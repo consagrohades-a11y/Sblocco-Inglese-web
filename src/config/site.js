@@ -151,8 +151,8 @@ export const siteConfig = {
       'Feedback scritto',
     ],
     media: {
-      photo: '/assets/proof/rhema-photo.jpg',
-      preplyProfile: '/assets/proof/preply-profile-rhema.png',
+      photo: '/assets/proof/rhema-photo-portrait.jpg',
+      preplyProfile: '/assets/proof/preply-profile-rhema-portrait.png',
     },
   },
 

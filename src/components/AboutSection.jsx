@@ -32,24 +32,33 @@ export default function AboutSection({ showReviews = false, className = '' }) {
       </div>
 
       <div className="grid gap-4">
-        <div className="overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft">
-          <img
-            src={aboutMe.media.photo}
-            alt="Rhema, insegnante di inglese online"
-            className="h-[440px] w-full object-cover object-[50%_28%]"
-            loading="lazy"
-          />
-        </div>
-        <div className="rounded-lg border border-moss/20 bg-white p-4 shadow-sm">
-          <p className="mb-3 text-xs font-black uppercase tracking-[0.08em] text-moss">Profilo Preply</p>
-          <div className="overflow-hidden rounded-lg border border-ink/10 bg-paper">
-            <img
-              src={aboutMe.media.preplyProfile}
-              alt="Screenshot del profilo Preply di Rhema"
-              className="max-h-[520px] w-full object-contain"
-              loading="lazy"
-            />
-          </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <figure className="overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft">
+            <div className="aspect-[9/16] overflow-hidden bg-paper">
+              <img
+                src={aboutMe.media.photo}
+                alt="Rhema, insegnante di inglese online"
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <figcaption className="border-t border-ink/10 px-4 py-3 text-xs font-black uppercase tracking-[0.08em] text-moss">
+              Foto Rhema
+            </figcaption>
+          </figure>
+          <figure className="overflow-hidden rounded-lg border border-moss/20 bg-white shadow-sm">
+            <div className="aspect-[9/16] overflow-hidden bg-white">
+              <img
+                src={aboutMe.media.preplyProfile}
+                alt="Screenshot del profilo Preply di Rhema"
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <figcaption className="border-t border-ink/10 px-4 py-3 text-xs font-black uppercase tracking-[0.08em] text-moss">
+              Profilo Preply
+            </figcaption>
+          </figure>
         </div>
         {showReviews ? <ReviewCarousel /> : null}
       </div>
