@@ -13,7 +13,7 @@ export default function Prenota() {
     <>
       <SEO
         title="Prenota la tua simulazione | Sblocco Inglese"
-        description={`Compila il modulo per richiedere la Simulazione Inglese per Colloqui e Lavoro da ${primaryOffer.price}. Il posto viene confermato solo dopo il pagamento.`}
+        description={`Compila il quiz di idoneità per richiedere la Simulazione Inglese per Colloqui e Lavoro da ${primaryOffer.price}. Il posto viene confermato solo dopo il pagamento.`}
       />
 
       <section className="section-shell grid gap-10 pb-16 pt-12 lg:grid-cols-[1fr_0.8fr] lg:items-start lg:pt-16">
@@ -26,8 +26,8 @@ export default function Prenota() {
             Prenota la tua simulazione
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70">
-            Compila il modulo per richiedere la Simulazione Inglese per Colloqui e Lavoro. Poi scegli lo slot e
-            confermi il posto con PayPal.
+            Compila il quiz di idoneità. In base alle risposte vedrai subito se procedere con slot e pagamento oppure
+            se fermarti per ora.
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <CTAButton href="#booking-form">{ctaLabels.form}</CTAButton>
@@ -72,7 +72,7 @@ export default function Prenota() {
               <CalendarCheck aria-hidden="true" className="h-6 w-6 text-moss" />
               <h2 className="mt-4 text-xl font-black text-ink">Slot e pagamento</h2>
               <p className="mt-3 text-sm leading-6 text-ink/70">
-                Dopo il modulo scegli lo slot su Calendly e confermi il posto con PayPal.
+                Se il quiz ti dà il via libera, scegli lo slot su Calendly e confermi il posto con PayPal.
               </p>
               <div className="mt-5">
                 <CTAButton href="#booking-flow" variant="secondary">
@@ -94,8 +94,8 @@ export default function Prenota() {
         <div className="section-shell grid gap-6 lg:grid-cols-3">
           {[
             {
-              title: 'Modulo semplice',
-              text: 'Indichi livello, obiettivo e situazione da simulare. Le risposte servono a preparare meglio la sessione.',
+              title: 'Quiz semplice',
+              text: 'Indichi livello, obiettivo e situazione da simulare. Le risposte servono a mostrarti un esito e a preparare meglio la sessione.',
               icon: FileText,
             },
             {

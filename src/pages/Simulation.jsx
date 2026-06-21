@@ -160,8 +160,8 @@ export default function Simulation() {
             preavviso, la sessione non viene recuperata.
           </DetailCard>
           <DetailCard icon={ShieldCheck} title="Prima di prenotare">
-            Se il quiz ti indica che la simulazione è adatta o potrebbe essere adatta, puoi procedere con modulo,
-            slot e pagamento.
+            Se il quiz ti indica che la simulazione è adatta o probabilmente adatta, puoi procedere con slot e
+            pagamento.
           </DetailCard>
         </div>
       </SectionReveal>
@@ -172,7 +172,7 @@ export default function Simulation() {
             <span className="eyebrow">Prenotazione</span>
             <h2 className="section-title">Come confermi il tuo posto</h2>
             <p className="section-copy">
-              Il percorso è semplice: modulo, scelta dello slot, pagamento con PayPal, sessione e feedback scritto.
+              Il percorso è semplice: quiz di idoneità, scelta dello slot, pagamento con PayPal, sessione e feedback scritto.
             </p>
             <div className="mt-8">
               <ProcessSteps steps={bookingSteps} title="Prenotazione simulazione" />

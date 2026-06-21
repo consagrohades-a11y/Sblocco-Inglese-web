@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { CalendarDays, CheckCircle2, ExternalLink, Send, ShieldCheck } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { AlertCircle, CalendarDays, CheckCircle2, ExternalLink, RotateCcw, Send, ShieldCheck } from 'lucide-react';
 import { bookingForm, externalLinks, primaryOffer } from '../config/site';
 
 const inputClass =
@@ -8,6 +8,55 @@ const inputClass =
 const initialState = Object.fromEntries(
   Object.keys(bookingForm.fields).map((key) => [key, ''])
 );
+
+const suitabilityResults = {
+  fit: {
+    label: 'Profilo adatto',
+    title: 'Quiz inviato: puoi procedere con slot e pagamento.',
+    text:
+      'Dalle tue risposte sembra che la simulazione da €39 sia un buon primo passo: hai un obiettivo concreto e una base su cui lavorare.',
+    canProceed: true,
+    tone: 'border-moss/25 bg-mint',
+    badge: 'bg-moss text-white',
+    icon: 'text-moss',
+  },
+  possible: {
+    label: 'Probabilmente adatta',
+    title: 'Quiz inviato: puoi procedere, con un obiettivo molto pratico.',
+    text:
+      'Le risposte indicano che la simulazione può aiutarti a capire cosa ti blocca e a ricevere frasi più chiare da riutilizzare. Se non conosci bene il tuo livello, useremo la sessione anche per orientarti.',
+    canProceed: true,
+    tone: 'border-butter bg-butter/70',
+    badge: 'bg-ink text-white',
+    icon: 'text-moss',
+  },
+  notFit: {
+    label: 'Meglio non procedere ora',
+    title: 'Quiz inviato, ma per ora non ti consiglio il pagamento.',
+    text:
+      'Dalle risposte sembra che una simulazione professionale da 30 minuti non sia il passo più utile in questo momento. Meglio chiarire l’obiettivo o lavorare prima sulle basi.',
+    canProceed: false,
+    tone: 'border-coral/25 bg-blush',
+    badge: 'bg-coral text-white',
+    icon: 'text-coral',
+  },
+};
+
+function getSuitabilityResult(values) {
+  if (values.paymentReadiness === 'No' || values.level === 'A1') {
+    return suitabilityResults.notFit;
+  }
+
+  if (
+    values.paymentReadiness === 'Forse' ||
+    values.level === 'Non lo so' ||
+    values.blocker === 'Mi blocco completamente'
+  ) {
+    return suitabilityResults.possible;
+  }
+
+  return suitabilityResults.fit;
+}
 
 function FieldShell({ label, required, children, helper }) {
   return (
@@ -98,22 +147,31 @@ function OptionGroup({ id, field, value, otherValue, onChange, onOtherChange }) 
 export default function BookingForm() {
   const [values, setValues] = useState(initialState);
   const [otherValues, setOtherValues] = useState({ purpose: '', deadline: '' });
-  const [submitted, setSubmitted] = useState(false);
+  const [submittedResult, setSubmittedResult] = useState(null);
+  const resultRef = useRef(null);
   const fields = bookingForm.fields;
 
   const update = (key, value) => {
     setValues((current) => ({ ...current, [key]: value }));
-    setSubmitted(false);
+    setSubmittedResult(null);
   };
 
   const updateOther = (key, value) => {
     setOtherValues((current) => ({ ...current, [key]: value }));
-    setSubmitted(false);
+    setSubmittedResult(null);
   };
 
   const handleSubmit = () => {
-    window.setTimeout(() => setSubmitted(true), 500);
+    const result = getSuitabilityResult(values);
+    window.setTimeout(() => setSubmittedResult(result), 500);
   };
+
+  useEffect(() => {
+    if (!submittedResult) return;
+
+    resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    resultRef.current?.focus({ preventScroll: true });
+  }, [submittedResult]);
 
   return (
     <div id="booking-form" className="scroll-mt-28 rounded-lg border border-moss/20 bg-white p-5 shadow-soft sm:p-7">
@@ -121,13 +179,13 @@ export default function BookingForm() {
         <div>
           <span className="eyebrow">
             <Send aria-hidden="true" className="h-3.5 w-3.5" />
-            Richiesta simulazione
+            Quiz di idoneità
           </span>
           <h2 className="mt-3 text-2xl font-black leading-tight text-ink sm:text-3xl">
-            Compila il modulo
+            Compila il quiz
           </h2>
           <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-ink/65">
-            Le risposte servono per preparare una simulazione utile e concreta per il tuo obiettivo.
+            Le risposte vengono inviate e ti mostrano subito se ha senso procedere con slot e pagamento.
           </p>
         </div>
         <div className="rounded-lg bg-butter px-4 py-3 text-left sm:text-right">
@@ -136,7 +194,7 @@ export default function BookingForm() {
         </div>
       </div>
 
-      <iframe title="Invio modulo Google Forms" name="google-form-submit" className="hidden" />
+      <iframe title="Invio quiz Google Forms" name="google-form-submit" className="hidden" />
 
       <form
         action={bookingForm.action}
@@ -202,27 +260,54 @@ export default function BookingForm() {
           <div className="flex items-start gap-3 text-sm font-bold leading-6 text-ink/75">
             <ShieldCheck aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-moss" />
             <p>
-              Il posto viene confermato solo dopo il pagamento. Dopo l’invio potrai scegliere lo slot e completare la
+              Il posto viene confermato solo dopo il pagamento. Dopo il quiz potrai scegliere lo slot e completare la
               prenotazione.
             </p>
           </div>
         </div>
 
-        {submitted ? (
-          <div role="status" className="rounded-lg border border-moss/25 bg-mint p-4 text-sm font-bold leading-6 text-ink">
+        {submittedResult ? (
+          <div
+            ref={resultRef}
+            role="status"
+            tabIndex={-1}
+            className={`rounded-lg border p-4 text-sm font-bold leading-6 text-ink outline-none ${submittedResult.tone}`}
+          >
             <div className="flex items-start gap-3">
-              <CheckCircle2 aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-moss" />
+              {submittedResult.canProceed ? (
+                <CheckCircle2 aria-hidden="true" className={`mt-0.5 h-5 w-5 shrink-0 ${submittedResult.icon}`} />
+              ) : (
+                <AlertCircle aria-hidden="true" className={`mt-0.5 h-5 w-5 shrink-0 ${submittedResult.icon}`} />
+              )}
               <div>
-                <p>
-                  Richiesta inviata. Ora puoi scegliere lo slot e completare il pagamento con PayPal.
-                </p>
-                <a
-                  href="#booking-flow"
-                  className="focus-ring mt-3 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-moss px-4 py-2 text-sm font-extrabold text-white transition hover:bg-[#096d58]"
-                >
-                  Scegli lo slot
-                  <CalendarDays aria-hidden="true" className="h-4 w-4" />
-                </a>
+                <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black uppercase tracking-[0.08em] ${submittedResult.badge}`}>
+                  {submittedResult.label}
+                </span>
+                <p className="mt-3 text-base font-black leading-6 text-ink">{submittedResult.title}</p>
+                <p className="mt-2 text-sm font-semibold leading-6 text-ink/70">{submittedResult.text}</p>
+                {submittedResult.canProceed ? (
+                  <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <a
+                      href="#booking-flow"
+                      className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-moss px-4 py-2 text-sm font-extrabold text-white transition hover:bg-[#096d58]"
+                    >
+                      Scegli lo slot
+                      <CalendarDays aria-hidden="true" className="h-4 w-4" />
+                    </a>
+                    <p className="text-xs font-bold leading-5 text-ink/55">
+                      Il posto viene confermato solo dopo il pagamento con PayPal.
+                    </p>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setSubmittedResult(null)}
+                    className="focus-ring mt-4 inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-sm font-extrabold text-ink transition hover:border-coral/30 hover:bg-white/80"
+                  >
+                    <RotateCcw aria-hidden="true" className="h-4 w-4" />
+                    Modifica le risposte
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -233,7 +318,7 @@ export default function BookingForm() {
             type="submit"
             className="focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-moss px-6 py-3 text-sm font-extrabold text-white shadow-lift transition hover:-translate-y-0.5 hover:bg-[#096d58] hover:shadow-soft active:translate-y-0 sm:text-base"
           >
-            Invia richiesta
+            Invia il quiz
             <Send aria-hidden="true" className="h-4 w-4" />
           </button>
           <a
@@ -242,10 +327,14 @@ export default function BookingForm() {
             rel="noreferrer"
             className="focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-extrabold text-ink transition hover:border-moss/30 hover:bg-mint/50"
           >
-            Apri il modulo Google
+            Apri il quiz su Google
             <ExternalLink aria-hidden="true" className="h-4 w-4" />
           </a>
         </div>
+        <p className="-mt-3 text-xs font-semibold leading-5 text-ink/50">
+          L’esito automatico appare solo usando il quiz su questa pagina. Il link Google è un backup se qualcosa non
+          funziona.
+        </p>
 
         <div className="flex items-start gap-3 rounded-lg bg-paper px-4 py-3 text-xs font-semibold leading-5 text-ink/55">
           <CalendarDays aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-moss" />

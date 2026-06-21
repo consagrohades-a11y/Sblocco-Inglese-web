@@ -5,7 +5,7 @@ export const siteConfig = {
   teacherName: 'Rhema',
   brandName: 'Sblocco Inglese by Rhema',
 
-  // Edit links here. Main booking CTAs open the internal booking form; the form itself submits to Google Forms.
+  // Edit links here. Main booking CTAs open the internal quiz; the quiz itself submits to Google Forms.
   links: {
     bookingPage: '/prenota#booking-form',
     bookingFlow: '/prenota#booking-flow',
@@ -15,7 +15,7 @@ export const siteConfig = {
     whatsapp: '[WHATSAPP_LINK_PLACEHOLDER]',
   },
 
-  // Edit the internal-looking booking form here.
+  // Edit the internal-looking booking quiz here.
   // These entry IDs come from the connected Google Form. If you change questions in Google Forms,
   // update the matching field names below.
   bookingForm: {
@@ -77,17 +77,17 @@ export const siteConfig = {
     },
   },
 
-  // Edit the booking/payment journey here. Calendly stays external, but it is displayed inside the booking page.
+  // Edit the quiz/booking/payment journey here. Calendly stays external, but it is displayed inside the booking page.
   bookingFlow: {
-    title: 'Prenotazione e pagamento',
+    title: 'Quiz, slot e pagamento',
     intro:
-      'Completi la richiesta, scegli l’orario e paghi con PayPal per confermare il posto.',
+      'Completi il quiz di idoneità, scegli l’orario e paghi con PayPal per confermare il posto.',
     calendlyEmbedUrl:
       'https://calendly.com/consagrohades/30min?hide_event_type_details=1&hide_gdpr_banner=1&primary_color=0e7c66',
     steps: [
       {
-        title: '1. Richiesta',
-        text: 'Compili il modulo interno con livello, obiettivo e contesto da preparare.',
+        title: '1. Quiz',
+        text: 'Compili il quiz con livello, obiettivo e contesto da preparare. Subito dopo vedi se procedere.',
       },
       {
         title: '2. Scegli lo slot',
@@ -125,7 +125,7 @@ export const siteConfig = {
   ctaLabels: {
     primary: 'Prenota la simulazione da €39',
     mobile: 'Prenota da €39',
-    form: 'Compila il modulo',
+    form: 'Compila il quiz',
     calendly: 'Scegli lo slot',
     secondary: 'Scopri come funziona',
   },

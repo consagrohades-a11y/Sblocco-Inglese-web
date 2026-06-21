@@ -400,8 +400,8 @@ export default function Home() {
           </span>
           <h2 className="section-title">Come funziona la prenotazione?</h2>
           <p className="section-copy">
-            Compili il modulo, scegli lo slot disponibile, completi il pagamento con PayPal e ricevi la conferma della
-            sessione.
+            Compili il quiz di idoneità, leggi l’esito, scegli lo slot disponibile, completi il pagamento con PayPal e
+            ricevi la conferma della sessione.
           </p>
           <div className="mt-8">
             <ProcessSteps steps={bookingSteps} title="Come funziona la prenotazione" />

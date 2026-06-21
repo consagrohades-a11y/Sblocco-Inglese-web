@@ -114,7 +114,7 @@ export const processSteps = [
 
 export const bookingSteps = [
   {
-    title: 'Compili il modulo',
+    title: 'Compili il quiz',
     text: 'Rispondi ad alcune domande sul tuo livello, il tuo obiettivo e il motivo per cui ti serve l’inglese.',
   },
   {
@@ -164,9 +164,10 @@ export const feedbackExamples = [
   },
 ];
 
-// Edit the short "Dopo il form" process here.
+// Edit the short "Dopo il quiz" process here.
 export const afterFormSteps = [
-  'Compili il modulo.',
+  'Compili il quiz.',
+  'Leggi l’esito.',
   'Scegli lo slot nel calendario.',
   'Paghi con PayPal.',
   'Ricevi la conferma.',
@@ -230,12 +231,12 @@ export const faqItems = [
   },
   {
     question: 'Posso fare la simulazione anche se non so il mio livello?',
-    answer: 'Sì. Nel modulo puoi indicare “non lo so”.',
+    answer: 'Sì. Nel quiz puoi indicare “non lo so”.',
   },
   {
     question: 'Ho fatto il quiz: posso prenotare?',
     answer:
-      'Sì, se il risultato dice che la simulazione è adatta o potrebbe essere adatta, puoi procedere con modulo, slot e pagamento.',
+      'Sì, se il risultato dice che la simulazione è adatta o probabilmente adatta, puoi procedere con slot e pagamento.',
   },
   {
     question: 'Come avviene il pagamento?',

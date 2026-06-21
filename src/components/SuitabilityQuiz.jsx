@@ -5,44 +5,43 @@ import CTAButton from './CTAButton';
 
 const questions = [
   {
-    question: 'Riesci a costruire frasi semplici in inglese?',
-    options: ['Sì', 'A volte', 'No'],
+    question: 'Quando devi parlare inglese in una situazione reale, cosa succede di solito?',
+    options: ['Parto, ma mi correggo troppo', 'Capisco, ma rispondo lentamente', 'Mi blocco quasi subito'],
   },
   {
-    question: 'Perché ti serve l’inglese?',
-    options: ['Colloquio', 'Lavoro', 'Clienti', 'Erasmus/trasferimento', 'Altro'],
+    question: 'Cosa vorresti capire con una simulazione?',
+    options: ['Quali errori ripeto', 'Quali frasi usare meglio', 'Se il mio livello regge una call'],
   },
   {
-    question: 'Cosa ti blocca di più?',
-    options: ['Paura di sbagliare', 'Non trovo le parole', 'Traduco dall’italiano', 'Mi blocco completamente'],
-  },
-  {
-    question: 'Hai una scadenza?',
-    options: ['Sì, urgente', 'Entro 1 mese', 'No, voglio migliorare'],
+    question: 'Hai già una situazione concreta da preparare?',
+    options: ['Sì: colloquio o call', 'Sì: lavoro, studio o trasferimento', 'Non ancora, voglio orientarmi'],
   },
 ];
 
 function getResult(answers) {
-  if (answers[0] === 'No') {
+  if (answers[0] === 'Mi blocco quasi subito' && answers[2] === 'Non ancora, voglio orientarmi') {
     return {
-      label: 'Prima le basi',
+      label: 'Da chiarire',
       tone: 'bg-butter text-ink',
-      text: 'Se parti completamente da zero, potrebbe essere meglio lavorare prima sulle basi.',
+      text:
+        'Il quiz completo ti aiuta a capire se la simulazione da 30 minuti è il passo giusto oppure se conviene partire da basi più semplici.',
     };
   }
 
-  if (answers[0] === 'A volte' || answers[3] === 'No, voglio migliorare') {
+  if (answers[2] === 'Non ancora, voglio orientarmi') {
     return {
-      label: 'Da valutare',
+      label: 'Orientamento utile',
       tone: 'bg-blush text-ink',
-      text: 'Potrebbe essere adatta, ma dipende dal tuo livello. Compila il modulo e valuterò se ha senso per te.',
+      text:
+        'Può avere senso fare il quiz completo prima di prenotare: ti dirà se procedere con slot e pagamento oppure fermarti.',
     };
   }
 
   return {
-    label: 'Sembra adatta',
+    label: 'Buon segnale',
     tone: 'bg-mint text-moss',
-    text: 'Sembra adatta al tuo caso. La simulazione può aiutarti a capire cosa ti blocca e quali frasi usare meglio.',
+    text:
+      'Hai già un contesto abbastanza concreto. Il passo successivo è il quiz completo, che invia le risposte e ti mostra subito un esito.',
   };
 }
 
@@ -70,12 +69,16 @@ export default function SuitabilityQuiz() {
         <div>
           <span className="eyebrow">
             <HelpCircle aria-hidden="true" className="h-3.5 w-3.5" />
-            Quiz rapido
+            Mini-check
           </span>
-          <h3 className="mt-4 text-2xl font-black text-ink">È adatta a te?</h3>
+          <h3 className="mt-4 text-2xl font-black text-ink">Non sei sicuro/a?</h3>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/70">
-            Quattro domande solo per orientarti. Le risposte restano nel browser e non vengono salvate.
+            Rispondi a tre domande veloci per orientarti. Questo mini-check non invia dati e non sostituisce il quiz
+            completo di idoneità.
           </p>
+          <div className="mt-4">
+            <CTAButton>Compila il quiz completo</CTAButton>
+          </div>
         </div>
         <div className="rounded-full bg-linen px-3 py-1 text-xs font-black text-ink">
           {completed ? 'Risultato' : `${step + 1}/${questions.length}`}
@@ -96,14 +99,14 @@ export default function SuitabilityQuiz() {
           </span>
           <p className="mt-4 text-lg font-extrabold leading-7 text-ink">{result.text}</p>
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <CTAButton>Richiedi la simulazione</CTAButton>
+            <CTAButton>Vai al quiz completo</CTAButton>
             <button
               type="button"
               onClick={reset}
               className="focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-ink/10 px-5 py-3 text-sm font-extrabold text-ink transition hover:bg-white"
             >
               <RotateCcw aria-hidden="true" className="h-4 w-4" />
-              Rifai il quiz
+              Rifai il mini-check
             </button>
           </div>
         </div>

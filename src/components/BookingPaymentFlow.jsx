@@ -77,13 +77,13 @@ export default function BookingPaymentFlow() {
           {activeStep === 0 ? (
             <div className="grid gap-4">
               <p className="text-sm font-semibold leading-6 text-ink/70">
-                Il modulo serve a capire il tuo obiettivo e a rendere la simulazione più mirata.
+                Il quiz serve a capire il tuo obiettivo, mostrarti un esito immediato e rendere la simulazione più mirata.
               </p>
               <a
                 href="#booking-form"
                 className="focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:-translate-y-0.5 hover:bg-[#096d58] hover:shadow-soft"
               >
-                Vai al modulo
+                Vai al quiz
                 <FileText aria-hidden="true" className="h-4 w-4" />
               </a>
             </div>

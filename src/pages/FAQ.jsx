@@ -33,7 +33,7 @@ export default function FAQ() {
           <div className="rounded-lg bg-ink p-6 text-white shadow-soft lg:sticky lg:top-28">
             <h2 className="text-2xl font-black">Hai ancora un dubbio?</h2>
             <p className="mt-3 text-sm leading-6 text-white/70">
-              Se il quiz ti sembra in linea con il tuo caso, puoi procedere con modulo, slot e pagamento.
+              Se il quiz ti dà il via libera, puoi procedere con slot e pagamento.
             </p>
             <CTAButton variant="contrast" className="mt-5">{ctaLabels.primary}</CTAButton>
           </div>

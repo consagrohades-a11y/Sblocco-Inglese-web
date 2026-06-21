@@ -38,11 +38,9 @@ export default function HeroAnimation() {
         loop
         muted
         playsInline
-        poster="/assets/sblocco-hero-poster-v6.png"
         preload="auto"
       >
-        <source src="/assets/sblocco-hero-loop-v6.mp4" type="video/mp4" />
-        <source src="/assets/sblocco-hero-loop-v6.webm" type="video/webm" />
+        <source src="/assets/sblocco-hero-rhema-loop.mp4" type="video/mp4" />
       </video>
     </figure>
   );
