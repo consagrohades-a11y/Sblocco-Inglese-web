@@ -326,10 +326,7 @@ export const percorsoOffers = [
   },
 ];
 
-export const proofPlaceholders = [
-  ...aboutMe.placeholders,
-  '[PLACEHOLDER — TEFL certificate or credentials if needed]',
-];
+export const proofPlaceholders = [];
 
 export const simulationIncludes = [
   primaryOffer.duration,

@@ -1,10 +1,9 @@
 import React from 'react';
 import { HelpCircle } from 'lucide-react';
-import CTAButton from '../components/CTAButton';
 import FAQAccordion from '../components/FAQAccordion';
 import SEO from '../components/SEO';
 import SectionReveal from '../components/SectionReveal';
-import { ctaLabels, primaryOffer } from '../config/site';
+import { primaryOffer } from '../config/site';
 import { faqItems } from '../data/content';
 
 export default function FAQ() {
@@ -33,9 +32,8 @@ export default function FAQ() {
           <div className="rounded-lg bg-ink p-6 text-white shadow-soft lg:sticky lg:top-28">
             <h2 className="text-2xl font-black">Hai ancora un dubbio?</h2>
             <p className="mt-3 text-sm leading-6 text-white/70">
-              Se il quiz ti dà il via libera, puoi procedere con slot e pagamento.
+              Se il quiz ti dà il via libera, puoi procedere con slot e pagamento dalla pagina Prenota.
             </p>
-            <CTAButton variant="contrast" className="mt-5">{ctaLabels.primary}</CTAButton>
           </div>
           <FAQAccordion items={faqItems} />
         </div>

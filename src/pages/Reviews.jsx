@@ -1,13 +1,11 @@
 import React from 'react';
 import { Award, Check, ShieldAlert } from 'lucide-react';
 import AboutSection from '../components/AboutSection';
-import CTAButton from '../components/CTAButton';
-import PlaceholderPanel from '../components/PlaceholderPanel';
 import ReviewCarousel from '../components/ReviewCarousel';
 import SEO from '../components/SEO';
 import SectionReveal from '../components/SectionReveal';
-import { ctaLabels, primaryOffer } from '../config/site';
-import { proofPlaceholders, reviews } from '../data/content';
+import { primaryOffer } from '../config/site';
+import { reviews } from '../data/content';
 
 export default function Reviews() {
   return (
@@ -29,9 +27,6 @@ export default function Reviews() {
           Le recensioni qui sotto arrivano dall’esperienza di Rhema come insegnante di inglese online. Rhema usa questa
           esperienza per aiutare studenti italiani a lavorare su speaking, colloqui e situazioni pratiche.
         </p>
-        <div className="mt-7">
-          <CTAButton>{ctaLabels.primary}</CTAButton>
-        </div>
       </section>
 
       <SectionReveal className="bg-white/70 py-16">
@@ -45,14 +40,16 @@ export default function Reviews() {
           <ReviewCarousel />
           <div className="grid gap-4 sm:grid-cols-2">
             {reviews.map((review) => (
-              <div key={review.name} className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
+              <div key={review.image || review.text} className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
                 <p className="text-sm font-black text-moss">{review.role}</p>
                 <h2 className="mt-3 text-lg font-black text-ink">{review.name}</h2>
                 <p className="mt-3 text-sm leading-6 text-ink/70">{review.text}</p>
+                {review.image ? (
+                  <div className="mt-4 overflow-hidden rounded-lg border border-ink/10 bg-paper">
+                    <img src={review.image} alt={`${review.name} - screenshot`} className="w-full" loading="lazy" />
+                  </div>
+                ) : null}
               </div>
-            ))}
-            {proofPlaceholders.slice(2).map((item) => (
-              <PlaceholderPanel key={item} label={item} />
             ))}
           </div>
         </div>
@@ -97,9 +94,6 @@ export default function Reviews() {
                 </p>
               </div>
             </div>
-          </div>
-          <div className="mt-8">
-            <CTAButton>{ctaLabels.primary}</CTAButton>
           </div>
         </div>
       </SectionReveal>

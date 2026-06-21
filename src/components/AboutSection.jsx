@@ -1,7 +1,6 @@
 import React from 'react';
 import { CheckCircle2, ShieldCheck, UserRoundCheck } from 'lucide-react';
 import { aboutMe } from '../config/site';
-import PlaceholderPanel from './PlaceholderPanel';
 import ReviewCarousel from './ReviewCarousel';
 
 export default function AboutSection({ showReviews = false, className = '' }) {
@@ -33,12 +32,26 @@ export default function AboutSection({ showReviews = false, className = '' }) {
       </div>
 
       <div className="grid gap-4">
-        {showReviews ? <ReviewCarousel /> : null}
-        <div className="grid gap-3 sm:grid-cols-2">
-          {aboutMe.placeholders.map((item) => (
-            <PlaceholderPanel key={item} label={item} />
-          ))}
+        <div className="overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft">
+          <img
+            src={aboutMe.media.photo}
+            alt="Rhema, insegnante di inglese online"
+            className="h-[440px] w-full object-cover object-[50%_28%]"
+            loading="lazy"
+          />
         </div>
+        <div className="rounded-lg border border-moss/20 bg-white p-4 shadow-sm">
+          <p className="mb-3 text-xs font-black uppercase tracking-[0.08em] text-moss">Profilo Preply</p>
+          <div className="overflow-hidden rounded-lg border border-ink/10 bg-paper">
+            <img
+              src={aboutMe.media.preplyProfile}
+              alt="Screenshot del profilo Preply di Rhema"
+              className="max-h-[520px] w-full object-contain"
+              loading="lazy"
+            />
+          </div>
+        </div>
+        {showReviews ? <ReviewCarousel /> : null}
       </div>
     </div>
   );

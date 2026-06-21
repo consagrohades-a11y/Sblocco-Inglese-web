@@ -150,30 +150,34 @@ export const siteConfig = {
       'Interview preparation',
       'Feedback scritto',
     ],
-    placeholders: [
-      '[PLACEHOLDER — foto di Rhema]',
-      '[PLACEHOLDER — screenshot profilo Preply]',
-      '[PLACEHOLDER — recensione Preply]',
-      '[PLACEHOLDER — breve video introduttivo]',
-    ],
+    media: {
+      photo: '/assets/proof/rhema-photo.jpg',
+      preplyProfile: '/assets/proof/preply-profile-rhema.png',
+    },
   },
 
-  // Replace these placeholders with real testimonials or Preply review summaries.
+  // Edit real testimonial summaries and screenshot paths here.
   reviews: [
     {
-      name: '[PLACEHOLDER — Screenshot recensione Preply 1]',
-      role: 'Studente online',
-      text: 'Spazio per una recensione reale da Preply, con focus su speaking, chiarezza delle correzioni e sicurezza nel parlare.',
+      name: 'Recensione Preply',
+      role: 'Studente italiano',
+      date: '3 weeks ago',
+      text: 'Insegnante preparata e disponibile.',
+      image: '/assets/proof/review-preply-preparata-disponibile.jpg',
     },
     {
-      name: '[PLACEHOLDER — Screenshot recensione Preply 2]',
-      role: 'Preparazione pratica',
-      text: 'Spazio per una recensione reale legata a obiettivi concreti: lavoro, colloqui, trasferimento o studio all’estero.',
+      name: 'Recensione Preply',
+      role: 'Studentessa italiana',
+      date: '2 months ago',
+      text: 'Mi sono trovata benissimo e a mio agio sin da subito con Rhema. Ha individuato le mie lacune e iniziato un lavoro mirato.',
+      image: '/assets/proof/review-preply-lavoro-mirato.jpg',
     },
     {
-      name: '[PLACEHOLDER — Screenshot recensione Preply 3]',
-      role: 'Feedback sul metodo',
-      text: 'Spazio per una recensione reale sul metodo: correzioni utili, frasi migliorate e pratica mirata.',
+      name: 'Recensione Preply',
+      role: 'Studente italiano',
+      date: '3 weeks ago',
+      text: 'Le lezioni sono coinvolgenti e ben organizzate. Rhema è paziente, preparata e aiuta a sentirsi più sicuri nel parlare inglese.',
+      image: '/assets/proof/review-preply-sicurezza-speaking.jpg',
     },
   ],
 

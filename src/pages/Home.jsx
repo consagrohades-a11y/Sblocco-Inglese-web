@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   AlertCircle,
-  ArrowDown,
   Check,
   CheckCircle2,
   FileText,
@@ -16,19 +15,16 @@ import AfterFormSteps from '../components/AfterFormSteps';
 import AboutSection from '../components/AboutSection';
 import CTAButton from '../components/CTAButton';
 import FAQAccordion from '../components/FAQAccordion';
-import HeroAnimation from '../components/HeroAnimation';
 import PricingCard from '../components/PricingCard';
 import ProcessSteps from '../components/ProcessSteps';
 import SEO from '../components/SEO';
 import SectionReveal from '../components/SectionReveal';
-import SituationTabs from '../components/SituationTabs';
 import SuitabilityQuiz from '../components/SuitabilityQuiz';
 import TrustBadges from '../components/TrustBadges';
-import { ctaLabels, externalLinks, primaryOffer } from '../config/site';
+import { ctaLabels, primaryOffer } from '../config/site';
 import {
   faqItems,
   fitCards,
-  feedbackExamples,
   processSteps,
   receiveItems,
   bookingSteps,
@@ -132,31 +128,6 @@ function ReceiveChecklist() {
   );
 }
 
-function FeedbackExamples() {
-  return (
-    <div className="grid gap-5 lg:grid-cols-3">
-      {feedbackExamples.map((example) => (
-        <article key={example.label} className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
-          <span className="inline-flex rounded-full bg-mint px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-moss">
-            {example.label}
-          </span>
-          <div className="mt-5 grid gap-4">
-            <div className="rounded-lg bg-blush p-4">
-              <p className="text-xs font-black uppercase tracking-[0.08em] text-coral">Prima</p>
-              <p className="mt-2 text-sm font-bold leading-6 text-ink/70">“{example.before}”</p>
-            </div>
-            <div className="rounded-lg border border-moss/20 bg-mint/70 p-4">
-              <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Dopo</p>
-              <p className="mt-2 text-sm font-bold leading-6 text-ink">“{example.after}”</p>
-            </div>
-          </div>
-          <p className="mt-4 text-sm font-semibold leading-6 text-ink/70">{example.note}</p>
-        </article>
-      ))}
-    </div>
-  );
-}
-
 export default function Home() {
   return (
     <>
@@ -165,8 +136,8 @@ export default function Home() {
         description={`Simulazione online di 30 minuti per italiani che si bloccano quando devono parlare inglese in colloqui, lavoro o call. Feedback scritto e frasi migliorate. Prezzo beta ${primaryOffer.price}.`}
       />
 
-      <section className="section-shell grid gap-10 pb-16 pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:pb-20 lg:pt-16">
-        <div>
+      <section className="section-shell pb-12 pt-10 lg:pb-16 lg:pt-16">
+        <div className="max-w-4xl">
           <span className="eyebrow">
             <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
             Simulazione pratica + diagnosi + feedback scritto
@@ -196,7 +167,6 @@ export default function Home() {
             <TrustBadges />
           </div>
         </div>
-        <HeroAnimation />
       </section>
 
       <SectionReveal className="bg-white/70 py-16">
@@ -250,35 +220,12 @@ export default function Home() {
           <div className="mt-8">
             <FitCards />
           </div>
-          <div className="mt-8">
-            <CTAButton>{ctaLabels.primary}</CTAButton>
-          </div>
         </div>
       </SectionReveal>
 
       <SectionReveal className="bg-linen/50 py-16">
         <div className="section-shell">
           <SuitabilityQuiz />
-        </div>
-      </SectionReveal>
-
-      <SectionReveal className="py-16">
-        <div className="section-shell">
-          <div className="rounded-lg border border-moss/20 bg-white p-6 shadow-soft sm:p-8">
-            <span className="eyebrow">
-              <CheckCircle2 aria-hidden="true" className="h-3.5 w-3.5" />
-              Spazio pratico, non giudizio
-            </span>
-            <h2 className="section-title">Non devi parlare perfettamente</h2>
-            <p className="mt-5 max-w-4xl text-base leading-7 text-ink/70 sm:text-lg">
-              La simulazione non serve a giudicarti. Serve a capire cosa succede quando provi a parlare inglese in
-              una situazione reale: dove ti blocchi, quali frasi non ti vengono, quali errori si ripetono e cosa puoi
-              migliorare subito.
-            </p>
-            <p className="mt-4 max-w-4xl text-base font-semibold leading-7 text-ink/75">
-              Non sempre il problema è non sapere inglese. A volte il problema è non riuscire a usarlo quando serve davvero.
-            </p>
-          </div>
         </div>
       </SectionReveal>
 
@@ -328,47 +275,8 @@ export default function Home() {
               Per {primaryOffer.price} non stai comprando una semplice mezz’ora di conversazione. Stai comprando una diagnosi
               pratica del tuo speaking in una situazione reale.
             </p>
-            <div className="mt-7">
-              <CTAButton>{ctaLabels.primary}</CTAButton>
-            </div>
           </div>
           <ReceiveChecklist />
-        </div>
-      </SectionReveal>
-
-      <SectionReveal className="bg-white/70 py-16">
-        <div className="section-shell">
-          <span className="eyebrow">
-            <FileText aria-hidden="true" className="h-3.5 w-3.5" />
-            Esempi di feedback
-          </span>
-          <h2 className="section-title">Che tipo di feedback ricevi?</h2>
-          <p className="section-copy">
-            Durante la simulazione lavoriamo su frasi reali, non su teoria astratta. L’obiettivo è rendere il tuo
-            inglese più chiaro, naturale e utilizzabile.
-          </p>
-          <div className="mt-8">
-            <FeedbackExamples />
-          </div>
-          <div className="mt-8">
-            <CTAButton>{ctaLabels.primary}</CTAButton>
-          </div>
-        </div>
-      </SectionReveal>
-
-      <SectionReveal className="bg-linen/50 py-16">
-        <div className="section-shell">
-          <span className="eyebrow">
-            <ArrowDown aria-hidden="true" className="h-3.5 w-3.5" />
-            Esempi pratici
-          </span>
-          <h2 className="section-title">Esempi di situazioni che possiamo simulare</h2>
-          <p className="section-copy">
-            Porti un contesto reale. Io ti aiuto a renderlo più chiaro, più naturale e meno improvvisato.
-          </p>
-          <div className="mt-8">
-            <SituationTabs />
-          </div>
         </div>
       </SectionReveal>
 
@@ -409,17 +317,6 @@ export default function Home() {
           <div className="mt-8">
             <AfterFormSteps />
           </div>
-          <div className="mt-8">
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <CTAButton>{ctaLabels.form}</CTAButton>
-              <CTAButton href={externalLinks.bookingFlow} variant="secondary">
-                {ctaLabels.calendly}
-              </CTAButton>
-            </div>
-            <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-ink/60">
-              Il posto viene confermato solo dopo il pagamento.
-            </p>
-          </div>
         </div>
       </SectionReveal>
 
@@ -431,31 +328,11 @@ export default function Home() {
             <p className="section-copy">
               Le domande più comuni riguardano livello, pagamento, cosa ricevi dopo e come funziona la sessione.
             </p>
-            <div className="mt-6">
-              <CTAButton>{ctaLabels.primary}</CTAButton>
-            </div>
           </div>
           <FAQAccordion items={faqItems.slice(0, 4)} />
         </div>
       </SectionReveal>
 
-      <SectionReveal className="pb-20 pt-16">
-        <div className="section-shell">
-          <div className="rounded-lg bg-ink px-5 py-10 text-white shadow-soft sm:px-8 lg:px-12">
-            <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div>
-                <h2 className="max-w-3xl text-3xl font-black leading-tight sm:text-4xl">
-                  Vuoi capire cosa ti blocca quando parli inglese?
-                </h2>
-                <p className="mt-4 max-w-2xl text-base leading-7 text-white/70">
-                  Prenota la simulazione da {primaryOffer.price} e ricevi feedback scritto con frasi migliorate da riutilizzare.
-                </p>
-              </div>
-              <CTAButton variant="contrast">{ctaLabels.primary}</CTAButton>
-            </div>
-          </div>
-        </div>
-      </SectionReveal>
     </>
   );
 }

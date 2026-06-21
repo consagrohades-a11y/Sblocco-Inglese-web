@@ -15,6 +15,12 @@ const suitabilityResults = {
     title: 'Quiz inviato: puoi procedere con slot e pagamento.',
     text:
       'Dalle tue risposte sembra che la simulazione da €39 sia un buon primo passo: hai un obiettivo concreto e una base su cui lavorare.',
+    detailsTitle: 'Perché ha senso procedere',
+    details: [
+      'hai indicato una base utile per lavorare su speaking reale',
+      'la simulazione può trasformare il blocco in errori e frasi da correggere',
+      'dopo lo slot, il pagamento PayPal conferma il posto',
+    ],
     canProceed: true,
     tone: 'border-moss/25 bg-mint',
     badge: 'bg-moss text-white',
@@ -25,6 +31,12 @@ const suitabilityResults = {
     title: 'Quiz inviato: puoi procedere, con un obiettivo molto pratico.',
     text:
       'Le risposte indicano che la simulazione può aiutarti a capire cosa ti blocca e a ricevere frasi più chiare da riutilizzare. Se non conosci bene il tuo livello, useremo la sessione anche per orientarti.',
+    detailsTitle: 'Come usarla bene',
+    details: [
+      'scegli una situazione precisa da simulare: colloquio, call, cliente o trasferimento',
+      'porta frasi o domande che ti mettono in difficoltà',
+      'procedi se vuoi una diagnosi pratica, non una lezione generica',
+    ],
     canProceed: true,
     tone: 'border-butter bg-butter/70',
     badge: 'bg-ink text-white',
@@ -35,6 +47,12 @@ const suitabilityResults = {
     title: 'Quiz inviato, ma per ora non ti consiglio il pagamento.',
     text:
       'Dalle risposte sembra che una simulazione professionale da 30 minuti non sia il passo più utile in questo momento. Meglio chiarire l’obiettivo o lavorare prima sulle basi.',
+    detailsTitle: 'Cosa fare invece',
+    details: [
+      'non scegliere slot e non pagare adesso',
+      'riparti da frasi semplici, presentazione personale e risposte base',
+      'rifai il quiz quando hai una situazione concreta da preparare',
+    ],
     canProceed: false,
     tone: 'border-coral/25 bg-blush',
     badge: 'bg-coral text-white',
@@ -285,6 +303,23 @@ export default function BookingForm() {
                 </span>
                 <p className="mt-3 text-base font-black leading-6 text-ink">{submittedResult.title}</p>
                 <p className="mt-2 text-sm font-semibold leading-6 text-ink/70">{submittedResult.text}</p>
+                <div className="mt-4 rounded-lg bg-white/75 p-4">
+                  <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/55">
+                    {submittedResult.detailsTitle}
+                  </p>
+                  <ul className="mt-3 grid gap-2">
+                    {submittedResult.details.map((detail) => (
+                      <li key={detail} className="flex items-start gap-2 text-sm font-semibold leading-6 text-ink/70">
+                        {submittedResult.canProceed ? (
+                          <CheckCircle2 aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-moss" />
+                        ) : (
+                          <AlertCircle aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-coral" />
+                        )}
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 {submittedResult.canProceed ? (
                   <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
                     <a

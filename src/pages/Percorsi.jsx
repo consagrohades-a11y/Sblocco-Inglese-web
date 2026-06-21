@@ -26,12 +26,6 @@ export default function Percorsi() {
           Dopo la simulazione, non propongo lo stesso percorso a tutti. In base al tuo livello, al tuo obiettivo e alla
           tua urgenza, posso consigliarti una delle opzioni sotto.
         </p>
-        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-          <CTAButton>Prima fai la simulazione da {primaryOffer.price}</CTAButton>
-          <CTAButton href={externalLinks.whatsapp} variant="secondary">
-            Richiedi informazioni
-          </CTAButton>
-        </div>
       </section>
 
       <SectionReveal className="pb-16">
