@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.pnpm-store/
+.codex/
+
+.env
+.env.*
+*.log
+
+.DS_Store
+Thumbs.db
