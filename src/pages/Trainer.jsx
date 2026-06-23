@@ -1,7 +1,8 @@
 import React from 'react';
-import { useEffect, useMemo, useState } from 'react';
-import { BarChart3, CalendarClock, RotateCcw, Sparkles } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CalendarClock, CheckCircle2, RotateCcw, Sparkles } from 'lucide-react';
 import DeckSelector from '../components/DeckSelector';
+import ReviewStats from '../components/ReviewStats';
 import SEO from '../components/SEO';
 import SrsCard from '../components/SrsCard';
 import { srsCards } from '../data/srsCards';
@@ -9,33 +10,133 @@ import {
   buildReviewQueue,
   cleanProgress,
   formatDueLabel,
-  getCardState,
   getDeckStats,
   getNextDueCard,
   getTodayISO,
   loadProgress,
+  reinsertCardAfterDelay,
   reviewCard,
   saveProgress,
 } from '../utils/srsAlgorithm';
 import { warnAboutSrsCardIssues } from '../utils/validateSrsCards';
 
-function StatCard({ label, value, helper }) {
+const SESSION_LIMIT = 30;
+const DAILY_NEW_LIMIT = 10;
+const emptyRatings = { again: 0, hard: 0, good: 0, easy: 0 };
+
+function toggleValue(values, value) {
+  return values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
+}
+
+function matchesSelection(value, selectedValues) {
+  return selectedValues.length === 0 || selectedValues.includes(value);
+}
+
+function SessionPanel({
+  title,
+  children,
+  icon: Icon,
+  actions,
+}) {
   return (
-    <div className="rounded-lg border border-ink/10 bg-white p-4 shadow-sm">
-      <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/50">{label}</p>
-      <p className="mt-2 text-3xl font-black text-ink">{value}</p>
-      <p className="mt-1 text-sm font-semibold text-ink/60">{helper}</p>
+    <div className="mx-auto w-full max-w-3xl rounded-lg border border-ink/10 bg-white p-6 text-center shadow-soft sm:p-8">
+      <span className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-lg bg-mint text-moss">
+        <Icon aria-hidden="true" className="h-6 w-6" />
+      </span>
+      <h2 className="mt-5 text-2xl font-black text-ink">{title}</h2>
+      <div className="mx-auto mt-3 max-w-xl text-sm font-semibold leading-6 text-ink/70">{children}</div>
+      {actions ? <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">{actions}</div> : null}
+    </div>
+  );
+}
+
+function CompletionStats({ ratings, reviewed }) {
+  const items = [
+    ['Cards reviewed', reviewed],
+    ['Again', ratings.again],
+    ['Hard', ratings.hard],
+    ['Good', ratings.good],
+    ['Easy', ratings.easy],
+  ];
+
+  return (
+    <div className="mt-6 grid gap-3 sm:grid-cols-5">
+      {items.map(([label, value]) => (
+        <div key={label} className="rounded-lg border border-ink/10 bg-paper px-3 py-3">
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/45">{label}</p>
+          <p className="mt-1 text-2xl font-black text-ink">{value}</p>
+        </div>
+      ))}
     </div>
   );
 }
 
 export default function Trainer() {
+  const filtersRef = useRef(null);
   const [progress, setProgress] = useState(() => cleanProgress(loadProgress(srsCards), srsCards));
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedLevel, setSelectedLevel] = useState('all');
+  const progressRef = useRef(progress);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedLevels, setSelectedLevels] = useState([]);
   const [now, setNow] = useState(() => new Date());
+  const [sessionQueue, setSessionQueue] = useState([]);
   const [sessionReviewedCount, setSessionReviewedCount] = useState(0);
+  const [sessionRatings, setSessionRatings] = useState(emptyRatings);
+  const [answerVisible, setAnswerVisible] = useState(false);
   const [sessionStep, setSessionStep] = useState(0);
+
+  const categories = useMemo(() => Array.from(new Set(srsCards.map((card) => card.category))), []);
+  const cardById = useMemo(() => new Map(srsCards.map((card) => [card.id, card])), []);
+  const selectedCategoryKey = selectedCategories.join('|');
+  const selectedLevelKey = selectedLevels.join('|');
+
+  const filteredCards = useMemo(
+    () =>
+      srsCards.filter(
+        (card) => matchesSelection(card.category, selectedCategories) && matchesSelection(card.level, selectedLevels),
+      ),
+    [selectedCategoryKey, selectedLevelKey],
+  );
+
+  const allStats = useMemo(() => getDeckStats(srsCards, progress, now), [progress, now]);
+  const filteredStats = useMemo(() => getDeckStats(filteredCards, progress, now), [filteredCards, progress, now]);
+  const stats = useMemo(
+    () => ({
+      ...filteredStats,
+      newAvailableToday: Math.min(filteredStats.new, allStats.newAvailableToday),
+    }),
+    [allStats.newAvailableToday, filteredStats],
+  );
+
+  const currentCard = sessionQueue.length > 0 ? cardById.get(sessionQueue[0]) : null;
+  const nextDue = useMemo(
+    () =>
+      getNextDueCard(srsCards, progress, {
+        category: selectedCategories,
+        levels: selectedLevels,
+        today: getTodayISO(now),
+      }),
+    [progress, selectedCategoryKey, selectedLevelKey, now],
+  );
+
+  const buildSessionIds = useCallback(
+    (progressSnapshot = progressRef.current) =>
+      buildReviewQueue(srsCards, progressSnapshot, selectedCategories, {
+        levels: selectedLevels,
+        today: getTodayISO(new Date()),
+        totalLimit: SESSION_LIMIT,
+        newLimit: DAILY_NEW_LIMIT,
+      }).map((card) => card.id),
+    [selectedCategoryKey, selectedLevelKey],
+  );
+
+  const startSession = useCallback(() => {
+    setNow(new Date());
+    setSessionQueue(buildSessionIds());
+    setSessionReviewedCount(0);
+    setSessionRatings(emptyRatings);
+    setAnswerVisible(false);
+    setSessionStep((step) => step + 1);
+  }, [buildSessionIds]);
 
   useEffect(() => {
     warnAboutSrsCardIssues(srsCards);
@@ -43,6 +144,7 @@ export default function Trainer() {
 
   useEffect(() => {
     saveProgress(progress);
+    progressRef.current = progress;
   }, [progress]);
 
   useEffect(() => {
@@ -50,34 +152,75 @@ export default function Trainer() {
     return () => window.clearInterval(timer);
   }, []);
 
-  const categories = useMemo(() => Array.from(new Set(srsCards.map((card) => card.category))), []);
-  const stats = useMemo(() => getDeckStats(srsCards, progress, now), [progress, now]);
-  const queue = useMemo(
-    () =>
-      buildReviewQueue(srsCards, progress, selectedCategory, {
-        level: selectedLevel,
-        today: getTodayISO(now),
-        totalLimit: Math.max(0, 30 - sessionReviewedCount),
-        newLimit: 10,
-      }),
-    [progress, selectedCategory, selectedLevel, now, sessionReviewedCount],
-  );
-  const currentCard = queue[0];
-  const currentProgress = currentCard ? getCardState(progress, currentCard.id) : null;
-  const nextDue = useMemo(
-    () => getNextDueCard(srsCards, progress, { category: selectedCategory, level: selectedLevel, today: getTodayISO(now) }),
-    [progress, selectedCategory, selectedLevel, now],
-  );
-
-  const handleRate = (rating) => {
-    if (!currentCard) return;
-
-    const reviewTime = new Date();
-    setProgress((currentProgressMap) => reviewCard(currentCard.id, rating, currentProgressMap, getTodayISO(reviewTime)));
-    setNow(reviewTime);
-    setSessionReviewedCount((count) => count + 1);
+  useEffect(() => {
+    setSessionQueue(buildSessionIds());
+    setSessionReviewedCount(0);
+    setSessionRatings(emptyRatings);
+    setAnswerVisible(false);
     setSessionStep((step) => step + 1);
-  };
+  }, [selectedCategoryKey, selectedLevelKey, buildSessionIds]);
+
+  useEffect(() => {
+    if (sessionQueue.length > 0 && !currentCard) {
+      setSessionQueue((queue) => queue.slice(1));
+    }
+  }, [currentCard, sessionQueue.length]);
+
+  const handleRate = useCallback(
+    (rating) => {
+      if (!currentCard) return;
+
+      const reviewTime = new Date();
+      const today = getTodayISO(reviewTime);
+      setProgress((currentProgressMap) => reviewCard(currentCard.id, rating, currentProgressMap, today));
+      setSessionRatings((ratings) => ({ ...ratings, [rating]: ratings[rating] + 1 }));
+      setSessionReviewedCount((count) => count + 1);
+      setSessionQueue((queue) => {
+        const remainingQueue = queue.slice(1);
+
+        if (rating !== 'again') return remainingQueue;
+        return reinsertCardAfterDelay(remainingQueue, currentCard.id, 3);
+      });
+      setAnswerVisible(false);
+      setNow(reviewTime);
+      setSessionStep((step) => step + 1);
+    },
+    [currentCard],
+  );
+
+  useEffect(() => {
+    function handleShortcut(event) {
+      const target = event.target;
+      const isTyping =
+        target instanceof HTMLElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
+
+      if (isTyping || event.metaKey || event.ctrlKey || event.altKey) return;
+
+      if (event.code === 'Space' && currentCard && !answerVisible) {
+        event.preventDefault();
+        setAnswerVisible(true);
+        return;
+      }
+
+      if (!currentCard || !answerVisible) return;
+
+      const ratingByKey = {
+        1: 'again',
+        2: 'hard',
+        3: 'good',
+        4: 'easy',
+      };
+      const rating = ratingByKey[event.key];
+
+      if (rating) {
+        event.preventDefault();
+        handleRate(rating);
+      }
+    }
+
+    window.addEventListener('keydown', handleShortcut);
+    return () => window.removeEventListener('keydown', handleShortcut);
+  }, [answerVisible, currentCard, handleRate]);
 
   const handleReset = () => {
     const confirmed = window.confirm('Vuoi azzerare i progressi del trainer su questo dispositivo?');
@@ -85,12 +228,34 @@ export default function Trainer() {
       setProgress({});
       saveProgress({});
       setNow(new Date());
+      setSessionQueue(buildReviewQueue(srsCards, {}, selectedCategories, {
+        levels: selectedLevels,
+        today: getTodayISO(new Date()),
+        totalLimit: SESSION_LIMIT,
+        newLimit: DAILY_NEW_LIMIT,
+      }).map((card) => card.id));
       setSessionReviewedCount(0);
+      setSessionRatings(emptyRatings);
+      setAnswerVisible(false);
       setSessionStep((step) => step + 1);
     }
   };
 
-  const progressWidth = `${stats.progressPercent}%`;
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setSelectedLevels([]);
+  };
+
+  const scrollToFilters = () => {
+    filtersRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const sessionLabel = currentCard
+    ? `Card ${Math.min(sessionReviewedCount + 1, SESSION_LIMIT)} of ${SESSION_LIMIT}`
+    : `Card ${sessionReviewedCount} of ${SESSION_LIMIT}`;
+  const noMatchingCards = !currentCard && filteredCards.length === 0;
+  const noReadyCards = !currentCard && filteredCards.length > 0 && sessionReviewedCount === 0;
+  const sessionComplete = !currentCard && filteredCards.length > 0 && sessionReviewedCount > 0;
 
   return (
     <>
@@ -99,116 +264,141 @@ export default function Trainer() {
         description="Review the English phrases you actually need for interviews, work, meetings and real conversations."
       />
 
-      <section className="section-shell pb-8 pt-10 lg:pt-12">
-        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-          <div>
-            <span className="eyebrow">
-              <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
-              Trainer SRS
-            </span>
-            <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight text-ink sm:text-5xl">
-              Expression Trainer
-            </h1>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70">
-              Review the English phrases you actually need for interviews, work, meetings and real conversations.
-            </p>
-            <p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-ink/60">
-              Il contenuto resta fisso nel dataset. I tuoi progressi vengono salvati solo su questo dispositivo.
-            </p>
+      <section className="section-shell pb-16 pt-10 lg:pt-12">
+        <div className="mx-auto max-w-5xl">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <span className="eyebrow">
+                <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
+                Trainer SRS
+              </span>
+              <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight text-ink sm:text-5xl">
+                Expression Trainer
+              </h1>
+              <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70">
+                Review the English phrases you actually need for interviews, work, meetings and real conversations.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-extrabold text-ink transition hover:border-coral/30 hover:bg-blush lg:justify-self-end"
+            >
+              <RotateCcw aria-hidden="true" className="h-4 w-4" />
+              Azzera progressi
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={handleReset}
-            className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-extrabold text-ink transition hover:border-coral/30 hover:bg-blush lg:justify-self-end"
-          >
-            <RotateCcw aria-hidden="true" className="h-4 w-4" />
-            Azzera progressi
-          </button>
-        </div>
-      </section>
 
-      <section className="section-shell pb-16">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          <StatCard label="Card totali" value={stats.total} helper="dataset fisso" />
-          <StatCard label="Dovute" value={stats.due} helper="da ripassare ora" />
-          <StatCard label="Nuove" value={stats.newAvailableToday} helper="disponibili oggi" />
-          <StatCard label="Ripassate oggi" value={stats.reviewedToday} helper="su questo browser" />
-          <StatCard label="Progressi" value={`${stats.progressPercent}%`} helper={`${stats.reviewed} viste`} />
-        </div>
+          <div className="mt-7">
+            <ReviewStats
+              dueToday={stats.due}
+              newAvailable={stats.newAvailableToday}
+              reviewedToday={stats.reviewedToday}
+              sessionReviewed={sessionReviewedCount}
+              sessionLimit={SESSION_LIMIT}
+            />
+          </div>
 
-        <div className="mt-5 h-3 overflow-hidden rounded-full bg-white">
-          <div className="h-full rounded-full bg-moss transition-all" style={{ width: progressWidth }} />
-        </div>
-
-        <div className="mt-8 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="grid content-start gap-5">
+          <div ref={filtersRef} className="mt-6">
             <DeckSelector
               categories={categories}
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-              selectedLevel={selectedLevel}
-              onLevelChange={setSelectedLevel}
-              statsByCategory={stats.byCategory}
+              selectedCategories={selectedCategories}
+              onToggleCategory={(category) => setSelectedCategories((values) => toggleValue(values, category))}
+              selectedLevels={selectedLevels}
+              onToggleLevel={(level) => setSelectedLevels((values) => toggleValue(values, level))}
+              onClear={clearFilters}
             />
-
-            <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
-              <div className="flex items-start gap-3">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-linen text-clay">
-                  <BarChart3 aria-hidden="true" className="h-5 w-5" />
-                </span>
-                <div>
-                  <h2 className="text-lg font-black text-ink">Sessione</h2>
-                  <p className="mt-1 text-sm font-semibold leading-6 text-ink/60">
-                    {queue.length > 0
-                      ? `${queue.length} card disponibili con i filtri attuali. Sessione: ${sessionReviewedCount}/30.`
-                      : sessionReviewedCount >= 30
-                        ? 'Sessione completata: hai raggiunto il limite di 30 card.'
-                        : 'Nessuna card disponibile con i filtri attuali.'}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-5 grid gap-3">
-                {categories.map((category) => {
-                  const categoryStats = stats.byCategory[category];
-                  return (
-                    <div key={category} className="flex items-center justify-between gap-3 border-t border-ink/10 pt-3 text-sm">
-                      <span className="font-black text-ink">{category}</span>
-                      <span className="font-semibold text-ink/60">
-                        {categoryStats.due} due / {categoryStats.new} nuove
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
           </div>
 
-          <div>
+          <div className="mt-8">
             {currentCard ? (
               <SrsCard
                 key={`${currentCard.id}-${sessionStep}`}
                 card={currentCard}
-                progress={currentProgress}
+                progress={progress[currentCard.id]}
+                revealed={answerVisible}
+                onReveal={() => setAnswerVisible(true)}
                 onRate={handleRate}
+                sessionLabel={sessionLabel}
               />
-            ) : (
-              <div className="rounded-lg border border-ink/10 bg-white p-6 shadow-soft">
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-mint text-moss">
-                  <CalendarClock aria-hidden="true" className="h-6 w-6" />
-                </span>
-                <h2 className="mt-5 text-2xl font-black text-ink">Per ora sei in pari</h2>
-                <p className="mt-3 text-sm font-semibold leading-6 text-ink/70">
-                  Non ci sono card nuove o dovute per questo filtro. Cambia categoria, cambia livello o torna quando la
-                  prossima card sarà pronta.
-                </p>
+            ) : null}
+
+            {noMatchingCards ? (
+              <SessionPanel
+                title="No cards match these filters."
+                icon={CalendarClock}
+                actions={
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:bg-[#096d58]"
+                  >
+                    Clear filters
+                  </button>
+                }
+              >
+                Try selecting more categories or levels.
+              </SessionPanel>
+            ) : null}
+
+            {noReadyCards ? (
+              <SessionPanel
+                title="No cards ready right now"
+                icon={CalendarClock}
+                actions={
+                  <>
+                    <button
+                      type="button"
+                      onClick={startSession}
+                      className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:bg-[#096d58]"
+                    >
+                      Start another session
+                    </button>
+                    <button
+                      type="button"
+                      onClick={scrollToFilters}
+                      className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-extrabold text-ink transition hover:bg-mint/50"
+                    >
+                      Change filters
+                    </button>
+                  </>
+                }
+              >
                 {nextDue ? (
-                  <p className="mt-4 rounded-lg bg-paper p-4 text-sm font-black text-ink/70">
-                    Prossima card: {formatDueLabel(nextDue.state.dueDate, now)}
-                  </p>
-                ) : null}
-              </div>
-            )}
+                  <>Next review: {formatDueLabel(nextDue.state.dueDate, now)}.</>
+                ) : (
+                  <>Try widening your filters or come back later.</>
+                )}
+              </SessionPanel>
+            ) : null}
+
+            {sessionComplete ? (
+              <SessionPanel
+                title="Session complete"
+                icon={CheckCircle2}
+                actions={
+                  <>
+                    <button
+                      type="button"
+                      onClick={startSession}
+                      className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:bg-[#096d58]"
+                    >
+                      Start another session
+                    </button>
+                    <button
+                      type="button"
+                      onClick={scrollToFilters}
+                      className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-extrabold text-ink transition hover:bg-mint/50"
+                    >
+                      Change filters
+                    </button>
+                  </>
+                }
+              >
+                <p>Suggested next step: Use 3 of these expressions in your next speaking lesson.</p>
+                <CompletionStats ratings={sessionRatings} reviewed={sessionReviewedCount} />
+              </SessionPanel>
+            ) : null}
           </div>
         </div>
       </section>

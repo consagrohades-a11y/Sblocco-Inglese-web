@@ -1,13 +1,12 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
 import { AlertCircle, BookOpen, CheckCircle2, Eye, RotateCcw, Zap } from 'lucide-react';
 import { formatDueLabel, reviewRatings } from '../utils/srsAlgorithm';
 
 const ratingStyles = {
-  again: 'border-coral/30 bg-blush text-ink hover:border-coral/50 hover:bg-coral/10',
-  hard: 'border-clay/30 bg-white text-ink hover:border-clay/50 hover:bg-linen',
-  good: 'border-moss/30 bg-mint/60 text-ink hover:border-moss/50 hover:bg-mint',
-  easy: 'border-sea/30 bg-white text-ink hover:border-sea/50 hover:bg-sea/10',
+  again: 'border-coral/35 bg-blush text-ink hover:border-coral/60 hover:bg-coral/10',
+  hard: 'border-clay/30 bg-white text-ink hover:border-clay/55 hover:bg-linen',
+  good: 'border-moss/30 bg-mint/60 text-ink hover:border-moss/55 hover:bg-mint',
+  easy: 'border-sea/30 bg-white text-ink hover:border-sea/55 hover:bg-sea/10',
 };
 
 const ratingIcons = {
@@ -37,8 +36,14 @@ function MarkdownText({ text, className = '' }) {
   );
 }
 
-export default function SrsCard({ card, progress, onRate }) {
-  const [revealed, setRevealed] = useState(false);
+export default function SrsCard({
+  card,
+  progress,
+  revealed,
+  onReveal,
+  onRate,
+  sessionLabel,
+}) {
   const safeCard = {
     id: card?.id || 'missing-card-id',
     category: card?.category || 'Categoria mancante',
@@ -51,60 +56,61 @@ export default function SrsCard({ card, progress, onRate }) {
     example2: card?.example2 || 'Example missing.',
     note: card?.note || 'Nota mancante.',
   };
-
-  useEffect(() => {
-    setRevealed(false);
-  }, [safeCard.id]);
-
   const dueLabel = progress?.dueDate ? formatDueLabel(progress.dueDate) : 'nuova';
 
   return (
-    <article className="overflow-hidden rounded-lg border border-ink/10 bg-white p-5 shadow-soft sm:p-6">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="max-w-full break-words rounded-full bg-mint px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-moss">
-          {safeCard.category}
-        </span>
-        <span className="rounded-full border border-ink/10 bg-paper px-3 py-1 text-xs font-black text-ink/70">
-          {safeCard.level}
-        </span>
-        <span className="rounded-full border border-ink/10 bg-white px-3 py-1 text-xs font-black text-ink/60">
-          {safeCard.type}
-        </span>
-        <span className="rounded-full bg-ink px-3 py-1 text-xs font-black text-white sm:ml-auto">
-          {dueLabel}
-        </span>
+    <article className="mx-auto w-full max-w-3xl overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft">
+      <div className="border-b border-ink/10 bg-white px-5 py-4 sm:px-6">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="max-w-full break-words rounded-full bg-mint px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-moss">
+            {safeCard.category}
+          </span>
+          <span className="rounded-full border border-ink/10 bg-paper px-3 py-1 text-xs font-black text-ink/70">
+            {safeCard.level}
+          </span>
+          <span className="rounded-full border border-ink/10 bg-white px-3 py-1 text-xs font-black text-ink/55">
+            {safeCard.type}
+          </span>
+          <span className="rounded-full bg-ink px-3 py-1 text-xs font-black text-white sm:ml-auto">
+            {dueLabel}
+          </span>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs font-black uppercase tracking-[0.08em] text-ink/40">
+          <span>{sessionLabel}</span>
+          <span>Shortcuts: Space, 1, 2, 3, 4</span>
+        </div>
       </div>
 
-      <div className="mt-8 min-h-[11rem]">
-        <p className="text-sm font-black uppercase tracking-[0.08em] text-ink/50">Front side</p>
-        <h2 className="mt-3 break-words text-3xl font-black leading-tight text-ink sm:text-4xl">
-          {safeCard.expression}
-        </h2>
-        <p className="mt-4 break-words rounded-lg bg-paper p-4 text-sm font-semibold leading-6 text-ink/70">
-          {safeCard.pronunciation}
-        </p>
+      <div className="px-5 py-7 sm:px-7 sm:py-8">
+        <div className="text-center">
+          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/45">Expression</p>
+          <h2 className="mx-auto mt-3 max-w-2xl break-words text-3xl font-black leading-tight text-ink sm:text-4xl">
+            {safeCard.expression}
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl break-words rounded-lg bg-paper px-4 py-3 text-sm font-semibold leading-6 text-ink/70">
+            {safeCard.pronunciation}
+          </p>
 
-        {!revealed ? (
-          <button
-            type="button"
-            onClick={() => setRevealed(true)}
-            className="focus-ring mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:-translate-y-0.5 hover:bg-[#096d58]"
-          >
-            <Eye aria-hidden="true" className="h-4 w-4" />
-            Mostra risposta
-          </button>
-        ) : null}
-      </div>
+          {!revealed ? (
+            <button
+              type="button"
+              onClick={onReveal}
+              className="focus-ring mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-moss px-6 py-3 text-sm font-extrabold text-white shadow-lift transition hover:-translate-y-0.5 hover:bg-[#096d58]"
+            >
+              <Eye aria-hidden="true" className="h-4 w-4" />
+              Show answer
+            </button>
+          ) : null}
+        </div>
 
-      {revealed ? (
-        <div className="mt-6 border-t border-ink/10 pt-6">
-          <div className="grid gap-4 lg:grid-cols-[0.75fr_1.25fr]">
-            <div className="rounded-lg bg-mint/60 p-4">
+        {revealed ? (
+          <div className="mt-7 border-t border-ink/10 pt-6">
+            <div className="rounded-lg bg-mint/60 p-4 text-center">
               <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Italiano</p>
               <p className="mt-2 break-words text-lg font-black leading-7 text-ink">{safeCard.italian}</p>
             </div>
 
-            <div className="grid gap-3">
+            <div className="mt-4 grid gap-3">
               <MarkdownText
                 text={safeCard.example1}
                 className="rounded-lg border border-ink/10 bg-white p-4 text-sm font-semibold leading-6 text-ink/75"
@@ -114,35 +120,36 @@ export default function SrsCard({ card, progress, onRate }) {
                 className="rounded-lg border border-ink/10 bg-white p-4 text-sm font-semibold leading-6 text-ink/75"
               />
             </div>
-          </div>
 
-          <div className="mt-4 flex items-start gap-3 rounded-lg bg-paper p-4">
-            <BookOpen aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 text-moss" />
-            <p className="break-words text-sm font-semibold leading-6 text-ink/70">{safeCard.note}</p>
-          </div>
+            <div className="mt-4 flex items-start gap-3 rounded-lg bg-paper p-4">
+              <BookOpen aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 text-moss" />
+              <p className="break-words text-sm font-semibold leading-6 text-ink/70">{safeCard.note}</p>
+            </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-4">
-            {reviewRatings.map((rating) => {
-              const Icon = ratingIcons[rating.value];
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {reviewRatings.map((rating, index) => {
+                const Icon = ratingIcons[rating.value];
 
-              return (
-                <button
-                  key={rating.value}
-                  type="button"
-                  onClick={() => onRate(rating.value)}
-                  className={`focus-ring rounded-lg border px-4 py-3 text-left transition hover:-translate-y-0.5 ${ratingStyles[rating.value]}`}
-                >
-                  <span className="flex items-center gap-2 text-base font-black">
-                    <Icon aria-hidden="true" className="h-4 w-4" />
-                    {rating.label}
-                  </span>
-                  <span className="mt-1 block text-xs font-bold text-ink/55">{rating.helper}</span>
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={rating.value}
+                    type="button"
+                    onClick={() => onRate(rating.value)}
+                    className={`focus-ring min-h-16 rounded-lg border px-4 py-3 text-left transition hover:-translate-y-0.5 ${ratingStyles[rating.value]}`}
+                  >
+                    <span className="flex items-center gap-2 text-base font-black">
+                      <Icon aria-hidden="true" className="h-4 w-4" />
+                      {rating.label}
+                      <span className="ml-auto text-xs text-ink/45">{index + 1}</span>
+                    </span>
+                    <span className="mt-1 block text-xs font-bold text-ink/55">{rating.helper}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </article>
   );
 }

@@ -5,22 +5,22 @@ export const reviewRatings = [
   {
     value: 'again',
     label: 'Again',
-    helper: 'oggi',
+    helper: 'forgot',
   },
   {
     value: 'hard',
     label: 'Hard',
-    helper: 'domani',
+    helper: 'difficult',
   },
   {
     value: 'good',
     label: 'Good',
-    helper: 'più avanti',
+    helper: 'remembered',
   },
   {
     value: 'easy',
     label: 'Easy',
-    helper: 'molto più avanti',
+    helper: 'automatic',
   },
 ];
 
@@ -70,10 +70,18 @@ function daysBetween(startISO, endISO) {
   return Math.round((dateFromISO(endISO).getTime() - dateFromISO(startISO).getTime()) / dayMs);
 }
 
+function matchesSelection(value, selection) {
+  if (Array.isArray(selection)) {
+    return selection.length === 0 || selection.includes('all') || selection.includes(value);
+  }
+
+  return !selection || selection === 'all' || selection === value;
+}
+
 function filterCards(cards, selectedCategory = 'all', level = 'all') {
   return cards.filter((card) => {
-    const categoryMatches = selectedCategory === 'all' || card.category === selectedCategory;
-    const levelMatches = level === 'all' || card.level === level;
+    const categoryMatches = matchesSelection(card.category, selectedCategory);
+    const levelMatches = matchesSelection(card.level, level);
     return categoryMatches && levelMatches;
   });
 }
@@ -179,7 +187,7 @@ export function isCardDue(progressEntry, today = getTodayISO()) {
 }
 
 export function getDueCards(cards, progress, selectedCategory = 'all', options = {}) {
-  const { today = getTodayISO(), level = 'all' } = options;
+  const { today = getTodayISO(), level = options.levels || 'all' } = options;
 
   return filterCards(cards, selectedCategory, level)
     .filter((card) => isCardDue(getCardState(progress, card.id), today))
@@ -193,7 +201,7 @@ export function getDueCards(cards, progress, selectedCategory = 'all', options =
 export function getNewCards(cards, progress, selectedCategory = 'all', options = {}) {
   const {
     today = getTodayISO(),
-    level = 'all',
+    level = options.levels || 'all',
     newLimit = 10,
   } = options;
   const reviewedToday = countNewCardsReviewedToday(progress, today);
@@ -207,7 +215,7 @@ export function getNewCards(cards, progress, selectedCategory = 'all', options =
 export function buildReviewQueue(cards, progress, selectedCategory = 'all', options = {}) {
   const {
     today = getTodayISO(),
-    level = 'all',
+    level = options.levels || 'all',
     totalLimit = 30,
     newLimit = 10,
   } = options;
@@ -229,7 +237,7 @@ export function buildReviewQueue(cards, progress, selectedCategory = 'all', opti
 export function getNextDueCard(cards, progress, options = {}) {
   const {
     category = 'all',
-    level = 'all',
+    level = options.levels || 'all',
     today = getTodayISO(),
   } = options;
 
@@ -369,6 +377,19 @@ export function reviewCard(cardId, rating, progress, today = getTodayISO()) {
       firstReviewed: previous.firstReviewed || today,
     },
   };
+}
+
+export function reinsertCardAfterDelay(remainingQueue, cardId, delay = 3) {
+  const queue = Array.isArray(remainingQueue) ? remainingQueue : [];
+
+  if (queue.length === 0) return [cardId];
+
+  const insertAt = Math.min(Math.max(1, delay), queue.length);
+  return [
+    ...queue.slice(0, insertAt),
+    cardId,
+    ...queue.slice(insertAt),
+  ];
 }
 
 export function formatDueLabel(dueDate, now = new Date()) {

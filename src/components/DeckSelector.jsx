@@ -1,64 +1,84 @@
 import React from 'react';
-import { Filter, Layers3 } from 'lucide-react';
+import { SlidersHorizontal, X } from 'lucide-react';
 
-const levels = ['all', 'A2', 'B1', 'B2'];
+const levels = ['A2', 'B1', 'B2'];
 
-function optionClass(active) {
-  return `focus-ring max-w-full break-words rounded-full px-4 py-2 text-left text-sm font-black transition ${
-    active ? 'bg-moss text-white shadow-lift' : 'border border-ink/10 bg-white text-ink/70 hover:border-moss/25 hover:bg-mint/40'
-  }`;
+function PillButton({ active, children, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`focus-ring max-w-full break-words rounded-full border px-3 py-2 text-left text-xs font-black transition sm:text-sm ${
+        active
+          ? 'border-moss bg-moss text-white shadow-lift'
+          : 'border-ink/10 bg-white/85 text-ink/65 hover:border-moss/25 hover:bg-mint/45 hover:text-ink'
+      }`}
+    >
+      {children}
+    </button>
+  );
 }
 
 export default function DeckSelector({
   categories,
-  selectedCategory,
-  onCategoryChange,
-  selectedLevel,
-  onLevelChange,
-  statsByCategory,
+  selectedCategories,
+  onToggleCategory,
+  selectedLevels,
+  onToggleLevel,
+  onClear,
 }) {
+  const hasFilters = selectedCategories.length > 0 || selectedLevels.length > 0;
+
   return (
-    <div className="rounded-lg border border-ink/10 bg-white p-4 shadow-sm">
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-mint text-moss">
-          <Layers3 aria-hidden="true" className="h-5 w-5" />
-        </span>
+    <section className="rounded-lg border border-ink/10 bg-white/80 p-4 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-mint text-moss">
+            <SlidersHorizontal aria-hidden="true" className="h-4 w-4" />
+          </span>
+          <div>
+            <h2 className="text-sm font-black text-ink">Filters</h2>
+            <p className="text-xs font-semibold text-ink/55">Nessuna selezione = tutto il deck.</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onClear}
+          disabled={!hasFilters}
+          className="focus-ring inline-flex min-h-9 items-center justify-center gap-2 rounded-full border border-ink/10 bg-white px-3 py-2 text-xs font-black text-ink/60 transition hover:border-coral/25 hover:bg-blush disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <X aria-hidden="true" className="h-3.5 w-3.5" />
+          Clear filters
+        </button>
+      </div>
+
+      <div className="mt-4 grid gap-3">
         <div>
-          <h2 className="text-lg font-black text-ink">Deck</h2>
-          <p className="text-sm font-semibold text-ink/60">Scegli categoria e livello.</p>
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/45">Categories</p>
+          <div className="mt-2 flex flex-wrap gap-2" aria-label="Filtra per categoria">
+            {categories.map((category) => (
+              <PillButton
+                key={category}
+                active={selectedCategories.includes(category)}
+                onClick={() => onToggleCategory(category)}
+              >
+                {category}
+              </PillButton>
+            ))}
+          </div>
+        </div>
+
+        <div className="border-t border-ink/10 pt-3">
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/45">Levels</p>
+          <div className="mt-2 flex flex-wrap gap-2" aria-label="Filtra per livello">
+            {levels.map((level) => (
+              <PillButton key={level} active={selectedLevels.includes(level)} onClick={() => onToggleLevel(level)}>
+                {level}
+              </PillButton>
+            ))}
+          </div>
         </div>
       </div>
-
-      <div className="mt-5 flex flex-wrap gap-2" aria-label="Filtra per categoria">
-        <button type="button" onClick={() => onCategoryChange('all')} className={optionClass(selectedCategory === 'all')}>
-          Tutte
-        </button>
-        {categories.map((category) => {
-          const stats = statsByCategory[category] || { due: 0, new: 0 };
-          const badge = stats.due > 0 ? stats.due : stats.new;
-
-          return (
-            <button
-              key={category}
-              type="button"
-              onClick={() => onCategoryChange(category)}
-              className={optionClass(selectedCategory === category)}
-            >
-              {category}
-              {badge > 0 ? <span className="ml-2 text-xs opacity-75">{badge}</span> : null}
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-ink/10 pt-4" aria-label="Filtra per livello">
-        <Filter aria-hidden="true" className="h-4 w-4 text-moss" />
-        {levels.map((level) => (
-          <button key={level} type="button" onClick={() => onLevelChange(level)} className={optionClass(selectedLevel === level)}>
-            {level === 'all' ? 'Tutti i livelli' : level}
-          </button>
-        ))}
-      </div>
-    </div>
+    </section>
   );
 }
