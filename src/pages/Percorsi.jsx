@@ -9,6 +9,7 @@ import { percorsoOffers } from '../data/content';
 
 export default function Percorsi() {
   const [selected, setSelected] = useState(0);
+  const selectedOffer = percorsoOffers[selected];
 
   return (
     <>
@@ -35,7 +36,7 @@ export default function Percorsi() {
             Questi percorsi non sono obbligatori. La simulazione da {primaryOffer.price} serve proprio a capire se ha senso continuare e
             con quale direzione.
           </div>
-          <div className="mt-8 grid gap-5 lg:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {percorsoOffers.map((offer, index) => {
               const Icon = offer.icon;
               const active = selected === index;
@@ -43,11 +44,12 @@ export default function Percorsi() {
                 <button
                   key={offer.title}
                   type="button"
+                  aria-pressed={active}
                   onClick={() => setSelected(index)}
                   className={`focus-ring flex h-full rounded-lg border p-5 text-left transition hover:-translate-y-1 ${
                     active
                       ? 'border-moss/30 bg-white shadow-soft'
-                      : 'border-ink/10 bg-white/100 hover:border-moss/25 hover:bg-white'
+                      : 'border-ink/10 bg-white hover:border-moss/25 hover:bg-white'
                   }`}
                 >
                   <div className="flex w-full flex-col">
@@ -81,6 +83,26 @@ export default function Percorsi() {
               );
             })}
           </div>
+          {selectedOffer ? (
+            <div className="mt-8 overflow-hidden rounded-lg border border-moss/20 bg-white shadow-soft">
+              <div className="h-1 scanline" />
+              <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Opzione selezionata</p>
+                  <h2 className="mt-3 text-3xl font-black leading-tight text-ink">{selectedOffer.selectedTitle}</h2>
+                  <p className="mt-4 text-base font-semibold leading-7 text-ink/70">{selectedOffer.selectedCopy}</p>
+                </div>
+                <div className="grid gap-3">
+                  {selectedOffer.selectedBullets?.map((item) => (
+                    <div key={item} className="flex items-start gap-3 rounded-lg border border-ink/10 bg-paper p-4">
+                      <Check aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-moss" />
+                      <p className="text-sm font-bold leading-6 text-ink/75">{item}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : null}
           <div className="mt-10 rounded-lg bg-ink p-6 text-white sm:p-8">
             <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>

@@ -12,6 +12,11 @@ export default function AboutSection({ showReviews = false, className = '' }) {
           Persona reale, metodo pratico
         </span>
         <h2 className="section-title">{aboutMe.title}</h2>
+        {aboutMe.lead ? (
+          <p className="mt-5 rounded-lg border border-moss/15 bg-white p-5 text-lg font-extrabold leading-8 text-ink shadow-sm">
+            {aboutMe.lead}
+          </p>
+        ) : null}
         <div className="mt-5 grid gap-4 text-base leading-7 text-ink/70">
           {aboutMe.paragraphs.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
@@ -32,13 +37,13 @@ export default function AboutSection({ showReviews = false, className = '' }) {
       </div>
 
       <div className="grid gap-4">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-[0.9fr_1.1fr]">
           <figure className="overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft">
-            <div className="aspect-[9/16] overflow-hidden bg-paper">
+            <div className="aspect-[4/5] max-h-[560px] overflow-hidden bg-paper">
               <img
                 src={aboutMe.media.photo}
                 alt="Rhema, insegnante di inglese online"
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover object-[center_18%]"
                 loading="lazy"
               />
             </div>
@@ -46,19 +51,22 @@ export default function AboutSection({ showReviews = false, className = '' }) {
               Foto Rhema
             </figcaption>
           </figure>
-          <figure className="overflow-hidden rounded-lg border border-moss/20 bg-white shadow-sm">
-            <div className="aspect-[9/16] overflow-hidden bg-white">
-              <img
-                src={aboutMe.media.preplyProfile}
-                alt="Screenshot del profilo Preply di Rhema"
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
+          <div className="rounded-lg border border-moss/20 bg-white p-5 shadow-soft sm:p-6">
+            <p className="text-xs font-black uppercase tracking-[0.12em] text-moss">Profilo tutor</p>
+            <h3 className="mt-3 text-2xl font-black leading-tight text-ink">Esperienza reale, metodo pratico.</h3>
+            <p className="mt-3 text-sm font-semibold leading-6 text-ink/70">
+              Il profilo Preply serve come prova di lavoro reale con studenti online. Sul sito, però, il focus resta su
+              ciò che conta per Sblocco Inglese: speaking, correzione mirata e situazioni professionali.
+            </p>
+            <div className="mt-5 grid gap-3">
+              {['Tutor online', 'Studenti italiani e internazionali', 'Approccio strutturato'].map((item) => (
+                <div key={item} className="flex items-start gap-3 rounded-lg bg-mint/50 p-3">
+                  <CheckCircle2 aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-moss" />
+                  <span className="text-sm font-black leading-5 text-ink/75">{item}</span>
+                </div>
+              ))}
             </div>
-            <figcaption className="border-t border-ink/10 px-4 py-3 text-xs font-black uppercase tracking-[0.08em] text-moss">
-              Profilo Preply
-            </figcaption>
-          </figure>
+          </div>
         </div>
         {showReviews ? <ReviewCarousel /> : null}
       </div>

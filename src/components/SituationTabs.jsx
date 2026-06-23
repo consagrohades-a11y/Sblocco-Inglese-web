@@ -28,6 +28,15 @@ export default function SituationTabs() {
 
       <div className="mt-6 rounded-lg bg-paper p-5">
         <h3 className="text-xl font-black text-ink">{current.title}</h3>
+        {current.context ? (
+          <p className="mt-3 text-sm font-semibold leading-6 text-ink/70">{current.context}</p>
+        ) : null}
+        {current.detail ? (
+          <div className="mt-4 rounded-lg border border-moss/15 bg-white p-4">
+            <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Quando scegli questa situazione</p>
+            <p className="mt-2 text-sm font-bold leading-6 text-ink/75">{current.detail}</p>
+          </div>
+        ) : null}
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {current.items.map((item) => (
             <div key={item} className="flex items-start gap-3 rounded-lg bg-white px-4 py-3">

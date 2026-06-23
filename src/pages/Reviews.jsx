@@ -21,16 +21,20 @@ export default function Reviews() {
           Prova e fiducia
         </span>
         <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight text-ink sm:text-5xl">
-          Recensioni ed esperienza
+          Recensioni, esperienza e metodo Rhema
         </h1>
         <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70">
-          Le recensioni qui sotto arrivano dall’esperienza di Rhema come insegnante di inglese online. Rhema usa questa
-          esperienza per aiutare studenti italiani a lavorare su speaking, colloqui e situazioni pratiche.
+          Qui trovi il lato umano e la prova pratica del progetto: chi è Rhema, come lavora con gli studenti e perché il
+          metodo Sblocco Inglese non nasce da conversazione casuale.
         </p>
       </section>
 
-      <SectionReveal className="bg-white/70 py-16">
+      <SectionReveal id="rhema" className="scroll-mt-24 bg-white/70 py-16">
         <div className="section-shell">
+          <div className="mb-8">
+            <span className="eyebrow">Dietro il metodo</span>
+            <h2 className="section-title">Perché impari con Rhema, non con un corso generico</h2>
+          </div>
           <AboutSection />
         </div>
       </SectionReveal>

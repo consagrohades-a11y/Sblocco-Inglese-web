@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { CalendarClock, CheckCircle2, RotateCcw, Sparkles } from 'lucide-react';
+import { CalendarClock, CheckCircle2, Moon, RotateCcw, Sparkles, Sun } from 'lucide-react';
 import DeckSelector from './DeckSelector';
 import ReviewStats from './ReviewStats';
 import SEO from './SEO';
@@ -69,7 +69,7 @@ function CompletionStats({ ratings, reviewed }) {
     <div className="mt-6 grid gap-3 sm:grid-cols-5">
       {items.map(([label, value]) => (
         <div key={label} className="rounded-lg border border-ink/10 bg-paper px-3 py-3">
-          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/45">{label}</p>
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/50">{label}</p>
           <p className="mt-1 text-2xl font-black text-ink">{value}</p>
         </div>
       ))}
@@ -100,6 +100,12 @@ export default function SrsTrainer({
   const [sessionRatings, setSessionRatings] = useState(emptyRatings);
   const [answerVisible, setAnswerVisible] = useState(false);
   const [sessionStep, setSessionStep] = useState(0);
+  const themeStorageKey = `${storageKey || 'srs-trainer'}:theme`;
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === 'undefined') return 'dark';
+    return window.localStorage.getItem(themeStorageKey) || 'dark';
+  });
+  const isDark = theme === 'dark';
 
   const categories = useMemo(() => Array.from(new Set(trainerCards.map((card) => card.category))), [trainerCards]);
   const categoryCounts = useMemo(() => getCategoryCardCounts(trainerCards), [trainerCards]);
@@ -176,6 +182,10 @@ export default function SrsTrainer({
     saveProgress(progress, storageKey);
     progressRef.current = progress;
   }, [progress, storageKey]);
+
+  useEffect(() => {
+    window.localStorage.setItem(themeStorageKey, theme);
+  }, [theme, themeStorageKey]);
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 60 * 1000);
@@ -295,28 +305,52 @@ export default function SrsTrainer({
       />
 
       <TrainerLayout>
-        <div className="mx-auto max-w-5xl">
+        <div
+          className={`mx-auto max-w-5xl overflow-hidden rounded-lg border shadow-soft transition ${
+            isDark ? 'border-white/10 bg-ink p-4 text-white sm:p-6' : 'border-ink/10 bg-white/70 p-0 text-ink'
+          }`}
+        >
+          {isDark ? <div className="-mx-4 -mt-4 mb-5 h-1 scanline sm:-mx-6 sm:-mt-6" /> : null}
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <span className="eyebrow">
+              <span className={`eyebrow ${isDark ? 'border-white/15 bg-white/10 !text-white' : ''}`}>
                 <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
                 Available trainer
               </span>
-              <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight text-ink sm:text-5xl">
+              <h1 className={`mt-5 max-w-4xl text-4xl font-black leading-tight sm:text-5xl ${isDark ? 'text-white' : 'text-ink'}`}>
                 {title}
               </h1>
-              <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70">
+              <p className={`mt-5 max-w-3xl text-lg leading-8 ${isDark ? 'text-white/70' : 'text-ink/70'}`}>
                 {subtitle}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={handleReset}
-              className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-extrabold text-ink transition hover:border-coral/30 hover:bg-blush lg:justify-self-end"
-            >
-              <RotateCcw aria-hidden="true" className="h-4 w-4" />
-              Azzera progressi
-            </button>
+            <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+              <button
+                type="button"
+                onClick={() => setTheme((value) => (value === 'dark' ? 'light' : 'dark'))}
+                aria-label={isDark ? 'Passa alla modalita chiara' : 'Passa alla modalita scura'}
+                className={`focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-extrabold transition ${
+                  isDark
+                    ? 'border-white/15 bg-white/[0.08] text-white hover:bg-white hover:text-ink'
+                    : 'border-moss/20 bg-white text-ink hover:bg-mint/50'
+                }`}
+              >
+                {isDark ? <Sun aria-hidden="true" className="h-4 w-4" /> : <Moon aria-hidden="true" className="h-4 w-4" />}
+                {isDark ? 'Light' : 'Dark'}
+              </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className={`focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-extrabold transition lg:justify-self-end ${
+                  isDark
+                    ? 'border-white/15 bg-white/[0.08] text-white hover:border-coral/40 hover:bg-blush hover:text-ink'
+                    : 'border-ink/15 bg-white text-ink hover:border-coral/30 hover:bg-blush'
+                }`}
+              >
+                <RotateCcw aria-hidden="true" className="h-4 w-4" />
+                Azzera progressi
+              </button>
+            </div>
           </div>
 
           <div className="mt-7">

@@ -7,7 +7,7 @@ export default function TrustBadges({ compact = false }) {
       {trustBadges.map(({ label, icon: Icon }) => (
         <div
           key={label}
-          className="flex min-h-16 items-center gap-3 rounded-lg border border-ink/10 bg-white/100 px-3 py-3 shadow-sm"
+          className="flex min-h-16 items-center gap-3 rounded-lg border border-ink/10 bg-white px-3 py-3 shadow-sm"
         >
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-mint text-moss">
             <Icon aria-hidden="true" className="h-4 w-4" />

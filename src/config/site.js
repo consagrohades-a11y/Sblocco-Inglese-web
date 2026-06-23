@@ -133,25 +133,26 @@ export const siteConfig = {
   // Edit the homepage/Reviews trust section here.
   aboutMe: {
     title: 'Migliora con Rhema',
+    lead:
+      'Rhema è la persona dietro Sblocco Inglese: un’insegnante bilingue che lavora sul punto esatto in cui molti studenti italiani si bloccano, cioè quando devono trasformare ciò che capiscono in una risposta chiara, naturale e credibile.',
     paragraphs: [
-      'Rhema è un’insegnante di inglese online bilingue italiano/inglese. Lavora con studenti italiani e internazionali, anche su Preply, e si concentra soprattutto su speaking, inglese pratico, colloqui e situazioni professionali.',
-      'Il suo punto di forza è capire sia come ragiona uno studente italiano quando prova a parlare inglese, sia cosa rende una risposta più naturale, chiara e credibile in un contesto anglofono.',
-      'Il suo approccio non si basa su conversazione generica, ma su simulazioni pratiche, correzioni mirate e frasi che lo studente può davvero riutilizzare.',
-      'Molti studenti non hanno solo un problema di grammatica: spesso il blocco nasce quando devono parlare sotto pressione, trovare le parole giuste o rispondere senza tradurre tutto dall’italiano.',
-      'Con Sblocco Inglese, Rhema aiuta gli studenti a capire cosa li blocca nello speaking e a rendere il loro inglese più chiaro, naturale e utilizzabile.',
+      'Il suo lavoro non parte dall’idea che “devi parlare di più” e basta. Parte da una domanda più utile: cosa succede nella tua testa quando sai cosa vorresti dire, ma in inglese la frase arriva lenta, rigida o troppo tradotta dall’italiano?',
+      'Nelle sessioni Rhema combina simulazioni, correzione immediata e frasi alternative che puoi davvero riutilizzare. Questo rende il lavoro pratico: meno teoria generica, più risposte migliori per colloqui, call, clienti e conversazioni professionali.',
+      'La sua forza è tenere insieme due prospettive: capisce gli automatismi tipici di chi pensa in italiano, ma sa anche cosa rende una risposta più naturale e credibile in inglese.',
+      'Sblocco Inglese nasce da questo: aiutarti a parlare con più controllo nei momenti in cui la pressione sale, senza promettere miracoli e senza trasformare ogni errore in una lezione di grammatica infinita.',
     ],
     disclaimer:
-      'Questo non significa promettere risultati lavorativi: significa lavorare in modo concreto su speaking, chiarezza e preparazione.',
+      'L’obiettivo non è promettere un risultato lavorativo. È costruire un inglese più chiaro, più pronto e più tuo quando devi usarlo davvero.',
     badges: [
       'Bilingue italiano/inglese',
-      'Preply teacher',
-      'Speaking-focused',
-      'Work English',
-      'Interview preparation',
+      'Tutor su Preply',
+      'CELTA certified tutor',
+      'Speaking sotto pressione',
+      'Colloqui e lavoro',
       'Feedback scritto',
     ],
     media: {
-      photo: '/assets/proof/rhema-photo-portrait.jpg',
+      photo: '/assets/proof/rhema-photo.jpg',
       preplyProfile: '/assets/proof/preply-profile-rhema-portrait.png',
     },
   },

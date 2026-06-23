@@ -202,7 +202,7 @@ export default function BookingForm() {
           <h2 className="mt-3 text-2xl font-black leading-tight text-ink sm:text-3xl">
             Compila il quiz
           </h2>
-          <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-ink/65">
+          <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-ink/70">
             Le risposte vengono inviate e ti mostrano subito se ha senso procedere con slot e pagamento.
           </p>
         </div>
@@ -274,7 +274,7 @@ export default function BookingForm() {
           onOtherChange={() => {}}
         />
 
-        <div className="rounded-lg border border-moss/15 bg-mint/45 p-4">
+        <div className="rounded-lg border border-moss/15 bg-mint/50 p-4">
           <div className="flex items-start gap-3 text-sm font-bold leading-6 text-ink/75">
             <ShieldCheck aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-moss" />
             <p>

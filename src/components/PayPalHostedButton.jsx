@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AlertCircle, CreditCard } from 'lucide-react';
+import { AlertCircle, CheckCircle2, CreditCard } from 'lucide-react';
 import { paypalPayment } from '../config/site';
 
 export default function PayPalHostedButton() {
@@ -105,7 +105,7 @@ export default function PayPalHostedButton() {
         <CreditCard aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-moss" />
         <div>
           <h4 className="text-base font-black text-ink">Pagamento sicuro con PayPal</h4>
-          <p className="mt-1 text-sm font-semibold leading-6 text-ink/65">
+          <p className="mt-1 text-sm font-semibold leading-6 text-ink/70">
             Completa il pagamento per confermare lo slot scelto.
           </p>
         </div>
@@ -127,6 +127,19 @@ export default function PayPalHostedButton() {
       ) : null}
 
       <div id={paypalPayment.containerId} />
+
+      <div className="mt-4 rounded-lg border border-moss/20 bg-mint/50 p-4">
+        <div className="flex items-start gap-3">
+          <CheckCircle2 aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-moss" />
+          <div>
+            <h5 className="text-sm font-black text-ink">Dopo il pagamento</h5>
+            <p className="mt-1 text-sm font-semibold leading-6 text-ink/70">
+              PayPal mostra la conferma del pagamento. Torna poi su questa pagina o alla tua email: lo slot scelto viene
+              considerato confermato quando il pagamento risulta completato.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

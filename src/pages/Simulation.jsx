@@ -30,32 +30,34 @@ export default function Simulation() {
         description="30 minuti online per capire cosa ti blocca quando parli inglese e ricevere feedback scritto con frasi migliorate da riutilizzare."
       />
 
-      <section className="section-shell grid gap-10 pb-16 pt-12 lg:grid-cols-[1fr_0.82fr] lg:items-center lg:pt-16">
-        <div>
-          <span className="eyebrow">Servizio principale - {primaryOffer.price}</span>
-          <h1 className="mt-5 max-w-4xl text-4xl font-black leading-[1.05] text-ink sm:text-5xl">
-            {primaryOffer.fullTitle}
-          </h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70">
-            30 minuti online per capire cosa ti blocca quando parli inglese e ricevere feedback scritto con frasi
-            migliorate da riutilizzare. È pensata per quando capisci abbastanza, ma sotto pressione fai fatica a
-            rispondere come vorresti.
-          </p>
-          <p className="mt-5 max-w-3xl rounded-lg border border-moss/20 bg-mint/70 p-4 text-sm font-semibold leading-6 text-ink/70">
-            Questa simulazione è pensata per persone che hanno già una base di inglese, ma si bloccano quando devono
-            parlare in situazioni reali. Non è una lezione generica e non è pensata per principianti assoluti.
-          </p>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <CTAButton>{ctaLabels.primary}</CTAButton>
-            <CTAButton href="#dettagli-simulazione" variant="secondary">
-              Scopri i dettagli
-            </CTAButton>
+      <section className="relative overflow-hidden bg-ink text-white">
+        <div className="h-1 scanline" />
+        <div className="section-shell grid gap-10 pb-16 pt-12 lg:grid-cols-[1fr_0.82fr] lg:items-center lg:pt-16">
+          <div>
+            <span className="eyebrow border-white/15 bg-white/10 !text-white">Diagnosi iniziale - {primaryOffer.price}</span>
+            <h1 className="mt-5 max-w-4xl text-4xl font-black leading-[1.05] text-white sm:text-5xl">
+              La simulazione è il modo più veloce per vedere dove si blocca il tuo inglese.
+            </h1>
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-white/70">
+              Non è il prodotto finale: è il punto di ingresso intelligente. In 30 minuti vediamo cosa succede quando
+              devi rispondere davvero, poi trasformiamo il blocco in correzioni, frasi migliori e una direzione di corso.
+            </p>
+            <p className="mt-5 max-w-3xl rounded-lg border border-white/10 bg-white/[0.08] p-4 text-sm font-semibold leading-6 text-white/70">
+              È pensata per chi ha già una base di inglese ma perde lucidità sotto pressione. Non è conversazione
+              generica, non è una promessa magica, e non è ideale per principianti assoluti.
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <CTAButton variant="contrast">{ctaLabels.primary}</CTAButton>
+              <CTAButton href="#dettagli-simulazione" variant="secondary">
+                Scopri i dettagli
+              </CTAButton>
+            </div>
+            <div className="mt-8 rounded-lg bg-white/90 p-3">
+              <TrustBadges />
+            </div>
           </div>
-          <div className="mt-8">
-            <TrustBadges />
-          </div>
+          <PricingCard compact />
         </div>
-        <PricingCard compact />
       </section>
 
       <SectionReveal id="dettagli-simulazione" className="bg-white/70 py-16">

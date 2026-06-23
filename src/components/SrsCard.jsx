@@ -93,7 +93,7 @@ export default function SrsCard({
 
       <div className="px-5 py-7 sm:px-7 sm:py-8">
         <div className="text-center">
-          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/45">{displayTargetLabel}</p>
+          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/50">{displayTargetLabel}</p>
           <h2 className="mx-auto mt-3 max-w-2xl break-words text-3xl font-black leading-tight text-ink sm:text-4xl">
             {safeCard.expression}
           </h2>
@@ -122,7 +122,7 @@ export default function SrsCard({
 
             {safeCard.collocations ? (
               <div className="mt-4 rounded-lg border border-ink/10 bg-paper p-4">
-                <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/45">Collocations</p>
+                <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/50">Collocations</p>
                 <p className="mt-2 break-words text-sm font-semibold leading-6 text-ink/75">
                   {safeCard.collocations}
                 </p>
@@ -159,7 +159,7 @@ export default function SrsCard({
                     <span className="flex items-center gap-2 text-base font-black">
                       <Icon aria-hidden="true" className="h-4 w-4" />
                       {rating.label}
-                      <span className="ml-auto text-xs text-ink/45">{index + 1}</span>
+                      <span className="ml-auto text-xs text-ink/50">{index + 1}</span>
                     </span>
                     <span className="mt-1 block text-xs font-bold text-ink/55">{rating.helper}</span>
                   </button>

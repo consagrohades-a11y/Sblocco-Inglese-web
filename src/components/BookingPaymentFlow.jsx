@@ -5,9 +5,37 @@ import PayPalHostedButton from './PayPalHostedButton';
 
 const icons = [FileText, CalendarCheck, CreditCard, CheckCircle2];
 
+const stepDetails = [
+  {
+    title: 'Il quiz rende la simulazione più precisa.',
+    text:
+      'Prima di parlare, raccogliamo livello, obiettivo e blocco principale. Così la sessione non parte con domande generiche: parte dal contesto che ti crea davvero pressione.',
+    note: 'Utile se non sai ancora quale corso o percorso avrebbe più senso.',
+  },
+  {
+    title: 'Lo slot trasforma l’intenzione in un appuntamento reale.',
+    text:
+      'Scegliere l’orario ti dà un punto concreto da preparare. Arrivi alla simulazione sapendo che lavoreremo su una situazione precisa, non su conversazione casuale.',
+    note: 'Lo slot viene confermato dopo il pagamento.',
+  },
+  {
+    title: 'Il pagamento conferma il posto senza complicare il sito.',
+    text:
+      'PayPal gestisce la parte di pagamento. Il sito resta leggero e non raccoglie dati di carta: tu confermi la sessione e puoi concentrarti sulla preparazione.',
+    note: 'Dopo il pagamento, la prenotazione è effettiva.',
+  },
+  {
+    title: 'La conferma apre il lavoro vero.',
+    text:
+      'A quel punto abbiamo contesto, orario e obiettivo. La sessione serve a vedere il tuo inglese in azione, correggere le frasi deboli e lasciarti materiale riutilizzabile.',
+    note: 'Il feedback scritto collega simulazione, corsi e trainer.',
+  },
+];
+
 export default function BookingPaymentFlow() {
   const [activeStep, setActiveStep] = useState(1);
   const ActiveIcon = icons[activeStep] || CalendarCheck;
+  const activeDetail = stepDetails[activeStep] || stepDetails[0];
 
   return (
     <div id="booking-flow" className="scroll-mt-28">
@@ -20,7 +48,7 @@ export default function BookingPaymentFlow() {
           <h2 className="mt-4 text-3xl font-black leading-tight text-ink sm:text-4xl">
             {bookingFlow.title}
           </h2>
-          <p className="mt-3 max-w-3xl text-base font-semibold leading-7 text-ink/68">
+          <p className="mt-3 max-w-3xl text-base font-semibold leading-7 text-ink/70">
             {bookingFlow.intro}
           </p>
         </div>
@@ -57,7 +85,7 @@ export default function BookingPaymentFlow() {
                   </span>
                   <span>
                     <span className="block text-base font-black text-ink">{step.title}</span>
-                    <span className="mt-1 block text-sm font-semibold leading-6 text-ink/65">{step.text}</span>
+                    <span className="mt-1 block text-sm font-semibold leading-6 text-ink/70">{step.text}</span>
                   </span>
                 </div>
               </button>
@@ -70,8 +98,14 @@ export default function BookingPaymentFlow() {
             <ActiveIcon aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-moss" />
             <div>
               <h3 className="text-lg font-black text-ink">{bookingFlow.steps[activeStep].title}</h3>
-              <p className="mt-1 text-sm font-semibold leading-6 text-ink/62">{bookingFlow.steps[activeStep].text}</p>
+              <p className="mt-1 text-sm font-semibold leading-6 text-ink/60">{bookingFlow.steps[activeStep].text}</p>
             </div>
+          </div>
+          <div className="mb-4 rounded-lg border border-moss/15 bg-mint/40 p-4">
+            <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Quando selezioni questo step</p>
+            <h4 className="mt-2 text-lg font-black leading-tight text-ink">{activeDetail.title}</h4>
+            <p className="mt-2 text-sm font-semibold leading-6 text-ink/70">{activeDetail.text}</p>
+            <p className="mt-3 text-xs font-black uppercase tracking-[0.08em] text-coral">{activeDetail.note}</p>
           </div>
 
           {activeStep === 0 ? (
@@ -142,7 +176,7 @@ export default function BookingPaymentFlow() {
                   correzioni e frasi migliorate da riutilizzare.
                 </p>
               </div>
-              <div className="flex items-start gap-3 rounded-lg bg-paper px-4 py-3 text-sm font-bold leading-6 text-ink/65">
+              <div className="flex items-start gap-3 rounded-lg bg-paper px-4 py-3 text-sm font-bold leading-6 text-ink/70">
                 <ShieldCheck aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-moss" />
                 <p>
                   Ricevi un riepilogo pratico con correzioni, frasi migliorate e prossimi step chiari.

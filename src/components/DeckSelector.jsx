@@ -11,7 +11,7 @@ function PillButton({ active, children, count, onClick }) {
       className={`focus-ring inline-flex max-w-full items-center gap-2 break-words rounded-full border px-3 py-2 text-left text-xs font-black transition sm:text-sm ${
         active
           ? 'border-moss bg-moss text-white shadow-lift'
-          : 'border-ink/10 bg-white/85 text-ink/65 hover:border-moss/25 hover:bg-mint/45 hover:text-ink'
+          : 'border-ink/10 bg-white/90 text-ink/70 hover:border-moss/25 hover:bg-mint/50 hover:text-ink'
       }`}
     >
       <span>{children}</span>
@@ -64,7 +64,7 @@ export default function DeckSelector({
 
       <div className="mt-4 grid gap-3">
         <div>
-          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/45">Categories</p>
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/50">Categories</p>
           <div className="mt-2 flex flex-wrap gap-2" aria-label="Filtra per categoria">
             {categories.map((category) => (
               <PillButton
@@ -80,7 +80,7 @@ export default function DeckSelector({
         </div>
 
         <div className="border-t border-ink/10 pt-3">
-          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/45">Levels</p>
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/50">Levels</p>
           <div className="mt-2 flex flex-wrap gap-2" aria-label="Filtra per livello">
             {levels.map((level) => (
               <PillButton key={level} active={selectedLevels.includes(level)} onClick={() => onToggleLevel(level)}>
