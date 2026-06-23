@@ -3,24 +3,34 @@ import { SlidersHorizontal, X } from 'lucide-react';
 
 const levels = ['A2', 'B1', 'B2'];
 
-function PillButton({ active, children, onClick }) {
+function PillButton({ active, children, count, onClick }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`focus-ring max-w-full break-words rounded-full border px-3 py-2 text-left text-xs font-black transition sm:text-sm ${
+      className={`focus-ring inline-flex max-w-full items-center gap-2 break-words rounded-full border px-3 py-2 text-left text-xs font-black transition sm:text-sm ${
         active
           ? 'border-moss bg-moss text-white shadow-lift'
           : 'border-ink/10 bg-white/85 text-ink/65 hover:border-moss/25 hover:bg-mint/45 hover:text-ink'
       }`}
     >
-      {children}
+      <span>{children}</span>
+      {typeof count === 'number' ? (
+        <span
+          className={`rounded-full px-2 py-0.5 text-[0.65rem] font-black leading-none ${
+            active ? 'bg-white/20 text-white' : 'bg-ink/5 text-ink/50'
+          }`}
+        >
+          {count}
+        </span>
+      ) : null}
     </button>
   );
 }
 
 export default function DeckSelector({
   categories,
+  categoryCounts = {},
   selectedCategories,
   onToggleCategory,
   selectedLevels,
@@ -60,6 +70,7 @@ export default function DeckSelector({
               <PillButton
                 key={category}
                 active={selectedCategories.includes(category)}
+                count={categoryCounts[category] || 0}
                 onClick={() => onToggleCategory(category)}
               >
                 {category}

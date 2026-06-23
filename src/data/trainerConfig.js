@@ -7,6 +7,7 @@ export const trainerConfig = [
     route: '/trainers/business-expression',
     status: 'available',
     cardType: 'expression',
+    storageKey: 'sblocco_srs_progress_v1',
     categories: [
       'Interview English',
       'Business English',
@@ -22,8 +23,9 @@ export const trainerConfig = [
     shortTitle: 'General',
     description: 'Build natural everyday English for opinions, reactions, travel and real conversations.',
     route: '/trainers/general-expression',
-    status: 'coming-soon',
+    status: 'available',
     cardType: 'expression',
+    storageKey: 'sblocco_general_expression_progress_v1',
     categories: [
       'Everyday Conversation',
       'Opinions & Preferences',
@@ -41,8 +43,9 @@ export const trainerConfig = [
     shortTitle: 'Words',
     description: 'Learn useful words, pronunciation, meanings, collocations and example sentences.',
     route: '/trainers/word-trainer',
-    status: 'coming-soon',
+    status: 'available',
     cardType: 'word',
+    storageKey: 'sblocco_word_trainer_progress_v1',
     categories: [
       'Work & Career Vocabulary',
       'Business & Money Vocabulary',

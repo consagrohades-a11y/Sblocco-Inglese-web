@@ -86,6 +86,16 @@ function filterCards(cards, selectedCategory = 'all', level = 'all') {
   });
 }
 
+export function getCategoryCardCounts(cards = []) {
+  return cards.reduce((counts, card) => {
+    if (!card?.category) return counts;
+    return {
+      ...counts,
+      [card.category]: (counts[card.category] || 0) + 1,
+    };
+  }, {});
+}
+
 function countNewCardsReviewedToday(progress, today) {
   return Object.values(progress || {}).filter((entry) => entry?.firstReviewed === today).length;
 }
@@ -142,20 +152,21 @@ export function cleanProgress(progress, cards = [], today = getTodayISO()) {
   );
 }
 
-export function loadProgress(cards = []) {
+export function loadProgress(cards = [], storageKey = SRS_STORAGE_KEY) {
   if (typeof window === 'undefined' || !window.localStorage) return {};
 
   try {
-    const stored = window.localStorage.getItem(SRS_STORAGE_KEY);
-    const legacyStored = stored ? null : window.localStorage.getItem(LEGACY_SRS_STORAGE_KEY);
+    const stored = window.localStorage.getItem(storageKey);
+    const legacyStored =
+      storageKey === SRS_STORAGE_KEY && !stored ? window.localStorage.getItem(LEGACY_SRS_STORAGE_KEY) : null;
     const raw = stored || legacyStored;
     if (!raw) return {};
 
     const parsed = JSON.parse(raw);
     const cleaned = cleanProgress(parsed, cards);
 
-    if (!stored && legacyStored) {
-      saveProgress(cleaned);
+    if (storageKey === SRS_STORAGE_KEY && !stored && legacyStored) {
+      saveProgress(cleaned, storageKey);
     }
 
     return cleaned;
@@ -165,11 +176,11 @@ export function loadProgress(cards = []) {
   }
 }
 
-export function saveProgress(progress) {
+export function saveProgress(progress, storageKey = SRS_STORAGE_KEY) {
   if (typeof window === 'undefined' || !window.localStorage) return false;
 
   try {
-    window.localStorage.setItem(SRS_STORAGE_KEY, JSON.stringify(progress || {}));
+    window.localStorage.setItem(storageKey, JSON.stringify(progress || {}));
     return true;
   } catch {
     warn('SRS progress could not be saved to localStorage.');

@@ -43,15 +43,20 @@ export default function SrsCard({
   onReveal,
   onRate,
   sessionLabel,
+  targetLabel,
 }) {
+  const targetText = card?.expression || card?.word || 'Contenuto mancante';
+  const displayTargetLabel = targetLabel || (card?.word ? 'Word' : 'Expression');
   const safeCard = {
     id: card?.id || 'missing-card-id',
     category: card?.category || 'Categoria mancante',
     level: card?.level || 'Livello mancante',
     type: card?.type || 'Tipo mancante',
-    expression: card?.expression || 'Espressione mancante',
+    expression: targetText,
+    partOfSpeech: card?.partOfSpeech || '',
     pronunciation: card?.pronunciation || 'Pronuncia mancante',
     italian: card?.italian || 'Traduzione mancante',
+    collocations: card?.collocations || '',
     example1: card?.example1 || 'Example missing.',
     example2: card?.example2 || 'Example missing.',
     note: card?.note || 'Nota mancante.',
@@ -71,6 +76,11 @@ export default function SrsCard({
           <span className="rounded-full border border-ink/10 bg-white px-3 py-1 text-xs font-black text-ink/55">
             {safeCard.type}
           </span>
+          {safeCard.partOfSpeech ? (
+            <span className="rounded-full border border-ink/10 bg-white px-3 py-1 text-xs font-black text-ink/55">
+              {safeCard.partOfSpeech}
+            </span>
+          ) : null}
           <span className="rounded-full bg-ink px-3 py-1 text-xs font-black text-white sm:ml-auto">
             {dueLabel}
           </span>
@@ -83,7 +93,7 @@ export default function SrsCard({
 
       <div className="px-5 py-7 sm:px-7 sm:py-8">
         <div className="text-center">
-          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/45">Expression</p>
+          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/45">{displayTargetLabel}</p>
           <h2 className="mx-auto mt-3 max-w-2xl break-words text-3xl font-black leading-tight text-ink sm:text-4xl">
             {safeCard.expression}
           </h2>
@@ -109,6 +119,15 @@ export default function SrsCard({
               <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Italiano</p>
               <p className="mt-2 break-words text-lg font-black leading-7 text-ink">{safeCard.italian}</p>
             </div>
+
+            {safeCard.collocations ? (
+              <div className="mt-4 rounded-lg border border-ink/10 bg-paper p-4">
+                <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/45">Collocations</p>
+                <p className="mt-2 break-words text-sm font-semibold leading-6 text-ink/75">
+                  {safeCard.collocations}
+                </p>
+              </div>
+            ) : null}
 
             <div className="mt-4 grid gap-3">
               <MarkdownText

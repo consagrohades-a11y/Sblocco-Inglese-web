@@ -7,7 +7,7 @@ export const expectedSrsCategoryCounts = {
   'Small Talk & Natural Reactions': 10,
 };
 
-export const requiredSrsCardFields = [
+export const expressionRequiredSrsCardFields = [
   'id',
   'type',
   'level',
@@ -20,15 +20,43 @@ export const requiredSrsCardFields = [
   'note',
 ];
 
+export const wordTrainerRequiredSrsCardFields = [
+  'id',
+  'type',
+  'level',
+  'category',
+  'word',
+  'partOfSpeech',
+  'pronunciation',
+  'italian',
+  'collocations',
+  'example1',
+  'example2',
+  'note',
+];
+
+export const requiredSrsCardFields = expressionRequiredSrsCardFields;
+
+export function buildExpectedCategoryCounts(categories = []) {
+  return Object.fromEntries(categories.map((category) => [category, 0]));
+}
+
 function hasText(value) {
   return value !== undefined && value !== null && String(value).trim() !== '';
 }
 
-export function validateSrsCards(cards, expectedCategories = expectedSrsCategoryCounts) {
+export function validateSrsCards(cards, expectedCategories = expectedSrsCategoryCounts, options = {}) {
+  if (expectedCategories?.expectedCategories || expectedCategories?.requiredFields || expectedCategories?.targetField) {
+    options = expectedCategories;
+    expectedCategories = options.expectedCategories || expectedSrsCategoryCounts;
+  }
+
+  const requiredFields = options.requiredFields || requiredSrsCardFields;
+  const targetField = options.targetField || 'expression';
   const warnings = [];
   const categoryCounts = Object.fromEntries(Object.keys(expectedCategories).map((category) => [category, 0]));
   const ids = new Map();
-  const expressions = new Map();
+  const targets = new Map();
 
   if (!Array.isArray(cards)) {
     return {
@@ -41,7 +69,7 @@ export function validateSrsCards(cards, expectedCategories = expectedSrsCategory
   cards.forEach((card, index) => {
     const label = card?.id || `card at index ${index}`;
 
-    requiredSrsCardFields.forEach((field) => {
+    requiredFields.forEach((field) => {
       if (!hasText(card?.[field])) {
         warnings.push(`${label}: missing required field "${field}".`);
       }
@@ -51,9 +79,9 @@ export function validateSrsCards(cards, expectedCategories = expectedSrsCategory
       ids.set(card.id, [...(ids.get(card.id) || []), index]);
     }
 
-    if (hasText(card?.expression)) {
-      const expressionKey = card.expression.toLowerCase().trim();
-      expressions.set(expressionKey, [...(expressions.get(expressionKey) || []), label]);
+    if (hasText(card?.[targetField])) {
+      const targetKey = card[targetField].toLowerCase().trim();
+      targets.set(targetKey, [...(targets.get(targetKey) || []), label]);
     }
 
     if (hasText(card?.category) && Object.prototype.hasOwnProperty.call(categoryCounts, card.category)) {
@@ -75,9 +103,9 @@ export function validateSrsCards(cards, expectedCategories = expectedSrsCategory
     }
   });
 
-  expressions.forEach((labels, expression) => {
+  targets.forEach((labels, target) => {
     if (labels.length > 1) {
-      warnings.push(`Duplicate expression "${expression}" in cards ${labels.join(', ')}.`);
+      warnings.push(`Duplicate ${targetField} "${target}" in cards ${labels.join(', ')}.`);
     }
   });
 
@@ -91,13 +119,15 @@ export function validateSrsCards(cards, expectedCategories = expectedSrsCategory
     count: cards.length,
     categoryCounts,
     duplicateIds: Array.from(ids.values()).filter((indexes) => indexes.length > 1).length,
-    duplicateExpressions: Array.from(expressions.values()).filter((labels) => labels.length > 1).length,
+    duplicateTargets: Array.from(targets.values()).filter((labels) => labels.length > 1).length,
+    duplicateExpressions:
+      targetField === 'expression' ? Array.from(targets.values()).filter((labels) => labels.length > 1).length : 0,
     warnings,
   };
 }
 
-export function warnAboutSrsCardIssues(cards, logger = console) {
-  const result = validateSrsCards(cards);
+export function warnAboutSrsCardIssues(cards, logger = console, options = {}) {
+  const result = validateSrsCards(cards, options.expectedCategories, options);
 
   if (result.warnings.length > 0 && logger && typeof logger.warn === 'function') {
     logger.warn('SRS card validation warnings:', result.warnings);
