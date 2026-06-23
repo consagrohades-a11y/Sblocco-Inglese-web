@@ -18,7 +18,7 @@ const ratingIcons = {
 };
 
 function MarkdownText({ text, className = '' }) {
-  const parts = text.split(/(\*\*.+?\*\*)/g);
+  const parts = String(text || '').split(/(\*\*.+?\*\*)/g);
 
   return (
     <p className={className}>
@@ -39,37 +39,49 @@ function MarkdownText({ text, className = '' }) {
 
 export default function SrsCard({ card, progress, onRate }) {
   const [revealed, setRevealed] = useState(false);
+  const safeCard = {
+    id: card?.id || 'missing-card-id',
+    category: card?.category || 'Categoria mancante',
+    level: card?.level || 'Livello mancante',
+    type: card?.type || 'Tipo mancante',
+    expression: card?.expression || 'Espressione mancante',
+    pronunciation: card?.pronunciation || 'Pronuncia mancante',
+    italian: card?.italian || 'Traduzione mancante',
+    example1: card?.example1 || 'Example missing.',
+    example2: card?.example2 || 'Example missing.',
+    note: card?.note || 'Nota mancante.',
+  };
 
   useEffect(() => {
     setRevealed(false);
-  }, [card.id]);
+  }, [safeCard.id]);
 
-  const dueLabel = progress?.dueAt ? formatDueLabel(progress.dueAt) : 'nuova';
+  const dueLabel = progress?.dueDate ? formatDueLabel(progress.dueDate) : 'nuova';
 
   return (
-    <article className="rounded-lg border border-ink/10 bg-white p-5 shadow-soft sm:p-6">
+    <article className="overflow-hidden rounded-lg border border-ink/10 bg-white p-5 shadow-soft sm:p-6">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-mint px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-moss">
-          {card.category}
+        <span className="max-w-full break-words rounded-full bg-mint px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-moss">
+          {safeCard.category}
         </span>
         <span className="rounded-full border border-ink/10 bg-paper px-3 py-1 text-xs font-black text-ink/70">
-          {card.level}
+          {safeCard.level}
         </span>
         <span className="rounded-full border border-ink/10 bg-white px-3 py-1 text-xs font-black text-ink/60">
-          {card.type}
+          {safeCard.type}
         </span>
-        <span className="ml-auto rounded-full bg-ink px-3 py-1 text-xs font-black text-white">
+        <span className="rounded-full bg-ink px-3 py-1 text-xs font-black text-white sm:ml-auto">
           {dueLabel}
         </span>
       </div>
 
       <div className="mt-8 min-h-[11rem]">
         <p className="text-sm font-black uppercase tracking-[0.08em] text-ink/50">Front side</p>
-        <h2 className="mt-3 text-3xl font-black leading-tight text-ink sm:text-4xl">
-          {card.expression}
+        <h2 className="mt-3 break-words text-3xl font-black leading-tight text-ink sm:text-4xl">
+          {safeCard.expression}
         </h2>
-        <p className="mt-4 rounded-lg bg-paper p-4 text-sm font-semibold leading-6 text-ink/70">
-          {card.pronunciation}
+        <p className="mt-4 break-words rounded-lg bg-paper p-4 text-sm font-semibold leading-6 text-ink/70">
+          {safeCard.pronunciation}
         </p>
 
         {!revealed ? (
@@ -89,16 +101,16 @@ export default function SrsCard({ card, progress, onRate }) {
           <div className="grid gap-4 lg:grid-cols-[0.75fr_1.25fr]">
             <div className="rounded-lg bg-mint/60 p-4">
               <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Italiano</p>
-              <p className="mt-2 text-lg font-black leading-7 text-ink">{card.italian}</p>
+              <p className="mt-2 break-words text-lg font-black leading-7 text-ink">{safeCard.italian}</p>
             </div>
 
             <div className="grid gap-3">
               <MarkdownText
-                text={card.example1}
+                text={safeCard.example1}
                 className="rounded-lg border border-ink/10 bg-white p-4 text-sm font-semibold leading-6 text-ink/75"
               />
               <MarkdownText
-                text={card.example2}
+                text={safeCard.example2}
                 className="rounded-lg border border-ink/10 bg-white p-4 text-sm font-semibold leading-6 text-ink/75"
               />
             </div>
@@ -106,7 +118,7 @@ export default function SrsCard({ card, progress, onRate }) {
 
           <div className="mt-4 flex items-start gap-3 rounded-lg bg-paper p-4">
             <BookOpen aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 text-moss" />
-            <p className="text-sm font-semibold leading-6 text-ink/70">{card.note}</p>
+            <p className="break-words text-sm font-semibold leading-6 text-ink/70">{safeCard.note}</p>
           </div>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-4">

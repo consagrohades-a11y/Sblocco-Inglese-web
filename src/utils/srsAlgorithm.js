@@ -1,10 +1,11 @@
-export const SRS_STORAGE_KEY = 'sblocco-inglese:srs-progress:v1';
+export const SRS_STORAGE_KEY = 'sblocco_srs_progress_v1';
+export const LEGACY_SRS_STORAGE_KEY = 'sblocco-inglese:srs-progress:v1';
 
 export const reviewRatings = [
   {
     value: 'again',
     label: 'Again',
-    helper: 'fra poco',
+    helper: 'oggi',
   },
   {
     value: 'hard',
@@ -23,104 +24,223 @@ export const reviewRatings = [
   },
 ];
 
-const tenMinutes = 10 * 60 * 1000;
+const validRatings = new Set(reviewRatings.map((rating) => rating.value));
+const validStatuses = new Set(['new', 'learning', 'review', 'mastered']);
 const dayMs = 24 * 60 * 60 * 1000;
 
-function addDays(date, days) {
-  return new Date(date.getTime() + days * dayMs);
+function warn(message) {
+  if (typeof console !== 'undefined' && typeof console.warn === 'function') {
+    console.warn(message);
+  }
 }
 
-function clampEase(ease) {
-  return Math.min(3, Math.max(1.3, ease));
+function clampEaseFactor(easeFactor) {
+  return Math.max(1.3, Number.isFinite(easeFactor) ? easeFactor : 2.5);
 }
 
-function getTime(value) {
-  const date = value ? new Date(value) : null;
-  return date && Number.isFinite(date.getTime()) ? date.getTime() : 0;
+function toNumber(value, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
 }
 
-function cleanCardProgress(entry) {
+function parseISODate(value) {
+  if (typeof value !== 'string' || value.trim() === '') return null;
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return value;
+  }
+
+  const parsed = new Date(value);
+  if (!Number.isFinite(parsed.getTime())) return null;
+  return getTodayISO(parsed);
+}
+
+function dateFromISO(isoDate) {
+  const [year, month, day] = isoDate.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function addDaysISO(isoDate, days) {
+  const date = dateFromISO(isoDate);
+  date.setDate(date.getDate() + days);
+  return getTodayISO(date);
+}
+
+function daysBetween(startISO, endISO) {
+  return Math.round((dateFromISO(endISO).getTime() - dateFromISO(startISO).getTime()) / dayMs);
+}
+
+function filterCards(cards, selectedCategory = 'all', level = 'all') {
+  return cards.filter((card) => {
+    const categoryMatches = selectedCategory === 'all' || card.category === selectedCategory;
+    const levelMatches = level === 'all' || card.level === level;
+    return categoryMatches && levelMatches;
+  });
+}
+
+function countNewCardsReviewedToday(progress, today) {
+  return Object.values(progress || {}).filter((entry) => entry?.firstReviewed === today).length;
+}
+
+function normalizeCardProgress(entry, cardId, today = getTodayISO()) {
   if (!entry || typeof entry !== 'object') return null;
 
+  const dueDate = parseISODate(entry.dueDate || entry.dueAt) || today;
+  const lastReviewed = parseISODate(entry.lastReviewed || entry.lastReviewedAt);
+  const firstReviewed = parseISODate(entry.firstReviewed);
+  const status = validStatuses.has(entry.status) ? entry.status : 'learning';
+
   return {
-    cardId: entry.cardId,
-    status: entry.status || 'learning',
-    repetitions: Number.isFinite(entry.repetitions) ? entry.repetitions : 0,
-    intervalDays: Number.isFinite(entry.intervalDays) ? entry.intervalDays : 0,
-    ease: clampEase(Number.isFinite(entry.ease) ? entry.ease : 2.3),
-    dueAt: entry.dueAt || new Date(0).toISOString(),
-    lastReviewedAt: entry.lastReviewedAt || null,
-    lastRating: entry.lastRating || null,
+    cardId,
+    status,
+    easeFactor: clampEaseFactor(toNumber(entry.easeFactor ?? entry.ease, 2.5)),
+    intervalDays: Math.max(0, Math.round(toNumber(entry.intervalDays, 0))),
+    repetitions: Math.max(0, Math.round(toNumber(entry.repetitions, 0))),
+    lapses: Math.max(0, Math.round(toNumber(entry.lapses, 0))),
+    dueDate,
+    lastReviewed,
+    ...(firstReviewed ? { firstReviewed } : {}),
   };
 }
 
-export function cleanProgress(progress, cards) {
-  const validIds = new Set(cards.map((card) => card.id));
+export function getTodayISO(date = new Date()) {
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+  return localDate.toISOString().slice(0, 10);
+}
+
+export function initializeCardProgress(cardId, today = getTodayISO()) {
+  return {
+    cardId,
+    status: 'new',
+    easeFactor: 2.5,
+    intervalDays: 0,
+    repetitions: 0,
+    lapses: 0,
+    dueDate: today,
+    lastReviewed: null,
+  };
+}
+
+export function cleanProgress(progress, cards = [], today = getTodayISO()) {
+  if (!progress || typeof progress !== 'object') return {};
+
+  const validIds = cards.length > 0 ? new Set(cards.map((card) => card.id)) : null;
 
   return Object.fromEntries(
-    Object.entries(progress || {})
-      .filter(([cardId]) => validIds.has(cardId))
-      .map(([cardId, entry]) => [cardId, cleanCardProgress({ ...entry, cardId })])
+    Object.entries(progress)
+      .filter(([cardId]) => !validIds || validIds.has(cardId))
+      .map(([cardId, entry]) => [cardId, normalizeCardProgress({ ...entry, cardId }, cardId, today)])
       .filter(([, entry]) => entry),
   );
 }
 
+export function loadProgress(cards = []) {
+  if (typeof window === 'undefined' || !window.localStorage) return {};
+
+  try {
+    const stored = window.localStorage.getItem(SRS_STORAGE_KEY);
+    const legacyStored = stored ? null : window.localStorage.getItem(LEGACY_SRS_STORAGE_KEY);
+    const raw = stored || legacyStored;
+    if (!raw) return {};
+
+    const parsed = JSON.parse(raw);
+    const cleaned = cleanProgress(parsed, cards);
+
+    if (!stored && legacyStored) {
+      saveProgress(cleaned);
+    }
+
+    return cleaned;
+  } catch {
+    warn('SRS progress in localStorage is corrupted. Starting with empty progress for this session.');
+    return {};
+  }
+}
+
+export function saveProgress(progress) {
+  if (typeof window === 'undefined' || !window.localStorage) return false;
+
+  try {
+    window.localStorage.setItem(SRS_STORAGE_KEY, JSON.stringify(progress || {}));
+    return true;
+  } catch {
+    warn('SRS progress could not be saved to localStorage.');
+    return false;
+  }
+}
+
 export function getCardState(progress, cardId) {
-  return cleanCardProgress(progress?.[cardId]);
+  return normalizeCardProgress(progress?.[cardId], cardId);
 }
 
-export function isCardDue(progressEntry, now = new Date()) {
+export function isCardDue(progressEntry, today = getTodayISO()) {
   if (!progressEntry) return false;
-  return getTime(progressEntry.dueAt) <= now.getTime();
+  return progressEntry.dueDate <= today;
 }
 
-export function getReviewQueue(cards, progress, options = {}) {
+export function getDueCards(cards, progress, selectedCategory = 'all', options = {}) {
+  const { today = getTodayISO(), level = 'all' } = options;
+
+  return filterCards(cards, selectedCategory, level)
+    .filter((card) => isCardDue(getCardState(progress, card.id), today))
+    .sort((a, b) => {
+      const aDate = getCardState(progress, a.id)?.dueDate || today;
+      const bDate = getCardState(progress, b.id)?.dueDate || today;
+      return aDate.localeCompare(bDate);
+    });
+}
+
+export function getNewCards(cards, progress, selectedCategory = 'all', options = {}) {
   const {
-    category = 'all',
+    today = getTodayISO(),
     level = 'all',
-    now = new Date(),
+    newLimit = 10,
   } = options;
+  const reviewedToday = countNewCardsReviewedToday(progress, today);
+  const remainingNewCards = Math.max(0, newLimit - reviewedToday);
 
-  const filteredCards = cards.filter((card) => {
-    const categoryMatches = category === 'all' || card.category === category;
-    const levelMatches = level === 'all' || card.level === level;
-    return categoryMatches && levelMatches;
-  });
+  return filterCards(cards, selectedCategory, level)
+    .filter((card) => !getCardState(progress, card.id))
+    .slice(0, remainingNewCards);
+}
 
-  const dueCards = [];
-  const newCards = [];
+export function buildReviewQueue(cards, progress, selectedCategory = 'all', options = {}) {
+  const {
+    today = getTodayISO(),
+    level = 'all',
+    totalLimit = 30,
+    newLimit = 10,
+  } = options;
+  const remainingTotal = Math.max(0, totalLimit);
 
-  filteredCards.forEach((card) => {
-    const state = getCardState(progress, card.id);
+  if (remainingTotal === 0) return [];
 
-    if (!state) {
-      newCards.push(card);
-      return;
-    }
+  const dueCards = getDueCards(cards, progress, selectedCategory, { today, level }).slice(0, remainingTotal);
+  const remainingSlots = Math.max(0, remainingTotal - dueCards.length);
+  const newCards = getNewCards(cards, progress, selectedCategory, {
+    today,
+    level,
+    newLimit,
+  }).slice(0, remainingSlots);
 
-    if (isCardDue(state, now)) {
-      dueCards.push(card);
-    }
-  });
-
-  dueCards.sort((a, b) => getTime(progress[a.id]?.dueAt) - getTime(progress[b.id]?.dueAt));
-
-  return [...dueCards, ...newCards];
+  return [...dueCards, ...newCards].slice(0, remainingTotal);
 }
 
 export function getNextDueCard(cards, progress, options = {}) {
-  const { category = 'all', level = 'all', now = new Date() } = options;
+  const {
+    category = 'all',
+    level = 'all',
+    today = getTodayISO(),
+  } = options;
 
-  return cards
-    .filter((card) => category === 'all' || card.category === category)
-    .filter((card) => level === 'all' || card.level === level)
+  return filterCards(cards, category, level)
     .map((card) => ({ card, state: getCardState(progress, card.id) }))
-    .filter(({ state }) => state && !isCardDue(state, now))
-    .sort((a, b) => getTime(a.state.dueAt) - getTime(b.state.dueAt))[0] || null;
+    .filter(({ state }) => state && !isCardDue(state, today))
+    .sort((a, b) => a.state.dueDate.localeCompare(b.state.dueDate))[0] || null;
 }
 
 export function getDeckStats(cards, progress, now = new Date()) {
-  const emptyCategoryStats = {};
+  const today = typeof now === 'string' ? now : getTodayISO(now);
 
   const totals = cards.reduce(
     (summary, card) => {
@@ -139,20 +259,28 @@ export function getDeckStats(cards, progress, now = new Date()) {
         summary.new += 1;
         categoryStats.new += 1;
       } else {
-        summary.reviewed += 1;
-        categoryStats.reviewed += 1;
+        summary.reviewed += state.lastReviewed ? 1 : 0;
+        categoryStats.reviewed += state.lastReviewed ? 1 : 0;
 
-        if (isCardDue(state, now)) {
+        if (isCardDue(state, today)) {
           summary.due += 1;
           categoryStats.due += 1;
         }
 
-        if (state.repetitions >= 2) {
+        if (state.status === 'learning') {
           summary.learning += 1;
         }
 
-        if (state.lastReviewedAt && new Date(state.lastReviewedAt).toDateString() === now.toDateString()) {
+        if (state.status === 'mastered') {
+          summary.mastered += 1;
+        }
+
+        if (state.lastReviewed === today) {
           summary.reviewedToday += 1;
+        }
+
+        if (state.firstReviewed === today) {
+          summary.newReviewedToday += 1;
         }
       }
 
@@ -165,87 +293,101 @@ export function getDeckStats(cards, progress, now = new Date()) {
       new: 0,
       reviewed: 0,
       learning: 0,
+      mastered: 0,
       reviewedToday: 0,
-      byCategory: emptyCategoryStats,
+      newReviewedToday: 0,
+      byCategory: {},
     },
   );
 
   totals.progressPercent = totals.total > 0 ? Math.round((totals.reviewed / totals.total) * 100) : 0;
+  totals.newAvailableToday = Math.max(0, 10 - totals.newReviewedToday);
   return totals;
 }
 
-export function rateCard(progress, cardId, rating, now = new Date()) {
-  const previous = getCardState(progress, cardId) || {
-    cardId,
-    status: 'new',
-    repetitions: 0,
-    intervalDays: 0,
-    ease: 2.3,
-    dueAt: now.toISOString(),
-    lastReviewedAt: null,
-    lastRating: null,
-  };
+export function reviewCard(cardId, rating, progress, today = getTodayISO()) {
+  if (!validRatings.has(rating)) {
+    warn(`Unknown SRS rating: ${rating}`);
+    return progress || {};
+  }
 
-  const previousInterval = Math.max(previous.intervalDays || 0, 1);
+  const currentProgress = progress || {};
+  const previous = getCardState(currentProgress, cardId) || initializeCardProgress(cardId, today);
+  const previousRepetitions = previous.repetitions;
+  let status = 'review';
   let repetitions = previous.repetitions;
   let intervalDays = previous.intervalDays;
-  let ease = previous.ease;
-  let dueAt = now;
-  let status = 'review';
+  let easeFactor = previous.easeFactor;
+  let lapses = previous.lapses;
 
   if (rating === 'again') {
+    status = 'learning';
+    lapses += 1;
     repetitions = 0;
     intervalDays = 0;
-    ease = clampEase(ease - 0.2);
-    dueAt = new Date(now.getTime() + tenMinutes);
-    status = 'learning';
+    easeFactor = clampEaseFactor(easeFactor - 0.2);
   }
 
   if (rating === 'hard') {
     repetitions += 1;
-    intervalDays = previous.repetitions === 0 ? 1 : Math.max(1, Math.ceil(previousInterval * 1.2));
-    ease = clampEase(ease - 0.1);
-    dueAt = addDays(now, intervalDays);
+    intervalDays = intervalDays === 0 ? 1 : Math.max(1, Math.round(intervalDays * 1.2));
+    easeFactor = clampEaseFactor(easeFactor - 0.15);
   }
 
   if (rating === 'good') {
     repetitions += 1;
-    intervalDays = previous.repetitions === 0 ? 3 : Math.max(2, Math.ceil(previousInterval * ease));
-    dueAt = addDays(now, intervalDays);
+    if (previousRepetitions === 0) {
+      intervalDays = 1;
+    } else if (previousRepetitions === 1) {
+      intervalDays = 3;
+    } else {
+      intervalDays = Math.max(1, Math.round(intervalDays * easeFactor));
+    }
   }
 
   if (rating === 'easy') {
     repetitions += 1;
-    intervalDays = previous.repetitions === 0 ? 7 : Math.max(4, Math.ceil(previousInterval * (ease + 0.7)));
-    ease = clampEase(ease + 0.15);
-    dueAt = addDays(now, intervalDays);
+    easeFactor = clampEaseFactor(easeFactor + 0.15);
+    intervalDays = previousRepetitions === 0 ? 4 : Math.max(1, Math.round(intervalDays * easeFactor * 1.3));
+  }
+
+  if (repetitions >= 6 && intervalDays >= 30) {
+    status = 'mastered';
   }
 
   return {
-    ...(progress || {}),
+    ...currentProgress,
     [cardId]: {
       cardId,
       status,
-      repetitions,
+      easeFactor,
       intervalDays,
-      ease,
-      dueAt: dueAt.toISOString(),
-      lastReviewedAt: now.toISOString(),
-      lastRating: rating,
+      repetitions,
+      lapses,
+      dueDate: rating === 'again' ? today : addDaysISO(today, intervalDays),
+      lastReviewed: today,
+      firstReviewed: previous.firstReviewed || today,
     },
   };
 }
 
-export function formatDueLabel(dueAt, now = new Date()) {
-  const dueTime = getTime(dueAt);
-  if (!dueTime) return 'non programmata';
+export function formatDueLabel(dueDate, now = new Date()) {
+  const today = typeof now === 'string' ? now : getTodayISO(now);
+  const normalizedDueDate = parseISODate(dueDate);
+  if (!normalizedDueDate) return 'non programmata';
 
-  const diff = dueTime - now.getTime();
+  const diffDays = daysBetween(today, normalizedDueDate);
 
-  if (diff <= 0) return 'adesso';
-  if (diff < 60 * 60 * 1000) return `tra ${Math.ceil(diff / (60 * 1000))} min`;
-  if (diff < dayMs) return `tra ${Math.ceil(diff / (60 * 60 * 1000))} ore`;
-  if (diff < dayMs * 2) return 'domani';
+  if (diffDays <= 0) return 'oggi';
+  if (diffDays === 1) return 'domani';
 
-  return `tra ${Math.ceil(diff / dayMs)} giorni`;
+  return `tra ${diffDays} giorni`;
+}
+
+export function getReviewQueue(cards, progress, options = {}) {
+  return buildReviewQueue(cards, progress, options.category || 'all', options);
+}
+
+export function rateCard(progress, cardId, rating, now = new Date()) {
+  return reviewCard(cardId, rating, progress, getTodayISO(now));
 }

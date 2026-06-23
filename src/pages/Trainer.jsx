@@ -6,26 +6,18 @@ import SEO from '../components/SEO';
 import SrsCard from '../components/SrsCard';
 import { srsCards } from '../data/srsCards';
 import {
-  SRS_STORAGE_KEY,
+  buildReviewQueue,
   cleanProgress,
   formatDueLabel,
   getCardState,
   getDeckStats,
   getNextDueCard,
-  getReviewQueue,
-  rateCard,
+  getTodayISO,
+  loadProgress,
+  reviewCard,
+  saveProgress,
 } from '../utils/srsAlgorithm';
-
-function loadStoredProgress() {
-  if (typeof window === 'undefined') return {};
-
-  try {
-    const stored = window.localStorage.getItem(SRS_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : {};
-  } catch {
-    return {};
-  }
-}
+import { warnAboutSrsCardIssues } from '../utils/validateSrsCards';
 
 function StatCard({ label, value, helper }) {
   return (
@@ -38,17 +30,19 @@ function StatCard({ label, value, helper }) {
 }
 
 export default function Trainer() {
-  const [progress, setProgress] = useState(() => cleanProgress(loadStoredProgress(), srsCards));
+  const [progress, setProgress] = useState(() => cleanProgress(loadProgress(srsCards), srsCards));
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedLevel, setSelectedLevel] = useState('all');
   const [now, setNow] = useState(() => new Date());
+  const [sessionReviewedCount, setSessionReviewedCount] = useState(0);
+  const [sessionStep, setSessionStep] = useState(0);
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem(SRS_STORAGE_KEY, JSON.stringify(progress));
-    } catch {
-      // Progress is intentionally local-only; if storage is unavailable, the trainer still works for the session.
-    }
+    warnAboutSrsCardIssues(srsCards);
+  }, []);
+
+  useEffect(() => {
+    saveProgress(progress);
   }, [progress]);
 
   useEffect(() => {
@@ -59,13 +53,19 @@ export default function Trainer() {
   const categories = useMemo(() => Array.from(new Set(srsCards.map((card) => card.category))), []);
   const stats = useMemo(() => getDeckStats(srsCards, progress, now), [progress, now]);
   const queue = useMemo(
-    () => getReviewQueue(srsCards, progress, { category: selectedCategory, level: selectedLevel, now }),
-    [progress, selectedCategory, selectedLevel, now],
+    () =>
+      buildReviewQueue(srsCards, progress, selectedCategory, {
+        level: selectedLevel,
+        today: getTodayISO(now),
+        totalLimit: Math.max(0, 30 - sessionReviewedCount),
+        newLimit: 10,
+      }),
+    [progress, selectedCategory, selectedLevel, now, sessionReviewedCount],
   );
   const currentCard = queue[0];
   const currentProgress = currentCard ? getCardState(progress, currentCard.id) : null;
   const nextDue = useMemo(
-    () => getNextDueCard(srsCards, progress, { category: selectedCategory, level: selectedLevel, now }),
+    () => getNextDueCard(srsCards, progress, { category: selectedCategory, level: selectedLevel, today: getTodayISO(now) }),
     [progress, selectedCategory, selectedLevel, now],
   );
 
@@ -73,15 +73,20 @@ export default function Trainer() {
     if (!currentCard) return;
 
     const reviewTime = new Date();
-    setProgress((currentProgressMap) => rateCard(currentProgressMap, currentCard.id, rating, reviewTime));
+    setProgress((currentProgressMap) => reviewCard(currentCard.id, rating, currentProgressMap, getTodayISO(reviewTime)));
     setNow(reviewTime);
+    setSessionReviewedCount((count) => count + 1);
+    setSessionStep((step) => step + 1);
   };
 
   const handleReset = () => {
     const confirmed = window.confirm('Vuoi azzerare i progressi del trainer su questo dispositivo?');
     if (confirmed) {
       setProgress({});
+      saveProgress({});
       setNow(new Date());
+      setSessionReviewedCount(0);
+      setSessionStep((step) => step + 1);
     }
   };
 
@@ -90,8 +95,8 @@ export default function Trainer() {
   return (
     <>
       <SEO
-        title="Trainer SRS | Sblocco Inglese"
-        description="Trainer SRS per ripassare espressioni utili in colloqui, lavoro, meeting, email e situazioni professionali."
+        title="Expression Trainer | Sblocco Inglese"
+        description="Review the English phrases you actually need for interviews, work, meetings and real conversations."
       />
 
       <section className="section-shell pb-8 pt-10 lg:pt-12">
@@ -102,17 +107,19 @@ export default function Trainer() {
               Trainer SRS
             </span>
             <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight text-ink sm:text-5xl">
-              150 espressioni per colloqui, lavoro e call
+              Expression Trainer
             </h1>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70">
-              Ripassa le card in base a quando sono dovute. Il contenuto resta fisso nel dataset, mentre i tuoi progressi
-              restano salvati solo su questo dispositivo.
+              Review the English phrases you actually need for interviews, work, meetings and real conversations.
+            </p>
+            <p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-ink/60">
+              Il contenuto resta fisso nel dataset. I tuoi progressi vengono salvati solo su questo dispositivo.
             </p>
           </div>
           <button
             type="button"
             onClick={handleReset}
-            className="focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-extrabold text-ink transition hover:border-coral/30 hover:bg-blush"
+            className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-extrabold text-ink transition hover:border-coral/30 hover:bg-blush lg:justify-self-end"
           >
             <RotateCcw aria-hidden="true" className="h-4 w-4" />
             Azzera progressi
@@ -124,7 +131,7 @@ export default function Trainer() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <StatCard label="Card totali" value={stats.total} helper="dataset fisso" />
           <StatCard label="Dovute" value={stats.due} helper="da ripassare ora" />
-          <StatCard label="Nuove" value={stats.new} helper="mai viste" />
+          <StatCard label="Nuove" value={stats.newAvailableToday} helper="disponibili oggi" />
           <StatCard label="Ripassate oggi" value={stats.reviewedToday} helper="su questo browser" />
           <StatCard label="Progressi" value={`${stats.progressPercent}%`} helper={`${stats.reviewed} viste`} />
         </div>
@@ -153,8 +160,10 @@ export default function Trainer() {
                   <h2 className="text-lg font-black text-ink">Sessione</h2>
                   <p className="mt-1 text-sm font-semibold leading-6 text-ink/60">
                     {queue.length > 0
-                      ? `${queue.length} card disponibili con i filtri attuali.`
-                      : 'Nessuna card disponibile con i filtri attuali.'}
+                      ? `${queue.length} card disponibili con i filtri attuali. Sessione: ${sessionReviewedCount}/30.`
+                      : sessionReviewedCount >= 30
+                        ? 'Sessione completata: hai raggiunto il limite di 30 card.'
+                        : 'Nessuna card disponibile con i filtri attuali.'}
                   </p>
                 </div>
               </div>
@@ -177,7 +186,12 @@ export default function Trainer() {
 
           <div>
             {currentCard ? (
-              <SrsCard card={currentCard} progress={currentProgress} onRate={handleRate} />
+              <SrsCard
+                key={`${currentCard.id}-${sessionStep}`}
+                card={currentCard}
+                progress={currentProgress}
+                onRate={handleRate}
+              />
             ) : (
               <div className="rounded-lg border border-ink/10 bg-white p-6 shadow-soft">
                 <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-mint text-moss">
@@ -190,7 +204,7 @@ export default function Trainer() {
                 </p>
                 {nextDue ? (
                   <p className="mt-4 rounded-lg bg-paper p-4 text-sm font-black text-ink/70">
-                    Prossima card: {formatDueLabel(nextDue.state.dueAt, now)}
+                    Prossima card: {formatDueLabel(nextDue.state.dueDate, now)}
                   </p>
                 ) : null}
               </div>

@@ -4,7 +4,7 @@ import { Filter, Layers3 } from 'lucide-react';
 const levels = ['all', 'A2', 'B1', 'B2'];
 
 function optionClass(active) {
-  return `focus-ring rounded-full px-4 py-2 text-sm font-black transition ${
+  return `focus-ring max-w-full break-words rounded-full px-4 py-2 text-left text-sm font-black transition ${
     active ? 'bg-moss text-white shadow-lift' : 'border border-ink/10 bg-white text-ink/70 hover:border-moss/25 hover:bg-mint/40'
   }`;
 }
