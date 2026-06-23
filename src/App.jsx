@@ -11,6 +11,7 @@ import Reviews from './pages/Reviews';
 import CaseStudies from './pages/CaseStudies';
 import FAQ from './pages/FAQ';
 import Prenota from './pages/Prenota';
+import Trainer from './pages/Trainer';
 import LegalPage from './pages/LegalPage';
 import NotFound from './pages/NotFound';
 import { legalPages } from './data/legalPages';
@@ -46,6 +47,7 @@ export default function App() {
           <Route path="/casi-reali" element={<CaseStudies />} />
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/trainer" element={<Trainer />} />
           <Route path="/prenota" element={<Prenota />} />
           <Route
             path="/privacy"
