@@ -1,8 +1,8 @@
 export const expectedSrsCategoryCounts = {
-  'Interview English': 45,
+  'Interview English': 85,
   'Business English': 35,
-  'Meetings & Calls': 35,
-  'Emails & Follow-ups': 15,
+  'Meetings & Calls': 65,
+  'Emails & Follow-ups': 45,
   'Customer-facing English': 10,
   'Small Talk & Natural Reactions': 10,
 };

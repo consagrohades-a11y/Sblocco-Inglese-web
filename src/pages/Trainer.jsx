@@ -5,6 +5,7 @@ import DeckSelector from '../components/DeckSelector';
 import ReviewStats from '../components/ReviewStats';
 import SEO from '../components/SEO';
 import SrsCard from '../components/SrsCard';
+import TrainerLayout from '../components/TrainerLayout';
 import { srsCards } from '../data/srsCards';
 import {
   buildReviewQueue,
@@ -260,20 +261,20 @@ export default function Trainer() {
   return (
     <>
       <SEO
-        title="Expression Trainer | Sblocco Inglese"
+        title="Business Expression Trainer | Sblocco Inglese"
         description="Review the English phrases you actually need for interviews, work, meetings and real conversations."
       />
 
-      <section className="section-shell pb-16 pt-10 lg:pt-12">
+      <TrainerLayout>
         <div className="mx-auto max-w-5xl">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <span className="eyebrow">
                 <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
-                Trainer SRS
+                Available trainer
               </span>
               <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight text-ink sm:text-5xl">
-                Expression Trainer
+                Business Expression Trainer
               </h1>
               <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70">
                 Review the English phrases you actually need for interviews, work, meetings and real conversations.
@@ -401,7 +402,7 @@ export default function Trainer() {
             ) : null}
           </div>
         </div>
-      </section>
+      </TrainerLayout>
     </>
   );
 }

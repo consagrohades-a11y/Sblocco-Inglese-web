@@ -36,7 +36,7 @@ export const navItems = [
   { label: 'Recensioni', to: '/recensioni' },
   { label: 'Casi reali', to: '/casi-reali' },
   { label: 'FAQ', to: '/faq' },
-  { label: 'Trainer', to: '/trainer' },
+  { label: 'Trainer', to: '/trainers' },
   { label: 'Prenota', to: '/prenota' },
 ];
 

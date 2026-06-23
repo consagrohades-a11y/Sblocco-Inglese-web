@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import StickyMobileCTA from './components/StickyMobileCTA';
@@ -12,6 +12,9 @@ import CaseStudies from './pages/CaseStudies';
 import FAQ from './pages/FAQ';
 import Prenota from './pages/Prenota';
 import Trainer from './pages/Trainer';
+import TrainersLanding from './pages/TrainersLanding';
+import GeneralExpressionTrainer from './pages/GeneralExpressionTrainer';
+import WordTrainer from './pages/WordTrainer';
 import LegalPage from './pages/LegalPage';
 import NotFound from './pages/NotFound';
 import { legalPages } from './data/legalPages';
@@ -47,7 +50,11 @@ export default function App() {
           <Route path="/casi-reali" element={<CaseStudies />} />
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route path="/trainer" element={<Trainer />} />
+          <Route path="/trainers" element={<TrainersLanding />} />
+          <Route path="/trainers/business-expression" element={<Trainer />} />
+          <Route path="/trainers/general-expression" element={<GeneralExpressionTrainer />} />
+          <Route path="/trainers/word-trainer" element={<WordTrainer />} />
+          <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
           <Route path="/prenota" element={<Prenota />} />
           <Route
             path="/privacy"
