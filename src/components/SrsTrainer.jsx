@@ -336,7 +336,11 @@ export default function SrsTrainer({
           <div className="-mx-4 -mt-4 mb-5 h-1 scanline sm:-mx-6 sm:-mt-6" />
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <span className={`eyebrow ${isDark ? 'border-white/15 bg-white/10 !text-white' : ''}`}>
+              <span
+                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.08em] shadow-sm ${
+                  isDark ? 'border-white/15 bg-white text-ink' : 'border-moss/20 bg-white/90 text-moss'
+                }`}
+              >
                 <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
                 Available trainer
               </span>
