@@ -20,24 +20,27 @@ export default function CTAButton({
   icon = true,
   onClick,
 }) {
-  const opensNewTab = /^https?:\/\//.test(href);
+  const shouldUseBooking = href === '/percorsi' && children === 'Scopri i corsi';
+  const finalHref = shouldUseBooking ? externalLinks.form : href;
+  const finalChildren = shouldUseBooking ? ctaLabels.primary : children;
+  const opensNewTab = /^https?:\/\//.test(finalHref);
   const classNames =
     variant === 'quiet'
       ? `focus-ring inline-flex items-center gap-2 text-sm font-extrabold transition ${variants[variant]} ${className}`
       : `focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-extrabold transition sm:text-base ${variants[variant]} ${className}`;
 
-  if (onClick && !href) {
+  if (onClick && !finalHref) {
     return (
       <button type="button" onClick={onClick} className={classNames}>
-        {children}
+        {finalChildren}
         {icon ? <ArrowRight aria-hidden="true" className="h-4 w-4" /> : null}
       </button>
     );
   }
 
   return (
-    <a href={href} onClick={onClick} className={classNames} target={opensNewTab ? '_blank' : undefined} rel={opensNewTab ? 'noreferrer' : undefined}>
-      {children}
+    <a href={finalHref} onClick={onClick} className={classNames} target={opensNewTab ? '_blank' : undefined} rel={opensNewTab ? 'noreferrer' : undefined}>
+      {finalChildren}
       {icon ? <ArrowRight aria-hidden="true" className="h-4 w-4" /> : null}
     </a>
   );
