@@ -11,16 +11,16 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const navClass = ({ isActive }) =>
-    `focus-ring whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-black transition ${
+    `focus-ring whitespace-nowrap rounded-full px-2 py-1.5 text-[0.68rem] font-black transition 2xl:px-2.5 2xl:text-xs ${
       isActive ? 'bg-ink text-white shadow-sm' : 'text-ink/70 hover:bg-white hover:text-ink'
     }`;
 
   return (
     <header className="sticky top-0 z-50 border-b border-ink/10 bg-paper/90 shadow-sm backdrop-blur-xl">
-      <div className="section-shell flex min-h-[72px] items-center justify-between gap-3 py-2">
+      <div className="section-shell flex min-h-[68px] items-center justify-between gap-2 py-2 2xl:gap-3">
         <BrandLogo />
 
-        <nav className="hidden items-center gap-1 xl:flex" aria-label="Navigazione principale">
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex 2xl:gap-1" aria-label="Navigazione principale">
           {navItems.map((item) =>
             item.to.includes('#') ? (
               <a key={item.to} href={item.to} className={navClass({ isActive: false })}>
@@ -34,12 +34,12 @@ export default function Navbar() {
           )}
         </nav>
 
-        <div className="hidden items-center gap-2 xl:flex">
-          <span className="whitespace-nowrap rounded-full border border-ink/15 bg-white px-3 py-1.5 text-xs font-black text-ink shadow-sm">
+        <div className="hidden shrink-0 items-center gap-2 xl:flex">
+          <span className="hidden whitespace-nowrap rounded-full border border-ink/15 bg-white px-3 py-1.5 text-xs font-black text-ink shadow-sm 2xl:inline-flex">
             Diagnosi iniziale {primaryOffer.price}
           </span>
-          <CTAButton href="/prenota#booking-form" className="!min-h-10 px-4 py-2 text-sm">
-            {ctaLabels.primary}
+          <CTAButton href="/prenota#booking-form" className="!min-h-10 whitespace-nowrap !px-3 !py-2 !text-xs 2xl:!px-4 2xl:!text-sm" icon={false}>
+            {ctaLabels.mobile}
           </CTAButton>
         </div>
 
