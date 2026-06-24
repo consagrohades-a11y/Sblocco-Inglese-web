@@ -135,8 +135,21 @@ export default function SrsCard({
               <p className={`mt-1.5 break-words text-lg font-black leading-7 ${dark ? 'text-white' : 'text-ink'}`}>{safeCard.italian}</p>
             </div>
 
-            <div className="mt-3 grid gap-3 xl:grid-cols-[0.82fr_1fr] xl:items-start">
-              <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-1">
+            <div className="mt-3 grid gap-3">
+              <div className="grid gap-3 lg:grid-cols-2">
+                <MarkdownText
+                  text={safeCard.example1}
+                  dark={dark}
+                  className={`rounded-lg border p-3 text-sm font-semibold leading-5 ${dark ? 'border-white/10 bg-white/[0.06] text-white/75' : 'border-ink/10 bg-white text-ink/75'}`}
+                />
+                <MarkdownText
+                  text={safeCard.example2}
+                  dark={dark}
+                  className={`rounded-lg border p-3 text-sm font-semibold leading-5 ${dark ? 'border-white/10 bg-white/[0.06] text-white/75' : 'border-ink/10 bg-white text-ink/75'}`}
+                />
+              </div>
+
+              <div className="grid gap-3 lg:grid-cols-2">
                 {safeCard.collocations ? (
                   <div className={`rounded-lg border p-3 ${dark ? 'border-white/10 bg-white/[0.06]' : 'border-ink/10 bg-paper'}`}>
                     <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Collocations</p>
@@ -150,19 +163,6 @@ export default function SrsCard({
                   <BookOpen aria-hidden="true" className={`mt-0.5 h-4 w-4 shrink-0 ${dark ? 'text-mint' : 'text-moss'}`} />
                   <p className={`break-words text-sm font-semibold leading-5 ${dark ? 'text-white/70' : 'text-ink/70'}`}>{safeCard.note}</p>
                 </div>
-              </div>
-
-              <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-1">
-                <MarkdownText
-                  text={safeCard.example1}
-                  dark={dark}
-                  className={`rounded-lg border p-3 text-sm font-semibold leading-5 ${dark ? 'border-white/10 bg-white/[0.06] text-white/75' : 'border-ink/10 bg-white text-ink/75'}`}
-                />
-                <MarkdownText
-                  text={safeCard.example2}
-                  dark={dark}
-                  className={`rounded-lg border p-3 text-sm font-semibold leading-5 ${dark ? 'border-white/10 bg-white/[0.06] text-white/75' : 'border-ink/10 bg-white text-ink/75'}`}
-                />
               </div>
             </div>
 
