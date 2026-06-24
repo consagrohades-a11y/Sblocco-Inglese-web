@@ -13,96 +13,58 @@ import {
 } from 'lucide-react';
 import CTAButton from '../components/CTAButton';
 import FAQAccordion from '../components/FAQAccordion';
-import PricingCard from '../components/PricingCard';
 import SEO from '../components/SEO';
 import SectionReveal from '../components/SectionReveal';
 import TrustBadges from '../components/TrustBadges';
-import { ctaLabels, externalLinks, primaryOffer } from '../config/site';
+import { externalLinks, primaryOffer } from '../config/site';
 import { faqItems, feedbackExamples, receiveItems } from '../data/content';
+
+const auditCta = "Prenota l'audit a 39 euro";
 
 const painPoints = [
   'capisci la domanda, ma la risposta arriva lenta',
   "traduci mentalmente dall'italiano e perdi naturalezza",
   'hai esperienza, ma in inglese sembri meno sicuro/a',
-  'devi preparare un colloquio, una call o una situazione di lavoro reale',
-];
-
-const fitItems = [
-  'hai almeno una base A2/B1 e riesci a costruire frasi semplici',
-  'vuoi capire cosa ti blocca quando devi parlare davvero',
-  'ti serve feedback pratico, non una lezione generica',
-  'vuoi sapere se continuare con un corso ha senso per te',
-];
-
-const notFitItems = [
-  'parti completamente da zero',
-  'cerchi una garanzia di superare un colloquio',
-  'vuoi solo conversazione libera senza obiettivo',
 ];
 
 const steps = [
   {
-    title: 'Compili il form',
-    text: 'Mi dai contesto: livello, obiettivo, situazione da preparare e urgenza reale.',
+    title: 'Form iniziale',
+    text: 'Mi dai contesto: livello, obiettivo e situazione da preparare.',
     icon: Target,
   },
   {
-    title: 'Prenoti e paghi',
-    text: 'Scegli lo slot e confermi il posto con pagamento PayPal.',
-    icon: CreditCard,
-  },
-  {
-    title: 'Fai la simulazione',
-    text: 'In 30 minuti lavoriamo su colloquio, call, clienti o una scena concreta.',
+    title: 'Audit online',
+    text: 'Facciamo una simulazione concreta di colloquio, call o lavoro.',
     icon: Video,
   },
   {
-    title: 'Ricevi feedback scritto',
-    text: 'Ti mando errori principali, frasi migliorate e prossimi step consigliati.',
+    title: 'Feedback scritto',
+    text: 'Ricevi errori principali, frasi migliorate e prossimi step.',
     icon: FileText,
   },
 ];
 
-const diagnosticCards = [
-  {
-    label: 'Input',
-    title: 'Situazione reale',
-    text: 'colloquio, call, cliente o risposta professionale',
-    icon: Target,
-  },
-  {
-    label: 'Blocco',
-    title: 'Dove rallenti',
-    text: 'traduzione mentale, esitazione, frasi deboli',
-    icon: MessageSquareWarning,
-  },
-  {
-    label: 'Output',
-    title: 'Feedback scritto',
-    text: 'errori, frasi migliorate, prossimi step',
-    icon: FileText,
-  },
+const fitItems = [
+  'hai una base A2/B1 o superiore',
+  'ti blocchi quando devi parlare davvero',
+  'vuoi capire cosa migliorare prima di comprare un corso',
+];
+
+const notFitItems = [
+  'parti completamente da zero',
+  'cerchi una garanzia finta di superare un colloquio',
+  'vuoi solo conversazione libera senza obiettivo',
 ];
 
 const proofStats = [
-  { value: primaryOffer.duration, label: 'sessione mirata' },
-  { value: primaryOffer.price, label: 'diagnosi iniziale' },
-  { value: '5-10', label: 'frasi migliorate' },
+  { value: primaryOffer.duration, label: 'online, mirato' },
+  { value: primaryOffer.price, label: 'audit iniziale' },
+  { value: 'feedback', label: 'scritto e riusabile' },
 ];
 
 const simulationFaq = faqItems.slice(0, 4);
-
-function MiniCard({ icon: Icon, title, children }) {
-  return (
-    <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
-      <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-mint text-moss">
-        <Icon aria-hidden="true" className="h-5 w-5" />
-      </span>
-      <h3 className="mt-5 text-xl font-black text-ink">{title}</h3>
-      <p className="mt-3 text-sm font-semibold leading-6 text-ink/70">{children}</p>
-    </div>
-  );
-}
+const visibleReceiveItems = receiveItems.slice(0, 6);
 
 function CheckList({ items, tone = 'positive' }) {
   const Icon = tone === 'positive' ? Check : AlertTriangle;
@@ -120,55 +82,44 @@ function CheckList({ items, tone = 'positive' }) {
   );
 }
 
-function DiagnosticPanel() {
+function AuditCard() {
   return (
-    <div className="dynamic-rail border-white/10 bg-white/[0.08] p-4 text-white shadow-soft backdrop-blur-md">
-      <div className="grid gap-3">
-        <div className="flex items-center justify-between gap-3">
-          <span className="inline-flex items-center gap-2 rounded-full bg-butter px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-ink">
-            <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
-            Diagnosi live
-          </span>
-          <span className="rounded-full border border-white/15 bg-white/[0.08] px-3 py-1 text-xs font-black text-white/70">
-            30 min
-          </span>
+    <aside className="relative overflow-hidden rounded-lg border border-white/15 bg-white p-5 text-ink shadow-soft lg:p-6">
+      <div className="absolute inset-x-0 top-0 h-1 scanline" />
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.12em] text-moss">Audit iniziale</p>
+          <p className="mt-2 text-5xl font-black leading-none text-ink">{primaryOffer.price}</p>
         </div>
-
-        {diagnosticCards.map((item, index) => {
-          const Icon = item.icon;
-          return (
-            <div
-              key={item.title}
-              className="hero-float-card grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-white/10 bg-white/[0.08] p-3"
-              style={{ animationDelay: `${index * 0.32}s` }}
-            >
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-white text-sm font-black text-ink">
-                <Icon aria-hidden="true" className="h-4 w-4" />
-              </span>
-              <span>
-                <span className="block text-[0.68rem] font-black uppercase tracking-[0.1em] text-mint/80">{item.label}</span>
-                <span className="mt-1 block text-base font-black text-white">{item.title}</span>
-                <span className="mt-1 block text-sm font-semibold leading-5 text-white/62">{item.text}</span>
-              </span>
-            </div>
-          );
-        })}
-
-        <div className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.08]">
-          <div className="h-1 scanline" />
-          <div className="grid gap-2 p-4">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-mint/80">Risultato</p>
-            <p className="text-lg font-black leading-tight text-white">Sai cosa ti blocca e cosa correggere prima.</p>
-          </div>
-        </div>
+        <span className="rounded-full bg-mint px-3 py-1 text-xs font-black text-moss">{primaryOffer.duration}</span>
       </div>
-    </div>
+
+      <div className="mt-6 grid gap-3">
+        {[
+          ['Simulazione reale', 'colloquio, call, cliente o risposta professionale'],
+          ['Diagnosi del blocco', 'dove rallenti, dove traduci, dove perdi precisione'],
+          ['Feedback scritto', 'errori principali e frasi più forti da riusare'],
+        ].map(([title, text]) => (
+          <div key={title} className="rounded-lg border border-ink/10 bg-linen/60 p-4">
+            <p className="text-sm font-black text-ink">{title}</p>
+            <p className="mt-1 text-sm font-semibold leading-5 text-ink/65">{text}</p>
+          </div>
+        ))}
+      </div>
+
+      <CTAButton className="mt-6 w-full" icon={false}>
+        {auditCta}
+      </CTAButton>
+      <p className="mt-3 text-center text-xs font-bold leading-5 text-ink/50">
+        Pagamento esterno sicuro. Nessuna promessa magica: solo diagnosi concreta.
+      </p>
+    </aside>
   );
 }
 
 function ProofStrip() {
   return (
-    <div className="border-y border-ink/10 bg-white/80">
+    <div className="border-y border-ink/10 bg-white/85">
       <div className="section-shell grid gap-3 py-4 sm:grid-cols-3">
         {proofStats.map((item) => (
           <div key={item.label} className="rounded-lg border border-ink/10 bg-linen/60 px-4 py-3 text-center shadow-sm">
@@ -181,6 +132,18 @@ function ProofStrip() {
   );
 }
 
+function MiniCard({ icon: Icon, title, children }) {
+  return (
+    <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
+      <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-mint text-moss">
+        <Icon aria-hidden="true" className="h-5 w-5" />
+      </span>
+      <h3 className="mt-5 text-xl font-black text-ink">{title}</h3>
+      <p className="mt-3 text-sm font-semibold leading-6 text-ink/70">{children}</p>
+    </div>
+  );
+}
+
 export default function Simulation() {
   const proofExamples = feedbackExamples.slice(0, 2);
 
@@ -188,28 +151,26 @@ export default function Simulation() {
     <>
       <SEO
         title={`${primaryOffer.fullTitle} | Sblocco Inglese`}
-        description={`Prenota una simulazione online da ${primaryOffer.price} per capire cosa ti blocca quando parli inglese e ricevere feedback scritto con frasi migliorate.`}
+        description={`Prenota un audit online da ${primaryOffer.price} per capire cosa ti blocca quando parli inglese e ricevere feedback scritto con frasi migliorate.`}
       />
 
       <section className="relative isolate overflow-hidden bg-ink text-white">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_18%,rgba(220,239,232,0.18),transparent_30%),radial-gradient(circle_at_78%_24%,rgba(255,196,87,0.18),transparent_28%),linear-gradient(135deg,#111f1b_0%,#18221f_54%,#0e2a24_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-[linear-gradient(180deg,transparent,rgba(251,247,241,0.08))]" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_18%,rgba(220,239,232,0.2),transparent_31%),radial-gradient(circle_at_78%_22%,rgba(255,196,87,0.18),transparent_30%),linear-gradient(135deg,#111f1b_0%,#18221f_58%,#0e2a24_100%)]" />
         <div className="h-1 scanline" />
-        <div className="section-shell grid gap-10 pb-14 pt-12 lg:grid-cols-[1fr_0.74fr] lg:items-center lg:pb-16 lg:pt-16">
+        <div className="section-shell grid gap-9 py-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.44fr)] lg:items-center lg:py-16">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-butter/50 bg-butter px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-ink shadow-soft">
               <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
-              Simulazione inglese online - {primaryOffer.price}
+              Audit inglese online - {primaryOffer.price}
             </span>
             <h1 className="mt-6 max-w-4xl text-4xl font-black leading-[1.02] text-white sm:text-5xl lg:text-6xl">
-              Ti blocchi quando devi parlare inglese in colloqui, call o lavoro?
+              Capisci l'inglese, ma ti blocchi quando devi parlare?
             </h1>
             <p className="mt-5 max-w-3xl text-lg font-semibold leading-8 text-white/78 sm:text-xl">
-              Fai una simulazione pratica da {primaryOffer.price}: vediamo il tuo blocco in azione, correggiamo le frasi
-              deboli e ti mando un feedback scritto con cosa migliorare subito.
+              In 30 minuti vediamo il blocco mentre succede: simulazione pratica, correzione delle frasi deboli e feedback scritto su cosa migliorare subito.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <CTAButton variant="contrast">{ctaLabels.primary}</CTAButton>
+              <CTAButton variant="contrast">{auditCta}</CTAButton>
               <CTAButton href="#come-funziona" variant="secondary">
                 Guarda come funziona
               </CTAButton>
@@ -218,13 +179,10 @@ export default function Simulation() {
               <TrustBadges />
             </div>
             <p className="mt-4 max-w-2xl text-sm font-semibold leading-6 text-white/60">
-              Pensata per italiani con base A2-B1/B2 che capiscono più di quanto riescono a dire sotto pressione.
+              Pensato per italiani con base A2-B1/B2 che capiscono più di quanto riescono a dire sotto pressione.
             </p>
           </div>
-          <div className="grid gap-4">
-            <DiagnosticPanel />
-            <PricingCard compact />
-          </div>
+          <AuditCard />
         </div>
       </section>
 
@@ -239,10 +197,10 @@ export default function Simulation() {
             </span>
             <h2 className="section-title">Il problema non è solo sapere inglese. È rispondere quando conta.</h2>
             <p className="section-copy">
-              La simulazione serve a vedere il momento esatto in cui perdi lucidità, così il feedback non resta astratto.
+              L'audit serve a vedere il momento esatto in cui perdi lucidità, così il feedback non resta astratto.
             </p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-3">
             {painPoints.map((item, index) => (
               <div key={item} className="brand-card p-4" style={{ transitionDelay: `${index * 55}ms` }}>
                 <Check aria-hidden="true" className="h-5 w-5 text-moss" />
@@ -257,12 +215,12 @@ export default function Simulation() {
         <div className="section-shell">
           <div className="mx-auto max-w-3xl text-center">
             <span className="eyebrow">Come funziona</span>
-            <h2 className="section-title mx-auto">Quattro passaggi. Nessuna lezione generica.</h2>
+            <h2 className="section-title mx-auto">Tre passaggi, nessuna lezione generica.</h2>
             <p className="section-copy mx-auto">
-              Il percorso è breve e chiaro: prima raccolgo il contesto, poi lavoriamo su una situazione vera.
+              Il percorso è breve e chiaro: contesto, simulazione, feedback scritto.
             </p>
           </div>
-          <div className="mt-9 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-9 grid gap-4 md:grid-cols-3">
             {steps.map((step, index) => {
               const Icon = step.icon;
               return (
@@ -289,13 +247,13 @@ export default function Simulation() {
               <FileText aria-hidden="true" className="h-3.5 w-3.5" />
               Cosa ricevi
             </span>
-            <h2 className="section-title">Alla fine hai una diagnosi utilizzabile, non solo “devi parlare di più”.</h2>
+            <h2 className="section-title">Una diagnosi utilizzabile, non solo “devi parlare di più”.</h2>
             <p className="section-copy">
               Il feedback ti aiuta a capire quali errori frenano il tuo speaking e quali frasi puoi iniziare a riusare.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            {receiveItems.map((item) => (
+            {visibleReceiveItems.map((item) => (
               <div key={item} className="rounded-lg border border-ink/10 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
                 <Check aria-hidden="true" className="h-5 w-5 text-moss" />
                 <p className="mt-3 text-sm font-bold text-ink/85">{item}</p>
@@ -313,7 +271,7 @@ export default function Simulation() {
           </div>
           <div className="grid gap-5 lg:grid-cols-2">
             <div className="rounded-lg border border-moss/20 bg-mint/50 p-5 shadow-sm">
-              <h3 className="text-xl font-black text-ink">È adatta se...</h3>
+              <h3 className="text-xl font-black text-ink">È adatto se...</h3>
               <div className="mt-5">
                 <CheckList items={fitItems} />
               </div>
@@ -334,7 +292,7 @@ export default function Simulation() {
             <span className="eyebrow">Esempio di feedback</span>
             <h2 className="section-title mx-auto">Le frasi deboli diventano frasi più chiare.</h2>
             <p className="section-copy mx-auto">
-              Durante e dopo la simulazione, il focus è trasformare risposte vaghe in risposte utilizzabili.
+              Durante e dopo l'audit, il focus è trasformare risposte vaghe in risposte utilizzabili.
             </p>
           </div>
           <div className="mt-8 grid gap-4 lg:grid-cols-2">
@@ -381,10 +339,10 @@ export default function Simulation() {
                 Vuoi capire cosa blocca il tuo inglese prima di comprare un corso?
               </h2>
               <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-white/70">
-                Prenota la simulazione: breve, concreta, con feedback scritto e una direzione chiara per decidere il prossimo passo.
+                Prenota l'audit: breve, concreto, con feedback scritto e una direzione chiara per decidere il prossimo passo.
               </p>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <CTAButton variant="contrast">{ctaLabels.primary}</CTAButton>
+                <CTAButton variant="contrast">{auditCta}</CTAButton>
                 <CTAButton href={externalLinks.bookingFlow} variant="secondary">
                   Guarda disponibilità
                 </CTAButton>
