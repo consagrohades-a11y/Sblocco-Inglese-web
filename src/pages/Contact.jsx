@@ -1,12 +1,12 @@
 import React from 'react';
 import { HelpCircle, Mail, MessageCircle, Send, ShieldCheck } from 'lucide-react';
 import FAQAccordion from '../components/FAQAccordion';
+import ContactQuestionForm from '../components/ContactQuestionForm';
 import SEO from '../components/SEO';
 import SectionReveal from '../components/SectionReveal';
 import { externalLinks, primaryOffer } from '../config/site';
 import { faqItems } from '../data/content';
 
-const questionFormUrl = 'https://forms.gle/mcss5TWTQj4jZ7ct7';
 const contactEmail = externalLinks.email.replace('mailto:', '');
 
 export default function Contact() {
@@ -121,26 +121,11 @@ export default function Contact() {
             <span className="eyebrow">Modulo domande</span>
             <h2 className="section-title">Scrivi il tuo dubbio</h2>
             <p className="section-copy">
-              Dopo l’invio, Google Forms mostrerà una conferma automatica nel modulo. Per urgenze pratiche puoi usare
-              anche email o WhatsApp, ma il modulo è il modo più ordinato per spiegare la situazione.
+              Compila il modulo se vuoi chiarire un dubbio prima di prenotare. Dopo l’invio vedrai una conferma qui
+              nella pagina; la risposta arriverà via email o, se lo lasci, via WhatsApp.
             </p>
           </div>
-          <div className="overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft">
-            <iframe
-              src={questionFormUrl}
-              title="Modulo domande Sblocco Inglese"
-              className="h-[760px] w-full"
-              loading="lazy"
-            />
-          </div>
-          <a
-            href={questionFormUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="focus-ring mt-4 inline-flex rounded-full bg-ink px-5 py-3 text-sm font-black text-white shadow-sm hover:bg-moss"
-          >
-            Apri il modulo in una nuova scheda
-          </a>
+          <ContactQuestionForm />
         </div>
       </SectionReveal>
     </>
