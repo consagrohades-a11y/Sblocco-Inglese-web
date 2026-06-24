@@ -1,1 +1,1 @@
-// temporary marker
+export const navItems = [];
