@@ -36,9 +36,11 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-2 xl:flex">
           <span className="rounded-full border border-moss/15 bg-white px-3 py-1.5 text-xs font-black text-moss shadow-sm">
-            Corsi + diagnosi da {primaryOffer.price}
+            Diagnosi iniziale {primaryOffer.price}
           </span>
-          <CTAButton href="/percorsi" className="!min-h-10 px-4 py-2 text-sm">Scopri i corsi</CTAButton>
+          <CTAButton href="/prenota#booking-form" className="!min-h-10 px-4 py-2 text-sm">
+            {ctaLabels.primary}
+          </CTAButton>
         </div>
 
         <button
