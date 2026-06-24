@@ -9,7 +9,7 @@ import Simulation from './pages/Simulation';
 import Percorsi from './pages/Percorsi';
 import Reviews from './pages/Reviews';
 import CaseStudies from './pages/CaseStudies';
-import FAQ from './pages/FAQ';
+import Contact from './pages/Contact';
 import Prenota from './pages/Prenota';
 import TrainersLanding from './pages/TrainersLanding';
 import LegalPage from './pages/LegalPage';
@@ -61,7 +61,8 @@ export default function App() {
             <Route path="/recensioni" element={<Reviews />} />
             <Route path="/casi-reali" element={<CaseStudies />} />
             <Route path="/case-studies" element={<CaseStudies />} />
-            <Route path="/faq" element={<FAQ />} />
+            <Route path="/contatti" element={<Contact />} />
+            <Route path="/faq" element={<Navigate to="/contatti#faq" replace />} />
             <Route path="/trainers" element={<TrainersLanding />} />
             <Route path="/trainers/business-expression" element={<Trainer />} />
             <Route path="/trainers/general-expression" element={<GeneralExpressionTrainer />} />
