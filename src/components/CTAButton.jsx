@@ -20,9 +20,9 @@ export default function CTAButton({
   icon = true,
   onClick,
 }) {
-  const shouldUseBooking = href === '/percorsi' && children === 'Scopri i corsi';
-  const finalHref = shouldUseBooking ? externalLinks.form : href;
-  const finalChildren = shouldUseBooking ? ctaLabels.primary : children;
+  const shouldUseSimulationPage = href === '/percorsi' && children === 'Scopri i corsi';
+  const finalHref = shouldUseSimulationPage ? '/simulazione-39' : href;
+  const finalChildren = shouldUseSimulationPage ? ctaLabels.primary : children;
   const opensNewTab = /^https?:\/\//.test(finalHref);
   const classNames =
     variant === 'quiet'
