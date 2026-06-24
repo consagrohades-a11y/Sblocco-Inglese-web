@@ -130,13 +130,13 @@ export default function SrsCard({
 
         {revealed ? (
           <div className={`mt-4 border-t pt-4 ${dark ? 'border-white/10' : 'border-ink/10'}`}>
-            <div className="grid gap-3 xl:grid-cols-[0.82fr_1fr] xl:items-start">
-              <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-1">
-                <div className={`rounded-lg p-3 text-center ${dark ? 'bg-mint/15' : 'bg-mint/60'}`}>
-                  <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-mint' : 'text-moss'}`}>Italiano</p>
-                  <p className={`mt-1.5 break-words text-base font-black leading-6 ${dark ? 'text-white' : 'text-ink'}`}>{safeCard.italian}</p>
-                </div>
+            <div className={`mx-auto max-w-2xl rounded-lg p-4 text-center ${dark ? 'bg-mint/15' : 'bg-mint/60'}`}>
+              <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-mint' : 'text-moss'}`}>Italiano</p>
+              <p className={`mt-1.5 break-words text-lg font-black leading-7 ${dark ? 'text-white' : 'text-ink'}`}>{safeCard.italian}</p>
+            </div>
 
+            <div className="mt-3 grid gap-3 xl:grid-cols-[0.82fr_1fr] xl:items-start">
+              <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-1">
                 {safeCard.collocations ? (
                   <div className={`rounded-lg border p-3 ${dark ? 'border-white/10 bg-white/[0.06]' : 'border-ink/10 bg-paper'}`}>
                     <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Collocations</p>
