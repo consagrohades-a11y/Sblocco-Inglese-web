@@ -10,7 +10,11 @@ import CTAButton from './CTAButton';
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const desktopItems = navItems.filter((item) => !['/prenota', '/simulazione-39'].includes(item.to));
-  const navLabel = (item) => (item.to === '/simulazione-39' ? `Simulazione ${primaryOffer.price}` : item.label);
+  const navLabel = (item) => {
+    if (item.to === '/') return 'La piattaforma';
+    if (item.to === '/simulazione-39') return `Simulazione ${primaryOffer.price}`;
+    return item.label;
+  };
 
   const navClass = ({ isActive }) =>
     `focus-ring whitespace-nowrap rounded-full px-3 py-2 text-[0.82rem] font-black transition 2xl:px-4 2xl:text-sm ${
