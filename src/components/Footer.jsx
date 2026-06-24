@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { primaryOffer } from '../config/site';
+import { externalLinks, primaryOffer } from '../config/site';
 import BrandLogo from './BrandLogo';
 
 export default function Footer() {
@@ -30,9 +30,10 @@ export default function Footer() {
           <Link className="text-white/75 hover:text-white" to="/privacy-policy">Privacy Policy</Link>
           <Link className="text-white/75 hover:text-white" to="/cookie-policy">Cookie Policy</Link>
           <Link className="text-white/75 hover:text-white" to="/termini-e-condizioni">Termini e Condizioni</Link>
-          <Link className="text-white/75 hover:text-white" to="/prenota">Contatti</Link>
+          <a className="text-white/75 hover:text-white" href={externalLinks.email}>Email assistenza</a>
+          <a className="text-white/75 hover:text-white" href={externalLinks.whatsapp} target="_blank" rel="noreferrer">WhatsApp per dubbi prima di prenotare</a>
           <p className="mt-3 rounded-lg border border-white/10 bg-white/5 p-4 text-xs leading-5 text-white/60">
-            Sblocco Inglese by Rhema. Servizi online di formazione linguistica.
+            Sblocco Inglese è un progetto di formazione linguistica online. La simulazione da {primaryOffer.price} è confermata solo dopo pagamento completato.
           </p>
         </div>
       </div>
