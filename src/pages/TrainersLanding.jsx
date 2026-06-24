@@ -18,7 +18,7 @@ const useCases = [
   },
   {
     title: 'Allenare il recupero veloce',
-    text: 'Le card difficili tornano prima; quelle facili tornano più avanti. Ormai le sai',
+    text: 'Le card difficili tornano prima; quelle facili tornano più avanti quando sono già più stabili.',
   },
   {
     title: 'Continuare dopo la lezione',
@@ -65,7 +65,7 @@ export default function TrainersLanding() {
             <div>
               <span className="eyebrow border-white/15 bg-white/10 text-white">
                 <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
-                Premium product
+                Supporto per studenti
               </span>
               <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight sm:text-6xl">
                 Trainer Suite
@@ -78,7 +78,7 @@ export default function TrainersLanding() {
                 <CTAButton href="/trainers/business-expression" variant="contrast">
                   Inizia dal Business Trainer
                 </CTAButton>
-                <CTAButton href="/simulazione-39" variant="secondary">
+                <CTAButton href="/prenota#booking-form" variant="secondary">
                   Prima fai la simulazione {primaryOffer.price}
                 </CTAButton>
               </div>
@@ -87,7 +87,7 @@ export default function TrainersLanding() {
             <div className="rounded-lg border border-white/10 bg-white/[0.07] p-5">
               <div className="rounded-lg border border-white/10 bg-white/[0.08] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">Review engine</p>
-                <h2 className="mt-3 text-3xl font-black leading-tight"> Lo vedi oggi, se è Hard domani, se già non lo ricordi subito.</h2>
+                <h2 className="mt-3 text-3xl font-black leading-tight">Ripassi le frasi giuste prima di dimenticarle.</h2>
                 <p className="mt-3 text-sm font-semibold leading-6 text-white/65">
                   Il trainer reagisce a come rispondi e mantiene separati deck, categorie e progressi. Non è una lista:
                   è un sistema di recupero.
@@ -169,9 +169,9 @@ export default function TrainersLanding() {
           <CtaBand
             eyebrow="Accesso"
             title="Il Trainer fa parte dell’ecosistema Sblocco Inglese."
-            copy="È una funzione pensata per supportare gli studenti fuori dalle lezioni. Se stai già facendo lezione con Rhema, l’accesso è incluso mentre sei attivo/a."
+            copy="È una funzione pensata per supportare gli studenti fuori dalle lezioni. Se stai già facendo lezione con Rhema, l’accesso è incluso mentre sei attivo/a. Alcune funzioni premium verranno attivate progressivamente."
           >
-            <CTAButton href="/prenota" variant="contrast">
+            <CTAButton href="/prenota#booking-form" variant="contrast">
               Prenota la simulazione
             </CTAButton>
             <CTAButton href="/percorsi" variant="secondary">
@@ -180,7 +180,7 @@ export default function TrainersLanding() {
           </CtaBand>
           <p className="mt-4 flex items-start gap-2 text-xs font-semibold leading-5 text-ink/55">
             <Lock aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-coral" />
-           Nota ricorda: aggiungimenti necessari - login, paywall
+            Accesso incluso per studenti attivi. Alcune funzioni premium verranno attivate progressivamente.
           </p>
         </div>
       </TrainerLayout>
