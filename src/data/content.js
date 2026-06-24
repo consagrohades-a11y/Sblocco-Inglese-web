@@ -330,18 +330,21 @@ export const percorsoOffers = [
       'risposte più naturali',
       'correzione degli errori comuni',
       'simulazioni guidate',
+      'allenamento fuori lezione con feedback',
+      'Trainer Suite inclusa durante il corso',
     ],
     bestFor:
-      'Chi vuole sbloccarsi con pratica strutturata, senza aspettare un colloquio urgente.',
+      'Chi vuole sbloccarsi con pratica strutturata, senza aspettare un colloquio urgente. Per non farsi cogliere di sorpresa.',
     note:
       `Se hai già fatto la simulazione da ${primaryOffer.price}, il costo può essere scalato dal prezzo del corso se ti iscrivi entro 7 giorni.`,
     selectedTitle: 'Quando scegli questo sprint',
     selectedCopy:
-      'Il lavoro diventa costante ma leggero: ogni settimana alleni speaking professionale, risposte da colloquio, call, email e frasi che ti servono davvero. È pensato per chi vuole crescere senza aspettare una scadenza drammatica.',
+      'Il lavoro diventa costante ma leggero e definito: ogni settimana alleni speaking professionale, risposte da colloquio, call, email e frasi che ti servono davvero. È pensato per chi vuole crescere senza aspettare una scadenza drammatica.',
     selectedBullets: [
       'più ritmo e continuità rispetto a una singola simulazione',
       'correzioni ricorrenti sugli errori che tornano spesso',
       'frasi professionali da riutilizzare in contesti diversi',
+      'organizzazione mirata a risultati tangibili',
     ],
     icon: Users,
   },
@@ -357,7 +360,8 @@ export const percorsoOffers = [
       'email e follow-up',
       'frasi professionali',
       'customer-facing English',
-      'trainer business incluso',
+      'speaking in ambienti quali expo, congressi, networking'
+      'trainer business incluso durante il corso',
     ],
     bestFor:
       'Chi usa già l’inglese al lavoro e vuole sembrare più chiaro, presente e professionale.',
@@ -365,7 +369,7 @@ export const percorsoOffers = [
       'È una buona evoluzione dopo la simulazione se il blocco emerge soprattutto in call, email o contatto clienti.',
     selectedTitle: 'Quando scegli Business English Flow',
     selectedCopy:
-      'Il corso lavora sulle situazioni che si ripetono davvero al lavoro: spiegare, chiedere, rispondere, seguire una call e chiudere un messaggio senza suonare tradotto.',
+      'Il corso lavora sulle situazioni che si ripetono davvero al lavoro: spiegare, chiedere, rispondere, seguire una call, chiudere un messaggio senza suonare tradotto, usare la lingua in maniera professionale ma non robotica, creando connessioni reali con colleghi, clienti e futuri partner lavorativi',
     selectedBullets: [
       'più formule pronte per call ed email',
       'meno traduzione mentale nelle risposte professionali',
@@ -380,12 +384,14 @@ export const percorsoOffers = [
     description:
       'Percorso privato per chi ha un colloquio o una scadenza ravvicinata e ha bisogno di preparare risposte, simulazioni e correzioni in modo più intensivo.',
     includes: [
-      '3 sessioni private',
+      '6 sessioni private (la cadenza delle sessioni la scegli tu, urgency matters)',
       'preparazione risposte',
       'simulazione colloquio',
       'feedback scritto',
       'correzione frasi',
       'pratica personalizzata',
+      'review CV (ATTENZIONE!, in inglese si scrive diversamente...)',
+      'Trainer Suite incluso durante la preparazione. Qui diventa fondamentale è aumenta di 10X la tua probabilità di successo',
     ],
     bestFor:
       'Chi ha un colloquio vero, una candidatura importante o poco tempo per prepararsi.',
@@ -406,7 +412,7 @@ export const percorsoOffers = [
     type: 'Training per team',
     price: 'Da €800',
     description:
-      'Percorso per piccoli team o attività che lavorano con clienti stranieri e vogliono migliorare inglese pratico per email, call, accoglienza, customer service o vendita.',
+      'Percorso per piccoli team o attività che lavorano con clienti stranieri o in espansione di mercato e vogliono migliorare inglese pratico per email, call, accoglienza, customer service o vendita.',
     includes: [
       'programma su misura',
       'sessioni online',
@@ -414,6 +420,7 @@ export const percorsoOffers = [
       'frasi e template pratici',
       'simulazioni con clienti',
       'feedback sul team',
+      'Trainer Suite disponibile per tutto il team durante il percorso',
     ],
     bestFor:
       'Piccole aziende, studi, attività turistiche, hospitality, customer service, beauty/wellness, eventi o servizi con clienti internazionali.',
@@ -421,7 +428,7 @@ export const percorsoOffers = [
       'La prima conversazione serve a capire se il bisogno del team è abbastanza specifico.',
     selectedTitle: 'Quando scegli il training per team',
     selectedCopy:
-      'Il focus non è “fare inglese”, ma rendere il team più chiaro con clienti, ospiti o interlocutori internazionali. Partiamo dalle situazioni ripetute dell’attività e costruiamo frasi, simulazioni e template utili.',
+      "Il focus non è “fare inglese”, ma rendere il team più chiaro con clienti, ospiti o interlocutori internazionali. Partiamo dalle situazioni ripetute dell’attività e costruiamo frasi, simulazioni e template utili. LET'S UPSKILL",
     selectedBullets: [
       'programma adattato a ruoli, clienti e settore',
       'call, email, accoglienza o vendita in inglese pratico',
