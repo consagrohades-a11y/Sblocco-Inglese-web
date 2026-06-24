@@ -78,39 +78,39 @@ export default function SrsCard({
         dark ? 'border-white/10 bg-[#111f1b] text-white' : 'border-ink/10 bg-white text-ink'
       }`}
     >
-      <div className={`border-b px-4 py-3 sm:px-6 sm:py-4 ${dark ? 'border-white/10 bg-white/[0.05]' : 'border-ink/10 bg-white'}`}>
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="max-w-full break-words rounded-full bg-mint px-3 py-1 text-[0.68rem] font-black uppercase tracking-[0.08em] text-moss sm:text-xs">
+      <div className={`border-b px-3 py-2.5 sm:px-5 ${dark ? 'border-white/10 bg-white/[0.05]' : 'border-ink/10 bg-white'}`}>
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <span className="max-w-full break-words rounded-full bg-mint px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-[0.08em] text-moss sm:text-xs">
             {safeCard.category}
           </span>
-          <span className={`rounded-full border px-3 py-1 text-[0.68rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/70' : 'border-ink/10 bg-paper text-ink/70'}`}>
+          <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/70' : 'border-ink/10 bg-paper text-ink/70'}`}>
             {safeCard.level}
           </span>
-          <span className={`rounded-full border px-3 py-1 text-[0.68rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/60' : 'border-ink/10 bg-white text-ink/55'}`}>
+          <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/60' : 'border-ink/10 bg-white text-ink/55'}`}>
             {safeCard.type}
           </span>
           {safeCard.partOfSpeech ? (
-            <span className={`rounded-full border px-3 py-1 text-[0.68rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/60' : 'border-ink/10 bg-white text-ink/55'}`}>
+            <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/60' : 'border-ink/10 bg-white text-ink/55'}`}>
               {safeCard.partOfSpeech}
             </span>
           ) : null}
-          <span className={`rounded-full px-3 py-1 text-[0.68rem] font-black sm:ml-auto sm:text-xs ${dark ? 'bg-white text-ink' : 'bg-ink text-white'}`}>
+          <span className={`rounded-full px-2.5 py-1 text-[0.65rem] font-black sm:ml-auto sm:text-xs ${dark ? 'bg-white text-ink' : 'bg-ink text-white'}`}>
             {dueLabel}
           </span>
         </div>
-        <div className={`mt-3 flex flex-wrap items-center justify-between gap-2 text-[0.68rem] font-black uppercase tracking-[0.08em] sm:text-xs ${dark ? 'text-white/40' : 'text-ink/40'}`}>
+        <div className={`mt-2 flex flex-wrap items-center justify-between gap-2 text-[0.65rem] font-black uppercase tracking-[0.08em] sm:text-xs ${dark ? 'text-white/40' : 'text-ink/40'}`}>
           <span>{sessionLabel}</span>
           <span className="hidden sm:inline">Shortcuts: Space, 1, 2, 3, 4</span>
         </div>
       </div>
 
-      <div className="px-4 py-5 sm:px-7 sm:py-8">
+      <div className="px-3 py-4 sm:px-5 sm:py-5">
         <div className="text-center">
-          <p className={`text-xs font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>{displayTargetLabel}</p>
-          <h2 className={`mx-auto mt-2 max-w-4xl break-words text-2xl font-black leading-tight sm:mt-3 sm:text-4xl lg:text-5xl ${dark ? 'text-white' : 'text-ink'}`}>
+          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>{displayTargetLabel}</p>
+          <h2 className={`mx-auto mt-2 max-w-4xl break-words text-2xl font-black leading-tight sm:text-3xl lg:text-4xl ${dark ? 'text-white' : 'text-ink'}`}>
             {safeCard.expression}
           </h2>
-          <p className={`mx-auto mt-3 max-w-4xl break-words rounded-lg px-4 py-2.5 text-sm font-semibold leading-6 sm:mt-5 sm:py-3 ${
+          <p className={`mx-auto mt-3 max-w-4xl break-words rounded-lg px-3 py-2 text-sm font-semibold leading-6 ${
             dark ? 'bg-white/[0.07] text-white/70' : 'bg-paper text-ink/70'
           }`}>
             {safeCard.pronunciation}
@@ -120,7 +120,7 @@ export default function SrsCard({
             <button
               type="button"
               onClick={onReveal}
-              className="focus-ring mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-moss px-6 py-3 text-sm font-extrabold text-white shadow-lift transition hover:-translate-y-0.5 hover:bg-[#096d58] sm:mt-7 sm:min-h-12"
+              className="focus-ring mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-moss px-6 py-3 text-sm font-extrabold text-white shadow-lift transition hover:-translate-y-0.5 hover:bg-[#096d58] sm:mt-5"
             >
               <Eye aria-hidden="true" className="h-4 w-4" />
               Show answer
@@ -129,44 +129,44 @@ export default function SrsCard({
         </div>
 
         {revealed ? (
-          <div className={`mt-5 border-t pt-5 sm:mt-7 sm:pt-6 ${dark ? 'border-white/10' : 'border-ink/10'}`}>
-            <div className="grid gap-4 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
-              <div className="grid gap-3">
-                <div className={`rounded-lg p-4 text-center ${dark ? 'bg-mint/15' : 'bg-mint/60'}`}>
-                  <p className={`text-xs font-black uppercase tracking-[0.08em] ${dark ? 'text-mint' : 'text-moss'}`}>Italiano</p>
-                  <p className={`mt-2 break-words text-lg font-black leading-7 ${dark ? 'text-white' : 'text-ink'}`}>{safeCard.italian}</p>
+          <div className={`mt-4 border-t pt-4 ${dark ? 'border-white/10' : 'border-ink/10'}`}>
+            <div className="grid gap-3 xl:grid-cols-[0.82fr_1fr] xl:items-start">
+              <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-1">
+                <div className={`rounded-lg p-3 text-center ${dark ? 'bg-mint/15' : 'bg-mint/60'}`}>
+                  <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-mint' : 'text-moss'}`}>Italiano</p>
+                  <p className={`mt-1.5 break-words text-base font-black leading-6 ${dark ? 'text-white' : 'text-ink'}`}>{safeCard.italian}</p>
                 </div>
 
                 {safeCard.collocations ? (
-                  <div className={`rounded-lg border p-4 ${dark ? 'border-white/10 bg-white/[0.06]' : 'border-ink/10 bg-paper'}`}>
-                    <p className={`text-xs font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Collocations</p>
-                    <p className={`mt-2 break-words text-sm font-semibold leading-6 ${dark ? 'text-white/70' : 'text-ink/75'}`}>
+                  <div className={`rounded-lg border p-3 ${dark ? 'border-white/10 bg-white/[0.06]' : 'border-ink/10 bg-paper'}`}>
+                    <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Collocations</p>
+                    <p className={`mt-1.5 break-words text-sm font-semibold leading-5 ${dark ? 'text-white/70' : 'text-ink/75'}`}>
                       {safeCard.collocations}
                     </p>
                   </div>
                 ) : null}
 
-                <div className={`flex items-start gap-3 rounded-lg p-4 ${dark ? 'bg-white/[0.06]' : 'bg-paper'}`}>
-                  <BookOpen aria-hidden="true" className={`mt-1 h-5 w-5 shrink-0 ${dark ? 'text-mint' : 'text-moss'}`} />
-                  <p className={`break-words text-sm font-semibold leading-6 ${dark ? 'text-white/70' : 'text-ink/70'}`}>{safeCard.note}</p>
+                <div className={`flex items-start gap-3 rounded-lg p-3 ${dark ? 'bg-white/[0.06]' : 'bg-paper'}`}>
+                  <BookOpen aria-hidden="true" className={`mt-0.5 h-4 w-4 shrink-0 ${dark ? 'text-mint' : 'text-moss'}`} />
+                  <p className={`break-words text-sm font-semibold leading-5 ${dark ? 'text-white/70' : 'text-ink/70'}`}>{safeCard.note}</p>
                 </div>
               </div>
 
-              <div className="grid gap-3">
+              <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-1">
                 <MarkdownText
                   text={safeCard.example1}
                   dark={dark}
-                  className={`rounded-lg border p-4 text-sm font-semibold leading-6 ${dark ? 'border-white/10 bg-white/[0.06] text-white/75' : 'border-ink/10 bg-white text-ink/75'}`}
+                  className={`rounded-lg border p-3 text-sm font-semibold leading-5 ${dark ? 'border-white/10 bg-white/[0.06] text-white/75' : 'border-ink/10 bg-white text-ink/75'}`}
                 />
                 <MarkdownText
                   text={safeCard.example2}
                   dark={dark}
-                  className={`rounded-lg border p-4 text-sm font-semibold leading-6 ${dark ? 'border-white/10 bg-white/[0.06] text-white/75' : 'border-ink/10 bg-white text-ink/75'}`}
+                  className={`rounded-lg border p-3 text-sm font-semibold leading-5 ${dark ? 'border-white/10 bg-white/[0.06] text-white/75' : 'border-ink/10 bg-white text-ink/75'}`}
                 />
               </div>
             </div>
 
-            <div className="mt-5 grid grid-cols-2 gap-2 sm:mt-6 sm:gap-3 lg:grid-cols-4">
+            <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
               {reviewRatings.map((rating, index) => {
                 const Icon = ratingIcons[rating.value];
 
@@ -175,14 +175,14 @@ export default function SrsCard({
                     key={rating.value}
                     type="button"
                     onClick={() => onRate(rating.value)}
-                    className={`focus-ring min-h-14 rounded-lg border px-3 py-3 text-left transition hover:-translate-y-0.5 sm:min-h-16 sm:px-4 ${activeRatingStyles[rating.value]}`}
+                    className={`focus-ring min-h-12 rounded-lg border px-3 py-2.5 text-left transition hover:-translate-y-0.5 sm:min-h-14 ${activeRatingStyles[rating.value]}`}
                   >
                     <span className="flex items-center gap-2 text-sm font-black sm:text-base">
                       <Icon aria-hidden="true" className="h-4 w-4" />
                       {rating.label}
                       <span className={`ml-auto text-xs ${dark ? 'text-white/50' : 'text-ink/50'}`}>{index + 1}</span>
                     </span>
-                    <span className={`mt-1 block text-xs font-bold ${dark ? 'text-white/60' : 'text-ink/55'}`}>{rating.helper}</span>
+                    <span className={`mt-0.5 block text-xs font-bold ${dark ? 'text-white/60' : 'text-ink/55'}`}>{rating.helper}</span>
                   </button>
                 );
               })}

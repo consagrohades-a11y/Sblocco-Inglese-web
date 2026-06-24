@@ -4,6 +4,7 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import StickyMobileCTA from './components/StickyMobileCTA';
+import BackToTopButton from './components/BackToTopButton';
 import Home from './pages/Home';
 import Simulation from './pages/Simulation';
 import Percorsi from './pages/Percorsi';
@@ -91,6 +92,7 @@ export default function App() {
       </main>
       <Footer />
       <StickyMobileCTA />
+      <BackToTopButton />
     </div>
   );
 }
