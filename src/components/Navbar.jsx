@@ -42,7 +42,7 @@ export default function Navbar() {
 
         <div className="hidden shrink-0 items-center gap-2 xl:flex">
           <CTAButton href="/simulazione-39" className="!min-h-11 whitespace-nowrap !px-5 !py-2.5 !text-sm" icon={false}>
-            {ctaLabels.mobile}
+            Prenota l'audit a 39 euro
           </CTAButton>
         </div>
 
@@ -87,7 +87,7 @@ export default function Navbar() {
             )}
           </nav>
           <CTAButton className="mt-4 w-full" onClick={() => setOpen(false)}>
-            {ctaLabels.primary}
+            Prenota l'audit a 39 euro
           </CTAButton>
         </div>
       ) : null}
