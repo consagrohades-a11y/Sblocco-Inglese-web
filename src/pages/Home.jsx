@@ -37,7 +37,7 @@ const pressureSignals = [
 ];
 
 const systemProof = [
-  { value: 'Corsi', label: "l'offerta principale" },
+  { value: 'Corsi', label: "Lezioni, struttura, docente" },
   { value: primaryOffer.price, label: 'diagnosi iniziale' },
   { value: '750+', label: 'card trainer disponibili' },
 ];
@@ -191,10 +191,10 @@ function ProductFlow() {
         <div className="section-kicker">
           <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Un unico ecosistema</p>
           <h2 className="mt-3 text-3xl font-black leading-tight text-ink sm:text-4xl">
-            Corsi al centro. Simulazione per iniziare. Trainer per non perdere slancio.
+            Corsi al centro. Simulazione per iniziare. Trainer per non perdere momentum.
           </h2>
           <p className="mt-4 text-base font-semibold leading-7 text-ink/70">
-            Ogni pezzo ha un ruolo preciso: non confonde il percorso, lo rende più facile da iniziare e più difficile da
+            Ogni cosa ha un ruolo preciso: non confonde il percorso, lo rende più facile da iniziare e più difficile da
             abbandonare.
           </p>
         </div>
@@ -326,8 +326,8 @@ export default function Home() {
               <SectionHeader
                 eyebrow="Il problema reale"
                 icon={MessageSquareWarning}
-                title="Non ti manca solo inglese. Ti manca accesso rapido quando qualcuno aspetta una risposta."
-                copy="Molte persone hanno studiato, capiscono abbastanza, leggono email e seguono video. Poi arriva una domanda dal vivo e tutto diventa più lento, più rigido, meno brillante."
+                title="Non ti manca solo l'inglese. Ti manca la rapidità nella risposta quando qualcuno ti parla."
+                copy="Molte persone hanno studiato, capiscono abbastanza, leggono email e seguono video. Poi arriva una domanda dal vivo e tutto diventa più lento, più rigido, e sconnesso."
               />
               <FeatureList items={pressureSignals} className="mt-7 sm:grid-cols-2" />
             </div>
@@ -349,8 +349,8 @@ export default function Home() {
               <SectionHeader
                 eyebrow="Corsi prima di tutto"
                 icon={GraduationCap}
-                title="Il cuore di Sblocco Inglese sono percorsi pratici, guidati e progressivi."
-                copy="La simulazione ti fa entrare con una diagnosi chiara. Il corso è dove trasformiamo quella diagnosi in pratica costante: risposte migliori, più sicurezza e un inglese che regge nei momenti importanti."
+                title="Il cuore di Sblocco Inglese sta nei percorsi pratici, guidati e progressivi."
+                copy="La simulazione ti dà un primo accesso con una diagnosi chiara. Il corso è dove quella diagnosi trasformata in pratica costante: risposte migliori, più sicurezza e un inglese che regge nei momenti importanti."
               />
               <FeatureList items={coursePrinciples} className="mt-7" />
             </div>
@@ -364,10 +364,10 @@ export default function Home() {
           <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
             <div>
               <SectionHeader
-                eyebrow="Ingresso semplice"
+                eyebrow="Primo accesso"
                 icon={Target}
                 title={`La simulazione da ${primaryOffer.price} è il modo più rapido per capire da dove partire.`}
-                copy="È il primo passo del funnel: una sessione breve, concreta, con feedback scritto. Serve a vedere il blocco in azione e a scegliere il percorso giusto senza comprare alla cieca."
+                copy="È il primo passo: una sessione breve, concreta, con feedback scritto. Serve a vedere il blocco in azione e a scegliere il percorso giusto senza comprare alla cieca."
               />
               <div className="mt-7">
                 <FeatureList items={receiveItems} className="sm:grid-cols-2" />
@@ -415,7 +415,7 @@ export default function Home() {
                 eyebrow="Prodotto digitale"
                 icon={Brain}
                 title="Il Trainer è il prodotto che mantiene vivo il lavoro tra una sessione e l'altra."
-                copy="Frasi, parole e risposte tornano con ripetizione dilazionata: ciò che è difficile ricompare prima, ciò che è stabile torna più avanti. Non sostituisce i corsi: li rende più efficaci."
+                copy="Frasi, parole e risposte tornano con ripetizione dilazionata: ciò che è difficile ricompare prima, ciò che è stabile torna più avanti. Non sostituisce i corsi: li rende più efficaci. Ogni lezione diventa una palestra in più dove utilizzare tutto ciò che si è imparato dentro e fuori."
                 light
               />
               <Link
@@ -454,7 +454,7 @@ export default function Home() {
                 eyebrow="Percorso di ingresso"
                 icon={CheckCircle2}
                 title="Se non sai da quale corso partire, parti dalla simulazione."
-                copy="È il modo più leggero per capire livello, blocco principale e urgenza reale. Dopo, il passo successivo è molto più chiaro."
+                copy="È il modo più sicuro per capire livello, blocco principale e urgenza reale. Dopo, il passo successivo sarà molto più chiaro."
               />
               <div className="mt-7">
                 <TrustBadges />
