@@ -16,6 +16,7 @@ import TrainersLanding from './pages/TrainersLanding';
 import LegalPage from './pages/LegalPage';
 import NotFound from './pages/NotFound';
 import { legalPages } from './data/legalPages';
+import './trainer-overrides.css';
 
 const Trainer = lazy(() => import('./pages/Trainer'));
 const GeneralExpressionTrainer = lazy(() => import('./pages/GeneralExpressionTrainer'));
