@@ -46,7 +46,7 @@ const steps = [
 ];
 
 const fitItems = [
-  'hai una base A2/B1 o superiore',
+  'hai una base A2 o superiore',
   'ti blocchi quando devi parlare davvero',
   'vuoi capire cosa migliorare prima di comprare un corso',
 ];
@@ -179,7 +179,7 @@ export default function Simulation() {
               <TrustBadges />
             </div>
             <p className="mt-4 max-w-2xl text-sm font-semibold leading-6 text-white/60">
-              Pensato per italiani con base A2-B1/B2 che capiscono più di quanto riescono a dire sotto pressione.
+              Pensato per italiani che capiscono più di quanto riescono a dire sotto pressione.
             </p>
           </div>
           <AuditCard />
