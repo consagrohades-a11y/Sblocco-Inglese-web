@@ -40,7 +40,7 @@ export default function ContactQuestionForm() {
         </label>
 
         <label className="mt-5 block text-sm font-black text-ink">
-          Scrivi la tua domanda
+          Che dubbio hai?
           <textarea
             className={`${inputClass} min-h-[150px] resize-y leading-6`}
             name="entry.820783450"
