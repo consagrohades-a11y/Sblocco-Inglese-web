@@ -35,7 +35,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-2 xl:flex">
-          <span className="whitespace-nowrap rounded-full border border-moss/15 bg-white px-3 py-1.5 text-xs font-black text-moss shadow-sm">
+          <span className="whitespace-nowrap rounded-full border border-ink/15 bg-white px-3 py-1.5 text-xs font-black text-ink shadow-sm">
             Diagnosi iniziale {primaryOffer.price}
           </span>
           <CTAButton href="/prenota#booking-form" className="!min-h-10 px-4 py-2 text-sm">
