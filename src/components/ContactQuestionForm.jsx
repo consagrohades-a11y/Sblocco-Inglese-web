@@ -45,14 +45,11 @@ export default function ContactQuestionForm() {
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             {doubtTypes.map((type) => (
               <label key={type} className="flex items-center gap-3 text-sm font-semibold text-ink/75">
-                <input className="h-4 w-4 shrink-0 accent-moss" name="doubtTypePendingEntryId" type="radio" value={type} required />
+                <input className="h-4 w-4 shrink-0 accent-moss" name="entry.697223897" type="radio" value={type} required />
                 <span>{type}</span>
               </label>
             ))}
           </div>
-          <p className="mt-3 text-xs font-semibold leading-5 text-coral">
-            Campo visivo aggiunto: serve l'entry ID di Google Forms per salvare questa risposta nel foglio.
-          </p>
         </fieldset>
 
         <label className="mt-5 block text-sm font-black text-ink">
