@@ -3,7 +3,7 @@
 
 export const siteConfig = {
   teacherName: 'Rhema',
-  brandName: 'Sblocco Inglese by Rhema',
+  brandName: 'Sblocco Inglese',
 
   // Edit links here. Main booking CTAs open the internal quiz; the quiz itself submits to Google Forms.
   links: {
@@ -11,8 +11,9 @@ export const siteConfig = {
     bookingFlow: '/prenota#booking-flow',
     googleForm: 'https://forms.gle/D95Y9hafyP9k3DEcA',
     calendly: 'https://calendly.com/consagrohades/30min',
-    payment: '[STRIPE_PAYMENT_LINK_PLACEHOLDER]',
-    whatsapp: '[WHATSAPP_LINK_PLACEHOLDER]',
+    payment: '/prenota#paypal-container-YRB8MRH7FYKKA',
+    whatsapp: 'https://wa.link/a8lf7c',
+    email: 'mailto:consagrohades@gmail.com',
   },
 
   // Edit the internal-looking booking quiz here.
@@ -146,7 +147,7 @@ export const siteConfig = {
     badges: [
       'Bilingue italiano/inglese',
       'Tutor su Preply',
-      'CELTA certified tutor',
+      'TEFL Level 5',
       'Speaking sotto pressione',
       'Colloqui e lavoro',
       'Feedback scritto',
@@ -266,4 +267,5 @@ export const externalLinks = {
   calendar: siteConfig.links.calendly,
   payment: siteConfig.links.payment,
   whatsapp: siteConfig.links.whatsapp,
+  email: siteConfig.links.email,
 };
