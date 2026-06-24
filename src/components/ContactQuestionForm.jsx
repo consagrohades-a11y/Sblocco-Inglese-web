@@ -4,6 +4,7 @@ import { Send } from 'lucide-react';
 const questionFormUrl = 'https://forms.gle/mcss5TWTQj4jZ7ct7';
 const formAction = 'https://docs.google.com/forms/d/e/1FAIpQLSejCylow7ayRiVRnRxVJIuuZGJF0KmEAqNRsTufjxMVVnTXAA/formResponse';
 const consentText = '“Confermo di aver letto la Privacy Policy e autorizzo Sblocco Inglese a usare questi dati solo per rispondere alla mia richiesta.”';
+const doubtTypes = ['Simulazione da €39', 'Pagamento', 'Livello inglese', 'Corsi', 'Trainer Suite', 'Altro'];
 
 const inputClass =
   'mt-2 w-full rounded-2xl border border-ink/10 bg-linen/60 px-4 py-3 text-sm font-semibold text-ink outline-none transition placeholder:text-ink/35 focus:border-moss focus:bg-white focus:ring-4 focus:ring-mint/30';
@@ -35,12 +36,27 @@ export default function ContactQuestionForm() {
         </div>
 
         <label className="mt-5 block text-sm font-black text-ink">
-          WhatsApp <span className="font-semibold text-ink/45">opzionale</span>
+          Whatsapp <span className="font-semibold text-ink/45">Opzionale</span>
           <input className={inputClass} name="entry.1757011184" type="tel" placeholder="+39 ..." />
         </label>
 
+        <fieldset className="mt-5 rounded-2xl border border-ink/10 bg-linen/40 p-4">
+          <legend className="px-1 text-sm font-black text-ink">Che tipo di dubbio hai?</legend>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            {doubtTypes.map((type) => (
+              <label key={type} className="flex items-center gap-3 text-sm font-semibold text-ink/75">
+                <input className="h-4 w-4 shrink-0 accent-moss" name="doubtTypePendingEntryId" type="radio" value={type} required />
+                <span>{type}</span>
+              </label>
+            ))}
+          </div>
+          <p className="mt-3 text-xs font-semibold leading-5 text-coral">
+            Campo visivo aggiunto: serve l'entry ID di Google Forms per salvare questa risposta nel foglio.
+          </p>
+        </fieldset>
+
         <label className="mt-5 block text-sm font-black text-ink">
-          Che dubbio hai?
+          Scrivi la tua domanda/richiesta
           <textarea
             className={`${inputClass} min-h-[150px] resize-y leading-6`}
             name="entry.820783450"
@@ -56,6 +72,14 @@ export default function ContactQuestionForm() {
             alla mia richiesta.
           </span>
         </label>
+
+        <div className="mt-5 rounded-2xl border border-ink/10 bg-white p-4 text-sm font-semibold leading-6 text-ink/70">
+          Dopo l'invio riceverai sulla mail o il numero di contatto inserito una risposta alla tua richiesta.
+          <br />
+          La risposta potrebbe non arrivare nell'immediato, si consiglia di aspettare fino alle 24-48h.
+          <br />
+          Si garantisce che l'invio della seguente, dopo successiva conferma è stata ricevuta.
+        </div>
 
         <button
           type="submit"
