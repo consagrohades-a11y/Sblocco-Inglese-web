@@ -39,7 +39,7 @@ export default function LegalPage({ page }) {
       <section className="section-shell pb-10 pt-12 lg:pt-16">
         <span className="eyebrow">
           <AlertCircle aria-hidden="true" className="h-3.5 w-3.5" />
-          Bozza legale da verificare
+          Informazioni legali
         </span>
         <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight text-ink sm:text-5xl">
           {page.title}
@@ -49,7 +49,7 @@ export default function LegalPage({ page }) {
         </p>
         <div className="mt-6 max-w-4xl rounded-lg border border-coral/20 bg-blush p-5 shadow-sm">
           <p className="text-sm font-semibold leading-6 text-ink/75">
-            Questa pagina contiene una bozza operativa e deve essere verificata da un professionista prima del lancio.
+            Queste informazioni descrivono l’uso del sito e dei servizi online di Sblocco Inglese. Per dubbi specifici, contatta l’assistenza prima di prenotare.
           </p>
         </div>
         <Paragraphs items={page.intro} />
