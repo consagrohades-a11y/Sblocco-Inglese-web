@@ -27,6 +27,7 @@ import {
 } from '../utils/validateSrsCards';
 
 const SESSION_LIMIT = 30;
+const ADDITIONAL_CARD_LIMIT = 5;
 const DAILY_NEW_LIMIT = 10;
 const emptyRatings = { again: 0, hard: 0, good: 0, easy: 0 };
 
@@ -101,6 +102,7 @@ export default function SrsTrainer({
   const trainerCards = cards || [];
   const trainerType = trainer?.cardType || 'expression';
   const targetLabel = trainerType === 'word' ? 'Word' : 'Expression';
+  const targetPluralLabel = trainerType === 'word' ? 'words' : 'expressions';
   const [progress, setProgress] = useState(() => cleanProgress(loadProgress(trainerCards, storageKey), trainerCards));
   const progressRef = useRef(progress);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -108,6 +110,8 @@ export default function SrsTrainer({
   const [now, setNow] = useState(() => new Date());
   const [sessionQueue, setSessionQueue] = useState([]);
   const [sessionReviewedCount, setSessionReviewedCount] = useState(0);
+  const [sessionReviewedIds, setSessionReviewedIds] = useState([]);
+  const [sessionTargetCount, setSessionTargetCount] = useState(SESSION_LIMIT);
   const [sessionRatings, setSessionRatings] = useState(emptyRatings);
   const [answerVisible, setAnswerVisible] = useState(false);
   const [sessionStep, setSessionStep] = useState(0);
@@ -135,6 +139,7 @@ export default function SrsTrainer({
   );
   const selectedCategoryKey = selectedCategories.join('|');
   const selectedLevelKey = selectedLevels.join('|');
+  const reviewedIdKey = sessionReviewedIds.join('|');
 
   const filteredCards = useMemo(
     () =>
@@ -176,10 +181,24 @@ export default function SrsTrainer({
     [trainerCards, selectedCategoryKey, selectedLevelKey],
   );
 
+  const buildAdditionalSessionIds = useCallback(
+    (progressSnapshot = progressRef.current, excludeIds = []) =>
+      buildReviewQueue(trainerCards, progressSnapshot, selectedCategories, {
+        levels: selectedLevels,
+        today: getTodayISO(new Date()),
+        totalLimit: ADDITIONAL_CARD_LIMIT,
+        newLimit: DAILY_NEW_LIMIT,
+        excludeIds,
+      }).map((card) => card.id),
+    [trainerCards, selectedCategoryKey, selectedLevelKey],
+  );
+
   const startSession = useCallback(() => {
     setNow(new Date());
     setSessionQueue(buildSessionIds());
     setSessionReviewedCount(0);
+    setSessionReviewedIds([]);
+    setSessionTargetCount(SESSION_LIMIT);
     setSessionRatings(emptyRatings);
     setAnswerVisible(false);
     setSessionStep((step) => step + 1);
@@ -206,6 +225,8 @@ export default function SrsTrainer({
   useEffect(() => {
     setSessionQueue(buildSessionIds());
     setSessionReviewedCount(0);
+    setSessionReviewedIds([]);
+    setSessionTargetCount(SESSION_LIMIT);
     setSessionRatings(emptyRatings);
     setAnswerVisible(false);
     setSessionStep((step) => step + 1);
@@ -226,6 +247,7 @@ export default function SrsTrainer({
       setProgress((currentProgressMap) => reviewCard(currentCard.id, rating, currentProgressMap, today));
       setSessionRatings((ratings) => ({ ...ratings, [rating]: ratings[rating] + 1 }));
       setSessionReviewedCount((count) => count + 1);
+      setSessionReviewedIds((ids) => (ids.includes(currentCard.id) ? ids : [...ids, currentCard.id]));
       setSessionQueue((queue) => {
         const remainingQueue = queue.slice(1);
 
@@ -238,6 +260,18 @@ export default function SrsTrainer({
     },
     [currentCard],
   );
+
+  const handleAddCards = useCallback(() => {
+    const extraCardIds = buildAdditionalSessionIds(progressRef.current, sessionReviewedIds);
+
+    if (extraCardIds.length === 0) return;
+
+    setSessionQueue((queue) => [...queue, ...extraCardIds]);
+    setSessionTargetCount((count) => count + extraCardIds.length);
+    setAnswerVisible(false);
+    setNow(new Date());
+    setSessionStep((step) => step + 1);
+  }, [buildAdditionalSessionIds, sessionReviewedIds]);
 
   useEffect(() => {
     function handleShortcut(event) {
@@ -286,6 +320,8 @@ export default function SrsTrainer({
         newLimit: DAILY_NEW_LIMIT,
       }).map((card) => card.id));
       setSessionReviewedCount(0);
+      setSessionReviewedIds([]);
+      setSessionTargetCount(SESSION_LIMIT);
       setSessionRatings(emptyRatings);
       setAnswerVisible(false);
       setSessionStep((step) => step + 1);
@@ -304,11 +340,15 @@ export default function SrsTrainer({
   };
 
   const sessionLabel = currentCard
-    ? `Card ${Math.min(sessionReviewedCount + 1, SESSION_LIMIT)} of ${SESSION_LIMIT}`
-    : `Card ${sessionReviewedCount} of ${SESSION_LIMIT}`;
+    ? `Card ${Math.min(sessionReviewedCount + 1, sessionTargetCount)} of ${sessionTargetCount}`
+    : `Card ${sessionReviewedCount} of ${sessionTargetCount}`;
   const noMatchingCards = !currentCard && filteredCards.length === 0;
   const noReadyCards = !currentCard && filteredCards.length > 0 && sessionReviewedCount === 0;
   const sessionComplete = !currentCard && filteredCards.length > 0 && sessionReviewedCount > 0;
+  const canAddExtraCards = useMemo(
+    () => sessionComplete && buildAdditionalSessionIds(progress, sessionReviewedIds).length > 0,
+    [sessionComplete, buildAdditionalSessionIds, progress, reviewedIdKey],
+  );
   const deckSelectorProps = {
     categories,
     categoryCounts,
@@ -387,7 +427,7 @@ export default function SrsTrainer({
                 newAvailable={stats.newAvailableToday}
                 reviewedToday={stats.reviewedToday}
                 sessionReviewed={sessionReviewedCount}
-                sessionLimit={SESSION_LIMIT}
+                sessionLimit={sessionTargetCount}
                 dark={isDark}
                 compact
               />
@@ -474,6 +514,19 @@ export default function SrsTrainer({
                   dark={isDark}
                   actions={
                     <>
+                      {canAddExtraCards ? (
+                        <button
+                          type="button"
+                          onClick={handleAddCards}
+                          className={`focus-ring inline-flex min-h-11 items-center justify-center rounded-full border px-5 py-3 text-sm font-extrabold shadow-lift transition ${
+                            isDark
+                              ? 'border-mint/40 bg-mint text-moss hover:bg-white'
+                              : 'border-moss/20 bg-mint text-moss hover:bg-white'
+                          }`}
+                        >
+                          Add 5 more cards
+                        </button>
+                      ) : null}
                       <button
                         type="button"
                         onClick={startSession}
@@ -495,7 +548,16 @@ export default function SrsTrainer({
                     </>
                   }
                 >
-                  <p>Suggested next step: Use 3 of these expressions in your next speaking lesson.</p>
+                  <p>Suggested next step: Use 3 of these {targetPluralLabel} in your next speaking lesson.</p>
+                  {canAddExtraCards ? (
+                    <p
+                      className={`mt-3 rounded-lg border px-4 py-3 text-xs font-bold leading-5 ${
+                        isDark ? 'border-white/10 bg-white/[0.08] text-white/70' : 'border-ink/10 bg-paper text-ink/65'
+                      }`}
+                    >
+                      More cards are not always better. Adding too many in one session can become counterproductive and create a heavier review backlog.
+                    </p>
+                  ) : null}
                   <CompletionStats ratings={sessionRatings} reviewed={sessionReviewedCount} dark={isDark} />
                 </SessionPanel>
               ) : null}
