@@ -10,15 +10,15 @@ import { trainerConfig } from '../data/trainerConfig';
 const useCases = [
   {
     title: 'Parlare sotto pressione',
-    text: 'Rivedi frasi che servono quando la mente va lenta: colloqui, call, clienti, chiarimenti.',
+    text: 'Rivedi frasi che servono per averle sempre pronte: colloqui, call, clienti, chiarimenti.',
   },
   {
     title: 'Uscire dalla traduzione mentale',
-    text: 'Incontri più volte le strutture naturali, così non parti sempre dall’italiano.',
+    text: 'Incontri più volte le strutture naturali, così non parti sempre dall’italiano. Automatizza.',
   },
   {
     title: 'Allenare il recupero veloce',
-    text: 'Le card difficili tornano prima; quelle facili tornano più avanti.',
+    text: 'Le card difficili tornano prima; quelle facili tornano più avanti. Ormai le sai',
   },
   {
     title: 'Continuare dopo la lezione',
@@ -65,13 +65,13 @@ export default function TrainersLanding() {
             <div>
               <span className="eyebrow border-white/15 bg-white/10 text-white">
                 <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
-                Product area
+                Premium product
               </span>
               <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight sm:text-6xl">
-                Trainer Lab
+                Trainer Suite
               </h1>
               <p className="mt-5 max-w-3xl text-lg leading-8 text-white/70">
-                Un ambiente di ripasso premium per recuperare più velocemente parole, frasi e risposte quando devi
+                Un ambiente di ripasso concreto per recuperare più velocemente parole, frasi e risposte quando devi
                 parlare inglese davvero: colloqui, call, lavoro, viaggi, clienti e conversazioni reali.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -87,7 +87,7 @@ export default function TrainersLanding() {
             <div className="rounded-lg border border-white/10 bg-white/[0.07] p-5">
               <div className="rounded-lg border border-white/10 bg-white/[0.08] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">Review engine</p>
-                <h2 className="mt-3 text-3xl font-black leading-tight">Due oggi, nuovo domani, difficile subito.</h2>
+                <h2 className="mt-3 text-3xl font-black leading-tight"> Lo vedi oggi, se è Hard domani, se già non lo ricordi subito.</h2>
                 <p className="mt-3 text-sm font-semibold leading-6 text-white/65">
                   Il trainer reagisce a come rispondi e mantiene separati deck, categorie e progressi. Non è una lista:
                   è un sistema di recupero.
@@ -124,7 +124,7 @@ export default function TrainersLanding() {
             eyebrow="Scegli un trainer"
             icon={CheckCircle2}
             title="Tre deck, un unico sistema."
-            copy="Ogni trainer ha categorie e progressi separati. Puoi usarli in modo leggero, senza login, direttamente dal browser."
+            copy="Ogni trainer ha categorie e progressi separati. Puoi usarli in modo leggero, senza login, direttamente dal browser. 10 card per deck al giorno, così è realmente efficace."
           />
           <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {trainerConfig.map((trainer) => (
@@ -180,8 +180,7 @@ export default function TrainersLanding() {
           </CtaBand>
           <p className="mt-4 flex items-start gap-2 text-xs font-semibold leading-5 text-ink/55">
             <Lock aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-coral" />
-            Non ho aggiunto login o pagamento automatico al trainer: per ora resta un MVP frontend-only con progressi in
-            localStorage.
+           Nota ricorda: aggiungimenti necessari - login, paywall
           </p>
         </div>
       </TrainerLayout>
