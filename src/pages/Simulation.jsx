@@ -7,6 +7,7 @@ import {
   FileText,
   MessageSquareWarning,
   ShieldCheck,
+  Sparkles,
   Target,
   Video,
 } from 'lucide-react';
@@ -62,11 +63,38 @@ const steps = [
   },
 ];
 
+const diagnosticCards = [
+  {
+    label: 'Input',
+    title: 'Situazione reale',
+    text: 'colloquio, call, cliente o risposta professionale',
+    icon: Target,
+  },
+  {
+    label: 'Blocco',
+    title: 'Dove rallenti',
+    text: 'traduzione mentale, esitazione, frasi deboli',
+    icon: MessageSquareWarning,
+  },
+  {
+    label: 'Output',
+    title: 'Feedback scritto',
+    text: 'errori, frasi migliorate, prossimi step',
+    icon: FileText,
+  },
+];
+
+const proofStats = [
+  { value: primaryOffer.duration, label: 'sessione mirata' },
+  { value: primaryOffer.price, label: 'diagnosi iniziale' },
+  { value: '5-10', label: 'frasi migliorate' },
+];
+
 const simulationFaq = faqItems.slice(0, 4);
 
 function MiniCard({ icon: Icon, title, children }) {
   return (
-    <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
+    <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
       <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-mint text-moss">
         <Icon aria-hidden="true" className="h-5 w-5" />
       </span>
@@ -92,6 +120,67 @@ function CheckList({ items, tone = 'positive' }) {
   );
 }
 
+function DiagnosticPanel() {
+  return (
+    <div className="dynamic-rail border-white/10 bg-white/[0.08] p-4 text-white shadow-soft backdrop-blur-md">
+      <div className="grid gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <span className="inline-flex items-center gap-2 rounded-full bg-butter px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-ink">
+            <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
+            Diagnosi live
+          </span>
+          <span className="rounded-full border border-white/15 bg-white/[0.08] px-3 py-1 text-xs font-black text-white/70">
+            30 min
+          </span>
+        </div>
+
+        {diagnosticCards.map((item, index) => {
+          const Icon = item.icon;
+          return (
+            <div
+              key={item.title}
+              className="hero-float-card grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-white/10 bg-white/[0.08] p-3"
+              style={{ animationDelay: `${index * 0.32}s` }}
+            >
+              <span className="grid h-10 w-10 place-items-center rounded-lg bg-white text-sm font-black text-ink">
+                <Icon aria-hidden="true" className="h-4 w-4" />
+              </span>
+              <span>
+                <span className="block text-[0.68rem] font-black uppercase tracking-[0.1em] text-mint/80">{item.label}</span>
+                <span className="mt-1 block text-base font-black text-white">{item.title}</span>
+                <span className="mt-1 block text-sm font-semibold leading-5 text-white/62">{item.text}</span>
+              </span>
+            </div>
+          );
+        })}
+
+        <div className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.08]">
+          <div className="h-1 scanline" />
+          <div className="grid gap-2 p-4">
+            <p className="text-xs font-black uppercase tracking-[0.12em] text-mint/80">Risultato</p>
+            <p className="text-lg font-black leading-tight text-white">Sai cosa ti blocca e cosa correggere prima.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProofStrip() {
+  return (
+    <div className="border-y border-ink/10 bg-white/80">
+      <div className="section-shell grid gap-3 py-4 sm:grid-cols-3">
+        {proofStats.map((item) => (
+          <div key={item.label} className="rounded-lg border border-ink/10 bg-linen/60 px-4 py-3 text-center shadow-sm">
+            <p className="text-2xl font-black text-moss">{item.value}</p>
+            <p className="mt-1 text-xs font-black uppercase tracking-[0.08em] text-ink/50">{item.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Simulation() {
   const proofExamples = feedbackExamples.slice(0, 2);
 
@@ -102,14 +191,17 @@ export default function Simulation() {
         description={`Prenota una simulazione online da ${primaryOffer.price} per capire cosa ti blocca quando parli inglese e ricevere feedback scritto con frasi migliorate.`}
       />
 
-      <section className="relative overflow-hidden bg-ink text-white">
+      <section className="relative isolate overflow-hidden bg-ink text-white">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_18%,rgba(220,239,232,0.18),transparent_30%),radial-gradient(circle_at_78%_24%,rgba(255,196,87,0.18),transparent_28%),linear-gradient(135deg,#111f1b_0%,#18221f_54%,#0e2a24_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-[linear-gradient(180deg,transparent,rgba(251,247,241,0.08))]" />
         <div className="h-1 scanline" />
-        <div className="section-shell grid gap-10 pb-14 pt-12 lg:grid-cols-[1fr_0.72fr] lg:items-center lg:pb-16 lg:pt-16">
+        <div className="section-shell grid gap-10 pb-14 pt-12 lg:grid-cols-[1fr_0.74fr] lg:items-center lg:pb-16 lg:pt-16">
           <div>
-            <span className="inline-flex rounded-full border border-butter/50 bg-butter px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-ink shadow-soft">
+            <span className="inline-flex items-center gap-2 rounded-full border border-butter/50 bg-butter px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-ink shadow-soft">
+              <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
               Simulazione inglese online - {primaryOffer.price}
             </span>
-            <h1 className="mt-6 max-w-4xl text-4xl font-black leading-[1.03] text-white sm:text-5xl lg:text-6xl">
+            <h1 className="mt-6 max-w-4xl text-4xl font-black leading-[1.02] text-white sm:text-5xl lg:text-6xl">
               Ti blocchi quando devi parlare inglese in colloqui, call o lavoro?
             </h1>
             <p className="mt-5 max-w-3xl text-lg font-semibold leading-8 text-white/78 sm:text-xl">
@@ -129,9 +221,14 @@ export default function Simulation() {
               Pensata per italiani con base A2-B1/B2 che capiscono più di quanto riescono a dire sotto pressione.
             </p>
           </div>
-          <PricingCard compact />
+          <div className="grid gap-4">
+            <DiagnosticPanel />
+            <PricingCard compact />
+          </div>
         </div>
       </section>
+
+      <ProofStrip />
 
       <SectionReveal className="bg-white/70 py-14">
         <div className="section-shell grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
@@ -146,8 +243,8 @@ export default function Simulation() {
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            {painPoints.map((item) => (
-              <div key={item} className="rounded-lg border border-ink/10 bg-white p-4 shadow-sm">
+            {painPoints.map((item, index) => (
+              <div key={item} className="brand-card p-4" style={{ transitionDelay: `${index * 55}ms` }}>
                 <Check aria-hidden="true" className="h-5 w-5 text-moss" />
                 <p className="mt-3 text-sm font-black leading-6 text-ink">{item}</p>
               </div>
@@ -169,7 +266,7 @@ export default function Simulation() {
             {steps.map((step, index) => {
               const Icon = step.icon;
               return (
-                <article key={step.title} className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
+                <article key={step.title} className="flow-node p-5">
                   <div className="flex items-center justify-between gap-3">
                     <span className="grid h-10 w-10 place-items-center rounded-lg bg-mint text-sm font-black text-moss">
                       0{index + 1}
@@ -199,7 +296,7 @@ export default function Simulation() {
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             {receiveItems.map((item) => (
-              <div key={item} className="rounded-lg border border-ink/10 bg-white p-4 shadow-sm">
+              <div key={item} className="rounded-lg border border-ink/10 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
                 <Check aria-hidden="true" className="h-5 w-5 text-moss" />
                 <p className="mt-3 text-sm font-bold text-ink/85">{item}</p>
               </div>
@@ -215,13 +312,13 @@ export default function Simulation() {
             <h2 className="section-title">È utile se hai già una base, ma non riesci a usarla bene sotto pressione.</h2>
           </div>
           <div className="grid gap-5 lg:grid-cols-2">
-            <div className="rounded-lg border border-moss/20 bg-mint/50 p-5">
+            <div className="rounded-lg border border-moss/20 bg-mint/50 p-5 shadow-sm">
               <h3 className="text-xl font-black text-ink">È adatta se...</h3>
               <div className="mt-5">
                 <CheckList items={fitItems} />
               </div>
             </div>
-            <div className="rounded-lg border border-coral/20 bg-blush p-5">
+            <div className="rounded-lg border border-coral/20 bg-blush p-5 shadow-sm">
               <h3 className="text-xl font-black text-ink">Non è ideale se...</h3>
               <div className="mt-5">
                 <CheckList items={notFitItems} tone="warning" />
@@ -242,7 +339,7 @@ export default function Simulation() {
           </div>
           <div className="mt-8 grid gap-4 lg:grid-cols-2">
             {proofExamples.map((item) => (
-              <article key={item.label} className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
+              <article key={item.label} className="brand-card p-5">
                 <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">{item.label}</p>
                 <div className="mt-4 grid gap-3">
                   <div className="rounded-lg bg-blush p-4">
