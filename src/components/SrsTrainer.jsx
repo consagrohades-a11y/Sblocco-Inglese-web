@@ -43,20 +43,25 @@ function SessionPanel({
   children,
   icon: Icon,
   actions,
+  dark = false,
 }) {
   return (
-    <div className="mx-auto w-full max-w-3xl rounded-lg border border-ink/10 bg-white p-6 text-center shadow-soft sm:p-8">
-      <span className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-lg bg-mint text-moss">
+    <div
+      className={`mx-auto w-full max-w-4xl rounded-lg border p-4 text-center shadow-soft sm:p-8 ${
+        dark ? 'border-white/10 bg-white/[0.07] text-white' : 'border-ink/10 bg-white text-ink'
+      }`}
+    >
+      <span className={`mx-auto inline-flex h-10 w-10 items-center justify-center rounded-lg sm:h-12 sm:w-12 ${dark ? 'bg-mint/20 text-mint' : 'bg-mint text-moss'}`}>
         <Icon aria-hidden="true" className="h-6 w-6" />
       </span>
-      <h2 className="mt-5 text-2xl font-black text-ink">{title}</h2>
-      <div className="mx-auto mt-3 max-w-xl text-sm font-semibold leading-6 text-ink/70">{children}</div>
-      {actions ? <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">{actions}</div> : null}
+      <h2 className={`mt-4 text-xl font-black sm:mt-5 sm:text-2xl ${dark ? 'text-white' : 'text-ink'}`}>{title}</h2>
+      <div className={`mx-auto mt-3 max-w-xl text-sm font-semibold leading-6 ${dark ? 'text-white/70' : 'text-ink/70'}`}>{children}</div>
+      {actions ? <div className="mt-4 flex flex-col justify-center gap-3 sm:mt-6 sm:flex-row">{actions}</div> : null}
     </div>
   );
 }
 
-function CompletionStats({ ratings, reviewed }) {
+function CompletionStats({ ratings, reviewed, dark = false }) {
   const items = [
     ['Cards reviewed', reviewed],
     ['Again', ratings.again],
@@ -66,11 +71,16 @@ function CompletionStats({ ratings, reviewed }) {
   ];
 
   return (
-    <div className="mt-6 grid gap-3 sm:grid-cols-5">
+    <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-6 sm:grid-cols-5 sm:gap-3">
       {items.map(([label, value]) => (
-        <div key={label} className="rounded-lg border border-ink/10 bg-paper px-3 py-3">
-          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/50">{label}</p>
-          <p className="mt-1 text-2xl font-black text-ink">{value}</p>
+        <div
+          key={label}
+          className={`rounded-lg border px-3 py-3 ${
+            dark ? 'border-white/10 bg-white/[0.08]' : 'border-ink/10 bg-paper'
+          }`}
+        >
+          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/55' : 'text-ink/50'}`}>{label}</p>
+          <p className={`mt-1 text-2xl font-black ${dark ? 'text-white' : 'text-ink'}`}>{value}</p>
         </div>
       ))}
     </div>
@@ -87,6 +97,7 @@ export default function SrsTrainer({
   seoDescription = subtitle,
 }) {
   const filtersRef = useRef(null);
+  const mobileFiltersRef = useRef(null);
   const trainerCards = cards || [];
   const trainerType = trainer?.cardType || 'expression';
   const targetLabel = trainerType === 'word' ? 'Word' : 'Expression';
@@ -287,7 +298,9 @@ export default function SrsTrainer({
   };
 
   const scrollToFilters = () => {
-    filtersRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const desktopFiltersVisible = typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches;
+    const target = desktopFiltersVisible ? filtersRef.current : mobileFiltersRef.current;
+    target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   const sessionLabel = currentCard
@@ -296,6 +309,16 @@ export default function SrsTrainer({
   const noMatchingCards = !currentCard && filteredCards.length === 0;
   const noReadyCards = !currentCard && filteredCards.length > 0 && sessionReviewedCount === 0;
   const sessionComplete = !currentCard && filteredCards.length > 0 && sessionReviewedCount > 0;
+  const deckSelectorProps = {
+    categories,
+    categoryCounts,
+    selectedCategories,
+    onToggleCategory: (category) => setSelectedCategories((values) => toggleValue(values, category)),
+    selectedLevels,
+    onToggleLevel: (level) => setSelectedLevels((values) => toggleValue(values, level)),
+    onClear: clearFilters,
+    dark: isDark,
+  };
 
   return (
     <>
@@ -306,21 +329,21 @@ export default function SrsTrainer({
 
       <TrainerLayout>
         <div
-          className={`mx-auto max-w-5xl overflow-hidden rounded-lg border shadow-soft transition ${
-            isDark ? 'border-white/10 bg-ink p-4 text-white sm:p-6' : 'border-ink/10 bg-white/70 p-0 text-ink'
+          className={`mx-auto max-w-7xl overflow-hidden rounded-lg border shadow-soft transition ${
+            isDark ? 'border-white/10 bg-ink p-4 text-white sm:p-6' : 'border-ink/10 bg-white/85 p-4 text-ink sm:p-6'
           }`}
         >
-          {isDark ? <div className="-mx-4 -mt-4 mb-5 h-1 scanline sm:-mx-6 sm:-mt-6" /> : null}
+          <div className="-mx-4 -mt-4 mb-5 h-1 scanline sm:-mx-6 sm:-mt-6" />
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <span className={`eyebrow ${isDark ? 'border-white/15 bg-white/10 !text-white' : ''}`}>
                 <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
                 Available trainer
               </span>
-              <h1 className={`mt-5 max-w-4xl text-4xl font-black leading-tight sm:text-5xl ${isDark ? 'text-white' : 'text-ink'}`}>
+              <h1 className={`mt-4 max-w-4xl text-3xl font-black leading-tight sm:mt-5 sm:text-5xl ${isDark ? 'text-white' : 'text-ink'}`}>
                 {title}
               </h1>
-              <p className={`mt-5 max-w-3xl text-lg leading-8 ${isDark ? 'text-white/70' : 'text-ink/70'}`}>
+              <p className={`mt-3 max-w-3xl text-base font-semibold leading-7 sm:mt-5 sm:text-lg sm:font-normal sm:leading-8 ${isDark ? 'text-white/70' : 'text-ink/70'}`}>
                 {subtitle}
               </p>
             </div>
@@ -353,118 +376,130 @@ export default function SrsTrainer({
             </div>
           </div>
 
-          <div className="mt-7">
-            <ReviewStats
-              dueToday={stats.due}
-              newAvailable={stats.newAvailableToday}
-              reviewedToday={stats.reviewedToday}
-              sessionReviewed={sessionReviewedCount}
-              sessionLimit={SESSION_LIMIT}
-            />
-          </div>
-
-          <div ref={filtersRef} className="mt-6">
-            <DeckSelector
-              categories={categories}
-              categoryCounts={categoryCounts}
-              selectedCategories={selectedCategories}
-              onToggleCategory={(category) => setSelectedCategories((values) => toggleValue(values, category))}
-              selectedLevels={selectedLevels}
-              onToggleLevel={(level) => setSelectedLevels((values) => toggleValue(values, level))}
-              onClear={clearFilters}
-            />
-          </div>
-
-          <div className="mt-8">
-            {currentCard ? (
-              <SrsCard
-                key={`${currentCard.id}-${sessionStep}`}
-                card={currentCard}
-                progress={progress[currentCard.id]}
-                revealed={answerVisible}
-                onReveal={() => setAnswerVisible(true)}
-                onRate={handleRate}
-                sessionLabel={sessionLabel}
-                targetLabel={targetLabel}
+          <div className="mt-5 grid min-w-0 gap-5 lg:grid-cols-[minmax(260px,0.38fr)_minmax(0,1fr)] lg:items-start">
+            <aside className="grid min-w-0 gap-4 lg:sticky lg:top-24">
+              <ReviewStats
+                dueToday={stats.due}
+                newAvailable={stats.newAvailableToday}
+                reviewedToday={stats.reviewedToday}
+                sessionReviewed={sessionReviewedCount}
+                sessionLimit={SESSION_LIMIT}
+                dark={isDark}
+                compact
               />
-            ) : null}
 
-            {noMatchingCards ? (
-              <SessionPanel
-                title="No cards match these filters."
-                icon={CalendarClock}
-                actions={
-                  <button
-                    type="button"
-                    onClick={clearFilters}
-                    className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:bg-[#096d58]"
-                  >
-                    Clear filters
-                  </button>
-                }
-              >
-                Try selecting more categories or levels.
-              </SessionPanel>
-            ) : null}
+              <div ref={filtersRef} className="hidden min-w-0 lg:block">
+                <DeckSelector {...deckSelectorProps} />
+              </div>
+            </aside>
 
-            {noReadyCards ? (
-              <SessionPanel
-                title="No cards ready right now"
-                icon={CalendarClock}
-                actions={
-                  <>
+            <div className="min-w-0">
+              {currentCard ? (
+                <SrsCard
+                  key={`${currentCard.id}-${sessionStep}`}
+                  card={currentCard}
+                  progress={progress[currentCard.id]}
+                  revealed={answerVisible}
+                  onReveal={() => setAnswerVisible(true)}
+                  onRate={handleRate}
+                  sessionLabel={sessionLabel}
+                  targetLabel={targetLabel}
+                  dark={isDark}
+                />
+              ) : null}
+
+              {noMatchingCards ? (
+                <SessionPanel
+                  title="No cards match these filters."
+                  icon={CalendarClock}
+                  dark={isDark}
+                  actions={
                     <button
                       type="button"
-                      onClick={startSession}
+                      onClick={clearFilters}
                       className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:bg-[#096d58]"
                     >
-                      Start another session
+                      Clear filters
                     </button>
-                    <button
-                      type="button"
-                      onClick={scrollToFilters}
-                      className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-extrabold text-ink transition hover:bg-mint/50"
-                    >
-                      Change filters
-                    </button>
-                  </>
-                }
-              >
-                {nextDue ? (
-                  <>Next review: {formatDueLabel(nextDue.state.dueDate, now)}.</>
-                ) : (
-                  <>Try widening your filters or come back later.</>
-                )}
-              </SessionPanel>
-            ) : null}
+                  }
+                >
+                  Try selecting more categories or levels.
+                </SessionPanel>
+              ) : null}
 
-            {sessionComplete ? (
-              <SessionPanel
-                title="Session complete"
-                icon={CheckCircle2}
-                actions={
-                  <>
-                    <button
-                      type="button"
-                      onClick={startSession}
-                      className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:bg-[#096d58]"
-                    >
-                      Start another session
-                    </button>
-                    <button
-                      type="button"
-                      onClick={scrollToFilters}
-                      className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-extrabold text-ink transition hover:bg-mint/50"
-                    >
-                      Change filters
-                    </button>
-                  </>
-                }
-              >
-                <p>Suggested next step: Use 3 of these expressions in your next speaking lesson.</p>
-                <CompletionStats ratings={sessionRatings} reviewed={sessionReviewedCount} />
-              </SessionPanel>
-            ) : null}
+              {noReadyCards ? (
+                <SessionPanel
+                  title="No cards ready right now"
+                  icon={CalendarClock}
+                  dark={isDark}
+                  actions={
+                    <>
+                      <button
+                        type="button"
+                        onClick={startSession}
+                        className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:bg-[#096d58]"
+                      >
+                        Start another session
+                      </button>
+                      <button
+                        type="button"
+                        onClick={scrollToFilters}
+                        className={`focus-ring inline-flex min-h-11 items-center justify-center rounded-full border px-5 py-3 text-sm font-extrabold transition ${
+                          isDark
+                            ? 'border-white/15 bg-white/[0.08] text-white hover:bg-white hover:text-ink'
+                            : 'border-ink/15 bg-white text-ink hover:bg-mint/50'
+                        }`}
+                      >
+                        Change filters
+                      </button>
+                    </>
+                  }
+                >
+                  {nextDue ? (
+                    <>Next review: {formatDueLabel(nextDue.state.dueDate, now)}.</>
+                  ) : (
+                    <>Try widening your filters or come back later.</>
+                  )}
+                </SessionPanel>
+              ) : null}
+
+              {sessionComplete ? (
+                <SessionPanel
+                  title="Session complete"
+                  icon={CheckCircle2}
+                  dark={isDark}
+                  actions={
+                    <>
+                      <button
+                        type="button"
+                        onClick={startSession}
+                        className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:bg-[#096d58]"
+                      >
+                        Start another session
+                      </button>
+                      <button
+                        type="button"
+                        onClick={scrollToFilters}
+                        className={`focus-ring inline-flex min-h-11 items-center justify-center rounded-full border px-5 py-3 text-sm font-extrabold transition ${
+                          isDark
+                            ? 'border-white/15 bg-white/[0.08] text-white hover:bg-white hover:text-ink'
+                            : 'border-ink/15 bg-white text-ink hover:bg-mint/50'
+                        }`}
+                      >
+                        Change filters
+                      </button>
+                    </>
+                  }
+                >
+                  <p>Suggested next step: Use 3 of these expressions in your next speaking lesson.</p>
+                  <CompletionStats ratings={sessionRatings} reviewed={sessionReviewedCount} dark={isDark} />
+                </SessionPanel>
+              ) : null}
+            </div>
+
+            <div ref={mobileFiltersRef} className="min-w-0 lg:hidden">
+              <DeckSelector {...deckSelectorProps} />
+            </div>
           </div>
         </div>
       </TrainerLayout>
