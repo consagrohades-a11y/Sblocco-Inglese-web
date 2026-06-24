@@ -11,7 +11,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const navClass = ({ isActive }) =>
-    `focus-ring rounded-full px-2.5 py-1.5 text-xs font-black transition ${
+    `focus-ring whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-black transition ${
       isActive ? 'bg-ink text-white shadow-sm' : 'text-ink/70 hover:bg-white hover:text-ink'
     }`;
 
@@ -35,7 +35,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-2 xl:flex">
-          <span className="rounded-full border border-moss/15 bg-white px-3 py-1.5 text-xs font-black text-moss shadow-sm">
+          <span className="whitespace-nowrap rounded-full border border-moss/15 bg-white px-3 py-1.5 text-xs font-black text-moss shadow-sm">
             Diagnosi iniziale {primaryOffer.price}
           </span>
           <CTAButton href="/prenota#booking-form" className="!min-h-10 px-4 py-2 text-sm">
@@ -62,7 +62,7 @@ export default function Navbar() {
                 <a
                   key={item.to}
                   href={item.to}
-                  className="rounded-lg bg-white/80 px-4 py-3 text-base font-bold text-ink hover:bg-mint/50"
+                  className="whitespace-nowrap rounded-lg bg-white/80 px-4 py-3 text-base font-bold text-ink hover:bg-mint/50"
                   onClick={() => setOpen(false)}
                 >
                   {item.label}
@@ -72,7 +72,7 @@ export default function Navbar() {
                   key={item.to}
                   to={item.to}
                   className={({ isActive }) =>
-                    `rounded-lg px-4 py-3 text-base font-bold ${
+                    `whitespace-nowrap rounded-lg px-4 py-3 text-base font-bold ${
                       isActive ? 'bg-ink text-white' : 'bg-white/80 text-ink hover:bg-mint/50'
                     }`
                   }
