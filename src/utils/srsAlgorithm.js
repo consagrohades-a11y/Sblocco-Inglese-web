@@ -86,6 +86,21 @@ function filterCards(cards, selectedCategory = 'all', level = 'all') {
   });
 }
 
+function createExcludedIdSet(excludeIds = []) {
+  return new Set(Array.isArray(excludeIds) ? excludeIds : []);
+}
+
+function shuffleCards(cards = []) {
+  const shuffled = [...cards];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  return shuffled;
+}
+
 export function getCategoryCardCounts(cards = []) {
   return cards.reduce((counts, card) => {
     if (!card?.category) return counts;
@@ -198,10 +213,11 @@ export function isCardDue(progressEntry, today = getTodayISO()) {
 }
 
 export function getDueCards(cards, progress, selectedCategory = 'all', options = {}) {
-  const { today = getTodayISO(), level = options.levels || 'all' } = options;
+  const { today = getTodayISO(), level = options.levels || 'all', excludeIds = [] } = options;
+  const excludedIds = createExcludedIdSet(excludeIds);
 
   return filterCards(cards, selectedCategory, level)
-    .filter((card) => isCardDue(getCardState(progress, card.id), today))
+    .filter((card) => !excludedIds.has(card.id) && isCardDue(getCardState(progress, card.id), today))
     .sort((a, b) => {
       const aDate = getCardState(progress, a.id)?.dueDate || today;
       const bDate = getCardState(progress, b.id)?.dueDate || today;
@@ -214,12 +230,14 @@ export function getNewCards(cards, progress, selectedCategory = 'all', options =
     today = getTodayISO(),
     level = options.levels || 'all',
     newLimit = 10,
+    excludeIds = [],
   } = options;
   const reviewedToday = countNewCardsReviewedToday(progress, today);
   const remainingNewCards = Math.max(0, newLimit - reviewedToday);
+  const excludedIds = createExcludedIdSet(excludeIds);
 
   return filterCards(cards, selectedCategory, level)
-    .filter((card) => !getCardState(progress, card.id))
+    .filter((card) => !excludedIds.has(card.id) && !getCardState(progress, card.id))
     .slice(0, remainingNewCards);
 }
 
@@ -229,20 +247,24 @@ export function buildReviewQueue(cards, progress, selectedCategory = 'all', opti
     level = options.levels || 'all',
     totalLimit = 30,
     newLimit = 10,
+    excludeIds = [],
+    randomize = true,
   } = options;
   const remainingTotal = Math.max(0, totalLimit);
+  const orderCards = randomize ? shuffleCards : (selectedCards) => selectedCards;
 
   if (remainingTotal === 0) return [];
 
-  const dueCards = getDueCards(cards, progress, selectedCategory, { today, level }).slice(0, remainingTotal);
+  const dueCards = getDueCards(cards, progress, selectedCategory, { today, level, excludeIds }).slice(0, remainingTotal);
   const remainingSlots = Math.max(0, remainingTotal - dueCards.length);
   const newCards = getNewCards(cards, progress, selectedCategory, {
     today,
     level,
     newLimit,
+    excludeIds,
   }).slice(0, remainingSlots);
 
-  return [...dueCards, ...newCards].slice(0, remainingTotal);
+  return [...orderCards(dueCards), ...orderCards(newCards)].slice(0, remainingTotal);
 }
 
 export function getNextDueCard(cards, progress, options = {}) {
