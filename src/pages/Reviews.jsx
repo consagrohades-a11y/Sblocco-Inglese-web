@@ -11,8 +11,8 @@ export default function Reviews() {
   return (
     <>
       <SEO
-        title="Recensioni ed esperienza | Sblocco Inglese"
-        description={`Recensioni e prove di esperienza per la simulazione inglese da ${primaryOffer.price}: speaking, colloqui e situazioni pratiche per italiani.`}
+        title="Founder e recensioni | Sblocco Inglese"
+        description={`Founder, recensioni e prove di esperienza per la simulazione inglese da ${primaryOffer.price}: speaking, colloqui e situazioni pratiche per italiani.`}
       />
 
       <section className="section-shell pb-12 pt-12 lg:pt-16">
@@ -20,8 +20,8 @@ export default function Reviews() {
           <Award aria-hidden="true" className="h-3.5 w-3.5" />
           Prova e fiducia
         </span>
-        <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight text-ink sm:text-5xl">
-          Recensioni, esperienza e metodo Rhema
+        <h1 className="mt-5 max-w-4xl whitespace-nowrap text-3xl font-black leading-tight text-ink sm:text-5xl">
+          Founder e recensioni
         </h1>
         <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70">
           Qui trovi il lato umano e la prova pratica del progetto: chi è Rhema, come lavora con gli studenti e perché il
