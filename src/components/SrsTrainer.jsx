@@ -26,7 +26,7 @@ import {
   wordTrainerRequiredSrsCardFields,
 } from '../utils/validateSrsCards';
 
-const SESSION_LIMIT = 30;
+const SESSION_LIMIT = 10;
 const ADDITIONAL_CARD_LIMIT = 5;
 const DAILY_NEW_LIMIT = 10;
 const emptyRatings = { again: 0, hard: 0, good: 0, easy: 0 };
@@ -112,7 +112,7 @@ export default function SrsTrainer({
   const [sessionQueue, setSessionQueue] = useState([]);
   const [sessionReviewedCount, setSessionReviewedCount] = useState(0);
   const [sessionReviewedIds, setSessionReviewedIds] = useState([]);
-  const [sessionTargetCount, setSessionTargetCount] = useState(SESSION_LIMIT);
+  const [sessionTargetCount, setSessionTargetCount] = useState(0);
   const [sessionRatings, setSessionRatings] = useState(emptyRatings);
   const [answerVisible, setAnswerVisible] = useState(false);
   const [sessionStep, setSessionStep] = useState(0);
@@ -195,11 +195,12 @@ export default function SrsTrainer({
   );
 
   const startSession = useCallback(() => {
+    const nextSessionIds = buildSessionIds();
     setNow(new Date());
-    setSessionQueue(buildSessionIds());
+    setSessionQueue(nextSessionIds);
     setSessionReviewedCount(0);
     setSessionReviewedIds([]);
-    setSessionTargetCount(SESSION_LIMIT);
+    setSessionTargetCount(nextSessionIds.length);
     setSessionRatings(emptyRatings);
     setAnswerVisible(false);
     setSessionStep((step) => step + 1);
@@ -224,10 +225,11 @@ export default function SrsTrainer({
   }, []);
 
   useEffect(() => {
-    setSessionQueue(buildSessionIds());
+    const nextSessionIds = buildSessionIds();
+    setSessionQueue(nextSessionIds);
     setSessionReviewedCount(0);
     setSessionReviewedIds([]);
-    setSessionTargetCount(SESSION_LIMIT);
+    setSessionTargetCount(nextSessionIds.length);
     setSessionRatings(emptyRatings);
     setAnswerVisible(false);
     setSessionStep((step) => step + 1);
@@ -278,11 +280,11 @@ export default function SrsTrainer({
     if (extraCardIds.length === 0) return;
 
     setSessionQueue((queue) => [...queue, ...extraCardIds]);
-    setSessionTargetCount((count) => count + extraCardIds.length);
+    setSessionTargetCount(sessionReviewedCount + extraCardIds.length);
     setAnswerVisible(false);
     setNow(new Date());
     setSessionStep((step) => step + 1);
-  }, [buildAdditionalSessionIds, sessionReviewedIds]);
+  }, [buildAdditionalSessionIds, sessionReviewedCount, sessionReviewedIds]);
 
   useEffect(() => {
     function handleShortcut(event) {
@@ -321,18 +323,19 @@ export default function SrsTrainer({
   const handleReset = () => {
     const confirmed = window.confirm('Vuoi azzerare i progressi del trainer su questo dispositivo?');
     if (confirmed) {
-      setProgress({});
-      saveProgress({}, storageKey);
-      setNow(new Date());
-      setSessionQueue(buildReviewQueue(trainerCards, {}, selectedCategories, {
+      const resetQueue = buildReviewQueue(trainerCards, {}, selectedCategories, {
         levels: selectedLevels,
         today: getTodayISO(new Date()),
         totalLimit: SESSION_LIMIT,
         newLimit: DAILY_NEW_LIMIT,
-      }).map((card) => card.id));
+      }).map((card) => card.id);
+      setProgress({});
+      saveProgress({}, storageKey);
+      setNow(new Date());
+      setSessionQueue(resetQueue);
       setSessionReviewedCount(0);
       setSessionReviewedIds([]);
-      setSessionTargetCount(SESSION_LIMIT);
+      setSessionTargetCount(resetQueue.length);
       setSessionRatings(emptyRatings);
       setAnswerVisible(false);
       setSessionStep((step) => step + 1);
@@ -350,9 +353,10 @@ export default function SrsTrainer({
     target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
+  const activeSessionTarget = currentCard ? Math.max(sessionTargetCount, sessionReviewedCount + sessionQueue.length) : sessionTargetCount;
   const sessionLabel = currentCard
-    ? `Card ${Math.min(sessionReviewedCount + 1, sessionTargetCount)} of ${sessionTargetCount}`
-    : `Card ${sessionReviewedCount} of ${sessionTargetCount}`;
+    ? `Card ${sessionReviewedCount + 1} of ${activeSessionTarget}`
+    : `Card ${sessionReviewedCount} of ${activeSessionTarget}`;
   const noMatchingCards = !currentCard && filteredCards.length === 0;
   const noReadyCards = !currentCard && filteredCards.length > 0 && sessionReviewedCount === 0;
   const sessionComplete = !currentCard && filteredCards.length > 0 && sessionReviewedCount > 0;
@@ -438,7 +442,7 @@ export default function SrsTrainer({
                 newAvailable={stats.newAvailableToday}
                 reviewedToday={stats.reviewedToday}
                 sessionReviewed={sessionReviewedCount}
-                sessionLimit={sessionTargetCount}
+                sessionLimit={activeSessionTarget}
                 dark={isDark}
                 compact
               />
