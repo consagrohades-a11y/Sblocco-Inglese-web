@@ -9,6 +9,8 @@ import CTAButton from './CTAButton';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const desktopItems = navItems.filter((item) => item.to !== '/prenota');
+  const navLabel = (item) => (item.to === '/simulazione-39' ? `Simulazione ${primaryOffer.price}` : item.label);
 
   const navClass = ({ isActive }) =>
     `focus-ring whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-black transition 2xl:px-3 ${
@@ -21,23 +23,20 @@ export default function Navbar() {
         <BrandLogo />
 
         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex 2xl:gap-1" aria-label="Navigazione principale">
-          {navItems.map((item) =>
+          {desktopItems.map((item) =>
             item.to.includes('#') ? (
               <a key={item.to} href={item.to} className={navClass({ isActive: false })}>
-                {item.label}
+                {navLabel(item)}
               </a>
             ) : (
               <NavLink key={item.to} to={item.to} className={navClass}>
-                {item.label}
+                {navLabel(item)}
               </NavLink>
             ),
           )}
         </nav>
 
         <div className="hidden shrink-0 items-center gap-2 xl:flex">
-          <span className="hidden whitespace-nowrap rounded-full border border-ink/15 bg-white px-3 py-1.5 text-xs font-black text-ink shadow-sm 2xl:inline-flex">
-            Diagnosi iniziale {primaryOffer.price}
-          </span>
           <CTAButton href="/prenota#booking-form" className="!min-h-10 whitespace-nowrap !px-4 !py-2 !text-sm" icon={false}>
             {ctaLabels.mobile}
           </CTAButton>
@@ -65,7 +64,7 @@ export default function Navbar() {
                   className="whitespace-nowrap rounded-lg bg-white/80 px-4 py-3 text-base font-bold text-ink hover:bg-mint/50"
                   onClick={() => setOpen(false)}
                 >
-                  {item.label}
+                  {navLabel(item)}
                 </a>
               ) : (
                 <NavLink
@@ -78,7 +77,7 @@ export default function Navbar() {
                   }
                   onClick={() => setOpen(false)}
                 >
-                  {item.label}
+                  {navLabel(item)}
                 </NavLink>
               ),
             )}
