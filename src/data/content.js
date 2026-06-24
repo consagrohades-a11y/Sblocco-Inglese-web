@@ -360,7 +360,7 @@ export const percorsoOffers = [
       'email e follow-up',
       'frasi professionali',
       'customer-facing English',
-      'speaking in ambienti quali expo, congressi, networking'
+      'speaking in ambienti quali expo, congressi, networking',
       'trainer business incluso durante il corso',
     ],
     bestFor:
@@ -369,7 +369,7 @@ export const percorsoOffers = [
       'È una buona evoluzione dopo la simulazione se il blocco emerge soprattutto in call, email o contatto clienti.',
     selectedTitle: 'Quando scegli Business English Flow',
     selectedCopy:
-      'Il corso lavora sulle situazioni che si ripetono davvero al lavoro: spiegare, chiedere, rispondere, seguire una call, chiudere un messaggio senza suonare tradotto, usare la lingua in maniera professionale ma non robotica, creando connessioni reali con colleghi, clienti e futuri partner lavorativi',
+      'Il corso lavora sulle situazioni che si ripetono davvero al lavoro: spiegare, chiedere, rispondere, seguire una call, chiudere un messaggio senza suonare tradotto, usare la lingua in maniera professionale ma non robotica, creando connessioni reali con colleghi, clienti e futuri partner lavorativi.',
     selectedBullets: [
       'più formule pronte per call ed email',
       'meno traduzione mentale nelle risposte professionali',
@@ -391,7 +391,7 @@ export const percorsoOffers = [
       'correzione frasi',
       'pratica personalizzata',
       'review CV (ATTENZIONE!, in inglese si scrive diversamente...)',
-      'Trainer Suite incluso durante la preparazione. Qui diventa fondamentale è aumenta di 10X la tua probabilità di successo',
+      'Trainer Suite incluso durante la preparazione. Qui diventa fondamentale e aumenta la tua probabilità di successo',
     ],
     bestFor:
       'Chi ha un colloquio vero, una candidatura importante o poco tempo per prepararsi.',
