@@ -1,0 +1,21 @@
+@media (min-width: 1024px) {
+  .scanline + div + .mt-5.grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .scanline + div + .mt-5.grid > aside {
+    order: 2;
+    position: static !important;
+    top: auto !important;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: start;
+  }
+
+  .scanline + div + .mt-5.grid > div {
+    order: 1;
+    width: 100%;
+    max-width: 64rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
