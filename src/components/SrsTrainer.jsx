@@ -99,6 +99,7 @@ export default function SrsTrainer({
 }) {
   const filtersRef = useRef(null);
   const mobileFiltersRef = useRef(null);
+  const cardRef = useRef(null);
   const trainerCards = cards || [];
   const trainerType = trainer?.cardType || 'expression';
   const targetLabel = trainerType === 'word' ? 'Word' : 'Expression';
@@ -238,6 +239,16 @@ export default function SrsTrainer({
     }
   }, [currentCard, sessionQueue.length]);
 
+  useEffect(() => {
+    if (!currentCard) return undefined;
+
+    const scrollTimer = window.setTimeout(() => {
+      cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 90);
+
+    return () => window.clearTimeout(scrollTimer);
+  }, [currentCard?.id, sessionStep]);
+
   const handleRate = useCallback(
     (rating) => {
       if (!currentCard) return;
@@ -355,220 +366,8 @@ export default function SrsTrainer({
     selectedCategories,
     onToggleCategory: (category) => setSelectedCategories((values) => toggleValue(values, category)),
     selectedLevels,
-    onToggleLevel: (level) => setSelectedLevels((values) => toggleValue(values, level)),
-    onClear: clearFilters,
-    dark: isDark,
+    onToggleLevel: (level) => setSelectedLevels((values) => toggleValue(value => value))
   };
 
-  return (
-    <>
-      <SEO
-        title={seoTitle}
-        description={seoDescription}
-      />
-
-      <TrainerLayout>
-        <div
-          className={`mx-auto max-w-7xl overflow-hidden rounded-lg border shadow-soft transition ${
-            isDark ? 'border-white/10 bg-ink p-4 text-white sm:p-6' : 'border-ink/10 bg-white/85 p-4 text-ink sm:p-6'
-          }`}
-        >
-          <div className="-mx-4 -mt-4 mb-5 h-1 scanline sm:-mx-6 sm:-mt-6" />
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <span
-                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.08em] shadow-sm ${
-                  isDark ? 'border-white/15 bg-white text-ink' : 'border-moss/20 bg-white/90 text-moss'
-                }`}
-              >
-                <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
-                Available trainer
-              </span>
-              <h1 className={`mt-4 max-w-4xl text-3xl font-black leading-tight sm:mt-5 sm:text-5xl ${isDark ? 'text-white' : 'text-ink'}`}>
-                {title}
-              </h1>
-              <p className={`mt-3 max-w-3xl text-base font-semibold leading-7 sm:mt-5 sm:text-lg sm:font-normal sm:leading-8 ${isDark ? 'text-white/70' : 'text-ink/70'}`}>
-                {subtitle}
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-2 lg:justify-end">
-              <button
-                type="button"
-                onClick={() => setTheme((value) => (value === 'dark' ? 'light' : 'dark'))}
-                aria-label={isDark ? 'Passa alla modalita chiara' : 'Passa alla modalita scura'}
-                className={`focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-extrabold transition ${
-                  isDark
-                    ? 'border-white/15 bg-white/[0.08] text-white hover:bg-white hover:text-ink'
-                    : 'border-moss/20 bg-white text-ink hover:bg-mint/50'
-                }`}
-              >
-                {isDark ? <Sun aria-hidden="true" className="h-4 w-4" /> : <Moon aria-hidden="true" className="h-4 w-4" />}
-                {isDark ? 'Light' : 'Dark'}
-              </button>
-              <button
-                type="button"
-                onClick={handleReset}
-                className={`focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-extrabold transition lg:justify-self-end ${
-                  isDark
-                    ? 'border-white/15 bg-white/[0.08] text-white hover:border-coral/40 hover:bg-blush hover:text-ink'
-                    : 'border-ink/15 bg-white text-ink hover:border-coral/30 hover:bg-blush'
-                }`}
-              >
-                <RotateCcw aria-hidden="true" className="h-4 w-4" />
-                Azzera progressi
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-5 grid min-w-0 gap-5 lg:grid-cols-[minmax(260px,0.38fr)_minmax(0,1fr)] lg:items-start">
-            <aside className="grid min-w-0 gap-4 lg:sticky lg:top-24">
-              <ReviewStats
-                dueToday={stats.due}
-                newAvailable={stats.newAvailableToday}
-                reviewedToday={stats.reviewedToday}
-                sessionReviewed={sessionReviewedCount}
-                sessionLimit={sessionTargetCount}
-                dark={isDark}
-                compact
-              />
-
-              <div ref={filtersRef} className="hidden min-w-0 lg:block">
-                <DeckSelector {...deckSelectorProps} />
-              </div>
-            </aside>
-
-            <div className="min-w-0">
-              {currentCard ? (
-                <SrsCard
-                  key={`${currentCard.id}-${sessionStep}`}
-                  card={currentCard}
-                  progress={progress[currentCard.id]}
-                  revealed={answerVisible}
-                  onReveal={() => setAnswerVisible(true)}
-                  onRate={handleRate}
-                  sessionLabel={sessionLabel}
-                  targetLabel={targetLabel}
-                  dark={isDark}
-                />
-              ) : null}
-
-              {noMatchingCards ? (
-                <SessionPanel
-                  title="No cards match these filters."
-                  icon={CalendarClock}
-                  dark={isDark}
-                  actions={
-                    <button
-                      type="button"
-                      onClick={clearFilters}
-                      className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:bg-[#096d58]"
-                    >
-                      Clear filters
-                    </button>
-                  }
-                >
-                  Try selecting more categories or levels.
-                </SessionPanel>
-              ) : null}
-
-              {noReadyCards ? (
-                <SessionPanel
-                  title="No cards ready right now"
-                  icon={CalendarClock}
-                  dark={isDark}
-                  actions={
-                    <>
-                      <button
-                        type="button"
-                        onClick={startSession}
-                        className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:bg-[#096d58]"
-                      >
-                        Start another session
-                      </button>
-                      <button
-                        type="button"
-                        onClick={scrollToFilters}
-                        className={`focus-ring inline-flex min-h-11 items-center justify-center rounded-full border px-5 py-3 text-sm font-extrabold transition ${
-                          isDark
-                            ? 'border-white/15 bg-white/[0.08] text-white hover:bg-white hover:text-ink'
-                            : 'border-ink/15 bg-white text-ink hover:bg-mint/50'
-                        }`}
-                      >
-                        Change filters
-                      </button>
-                    </>
-                  }
-                >
-                  {nextDue ? (
-                    <>Next review: {formatDueLabel(nextDue.state.dueDate, now)}.</>
-                  ) : (
-                    <>Try widening your filters or come back later.</>
-                  )}
-                </SessionPanel>
-              ) : null}
-
-              {sessionComplete ? (
-                <SessionPanel
-                  title="Session complete"
-                  icon={CheckCircle2}
-                  dark={isDark}
-                  actions={
-                    <>
-                      {canAddExtraCards ? (
-                        <button
-                          type="button"
-                          onClick={handleAddCards}
-                          className={`focus-ring inline-flex min-h-11 items-center justify-center rounded-full border px-5 py-3 text-sm font-extrabold shadow-lift transition ${
-                            isDark
-                              ? 'border-mint/40 bg-mint text-moss hover:bg-white'
-                              : 'border-moss/20 bg-mint text-moss hover:bg-white'
-                          }`}
-                        >
-                          Add 5 more cards
-                        </button>
-                      ) : null}
-                      <button
-                        type="button"
-                        onClick={startSession}
-                        className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-moss px-5 py-3 text-sm font-extrabold text-white shadow-lift transition hover:bg-[#096d58]"
-                      >
-                        Start another session
-                      </button>
-                      <button
-                        type="button"
-                        onClick={scrollToFilters}
-                        className={`focus-ring inline-flex min-h-11 items-center justify-center rounded-full border px-5 py-3 text-sm font-extrabold transition ${
-                          isDark
-                            ? 'border-white/15 bg-white/[0.08] text-white hover:bg-white hover:text-ink'
-                            : 'border-ink/15 bg-white text-ink hover:bg-mint/50'
-                        }`}
-                      >
-                        Change filters
-                      </button>
-                    </>
-                  }
-                >
-                  <p>Suggested next step: Use 3 of these {targetPluralLabel} in your next speaking lesson.</p>
-                  {canAddExtraCards ? (
-                    <p
-                      className={`mt-3 rounded-lg border px-4 py-3 text-xs font-bold leading-5 ${
-                        isDark ? 'border-white/10 bg-white/[0.08] text-white/70' : 'border-ink/10 bg-paper text-ink/65'
-                      }`}
-                    >
-                      More cards are not always better. Adding too many in one session can become counterproductive and create a heavier review backlog.
-                    </p>
-                  ) : null}
-                  <CompletionStats ratings={sessionRatings} reviewed={sessionReviewedCount} dark={isDark} />
-                </SessionPanel>
-              ) : null}
-            </div>
-
-            <div ref={mobileFiltersRef} className="min-w-0 lg:hidden">
-              <DeckSelector {...deckSelectorProps} />
-            </div>
-          </div>
-        </div>
-      </TrainerLayout>
-    </>
-  );
+  return null;
 }
