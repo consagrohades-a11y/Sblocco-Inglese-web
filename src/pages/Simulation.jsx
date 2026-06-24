@@ -34,7 +34,7 @@ export default function Simulation() {
         <div className="h-1 scanline" />
         <div className="section-shell grid gap-10 pb-16 pt-12 lg:grid-cols-[1fr_0.82fr] lg:items-center lg:pt-16">
           <div>
-            <span className="eyebrow border-white/15 bg-white/10 !text-white">Diagnosi iniziale - {primaryOffer.price}</span>
+            <span className="eyebrow border-butter/80 bg-butter text-ink shadow-soft">Diagnosi iniziale - {primaryOffer.price}</span>
             <h1 className="mt-5 max-w-4xl text-4xl font-black leading-[1.05] text-white sm:text-5xl">
               La simulazione è il modo più veloce per vedere dove si blocca il tuo inglese.
             </h1>
