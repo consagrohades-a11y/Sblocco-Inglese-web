@@ -18,4 +18,14 @@
     margin-right: auto;
     margin-left: auto;
   }
+
+  .scanline + div + .mt-5.grid > aside button,
+  .scanline + div + .mt-5.grid > aside label {
+    font-size: 0.75rem;
+  }
+
+  .scanline + div + .mt-5.grid > aside button {
+    min-height: 2.25rem;
+    padding: 0.45rem 0.65rem;
+  }
 }
