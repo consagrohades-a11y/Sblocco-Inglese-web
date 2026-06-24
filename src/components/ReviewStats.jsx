@@ -29,7 +29,7 @@ export default function ReviewStats({
         <StatTile dark={dark} label="Due today" value={dueToday} helper="da ripassare" />
         <StatTile dark={dark} label="New available" value={newAvailable} helper="oggi" />
         <StatTile dark={dark} label="Reviewed today" value={reviewedToday} helper="su questo browser" />
-        <StatTile dark={dark} label="Session progress" value={`${sessionReviewed}/${sessionLimit}`} helper="card viste" />
+        <StatTile dark={dark} label="Cards reviewed" value={sessionReviewed} helper="in this session" />
       </div>
       <div className={`h-2 overflow-hidden rounded-full ${dark ? 'bg-white/10' : 'bg-white'}`}>
         <div className="h-full rounded-full bg-moss transition-all" style={{ width: `${progressPercent}%` }} />
