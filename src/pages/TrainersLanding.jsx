@@ -14,7 +14,7 @@ const useCases = [
   },
   {
     title: 'Uscire dalla traduzione mentale',
-    text: 'Incontri più volte le strutture naturali, così non parti sempre dall’italiano. Automatizza.',
+    text: 'Incontri più volte le strutture naturali, così non parti sempre dall’italiano. Automatizzi.',
   },
   {
     title: 'Allenare il recupero veloce',
