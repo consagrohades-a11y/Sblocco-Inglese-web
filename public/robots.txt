@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sblocco-inglese-web-t5ia.vercel.app/sitemap.xml
+Sitemap: https://sbloccoinglese.com/sitemap.xml
