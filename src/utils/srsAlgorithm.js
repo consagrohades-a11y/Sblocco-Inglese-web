@@ -233,7 +233,8 @@ export function getNewCards(cards, progress, selectedCategory = 'all', options =
     excludeIds = [],
   } = options;
   const reviewedToday = countNewCardsReviewedToday(progress, today);
-  const remainingNewCards = Math.max(0, newLimit - reviewedToday);
+  const isContinuation = Array.isArray(excludeIds) && excludeIds.length > 0;
+  const remainingNewCards = isContinuation ? newLimit : Math.max(0, newLimit - reviewedToday);
   const excludedIds = createExcludedIdSet(excludeIds);
 
   return filterCards(cards, selectedCategory, level)
