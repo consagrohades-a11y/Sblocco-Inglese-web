@@ -24,6 +24,7 @@ const HospitalityExpressionTrainer = lazy(() => import('./pages/HospitalityExpre
 const WordTrainer = lazy(() => import('./pages/WordTrainer'));
 const GrammarHub = lazy(() => import('./pages/GrammarHub'));
 const GrammarA1Test = lazy(() => import('./pages/GrammarA1Test'));
+const GrammarA1TopicPage = lazy(() => import('./pages/GrammarA1TopicPage'));
 
 function ScrollManager() {
   const location = useLocation();
@@ -54,6 +55,12 @@ function PageFallback() {
 
 export default function App() {
   useEffect(() => {
+    const savedTheme = window.localStorage.getItem('sblocco_theme');
+    if (savedTheme === 'dark' || savedTheme === 'light') {
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+      return undefined;
+    }
+
     const media = window.matchMedia?.('(prefers-color-scheme: dark)');
     const applyPreferredTheme = () => document.documentElement.classList.toggle('dark', Boolean(media?.matches));
 
@@ -85,6 +92,7 @@ export default function App() {
             <Route path="/trainers/word-trainer" element={<WordTrainer />} />
             <Route path="/grammar" element={<GrammarHub />} />
             <Route path="/grammar/a1" element={<GrammarA1Test />} />
+            <Route path="/grammar/a1/:topicId" element={<GrammarA1TopicPage />} />
             <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
             <Route path="/prenota" element={<Prenota />} />
             <Route
