@@ -24,7 +24,7 @@ const HospitalityExpressionTrainer = lazy(() => import('./pages/HospitalityExpre
 const WordTrainer = lazy(() => import('./pages/WordTrainer'));
 const GrammarHub = lazy(() => import('./pages/GrammarHub'));
 const GrammarA1Hub = lazy(() => import('./pages/GrammarA1Hub'));
-const GrammarA1Topic = lazy(() => import('./pages/GrammarA1Topic'));
+const GrammarA1Topic = lazy(() => import('./pages/GrammarA1Test'));
 
 function ScrollManager() {
   const location = useLocation();
