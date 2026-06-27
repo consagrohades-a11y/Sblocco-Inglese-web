@@ -1,20 +1,95 @@
-const choice = (id, prompt, options, correct, feedback) => ({
+const choice = (id, prompt, options, correct, feedback, metadata = {}) => ({
   id,
   type: 'choice',
   prompt,
   options,
   correct,
   feedback,
+  tags: metadata.tags || [],
+  baseForm: metadata.baseForm || null,
 });
 
-const blank = (id, prompt, accepted, answer, feedback) => ({
+const blank = (id, prompt, accepted, answer, feedback, metadata = {}) => ({
   id,
   type: 'blank',
   prompt,
   accepted,
   answer,
   feedback,
+  tags: metadata.tags || [],
+  baseForm: metadata.baseForm || null,
 });
+
+export const grammarDiagnosticTags = {
+  'be-present': {
+    label: 'Verbo be al presente',
+    description: 'Confusione su am / is / are o uso scorretto di do/does con be.',
+  },
+  'be-past': {
+    label: 'Verbo be al passato',
+    description: 'Confusione su was / were o sulle forme negative wasn’t / weren’t.',
+  },
+  'present-third-person': {
+    label: 'Terza persona singolare',
+    description: 'Confusione sulla -s con he / she / it al Present Simple.',
+  },
+  'present-aux-question': {
+    label: 'Domande al Present Simple',
+    description: 'Confusione su do / does + soggetto + verbo base.',
+  },
+  'present-aux-negative': {
+    label: 'Negative al Present Simple',
+    description: 'Confusione su don’t / doesn’t + verbo base.',
+  },
+  'present-base-form': {
+    label: 'Verbo base al presente',
+    description: 'Confusione sull’uso del verbo base con I / you / we / they o dopo do/does.',
+  },
+  'past-affirmative': {
+    label: 'Past Simple affermativo',
+    description: 'Confusione sulla forma passata del verbo nelle frasi affermative.',
+  },
+  'past-aux-question': {
+    label: 'Domande al Past Simple',
+    description: 'Confusione su Did + soggetto + verbo base.',
+  },
+  'past-aux-negative': {
+    label: 'Negative al Past Simple',
+    description: 'Confusione su didn’t + verbo base.',
+  },
+  'short-answer': {
+    label: 'Risposte brevi',
+    description: 'Confusione sulle risposte brevi con be, do/does o did.',
+  },
+  'article-a-an': {
+    label: 'a / an',
+    description: 'Confusione tra a e an con nomi singolari contabili.',
+  },
+  'article-the': {
+    label: 'the',
+    description: 'Confusione sull’articolo the per elementi specifici o già chiari.',
+  },
+  'article-zero': {
+    label: 'No article',
+    description: 'Confusione sui casi in cui l’articolo non si usa.',
+  },
+  'plural-s': {
+    label: 'Plurale con -s',
+    description: 'Confusione sul plurale regolare più semplice.',
+  },
+  'plural-es': {
+    label: 'Plurale con -es',
+    description: 'Confusione sui plurali che richiedono -es.',
+  },
+  'plural-ies': {
+    label: 'Plurale con -ies',
+    description: 'Confusione sulla trasformazione consonante + y → -ies.',
+  },
+  'plural-irregular': {
+    label: 'Plurali irregolari',
+    description: 'Confusione sui plurali irregolari frequenti.',
+  },
+};
 
 export const grammarA1Checkpoints = [
   {
@@ -39,11 +114,11 @@ export const grammarA1Checkpoints = [
         title: 'Regole rapide',
         instruction: 'Scegli la frase corretta. Qui non serve tradurre: devi riconoscere la struttura giusta.',
         items: [
-          choice('present-rule-1', 'Which sentence is correct?', ['She like coffee.', 'She likes coffee.', 'She liking coffee.', 'She does likes coffee.'], 1, 'Con she, he e it il verbo normale prende -s: She likes coffee. Non si usa does insieme alla -s nella frase affermativa.'),
-          choice('present-rule-2', 'Which sentence is negative?', ['I not work on Sunday.', 'I don’t work on Sunday.', 'I doesn’t work on Sunday.', 'I no work on Sunday.'], 1, 'Con I e un verbo normale si usa don’t + verbo base: I don’t work. Non si usa not da solo.'),
-          choice('present-rule-3', 'Choose the correct question.', ['You live in Italy?', 'Do you live in Italy?', 'Does you live in Italy?', 'Are you live in Italy?'], 1, 'Con you e un verbo normale la domanda si costruisce con Do + soggetto + verbo base.'),
-          choice('present-rule-4', 'Choose the correct sentence with be.', ['He are tired.', 'He is tired.', 'He be tired.', 'He does tired.'], 1, 'Con he si usa is. Il verbo be non usa does.'),
-          choice('present-rule-5', 'Choose the correct negative sentence with be.', ['They not are students.', 'They isn’t students.', 'They aren’t students.', 'They don’t students.'], 2, 'Con they si usa are; la forma negativa è aren’t / are not. Be non usa don’t.'),
+          choice('present-rule-1', 'Which sentence is correct?', ['She like coffee.', 'She likes coffee.', 'She liking coffee.', 'She does likes coffee.'], 1, 'Con she, he e it il verbo normale prende -s: She likes coffee. Non si usa does insieme alla -s nella frase affermativa.', { tags: ['present-third-person'] }),
+          choice('present-rule-2', 'Which sentence is negative?', ['I not work on Sunday.', 'I don’t work on Sunday.', 'I doesn’t work on Sunday.', 'I no work on Sunday.'], 1, 'Con I e un verbo normale si usa don’t + verbo base: I don’t work. Non si usa not da solo.', { tags: ['present-aux-negative', 'present-base-form'], baseForm: 'work' }),
+          choice('present-rule-3', 'Choose the correct question.', ['You live in Italy?', 'Do you live in Italy?', 'Does you live in Italy?', 'Are you live in Italy?'], 1, 'Con you e un verbo normale la domanda si costruisce con Do + soggetto + verbo base.', { tags: ['present-aux-question', 'present-base-form'], baseForm: 'live' }),
+          choice('present-rule-4', 'Choose the correct sentence with be.', ['He are tired.', 'He is tired.', 'He be tired.', 'He does tired.'], 1, 'Con he si usa is. Il verbo be non usa does.', { tags: ['be-present'] }),
+          choice('present-rule-5', 'Choose the correct negative sentence with be.', ['They not are students.', 'They isn’t students.', 'They aren’t students.', 'They don’t students.'], 2, 'Con they si usa are; la forma negativa è aren’t / are not. Be non usa don’t.', { tags: ['be-present'] }),
         ],
       },
       {
@@ -68,18 +143,18 @@ export const grammarA1Checkpoints = [
           { speaker: 'Marco', parts: ['Lucky her! I ', { blankId: 'present-dialogue-12' }, ' on Saturdays.'] },
         ],
         items: [
-          blank('present-dialogue-1', 'I ___ Anna.', ['am'], 'am', 'Con I si usa am.'),
-          blank('present-dialogue-2', 'I ___ Marco.', ['am'], 'am', 'Anche qui il soggetto è I, quindi serve am.'),
-          blank('present-dialogue-3', '___ you from Italy?', ['are'], 'Are', 'Nelle domande con be si mette il verbo prima del soggetto: Are you...?'),
-          blank('present-dialogue-4', 'Yes, I ___.', ['am'], 'am', 'La risposta breve riprende il verbo be: Yes, I am.'),
-          blank('present-dialogue-5', 'Where ___ you live?', ['do'], 'do', 'Con live, che è un verbo normale, la domanda con you usa do.'),
-          blank('present-dialogue-6', 'I ___ in Rome.', ['live'], 'live', 'Con I si usa il verbo base: live.'),
-          blank('present-dialogue-7', 'My sister ___ in Rome too.', ['lives'], 'lives', 'My sister corrisponde a she, quindi il verbo prende -s.'),
-          blank('present-dialogue-8', '___ she speak English?', ['does'], 'Does', 'Con she e un verbo normale la domanda usa does + verbo base.'),
-          blank('present-dialogue-9', 'Yes, she ___.', ['does'], 'does', 'La risposta breve usa does perché la domanda era con does.'),
-          blank('present-dialogue-10', 'She ___ in a hotel.', ['works'], 'works', 'Con she il verbo work diventa works.'),
-          blank('present-dialogue-11', 'She ___ work on Sundays.', ["doesn't", 'does not'], 'doesn’t / does not', 'Con she la negativa dei verbi normali è doesn’t + verbo base.'),
-          blank('present-dialogue-12', 'I ___ on Saturdays.', ['work'], 'work', 'Con I si usa il verbo base: work.'),
+          blank('present-dialogue-1', 'I ___ Anna.', ['am'], 'am', 'Con I si usa am.', { tags: ['be-present'] }),
+          blank('present-dialogue-2', 'I ___ Marco.', ['am'], 'am', 'Anche qui il soggetto è I, quindi serve am.', { tags: ['be-present'] }),
+          blank('present-dialogue-3', '___ you from Italy?', ['are'], 'Are', 'Nelle domande con be si mette il verbo prima del soggetto: Are you...?', { tags: ['be-present'] }),
+          blank('present-dialogue-4', 'Yes, I ___.', ['am'], 'am', 'La risposta breve riprende il verbo be: Yes, I am.', { tags: ['be-present', 'short-answer'] }),
+          blank('present-dialogue-5', 'Where ___ you live?', ['do'], 'do', 'Con live, che è un verbo normale, la domanda con you usa do.', { tags: ['present-aux-question'], baseForm: 'live' }),
+          blank('present-dialogue-6', 'I ___ in Rome.', ['live'], 'live', 'Con I si usa il verbo base: live.', { tags: ['present-base-form'], baseForm: 'live' }),
+          blank('present-dialogue-7', 'My sister ___ in Rome too.', ['lives'], 'lives', 'My sister corrisponde a she, quindi il verbo prende -s.', { tags: ['present-third-person'], baseForm: 'live' }),
+          blank('present-dialogue-8', '___ she speak English?', ['does'], 'Does', 'Con she e un verbo normale la domanda usa does + verbo base.', { tags: ['present-aux-question'], baseForm: 'speak' }),
+          blank('present-dialogue-9', 'Yes, she ___.', ['does'], 'does', 'La risposta breve usa does perché la domanda era con does.', { tags: ['short-answer', 'present-aux-question'] }),
+          blank('present-dialogue-10', 'She ___ in a hotel.', ['works'], 'works', 'Con she il verbo work diventa works.', { tags: ['present-third-person'], baseForm: 'work' }),
+          blank('present-dialogue-11', 'She ___ work on Sundays.', ["doesn't", 'does not'], 'doesn’t / does not', 'Con she la negativa dei verbi normali è doesn’t + verbo base.', { tags: ['present-aux-negative'], baseForm: 'work' }),
+          blank('present-dialogue-12', 'I ___ on Saturdays.', ['work'], 'work', 'Con I si usa il verbo base: work.', { tags: ['present-base-form'], baseForm: 'work' }),
         ],
       },
       {
@@ -88,14 +163,14 @@ export const grammarA1Checkpoints = [
         title: 'Controllo frase per frase',
         instruction: 'Scegli la frase corretta. Questo blocco controlla se lo studente applica la regola senza il supporto del dialogo.',
         items: [
-          choice('present-control-1', 'Choose the correct sentence.', ['I works in a shop.', 'I work in a shop.', 'I working in a shop.'], 1, 'Con I si usa il verbo base: I work.'),
-          choice('present-control-2', 'Choose the correct sentence.', ['He don’t like tea.', 'He doesn’t like tea.', 'He isn’t like tea.'], 1, 'Con he la negativa dei verbi normali è doesn’t + verbo base.'),
-          choice('present-control-3', 'Choose the correct sentence.', ['Do they study English?', 'Does they study English?', 'Are they study English?'], 0, 'Con they e un verbo normale si usa do nella domanda.'),
-          choice('present-control-4', 'Choose the correct sentence.', ['She go to school by bus.', 'She goes to school by bus.', 'She going to school by bus.'], 1, 'Con she il verbo prende -s: goes.'),
-          choice('present-control-5', 'Choose the correct sentence.', ['We aren’t live in Milan.', 'We don’t live in Milan.', 'We doesn’t live in Milan.'], 1, 'Con we e un verbo normale si usa don’t + verbo base.'),
-          choice('present-control-6', 'Choose the correct sentence.', ['Is your brother a student?', 'Does your brother a student?', 'Do your brother a student?'], 0, 'A student descrive identità/ruolo, quindi serve be: Is your brother...?'),
-          choice('present-control-7', 'Choose the correct sentence.', ['My parents is teachers.', 'My parents are teachers.', 'My parents be teachers.'], 1, 'My parents è plurale, quindi si usa are.'),
-          choice('present-control-8', 'Choose the correct sentence.', ['I am not tired.', 'I don’t tired.', 'I not tired.'], 0, 'Tired si usa con be: I am not tired.'),
+          choice('present-control-1', 'Choose the correct sentence.', ['I works in a shop.', 'I work in a shop.', 'I working in a shop.'], 1, 'Con I si usa il verbo base: I work.', { tags: ['present-base-form'], baseForm: 'work' }),
+          choice('present-control-2', 'Choose the correct sentence.', ['He don’t like tea.', 'He doesn’t like tea.', 'He isn’t like tea.'], 1, 'Con he la negativa dei verbi normali è doesn’t + verbo base.', { tags: ['present-aux-negative'], baseForm: 'like' }),
+          choice('present-control-3', 'Choose the correct sentence.', ['Do they study English?', 'Does they study English?', 'Are they study English?'], 0, 'Con they e un verbo normale si usa do nella domanda.', { tags: ['present-aux-question'], baseForm: 'study' }),
+          choice('present-control-4', 'Choose the correct sentence.', ['She go to school by bus.', 'She goes to school by bus.', 'She going to school by bus.'], 1, 'Con she il verbo prende -s: goes.', { tags: ['present-third-person'], baseForm: 'go' }),
+          choice('present-control-5', 'Choose the correct sentence.', ['We aren’t live in Milan.', 'We don’t live in Milan.', 'We doesn’t live in Milan.'], 1, 'Con we e un verbo normale si usa don’t + verbo base.', { tags: ['present-aux-negative'], baseForm: 'live' }),
+          choice('present-control-6', 'Choose the correct sentence.', ['Is your brother a student?', 'Does your brother a student?', 'Do your brother a student?'], 0, 'A student descrive identità/ruolo, quindi serve be: Is your brother...?', { tags: ['be-present'] }),
+          choice('present-control-7', 'Choose the correct sentence.', ['My parents is teachers.', 'My parents are teachers.', 'My parents be teachers.'], 1, 'My parents è plurale, quindi si usa are.', { tags: ['be-present'] }),
+          choice('present-control-8', 'Choose the correct sentence.', ['I am not tired.', 'I don’t tired.', 'I not tired.'], 0, 'Tired si usa con be: I am not tired.', { tags: ['be-present'] }),
         ],
       },
     ],
@@ -122,9 +197,9 @@ export const grammarA1Checkpoints = [
         title: 'Regole rapide',
         instruction: 'Scegli la frase corretta. Qui controlliamo la struttura, non il vocabolario.',
         items: [
-          choice('past-rule-1', 'Choose the correct Past Simple form of be.', ['Yesterday I am at home.', 'Yesterday I was at home.', 'Yesterday I were at home.', 'Yesterday I be at home.'], 1, 'Con I al passato si usa was: Yesterday I was at home.'),
-          choice('past-rule-2', 'Choose the correct Past Simple negative.', ['I didn’t went to school.', 'I don’t went to school.', 'I didn’t go to school.', 'I wasn’t go to school.'], 2, 'Dopo didn’t il verbo torna alla forma base: didn’t go, non didn’t went.'),
-          choice('past-rule-3', 'Choose the correct Past Simple question.', ['Did you watched TV?', 'Did you watch TV?', 'Do you watched TV?', 'Were you watch TV?'], 1, 'Nelle domande al Past Simple con verbi normali si usa Did + soggetto + verbo base.'),
+          choice('past-rule-1', 'Choose the correct Past Simple form of be.', ['Yesterday I am at home.', 'Yesterday I was at home.', 'Yesterday I were at home.', 'Yesterday I be at home.'], 1, 'Con I al passato si usa was: Yesterday I was at home.', { tags: ['be-past'] }),
+          choice('past-rule-2', 'Choose the correct Past Simple negative.', ['I didn’t went to school.', 'I don’t went to school.', 'I didn’t go to school.', 'I wasn’t go to school.'], 2, 'Dopo didn’t il verbo torna alla forma base: didn’t go, non didn’t went.', { tags: ['past-aux-negative'], baseForm: 'go' }),
+          choice('past-rule-3', 'Choose the correct Past Simple question.', ['Did you watched TV?', 'Did you watch TV?', 'Do you watched TV?', 'Were you watch TV?'], 1, 'Nelle domande al Past Simple con verbi normali si usa Did + soggetto + verbo base.', { tags: ['past-aux-question'], baseForm: 'watch' }),
         ],
       },
       {
@@ -155,18 +230,18 @@ export const grammarA1Checkpoints = [
           { speaker: 'Student', parts: ['Yes, I ', { blankId: 'past-dialogue-12' }, ' it.'] },
         ],
         items: [
-          blank('past-dialogue-1', 'Where ___ you yesterday?', ['were'], 'were', 'Con you al passato di be si usa were.'),
-          blank('past-dialogue-2', 'I ___ at home.', ['was'], 'was', 'Con I al passato di be si usa was.'),
-          blank('past-dialogue-3', '___ you ill?', ['were'], 'Were', 'Nelle domande con be al passato si mette were prima del soggetto.'),
-          blank('past-dialogue-4', 'No, I ___.', ["wasn't", 'was not'], 'wasn’t / was not', 'La forma negativa di was è wasn’t / was not.'),
-          blank('past-dialogue-5', 'I ___ my room.', ['cleaned'], 'cleaned', 'Nella frase affermativa al Past Simple si usa il verbo al passato: cleaned.'),
-          blank('past-dialogue-6', 'Yes, I ___.', ['did'], 'did', 'La risposta breve a una domanda con Did usa did.'),
-          blank('past-dialogue-7', 'No, I ___.', ["didn't", 'did not'], 'didn’t / did not', 'La risposta breve negativa a una domanda con Did usa didn’t / did not.'),
-          blank('past-dialogue-8', 'I ___ a video.', ['watched'], 'watched', 'Nella frase affermativa al Past Simple si usa watched.'),
-          blank('past-dialogue-9', 'No, they ___.', ["weren't", 'were not'], 'weren’t / were not', 'Con they la forma negativa di were è weren’t / were not.'),
-          blank('past-dialogue-10', 'They ___ at work.', ['were'], 'were', 'Con they al passato di be si usa were.'),
-          blank('past-dialogue-11', 'I ___ dinner.', ["didn't cook", 'did not cook'], 'didn’t cook / did not cook', 'Dopo didn’t si usa il verbo base: didn’t cook.'),
-          blank('past-dialogue-12', 'I ___ it.', ['liked'], 'liked', 'Nella frase affermativa si usa il verbo al passato: liked.'),
+          blank('past-dialogue-1', 'Where ___ you yesterday?', ['were'], 'were', 'Con you al passato di be si usa were.', { tags: ['be-past'] }),
+          blank('past-dialogue-2', 'I ___ at home.', ['was'], 'was', 'Con I al passato di be si usa was.', { tags: ['be-past'] }),
+          blank('past-dialogue-3', '___ you ill?', ['were'], 'Were', 'Nelle domande con be al passato si mette were prima del soggetto.', { tags: ['be-past'] }),
+          blank('past-dialogue-4', 'No, I ___.', ["wasn't", 'was not'], 'wasn’t / was not', 'La forma negativa di was è wasn’t / was not.', { tags: ['be-past', 'short-answer'] }),
+          blank('past-dialogue-5', 'I ___ my room.', ['cleaned'], 'cleaned', 'Nella frase affermativa al Past Simple si usa il verbo al passato: cleaned.', { tags: ['past-affirmative'], baseForm: 'clean' }),
+          blank('past-dialogue-6', 'Yes, I ___.', ['did'], 'did', 'La risposta breve a una domanda con Did usa did.', { tags: ['short-answer', 'past-aux-question'] }),
+          blank('past-dialogue-7', 'No, I ___.', ["didn't", 'did not'], 'didn’t / did not', 'La risposta breve negativa a una domanda con Did usa didn’t / did not.', { tags: ['short-answer', 'past-aux-negative'] }),
+          blank('past-dialogue-8', 'I ___ a video.', ['watched'], 'watched', 'Nella frase affermativa al Past Simple si usa watched.', { tags: ['past-affirmative'], baseForm: 'watch' }),
+          blank('past-dialogue-9', 'No, they ___.', ["weren't", 'were not'], 'weren’t / were not', 'Con they la forma negativa di were è weren’t / were not.', { tags: ['be-past', 'short-answer'] }),
+          blank('past-dialogue-10', 'They ___ at work.', ['were'], 'were', 'Con they al passato di be si usa were.', { tags: ['be-past'] }),
+          blank('past-dialogue-11', 'I ___ dinner.', ["didn't cook", 'did not cook'], 'didn’t cook / did not cook', 'Dopo didn’t si usa il verbo base: didn’t cook.', { tags: ['past-aux-negative'], baseForm: 'cook' }),
+          blank('past-dialogue-12', 'I ___ it.', ['liked'], 'liked', 'Nella frase affermativa si usa il verbo al passato: liked.', { tags: ['past-affirmative'], baseForm: 'like' }),
         ],
       },
     ],
@@ -192,14 +267,14 @@ export const grammarA1Checkpoints = [
         title: 'Articoli in contesto',
         instruction: 'Scegli l’articolo corretto. Ogni frase controlla un uso diverso.',
         items: [
-          choice('article-1', 'I have ___ dog.', ['a', 'an', 'the', 'no article'], 0, 'Dog è singolare, contabile e non specifico: si usa a.'),
-          choice('article-2', 'She is ___ English teacher.', ['a', 'an', 'the', 'no article'], 1, 'English inizia con un suono vocalico, quindi si usa an.'),
-          choice('article-3', 'I like ___ music.', ['a', 'an', 'the', 'no article'], 3, 'Quando parliamo di music in generale non usiamo l’articolo.'),
-          choice('article-4', 'Can you open ___ door, please?', ['a', 'an', 'the', 'no article'], 2, 'Si usa the perché la porta è specifica e chi parla sa quale porta intende.'),
-          choice('article-5', 'He eats ___ apple every day.', ['a', 'an', 'the', 'no article'], 1, 'Apple inizia con un suono vocalico, quindi si usa an.'),
-          choice('article-6', 'We live in ___ Italy.', ['a', 'an', 'the', 'no article'], 3, 'Con la maggior parte dei paesi, tra cui Italy, non si usa l’articolo.'),
-          choice('article-7', 'This is ___ old book.', ['a', 'an', 'the', 'no article'], 1, 'Old inizia con un suono vocalico, quindi si usa an.'),
-          choice('article-8', 'I go to ___ school every day.', ['a', 'an', 'the', 'no article'], 3, 'Quando school indica l’attività normale o l’istituzione, si usa spesso senza articolo.'),
+          choice('article-1', 'I have ___ dog.', ['a', 'an', 'the', 'no article'], 0, 'Dog è singolare, contabile e non specifico: si usa a.', { tags: ['article-a-an'] }),
+          choice('article-2', 'She is ___ English teacher.', ['a', 'an', 'the', 'no article'], 1, 'English inizia con un suono vocalico, quindi si usa an.', { tags: ['article-a-an'] }),
+          choice('article-3', 'I like ___ music.', ['a', 'an', 'the', 'no article'], 3, 'Quando parliamo di music in generale non usiamo l’articolo.', { tags: ['article-zero'] }),
+          choice('article-4', 'Can you open ___ door, please?', ['a', 'an', 'the', 'no article'], 2, 'Si usa the perché la porta è specifica e chi parla sa quale porta intende.', { tags: ['article-the'] }),
+          choice('article-5', 'He eats ___ apple every day.', ['a', 'an', 'the', 'no article'], 1, 'Apple inizia con un suono vocalico, quindi si usa an.', { tags: ['article-a-an'] }),
+          choice('article-6', 'We live in ___ Italy.', ['a', 'an', 'the', 'no article'], 3, 'Con la maggior parte dei paesi, tra cui Italy, non si usa l’articolo.', { tags: ['article-zero'] }),
+          choice('article-7', 'This is ___ old book.', ['a', 'an', 'the', 'no article'], 1, 'Old inizia con un suono vocalico, quindi si usa an.', { tags: ['article-a-an'] }),
+          choice('article-8', 'I go to ___ school every day.', ['a', 'an', 'the', 'no article'], 3, 'Quando school indica l’attività normale o l’istituzione, si usa spesso senza articolo.', { tags: ['article-zero'] }),
         ],
       },
     ],
@@ -225,21 +300,31 @@ export const grammarA1Checkpoints = [
         title: 'Scrivi il plurale',
         instruction: 'Completa con la forma plurale corretta.',
         items: [
-          blank('plural-1', 'one book → two ___', ['books'], 'books', 'La maggior parte dei nomi aggiunge -s.'),
-          blank('plural-2', 'one box → two ___', ['boxes'], 'boxes', 'Le parole che finiscono in -x prendono -es.'),
-          blank('plural-3', 'one baby → two ___', ['babies'], 'babies', 'Con consonante + y, la y diventa -ies.'),
-          blank('plural-4', 'one city → two ___', ['cities'], 'cities', 'City finisce con consonante + y, quindi diventa cities.'),
-          blank('plural-5', 'one bus → two ___', ['buses'], 'buses', 'Bus prende -es al plurale.'),
-          blank('plural-6', 'one person → two ___', ['people'], 'people', 'People è il plurale irregolare più comune di person.'),
-          blank('plural-7', 'one child → two ___', ['children'], 'children', 'Children è un plurale irregolare.'),
-          blank('plural-8', 'one man → two ___', ['men'], 'men', 'Man cambia internamente in men.'),
-          blank('plural-9', 'one woman → two ___', ['women'], 'women', 'Woman diventa women al plurale.'),
-          blank('plural-10', 'one watch → two ___', ['watches'], 'watches', 'Watch prende -es al plurale.'),
+          blank('plural-1', 'one book → two ___', ['books'], 'books', 'La maggior parte dei nomi aggiunge -s.', { tags: ['plural-s'] }),
+          blank('plural-2', 'one box → two ___', ['boxes'], 'boxes', 'Le parole che finiscono in -x prendono -es.', { tags: ['plural-es'] }),
+          blank('plural-3', 'one baby → two ___', ['babies'], 'babies', 'Con consonante + y, la y diventa -ies.', { tags: ['plural-ies'] }),
+          blank('plural-4', 'one city → two ___', ['cities'], 'cities', 'City finisce con consonante + y, quindi diventa cities.', { tags: ['plural-ies'] }),
+          blank('plural-5', 'one bus → two ___', ['buses'], 'buses', 'Bus prende -es al plurale.', { tags: ['plural-es'] }),
+          blank('plural-6', 'one person → two ___', ['people'], 'people', 'People è il plurale irregolare più comune di person.', { tags: ['plural-irregular'] }),
+          blank('plural-7', 'one child → two ___', ['children'], 'children', 'Children è un plurale irregolare.', { tags: ['plural-irregular'] }),
+          blank('plural-8', 'one man → two ___', ['men'], 'men', 'Man cambia internamente in men.', { tags: ['plural-irregular'] }),
+          blank('plural-9', 'one woman → two ___', ['women'], 'women', 'Woman diventa women al plurale.', { tags: ['plural-irregular'] }),
+          blank('plural-10', 'one watch → two ___', ['watches'], 'watches', 'Watch prende -es al plurale.', { tags: ['plural-es'] }),
         ],
       },
     ],
   },
 ];
+
+export const grammarLevels = {
+  a1: {
+    id: 'a1',
+    label: 'A1',
+    title: 'A1 Grammar',
+    path: '/grammar/a1',
+    topics: grammarA1Checkpoints,
+  },
+};
 
 export const grammarTopicRules = {
   'Present Simple': 'Usa il verbo base con I/you/we/they, aggiungi -s con he/she/it e usa do/does nelle domande e nelle negative dei verbi normali.',
