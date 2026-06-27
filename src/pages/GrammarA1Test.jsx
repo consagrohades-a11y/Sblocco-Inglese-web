@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { CheckCircle2, RotateCcw, Target, XCircle } from 'lucide-react';
+import { Link, useParams } from 'react-router-dom';
+import { ArrowLeft, CheckCircle2, RotateCcw, Target, XCircle } from 'lucide-react';
 import SEO from '../components/SEO';
 import { grammarA1Checkpoints } from '../data/grammarA1Test';
 
@@ -145,7 +146,7 @@ function ExerciseCard({ exercise, answers, setAnswer, submitted }) {
   const score = submitted ? getScore(getExerciseItems(exercise), answers) : null;
 
   return (
-    <article className="rounded-2xl border border-ink/10 bg-white/90 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
+    <article id={exercise.id} className="scroll-mt-28 rounded-2xl border border-ink/10 bg-white/90 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 className="text-xl font-black text-ink dark:text-white">{exercise.title}</h3>
@@ -169,96 +170,106 @@ function ExerciseCard({ exercise, answers, setAnswer, submitted }) {
   );
 }
 
+function TopicNotFound() {
+  return (
+    <section className="section-shell py-12">
+      <Link to="/grammar/a1" className="focus-ring inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-ink shadow-sm dark:bg-white/10 dark:text-white">
+        <ArrowLeft className="h-4 w-4" />Torna ad A1 Grammar
+      </Link>
+      <div className="mt-8 rounded-[2rem] border border-ink/10 bg-white/80 p-7 shadow-soft dark:border-white/10 dark:bg-white/[0.05]">
+        <h1 className="text-3xl font-black text-ink dark:text-white">Argomento non trovato.</h1>
+        <p className="mt-3 text-ink/70 dark:text-white/70">Scegli uno degli argomenti A1 disponibili.</p>
+      </div>
+    </section>
+  );
+}
+
 export default function GrammarA1Test() {
+  const { topicId } = useParams();
+  const checkpoint = grammarA1Checkpoints.find((item) => item.id === topicId);
   const [answers, setAnswers] = useState({});
-  const [submitted, setSubmitted] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  if (!checkpoint) return <TopicNotFound />;
+
+  const checkpointItems = getCheckpointItems(checkpoint);
+  const score = submitted ? getScore(checkpointItems, answers) : null;
+  const status = score ? getStatus(score.percent) : null;
 
   const setAnswer = (id, value) => {
     setAnswers((current) => ({ ...current, [id]: value }));
   };
 
-  const submitCheckpoint = (event, checkpointId) => {
+  const submitTopic = (event) => {
     event.preventDefault();
-    setSubmitted((current) => ({ ...current, [checkpointId]: true }));
+    setSubmitted(true);
   };
 
-  const resetCheckpoint = (checkpoint) => {
-    const ids = new Set(getCheckpointItems(checkpoint).map((item) => item.id));
-    setAnswers((current) => Object.fromEntries(Object.entries(current).filter(([key]) => !ids.has(key))));
-    setSubmitted((current) => ({ ...current, [checkpoint.id]: false }));
+  const resetTopic = () => {
+    setAnswers({});
+    setSubmitted(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <>
-      <SEO title="A1 Grammar Checkpoints | Sblocco Inglese" description="Checkpoint A1 di grammatica inglese con dialoghi, micro-valutazione e correzioni in italiano." />
+      <SEO title={`${checkpoint.title} | A1 Grammar`} description={`${checkpoint.title}: checkpoint A1 con esercizi, dialoghi e correzioni in italiano.`} />
       <section className="section-shell py-12">
-        <span className="eyebrow"><Target aria-hidden="true" className="h-4 w-4" />A1 Grammar checkpoints</span>
-        <h1 className="mt-5 max-w-5xl text-4xl font-black leading-tight sm:text-5xl dark:text-white">A1 Grammar Checkpoints</h1>
-        <p className="mt-4 max-w-3xl text-lg leading-8 text-ink/70 dark:text-white/70">
-          Non è un test unico da 60 domande. È una pagina di controllo divisa per aree: Present Simple, Past Simple, articoli e plurali. Ogni blocco dà correzioni in italiano e ti dice cosa ripassare.
-        </p>
+        <Link to="/grammar/a1" className="focus-ring inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-ink shadow-sm dark:bg-white/10 dark:text-white">
+          <ArrowLeft className="h-4 w-4" />Torna agli argomenti A1
+        </Link>
 
-        <div className="mt-8 grid gap-3 rounded-2xl border border-ink/10 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.05] md:grid-cols-4">
-          {grammarA1Checkpoints.map((checkpoint) => (
-            <a key={checkpoint.id} href={`#${checkpoint.id}`} className="focus-ring rounded-xl bg-mint/60 p-4 text-sm font-black text-ink transition hover:-translate-y-0.5 dark:bg-mint/10 dark:text-white">
-              <span className="block text-xs uppercase tracking-wide text-moss dark:text-mint">{checkpoint.eyebrow}</span>
-              <span className="mt-1 block">{checkpoint.title}</span>
-            </a>
+        <div className="mt-7 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <span className="eyebrow"><Target aria-hidden="true" className="h-4 w-4" />{checkpoint.eyebrow}</span>
+            <h1 className="mt-5 max-w-5xl text-4xl font-black leading-tight sm:text-5xl dark:text-white">{checkpoint.title}</h1>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-ink/70 dark:text-white/70">{checkpoint.description}</p>
+          </div>
+          <div className="rounded-2xl border border-ink/10 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
+            <p className="text-sm font-black uppercase tracking-wide text-ink/65 dark:text-white/65">Cosa controlla</p>
+            <ul className="mt-3 grid gap-2 text-sm font-semibold leading-6 text-ink/75 dark:text-white/75">
+              {checkpoint.checks.map((item) => <li key={item}>• {item}</li>)}
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-ink/10 bg-linen/80 p-5 dark:border-white/10 dark:bg-white/[0.05]">
+          <p className="text-sm font-black uppercase tracking-wide text-moss dark:text-mint">Test disponibili</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {checkpoint.exercises.map((exercise) => (
+              <a key={exercise.id} href={`#${exercise.id}`} className="focus-ring rounded-full bg-white px-4 py-2 text-sm font-black text-ink shadow-sm transition hover:-translate-y-0.5 dark:bg-white/10 dark:text-white">
+                {exercise.title}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <form onSubmit={submitTopic} className="mt-8 grid gap-5">
+          {checkpoint.exercises.map((exercise) => (
+            <ExerciseCard key={exercise.id} exercise={exercise} answers={answers} setAnswer={setAnswer} submitted={submitted} />
           ))}
-        </div>
 
-        <div className="mt-10 grid gap-8">
-          {grammarA1Checkpoints.map((checkpoint) => {
-            const isSubmitted = Boolean(submitted[checkpoint.id]);
-            const score = isSubmitted ? getScore(getCheckpointItems(checkpoint), answers) : null;
-            const status = score ? getStatus(score.percent) : null;
+          {score ? (
+            <div className="rounded-2xl bg-ink p-5 text-white dark:bg-mint dark:text-ink">
+              <p className="text-sm font-black uppercase tracking-wider opacity-75">Risultato argomento</p>
+              <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
+                <h2 className="text-3xl font-black">{score.correct}/{score.total} · {status}</h2>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-black dark:bg-ink/10">{score.percent}%</span>
+              </div>
+              {score.percent < 85 ? <p className="mt-3 text-sm font-semibold opacity-80">{checkpoint.recommendation}</p> : null}
+            </div>
+          ) : null}
 
-            return (
-              <section key={checkpoint.id} id={checkpoint.id} className="scroll-mt-28 rounded-[2rem] border border-ink/10 bg-white/70 p-5 shadow-soft dark:border-white/10 dark:bg-white/[0.04] sm:p-7">
-                <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-                  <div>
-                    <p className="text-sm font-black uppercase tracking-wider text-moss dark:text-mint">{checkpoint.eyebrow}</p>
-                    <h2 className="mt-2 text-3xl font-black leading-tight text-ink dark:text-white">{checkpoint.title}</h2>
-                    <p className="mt-3 max-w-3xl text-base leading-7 text-ink/70 dark:text-white/70">{checkpoint.description}</p>
-                  </div>
-                  <div className="rounded-2xl border border-ink/10 bg-linen/80 p-4 dark:border-white/10 dark:bg-white/[0.06]">
-                    <p className="text-sm font-black uppercase tracking-wide text-ink/65 dark:text-white/65">Cosa controlla</p>
-                    <ul className="mt-3 grid gap-2 text-sm font-semibold leading-6 text-ink/75 dark:text-white/75">
-                      {checkpoint.checks.map((item) => <li key={item}>• {item}</li>)}
-                    </ul>
-                  </div>
-                </div>
-
-                <form onSubmit={(event) => submitCheckpoint(event, checkpoint.id)} className="mt-6 grid gap-5">
-                  {checkpoint.exercises.map((exercise) => (
-                    <ExerciseCard key={exercise.id} exercise={exercise} answers={answers} setAnswer={setAnswer} submitted={isSubmitted} />
-                  ))}
-
-                  {score ? (
-                    <div className="rounded-2xl bg-ink p-5 text-white dark:bg-mint dark:text-ink">
-                      <p className="text-sm font-black uppercase tracking-wider opacity-75">Risultato checkpoint</p>
-                      <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
-                        <h3 className="text-3xl font-black">{score.correct}/{score.total} · {status}</h3>
-                        <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-black dark:bg-ink/10">{score.percent}%</span>
-                      </div>
-                      {score.percent < 85 ? <p className="mt-3 text-sm font-semibold opacity-80">{checkpoint.recommendation}</p> : null}
-                    </div>
-                  ) : null}
-
-                  <div className="flex flex-wrap gap-3">
-                    {!isSubmitted ? (
-                      <button className="focus-ring rounded-full bg-moss px-6 py-4 font-black text-white shadow-lift" type="submit">Controlla questo checkpoint</button>
-                    ) : (
-                      <button type="button" onClick={() => resetCheckpoint(checkpoint)} className="focus-ring inline-flex items-center gap-2 rounded-full bg-butter px-5 py-3 font-black text-ink">
-                        <RotateCcw className="h-4 w-4" />Rifai checkpoint
-                      </button>
-                    )}
-                  </div>
-                </form>
-              </section>
-            );
-          })}
-        </div>
+          <div className="flex flex-wrap gap-3">
+            {!submitted ? (
+              <button className="focus-ring rounded-full bg-moss px-6 py-4 font-black text-white shadow-lift" type="submit">Controlla questo argomento</button>
+            ) : (
+              <button type="button" onClick={resetTopic} className="focus-ring inline-flex items-center gap-2 rounded-full bg-butter px-5 py-3 font-black text-ink">
+                <RotateCcw className="h-4 w-4" />Rifai argomento
+              </button>
+            )}
+          </div>
+        </form>
       </section>
     </>
   );
