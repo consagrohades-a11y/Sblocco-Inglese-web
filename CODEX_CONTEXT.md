@@ -25,10 +25,14 @@ Correct hierarchy:
 `Grammar → level → topic → tests/exercises`
 
 Current A1 files:
-- `src/pages/GrammarHub.jsx`: level hub.
-- `src/pages/GrammarA1Hub.jsx`: clean A1 topic index.
-- `src/pages/GrammarA1Test.jsx`: selected topic page for `/grammar/a1/:topicId`.
+- `src/pages/GrammarHub.jsx`: grammar/level hub.
+- `src/pages/GrammarA1Hub.jsx`: clean A1 topic index for `/grammar/a1`.
+- `src/pages/GrammarA1Test.jsx`: routed selected topic page for `/grammar/a1/:topicId`.
 - `src/data/grammarA1Test.js`: A1 grammar data.
+
+Important routing note:
+- `src/App.jsx` must route `/grammar/a1/:topicId` to `GrammarA1Test.jsx`.
+- Do not recreate or import a separate `GrammarA1Topic.jsx`; a stale version of that file previously caused live pages to ignore the corrected exercise engine.
 
 ## Grammar data model
 A grammar level should expose topics. A topic contains exercises. An exercise contains items.
@@ -60,16 +64,17 @@ To add a new level later:
 - Do not turn a level page into a huge all-in-one test.
 - `/grammar/a1` should stay clean: topic cards only.
 - Topic pages can show the tests for that topic.
+- Each exercise/test should be independently submittable.
 - Dialogues must remain one exercise, not split into separate cards.
 - Corrections must be written in correct Italian.
 - Feedback must be diagnostic: show error categories and percentages, not only score.
 - Mixed-form exercises should show the base form in brackets when useful.
 - Dark mode must be scoped to grammar exercises only; it must not affect the whole webapp.
 
-## Current open grammar PR intent
-The open grammar PR should keep the scalable routing and update the exercise engine so that:
-- dark mode is local to grammar topic pages;
-- diagnostics come from item `tags`;
-- feedback appears directly under exercises/items;
-- base-form hints appear from `baseForm`;
-- the data model remains easy to extend.
+## Current grammar behavior
+- `/grammar/a1` renders topic cards only.
+- `/grammar/a1/:topicId` renders the selected topic.
+- Each exercise has its own submit/reset flow.
+- Topic-level feedback aggregates only submitted exercises.
+- Diagnostic feedback comes from item `tags`.
+- Base-form hints come from `baseForm`.
