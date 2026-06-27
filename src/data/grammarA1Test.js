@@ -270,3 +270,37 @@ export const grammarA1Checkpoints = [
     ],
   },
 ];
+
+export const grammarTopicRules = {
+  'Present Simple': 'Usa be per identità, stato e descrizione; usa do/does con i verbi normali nelle domande e nelle frasi negative.',
+  'Verb be': 'Usa am/is/are al presente e was/were al passato. Il verbo be non usa do, does o did.',
+  'Past Simple': 'Nelle frasi affermative usa il verbo al passato; nelle domande e negative usa did/didn’t + verbo base.',
+  Articles: 'Usa a/an per un nome singolare contabile non specifico, the per qualcosa di specifico e no article per idee generali, paesi e alcune istituzioni.',
+  Plurals: 'I plurali regolari aggiungono -s, -es o -ies; alcuni plurali frequenti sono irregolari e vanno memorizzati.',
+};
+
+export const grammarTopicRecommendations = {
+  'Present Simple': 'Ripassa la differenza tra be e verbi normali al Present Simple.',
+  'Verb be': 'Ripassa am/is/are e was/were senza usare do, does o did.',
+  'Past Simple': 'Ripassa did/didn’t + verbo base e la differenza con was/were.',
+  Articles: 'Ripassa a/an, the e no article nei casi A1 più frequenti.',
+  Plurals: 'Ripassa -s, -es, -ies e i plurali irregolari più comuni.',
+};
+
+const legacyTopicByCheckpoint = {
+  'present-simple': 'Present Simple',
+  'past-simple': 'Past Simple',
+  articles: 'Articles',
+  plurals: 'Plurals',
+};
+
+export const grammarA1Questions = grammarA1Checkpoints.flatMap((checkpoint) =>
+  checkpoint.exercises.flatMap((exercise) =>
+    (exercise.items || []).map((item) => ({
+      ...item,
+      type: item.type === 'blank' ? 'text' : item.type,
+      topic: legacyTopicByCheckpoint[checkpoint.id] || checkpoint.title,
+      why: item.feedback,
+    })),
+  ),
+);
