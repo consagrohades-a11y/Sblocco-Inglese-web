@@ -1,10 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, RotateCcw, Target, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Moon, RotateCcw, Sun, Target, XCircle } from 'lucide-react';
 import SEO from '../components/SEO';
-import { grammarA1Checkpoints } from '../data/grammarA1Test';
+import { grammarA1Checkpoints, grammarDiagnosticTags } from '../data/grammarA1Test';
 
 const normalize = (value) => String(value || '').trim().toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, ' ');
+
+function getInitialGrammarTheme() {
+  if (typeof window === 'undefined') return false;
+  return window.localStorage.getItem('sblocco_grammar_theme') === 'dark';
+}
 
 function getExerciseItems(exercise) {
   return exercise.items || [];
@@ -34,10 +39,92 @@ function getStatus(percent) {
   return 'Da ripassare';
 }
 
+function getDiagnostics(items, answers) {
+  const bucket = {};
+
+  items.forEach((item) => {
+    const tags = item.tags?.length ? item.tags : ['general'];
+    const wrong = !isCorrect(item, answers[item.id]);
+
+    tags.forEach((tag) => {
+      const metadata = grammarDiagnosticTags[tag] || {
+        label: tag,
+        description: 'Categoria diagnostica non descritta.',
+      };
+
+      if (!bucket[tag]) {
+        bucket[tag] = { id: tag, ...metadata, total: 0, wrong: 0 };
+      }
+
+      bucket[tag].total += 1;
+      if (wrong) bucket[tag].wrong += 1;
+    });
+  });
+
+  return Object.values(bucket)
+    .filter((item) => item.wrong > 0)
+    .map((item) => ({ ...item, percent: Math.round((item.wrong / item.total) * 100) }))
+    .sort((a, b) => b.percent - a.percent || b.wrong - a.wrong);
+}
+
+function BaseFormHint({ item }) {
+  if (!item.baseForm) return null;
+
+  return (
+    <span className="mt-2 inline-flex rounded-full bg-butter px-2.5 py-1 text-xs font-black text-ink dark:bg-white/10 dark:text-white">
+      forma base: ({item.baseForm})
+    </span>
+  );
+}
+
+function ItemFeedback({ item, answers }) {
+  const checked = isCorrect(item, answers[item.id]);
+
+  return (
+    <div className={'mt-3 rounded-lg border p-3 text-sm leading-6 ' + (checked ? 'border-moss/25 bg-mint/45 text-ink dark:bg-mint/10 dark:text-white' : 'border-coral/30 bg-blush text-ink dark:bg-coral/10 dark:text-white')}>
+      <p className="flex items-start gap-2 font-black">
+        {checked ? <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-moss dark:text-mint" /> : <XCircle className="mt-1 h-4 w-4 shrink-0 text-coral" />}
+        <span>{checked ? 'Corretto' : 'Da correggere'}</span>
+      </p>
+      <p className="mt-1"><strong>Risposta corretta:</strong> {correctAnswer(item)}</p>
+      <p className="mt-1"><strong>Perché:</strong> {item.feedback}</p>
+    </div>
+  );
+}
+
+function DiagnosticPanel({ items, answers, title = 'Diagnosi errori' }) {
+  const diagnostics = getDiagnostics(items, answers);
+
+  return (
+    <div className="rounded-2xl border border-ink/10 bg-linen/80 p-4 dark:border-white/10 dark:bg-white/[0.06]">
+      <p className="text-sm font-black uppercase tracking-wide text-ink/65 dark:text-white/65">{title}</p>
+      {diagnostics.length ? (
+        <div className="mt-3 grid gap-3">
+          {diagnostics.map((item) => (
+            <article key={item.id} className="rounded-xl bg-white p-4 text-sm leading-6 shadow-sm dark:bg-white/[0.07]">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h4 className="font-black text-ink dark:text-white">{item.label}</h4>
+                <span className="rounded-full bg-coral/10 px-3 py-1 text-xs font-black text-coral dark:bg-coral/15">
+                  {item.wrong}/{item.total} errori · {item.percent}%
+                </span>
+              </div>
+              <p className="mt-2 text-ink/70 dark:text-white/70">{item.description}</p>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p className="mt-3 rounded-xl bg-white p-4 text-sm font-semibold text-ink/70 shadow-sm dark:bg-white/[0.07] dark:text-white/70">
+          Nessuna confusione rilevante in questo blocco.
+        </p>
+      )}
+    </div>
+  );
+}
+
 function CorrectionList({ items, answers }) {
   return (
     <div className="mt-5 rounded-lg border border-ink/10 bg-linen/70 p-4 dark:border-white/10 dark:bg-white/[0.06]">
-      <p className="text-sm font-black uppercase tracking-wide text-ink/70 dark:text-white/70">Correzioni</p>
+      <p className="text-sm font-black uppercase tracking-wide text-ink/70 dark:text-white/70">Correzioni del dialogo</p>
       <div className="mt-3 grid gap-3">
         {items.map((item) => {
           const checked = isCorrect(item, answers[item.id]);
@@ -47,6 +134,7 @@ function CorrectionList({ items, answers }) {
                 {checked ? <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-moss dark:text-mint" /> : <XCircle className="mt-1 h-4 w-4 shrink-0 text-coral" />}
                 <span>{checked ? 'Corretto' : 'Da correggere'} · {item.prompt}</span>
               </p>
+              <BaseFormHint item={item} />
               <p className="mt-2 text-ink/75 dark:text-white/75"><strong>Risposta corretta:</strong> {correctAnswer(item)}</p>
               <p className="mt-1 text-ink/70 dark:text-white/70"><strong>Perché:</strong> {item.feedback}</p>
             </article>
@@ -66,6 +154,7 @@ function ChoiceSet({ exercise, answers, setAnswer, submitted }) {
           <fieldset key={item.id} className={'rounded-lg border p-4 ' + (submitted ? checked ? 'border-moss/30 bg-mint/40 dark:bg-mint/10' : 'border-coral/35 bg-blush/60 dark:bg-coral/10' : 'border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.04]')}>
             <legend className="px-2 text-xs font-black uppercase tracking-wide text-moss dark:text-mint">Domanda {index + 1}</legend>
             <p className="mt-2 text-sm font-black leading-6 text-ink dark:text-white">{item.prompt}</p>
+            <BaseFormHint item={item} />
             <div className="mt-3 grid gap-2">
               {item.options.map((option, optionIndex) => (
                 <label key={option} className="flex cursor-pointer gap-3 rounded-lg border border-ink/10 bg-white/80 p-3 text-sm font-semibold text-ink hover:bg-mint/30 dark:border-white/10 dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/10">
@@ -82,6 +171,7 @@ function ChoiceSet({ exercise, answers, setAnswer, submitted }) {
                 </label>
               ))}
             </div>
+            {submitted ? <ItemFeedback item={item} answers={answers} /> : null}
           </fieldset>
         );
       })}
@@ -95,6 +185,7 @@ function BlankSet({ exercise, answers, setAnswer, submitted }) {
       {exercise.items.map((item) => (
         <label key={item.id} className="rounded-lg border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.04]">
           <span className="block text-sm font-black text-ink dark:text-white">{item.prompt}</span>
+          <BaseFormHint item={item} />
           <input
             className="focus-ring mt-3 w-full rounded-lg border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink dark:border-white/10 dark:bg-[#101816] dark:text-white"
             value={answers[item.id] || ''}
@@ -103,6 +194,7 @@ function BlankSet({ exercise, answers, setAnswer, submitted }) {
             disabled={submitted}
             placeholder="Scrivi la risposta"
           />
+          {submitted ? <ItemFeedback item={item} answers={answers} /> : null}
         </label>
       ))}
     </div>
@@ -123,16 +215,18 @@ function DialogueExercise({ exercise, answers, setAnswer, submitted }) {
 
               const item = itemsById[part.blankId];
               return (
-                <input
-                  key={part.blankId}
-                  className="focus-ring mx-1 inline-block w-28 rounded-lg border border-ink/15 bg-white px-3 py-1.5 text-center text-sm font-black text-ink dark:border-white/10 dark:bg-[#101816] dark:text-white"
-                  aria-label={item.prompt}
-                  value={answers[item.id] || ''}
-                  onChange={(event) => setAnswer(item.id, event.target.value)}
-                  required
-                  disabled={submitted}
-                  placeholder="..."
-                />
+                <React.Fragment key={part.blankId}>
+                  <input
+                    className="focus-ring mx-1 inline-block w-28 rounded-lg border border-ink/15 bg-white px-3 py-1.5 text-center text-sm font-black text-ink dark:border-white/10 dark:bg-[#101816] dark:text-white"
+                    aria-label={item.prompt}
+                    value={answers[item.id] || ''}
+                    onChange={(event) => setAnswer(item.id, event.target.value)}
+                    required
+                    disabled={submitted}
+                    placeholder="..."
+                  />
+                  {item.baseForm ? <span className="mx-1 rounded-full bg-butter px-2 py-0.5 text-xs font-black text-ink dark:bg-white/10 dark:text-white">({item.baseForm})</span> : null}
+                </React.Fragment>
               );
             })}
           </p>
@@ -143,7 +237,8 @@ function DialogueExercise({ exercise, answers, setAnswer, submitted }) {
 }
 
 function ExerciseCard({ exercise, answers, setAnswer, submitted }) {
-  const score = submitted ? getScore(getExerciseItems(exercise), answers) : null;
+  const items = getExerciseItems(exercise);
+  const score = submitted ? getScore(items, answers) : null;
 
   return (
     <article id={exercise.id} className="scroll-mt-28 rounded-2xl border border-ink/10 bg-white/90 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
@@ -165,7 +260,8 @@ function ExerciseCard({ exercise, answers, setAnswer, submitted }) {
         {exercise.type === 'dialogue' ? <DialogueExercise exercise={exercise} answers={answers} setAnswer={setAnswer} submitted={submitted} /> : null}
       </div>
 
-      {submitted ? <CorrectionList items={getExerciseItems(exercise)} answers={answers} /> : null}
+      {submitted ? <div className="mt-5"><DiagnosticPanel items={items} answers={answers} title="Diagnosi esercizio" /></div> : null}
+      {submitted && exercise.type === 'dialogue' ? <CorrectionList items={items} answers={answers} /> : null}
     </article>
   );
 }
@@ -173,12 +269,12 @@ function ExerciseCard({ exercise, answers, setAnswer, submitted }) {
 function TopicNotFound() {
   return (
     <section className="section-shell py-12">
-      <Link to="/grammar/a1" className="focus-ring inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-ink shadow-sm dark:bg-white/10 dark:text-white">
+      <Link to="/grammar/a1" className="focus-ring inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-ink shadow-sm">
         <ArrowLeft className="h-4 w-4" />Torna ad A1 Grammar
       </Link>
-      <div className="mt-8 rounded-[2rem] border border-ink/10 bg-white/80 p-7 shadow-soft dark:border-white/10 dark:bg-white/[0.05]">
-        <h1 className="text-3xl font-black text-ink dark:text-white">Argomento non trovato.</h1>
-        <p className="mt-3 text-ink/70 dark:text-white/70">Scegli uno degli argomenti A1 disponibili.</p>
+      <div className="mt-8 rounded-[2rem] border border-ink/10 bg-white/80 p-7 shadow-soft">
+        <h1 className="text-3xl font-black text-ink">Argomento non trovato.</h1>
+        <p className="mt-3 text-ink/70">Scegli uno degli argomenti A1 disponibili.</p>
       </div>
     </section>
   );
@@ -189,6 +285,7 @@ export default function GrammarA1Test() {
   const checkpoint = grammarA1Checkpoints.find((item) => item.id === topicId);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [grammarDark, setGrammarDark] = useState(getInitialGrammarTheme);
 
   if (!checkpoint) return <TopicNotFound />;
 
@@ -211,13 +308,31 @@ export default function GrammarA1Test() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const toggleGrammarTheme = () => {
+    setGrammarDark((current) => {
+      const next = !current;
+      window.localStorage.setItem('sblocco_grammar_theme', next ? 'dark' : 'light');
+      return next;
+    });
+  };
+
   return (
-    <>
+    <div className={grammarDark ? 'dark' : ''}>
       <SEO title={`${checkpoint.title} | A1 Grammar`} description={`${checkpoint.title}: checkpoint A1 con esercizi, dialoghi e correzioni in italiano.`} />
-      <section className="section-shell py-12">
-        <Link to="/grammar/a1" className="focus-ring inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-ink shadow-sm dark:bg-white/10 dark:text-white">
-          <ArrowLeft className="h-4 w-4" />Torna agli argomenti A1
-        </Link>
+      <section className="section-shell py-12 transition-colors dark:bg-[#0f1715]">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Link to="/grammar/a1" className="focus-ring inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-ink shadow-sm dark:bg-white/10 dark:text-white">
+            <ArrowLeft className="h-4 w-4" />Torna agli argomenti A1
+          </Link>
+          <button
+            type="button"
+            onClick={toggleGrammarTheme}
+            className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-sm font-black text-ink shadow-sm dark:border-white/10 dark:bg-white/10 dark:text-white"
+          >
+            {grammarDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {grammarDark ? 'Tema chiaro esercizi' : 'Tema scuro esercizi'}
+          </button>
+        </div>
 
         <div className="mt-7 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
@@ -250,13 +365,16 @@ export default function GrammarA1Test() {
           ))}
 
           {score ? (
-            <div className="rounded-2xl bg-ink p-5 text-white dark:bg-mint dark:text-ink">
-              <p className="text-sm font-black uppercase tracking-wider opacity-75">Risultato argomento</p>
-              <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
-                <h2 className="text-3xl font-black">{score.correct}/{score.total} · {status}</h2>
-                <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-black dark:bg-ink/10">{score.percent}%</span>
+            <div className="grid gap-5 rounded-2xl bg-ink p-5 text-white dark:bg-mint dark:text-ink">
+              <div>
+                <p className="text-sm font-black uppercase tracking-wider opacity-75">Risultato argomento</p>
+                <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
+                  <h2 className="text-3xl font-black">{score.correct}/{score.total} · {status}</h2>
+                  <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-black dark:bg-ink/10">{score.percent}%</span>
+                </div>
+                {score.percent < 85 ? <p className="mt-3 text-sm font-semibold opacity-80">{checkpoint.recommendation}</p> : null}
               </div>
-              {score.percent < 85 ? <p className="mt-3 text-sm font-semibold opacity-80">{checkpoint.recommendation}</p> : null}
+              <DiagnosticPanel items={checkpointItems} answers={answers} title="Diagnosi argomento" />
             </div>
           ) : null}
 
@@ -271,6 +389,6 @@ export default function GrammarA1Test() {
           </div>
         </form>
       </section>
-    </>
+    </div>
   );
 }
