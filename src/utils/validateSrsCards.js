@@ -53,10 +53,13 @@ export function validateSrsCards(cards, expectedCategories = expectedSrsCategory
 
   const requiredFields = options.requiredFields || requiredSrsCardFields;
   const targetField = options.targetField || 'expression';
+  const expectedCount = options.expectedCount;
+  const strictExamples = options.strictExamples === true;
   const warnings = [];
   const categoryCounts = Object.fromEntries(Object.keys(expectedCategories).map((category) => [category, 0]));
   const ids = new Map();
   const targets = new Map();
+  const examples = new Map();
 
   if (!Array.isArray(cards)) {
     return {
@@ -64,6 +67,10 @@ export function validateSrsCards(cards, expectedCategories = expectedSrsCategory
       categoryCounts,
       warnings: ['srsCards is not an array.'],
     };
+  }
+
+  if (Number.isInteger(expectedCount) && cards.length !== expectedCount) {
+    warnings.push(`Expected ${expectedCount} cards, found ${cards.length}.`);
   }
 
   cards.forEach((card, index) => {
@@ -95,6 +102,31 @@ export function validateSrsCards(cards, expectedCategories = expectedSrsCategory
     if (!String(card?.example2 || '').includes('**')) {
       warnings.push(`${label}: example2 does not contain bold markdown.`);
     }
+
+    if (strictExamples && hasText(card?.[targetField])) {
+      const boldTarget = `**${String(card[targetField]).trim()}**`.toLowerCase();
+
+      ['example1', 'example2'].forEach((exampleField) => {
+        const example = String(card?.[exampleField] || '').trim();
+        const normalizedExample = example.toLowerCase().replace(/\s+/g, ' ');
+
+        if (!normalizedExample.includes(boldTarget)) {
+          warnings.push(`${label}: ${exampleField} must contain the complete target in bold.`);
+        }
+
+        if (example && !/[.!?]$/.test(example)) {
+          warnings.push(`${label}: ${exampleField} must end with sentence punctuation.`);
+        }
+
+        if (example.replace(/\*\*/g, '').split(/\s+/).length < 5) {
+          warnings.push(`${label}: ${exampleField} is too short to provide useful context.`);
+        }
+
+        if (normalizedExample) {
+          examples.set(normalizedExample, [...(examples.get(normalizedExample) || []), `${label}.${exampleField}`]);
+        }
+      });
+    }
   });
 
   ids.forEach((indexes, id) => {
@@ -108,6 +140,14 @@ export function validateSrsCards(cards, expectedCategories = expectedSrsCategory
       warnings.push(`Duplicate ${targetField} "${target}" in cards ${labels.join(', ')}.`);
     }
   });
+
+  if (strictExamples) {
+    examples.forEach((labels, example) => {
+      if (labels.length > 1) {
+        warnings.push(`Duplicate example "${example}" in ${labels.join(', ')}.`);
+      }
+    });
+  }
 
   Object.entries(categoryCounts).forEach(([category, count]) => {
     if (count === 0) {

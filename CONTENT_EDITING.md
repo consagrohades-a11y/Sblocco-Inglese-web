@@ -27,6 +27,9 @@ Use this when you want to change text without searching the whole project.
 - `src/data/generalExpressionCards.js`
   - General expression trainer cards
 
+- `src/data/hospitalityExpressionCards.js`
+  - 150 hospitality expressions for hotels, restaurants, guest service, complaints, front desk, and safety
+
 - `src/data/wordTrainerCards.js`
   - Word trainer cards
 

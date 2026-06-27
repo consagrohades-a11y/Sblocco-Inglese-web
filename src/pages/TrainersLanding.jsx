@@ -123,7 +123,7 @@ export default function TrainersLanding() {
           <SectionHeader
             eyebrow="Scegli un trainer"
             icon={CheckCircle2}
-            title="Tre deck, un unico sistema."
+            title="Quattro deck, un unico sistema."
             copy="Ogni trainer ha categorie e progressi separati. Puoi usarli in modo leggero, senza login, direttamente dal browser. 10 card per deck al giorno, così è realmente efficace."
           />
           <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">

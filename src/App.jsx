@@ -20,6 +20,7 @@ import './trainer-overrides.css';
 
 const Trainer = lazy(() => import('./pages/Trainer'));
 const GeneralExpressionTrainer = lazy(() => import('./pages/GeneralExpressionTrainer'));
+const HospitalityExpressionTrainer = lazy(() => import('./pages/HospitalityExpressionTrainer'));
 const WordTrainer = lazy(() => import('./pages/WordTrainer'));
 
 function ScrollManager() {
@@ -68,6 +69,7 @@ export default function App() {
             <Route path="/trainers" element={<TrainersLanding />} />
             <Route path="/trainers/business-expression" element={<Trainer />} />
             <Route path="/trainers/general-expression" element={<GeneralExpressionTrainer />} />
+            <Route path="/trainers/hospitality-expression" element={<HospitalityExpressionTrainer />} />
             <Route path="/trainers/word-trainer" element={<WordTrainer />} />
             <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
             <Route path="/prenota" element={<Prenota />} />
