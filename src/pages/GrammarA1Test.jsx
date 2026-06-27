@@ -15,10 +15,6 @@ function getExerciseItems(exercise) {
   return exercise.items || [];
 }
 
-function getCheckpointItems(checkpoint) {
-  return checkpoint.exercises.flatMap(getExerciseItems);
-}
-
 function correctAnswer(item) {
   return item.type === 'choice' ? item.options[item.correct] : item.answer;
 }
@@ -236,12 +232,17 @@ function DialogueExercise({ exercise, answers, setAnswer, submitted }) {
   );
 }
 
-function ExerciseCard({ exercise, answers, setAnswer, submitted }) {
+function ExerciseCard({ exercise, answers, setAnswer, submitted, onSubmit, onReset }) {
   const items = getExerciseItems(exercise);
   const score = submitted ? getScore(items, answers) : null;
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSubmit(exercise.id);
+  };
+
   return (
-    <article id={exercise.id} className="scroll-mt-28 rounded-2xl border border-ink/10 bg-white/90 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
+    <form id={exercise.id} onSubmit={handleSubmit} className="scroll-mt-28 rounded-2xl border border-ink/10 bg-white/90 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 className="text-xl font-black text-ink dark:text-white">{exercise.title}</h3>
@@ -262,7 +263,17 @@ function ExerciseCard({ exercise, answers, setAnswer, submitted }) {
 
       {submitted ? <div className="mt-5"><DiagnosticPanel items={items} answers={answers} title="Diagnosi esercizio" /></div> : null}
       {submitted && exercise.type === 'dialogue' ? <CorrectionList items={items} answers={answers} /> : null}
-    </article>
+
+      <div className="mt-5 flex flex-wrap gap-3">
+        {!submitted ? (
+          <button className="focus-ring rounded-full bg-moss px-5 py-3 font-black text-white shadow-lift" type="submit">Controlla questo test</button>
+        ) : (
+          <button type="button" onClick={() => onReset(exercise)} className="focus-ring inline-flex items-center gap-2 rounded-full bg-butter px-5 py-3 font-black text-ink">
+            <RotateCcw className="h-4 w-4" />Rifai test
+          </button>
+        )}
+      </div>
+    </form>
   );
 }
 
@@ -284,27 +295,34 @@ export default function GrammarA1Test() {
   const { topicId } = useParams();
   const checkpoint = grammarA1Checkpoints.find((item) => item.id === topicId);
   const [answers, setAnswers] = useState({});
-  const [submitted, setSubmitted] = useState(false);
+  const [submittedExercises, setSubmittedExercises] = useState({});
   const [grammarDark, setGrammarDark] = useState(getInitialGrammarTheme);
 
   if (!checkpoint) return <TopicNotFound />;
 
-  const checkpointItems = getCheckpointItems(checkpoint);
-  const score = submitted ? getScore(checkpointItems, answers) : null;
+  const submittedItems = checkpoint.exercises
+    .filter((exercise) => submittedExercises[exercise.id])
+    .flatMap(getExerciseItems);
+  const score = submittedItems.length ? getScore(submittedItems, answers) : null;
   const status = score ? getStatus(score.percent) : null;
 
   const setAnswer = (id, value) => {
     setAnswers((current) => ({ ...current, [id]: value }));
   };
 
-  const submitTopic = (event) => {
-    event.preventDefault();
-    setSubmitted(true);
+  const submitExercise = (exerciseId) => {
+    setSubmittedExercises((current) => ({ ...current, [exerciseId]: true }));
+  };
+
+  const resetExercise = (exercise) => {
+    const ids = new Set(getExerciseItems(exercise).map((item) => item.id));
+    setAnswers((current) => Object.fromEntries(Object.entries(current).filter(([key]) => !ids.has(key))));
+    setSubmittedExercises((current) => ({ ...current, [exercise.id]: false }));
   };
 
   const resetTopic = () => {
     setAnswers({});
-    setSubmitted(false);
+    setSubmittedExercises({});
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -359,9 +377,17 @@ export default function GrammarA1Test() {
           </div>
         </div>
 
-        <form onSubmit={submitTopic} className="mt-8 grid gap-5">
+        <div className="mt-8 grid gap-5">
           {checkpoint.exercises.map((exercise) => (
-            <ExerciseCard key={exercise.id} exercise={exercise} answers={answers} setAnswer={setAnswer} submitted={submitted} />
+            <ExerciseCard
+              key={exercise.id}
+              exercise={exercise}
+              answers={answers}
+              setAnswer={setAnswer}
+              submitted={Boolean(submittedExercises[exercise.id])}
+              onSubmit={submitExercise}
+              onReset={resetExercise}
+            />
           ))}
 
           {score ? (
@@ -374,20 +400,13 @@ export default function GrammarA1Test() {
                 </div>
                 {score.percent < 85 ? <p className="mt-3 text-sm font-semibold opacity-80">{checkpoint.recommendation}</p> : null}
               </div>
-              <DiagnosticPanel items={checkpointItems} answers={answers} title="Diagnosi argomento" />
+              <DiagnosticPanel items={submittedItems} answers={answers} title="Diagnosi argomento" />
+              <button type="button" onClick={resetTopic} className="focus-ring inline-flex w-fit items-center gap-2 rounded-full bg-butter px-5 py-3 font-black text-ink">
+                <RotateCcw className="h-4 w-4" />Rifai tutti i test completati
+              </button>
             </div>
           ) : null}
-
-          <div className="flex flex-wrap gap-3">
-            {!submitted ? (
-              <button className="focus-ring rounded-full bg-moss px-6 py-4 font-black text-white shadow-lift" type="submit">Controlla questo argomento</button>
-            ) : (
-              <button type="button" onClick={resetTopic} className="focus-ring inline-flex items-center gap-2 rounded-full bg-butter px-5 py-3 font-black text-ink">
-                <RotateCcw className="h-4 w-4" />Rifai argomento
-              </button>
-            )}
-          </div>
-        </form>
+        </div>
       </section>
     </div>
   );
