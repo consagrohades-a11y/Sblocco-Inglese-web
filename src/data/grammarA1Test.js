@@ -39,41 +39,11 @@ export const grammarA1Checkpoints = [
         title: 'Regole rapide',
         instruction: 'Scegli la frase corretta. Qui non serve tradurre: devi riconoscere la struttura giusta.',
         items: [
-          choice(
-            'present-rule-1',
-            'Which sentence is correct?',
-            ['She like coffee.', 'She likes coffee.', 'She liking coffee.', 'She does likes coffee.'],
-            1,
-            'Con she, he e it il verbo normale prende -s: She likes coffee. Non si usa does insieme alla -s nella frase affermativa.',
-          ),
-          choice(
-            'present-rule-2',
-            'Which sentence is negative?',
-            ['I not work on Sunday.', 'I don’t work on Sunday.', 'I doesn’t work on Sunday.', 'I no work on Sunday.'],
-            1,
-            'Con I e un verbo normale si usa don’t + verbo base: I don’t work. Non si usa not da solo.',
-          ),
-          choice(
-            'present-rule-3',
-            'Choose the correct question.',
-            ['You live in Italy?', 'Do you live in Italy?', 'Does you live in Italy?', 'Are you live in Italy?'],
-            1,
-            'Con you e un verbo normale la domanda si costruisce con Do + soggetto + verbo base.',
-          ),
-          choice(
-            'present-rule-4',
-            'Choose the correct sentence with be.',
-            ['He are tired.', 'He is tired.', 'He be tired.', 'He does tired.'],
-            1,
-            'Con he si usa is. Il verbo be non usa does.',
-          ),
-          choice(
-            'present-rule-5',
-            'Choose the correct negative sentence with be.',
-            ['They not are students.', 'They isn’t students.', 'They aren’t students.', 'They don’t students.'],
-            2,
-            'Con they si usa are; la forma negativa è aren’t / are not. Be non usa don’t.',
-          ),
+          choice('present-rule-1', 'Which sentence is correct?', ['She like coffee.', 'She likes coffee.', 'She liking coffee.', 'She does likes coffee.'], 1, 'Con she, he e it il verbo normale prende -s: She likes coffee. Non si usa does insieme alla -s nella frase affermativa.'),
+          choice('present-rule-2', 'Which sentence is negative?', ['I not work on Sunday.', 'I don’t work on Sunday.', 'I doesn’t work on Sunday.', 'I no work on Sunday.'], 1, 'Con I e un verbo normale si usa don’t + verbo base: I don’t work. Non si usa not da solo.'),
+          choice('present-rule-3', 'Choose the correct question.', ['You live in Italy?', 'Do you live in Italy?', 'Does you live in Italy?', 'Are you live in Italy?'], 1, 'Con you e un verbo normale la domanda si costruisce con Do + soggetto + verbo base.'),
+          choice('present-rule-4', 'Choose the correct sentence with be.', ['He are tired.', 'He is tired.', 'He be tired.', 'He does tired.'], 1, 'Con he si usa is. Il verbo be non usa does.'),
+          choice('present-rule-5', 'Choose the correct negative sentence with be.', ['They not are students.', 'They isn’t students.', 'They aren’t students.', 'They don’t students.'], 2, 'Con they si usa are; la forma negativa è aren’t / are not. Be non usa don’t.'),
         ],
       },
       {
@@ -270,3 +240,57 @@ export const grammarA1Checkpoints = [
     ],
   },
 ];
+
+export const grammarTopicRules = {
+  'Present Simple': 'Usa il verbo base con I/you/we/they, aggiungi -s con he/she/it e usa do/does nelle domande e nelle negative dei verbi normali.',
+  'Verb be': 'Usa am/is/are al presente e was/were al passato. Il verbo be non usa do, does o did.',
+  'Past Simple': 'Nelle frasi affermative usa il verbo al passato; nelle domande e nelle negative usa did/didn’t + verbo base.',
+  Articles: 'Usa a/an per un nome singolare contabile non specifico, the per qualcosa di specifico e nessun articolo per molte idee generali, paesi e istituzioni.',
+  Plurals: 'I plurali regolari aggiungono -s o -es; consonante + y diventa -ies. Alcuni plurali frequenti sono irregolari.',
+};
+
+export const grammarTopicRecommendations = {
+  'Present Simple': 'Ripassa terza persona singolare, do/does e don’t/doesn’t.',
+  'Verb be': 'Ripassa am/is/are e was/were senza do, does o did.',
+  'Past Simple': 'Ripassa did/didn’t + verbo base e i verbi affermativi al passato.',
+  Articles: 'Ripassa a/an, the specifico e i casi principali di no article.',
+  Plurals: 'Ripassa -s, -es, -ies e i plurali irregolari più frequenti.',
+};
+
+const verbBeIds = new Set([
+  'present-rule-4',
+  'present-rule-5',
+  'present-dialogue-1',
+  'present-dialogue-2',
+  'present-dialogue-3',
+  'present-dialogue-4',
+  'present-control-6',
+  'present-control-7',
+  'present-control-8',
+  'past-rule-1',
+  'past-dialogue-1',
+  'past-dialogue-2',
+  'past-dialogue-3',
+  'past-dialogue-4',
+  'past-dialogue-9',
+  'past-dialogue-10',
+]);
+
+function legacyTopicFor(item, checkpointId) {
+  if (verbBeIds.has(item.id)) return 'Verb be';
+  if (checkpointId === 'present-simple') return 'Present Simple';
+  if (checkpointId === 'past-simple') return 'Past Simple';
+  if (checkpointId === 'articles') return 'Articles';
+  return 'Plurals';
+}
+
+export const grammarA1Questions = grammarA1Checkpoints.flatMap((checkpoint) =>
+  checkpoint.exercises.flatMap((exercise) =>
+    exercise.items.map((item) => ({
+      ...item,
+      type: item.type === 'choice' ? 'choice' : 'text',
+      topic: legacyTopicFor(item, checkpoint.id),
+      why: item.feedback,
+    })),
+  ),
+);
