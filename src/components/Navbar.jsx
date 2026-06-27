@@ -6,6 +6,7 @@ import { navItems } from '../data/content';
 import { ctaLabels, primaryOffer } from '../config/site';
 import BrandLogo from './BrandLogo';
 import CTAButton from './CTAButton';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -42,6 +43,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden shrink-0 items-center gap-2 xl:flex">
+          <ThemeToggle />
           <CTAButton href="/simulazione-39" className="!min-h-11 whitespace-nowrap !px-5 !py-2.5 !text-sm" icon={false}>
             Prenota l'audit a 39 euro
           </CTAButton>
@@ -86,6 +88,7 @@ export default function Navbar() {
                 </NavLink>
               ),
             )}
+            <ThemeToggle mobile />
           </nav>
           <CTAButton className="mt-4 w-full" onClick={() => setOpen(false)}>
             Prenota l'audit a 39 euro
