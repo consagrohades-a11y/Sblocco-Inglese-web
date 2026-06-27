@@ -45,16 +45,26 @@ function ScrollManager() {
 function PageFallback() {
   return (
     <div className="section-shell py-16">
-      <div className="mx-auto max-w-3xl rounded-lg border border-ink/10 bg-white p-6 text-center shadow-sm">
-        <p className="text-sm font-black text-ink">Loading trainer...</p>
+      <div className="mx-auto max-w-3xl rounded-lg border border-ink/10 bg-white p-6 text-center shadow-sm dark:border-white/10 dark:bg-white/[0.06]">
+        <p className="text-sm font-black text-ink dark:text-white">Loading trainer...</p>
       </div>
     </div>
   );
 }
 
 export default function App() {
+  useEffect(() => {
+    const media = window.matchMedia?.('(prefers-color-scheme: dark)');
+    const applyPreferredTheme = () => document.documentElement.classList.toggle('dark', Boolean(media?.matches));
+
+    applyPreferredTheme();
+    media?.addEventListener?.('change', applyPreferredTheme);
+
+    return () => media?.removeEventListener?.('change', applyPreferredTheme);
+  }, []);
+
   return (
-    <div className="min-h-screen overflow-x-hidden text-ink">
+    <div className="min-h-screen overflow-x-hidden bg-paper text-ink transition-colors duration-300 dark:bg-[#0f1715] dark:text-white">
       <ScrollManager />
       <Navbar />
       <main className="pb-24 xl:pb-0">
