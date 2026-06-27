@@ -23,6 +23,7 @@ const GeneralExpressionTrainer = lazy(() => import('./pages/GeneralExpressionTra
 const HospitalityExpressionTrainer = lazy(() => import('./pages/HospitalityExpressionTrainer'));
 const WordTrainer = lazy(() => import('./pages/WordTrainer'));
 const GrammarHub = lazy(() => import('./pages/GrammarHub'));
+const GrammarA1Hub = lazy(() => import('./pages/GrammarA1Hub'));
 const GrammarA1Test = lazy(() => import('./pages/GrammarA1Test'));
 
 function ScrollManager() {
@@ -53,16 +54,6 @@ function PageFallback() {
 }
 
 export default function App() {
-  useEffect(() => {
-    const media = window.matchMedia?.('(prefers-color-scheme: dark)');
-    const applyPreferredTheme = () => document.documentElement.classList.toggle('dark', Boolean(media?.matches));
-
-    applyPreferredTheme();
-    media?.addEventListener?.('change', applyPreferredTheme);
-
-    return () => media?.removeEventListener?.('change', applyPreferredTheme);
-  }, []);
-
   return (
     <div className="min-h-screen overflow-x-hidden bg-paper text-ink transition-colors duration-300 dark:bg-[#0f1715] dark:text-white">
       <ScrollManager />
@@ -84,7 +75,8 @@ export default function App() {
             <Route path="/trainers/hospitality-expression" element={<HospitalityExpressionTrainer />} />
             <Route path="/trainers/word-trainer" element={<WordTrainer />} />
             <Route path="/grammar" element={<GrammarHub />} />
-            <Route path="/grammar/a1" element={<GrammarA1Test />} />
+            <Route path="/grammar/a1" element={<GrammarA1Hub />} />
+            <Route path="/grammar/a1/:topicId" element={<GrammarA1Test />} />
             <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
             <Route path="/prenota" element={<Prenota />} />
             <Route
