@@ -1,5 +1,6 @@
 import { srsCards } from '../src/data/srsCards.js';
 import { generalExpressionCards } from '../src/data/generalExpressionCards.js';
+import { hospitalityExpressionCards } from '../src/data/hospitalityExpressionCards.js';
 import { trainerConfig } from '../src/data/trainerConfig.js';
 import { wordTrainerCards } from '../src/data/wordTrainerCards.js';
 import {
@@ -25,6 +26,14 @@ const datasets = [
     requiredFields: expressionRequiredSrsCardFields,
   },
   {
+    id: 'hospitality-expression',
+    name: 'hospitalityExpressionCards',
+    cards: hospitalityExpressionCards,
+    targetField: 'expression',
+    requiredFields: expressionRequiredSrsCardFields,
+    strictExamples: true,
+  },
+  {
     id: 'word-trainer',
     name: 'wordTrainerCards',
     cards: wordTrainerCards,
@@ -43,6 +52,8 @@ const results = Object.fromEntries(
         expectedCategories: buildExpectedCategoryCounts(trainer?.categories || []),
         requiredFields: dataset.requiredFields,
         targetField: dataset.targetField,
+        expectedCount: trainer?.cardCount,
+        strictExamples: dataset.strictExamples === true,
       }),
     ];
   }),

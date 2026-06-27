@@ -135,8 +135,10 @@ export default function SrsTrainer({
       expectedCategories,
       requiredFields: trainerType === 'word' ? wordTrainerRequiredSrsCardFields : expressionRequiredSrsCardFields,
       targetField: trainerType === 'word' ? 'word' : 'expression',
+      expectedCount: trainer?.cardCount,
+      strictExamples: trainer?.strictExamples === true,
     }),
-    [expectedCategories, trainerType],
+    [expectedCategories, trainer?.cardCount, trainer?.strictExamples, trainerType],
   );
   const selectedCategoryKey = selectedCategories.join('|');
   const selectedLevelKey = selectedLevels.join('|');

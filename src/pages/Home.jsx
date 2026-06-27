@@ -39,7 +39,7 @@ const pressureSignals = [
 const systemProof = [
   { value: 'Corsi', label: "Lezioni, struttura, docente" },
   { value: primaryOffer.price, label: 'diagnosi iniziale' },
-  { value: '750+', label: 'card trainer disponibili' },
+  { value: '900+', label: 'card trainer disponibili' },
 ];
 
 const ecosystemRail = [

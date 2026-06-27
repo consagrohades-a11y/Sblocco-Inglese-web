@@ -117,6 +117,7 @@ Current public routes:
 - `/trainers` — Trainer landing page
 - `/trainers/business-expression` — Business Expression Trainer
 - `/trainers/general-expression` — General Expression Trainer
+- `/trainers/hospitality-expression` — Hospitality Expression Trainer
 - `/trainers/word-trainer` — Word Trainer
 - `/trainer` — redirects to `/trainers/business-expression`
 - `/prenota` — Booking/quiz/payment flow
@@ -216,7 +217,14 @@ Current trainers in `src/data/trainerConfig.js`:
    - Storage key: `sblocco_general_expression_progress_v1`
    - Categories: everyday conversation, opinions, clarification, social situations, travel, feelings, storytelling, plans/goals
 
-3. **Word Trainer**
+3. **Hospitality Expression Trainer**
+   - Route: `/trainers/hospitality-expression`
+   - 150 expression cards
+   - Storage key: `sblocco_hospitality_expression_progress_v1`
+   - Categories: welcoming, reservations, check-in/out, rooms, guest requests, food service, complaints, local guidance, front desk, safety
+   - Uses strict example validation to require complete bold targets, contextual sentences, punctuation, and unique examples
+
+4. **Word Trainer**
    - Route: `/trainers/word-trainer`
    - 500 word cards
    - Storage key: `sblocco_word_trainer_progress_v1`
@@ -247,6 +255,7 @@ Key trainer files:
 - `scripts/validate-srs-cards.mjs`
 - `src/data/srsCards.js`
 - `src/data/generalExpressionCards.js`
+- `src/data/hospitalityExpressionCards.js`
 - `src/data/wordTrainerCards.js`
 - `src/data/trainerConfig.js`
 
