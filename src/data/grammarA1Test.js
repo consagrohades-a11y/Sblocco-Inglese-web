@@ -1,0 +1,86 @@
+export const grammarTopicRules = {
+  'Present Simple': 'Use the base verb with I/you/we/they, add -s with he/she/it, and use do/does plus the base verb in questions and negatives.',
+  'Verb be': 'Use am/is/are in the present and was/were in the past. The verb be does not use do or does.',
+  'Past Simple': 'Use the past form in affirmative sentences, but use did or did not plus the base verb in questions and negatives.',
+  Articles: 'Use a/an for one non-specific countable noun, the for something specific, and no article for many general ideas, countries and institutions.',
+  Plurals: 'Regular plurals usually add -s or -es; consonant + y becomes -ies, while common irregular nouns must be learned separately.',
+};
+
+export const grammarTopicRecommendations = {
+  'Present Simple': 'Review third-person -s and do/does sentence patterns.',
+  'Verb be': 'Practise am/is/are and was/were without do/does.',
+  'Past Simple': 'Practise did/didn’t + base verb and was/were.',
+  Articles: 'Review a/an, specific the, and common zero-article cases.',
+  Plurals: 'Review -s/-es/-ies endings and irregular plurals.',
+};
+
+const mc = (id, topic, prompt, options, correct, why = '') => ({ id, type: 'choice', topic, prompt, options, correct, why });
+const text = (id, topic, prompt, accepted, answer, why = '') => ({ id, type: 'text', topic, prompt, accepted, answer, why });
+
+export const grammarA1Questions = [
+  mc(1, 'Present Simple', 'Which sentence is correct?', ['She like coffee.', 'She likes coffee.', 'She liking coffee.', 'She does likes coffee.'], 1),
+  mc(2, 'Present Simple', 'Which sentence is negative?', ['I not work on Sunday.', 'I don’t work on Sunday.', 'I doesn’t work on Sunday.', 'I no work on Sunday.'], 1),
+  mc(3, 'Present Simple', 'Choose the correct question.', ['You live in Italy?', 'Do you live in Italy?', 'Does you live in Italy?', 'Are you live in Italy?'], 1),
+  mc(4, 'Verb be', 'Choose the correct sentence with be.', ['He are tired.', 'He is tired.', 'He be tired.', 'He does tired.'], 1),
+  mc(5, 'Verb be', 'Choose the correct negative sentence with be.', ['They not are students.', 'They isn’t students.', 'They aren’t students.', 'They don’t students.'], 2),
+  mc(6, 'Verb be', 'Choose the correct Past Simple form of be.', ['Yesterday I am at home.', 'Yesterday I was at home.', 'Yesterday I were at home.', 'Yesterday I be at home.'], 1),
+  mc(7, 'Past Simple', 'Choose the correct Past Simple negative.', ['I didn’t went to school.', 'I don’t went to school.', 'I didn’t go to school.', 'I wasn’t go to school.'], 2),
+  mc(8, 'Past Simple', 'Choose the correct Past Simple question.', ['Did you watched TV?', 'Did you watch TV?', 'Do you watched TV?', 'Were you watch TV?'], 1),
+  mc(9, 'Articles', 'Choose the correct phrase.', ['a apple', 'an apple', 'the apple when speaking generally', 'no apple'], 1, 'Use an before a vowel sound.'),
+  mc(10, 'Plurals', 'Choose the correct plural of child.', ['childs', 'childrens', 'children', 'childes'], 2, 'Children is an irregular plural.'),
+
+  text(11, 'Verb be', 'Anna: Hi, I ___ Anna.', ['am'], 'am'),
+  text(12, 'Verb be', 'Marco: Nice to meet you. I ___ Marco.', ['am'], 'am'),
+  text(13, 'Verb be', 'Anna: ___ you from Italy?', ['are'], 'Are'),
+  text(14, 'Verb be', 'Marco: Yes, I ___.', ['am'], 'am'),
+  text(15, 'Present Simple', 'Anna: Where ___ you live?', ['do'], 'do'),
+  text(16, 'Present Simple', 'Marco: I ___ in Rome.', ['live'], 'live'),
+  text(17, 'Present Simple', 'Anna: My sister ___ in Rome too.', ['lives'], 'lives'),
+  text(18, 'Present Simple', 'Marco: ___ she speak English?', ['does'], 'Does'),
+  text(19, 'Present Simple', 'Anna: Yes, she ___.', ['does'], 'does'),
+  text(20, 'Present Simple', 'Anna: She ___ in a hotel.', ['works'], 'works'),
+  text(21, 'Present Simple', 'Anna: Yes, but she ___ work on Sundays.', ["doesn't", 'does not'], 'doesn’t / does not'),
+  text(22, 'Present Simple', 'Marco: Lucky her! I ___ on Saturdays.', ['work'], 'work'),
+
+  mc(23, 'Present Simple', 'Choose the correct sentence.', ['I works in a shop.', 'I work in a shop.', 'I working in a shop.'], 1),
+  mc(24, 'Present Simple', 'Choose the correct sentence.', ['He don’t like tea.', 'He doesn’t like tea.', 'He isn’t like tea.'], 1),
+  mc(25, 'Present Simple', 'Choose the correct sentence.', ['Do they study English?', 'Does they study English?', 'Are they study English?'], 0),
+  mc(26, 'Present Simple', 'Choose the correct sentence.', ['She go to school by bus.', 'She goes to school by bus.', 'She going to school by bus.'], 1),
+  mc(27, 'Present Simple', 'Choose the correct sentence.', ['We aren’t live in Milan.', 'We don’t live in Milan.', 'We doesn’t live in Milan.'], 1),
+  mc(28, 'Verb be', 'Choose the correct sentence.', ['Is your brother a student?', 'Does your brother a student?', 'Do your brother a student?'], 0),
+  mc(29, 'Verb be', 'Choose the correct sentence.', ['My parents is teachers.', 'My parents are teachers.', 'My parents be teachers.'], 1),
+  mc(30, 'Verb be', 'Choose the correct sentence.', ['I am not tired.', 'I don’t tired.', 'I not tired.'], 0),
+
+  text(31, 'Verb be', 'Teacher: Where ___ you yesterday?', ['were'], 'were'),
+  text(32, 'Verb be', 'Student: I ___ at home.', ['was'], 'was'),
+  text(33, 'Verb be', 'Teacher: ___ you ill?', ['were'], 'Were'),
+  text(34, 'Verb be', 'Student: No, I ___. I was just tired.', ["wasn't", 'was not'], 'wasn’t / was not'),
+  text(35, 'Past Simple', 'Student: I ___ my room in the morning.', ['cleaned'], 'cleaned'),
+  text(36, 'Past Simple', 'Teacher: Did you study English? Student: Yes, I ___.', ['did'], 'did'),
+  text(37, 'Past Simple', 'Teacher: Did you watch a film? Student: No, I ___.', ["didn't", 'did not'], 'didn’t / did not'),
+  text(38, 'Past Simple', 'Student: I ___ a video on YouTube.', ['watched'], 'watched'),
+  text(39, 'Verb be', 'Teacher: Were your parents at home? Student: No, they ___.', ["weren't", 'were not'], 'weren’t / were not'),
+  text(40, 'Verb be', 'Student: They ___ at work.', ['were'], 'were'),
+  text(41, 'Past Simple', 'Student: No, I ___ dinner. My brother cooked.', ["didn't cook", 'did not cook'], 'didn’t cook / did not cook'),
+  text(42, 'Past Simple', 'Student: Yes, I ___ it.', ['liked'], 'liked'),
+
+  mc(43, 'Articles', 'I have ___ dog.', ['a', 'an', 'the', 'no article'], 0, 'Dog is singular, countable and not yet specific.'),
+  mc(44, 'Articles', 'She is ___ English teacher.', ['a', 'an', 'the', 'no article'], 1, 'English begins with a vowel sound, so use an.'),
+  mc(45, 'Articles', 'I like ___ music.', ['a', 'an', 'the', 'no article'], 3, 'Use no article when speaking about music generally.'),
+  mc(46, 'Articles', 'Can you open ___ door, please?', ['a', 'an', 'the', 'no article'], 2, 'Use the because both speakers know which door.'),
+  mc(47, 'Articles', 'He eats ___ apple every day.', ['a', 'an', 'the', 'no article'], 1, 'Apple begins with a vowel sound.'),
+  mc(48, 'Articles', 'We live in ___ Italy.', ['a', 'an', 'the', 'no article'], 3, 'Most country names, including Italy, take no article.'),
+  mc(49, 'Articles', 'This is ___ old book.', ['a', 'an', 'the', 'no article'], 1, 'Old begins with a vowel sound.'),
+  mc(50, 'Articles', 'I go to ___ school every day.', ['a', 'an', 'the', 'no article'], 3, 'Use no article when school means the institution or normal activity.'),
+
+  text(51, 'Plurals', 'one book → two ___', ['books'], 'books'),
+  text(52, 'Plurals', 'one box → two ___', ['boxes'], 'boxes', 'Words ending in -x normally add -es.'),
+  text(53, 'Plurals', 'one baby → two ___', ['babies'], 'babies', 'Consonant + y changes to -ies.'),
+  text(54, 'Plurals', 'one city → two ___', ['cities'], 'cities', 'Consonant + y changes to -ies.'),
+  text(55, 'Plurals', 'one bus → two ___', ['buses'], 'buses', 'Words ending in -s normally add -es.'),
+  text(56, 'Plurals', 'one person → two ___', ['people'], 'people', 'People is the common irregular plural of person.'),
+  text(57, 'Plurals', 'one child → two ___', ['children'], 'children', 'Children is an irregular plural.'),
+  text(58, 'Plurals', 'one man → two ___', ['men'], 'men', 'Man changes internally to men.'),
+  text(59, 'Plurals', 'one woman → two ___', ['women'], 'women', 'Woman changes internally to women.'),
+  text(60, 'Plurals', 'one watch → two ___', ['watches'], 'watches', 'Words ending in -ch normally add -es.'),
+];

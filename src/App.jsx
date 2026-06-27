@@ -22,6 +22,8 @@ const Trainer = lazy(() => import('./pages/Trainer'));
 const GeneralExpressionTrainer = lazy(() => import('./pages/GeneralExpressionTrainer'));
 const HospitalityExpressionTrainer = lazy(() => import('./pages/HospitalityExpressionTrainer'));
 const WordTrainer = lazy(() => import('./pages/WordTrainer'));
+const GrammarHub = lazy(() => import('./pages/GrammarHub'));
+const GrammarA1Test = lazy(() => import('./pages/GrammarA1Test'));
 
 function ScrollManager() {
   const location = useLocation();
@@ -71,6 +73,8 @@ export default function App() {
             <Route path="/trainers/general-expression" element={<GeneralExpressionTrainer />} />
             <Route path="/trainers/hospitality-expression" element={<HospitalityExpressionTrainer />} />
             <Route path="/trainers/word-trainer" element={<WordTrainer />} />
+            <Route path="/grammar" element={<GrammarHub />} />
+            <Route path="/grammar/a1" element={<GrammarA1Test />} />
             <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
             <Route path="/prenota" element={<Prenota />} />
             <Route
