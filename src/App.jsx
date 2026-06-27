@@ -53,6 +53,16 @@ function PageFallback() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const media = window.matchMedia?.('(prefers-color-scheme: dark)');
+    const applyPreferredTheme = () => document.documentElement.classList.toggle('dark', Boolean(media?.matches));
+
+    applyPreferredTheme();
+    media?.addEventListener?.('change', applyPreferredTheme);
+
+    return () => media?.removeEventListener?.('change', applyPreferredTheme);
+  }, []);
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-paper text-ink transition-colors duration-300 dark:bg-[#0f1715] dark:text-white">
       <ScrollManager />
