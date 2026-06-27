@@ -35,6 +35,11 @@ Use this when you want to change text without searching the whole project.
 
 ## Page-specific copy
 
+## Grammar sessions
+
+- `src/data/grammarA1Test.js` — A1 questions, accepted answers, rules, and feedback recommendations
+- `src/pages/GrammarHub.jsx` and `src/pages/GrammarA1Test.jsx` — level navigation and diagnostic UI
+
 If the text is unique to one page layout, check:
 
 - `src/pages/Home.jsx`

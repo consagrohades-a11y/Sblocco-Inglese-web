@@ -119,6 +119,8 @@ Current public routes:
 - `/trainers/general-expression` — General Expression Trainer
 - `/trainers/hospitality-expression` — Hospitality Expression Trainer
 - `/trainers/word-trainer` — Word Trainer
+- `/grammar` — Grammar practice hub by CEFR level
+- `/grammar/a1` — 60-question A1 grammar diagnostic with explanations and topic feedback
 - `/trainer` — redirects to `/trainers/business-expression`
 - `/prenota` — Booking/quiz/payment flow
 - `/privacy`, `/privacy-policy`, `/cookie-policy`, `/termini-e-condizioni` — Legal pages
@@ -260,6 +262,13 @@ Key trainer files:
 - `src/data/trainerConfig.js`
 
 ## 11. Current content/proof assets
+
+### Grammar diagnostic
+
+- `src/data/grammarA1Test.js` contains the tagged A1 question bank, accepted answers, rules, and recommendations.
+- `src/pages/GrammarA1Test.jsx` scores answers by topic and labels mastery as Solid, Developing, or Review needed.
+- A1 results are stored locally under `sblocco_grammar_a1_last_result`; no account or backend is used.
+- Future A2+ sessions should keep the same topic tagging and explanation model.
 
 The site currently uses:
 

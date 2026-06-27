@@ -34,6 +34,7 @@ export const navItems = [
   { label: 'Corsi', to: '/percorsi' },
   { label: 'Simulazione', to: '/simulazione-39' },
   { label: 'Trainer', to: '/trainers' },
+  { label: 'Grammatica', to: '/grammar' },
   { label: 'Founder e recensioni', to: '/recensioni' },
   { label: 'Contatti', to: '/contatti' },
   { label: 'Prenota', to: '/prenota' },
