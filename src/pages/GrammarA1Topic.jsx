@@ -9,6 +9,17 @@ const getItems = (checkpoint) => checkpoint.exercises.flatMap((exercise) => exer
 const isCorrect = (item, value) => item.type === 'choice' ? Number(value) === item.correct : item.accepted.map(normalize).includes(normalize(value));
 const answerLabel = (item) => item.type === 'choice' ? item.options[item.correct] : item.answer;
 
+function Feedback({ item, answers }) {
+  const checked = isCorrect(item, answers[item.id]);
+  return (
+    <div className="mt-4 rounded-lg bg-white/80 p-3 text-sm leading-6 dark:bg-white/[0.06]">
+      <p className="flex items-center gap-2 font-black text-ink dark:text-white">{checked ? <CheckCircle2 className="h-4 w-4 text-moss dark:text-mint" /> : <XCircle className="h-4 w-4 text-coral" />}{checked ? 'Corretto' : 'Da correggere'} · {item.prompt}</p>
+      <p className="mt-2 text-ink/75 dark:text-white/75"><strong>Risposta corretta:</strong> {answerLabel(item)}</p>
+      <p className="mt-1 text-ink/70 dark:text-white/70"><strong>Perché:</strong> {item.feedback}</p>
+    </div>
+  );
+}
+
 function Question({ item, answers, setAnswer, submitted }) {
   const checked = submitted ? isCorrect(item, answers[item.id]) : null;
 
@@ -30,13 +41,7 @@ function Question({ item, answers, setAnswer, submitted }) {
         <input className="focus-ring mt-3 w-full max-w-md rounded-lg border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink dark:border-white/10 dark:bg-[#101816] dark:text-white" value={answers[item.id] || ''} onChange={(event) => setAnswer(item.id, event.target.value)} required disabled={submitted} placeholder="Scrivi la risposta" />
       )}
 
-      {submitted ? (
-        <div className="mt-4 rounded-lg bg-white/80 p-3 text-sm leading-6 dark:bg-white/[0.06]">
-          <p className="flex items-center gap-2 font-black text-ink dark:text-white">{checked ? <CheckCircle2 className="h-4 w-4 text-moss dark:text-mint" /> : <XCircle className="h-4 w-4 text-coral" />}{checked ? 'Corretto' : 'Da correggere'}</p>
-          <p className="mt-2 text-ink/75 dark:text-white/75"><strong>Risposta corretta:</strong> {answerLabel(item)}</p>
-          <p className="mt-1 text-ink/70 dark:text-white/70"><strong>Perché:</strong> {item.feedback}</p>
-        </div>
-      ) : null}
+      {submitted ? <Feedback item={item} answers={answers} /> : null}
     </fieldset>
   );
 }
@@ -45,20 +50,23 @@ function Dialogue({ exercise, answers, setAnswer, submitted }) {
   const itemsById = useMemo(() => Object.fromEntries(exercise.items.map((item) => [item.id, item])), [exercise.items]);
 
   return (
-    <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.04]">
-      <div className="grid gap-3">
-        {exercise.lines.map((line, lineIndex) => (
-          <p key={`${line.speaker}-${lineIndex}`} className="text-base leading-8 text-ink dark:text-white">
-            <span className="mr-2 font-black text-moss dark:text-mint">{line.speaker}:</span>
-            {line.parts.map((part, partIndex) => {
-              if (typeof part === 'string') return <React.Fragment key={partIndex}>{part}</React.Fragment>;
-              const item = itemsById[part.blankId];
-              return <input key={item.id} className="focus-ring mx-1 inline-block w-28 rounded-lg border border-ink/15 bg-white px-3 py-1.5 text-center text-sm font-black text-ink dark:border-white/10 dark:bg-[#101816] dark:text-white" aria-label={item.prompt} value={answers[item.id] || ''} onChange={(event) => setAnswer(item.id, event.target.value)} required disabled={submitted} placeholder="..." />;
-            })}
-          </p>
-        ))}
+    <>
+      <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.04]">
+        <div className="grid gap-3">
+          {exercise.lines.map((line, lineIndex) => (
+            <p key={`${line.speaker}-${lineIndex}`} className="text-base leading-8 text-ink dark:text-white">
+              <span className="mr-2 font-black text-moss dark:text-mint">{line.speaker}:</span>
+              {line.parts.map((part, partIndex) => {
+                if (typeof part === 'string') return <React.Fragment key={partIndex}>{part}</React.Fragment>;
+                const item = itemsById[part.blankId];
+                return <input key={item.id} className="focus-ring mx-1 inline-block w-28 rounded-lg border border-ink/15 bg-white px-3 py-1.5 text-center text-sm font-black text-ink dark:border-white/10 dark:bg-[#101816] dark:text-white" aria-label={item.prompt} value={answers[item.id] || ''} onChange={(event) => setAnswer(item.id, event.target.value)} required disabled={submitted} placeholder="..." />;
+              })}
+            </p>
+          ))}
+        </div>
       </div>
-    </div>
+      {submitted ? <div className="grid gap-3">{exercise.items.map((item) => <Feedback key={item.id} item={item} answers={answers} />)}</div> : null}
+    </>
   );
 }
 
