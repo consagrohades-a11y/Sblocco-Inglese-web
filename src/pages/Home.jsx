@@ -344,6 +344,28 @@ export default function Home() {
 
       <SectionReveal className="py-0">
         <Section>
+          <div className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
+            <p className="text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint">New grammar-output units</p>
+            <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <h2 className="text-3xl font-black leading-tight text-ink dark:text-white">A1 Learning Path</h2>
+                <p className="mt-3 max-w-3xl text-base font-semibold leading-7 text-ink/70 dark:text-white/70">
+                  Learn the rule, use it actively, get diagnostic feedback. Trovi le nuove unità A1 dentro la grammatica, senza cambiare il resto del sito.
+                </p>
+              </div>
+              <Link
+                to="/grammar/a1"
+                className="focus-ring inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-moss dark:bg-mint dark:text-ink"
+              >
+                Vai all'A1 Learning Path
+              </Link>
+            </div>
+          </div>
+        </Section>
+      </SectionReveal>
+
+      <SectionReveal className="py-0">
+        <Section>
           <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
             <div>
               <SectionHeader
