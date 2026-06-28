@@ -104,6 +104,8 @@ To add a new level later:
 - Each exercise/test should be independently submittable.
 - Dialogues must remain one exercise, not split into separate cards.
 - Corrections must be written in correct Italian.
+- For separate-question exercises such as gap-fill and multiple-choice, corrections should appear inline directly under each question after submit. Do not repeat the submitted answer in the correction because the disabled input or selected option already shows it.
+- For dialogue exercises, keep feedback separate because blanks live inside continuous dialogue lines.
 - Feedback must be diagnostic: show useful error signals and next steps, not only score.
 - Diagnostic UI should stay compact. Avoid oversized cards, repeated generic messages, or long blocks that make the page feel endless.
 - Per-exercise diagnostic evidence should prioritize human-readable next-check signals. Do not use raw diagnostic tag counts as the main visual metric; show wrong-answer count and only the most useful signals.
