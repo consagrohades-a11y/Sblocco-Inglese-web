@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { RotateCcw } from 'lucide-react';
 import { evaluateExerciseAttempt } from '../../engines/exerciseEngine';
 import { saveExerciseAttempt } from '../../engines/progressEngine';
@@ -17,6 +17,9 @@ export default function ExerciseRenderer({ exercise, onComplete }) {
   const [answers, setAnswers] = useState({});
   const [attempt, setAttempt] = useState(null);
   const Renderer = renderers[exercise?.type];
+  const attemptItemsById = useMemo(() => (
+    Object.fromEntries((attempt?.items || []).map((item) => [item.itemId, item]))
+  ), [attempt]);
 
   const setAnswer = (itemId, value) => {
     setAnswers((current) => ({ ...current, [itemId]: value }));
@@ -62,7 +65,13 @@ export default function ExerciseRenderer({ exercise, onComplete }) {
 
       {Renderer ? (
         <form className="mt-5" onSubmit={handleSubmit}>
-          <Renderer exercise={exercise} answers={answers} setAnswer={setAnswer} disabled={Boolean(attempt)} />
+          <Renderer
+            exercise={exercise}
+            answers={answers}
+            setAnswer={setAnswer}
+            disabled={Boolean(attempt)}
+            attemptItemsById={attemptItemsById}
+          />
           {!attempt ? (
             <button type="submit" className="focus-ring mt-5 rounded-full bg-moss px-5 py-3 font-black text-white shadow-lift">
               Check exercise
