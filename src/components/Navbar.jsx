@@ -13,7 +13,7 @@ export default function Navbar() {
   const navLabel = (item) => {
     if (item.to === '/') return 'La piattaforma';
     if (item.to === '/simulazione-39') return `Simulazione ${primaryOffer.price}`;
-    if (item.to === '/grammar') return 'Grammar';
+    if (item.to === '/grammar') return 'English Foundations';
     return item.label;
   };
 
