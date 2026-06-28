@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { buildRecommendations } from '../../engines/recommendationEngine';
 import { getTagInfo } from '../../content/registries/tagRegistry';
 
-export default function DiagnosticResult({ result }) {
+export default function DiagnosticResult({ result, level = 'a1', track = 'core' }) {
   if (!result) {
     return (
       <div className="rounded-2xl border border-ink/10 bg-white p-5 text-sm font-semibold text-ink/65">
@@ -27,7 +27,7 @@ export default function DiagnosticResult({ result }) {
       <div className="mt-5 grid gap-3">
         <h3 className="font-black">Blockers and evidence</h3>
         {blockers.length ? blockers.map((entry) => {
-          const info = getTagInfo({ dimension: entry.dimension, tag: entry.tag, level: 'a1', track: 'hospitality' });
+          const info = getTagInfo({ dimension: entry.dimension, tag: entry.tag, level, track });
           return (
             <article key={`${entry.dimension}-${entry.tag}`} className="rounded-xl bg-white/10 p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -70,4 +70,3 @@ export default function DiagnosticResult({ result }) {
     </section>
   );
 }
-

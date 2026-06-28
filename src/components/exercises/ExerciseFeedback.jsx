@@ -15,8 +15,7 @@ export default function ExerciseFeedback({ item }) {
       <p className="mt-2 text-ink/75"><strong>Your answer:</strong> {String(item.userAnswer || '—')}</p>
       <p className="mt-1 text-ink/75"><strong>Correct answer:</strong> {String(item.correctAnswer || '—')}</p>
       {item.feedback ? <p className="mt-1 text-ink/75"><strong>Feedback:</strong> {item.feedback}</p> : null}
-      {item.explanation ? <p className="mt-1 text-ink/70"><strong>Why:</strong> {item.explanation}</p> : null}
+      {item.explanation ? <p className="mt-1 text-ink/70"><strong>Explanation:</strong> {item.explanation}</p> : null}
     </article>
   );
 }
-

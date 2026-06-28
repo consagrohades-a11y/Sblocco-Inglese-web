@@ -6,10 +6,10 @@ const fallbackRecommendation = (evidence) => ({
   severity: evidence?.severity || 'low',
   evidenceCount: evidence?.evidenceCount || 0,
   title: 'Practice this area again',
-  reason: 'This pattern appeared in your answers, but it does not have a specific recommendation yet.',
+  reason: 'Questo pattern è comparso nelle tue risposte, ma non ha ancora una raccomandazione specifica. Ripeti l’esercizio e controlla la struttura prima di rispondere.',
   actions: [
     {
-      label: 'Repeat the exercise carefully',
+      label: 'Ripeti l’esercizio con attenzione',
       path: null,
     },
   ],
