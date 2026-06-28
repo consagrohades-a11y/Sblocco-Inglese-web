@@ -11,8 +11,8 @@ export default function GrammarHub() {
       <SEO title="English Foundations | Sblocco Inglese" description="Un percorso CEFR guidato per costruire inglese utilizzabile, fare pratica e ricevere feedback specifico." />
       <section className="section-shell py-14">
         <span className="eyebrow"><BookOpen aria-hidden="true" className="h-4 w-4" />English Foundations</span>
-        <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight sm:text-5xl dark:text-white">Un percorso CEFR per costruire inglese utilizzabile.</h1>
-        <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70 dark:text-white/70">Non è solo pratica grammaticale. Ogni livello ti aiuta a capire la regola, usarla in esercizi controllati, verificare gli errori e riprovare con un feedback più chiaro.</p>
+        <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight sm:text-5xl dark:text-white">Un percorso per costruire un'inglese reale.</h1>
+        <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70 dark:text-white/70">Ogni livello ti aiuta a capire la regola, la utilizzi in esercizi di grammatica controllata, vedi gli errori e ricevi feedback vero.</p>
         <div className="mt-8 rounded-2xl border border-moss/15 bg-mint/40 p-5 dark:border-mint/20 dark:bg-mint/10">
           <div className="flex items-center gap-2">
             <GraduationCap aria-hidden="true" className="h-5 w-5 text-moss dark:text-mint" />
@@ -30,7 +30,7 @@ export default function GrammarHub() {
             <Link key={level} to="/grammar/a1" className="focus-ring rounded-lg border border-moss/25 bg-mint p-5 shadow-sm transition hover:-translate-y-1 dark:border-mint/30 dark:bg-mint/15">
               <CheckCircle2 aria-hidden="true" className="h-6 w-6 text-moss dark:text-mint" />
               <h2 className="mt-4 text-3xl font-black dark:text-white">{level}</h2>
-              <p className="mt-2 text-sm font-semibold text-ink/70 dark:text-white/70">Percorso e Quick Checks disponibili</p>
+              <p className="mt-2 text-sm font-semibold text-ink/70 dark:text-white/70">Percorso + Quick Checks</p>
             </Link>
           ) : (
             <div key={level} className="rounded-lg border border-ink/10 bg-white p-5 opacity-65 dark:border-white/10 dark:bg-white/[0.06]">
