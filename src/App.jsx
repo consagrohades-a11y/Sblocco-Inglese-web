@@ -27,6 +27,7 @@ const GrammarA1Hub = lazy(() => import('./pages/GrammarA1Hub'));
 const GrammarA1Topic = lazy(() => import('./pages/GrammarA1Test'));
 const EngineDemo = lazy(() => import('./pages/EngineDemo'));
 const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
+const A1UnitPage = lazy(() => import('./pages/A1UnitPage'));
 
 function ScrollManager() {
   const location = useLocation();
@@ -81,6 +82,8 @@ export default function App() {
             <Route path="/grammar/a1/:topicId" element={<GrammarA1Topic />} />
             <Route path="/engine-demo" element={<EngineDemo />} />
             <Route path="/diagnostic" element={<DiagnosticPage />} />
+            <Route path="/levels/a1/be-basic-sentences" element={<A1UnitPage key="a1-be-basic-sentences" unitId="be-basic-sentences" />} />
+            <Route path="/levels/a1/present-simple-normal-verbs" element={<A1UnitPage key="a1-present-simple-normal-verbs" unitId="present-simple-normal-verbs" />} />
             <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
             <Route path="/prenota" element={<Prenota />} />
             <Route
