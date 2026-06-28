@@ -97,19 +97,22 @@ To add a new level later:
 
 ## Grammar UX rules
 - Do not turn a level page into a huge all-in-one test.
-- `/grammar/a1` should stay clean: topic cards plus a separate A1 learning-path/unit section.
+- `/grammar/a1` should keep two clearly separated areas: guided A1 units first, checkpoint cards second.
+- Unit paths and checkpoint paths must not be visually mixed without section titles.
 - Topic pages can show the tests for that topic.
 - Unit pages should move from rule explanation to active output to diagnostic feedback.
 - Each exercise/test should be independently submittable.
 - Dialogues must remain one exercise, not split into separate cards.
 - Corrections must be written in correct Italian.
-- Feedback must be diagnostic: show error categories and percentages, not only score.
+- Feedback must be diagnostic: show useful error signals and next steps, not only score.
+- Diagnostic UI should stay compact. Avoid oversized cards, repeated generic messages, or long blocks that make the page feel endless.
+- Fallback recommendations are allowed internally, but the UI should show at most one fallback card and must not render non-clickable actions as CTA pills.
 - Mixed-form exercises should show the base form in brackets when useful.
 - Dark mode must be scoped to grammar exercises only; it must not affect the whole webapp.
 
 ## Current grammar behavior
 - `/grammar` shows the grammar hub and now highlights the A1 Learning Path.
-- `/grammar/a1` renders topic cards and A1 grammar-output unit cards.
+- `/grammar/a1` renders guided A1 unit cards before checkpoint cards.
 - `/grammar/a1/:topicId` renders the selected topic.
 - `/levels/a1/be-basic-sentences` renders the first A1 grammar-output unit.
 - `/levels/a1/present-simple-normal-verbs` renders the second A1 grammar-output unit.
@@ -119,8 +122,7 @@ To add a new level later:
 - Base-form hints come from `baseForm` where available.
 
 ## AI/Codex safety rules
-- Never paste local file paths into source files.
-- No source file may contain `@C:\Users`, `files-mentioned-by-the-user-model`, or `work/a1-output-units`.
+- Never paste local workspace paths into source files.
 - Generated JSX files must start with valid code/imports, not workspace references.
 - After every generated-file task, inspect modified files before committing.
 - Always run `npm run build` before merge.
