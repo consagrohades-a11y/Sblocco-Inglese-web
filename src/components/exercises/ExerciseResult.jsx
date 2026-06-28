@@ -110,6 +110,7 @@ function EvidenceSummary({ profile, exercise, attempt }) {
 export default function ExerciseResult({ attempt, exercise }) {
   const profile = buildDiagnosticProfile([attempt]);
   const recommendations = buildRecommendations(profile);
+  const usesInlineItemFeedback = exercise?.type !== 'dialogue-gap-fill';
 
   return (
     <div className="grid gap-4">
@@ -123,10 +124,12 @@ export default function ExerciseResult({ attempt, exercise }) {
         </div>
       </div>
 
-      <div className="grid gap-2">
-        <h4 className="text-base font-black text-ink">Item feedback</h4>
-        {attempt.items.map((item) => <ExerciseFeedback key={item.itemId} item={item} />)}
-      </div>
+      {usesInlineItemFeedback ? null : (
+        <div className="grid gap-2">
+          <h4 className="text-base font-black text-ink">Item feedback</h4>
+          {attempt.items.map((item) => <ExerciseFeedback key={item.itemId} item={item} />)}
+        </div>
+      )}
 
       <EvidenceSummary profile={profile} exercise={exercise} attempt={attempt} />
 
