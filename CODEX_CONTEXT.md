@@ -106,6 +106,7 @@ To add a new level later:
 - Corrections must be written in correct Italian.
 - Feedback must be diagnostic: show useful error signals and next steps, not only score.
 - Diagnostic UI should stay compact. Avoid oversized cards, repeated generic messages, or long blocks that make the page feel endless.
+- Per-exercise diagnostic evidence should use a compact evidence map plus top-signal table, not a long raw list of dimensions and tags.
 - Fallback recommendations are allowed internally, but the UI should show at most one fallback card and must not render non-clickable actions as CTA pills.
 - Mixed-form exercises should show the base form in brackets when useful.
 - Dark mode must be scoped to grammar exercises only; it must not affect the whole webapp.
