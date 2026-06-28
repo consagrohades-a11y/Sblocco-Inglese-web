@@ -1,6 +1,22 @@
 import React from 'react';
 
-export default function MultipleChoice({ exercise, answers, setAnswer, disabled = false }) {
+function InlineCorrection({ feedback }) {
+  if (!feedback) return null;
+
+  return (
+    <div className={`mt-3 rounded-lg border px-3 py-2 text-xs leading-5 ${
+      feedback.correct ? 'border-moss/20 bg-mint/25 text-ink/70' : 'border-coral/25 bg-blush/70 text-ink/75'
+    }`}>
+      <p className="font-black text-ink">
+        {feedback.correct ? 'Correct.' : <>Correction: <span className="text-coral">{String(feedback.correctAnswer || '—')}</span></>}
+      </p>
+      {feedback.feedback ? <p className="mt-1">{feedback.feedback}</p> : null}
+      {feedback.explanation ? <p className="mt-1"><strong className="text-ink">Why:</strong> {feedback.explanation}</p> : null}
+    </div>
+  );
+}
+
+export default function MultipleChoice({ exercise, answers, setAnswer, disabled = false, attemptItemsById = {} }) {
   return (
     <div className="grid gap-4">
       {(exercise.items || []).map((item, index) => (
@@ -28,9 +44,9 @@ export default function MultipleChoice({ exercise, answers, setAnswer, disabled 
               </label>
             ))}
           </div>
+          <InlineCorrection feedback={attemptItemsById[item.id]} />
         </fieldset>
       ))}
     </div>
   );
 }
-
