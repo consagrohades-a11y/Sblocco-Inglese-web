@@ -1,3 +1,5 @@
+import { presentSimpleNormalVerbsPool } from './questionPools/presentSimpleNormalVerbsPool.js';
+
 const makeDiagnostic = ({
   skills,
   grammar,
@@ -203,11 +205,13 @@ export const unitPresentSimpleNormalVerbs = {
       skillFocus: 'Spoken sentence control',
       title: 'Control the form across different sentences',
       instructions: 'Completa ogni frase. Il tipo di struttura cambia da un item all’altro.',
-      items: [
-        blank('present-control-1', 'I ___ in Bologna, but my family lives in Bari.', ['live'], sentenceDiagnostic('controlled-practice'), { correct: 'Corretto. Con I usa la forma base live.', incorrect: 'Con I non aggiungere -s: I live.' }, 'Il soggetto I usa il verbo base.', 'live'),
-        blank('present-control-2', 'She ___ English every evening after work.', ['studies'], thirdPersonDiagnostic('controlled-practice'), { correct: 'Corretto. Study diventa studies con she.', incorrect: 'Con she, study cambia in studies.' }, 'Consonante + y diventa -ies alla terza persona.', 'study'),
-        blank('present-control-3', 'Where ___ your parents live now?', ['do'], questionDiagnostic('controlled-practice'), { correct: 'Corretto. Your parents è plurale, quindi usa do.', incorrect: 'Con un soggetto plurale e live usa do.' }, 'La domanda è do + soggetto + verbo base.', 'live'),
-        blank('present-control-4', 'He ___ work on Sundays.', ["doesn't", 'does not'], negativeDiagnostic('controlled-practice'), { correct: 'Corretto. Con he usa doesn’t + work.', incorrect: 'La negativa con he è doesn’t + verbo base.' }, 'Dopo doesn’t, work resta alla forma base.', 'work'),
+      questionPool: presentSimpleNormalVerbsPool,
+      questionCount: 4,
+      selectionRules: [
+        { count: 1, match: { type: 'blank', grammarFocus: ['present-simple', 'affirmative'] } },
+        { count: 1, match: { type: 'blank', grammarFocus: ['present-simple', 'third-person-affirmative'] } },
+        { count: 1, match: { type: 'blank', grammarFocus: ['present-simple', 'yes-no-question'] } },
+        { count: 1, match: { type: 'blank', grammarFocus: ['present-simple', 'negative'] } },
       ],
     },
     {
