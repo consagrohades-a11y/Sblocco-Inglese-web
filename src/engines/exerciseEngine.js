@@ -97,7 +97,7 @@ export function evaluateExerciseAttempt(exercise = {}, answers = {}) {
       feedback: typeof feedback === 'string'
         ? feedback
         : (correct ? feedback.correct : feedback.incorrect) || '',
-      explanation: item.explanation || '',
+      explanation: item.visibleExplanation || item.explanation || '',
     };
   });
 
