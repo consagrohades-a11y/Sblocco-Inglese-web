@@ -50,14 +50,14 @@ export default function A1UnitPage({ unitId }) {
       title: exercise.purpose === 'final-check' ? 'Test finale' : `${index + 1}. Esercizio`,
     }));
   }, [unit]);
-  const activeExerciseIndex = Math.max(
-    exerciseNavigation.findIndex((step) => step.id === activeExerciseId),
-    0,
-  );
-  const activeExerciseStep = exerciseNavigation[activeExerciseIndex];
-  const activeExercise = unit?.exercises.find((exercise) => exercise.id === activeExerciseStep?.id);
-  const nextExerciseStep = exerciseNavigation[activeExerciseIndex + 1];
-  const nextExercise = unit?.exercises.find((exercise) => exercise.id === nextExerciseStep?.id);
+  const activeExerciseIndex = exerciseNavigation.findIndex((step) => step.id === activeExerciseId);
+  const activeExercise = unit?.exercises.find((exercise) => exercise.id === activeExerciseId);
+  const finalExercise = unit?.exercises.find((exercise) => exercise.purpose === 'final-check');
+  const nextExerciseStep = activeExerciseIndex >= 0
+    ? exerciseNavigation[activeExerciseIndex + 1]
+    : null;
+  const nextExercise = unit?.exercises.find((exercise) => exercise.id === nextExerciseStep?.id)
+    || (activeExerciseIndex === exerciseNavigation.length - 1 ? finalExercise : null);
   const isFinal = activeExercise?.purpose === 'final-check';
   const continueLabel = nextExercise?.purpose === 'final-check'
     ? 'Inizia il test finale'
@@ -72,9 +72,16 @@ export default function A1UnitPage({ unitId }) {
 
   const startPractice = () => {
     setPracticeStarted(true);
+    if (isFinal && exerciseNavigation[0]) setActiveExerciseId(exerciseNavigation[0].id);
     window.requestAnimationFrame(() => {
       document.getElementById('unit-exercise-navigation')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+  };
+
+  const openFinalTest = () => {
+    if (!finalExercise) return;
+    setPracticeStarted(true);
+    selectExercise(finalExercise.id);
   };
   const diagnosticResult = useMemo(() => {
     if (!unit || !attempts.length) return null;
@@ -207,15 +214,26 @@ export default function A1UnitPage({ unitId }) {
         aria-expanded={practiceStarted}
         className="focus-ring mt-5 rounded-full bg-coral px-5 py-3 font-black text-white shadow-lift transition hover:brightness-105"
       >
-        Click here — Let&apos;s see if you got it
+        Esercizi per vedere se hai capito
       </button>
+
+      {unit.id === 'a1-present-simple-normal-verbs' && finalExercise ? (
+        <button
+          type="button"
+          onClick={openFinalTest}
+          aria-pressed={isFinal}
+          className="focus-ring mt-3 block rounded-full bg-ink px-5 py-3 font-black text-white shadow-lift transition hover:brightness-110"
+        >
+          Test finale
+        </button>
+      ) : null}
 
       {practiceStarted ? (
         <>
       <nav id="unit-exercise-navigation" className="mt-5 scroll-mt-24 overflow-x-auto pb-2" aria-label="Esercizi dell’unità">
         <div className="flex min-w-max gap-2">
           {exerciseNavigation.map((step) => {
-            const active = step.id === activeExerciseStep?.id;
+            const active = step.id === activeExerciseId;
             return (
               <button
                 key={step.id}
@@ -235,13 +253,14 @@ export default function A1UnitPage({ unitId }) {
 
       {activeExercise ? (
         <section id="unit-active-exercise" className="mt-8 scroll-mt-24">
+          <h2 className="mb-4 text-3xl font-black text-ink">{activeExercise.title}</h2>
           <ExerciseRenderer
             key={activeExercise.id}
             exercise={activeExercise}
             showHeader={false}
             isFinal={isFinal}
             continueLabel={continueLabel}
-            onContinue={() => nextExerciseStep && selectExercise(nextExerciseStep.id)}
+            onContinue={() => nextExercise && selectExercise(nextExercise.id)}
             onComplete={(attempt) => setAttemptsByExercise((current) => ({
               ...current,
               [activeExercise.id]: attempt,
