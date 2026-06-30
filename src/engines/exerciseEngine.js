@@ -1,10 +1,20 @@
 const DIAGNOSTIC_DIMENSIONS = ['skills', 'grammar', 'errorPatterns', 'contexts', 'production'];
 
+const FEEDBACK_KEY_DIAGNOSTIC_EQUIVALENTS = {
+  'normal-verb-question-needs-do': ['missing-auxiliary'],
+  'third-person-s-missing': ['missing-third-person-s'],
+  'be-and-do-confusion': ['be-do-confusion'],
+  'present-simple-negative-needs-dont-doesnt': ['missing-auxiliary'],
+  'short-answer-uses-auxiliary': ['short-answer-omission'],
+};
+
 export function normalizeAnswer(value) {
   return String(value ?? '')
     .normalize('NFKC')
     .replace(/[’‘`´]/g, "'")
     .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/[.!?]+$/u, '')
     .trim()
     .toLowerCase();
 }
@@ -74,13 +84,35 @@ export function collectItemDiagnostics(item = {}) {
   });
 }
 
+export function collectFeedbackKeyDiagnostics(item = {}) {
+  const existingErrorPatterns = new Set(
+    collectItemDiagnostics(item)
+      .filter(({ dimension }) => dimension === 'errorPatterns')
+      .map(({ tag }) => tag),
+  );
+  const feedbackKeys = Array.isArray(item.feedbackKeys) ? item.feedbackKeys : [];
+
+  return [...new Set(feedbackKeys)].filter((key) => {
+    const equivalentTags = FEEDBACK_KEY_DIAGNOSTIC_EQUIVALENTS[key] || [];
+    return !equivalentTags.some((tag) => existingErrorPatterns.has(tag));
+  }).map((tag) => ({
+    tag,
+    dimension: 'errorPatterns',
+    severity: Number.isFinite(Number(item.diagnostic?.severity))
+      ? Number(item.diagnostic.severity)
+      : 1,
+    contexts: [],
+    productionModes: [item.productionMode].filter(Boolean),
+  }));
+}
+
 export function evaluateExerciseAttempt(exercise = {}, answers = {}) {
   const items = Array.isArray(exercise.items) ? exercise.items : [];
   const score = scoreExercise(exercise, answers);
   const evaluatedItems = items.map((item, index) => {
     const userAnswer = answers[item.id] ?? '';
     const correct = isItemCorrect(item, userAnswer);
-    const diagnostic = collectItemDiagnostics(item).map((evidence) => ({
+    const diagnostic = [...collectItemDiagnostics(item), ...collectFeedbackKeyDiagnostics(item)].map((evidence) => ({
       ...evidence,
       exerciseId: exercise.id ?? null,
       itemId: item.id ?? `item-${index + 1}`,
