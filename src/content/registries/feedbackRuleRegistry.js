@@ -37,14 +37,14 @@ export const feedbackRuleRegistry = {
   'present-simple-negative-needs-dont-doesnt': {
     key: 'present-simple-negative-needs-dont-doesnt',
     title: 'Costruisci la negativa con don’t/doesn’t',
-    learnerMessage: 'Per fare frasi negative con verbi normali, usa don't o doesn't.',
+    learnerMessage: "Per fare frasi negative con verbi normali, usa don't o doesn't.",
     fixRule: 'Usa don’t con I/you/we/they e doesn’t con he/she/it, poi mantieni il verbo alla forma base.',
     practiceAdvice: 'Alterna affermativa e negativa: I work / I don’t work; She speaks / She doesn’t speak.',
   },
   'short-answer-uses-auxiliary': {
     key: 'short-answer-uses-auxiliary',
     title: 'Riprendi do/does nella risposta breve',
-    learnerMessage: 'Nelle risposte brevi usa l'ausiliare: Yes, I do. / No, she doesn't.',
+    learnerMessage: "Nelle risposte brevi usa l'ausiliare: Yes, I do. / No, she doesn't.",
     fixRule: 'Rispondi Yes, I do / No, I don’t oppure Yes, she does / No, she doesn’t.',
     practiceAdvice: 'Abbina ogni domanda a due risposte brevi: una positiva e una negativa.',
   },
