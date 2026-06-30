@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { buildDiagnosticProfile } from '../../engines/diagnosticEngine';
 import { buildRecommendations } from '../../engines/recommendationEngine';
 import { getTagInfo } from '../../content/registries/tagRegistry';
+import { feedbackRuleRegistry } from '../../content/registries/feedbackRuleRegistry';
 
 const dimensionLabels = {
   skills: 'Skill',
@@ -38,6 +39,41 @@ function getResultMessage(percent) {
   if (percent >= 70) return 'Buon lavoro. Hai qualche errore da rivedere, ma puoi continuare.';
   if (percent >= 50) return 'Meglio riprovare prima di continuare. Guarda il feedback sotto le domande e correggi gli errori principali.';
   return 'Ti conviene rivedere la spiegazione e riprovare. Il punto non è andare avanti velocemente, ma rendere automatiche le strutture base.';
+}
+
+const unit8FeedbackAliases = {
+  'missing-auxiliary': 'normal-verb-question-needs-do',
+  'missing-third-person-s': 'third-person-s-missing',
+  'be-do-confusion': 'be-and-do-confusion',
+  'short-answer-omission': 'short-answer-uses-auxiliary',
+};
+
+const unit8AdditionalMessages = {
+  'italian-word-order-transfer': 'Controlla l’ordine della frase inglese: soggetto, ausiliare e verbo devono restare nella posizione corretta.',
+};
+
+function Unit8EvidenceSummary({ profile, attempt }) {
+  const wrongCount = Math.max((attempt?.total || 0) - (attempt?.correct || 0), 0);
+  if (!wrongCount) return null;
+
+  const messages = [...new Set((profile.evidence || [])
+    .filter(({ dimension }) => dimension === 'errorPatterns')
+    .map(({ tag }) => {
+      const feedbackKey = unit8FeedbackAliases[tag] || tag;
+      return feedbackRuleRegistry[feedbackKey]?.learnerMessage || unit8AdditionalMessages[tag] || null;
+    })
+    .filter(Boolean))];
+
+  if (!messages.length) return null;
+
+  return (
+    <div className="rounded-xl border border-ink/10 bg-linen/70 p-4">
+      <h4 className="text-base font-black text-ink">Resoconto finale, vediamo se c&apos;è qualcosa da rivedere:</h4>
+      <ul className="mt-3 grid gap-2 text-sm leading-6 text-ink/70">
+        {messages.map((message) => <li key={message}>• {message}</li>)}
+      </ul>
+    </div>
+  );
 }
 
 function EvidenceSummary({ profile, exercise, attempt }) {
@@ -116,13 +152,14 @@ function EvidenceSummary({ profile, exercise, attempt }) {
 export default function ExerciseResult({ attempt, exercise, isFinal = false }) {
   const profile = buildDiagnosticProfile([attempt]);
   const recommendations = buildRecommendations(profile);
+  const isUnit8 = exercise?.unit === 'present-simple-normal-verbs';
 
   return (
     <div className="grid gap-4">
       <div className="rounded-xl bg-ink p-4 text-white">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-xs font-black uppercase tracking-wide text-white/60">{isFinal ? "Resoconto finale, vediamo se c'è qualcosa da rivedere:" : 'Risultato dell’esercizio'}</p>
+            <p className="text-xs font-black uppercase tracking-wide text-white/60">{isFinal ? 'Risultato del test finale' : 'Risultato dell’esercizio'}</p>
             <p className="mt-1 text-3xl font-black">{attempt.correct}/{attempt.total} · {attempt.percent}%</p>
           </div>
           <p className="max-w-xl text-xs leading-5 text-white/65">Gli errori indicano quali strutture rendere più automatiche.</p>
@@ -131,9 +168,13 @@ export default function ExerciseResult({ attempt, exercise, isFinal = false }) {
 
       <p className="rounded-xl border border-ink/10 bg-white p-4 text-sm font-semibold leading-6 text-ink/70 shadow-sm">{getResultMessage(attempt.percent)}</p>
 
-      <EvidenceSummary profile={profile} exercise={exercise} attempt={attempt} />
+      {isUnit8 ? (
+        <Unit8EvidenceSummary profile={profile} attempt={attempt} />
+      ) : (
+        <EvidenceSummary profile={profile} exercise={exercise} attempt={attempt} />
+      )}
 
-      {recommendations.length ? (
+      {!isUnit8 && recommendations.length ? (
         <div className="rounded-xl border border-ink/10 bg-white p-4 shadow-sm">
           <h4 className="text-base font-black text-ink">Cosa fare adesso</h4>
           <div className="mt-3 grid gap-2">
