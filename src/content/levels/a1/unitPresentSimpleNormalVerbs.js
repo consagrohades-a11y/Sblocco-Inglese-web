@@ -173,15 +173,14 @@ export const unitPresentSimpleNormalVerbs = {
     'She doesn’t speak German.',
     'Do you enjoy swimming?',
   ],
-  sectionNavigation: [
-    { id: 'overview', title: 'Panoramica' },
-    { id: 'a1-present-recognition', title: '1. Be o Do?' },
-    { id: 'a1-present-do-does', title: '2. Do o Does?' },
-    { id: 'a1-present-questions', title: '3. Domande' },
-    { id: 'a1-present-negatives', title: '4. Frasi negative' },
-    { id: 'a1-present-short-answers', title: '5. Risposte brevi' },
-    { id: 'a1-present-dialogue', title: '6. Mini-dialogo' },
-    { id: 'a1-present-final-check', title: '7. Test finale' },
+  exerciseNavigation: [
+    { id: 'a1-present-recognition', title: 'Be o Do?' },
+    { id: 'a1-present-do-does', title: 'Do o Does?' },
+    { id: 'a1-present-questions', title: 'Domande' },
+    { id: 'a1-present-negatives', title: 'Frasi negative' },
+    { id: 'a1-present-short-answers', title: 'Risposte brevi' },
+    { id: 'a1-present-dialogue', title: 'Mini-dialogo' },
+    { id: 'a1-present-final-check', title: 'Test finale' },
   ],
   exercises: [
     {
