@@ -1,3 +1,5 @@
+import { feedbackRuleRegistry } from './feedbackRuleRegistry.js';
+
 export const tagRegistry = {
   global: {
     skills: {
@@ -149,6 +151,17 @@ export function getTagInfo({ dimension, tag, level, track } = {}) {
     || tagRegistry.tracks?.[track]?.[dimension]?.[tag];
 
   if (info) return { tag, dimension, known: true, ...info };
+
+  const feedbackRule = dimension === 'errorPatterns' ? feedbackRuleRegistry[tag] : null;
+  if (feedbackRule) {
+    return {
+      tag,
+      dimension,
+      known: true,
+      label: feedbackRule.title,
+      description: feedbackRule.learnerMessage,
+    };
+  }
 
   return {
     tag,
