@@ -191,7 +191,6 @@ export const unitPresentSimpleNormalVerbs = {
     { id: 'a1-present-negatives', title: 'Frasi negative' },
     { id: 'a1-present-short-answers', title: 'Risposte brevi' },
     { id: 'a1-present-dialogue', title: 'Mini-dialogo' },
-    { id: 'a1-present-final-check', title: 'Test finale' },
   ],
   exercises: [
     {
