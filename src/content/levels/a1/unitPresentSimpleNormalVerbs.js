@@ -83,9 +83,9 @@ export const unitPresentSimpleNormalVerbs = {
   slug: 'present-simple-normal-verbs',
   level: 'a1',
   track: 'core',
-  title: 'Present Simple, Normal Verbs and Do/Does',
-  displayTitle: 'A1 Unit 2 — Present Simple, verbi normali e do/does',
-  subtitle: 'Usa i verbi normali per parlare di vita, lavoro, studio, preferenze e necessità.',
+  title: 'Ask About Daily Life',
+  displayTitle: 'A1 Unit 8 — Ask About Daily Life',
+  subtitle: 'Present Simple questions, negatives, and short answers with do/does.',
   outcome: 'Alla fine dell’unità saprai costruire frasi con i verbi normali, usare la -s alla terza persona e creare domande, negative e short answers con do/does.',
   grammarPoints: [
     'Normal verbs: live, work, study, speak, like, want, need, enjoy',
@@ -280,9 +280,9 @@ export const unitPresentSimpleNormalVerbs = {
   ],
   navigation: {
     previous: {
-      label: 'Back to Unit 1',
-      path: '/levels/a1/be-basic-sentences',
-      description: 'Ripassa be, frasi semplici e domande base.',
+      label: 'Back to A1 English Foundations',
+      path: '/grammar/a1',
+      description: 'Torna alla panoramica del percorso A1.',
     },
   },
 };
