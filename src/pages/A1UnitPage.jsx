@@ -57,10 +57,11 @@ export default function A1UnitPage({ unitId }) {
   const activeSection = sectionNavigation[activeSectionIndex];
   const activeExercise = unit?.exercises.find((exercise) => exercise.id === activeSection?.id);
   const nextSection = sectionNavigation[activeSectionIndex + 1];
+  const nextExercise = unit?.exercises.find((exercise) => exercise.id === nextSection?.id);
   const isFinal = activeExercise?.purpose === 'final-check';
   const continueLabel = nextSection?.title === 'Test finale'
     ? 'Inizia il test finale'
-    : `Prossimo: ${nextSection?.title || 'Panoramica'}`;
+    : `Prossimo: ${nextExercise?.title || nextSection?.title || 'Panoramica'}`;
 
   const selectSection = (sectionId) => {
     setActiveSectionId(sectionId);
