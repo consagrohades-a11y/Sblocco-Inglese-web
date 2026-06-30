@@ -1,20 +1,5 @@
 import React from 'react';
-
-function InlineCorrection({ feedback }) {
-  if (!feedback) return null;
-
-  return (
-    <div className={`mt-2 rounded-lg border px-3 py-2 text-xs leading-5 ${
-      feedback.correct ? 'border-moss/20 bg-mint/25 text-ink/70' : 'border-coral/25 bg-blush/70 text-ink/75'
-    }`}>
-      <p className="font-black text-ink">
-        {feedback.correct ? 'Correct.' : <>Correction: <span className="text-coral">{String(feedback.correctAnswer || '—')}</span></>}
-      </p>
-      {feedback.feedback ? <p className="mt-1">{feedback.feedback}</p> : null}
-      {feedback.explanation ? <p className="mt-1"><strong className="text-ink">Why:</strong> {feedback.explanation}</p> : null}
-    </div>
-  );
-}
+import InlineExerciseFeedback from './InlineExerciseFeedback';
 
 export default function GapFill({ exercise, answers, setAnswer, disabled = false, attemptItemsById = {} }) {
   return (
@@ -32,12 +17,11 @@ export default function GapFill({ exercise, answers, setAnswer, disabled = false
             name={item.id}
             value={answers[item.id] ?? ''}
             onChange={(event) => setAnswer(item.id, event.target.value)}
-            required
             disabled={disabled}
             autoComplete="off"
-            placeholder="Type your answer"
+            placeholder="Scrivi la risposta"
           />
-          <InlineCorrection feedback={attemptItemsById[item.id]} />
+          <InlineExerciseFeedback item={attemptItemsById[item.id]} />
         </label>
       ))}
     </div>

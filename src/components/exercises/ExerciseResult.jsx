@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { buildDiagnosticProfile } from '../../engines/diagnosticEngine';
 import { buildRecommendations } from '../../engines/recommendationEngine';
 import { getTagInfo } from '../../content/registries/tagRegistry';
-import ExerciseFeedback from './ExerciseFeedback';
 
 const dimensionLabels = {
   skills: 'Skill',
@@ -34,6 +33,13 @@ function sortSignals(a, b) {
     || (b.evidenceCount || 0) - (a.evidenceCount || 0);
 }
 
+function getResultMessage(percent) {
+  if (percent >= 90) return 'Ottimo lavoro. Puoi continuare con il prossimo esercizio.';
+  if (percent >= 70) return 'Buon lavoro. Hai qualche errore da rivedere, ma puoi continuare.';
+  if (percent >= 50) return 'Meglio riprovare prima di continuare. Guarda il feedback sotto le domande e correggi gli errori principali.';
+  return 'Ti conviene rivedere la spiegazione e riprovare. Il punto non è andare avanti velocemente, ma rendere automatiche le strutture base.';
+}
+
 function EvidenceSummary({ profile, exercise, attempt }) {
   const wrongCount = Math.max((attempt?.total || 0) - (attempt?.correct || 0), 0);
   const dimensions = Object.entries(profile.dimensions || {})
@@ -46,8 +52,8 @@ function EvidenceSummary({ profile, exercise, attempt }) {
   if (!profile.evidence.length) {
     return (
       <div className="rounded-xl border border-ink/10 bg-linen/70 p-4">
-        <h4 className="text-base font-black text-ink">Diagnostic focus</h4>
-        <p className="mt-2 text-sm font-semibold text-ink/65">No recurring pattern was recorded in this attempt.</p>
+        <h4 className="text-base font-black text-ink">Punto da rivedere</h4>
+        <p className="mt-2 text-sm font-semibold text-ink/65">Non è emerso nessun errore ricorrente in questo tentativo.</p>
       </div>
     );
   }
@@ -56,7 +62,7 @@ function EvidenceSummary({ profile, exercise, attempt }) {
     <div className="rounded-xl border border-ink/10 bg-linen/70 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-black uppercase tracking-wide text-ink/50">Diagnostic focus</p>
+          <p className="text-xs font-black uppercase tracking-wide text-ink/50">Errori ricorrenti</p>
           <h4 className="mt-1 text-lg font-black text-ink">Cosa controllare nel prossimo tentativo</h4>
         </div>
         <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-ink/65 shadow-sm">
@@ -107,35 +113,29 @@ function EvidenceSummary({ profile, exercise, attempt }) {
   );
 }
 
-export default function ExerciseResult({ attempt, exercise }) {
+export default function ExerciseResult({ attempt, exercise, isFinal = false }) {
   const profile = buildDiagnosticProfile([attempt]);
   const recommendations = buildRecommendations(profile);
-  const usesInlineItemFeedback = exercise?.type !== 'dialogue-gap-fill';
 
   return (
     <div className="grid gap-4">
       <div className="rounded-xl bg-ink p-4 text-white">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-xs font-black uppercase tracking-wide text-white/60">Exercise result</p>
+            <p className="text-xs font-black uppercase tracking-wide text-white/60">{isFinal ? "Resoconto finale, vediamo se c'è qualcosa da rivedere:" : 'Risultato dell’esercizio'}</p>
             <p className="mt-1 text-3xl font-black">{attempt.correct}/{attempt.total} · {attempt.percent}%</p>
           </div>
-          <p className="max-w-xl text-xs leading-5 text-white/65">A wrong answer is evidence, not a final diagnosis.</p>
+          <p className="max-w-xl text-xs leading-5 text-white/65">Gli errori indicano quali strutture rendere più automatiche.</p>
         </div>
       </div>
 
-      {usesInlineItemFeedback ? null : (
-        <div className="grid gap-2">
-          <h4 className="text-base font-black text-ink">Item feedback</h4>
-          {attempt.items.map((item) => <ExerciseFeedback key={item.itemId} item={item} />)}
-        </div>
-      )}
+      <p className="rounded-xl border border-ink/10 bg-white p-4 text-sm font-semibold leading-6 text-ink/70 shadow-sm">{getResultMessage(attempt.percent)}</p>
 
       <EvidenceSummary profile={profile} exercise={exercise} attempt={attempt} />
 
       {recommendations.length ? (
         <div className="rounded-xl border border-ink/10 bg-white p-4 shadow-sm">
-          <h4 className="text-base font-black text-ink">What to do next</h4>
+          <h4 className="text-base font-black text-ink">Cosa fare adesso</h4>
           <div className="mt-3 grid gap-2">
             {recommendations.slice(0, 3).map((recommendation) => (
               <article key={`${recommendation.dimension}-${recommendation.tag}`} className="rounded-lg bg-mint/35 p-3">
