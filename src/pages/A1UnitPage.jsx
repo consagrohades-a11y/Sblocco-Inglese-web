@@ -253,6 +253,9 @@ export default function A1UnitPage({ unitId }) {
 
       {activeExercise ? (
         <section id="unit-active-exercise" className="mt-8 scroll-mt-24">
+          {isFinal ? (
+            <h2 className="mb-4 text-3xl font-black text-ink">Test finale</h2>
+          ) : null}
           <ExerciseRenderer
             key={activeExercise.id}
             exercise={activeExercise}
