@@ -141,6 +141,7 @@ export function evaluateExerciseAttempt(exercise = {}, answers = {}) {
       correct,
       answerStatus: answerResult.status,
       userAnswer,
+      feedbackKeys: Array.isArray(item.feedbackKeys) ? [...new Set(item.feedbackKeys)] : [],
       correctAnswer: getCorrectAnswer(item),
       diagnostic,
       feedback: typeof feedback === 'string'
