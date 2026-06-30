@@ -205,7 +205,7 @@ export default function A1UnitPage({ unitId }) {
         type="button"
         onClick={startPractice}
         aria-expanded={practiceStarted}
-        className="focus-ring mt-5 rounded-full bg-moss px-5 py-3 font-black text-white shadow-lift"
+        className="focus-ring mt-5 rounded-full bg-coral px-5 py-3 font-black text-white shadow-lift transition hover:brightness-105"
       >
         Click here — Let&apos;s see if you got it
       </button>
