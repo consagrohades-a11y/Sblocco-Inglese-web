@@ -258,9 +258,9 @@ export const unitBeBasicSentences = {
   ],
   navigation: {
     next: {
-      label: 'Open Unit 8',
-      path: '/levels/a1/present-simple-normal-verbs',
-      description: 'Pratica domande, negative e short answers con do/does.',
+      label: 'Back to A1 English Foundations',
+      path: '/grammar/a1',
+      description: 'Torna alla panoramica del percorso A1.',
     },
   },
 };
