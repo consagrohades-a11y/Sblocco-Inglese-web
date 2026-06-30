@@ -36,47 +36,40 @@ function NavigationCard({ item, direction }) {
 export default function A1UnitPage({ unitId }) {
   const unit = units[unitId];
   const [attemptsByExercise, setAttemptsByExercise] = useState({});
-  const [activeSectionId, setActiveSectionId] = useState('overview');
+  const [activeExerciseId, setActiveExerciseId] = useState(() => (
+    unit?.exerciseNavigation?.[0]?.id || unit?.exercises?.[0]?.id || null
+  ));
   const attempts = useMemo(() => Object.values(attemptsByExercise), [attemptsByExercise]);
-  const sectionNavigation = useMemo(() => {
+  const exerciseNavigation = useMemo(() => {
     if (!unit) return [];
-    if (unit.sectionNavigation?.length) return unit.sectionNavigation;
+    if (unit.exerciseNavigation?.length) return unit.exerciseNavigation;
 
-    return [
-      { id: 'overview', title: 'Panoramica' },
-      ...unit.exercises.map((exercise, index) => ({
-        id: exercise.id,
-        title: exercise.purpose === 'final-check' ? 'Test finale' : `${index + 1}. Esercizio`,
-      })),
-    ];
+    return unit.exercises.map((exercise, index) => ({
+      id: exercise.id,
+      title: exercise.purpose === 'final-check' ? 'Test finale' : `${index + 1}. Esercizio`,
+    }));
   }, [unit]);
-  const activeSectionIndex = Math.max(
-    sectionNavigation.findIndex((section) => section.id === activeSectionId),
+  const activeExerciseIndex = Math.max(
+    exerciseNavigation.findIndex((step) => step.id === activeExerciseId),
     0,
   );
-  const activeSection = sectionNavigation[activeSectionIndex];
-  const activeExercise = unit?.exercises.find((exercise) => exercise.id === activeSection?.id);
-  const nextSection = sectionNavigation[activeSectionIndex + 1];
-  const nextExercise = unit?.exercises.find((exercise) => exercise.id === nextSection?.id);
+  const activeExerciseStep = exerciseNavigation[activeExerciseIndex];
+  const activeExercise = unit?.exercises.find((exercise) => exercise.id === activeExerciseStep?.id);
+  const nextExerciseStep = exerciseNavigation[activeExerciseIndex + 1];
+  const nextExercise = unit?.exercises.find((exercise) => exercise.id === nextExerciseStep?.id);
   const isFinal = activeExercise?.purpose === 'final-check';
   const continueLabel = nextExercise?.purpose === 'final-check'
     ? 'Inizia il test finale'
-    : `Prossimo: ${nextExercise?.title || nextSection?.title || 'Panoramica'}`;
+    : `Prossimo: ${nextExercise?.title || nextExerciseStep?.title || 'A1 English Foundations'}`;
 
-  const selectSection = (sectionId) => {
-    setActiveSectionId(sectionId);
+  const selectExercise = (exerciseId) => {
+    setActiveExerciseId(exerciseId);
     window.requestAnimationFrame(() => {
-      document.getElementById('unit-active-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('unit-active-exercise')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   };
 
   const startPractice = () => {
-    if (!activeExercise) {
-      const firstExerciseSection = sectionNavigation.find((section) => section.id !== 'overview');
-      if (firstExerciseSection) selectSection(firstExerciseSection.id);
-      return;
-    }
-
     document.getElementById('unit-active-exercise')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
   const diagnosticResult = useMemo(() => {
@@ -116,8 +109,6 @@ export default function A1UnitPage({ unitId }) {
         </div>
       </div>
 
-      {activeSection?.id === 'overview' ? (
-        <>
       <div id="unit-active-section" className="mt-8 grid scroll-mt-24 gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
           <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-moss">
@@ -206,42 +197,6 @@ export default function A1UnitPage({ unitId }) {
         </div>
       </section>
 
-        </>
-      ) : activeExercise ? (
-        <section id="unit-active-section" className="mt-8 scroll-mt-24 rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
-          <p className="text-xs font-black uppercase tracking-wide text-moss">Spiegazione</p>
-          <h2 className="mt-2 text-3xl font-black text-ink">{activeSection.title}</h2>
-          <p className="mt-4 max-w-3xl leading-7 text-ink/75">
-            {activeExercise.teachingText || activeExercise.instructions}
-          </p>
-          <div className="mt-5 rounded-xl bg-mint/35 p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-ink/55">Attività</p>
-            <p className="mt-2 text-sm leading-6 text-ink/70">{activeExercise.instructions}</p>
-          </div>
-        </section>
-      ) : null}
-
-      <nav className="mt-8 overflow-x-auto pb-2" aria-label="Sezioni dell’unità">
-        <div className="flex min-w-max gap-2">
-          {sectionNavigation.map((section) => {
-            const active = section.id === activeSection?.id;
-            return (
-              <button
-                key={section.id}
-                type="button"
-                onClick={() => selectSection(section.id)}
-                aria-current={active ? 'step' : undefined}
-                className={`focus-ring rounded-full px-4 py-2 text-sm font-black transition ${
-                  active ? 'bg-ink text-white' : 'border border-ink/10 bg-white text-ink/70 hover:border-moss/30'
-                }`}
-              >
-                {section.title}
-              </button>
-            );
-          })}
-        </div>
-      </nav>
-
       <button
         type="button"
         onClick={startPractice}
@@ -249,6 +204,27 @@ export default function A1UnitPage({ unitId }) {
       >
         Let&apos;s see if you got it
       </button>
+
+      <nav className="mt-5 overflow-x-auto pb-2" aria-label="Esercizi dell’unità">
+        <div className="flex min-w-max gap-2">
+          {exerciseNavigation.map((step) => {
+            const active = step.id === activeExerciseStep?.id;
+            return (
+              <button
+                key={step.id}
+                type="button"
+                onClick={() => selectExercise(step.id)}
+                aria-current={active ? 'step' : undefined}
+                className={`focus-ring rounded-full px-4 py-2 text-sm font-black transition ${
+                  active ? 'bg-ink text-white' : 'border border-ink/10 bg-white text-ink/70 hover:border-moss/30'
+                }`}
+              >
+                {step.title}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
 
       {activeExercise ? (
         <section id="unit-active-exercise" className="mt-8 scroll-mt-24">
@@ -258,7 +234,7 @@ export default function A1UnitPage({ unitId }) {
             showHeader={false}
             isFinal={isFinal}
             continueLabel={continueLabel}
-            onContinue={() => nextSection && selectSection(nextSection.id)}
+            onContinue={() => nextExerciseStep && selectExercise(nextExerciseStep.id)}
             onComplete={(attempt) => setAttemptsByExercise((current) => ({
               ...current,
               [activeExercise.id]: attempt,
@@ -267,18 +243,16 @@ export default function A1UnitPage({ unitId }) {
         </section>
       ) : null}
 
-      {diagnosticResult && activeSection?.id === 'overview' && !unit.sectionNavigation ? (
+      {diagnosticResult && !unit.exerciseNavigation ? (
         <div className="mt-10">
           <DiagnosticResult result={diagnosticResult} level={unit.level} track={unit.track} />
         </div>
       ) : null}
 
-      {activeSection?.id === 'overview' ? (
-        <nav className="mt-10 grid gap-4 sm:grid-cols-2" aria-label="Navigazione A1">
-          <NavigationCard item={unit.navigation?.previous} direction="previous" />
-          <NavigationCard item={unit.navigation?.next} direction="next" />
-        </nav>
-      ) : null}
+      <nav className="mt-10 grid gap-4 sm:grid-cols-2" aria-label="Navigazione A1">
+        <NavigationCard item={unit.navigation?.previous} direction="previous" />
+        <NavigationCard item={unit.navigation?.next} direction="next" />
+      </nav>
     </section>
   );
 }
