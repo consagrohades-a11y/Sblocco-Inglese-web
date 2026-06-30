@@ -1,4 +1,18 @@
 export const feedbackRuleRegistry = {
+  'be-and-do-confusion': {
+    key: 'be-and-do-confusion',
+    title: 'Distingui be da do/does',
+    learnerMessage: 'Con i verbi normali al Present Simple, usa do/does per fare domande e don’t/doesn’t per le frasi negative. Non usare be.',
+    fixRule: 'Identifica il verbo principale: se non è be, usa do/does + soggetto + verbo base nelle domande.',
+    practiceAdvice: 'Confronta coppie come Where is she? e Where does she work?',
+  },
+  'do-does-subject-agreement': {
+    key: 'do-does-subject-agreement',
+    title: 'Abbina do/does al soggetto',
+    learnerMessage: 'Usa do con I, you, we e they; usa does con he, she e it.',
+    fixRule: 'Controlla il soggetto prima di scegliere l’ausiliare.',
+    practiceAdvice: 'Alterna domande con you/they e he/she finché la scelta diventa automatica.',
+  },
   'normal-verb-question-needs-do': {
     key: 'normal-verb-question-needs-do',
     title: 'Usa do/does con i verbi normali',
