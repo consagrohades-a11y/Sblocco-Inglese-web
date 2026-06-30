@@ -14,9 +14,11 @@ export function normalizeAnswer(value) {
     .replace(/[’‘`´]/g, "'")
     .replace(/\s+/g, ' ')
     .trim()
-    .replace(/[.!?]+$/u, '')
-    .trim()
     .toLowerCase();
+}
+
+function removeTerminalPunctuation(value) {
+  return value.replace(/[.!?]+$/u, '').trim();
 }
 
 function answerCandidates(item = {}) {
@@ -37,17 +39,30 @@ export function getCorrectAnswer(item = {}) {
   return answerCandidates(item)[0] ?? '';
 }
 
-export function isItemCorrect(item = {}, answer) {
+export function evaluateItemAnswer(item = {}, answer) {
+  const normalizedAnswer = normalizeAnswer(answer);
+  if (!normalizedAnswer) return { correct: false, status: 'empty' };
+
   if (Number.isInteger(item.correctIndex) && Array.isArray(item.options)) {
     const selectedByIndex = Number.isInteger(Number(answer)) && Number(answer) === item.correctIndex;
-    const selectedByValue = normalizeAnswer(answer) === normalizeAnswer(item.options[item.correctIndex]);
-    if (selectedByIndex || selectedByValue) return true;
+    const selectedByValue = normalizedAnswer === normalizeAnswer(item.options[item.correctIndex]);
+    if (selectedByIndex || selectedByValue) return { correct: true, status: 'exact' };
   }
 
-  const normalizedAnswer = normalizeAnswer(answer);
-  if (!normalizedAnswer) return false;
+  const candidates = answerCandidates(item).map(normalizeAnswer);
+  if (candidates.includes(normalizedAnswer)) return { correct: true, status: 'exact' };
 
-  return answerCandidates(item).some((candidate) => normalizeAnswer(candidate) === normalizedAnswer);
+  const toleratedAnswer = removeTerminalPunctuation(normalizedAnswer);
+  const hasToleratedPunctuation = toleratedAnswer !== normalizedAnswer;
+  const toleratedMatch = hasToleratedPunctuation
+    && candidates.some((candidate) => removeTerminalPunctuation(candidate) === toleratedAnswer);
+
+  if (toleratedMatch) return { correct: true, status: 'tolerated' };
+  return { correct: false, status: 'wrong' };
+}
+
+export function isItemCorrect(item = {}, answer) {
+  return evaluateItemAnswer(item, answer).correct;
 }
 
 export function scoreExercise(exercise = {}, answers = {}) {
@@ -111,7 +126,8 @@ export function evaluateExerciseAttempt(exercise = {}, answers = {}) {
   const score = scoreExercise(exercise, answers);
   const evaluatedItems = items.map((item, index) => {
     const userAnswer = answers[item.id] ?? '';
-    const correct = isItemCorrect(item, userAnswer);
+    const answerResult = evaluateItemAnswer(item, userAnswer);
+    const correct = answerResult.correct;
     const diagnostic = [...collectItemDiagnostics(item), ...collectFeedbackKeyDiagnostics(item)].map((evidence) => ({
       ...evidence,
       exerciseId: exercise.id ?? null,
@@ -123,6 +139,7 @@ export function evaluateExerciseAttempt(exercise = {}, answers = {}) {
     return {
       itemId: item.id ?? `item-${index + 1}`,
       correct,
+      answerStatus: answerResult.status,
       userAnswer,
       correctAnswer: getCorrectAnswer(item),
       diagnostic,
