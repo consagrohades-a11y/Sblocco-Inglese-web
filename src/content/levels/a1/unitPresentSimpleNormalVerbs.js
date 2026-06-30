@@ -15,7 +15,7 @@ const makeDiagnostic = ({
   severity,
 });
 
-const choice = (id, prompt, options, correctIndex, diagnostic, feedback, explanation) => ({
+const choice = (id, prompt, options, correctIndex, diagnostic, feedback, explanation, metadata = {}) => ({
   id,
   type: 'choice',
   prompt,
@@ -24,9 +24,10 @@ const choice = (id, prompt, options, correctIndex, diagnostic, feedback, explana
   diagnostic,
   feedback,
   explanation,
+  ...metadata,
 });
 
-const blank = (id, prompt, correctAnswers, diagnostic, feedback, explanation, baseForm = null) => ({
+const blank = (id, prompt, correctAnswers, diagnostic, feedback, explanation, baseForm = null, metadata = {}) => ({
   id,
   type: 'blank',
   prompt,
@@ -36,6 +37,16 @@ const blank = (id, prompt, correctAnswers, diagnostic, feedback, explanation, ba
   diagnostic,
   feedback,
   explanation,
+  ...metadata,
+});
+
+const itemMetadata = (form, languageFunction, topic, productionMode, feedbackKeys = []) => ({
+  grammarArea: 'present-simple',
+  form,
+  languageFunction,
+  topic,
+  productionMode,
+  feedbackKeys,
 });
 
 const sentenceDiagnostic = (production, severity = 2, extraErrors = []) => makeDiagnostic({
@@ -196,10 +207,10 @@ export const unitPresentSimpleNormalVerbs = {
       title: 'Be o Do?',
       instructions: 'Scegli la struttura corretta in base al verbo e al significato.',
       items: [
-        choice('present-recognition-1', 'Stai descrivendo il lavoro di Sara. Quale frase è corretta?', ['She work in a hotel.', 'She works in a hotel.', 'She does works in a hotel.'], 1, thirdPersonDiagnostic('recognition'), { correct: 'Corretto. Con she, il verbo affermativo prende -s.', incorrect: 'In una frase affermativa con she usa works, senza does.' }, 'La terza persona singolare aggiunge -s al verbo affermativo.'),
-        choice('present-recognition-2', 'Vuoi sapere dove lavora Sara. Quale domanda è corretta?', ['Where is Sara work?', 'Where does Sara work?', 'Where does Sara works?'], 1, questionDiagnostic('recognition'), { correct: 'Corretto. La domanda usa does + soggetto + verbo base.', incorrect: 'Work è un verbo normale: usa Where does Sara work?' }, 'Does porta la marca di terza persona, quindi work resta alla forma base.'),
-        choice('present-recognition-3', 'Scegli la domanda naturale per parlare di un’attività.', ['Do you enjoy swimming?', 'Are you enjoy swimming?', 'Does you enjoy swim?'], 0, questionDiagnostic('recognition'), { correct: 'Corretto. Con you usa do e dopo enjoy usa swimming.', incorrect: 'La struttura corretta è Do you enjoy swimming?' }, 'Enjoy è un verbo normale e regge spesso un’attività in -ing.'),
-        choice('present-recognition-4', 'Quale coppia usa la struttura corretta?', ['Where is she? / Where does she work?', 'Where does she? / Where is she work?', 'Where she is? / Where she works?'], 0, questionDiagnostic('recognition', 3), { correct: 'Corretto. Be si inverte; il verbo normale usa does.', incorrect: 'Distingui Where is she? da Where does she work?' }, 'Il verbo principale determina se usare be oppure do/does.'),
+        choice('present-recognition-1', 'Stai descrivendo il lavoro di Sara. Quale frase è corretta?', ['She work in a hotel.', 'She works in a hotel.', 'She does works in a hotel.'], 1, thirdPersonDiagnostic('recognition'), { correct: 'Corretto. Con she, il verbo affermativo prende -s.', incorrect: 'In una frase affermativa con she usa works, senza does.' }, 'La terza persona singolare aggiunge -s al verbo affermativo.', itemMetadata('third-person-affirmative-review', 'answer-about-work', 'work', 'recognition', ['third-person-s-missing'])),
+        choice('present-recognition-2', 'Vuoi sapere dove lavora Sara. Quale domanda è corretta?', ['Where is Sara work?', 'Where does Sara work?', 'Where does Sara works?'], 1, questionDiagnostic('recognition'), { correct: 'Corretto. La domanda usa does + soggetto + verbo base.', incorrect: 'Work è un verbo normale: usa Where does Sara work?' }, 'Does porta la marca di terza persona, quindi work resta alla forma base.', itemMetadata('be-vs-do-recognition', 'ask-about-work', 'work', 'recognition', ['be-and-do-confusion', 'normal-verb-question-needs-do', 'does-followed-by-base-verb'])),
+        choice('present-recognition-3', 'Scegli la domanda naturale per parlare di un’attività.', ['Do you enjoy swimming?', 'Are you enjoy swimming?', 'Does you enjoy swim?'], 0, questionDiagnostic('recognition'), { correct: 'Corretto. Con you usa do e dopo enjoy usa swimming.', incorrect: 'La struttura corretta è Do you enjoy swimming?' }, 'Enjoy è un verbo normale e regge spesso un’attività in -ing.', itemMetadata('be-vs-do-recognition', 'ask-about-likes', 'free-time', 'recognition', ['be-and-do-confusion', 'normal-verb-question-needs-do'])),
+        choice('present-recognition-4', 'Quale coppia usa la struttura corretta?', ['Where is she? / Where does she work?', 'Where does she? / Where is she work?', 'Where she is? / Where she works?'], 0, questionDiagnostic('recognition', 3), { correct: 'Corretto. Be si inverte; il verbo normale usa does.', incorrect: 'Distingui Where is she? da Where does she work?' }, 'Il verbo principale determina se usare be oppure do/does.', itemMetadata('be-vs-do-recognition', 'correct-basic-information', 'work', 'recognition', ['be-and-do-confusion', 'normal-verb-question-needs-do'])),
       ],
     },
     {
@@ -217,7 +228,7 @@ export const unitPresentSimpleNormalVerbs = {
       questionPool: presentSimpleNormalVerbsPool,
       questionCount: 4,
       selectionRules: [
-        { count: 4, match: { type: 'blank', grammarFocus: ['present-simple', 'yes-no-question'] } },
+        { count: 4, match: { type: 'blank', form: 'do-does-choice' } },
       ],
     },
     {
@@ -235,8 +246,9 @@ export const unitPresentSimpleNormalVerbs = {
       questionPool: presentSimpleNormalVerbsPool,
       questionCount: 4,
       selectionRules: [
-        { count: 2, match: { type: 'blank', grammarFocus: ['present-simple', 'yes-no-question'] } },
-        { count: 2, match: { type: 'blank', grammarFocus: ['present-simple', 'wh-question'] } },
+        { count: 2, match: { type: 'blank', form: 'do-does-choice' } },
+        { count: 1, match: { type: 'blank', form: 'wh-do-question' } },
+        { count: 1, match: { type: 'blank', form: 'wh-does-question' } },
       ],
     },
     {
@@ -254,7 +266,8 @@ export const unitPresentSimpleNormalVerbs = {
       questionPool: presentSimpleNormalVerbsPool,
       questionCount: 4,
       selectionRules: [
-        { count: 4, match: { type: 'blank', grammarFocus: ['present-simple', 'negative'] } },
+        { count: 2, match: { type: 'blank', form: 'negative-dont' } },
+        { count: 2, match: { type: 'blank', form: 'negative-doesnt' } },
       ],
     },
     {
@@ -272,7 +285,8 @@ export const unitPresentSimpleNormalVerbs = {
       questionPool: presentSimpleNormalVerbsPool,
       questionCount: 4,
       selectionRules: [
-        { count: 4, match: { type: 'blank', grammarFocus: ['present-simple', 'short-answer'] } },
+        { count: 2, match: { type: 'blank', form: 'short-answer-do' } },
+        { count: 2, match: { type: 'blank', form: 'short-answer-does' } },
       ],
     },
     {
@@ -294,10 +308,10 @@ export const unitPresentSimpleNormalVerbs = {
         { speaker: 'Chiara', parts: ['No, she ', { blankId: 'present-dialogue-4' }, '. She works in a hotel.'] },
       ],
       items: [
-        blank('present-dialogue-1', 'What ___ you do?', ['do'], questionDiagnostic('applied-use'), { correct: 'Corretto. What do you do? chiede il lavoro o l’attività.', incorrect: 'Con you e il verbo do usa l’ausiliare do: What do you do?' }, 'Il primo do è l’ausiliare; il secondo è il verbo principale.'),
-        blank('present-dialogue-2', 'I ___ in a language school.', ['work'], sentenceDiagnostic('applied-use'), { correct: 'Corretto. Con I usa work.', incorrect: 'La frase affermativa con I usa il verbo base work.' }, 'Il contesto cambia, ma la forma resta I work.', 'work'),
-        blank('present-dialogue-3', '___ your sister work there too?', ['does'], questionDiagnostic('applied-use'), { correct: 'Corretto. Your sister richiede does.', incorrect: 'Con your sister usa Does + soggetto + work.' }, 'Dopo does il verbo principale resta work.', 'work'),
-        blank('present-dialogue-4', 'No, she ___.', ["doesn't", 'does not'], shortAnswerDiagnostic('applied-use'), { correct: 'Corretto. La short answer negativa è No, she doesn’t.', incorrect: 'Riprendi l’ausiliare della domanda: No, she doesn’t.' }, 'La risposta breve non ripete il verbo work.'),
+        blank('present-dialogue-1', 'What ___ you do?', ['do'], questionDiagnostic('applied-use'), { correct: 'Corretto. What do you do? chiede il lavoro o l’attività.', incorrect: 'Con you e il verbo do usa l’ausiliare do: What do you do?' }, 'Il primo do è l’ausiliare; il secondo è il verbo principale.', null, itemMetadata('wh-do-question', 'ask-about-work', 'work', 'guided-production', ['normal-verb-question-needs-do'])),
+        blank('present-dialogue-2', 'I ___ in a language school.', ['work'], sentenceDiagnostic('applied-use'), { correct: 'Corretto. Con I usa work.', incorrect: 'La frase affermativa con I usa il verbo base work.' }, 'Il contesto cambia, ma la forma resta I work.', 'work', itemMetadata('base-affirmative-review', 'answer-about-work', 'work', 'guided-production', [])),
+        blank('present-dialogue-3', '___ your sister work there too?', ['does'], questionDiagnostic('applied-use'), { correct: 'Corretto. Your sister richiede does.', incorrect: 'Con your sister usa Does + soggetto + work.' }, 'Dopo does il verbo principale resta work.', 'work', itemMetadata('does-question', 'ask-about-work', 'work', 'guided-production', ['normal-verb-question-needs-do', 'do-does-subject-agreement', 'does-followed-by-base-verb'])),
+        blank('present-dialogue-4', 'No, she ___.', ["doesn't", 'does not'], shortAnswerDiagnostic('applied-use'), { correct: 'Corretto. La short answer negativa è No, she doesn’t.', incorrect: 'Riprendi l’ausiliare della domanda: No, she doesn’t.' }, 'La risposta breve non ripete il verbo work.', null, itemMetadata('short-answer-does', 'continue-basic-conversation', 'work', 'active-use', ['short-answer-uses-auxiliary'])),
       ],
     },
     {
@@ -313,10 +327,10 @@ export const unitPresentSimpleNormalVerbs = {
       title: 'Test finale',
       instructions: 'Scegli la soluzione corretta in ogni situazione.',
       items: [
-        choice('present-final-1', 'Quale coppia distingue correttamente luogo e lavoro?', ['Where is she? / Where does she work?', 'Where does she? / Where is she work?', 'Where she is? / Where she works?'], 0, questionDiagnostic('final-check', 3), { correct: 'Corretto. La posizione usa be; il lavoro usa does + work.', incorrect: 'Usa Where is she? per la posizione e Where does she work? per il verbo normale.' }, 'La scelta dell’ausiliare dipende dal verbo principale.'),
-        choice('present-final-2', 'Scegli lo scambio completo corretto.', ['Does he need help? — Yes, he does.', 'Is he need help? — Yes, he is.', 'Does he needs help? — Yes, he need.'], 0, shortAnswerDiagnostic('final-check', 3), { correct: 'Corretto. Domanda e risposta breve usano does.', incorrect: 'Need è un verbo normale: Does he need...? — Yes, he does.' }, 'Dopo does usa need, non needs.'),
-        choice('present-final-3', 'Una collega parla inglese ma non tedesco. Quale frase è corretta?', ["She isn’t speak German.", "She doesn’t speaks German.", "She doesn’t speak German."], 2, negativeDiagnostic('final-check', 3), { correct: 'Corretto. Doesn’t è seguito da speak.', incorrect: 'La negativa corretta è She doesn’t speak German.' }, 'L’ausiliare doesn’t porta la terza persona; il verbo resta base.'),
-        choice('present-final-4', 'Quale domanda è naturale e grammaticalmente completa?', ['Do you enjoy swimming?', 'Are you enjoy swimming?', 'Do enjoy you swimming?'], 0, questionDiagnostic('final-check', 3), { correct: 'Corretto. La sequenza è Do + you + enjoy + swimming.', incorrect: 'Usa Do you enjoy swimming?' }, 'La domanda combina do/you con il chunk enjoy + -ing.'),
+        choice('present-final-1', 'Quale coppia distingue correttamente luogo e lavoro?', ['Where is she? / Where does she work?', 'Where does she? / Where is she work?', 'Where she is? / Where she works?'], 0, questionDiagnostic('final-check', 3), { correct: 'Corretto. La posizione usa be; il lavoro usa does + work.', incorrect: 'Usa Where is she? per la posizione e Where does she work? per il verbo normale.' }, 'La scelta dell’ausiliare dipende dal verbo principale.', itemMetadata('be-vs-do-recognition', 'ask-about-work', 'work', 'recognition', ['be-and-do-confusion', 'normal-verb-question-needs-do'])),
+        choice('present-final-2', 'Scegli lo scambio completo corretto.', ['Does he need help? — Yes, he does.', 'Is he need help? — Yes, he is.', 'Does he needs help? — Yes, he need.'], 0, shortAnswerDiagnostic('final-check', 3), { correct: 'Corretto. Domanda e risposta breve usano does.', incorrect: 'Need è un verbo normale: Does he need...? — Yes, he does.' }, 'Dopo does usa need, non needs.', itemMetadata('does-base-verb-control', 'ask-about-needs', 'basic-needs', 'recognition', ['normal-verb-question-needs-do', 'does-followed-by-base-verb', 'short-answer-uses-auxiliary'])),
+        choice('present-final-3', 'Una collega parla inglese ma non tedesco. Quale frase è corretta?', ["She isn’t speak German.", "She doesn’t speaks German.", "She doesn’t speak German."], 2, negativeDiagnostic('final-check', 3), { correct: 'Corretto. Doesn’t è seguito da speak.', incorrect: 'La negativa corretta è She doesn’t speak German.' }, 'L’ausiliare doesn’t porta la terza persona; il verbo resta base.', itemMetadata('negative-doesnt', 'correct-basic-information', 'language', 'recognition', ['present-simple-negative-needs-dont-doesnt', 'does-followed-by-base-verb'])),
+        choice('present-final-4', 'Quale domanda è naturale e grammaticalmente completa?', ['Do you enjoy swimming?', 'Are you enjoy swimming?', 'Do enjoy you swimming?'], 0, questionDiagnostic('final-check', 3), { correct: 'Corretto. La sequenza è Do + you + enjoy + swimming.', incorrect: 'Usa Do you enjoy swimming?' }, 'La domanda combina do/you con il chunk enjoy + -ing.', itemMetadata('be-vs-do-recognition', 'ask-about-likes', 'free-time', 'recognition', ['be-and-do-confusion', 'normal-verb-question-needs-do'])),
       ],
     },
   ],
