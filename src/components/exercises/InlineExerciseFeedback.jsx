@@ -9,7 +9,7 @@ export default function InlineExerciseFeedback({ item }) {
     const tolerated = item.answerStatus === 'tolerated';
     return (
       <div className={`mt-2 rounded-lg border px-3 py-2 text-xs font-black text-ink ${
-        tolerated ? 'border-gold/30 bg-butter/70' : 'border-moss/20 bg-mint/25'
+        tolerated ? 'border-coral/20 bg-butter/70' : 'border-moss/20 bg-mint/25'
       }`}>
         {tolerated ? 'Quasi. Controlla la forma della parola.' : 'Corretto.'}
       </div>
