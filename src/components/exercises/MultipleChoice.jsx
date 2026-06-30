@@ -10,6 +10,9 @@ export default function MultipleChoice({ exercise, answers, setAnswer, disabled 
             Domanda {index + 1}
           </legend>
           <p className="mt-2 text-sm font-black leading-6 text-ink">{item.prompt}</p>
+          {item.sentence ? (
+            <p className="mt-2 text-base font-black leading-7 text-ink">{item.sentence}</p>
+          ) : null}
           <div className="mt-3 grid gap-2">
             {(item.options || []).map((option, optionIndex) => (
               <label
