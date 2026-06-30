@@ -1,4 +1,5 @@
 import { presentSimpleNormalVerbsPool } from './questionPools/presentSimpleNormalVerbsPool.js';
+import { beVsDoRecognitionPool } from './questionPools/beVsDoRecognitionPool.js';
 
 const makeDiagnostic = ({
   skills,
@@ -53,14 +54,6 @@ const sentenceDiagnostic = (production, severity = 2, extraErrors = []) => makeD
   skills: ['spoken-sentence-control', 'sentence-control'],
   grammar: ['present-simple', 'present-simple-affirmative'],
   errorPatterns: ['italian-word-order-transfer', ...extraErrors],
-  production,
-  severity,
-});
-
-const thirdPersonDiagnostic = (production, severity = 2) => makeDiagnostic({
-  skills: ['spoken-sentence-control', 'sentence-control'],
-  grammar: ['present-simple', 'present-simple-third-person'],
-  errorPatterns: ['missing-third-person-s'],
   production,
   severity,
 });
@@ -205,11 +198,10 @@ export const unitPresentSimpleNormalVerbs = {
       skillFocus: 'Grammar recognition',
       title: 'Be o Do?',
       instructions: 'Scegli la struttura corretta in base al verbo e al significato.',
-      items: [
-        choice('present-recognition-1', 'Stai descrivendo il lavoro di Sara. Quale frase è corretta?', ['She work in a hotel.', 'She works in a hotel.', 'She does works in a hotel.'], 1, thirdPersonDiagnostic('recognition'), { correct: 'Corretto. Con she, il verbo affermativo prende -s.', incorrect: 'In una frase affermativa con she usa works, senza does.' }, 'La terza persona singolare aggiunge -s al verbo affermativo.', itemMetadata('third-person-affirmative-review', 'answer-about-work', 'work', 'recognition', ['third-person-s-missing'])),
-        choice('present-recognition-2', 'Vuoi sapere dove lavora Sara. Quale domanda è corretta?', ['Where is Sara work?', 'Where does Sara work?', 'Where does Sara works?'], 1, questionDiagnostic('recognition'), { correct: 'Corretto. La domanda usa does + soggetto + verbo base.', incorrect: 'Work è un verbo normale: usa Where does Sara work?' }, 'Does porta la marca di terza persona, quindi work resta alla forma base.', itemMetadata('be-vs-do-recognition', 'ask-about-work', 'work', 'recognition', ['be-and-do-confusion', 'normal-verb-question-needs-do', 'does-followed-by-base-verb'])),
-        choice('present-recognition-3', 'Scegli la domanda naturale per parlare di un’attività.', ['Do you enjoy swimming?', 'Are you enjoy swimming?', 'Does you enjoy swim?'], 0, questionDiagnostic('recognition'), { correct: 'Corretto. Con you usa do e dopo enjoy usa swimming.', incorrect: 'La struttura corretta è Do you enjoy swimming?' }, 'Enjoy è un verbo normale e regge spesso un’attività in -ing.', itemMetadata('be-vs-do-recognition', 'ask-about-likes', 'free-time', 'recognition', ['be-and-do-confusion', 'normal-verb-question-needs-do'])),
-        choice('present-recognition-4', 'Quale coppia usa la struttura corretta?', ['Where is she? / Where does she work?', 'Where does she? / Where is she work?', 'Where she is? / Where she works?'], 0, questionDiagnostic('recognition', 3), { correct: 'Corretto. Be si inverte; il verbo normale usa does.', incorrect: 'Distingui Where is she? da Where does she work?' }, 'Il verbo principale determina se usare be oppure do/does.', itemMetadata('be-vs-do-recognition', 'correct-basic-information', 'work', 'recognition', ['be-and-do-confusion', 'normal-verb-question-needs-do'])),
+      questionPool: beVsDoRecognitionPool,
+      questionCount: 8,
+      selectionRules: [
+        { count: 8, match: { type: 'choice', form: 'be-vs-do-recognition' } },
       ],
     },
     {
