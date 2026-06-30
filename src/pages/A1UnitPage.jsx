@@ -59,7 +59,7 @@ export default function A1UnitPage({ unitId }) {
   const nextSection = sectionNavigation[activeSectionIndex + 1];
   const nextExercise = unit?.exercises.find((exercise) => exercise.id === nextSection?.id);
   const isFinal = activeExercise?.purpose === 'final-check';
-  const continueLabel = nextSection?.title === 'Test finale'
+  const continueLabel = nextExercise?.purpose === 'final-check'
     ? 'Inizia il test finale'
     : `Prossimo: ${nextExercise?.title || nextSection?.title || 'Panoramica'}`;
 
@@ -68,6 +68,16 @@ export default function A1UnitPage({ unitId }) {
     window.requestAnimationFrame(() => {
       document.getElementById('unit-active-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+  };
+
+  const startPractice = () => {
+    if (!activeExercise) {
+      const firstExerciseSection = sectionNavigation.find((section) => section.id !== 'overview');
+      if (firstExerciseSection) selectSection(firstExerciseSection.id);
+      return;
+    }
+
+    document.getElementById('unit-active-exercise')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
   const diagnosticResult = useMemo(() => {
     if (!unit || !attempts.length) return null;
@@ -105,27 +115,6 @@ export default function A1UnitPage({ unitId }) {
           <p className="mt-2 max-w-4xl leading-7 text-white/85">{unit.outcome}</p>
         </div>
       </div>
-
-      <nav className="mt-8 overflow-x-auto pb-2" aria-label="Sezioni dell’unità">
-        <div className="flex min-w-max gap-2">
-          {sectionNavigation.map((section) => {
-            const active = section.id === activeSection?.id;
-            return (
-              <button
-                key={section.id}
-                type="button"
-                onClick={() => selectSection(section.id)}
-                aria-current={active ? 'step' : undefined}
-                className={`focus-ring rounded-full px-4 py-2 text-sm font-black transition ${
-                  active ? 'bg-ink text-white' : 'border border-ink/10 bg-white text-ink/70 hover:border-moss/30'
-                }`}
-              >
-                {section.title}
-              </button>
-            );
-          })}
-        </div>
-      </nav>
 
       {activeSection?.id === 'overview' ? (
         <>
@@ -219,24 +208,62 @@ export default function A1UnitPage({ unitId }) {
 
         </>
       ) : activeExercise ? (
-        <section id="unit-active-section" className="mt-8 scroll-mt-24">
-          <p className="text-xs font-black uppercase tracking-wide text-moss">Esercizio</p>
+        <section id="unit-active-section" className="mt-8 scroll-mt-24 rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
+          <p className="text-xs font-black uppercase tracking-wide text-moss">Spiegazione</p>
           <h2 className="mt-2 text-3xl font-black text-ink">{activeSection.title}</h2>
-          <p className="mt-3 max-w-3xl leading-7 text-ink/70">{activeExercise.instructions}</p>
-          <div className="mt-6">
-            <ExerciseRenderer
-              key={activeExercise.id}
-              exercise={activeExercise}
-              showHeader={false}
-              isFinal={isFinal}
-              continueLabel={continueLabel}
-              onContinue={() => nextSection && selectSection(nextSection.id)}
-              onComplete={(attempt) => setAttemptsByExercise((current) => ({
-                ...current,
-                [activeExercise.id]: attempt,
-              }))}
-            />
+          <p className="mt-4 max-w-3xl leading-7 text-ink/75">
+            {activeExercise.teachingText || activeExercise.instructions}
+          </p>
+          <div className="mt-5 rounded-xl bg-mint/35 p-4">
+            <p className="text-xs font-black uppercase tracking-wide text-ink/55">Attività</p>
+            <p className="mt-2 text-sm leading-6 text-ink/70">{activeExercise.instructions}</p>
           </div>
+        </section>
+      ) : null}
+
+      <nav className="mt-8 overflow-x-auto pb-2" aria-label="Sezioni dell’unità">
+        <div className="flex min-w-max gap-2">
+          {sectionNavigation.map((section) => {
+            const active = section.id === activeSection?.id;
+            return (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => selectSection(section.id)}
+                aria-current={active ? 'step' : undefined}
+                className={`focus-ring rounded-full px-4 py-2 text-sm font-black transition ${
+                  active ? 'bg-ink text-white' : 'border border-ink/10 bg-white text-ink/70 hover:border-moss/30'
+                }`}
+              >
+                {section.title}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
+      <button
+        type="button"
+        onClick={startPractice}
+        className="focus-ring mt-5 rounded-full bg-moss px-5 py-3 font-black text-white shadow-lift"
+      >
+        Let&apos;s see if you got it
+      </button>
+
+      {activeExercise ? (
+        <section id="unit-active-exercise" className="mt-8 scroll-mt-24">
+          <ExerciseRenderer
+            key={activeExercise.id}
+            exercise={activeExercise}
+            showHeader={false}
+            isFinal={isFinal}
+            continueLabel={continueLabel}
+            onContinue={() => nextSection && selectSection(nextSection.id)}
+            onComplete={(attempt) => setAttemptsByExercise((current) => ({
+              ...current,
+              [activeExercise.id]: attempt,
+            }))}
+          />
         </section>
       ) : null}
 
