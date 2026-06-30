@@ -3,20 +3,13 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Sigma } from 'lucide-react';
 import SEO from '../components/SEO';
 import { grammarA1Checkpoints } from '../data/grammarA1Test';
+import { a1EnglishFoundationsUnits } from '../content/levels/a1/a1EnglishFoundationsUnits';
 
 const countQuestions = (checkpoint) => checkpoint.exercises.reduce((total, exercise) => total + exercise.items.length, 0);
-const unitCards = [
-  {
-    title: 'Unit 1: Be, Basic Sentences and Simple Questions',
-    text: 'Costruisci frasi con be, domande semplici e risposte brevi.',
-    to: '/levels/a1/be-basic-sentences',
-  },
-  {
-    title: 'Unit 2: Present Simple, Normal Verbs and Do/Does',
-    text: 'Rendi automatiche frasi, domande e negative con i verbi normali.',
-    to: '/levels/a1/present-simple-normal-verbs',
-  },
-];
+const unitCards = a1EnglishFoundationsUnits.map((unit) => ({
+  ...unit,
+  displayTitle: unit.unitNumber ? `Unit ${unit.unitNumber} — ${unit.title}` : unit.title,
+}));
 
 export default function GrammarA1Hub() {
   return (
@@ -45,20 +38,25 @@ export default function GrammarA1Hub() {
             </div>
           </div>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
-            {unitCards.map((unit) => (
-              <Link
-                key={unit.to}
-                to={unit.to}
-                className="focus-ring group rounded-2xl border border-ink/10 bg-paper p-5 transition hover:-translate-y-1 hover:border-moss/25 hover:shadow-soft dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-mint/35"
-              >
-                <p className="text-sm font-black uppercase tracking-wide text-moss dark:text-mint">Unità guidata</p>
-                <h3 className="mt-3 text-xl font-black leading-tight text-ink dark:text-white">{unit.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-ink/70 dark:text-white/70">{unit.text}</p>
-                <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-black text-white transition group-hover:gap-3 dark:bg-mint dark:text-ink">
-                  Apri unità <ArrowRight className="h-4 w-4" />
-                </span>
-              </Link>
-            ))}
+            {unitCards.map((unit) => {
+              const Card = unit.path ? Link : 'article';
+              return (
+                <Card
+                  key={unit.unitId || unit.displayTitle}
+                  {...(unit.path ? { to: unit.path } : {})}
+                  className={`focus-ring group rounded-2xl border border-ink/10 bg-paper p-5 transition dark:border-white/10 dark:bg-white/[0.04] ${unit.path ? 'hover:-translate-y-1 hover:border-moss/25 hover:shadow-soft dark:hover:border-mint/35' : 'opacity-65'}`}
+                >
+                  <p className="text-sm font-black uppercase tracking-wide text-moss dark:text-mint">{unit.status === 'planned' ? 'In preparazione' : 'Unità guidata'}</p>
+                  <h3 className="mt-3 text-xl font-black leading-tight text-ink dark:text-white">{unit.displayTitle}</h3>
+                  {unit.subtitle ? <p className="mt-3 text-sm leading-6 text-ink/70 dark:text-white/70">{unit.subtitle}</p> : null}
+                  {unit.path ? (
+                    <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-black text-white transition group-hover:gap-3 dark:bg-mint dark:text-ink">
+                      Apri unità <ArrowRight className="h-4 w-4" />
+                    </span>
+                  ) : null}
+                </Card>
+              );
+            })}
           </div>
         </section>
 
