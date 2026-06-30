@@ -53,7 +53,7 @@ export default function A1UnitPage({ unitId }) {
         <div className="rounded-[2rem] border border-ink/10 bg-white p-7 shadow-soft">
           <h1 className="text-3xl font-black text-ink">Unità A1 non trovata.</h1>
           <Link to="/grammar/a1" className="focus-ring mt-5 inline-flex rounded-full bg-moss px-5 py-3 font-black text-white">
-            Torna ad A1 Grammar
+            Torna ad A1 English Foundations
           </Link>
         </div>
       </section>
@@ -65,7 +65,7 @@ export default function A1UnitPage({ unitId }) {
       <SEO title={`${unit.displayTitle} | Sblocco Inglese`} description={unit.outcome} />
 
       <div className="rounded-[2rem] bg-ink p-7 text-white shadow-soft sm:p-9">
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-mint">A1 grammar-output unit</p>
+        <p className="text-xs font-black uppercase tracking-[0.18em] text-mint">A1 English Foundations unit</p>
         <h1 className="mt-4 max-w-5xl text-4xl font-black leading-tight sm:text-5xl">{unit.displayTitle}</h1>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-white/75">{unit.subtitle}</p>
         <div className="mt-6 rounded-2xl bg-white/10 p-5">
