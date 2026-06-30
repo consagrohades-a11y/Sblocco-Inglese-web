@@ -138,6 +138,7 @@ export function evaluateExerciseAttempt(exercise = {}, answers = {}) {
 
     return {
       itemId: item.id ?? `item-${index + 1}`,
+      exerciseUnit: exercise.unit ?? null,
       correct,
       answerStatus: answerResult.status,
       userAnswer,
