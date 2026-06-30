@@ -52,15 +52,24 @@ const unit8AdditionalMessages = {
   'italian-word-order-transfer': 'Controlla l’ordine della frase inglese: soggetto, ausiliare e verbo devono restare nella posizione corretta.',
 };
 
-function Unit8EvidenceSummary({ profile, attempt }) {
+function Unit8EvidenceSummary({ attempt }) {
   const wrongCount = Math.max((attempt?.total || 0) - (attempt?.correct || 0), 0);
   if (!wrongCount) return null;
 
-  const messages = [...new Set((profile.evidence || [])
-    .filter(({ dimension }) => dimension === 'errorPatterns')
-    .map(({ tag }) => {
-      const feedbackKey = unit8FeedbackAliases[tag] || tag;
-      return feedbackRuleRegistry[feedbackKey]?.learnerMessage || unit8AdditionalMessages[tag] || null;
+  const messages = [...new Set((attempt?.items || [])
+    .filter(({ correct }) => !correct)
+    .flatMap((item) => {
+      const feedbackKeys = Array.isArray(item.feedbackKeys) ? item.feedbackKeys : [];
+      const tags = feedbackKeys.length
+        ? feedbackKeys
+        : (item.diagnostic || [])
+          .filter(({ dimension }) => dimension === 'errorPatterns')
+          .map(({ tag }) => tag);
+
+      return tags.map((tag) => {
+        const feedbackKey = unit8FeedbackAliases[tag] || tag;
+        return feedbackRuleRegistry[feedbackKey]?.learnerMessage || unit8AdditionalMessages[tag] || null;
+      });
     })
     .filter(Boolean))];
 
@@ -169,7 +178,7 @@ export default function ExerciseResult({ attempt, exercise, isFinal = false }) {
       <p className="rounded-xl border border-ink/10 bg-white p-4 text-sm font-semibold leading-6 text-ink/70 shadow-sm">{getResultMessage(attempt.percent)}</p>
 
       {isUnit8 ? (
-        <Unit8EvidenceSummary profile={profile} attempt={attempt} />
+        <Unit8EvidenceSummary attempt={attempt} />
       ) : (
         <EvidenceSummary profile={profile} exercise={exercise} attempt={attempt} />
       )}
