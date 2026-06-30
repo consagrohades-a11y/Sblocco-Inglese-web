@@ -207,7 +207,7 @@ export default function A1UnitPage({ unitId }) {
         aria-expanded={practiceStarted}
         className="focus-ring mt-5 rounded-full bg-moss px-5 py-3 font-black text-white shadow-lift"
       >
-        Let&apos;s see if you got it
+        Click here — Let&apos;s see if you got it
       </button>
 
       {practiceStarted ? (
