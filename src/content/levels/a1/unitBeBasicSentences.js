@@ -65,8 +65,8 @@ export const unitBeBasicSentences = {
   slug: 'be-basic-sentences',
   level: 'a1',
   track: 'core',
-  title: 'Be, Basic Sentences and Simple Questions',
-  displayTitle: 'A1 Unit 1 — Be, frasi semplici e domande base',
+  title: 'Introduce Yourself',
+  displayTitle: 'A1 Unit 1 — Introduce Yourself',
   subtitle: 'Costruisci le prime frasi in inglese con am, is e are.',
   outcome: 'Alla fine dell’unità saprai creare frasi semplici con be, fare domande basilari e dare brevi risposte.',
   grammarPoints: [
@@ -258,9 +258,9 @@ export const unitBeBasicSentences = {
   ],
   navigation: {
     next: {
-      label: 'Continue to Unit 2',
+      label: 'Open Unit 8',
       path: '/levels/a1/present-simple-normal-verbs',
-      description: 'Passa dai verbi be ai verbi normali con do/does.',
+      description: 'Pratica domande, negative e short answers con do/does.',
     },
   },
 };
