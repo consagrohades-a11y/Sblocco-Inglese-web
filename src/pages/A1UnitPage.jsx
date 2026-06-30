@@ -36,6 +36,7 @@ function NavigationCard({ item, direction }) {
 export default function A1UnitPage({ unitId }) {
   const unit = units[unitId];
   const [attemptsByExercise, setAttemptsByExercise] = useState({});
+  const [practiceStarted, setPracticeStarted] = useState(false);
   const [activeExerciseId, setActiveExerciseId] = useState(() => (
     unit?.exerciseNavigation?.[0]?.id || unit?.exercises?.[0]?.id || null
   ));
@@ -70,7 +71,10 @@ export default function A1UnitPage({ unitId }) {
   };
 
   const startPractice = () => {
-    document.getElementById('unit-active-exercise')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setPracticeStarted(true);
+    window.requestAnimationFrame(() => {
+      document.getElementById('unit-exercise-navigation')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   };
   const diagnosticResult = useMemo(() => {
     if (!unit || !attempts.length) return null;
@@ -200,12 +204,15 @@ export default function A1UnitPage({ unitId }) {
       <button
         type="button"
         onClick={startPractice}
+        aria-expanded={practiceStarted}
         className="focus-ring mt-5 rounded-full bg-moss px-5 py-3 font-black text-white shadow-lift"
       >
         Let&apos;s see if you got it
       </button>
 
-      <nav className="mt-5 overflow-x-auto pb-2" aria-label="Esercizi dell’unità">
+      {practiceStarted ? (
+        <>
+      <nav id="unit-exercise-navigation" className="mt-5 scroll-mt-24 overflow-x-auto pb-2" aria-label="Esercizi dell’unità">
         <div className="flex min-w-max gap-2">
           {exerciseNavigation.map((step) => {
             const active = step.id === activeExerciseStep?.id;
@@ -241,6 +248,8 @@ export default function A1UnitPage({ unitId }) {
             }))}
           />
         </section>
+      ) : null}
+        </>
       ) : null}
 
       {diagnosticResult && !unit.exerciseNavigation ? (
