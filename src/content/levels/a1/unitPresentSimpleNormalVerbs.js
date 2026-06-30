@@ -173,15 +173,14 @@ export const unitPresentSimpleNormalVerbs = {
     'She doesn’t speak German.',
     'Do you enjoy swimming?',
   ],
-  sectionNavigation: [
-    { id: 'overview', title: 'Panoramica' },
-    { id: 'a1-present-recognition', title: '1. Be o Do?' },
-    { id: 'a1-present-do-does', title: '2. Do o Does?' },
-    { id: 'a1-present-questions', title: '3. Domande' },
-    { id: 'a1-present-negatives', title: '4. Frasi negative' },
-    { id: 'a1-present-short-answers', title: '5. Risposte brevi' },
-    { id: 'a1-present-dialogue', title: '6. Mini-dialogo' },
-    { id: 'a1-present-final-check', title: '7. Test finale' },
+  exerciseNavigation: [
+    { id: 'a1-present-recognition', title: 'Be o Do?' },
+    { id: 'a1-present-do-does', title: 'Do o Does?' },
+    { id: 'a1-present-questions', title: 'Domande' },
+    { id: 'a1-present-negatives', title: 'Frasi negative' },
+    { id: 'a1-present-short-answers', title: 'Risposte brevi' },
+    { id: 'a1-present-dialogue', title: 'Mini-dialogo' },
+    { id: 'a1-present-final-check', title: 'Test finale' },
   ],
   exercises: [
     {
@@ -196,7 +195,6 @@ export const unitPresentSimpleNormalVerbs = {
       skillFocus: 'Grammar recognition',
       title: 'Be o Do?',
       instructions: 'Scegli la struttura corretta in base al verbo e al significato.',
-      teachingText: 'Prima identifica il verbo principale: con be inverti verbo e soggetto; con un verbo normale usa do o does.',
       items: [
         choice('present-recognition-1', 'Stai descrivendo il lavoro di Sara. Quale frase è corretta?', ['She work in a hotel.', 'She works in a hotel.', 'She does works in a hotel.'], 1, thirdPersonDiagnostic('recognition'), { correct: 'Corretto. Con she, il verbo affermativo prende -s.', incorrect: 'In una frase affermativa con she usa works, senza does.' }, 'La terza persona singolare aggiunge -s al verbo affermativo.'),
         choice('present-recognition-2', 'Vuoi sapere dove lavora Sara. Quale domanda è corretta?', ['Where is Sara work?', 'Where does Sara work?', 'Where does Sara works?'], 1, questionDiagnostic('recognition'), { correct: 'Corretto. La domanda usa does + soggetto + verbo base.', incorrect: 'Work è un verbo normale: usa Where does Sara work?' }, 'Does porta la marca di terza persona, quindi work resta alla forma base.'),
@@ -216,7 +214,6 @@ export const unitPresentSimpleNormalVerbs = {
       skillFocus: 'Question formation',
       title: 'Do o Does?',
       instructions: 'Completa con do o does in base al soggetto.',
-      teachingText: 'Usa do con I, you, we e they; usa does con he, she, it o una persona singolare.',
       questionPool: presentSimpleNormalVerbsPool,
       questionCount: 4,
       selectionRules: [
@@ -235,7 +232,6 @@ export const unitPresentSimpleNormalVerbs = {
       skillFocus: 'Question formation',
       title: 'Domande',
       instructions: 'Completa domande sì/no e domande con una question word.',
-      teachingText: 'Costruisci la domanda con question word + do/does + soggetto + verbo base.',
       questionPool: presentSimpleNormalVerbsPool,
       questionCount: 4,
       selectionRules: [
@@ -255,7 +251,6 @@ export const unitPresentSimpleNormalVerbs = {
       skillFocus: 'Sentence control',
       title: 'Frasi negative',
       instructions: 'Completa con don’t o doesn’t e mantieni il verbo alla forma base.',
-      teachingText: 'Usa don’t o doesn’t prima del verbo; dopo l’ausiliare il verbo resta alla forma base.',
       questionPool: presentSimpleNormalVerbsPool,
       questionCount: 4,
       selectionRules: [
@@ -274,7 +269,6 @@ export const unitPresentSimpleNormalVerbs = {
       skillFocus: 'Short-answer control',
       title: 'Risposte brevi',
       instructions: 'Completa la risposta breve riprendendo do o does.',
-      teachingText: 'La risposta breve riprende l’ausiliare della domanda: do, don’t, does o doesn’t.',
       questionPool: presentSimpleNormalVerbsPool,
       questionCount: 4,
       selectionRules: [
@@ -293,7 +287,6 @@ export const unitPresentSimpleNormalVerbs = {
       skillFocus: 'Applied question formation',
       title: 'Mini-dialogo',
       instructions: 'Completa il dialogo come un unico scenario: domande, risposte e frasi restano collegate.',
-      teachingText: 'Leggi tutto lo scambio prima di completare gli spazi: ogni risposta dipende dalla domanda e dal turno precedente.',
       lines: [
         { speaker: 'Luca', parts: ['What ', { blankId: 'present-dialogue-1' }, ' you do?'] },
         { speaker: 'Chiara', parts: ['I ', { blankId: 'present-dialogue-2' }, ' in a language school.'] },
@@ -319,7 +312,6 @@ export const unitPresentSimpleNormalVerbs = {
       skillFocus: 'Flexible grammar control',
       title: 'Test finale',
       instructions: 'Scegli la soluzione corretta in ogni situazione.',
-      teachingText: 'Nel test finale distingui be da do/does e controlla domande, negative e risposte brevi nel loro insieme.',
       items: [
         choice('present-final-1', 'Quale coppia distingue correttamente luogo e lavoro?', ['Where is she? / Where does she work?', 'Where does she? / Where is she work?', 'Where she is? / Where she works?'], 0, questionDiagnostic('final-check', 3), { correct: 'Corretto. La posizione usa be; il lavoro usa does + work.', incorrect: 'Usa Where is she? per la posizione e Where does she work? per il verbo normale.' }, 'La scelta dell’ausiliare dipende dal verbo principale.'),
         choice('present-final-2', 'Scegli lo scambio completo corretto.', ['Does he need help? — Yes, he does.', 'Is he need help? — Yes, he is.', 'Does he needs help? — Yes, he need.'], 0, shortAnswerDiagnostic('final-check', 3), { correct: 'Corretto. Domanda e risposta breve usano does.', incorrect: 'Need è un verbo normale: Does he need...? — Yes, he does.' }, 'Dopo does usa need, non needs.'),
