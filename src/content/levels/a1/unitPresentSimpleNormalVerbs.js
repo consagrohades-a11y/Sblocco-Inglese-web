@@ -1,5 +1,9 @@
-import { presentSimpleNormalVerbsPool } from './questionPools/presentSimpleNormalVerbsPool.js';
-import { beVsDoRecognitionPool } from './questionPools/beVsDoRecognitionPool.js';
+import {
+  beVsDoRecognitionPool,
+  dialogueScenarioPool,
+  finalTestItems,
+  presentSimpleNormalVerbsPool,
+} from './questionPools/presentSimpleNormalVerbs/assembledPools.js';
 
 const makeDiagnostic = ({
   skills,
@@ -292,6 +296,7 @@ export const unitPresentSimpleNormalVerbs = {
       skillFocus: 'Applied question formation',
       title: 'Mini-dialogo',
       instructions: 'Completa il dialogo come un unico scenario: domande, risposte e frasi restano collegate.',
+      scenarioPool: dialogueScenarioPool,
       lines: [
         { speaker: 'Luca', parts: ['What ', { blankId: 'present-dialogue-1' }, ' you do?'] },
         { speaker: 'Chiara', parts: ['I ', { blankId: 'present-dialogue-2' }, ' in a language school.'] },
@@ -318,6 +323,7 @@ export const unitPresentSimpleNormalVerbs = {
       title: 'Test finale',
       instructions: 'Scegli la soluzione corretta in ogni situazione.',
       items: [
+        ...finalTestItems,
         choice('present-final-1', 'Quale coppia distingue correttamente luogo e lavoro?', ['Where is she? / Where does she work?', 'Where does she? / Where is she work?', 'Where she is? / Where she works?'], 0, questionDiagnostic('final-check', 3), { correct: 'Corretto. La posizione usa be; il lavoro usa does + work.', incorrect: 'Usa Where is she? per la posizione e Where does she work? per il verbo normale.' }, 'La scelta dell’ausiliare dipende dal verbo principale.', itemMetadata('be-vs-do-recognition', 'ask-about-work', 'work', 'recognition', ['be-and-do-confusion', 'normal-verb-question-needs-do'])),
         choice('present-final-2', 'Scegli lo scambio completo corretto.', ['Does he need help? — Yes, he does.', 'Is he need help? — Yes, he is.', 'Does he needs help? — Yes, he need.'], 0, shortAnswerDiagnostic('final-check', 3), { correct: 'Corretto. Domanda e risposta breve usano does.', incorrect: 'Need è un verbo normale: Does he need...? — Yes, he does.' }, 'Dopo does usa need, non needs.', itemMetadata('does-base-verb-control', 'ask-about-needs', 'basic-needs', 'recognition', ['normal-verb-question-needs-do', 'does-followed-by-base-verb', 'short-answer-uses-auxiliary'])),
         choice('present-final-3', 'Una collega parla inglese ma non tedesco. Quale frase è corretta?', ["She isn’t speak German.", "She doesn’t speaks German.", "She doesn’t speak German."], 2, negativeDiagnostic('final-check', 3), { correct: 'Corretto. Doesn’t è seguito da speak.', incorrect: 'La negativa corretta è She doesn’t speak German.' }, 'L’ausiliare doesn’t porta la terza persona; il verbo resta base.', itemMetadata('negative-doesnt', 'correct-basic-information', 'language', 'recognition', ['present-simple-negative-needs-dont-doesnt', 'does-followed-by-base-verb'])),
@@ -335,4 +341,3 @@ export const unitPresentSimpleNormalVerbs = {
 };
 
 export default unitPresentSimpleNormalVerbs;
-
