@@ -16,6 +16,7 @@ import TrainersLanding from './pages/TrainersLanding';
 import LegalPage from './pages/LegalPage';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './auth/ProtectedRoute';
+import AdminRoute from './auth/AdminRoute';
 import { legalPages } from './data/legalPages';
 import './trainer-overrides.css';
 
@@ -34,6 +35,7 @@ const Register = lazy(() => import('./pages/Register'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const UpdatePassword = lazy(() => import('./pages/UpdatePassword'));
 const Account = lazy(() => import('./pages/Account'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 function ScrollManager() {
   const location = useLocation();
@@ -110,6 +112,14 @@ export default function App() {
                 <ProtectedRoute>
                   <Account />
                 </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="/admin"
+              element={(
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
               )}
             />
             <Route path="/levels/a1/be-basic-sentences" element={<A1UnitPage key="a1-be-basic-sentences" unitId="be-basic-sentences" />} />
