@@ -1,0 +1,171 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
+import { supabase } from '../lib/supabaseClient.js';
+
+const languageLabels = {
+  it: 'Italiano',
+  en: 'English',
+};
+
+const statusLabels = {
+  active: 'Attivo',
+  suspended: 'Sospeso',
+  deleted: 'Eliminato',
+};
+
+function formatDate(value) {
+  if (!value) return '-';
+
+  return new Intl.DateTimeFormat('it-IT', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(new Date(value));
+}
+
+export default function AdminLearners() {
+  const [learners, setLearners] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [query, setQuery] = useState('');
+  const [status, setStatus] = useState('all');
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadLearners() {
+      setLoading(true);
+      setError('');
+
+      const { data, error: rpcError } = await supabase.rpc('admin_list_learners');
+
+      if (!active) return;
+
+      if (rpcError) {
+        setError('Non è stato possibile caricare gli studenti. Verifica che la migrazione admin_list_learners sia stata applicata in Supabase.');
+        setLearners([]);
+      } else {
+        setLearners(data ?? []);
+      }
+
+      setLoading(false);
+    }
+
+    loadLearners();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const filteredLearners = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return learners.filter((learner) => {
+      const matchesStatus = status === 'all' || learner.status === status;
+      const matchesQuery = !normalizedQuery || [learner.display_name, learner.email]
+        .some((value) => String(value ?? '').toLowerCase().includes(normalizedQuery));
+
+      return matchesStatus && matchesQuery;
+    });
+  }, [learners, query, status]);
+
+  return (
+    <>
+      <SEO
+        title="Studenti | Pannello admin | Sblocco Inglese"
+        description="Directory amministrativa degli studenti Sblocco Inglese."
+      />
+      <section className="section-shell py-12 lg:py-16">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex flex-col gap-5 rounded-2xl border border-ink/10 bg-white p-6 shadow-soft sm:p-8 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <span className="eyebrow">Amministrazione</span>
+              <h1 className="mt-4 text-3xl font-black text-ink sm:text-4xl">Studenti</h1>
+              <p className="mt-3 max-w-2xl text-base leading-7 text-ink/70">
+                Cerca gli account learner e seleziona lo studente su cui lavorare nelle fasi successive.
+              </p>
+            </div>
+            <Link
+              to="/admin"
+              className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-black text-ink transition hover:bg-linen"
+            >
+              Torna al pannello admin
+            </Link>
+          </div>
+
+          <div className="mt-6 grid gap-4 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm md:grid-cols-[1fr_auto]">
+            <label className="block">
+              <span className="text-xs font-black uppercase tracking-wide text-ink/50">Cerca</span>
+              <input
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Nome o email"
+                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40"
+              />
+            </label>
+
+            <label className="block md:min-w-48">
+              <span className="text-xs font-black uppercase tracking-wide text-ink/50">Stato</span>
+              <select
+                value={status}
+                onChange={(event) => setStatus(event.target.value)}
+                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40"
+              >
+                <option value="all">Tutti</option>
+                <option value="active">Attivi</option>
+                <option value="suspended">Sospesi</option>
+                <option value="deleted">Eliminati</option>
+              </select>
+            </label>
+          </div>
+
+          <div className="mt-6 overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm">
+            {loading ? (
+              <p className="p-6 text-sm font-bold text-ink/65">Caricamento studenti...</p>
+            ) : null}
+
+            {error ? (
+              <div className="border-l-4 border-red-400 bg-red-50 p-5 text-sm font-bold leading-6 text-red-900">
+                {error}
+              </div>
+            ) : null}
+
+            {!loading && !error && filteredLearners.length === 0 ? (
+              <p className="p-6 text-sm font-bold text-ink/65">
+                {learners.length === 0
+                  ? 'Non ci sono ancora account learner.'
+                  : 'Nessuno studente corrisponde ai filtri selezionati.'}
+              </p>
+            ) : null}
+
+            {!loading && !error && filteredLearners.length > 0 ? (
+              <div className="divide-y divide-ink/10">
+                {filteredLearners.map((learner) => (
+                  <article
+                    key={learner.id}
+                    className="grid gap-4 p-5 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1.6fr)_auto_auto] md:items-center"
+                  >
+                    <div>
+                      <p className="text-base font-black text-ink">{learner.display_name || 'Nome non impostato'}</p>
+                      <p className="mt-1 text-xs font-bold text-ink/45">Registrato il {formatDate(learner.created_at)}</p>
+                    </div>
+                    <p className="break-all text-sm font-semibold text-ink/70">{learner.email || '-'}</p>
+                    <p className="text-sm font-bold text-ink/65">
+                      {languageLabels[learner.interface_language] || learner.interface_language || '-'}
+                    </p>
+                    <span className="inline-flex w-fit rounded-full border border-ink/10 bg-linen px-3 py-1.5 text-xs font-black text-ink">
+                      {statusLabels[learner.status] || learner.status}
+                    </span>
+                  </article>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

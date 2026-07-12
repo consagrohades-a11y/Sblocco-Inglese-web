@@ -36,6 +36,7 @@ const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const UpdatePassword = lazy(() => import('./pages/UpdatePassword'));
 const Account = lazy(() => import('./pages/Account'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const AdminLearners = lazy(() => import('./pages/AdminLearners'));
 
 function ScrollManager() {
   const location = useLocation();
@@ -70,7 +71,7 @@ function PageFallback() {
   return (
     <div className="section-shell py-16">
       <div className="mx-auto max-w-3xl rounded-lg border border-ink/10 bg-white p-6 text-center shadow-sm dark:border-white/10 dark:bg-white/[0.06]">
-        <p className="text-sm font-black text-ink dark:text-white">Loading trainer...</p>
+        <p className="text-sm font-black text-ink dark:text-white">Loading...</p>
       </div>
     </div>
   );
@@ -122,26 +123,22 @@ export default function App() {
                 </AdminRoute>
               )}
             />
+            <Route
+              path="/admin/learners"
+              element={(
+                <AdminRoute>
+                  <AdminLearners />
+                </AdminRoute>
+              )}
+            />
             <Route path="/levels/a1/be-basic-sentences" element={<A1UnitPage key="a1-be-basic-sentences" unitId="be-basic-sentences" />} />
             <Route path="/levels/a1/present-simple-normal-verbs" element={<A1UnitPage key="a1-present-simple-normal-verbs" unitId="present-simple-normal-verbs" />} />
             <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
             <Route path="/prenota" element={<Prenota />} />
-            <Route
-              path="/privacy"
-              element={<LegalPage page={legalPages.privacy} />}
-            />
-            <Route
-              path="/privacy-policy"
-              element={<LegalPage page={legalPages.privacy} />}
-            />
-            <Route
-              path="/cookie-policy"
-              element={<LegalPage page={legalPages.cookies} />}
-            />
-            <Route
-              path="/termini-e-condizioni"
-              element={<LegalPage page={legalPages.terms} />}
-            />
+            <Route path="/privacy" element={<LegalPage page={legalPages.privacy} />} />
+            <Route path="/privacy-policy" element={<LegalPage page={legalPages.privacy} />} />
+            <Route path="/cookie-policy" element={<LegalPage page={legalPages.cookies} />} />
+            <Route path="/termini-e-condizioni" element={<LegalPage page={legalPages.terms} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

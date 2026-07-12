@@ -7,7 +7,9 @@ const sections = [
   {
     title: 'Studenti',
     description: 'Visualizza gli account learner e prepara la gestione delle assegnazioni.',
-    status: 'Prossimo modulo',
+    status: 'Disponibile',
+    to: '/admin/learners',
+    cta: 'Apri studenti',
   },
   {
     title: 'Assegnazioni',
@@ -64,6 +66,14 @@ export default function AdminDashboard() {
                 </p>
                 <h2 className="mt-3 text-xl font-black text-ink">{section.title}</h2>
                 <p className="mt-2 text-sm leading-6 text-ink/65">{section.description}</p>
+                {section.to ? (
+                  <Link
+                    to={section.to}
+                    className="focus-ring mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss"
+                  >
+                    {section.cta}
+                  </Link>
+                ) : null}
               </section>
             ))}
           </div>
@@ -72,7 +82,7 @@ export default function AdminDashboard() {
             <p className="text-xs font-black uppercase tracking-wide text-moss">Stato attuale</p>
             <h2 className="mt-2 text-xl font-black text-ink">Accesso admin attivo</h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70">
-              Questa prima versione verifica il ruolo admin nel profilo Supabase e protegge la rotta dal browser. Non include ancora operazioni di modifica o dati simulati.
+              La directory studenti è il primo modulo operativo. Le assegnazioni verranno costruite sopra questa selezione reale degli account learner.
             </p>
           </div>
         </div>
