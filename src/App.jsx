@@ -37,6 +37,7 @@ const UpdatePassword = lazy(() => import('./pages/UpdatePassword'));
 const Account = lazy(() => import('./pages/Account'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AdminLearners = lazy(() => import('./pages/AdminLearners'));
+const AdminLearnerDetail = lazy(() => import('./pages/AdminLearnerDetail'));
 
 function ScrollManager() {
   const location = useLocation();
@@ -128,6 +129,14 @@ export default function App() {
               element={(
                 <AdminRoute>
                   <AdminLearners />
+                </AdminRoute>
+              )}
+            />
+            <Route
+              path="/admin/learners/:learnerId"
+              element={(
+                <AdminRoute>
+                  <AdminLearnerDetail />
                 </AdminRoute>
               )}
             />
