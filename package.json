@@ -7,9 +7,11 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
+    "validate:supabase": "node scripts/validate-supabase-config.mjs",
     "validate:srs": "node scripts/validate-srs-cards.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.110.2",
     "autoprefixer": "^10.4.21",
     "lucide-react": "^0.468.0",
     "postcss": "^8.5.6",
