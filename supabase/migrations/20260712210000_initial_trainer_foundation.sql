@@ -209,6 +209,32 @@ create trigger expressions_enforce_learning_item_type
 before insert or update on public.expressions
 for each row execute function public.enforce_learning_item_extension_type();
 
+create or replace function public.protect_learning_item_type()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  if new.item_type is distinct from old.item_type then
+    if exists (select 1 from public.words where id = old.id)
+      and new.item_type <> 'word' then
+      raise exception 'Cannot change learning_items.item_type away from word while a words row exists.';
+    end if;
+
+    if exists (select 1 from public.expressions where id = old.id)
+      and new.item_type <> 'expression' then
+      raise exception 'Cannot change learning_items.item_type away from expression while an expressions row exists.';
+    end if;
+  end if;
+
+  return new;
+end;
+$$;
+
+create trigger learning_items_protect_item_type
+before update of item_type on public.learning_items
+for each row execute function public.protect_learning_item_type();
+
 -- Sentence bank and reviewed links to learning items.
 
 create table public.sentence_bank_entries (

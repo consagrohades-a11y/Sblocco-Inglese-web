@@ -48,6 +48,8 @@ supabase/migrations/20260712210000_initial_trainer_foundation.sql
 - `profiles.id` references `auth.users.id`.
 - `teaching_relationships.learner_id` and `teacher_id` reference `profiles.id`.
 - `words.id` and `expressions.id` reference `learning_items.id`, preserving separate learner-facing systems while sharing identity.
+- Child extension triggers reject `words` rows whose parent `learning_items.item_type` is not `word`, and `expressions` rows whose parent type is not `expression`.
+- A parent-side `learning_items_protect_item_type` trigger rejects changing `learning_items.item_type` away from `word` while a related `words` row exists, or away from `expression` while a related `expressions` row exists. Item type changes remain valid only before an incompatible extension row exists.
 - `learning_item_sentence_links` connects reusable sentences to reusable content items without duplicating sentences.
 - `collection_items` references both `collections` and `learning_items`.
 - `assignments` reference the assigned learner, optional teacher, and optional teaching relationship.
@@ -201,3 +203,10 @@ supabase migration list
 ```
 
 Those commands require the Supabase CLI and an intentional local or linked project context.
+
+Static type-integrity validation performed for review:
+
+- Child-to-parent direction: confirm `words_enforce_learning_item_type` and `expressions_enforce_learning_item_type` execute `public.enforce_learning_item_extension_type()` before insert or update on child extension tables.
+- Parent-to-child direction: confirm `learning_items_protect_item_type` executes `public.protect_learning_item_type()` before update of `item_type` on `public.learning_items`.
+- The child trigger function checks the parent `learning_items.item_type` before accepting child rows.
+- The parent trigger function checks for existing `words` or `expressions` rows before allowing `learning_items.item_type` to change.
