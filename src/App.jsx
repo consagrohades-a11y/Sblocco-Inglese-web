@@ -39,13 +39,25 @@ function ScrollManager() {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.hash) {
-      const target = document.querySelector(location.hash);
+    const hash = location.hash;
+    const isAuthHash =
+      hash.includes('access_token=') ||
+      hash.includes('refresh_token=') ||
+      hash.includes('error=') ||
+      hash.includes('error_code=');
+
+    if (hash && !isAuthHash) {
+      const elementId = decodeURIComponent(hash.slice(1));
+      const target = document.getElementById(elementId);
+
       if (target) {
-        window.setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+        window.setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 80);
         return;
       }
     }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location.pathname, location.hash]);
 
