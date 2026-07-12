@@ -20,6 +20,22 @@ begin
 end;
 $$;
 
+-- User profiles and learner-teacher relationships.
+
+create table public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  display_name text not null default '',
+  interface_language text not null default 'it'
+    check (interface_language in ('it', 'en')),
+  timezone text not null default 'Europe/Rome',
+  role text not null default 'learner'
+    check (role in ('learner', 'admin')),
+  status text not null default 'active'
+    check (status in ('active', 'suspended', 'deleted')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 -- Admin lookup intentionally uses a protected profiles field instead of hardcoded email.
 create or replace function public.is_admin()
 returns boolean
@@ -37,21 +53,34 @@ as $$
   );
 $$;
 
--- User profiles and learner-teacher relationships.
+revoke all on function public.is_admin() from public;
+grant execute on function public.is_admin() to authenticated;
 
-create table public.profiles (
-  id uuid primary key references auth.users(id) on delete cascade,
-  display_name text not null default '',
-  interface_language text not null default 'it'
-    check (interface_language in ('it', 'en')),
-  timezone text not null default 'Europe/Rome',
-  role text not null default 'learner'
-    check (role in ('learner', 'admin')),
-  status text not null default 'active'
-    check (status in ('active', 'suspended', 'deleted')),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+-- RLS cannot protect individual columns. This trigger rejects non-admin edits
+-- to protected profile fields before the database updates updated_at.
+create or replace function public.protect_profile_fields()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  if auth.uid() is not null and not public.is_admin() then
+    if new.id is distinct from old.id
+      or new.role is distinct from old.role
+      or new.status is distinct from old.status
+      or new.created_at is distinct from old.created_at
+      or new.updated_at is distinct from old.updated_at then
+      raise exception 'Only display_name, interface_language, and timezone can be updated by learners.';
+    end if;
+  end if;
+
+  return new;
+end;
+$$;
+
+create trigger profiles_protect_fields
+before update on public.profiles
+for each row execute function public.protect_profile_fields();
 
 create trigger profiles_set_updated_at
 before update on public.profiles
@@ -144,6 +173,41 @@ create table public.expressions (
   unsuitable_alternatives text[] not null default '{}',
   metadata jsonb not null default '{}'::jsonb
 );
+
+create or replace function public.enforce_learning_item_extension_type()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+declare
+  expected_type text;
+  actual_type text;
+begin
+  expected_type := case TG_TABLE_NAME
+    when 'words' then 'word'
+    when 'expressions' then 'expression'
+    else null
+  end;
+
+  select item_type into actual_type
+  from public.learning_items
+  where id = new.id;
+
+  if actual_type is null or actual_type <> expected_type then
+    raise exception '% rows must reference a learning_items row with item_type = %', TG_TABLE_NAME, expected_type;
+  end if;
+
+  return new;
+end;
+$$;
+
+create trigger words_enforce_learning_item_type
+before insert or update on public.words
+for each row execute function public.enforce_learning_item_extension_type();
+
+create trigger expressions_enforce_learning_item_type
+before insert or update on public.expressions
+for each row execute function public.enforce_learning_item_extension_type();
 
 -- Sentence bank and reviewed links to learning items.
 
@@ -282,12 +346,98 @@ as $$
     from public.assignments
     where id = target_assignment_id
       and (
-        learner_id = auth.uid()
-        or teacher_id = auth.uid()
-        or public.is_admin()
+        public.is_admin()
+        or (
+          learner_id = auth.uid()
+          and status in ('published', 'completed')
+          and (published_at is null or published_at <= now())
+          and (access_ends_at is null or access_ends_at > now())
+        )
       )
   );
 $$;
+
+revoke all on function public.can_read_assignment(uuid) from public;
+grant execute on function public.can_read_assignment(uuid) to authenticated;
+
+create or replace function public.can_read_assigned_learning_item(target_learning_item_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.assignments
+    join public.assignment_items
+      on assignment_items.assignment_id = assignments.id
+    left join public.collection_items
+      on collection_items.collection_id = assignment_items.collection_id
+    where assignments.learner_id = auth.uid()
+      and assignments.status in ('published', 'completed')
+      and (assignments.published_at is null or assignments.published_at <= now())
+      and (assignments.access_ends_at is null or assignments.access_ends_at > now())
+      and (
+        assignment_items.learning_item_id = target_learning_item_id
+        or collection_items.learning_item_id = target_learning_item_id
+      )
+  );
+$$;
+
+revoke all on function public.can_read_assigned_learning_item(uuid) from public;
+grant execute on function public.can_read_assigned_learning_item(uuid) to authenticated;
+
+create or replace function public.can_read_assigned_collection(target_collection_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.assignments
+    join public.assignment_items
+      on assignment_items.assignment_id = assignments.id
+    where assignments.learner_id = auth.uid()
+      and assignments.status in ('published', 'completed')
+      and (assignments.published_at is null or assignments.published_at <= now())
+      and (assignments.access_ends_at is null or assignments.access_ends_at > now())
+      and assignment_items.collection_id = target_collection_id
+  );
+$$;
+
+revoke all on function public.can_read_assigned_collection(uuid) from public;
+grant execute on function public.can_read_assigned_collection(uuid) to authenticated;
+
+create or replace function public.can_read_assigned_sentence(target_sentence_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.assignments
+    join public.assignment_items
+      on assignment_items.assignment_id = assignments.id
+    left join public.collection_items
+      on collection_items.collection_id = assignment_items.collection_id
+    join public.learning_item_sentence_links
+      on learning_item_sentence_links.learning_item_id = assignment_items.learning_item_id
+      or learning_item_sentence_links.learning_item_id = collection_items.learning_item_id
+    where assignments.learner_id = auth.uid()
+      and assignments.status in ('published', 'completed')
+      and (assignments.published_at is null or assignments.published_at <= now())
+      and (assignments.access_ends_at is null or assignments.access_ends_at > now())
+      and learning_item_sentence_links.sentence_id = target_sentence_id
+  );
+$$;
+
+revoke all on function public.can_read_assigned_sentence(uuid) from public;
+grant execute on function public.can_read_assigned_sentence(uuid) to authenticated;
 
 -- Learner SRS state, immutable review history, and immutable applied attempts.
 
@@ -452,6 +602,12 @@ for select
 to anon, authenticated
 using (status = 'published');
 
+create policy "learning_items_read_assigned"
+on public.learning_items
+for select
+to authenticated
+using (public.can_read_assigned_learning_item(id));
+
 create policy "learning_items_admin_all"
 on public.learning_items
 for all
@@ -471,6 +627,12 @@ using (
       and learning_items.status = 'published'
   )
 );
+
+create policy "words_read_assigned_parent"
+on public.words
+for select
+to authenticated
+using (public.can_read_assigned_learning_item(id));
 
 create policy "words_admin_all"
 on public.words
@@ -492,6 +654,12 @@ using (
   )
 );
 
+create policy "expressions_read_assigned_parent"
+on public.expressions
+for select
+to authenticated
+using (public.can_read_assigned_learning_item(id));
+
 create policy "expressions_admin_all"
 on public.expressions
 for all
@@ -504,6 +672,12 @@ on public.sentence_bank_entries
 for select
 to anon, authenticated
 using (status = 'published');
+
+create policy "sentence_bank_entries_read_assigned"
+on public.sentence_bank_entries
+for select
+to authenticated
+using (public.can_read_assigned_sentence(id));
 
 create policy "sentence_bank_entries_admin_all"
 on public.sentence_bank_entries
@@ -529,6 +703,15 @@ using (
   )
 );
 
+create policy "learning_item_sentence_links_read_assigned"
+on public.learning_item_sentence_links
+for select
+to authenticated
+using (
+  public.can_read_assigned_learning_item(learning_item_id)
+  and public.can_read_assigned_sentence(sentence_id)
+);
+
 create policy "learning_item_sentence_links_admin_all"
 on public.learning_item_sentence_links
 for all
@@ -536,11 +719,20 @@ to authenticated
 using (public.is_admin())
 with check (public.is_admin());
 
-create policy "collections_read_published"
+create policy "collections_read_public_published"
 on public.collections
 for select
 to anon, authenticated
-using (status = 'published');
+using (
+  status = 'published'
+  and collection_type in ('reusable', 'starter_pack', 'specialist')
+);
+
+create policy "collections_read_assigned"
+on public.collections
+for select
+to authenticated
+using (public.can_read_assigned_collection(id));
 
 create policy "collections_admin_all"
 on public.collections
@@ -558,6 +750,7 @@ using (
     select 1 from public.collections
     where collections.id = collection_items.collection_id
       and collections.status = 'published'
+      and collections.collection_type in ('reusable', 'starter_pack', 'specialist')
   )
   and exists (
     select 1 from public.learning_items
@@ -565,6 +758,12 @@ using (
       and learning_items.status = 'published'
   )
 );
+
+create policy "collection_items_read_assigned_collection"
+on public.collection_items
+for select
+to authenticated
+using (public.can_read_assigned_collection(collection_id));
 
 create policy "collection_items_admin_all"
 on public.collection_items
@@ -575,11 +774,11 @@ with check (public.is_admin());
 
 -- Assignments and learner activity: learners access only their own rows; admins can administer.
 
-create policy "assignments_select_related_or_admin"
+create policy "assignments_select_accessible_or_admin"
 on public.assignments
 for select
 to authenticated
-using (learner_id = auth.uid() or teacher_id = auth.uid() or public.is_admin());
+using (public.can_read_assignment(id));
 
 create policy "assignments_admin_all"
 on public.assignments

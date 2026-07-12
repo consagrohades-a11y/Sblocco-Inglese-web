@@ -61,22 +61,68 @@ RLS is enabled on every table in the migration.
 
 Admin authorization uses `public.profiles.role = 'admin'` via the `public.is_admin()` helper. No email address, secret key, service-role key, or database password is hardcoded.
 
+Security-definer helper functions use `set search_path = public`. Execute permission is revoked from `PUBLIC` and granted only to `authenticated` for:
+
+- `public.is_admin()`
+- `public.can_read_assignment(uuid)`
+- `public.can_read_assigned_learning_item(uuid)`
+- `public.can_read_assigned_collection(uuid)`
+- `public.can_read_assigned_sentence(uuid)`
+
 Public content read behaviour:
 
 - Anonymous and authenticated clients can read only published rows from `learning_items`, `words`, `expressions`, `sentence_bank_entries`, `learning_item_sentence_links`, `collections`, and `collection_items`.
 - Child tables such as `words`, `expressions`, sentence links, and collection items check the published status of their parent rows.
+- Anonymous collection reads are restricted to published `reusable`, `starter_pack`, and `specialist` collections. `temporary_custom`, `assignment_snapshot`, and `lesson` collections are not anonymously readable.
 
 Learner data behaviour:
 
-- Learners can read only their own profile, SRS state, review history, applied attempts, and assignments.
+- Learners can read only their own profile, SRS state, review history, applied attempts, and currently accessible assignments.
+- Learner-visible assignments must belong to the learner, have `status` of `published` or `completed`, have `published_at` in the past when set, and have `access_ends_at` in the future when set.
 - Learners can insert their own SRS state, review history, and applied-practice attempts.
 - Learners can update their own SRS state.
 - Review history and applied attempts intentionally have no learner update or delete policies.
+- Learners can update only `display_name`, `interface_language`, and `timezone` on their own profile. A `BEFORE UPDATE` trigger rejects authenticated non-admin changes to `id`, `role`, `status`, `created_at`, or client-supplied `updated_at`. The separate timestamp trigger remains responsible for setting `updated_at`.
+
+Assignment-based private content behaviour:
+
+- Authenticated learners can read non-public learning items, word records, expression records, collections, collection items, sentence links, and sentence entries only when the content is part of one of their currently accessible assignments.
+- Direct assignment items can entitle one learning item.
+- Collection assignment items can entitle the assigned collection, its collection items, the collection's learning items, and linked sentence-bank entries.
+- Assigned private content is not granted to `anon`; it is available only through authenticated RLS policies using security-definer yes/no helper functions.
+- Expired assignments immediately stop granting private content access because the helper functions require `access_ends_at` to be null or later than `now()`.
 
 Admin behaviour:
 
 - Admin-authorized users can create and modify learning content, sentence-bank entries, collections, assignments, relationship records, and progress records through RLS policies.
 - Anonymous users have no write grants and no write policies.
+
+## First-Admin Bootstrap Procedure
+
+The migration intentionally does not hardcode an email address or create an admin user.
+
+After the migration is reviewed and applied in a controlled environment, the first admin must be bootstrapped through a trusted server-side process that uses Supabase dashboard access, a local SQL console, or another privileged deployment-only path.
+
+Exact intended procedure:
+
+1. Create or invite the first administrator through Supabase Auth.
+2. Confirm the user's UUID from `auth.users`.
+3. Insert or update exactly one matching `public.profiles` row with `role = 'admin'` and `status = 'active'` from the trusted SQL context. The profile-protection trigger allows this no-JWT privileged bootstrap path while continuing to reject authenticated learner role/status edits.
+4. Verify the row belongs to the intended user before granting any admin UI access.
+5. Do not expose this operation through the browser client.
+
+Example SQL for the trusted console only:
+
+```sql
+insert into public.profiles (id, display_name, interface_language, timezone, role, status)
+values ('<auth-user-uuid>', 'Rhema', 'it', 'Europe/Rome', 'admin', 'active')
+on conflict (id) do update
+set role = 'admin',
+    status = 'active',
+    updated_at = now();
+```
+
+This bootstrap SQL must not be embedded in client code, migrations with real user IDs, or public documentation with a real UUID.
 
 ## Indexes
 
@@ -98,8 +144,26 @@ The migration adds indexes for:
 - `profiles.role` is treated as protected data; normal learners cannot promote themselves through the provided RLS policies.
 - Published content is safe to read through the Supabase publishable browser key.
 - Draft, review-needed, approved-but-unpublished, and archived content must not be visible to anonymous learners.
+- Assigned private content is safe for the assigned authenticated learner to read until the assignment expires.
 - The migration prepares the foundation only; it does not import existing JavaScript trainer content.
 - Assignment content can initially reference learning items or collections. More complex exercise-version assignments can be added in a later migration.
+
+## Direct Learner Progress Write Risks
+
+The migration currently allows authenticated learners to insert their own SRS review history and applied-practice attempts, and to update their own current SRS state.
+
+Remaining risks:
+
+- A malicious authenticated learner could submit inaccurate progress events for their own account.
+- Client-side scoring could be manipulated until review writes move behind trusted RPC functions.
+- SRS scheduling fields on `learner_srs_state` could be client-influenced.
+
+Recommended future hardening:
+
+- Move review-event creation and SRS-state updates into RPC functions.
+- Validate objective result, rating, timing, and schedule transitions server-side.
+- Consider append-only progress tables with admin/RPC-only mutation for derived state.
+- Keep direct table writes only for early internal testing if that operational risk is accepted.
 
 ## Unresolved Questions
 
