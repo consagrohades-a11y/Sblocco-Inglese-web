@@ -84,7 +84,7 @@ export default function AdminLearners() {
               <span className="eyebrow">Amministrazione</span>
               <h1 className="mt-4 text-3xl font-black text-ink sm:text-4xl">Studenti</h1>
               <p className="mt-3 max-w-2xl text-base leading-7 text-ink/70">
-                Cerca gli account learner e seleziona lo studente su cui lavorare nelle fasi successive.
+                Cerca gli account learner e apri il profilo dello studente su cui vuoi lavorare.
               </p>
             </div>
             <Link
@@ -144,9 +144,10 @@ export default function AdminLearners() {
             {!loading && !error && filteredLearners.length > 0 ? (
               <div className="divide-y divide-ink/10">
                 {filteredLearners.map((learner) => (
-                  <article
+                  <Link
                     key={learner.id}
-                    className="grid gap-4 p-5 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1.6fr)_auto_auto] md:items-center"
+                    to={`/admin/learners/${learner.id}`}
+                    className="focus-ring grid gap-4 p-5 transition hover:bg-linen/45 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1.6fr)_auto_auto_auto] md:items-center"
                   >
                     <div>
                       <p className="text-base font-black text-ink">{learner.display_name || 'Nome non impostato'}</p>
@@ -159,7 +160,8 @@ export default function AdminLearners() {
                     <span className="inline-flex w-fit rounded-full border border-ink/10 bg-linen px-3 py-1.5 text-xs font-black text-ink">
                       {statusLabels[learner.status] || learner.status}
                     </span>
-                  </article>
+                    <span className="text-sm font-black text-moss">Apri profilo</span>
+                  </Link>
                 ))}
               </div>
             ) : null}
