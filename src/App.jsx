@@ -32,6 +32,7 @@ const A1UnitPage = lazy(() => import('./pages/A1UnitPage'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const UpdatePassword = lazy(() => import('./pages/UpdatePassword'));
 const Account = lazy(() => import('./pages/Account'));
 
 function ScrollManager() {
@@ -90,6 +91,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/update-password" element={<UpdatePassword />} />
             <Route
               path="/account"
               element={(

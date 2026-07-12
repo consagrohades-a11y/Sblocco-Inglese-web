@@ -21,6 +21,17 @@ export function getAuthErrorMessage(error) {
     return 'Devi confermare la tua email prima di accedere.';
   }
 
+  if (
+    message.includes('expired') ||
+    message.includes('invalid refresh token') ||
+    message.includes('session missing') ||
+    message.includes('session_not_found') ||
+    message.includes('auth session missing') ||
+    message.includes('invalid grant')
+  ) {
+    return 'Il link di recupero non e valido o e scaduto. Richiedi una nuova email di recupero password.';
+  }
+
   if (message.includes('network') || message.includes('fetch') || message.includes('failed to fetch')) {
     return 'Connessione non riuscita. Controlla la rete e riprova.';
   }

@@ -105,8 +105,11 @@ export function AuthProvider({ children }) {
 
   const requestPasswordReset = useCallback(({ email }) =>
     supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/login`,
+      redirectTo: `${window.location.origin}/update-password`,
     }), []);
+
+  const updatePassword = useCallback(({ password }) =>
+    supabase.auth.updateUser({ password }), []);
 
   const value = useMemo(() => ({
     session,
@@ -118,7 +121,8 @@ export function AuthProvider({ children }) {
     signIn,
     signOut,
     requestPasswordReset,
-  }), [session, user, profile, loading, refreshProfile, signUp, signIn, signOut, requestPasswordReset]);
+    updatePassword,
+  }), [session, user, profile, loading, refreshProfile, signUp, signIn, signOut, requestPasswordReset, updatePassword]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -4,7 +4,7 @@
 
 This document describes the first authentication foundation for the Vite React app.
 
-It adds learner signup, login, logout, password-reset request, a protected account page, and automatic learner profile creation. It does not add assignments UI, admin UI, paid access, Stripe, social login, trainer content migration, or production database changes from Codex.
+It adds learner signup, login, logout, password-reset request and update, a protected account page, and automatic learner profile creation. It does not add assignments UI, admin UI, paid access, Stripe, social login, trainer content migration, or production database changes from Codex.
 
 ## Supabase URL Configuration
 
@@ -59,15 +59,40 @@ Invalid credentials, unconfirmed email, weak password, network failure, and gene
 
 ## Password Reset Flow
 
-Route:
+Request route:
 
 ```text
 /forgot-password
 ```
 
-The form sends a Supabase password-reset email request. The app shows a confirmation message when the reset email request succeeds.
+The form sends a Supabase password-reset email request with:
 
-This foundation only adds the request step. A dedicated password-update screen can be added later if the Supabase email template redirects back into the app for password update.
+```text
+redirectTo: ${window.location.origin}/update-password
+```
+
+The app shows a confirmation message when the reset email request succeeds.
+
+Update route:
+
+```text
+/update-password
+```
+
+A learner who arrives from a valid Supabase recovery email receives a temporary Supabase Auth session. The update page requires that session before enabling the form. The form asks for:
+
+- new password;
+- password confirmation.
+
+On submit, the browser calls:
+
+```js
+supabase.auth.updateUser({ password })
+```
+
+The page handles missing, invalid, or expired recovery sessions with a safe message and a link to request a new reset email. Password mismatch, weak password, network failure, expired reset links, and successful password update are also handled without displaying raw Supabase errors.
+
+After a successful update, the app shows a success message, signs out the recovery session, and redirects to `/login` so the learner can sign in with the new password.
 
 ## Profile Auto-Creation
 
@@ -91,7 +116,9 @@ On `auth.users` insert, the trigger inserts one `public.profiles` row:
 - `role`: `learner`;
 - `status`: `active`.
 
-The function is `SECURITY DEFINER`, uses `set search_path = public`, revokes execute from `PUBLIC`, and uses `on conflict (id) do nothing` so repeated creation attempts do not overwrite protected profile fields.
+The function is `SECURITY DEFINER`, uses an empty `set search_path = ''`, fully qualifies `public.profiles`, revokes execute from `PUBLIC`, and uses `on conflict (id) do nothing` so repeated creation attempts do not overwrite protected profile fields.
+
+The empty search path keeps the trigger function from resolving attacker-controlled objects by name. Any database object referenced by the function must remain schema-qualified.
 
 ## Protected Routes
 
@@ -162,6 +189,7 @@ Do not expose this operation through the browser app.
 - `src/pages/Login.jsx`
 - `src/pages/Register.jsx`
 - `src/pages/ForgotPassword.jsx`
+- `src/pages/UpdatePassword.jsx`
 - `src/pages/Account.jsx`
 - `src/App.jsx`
 - `src/main.js`
@@ -172,7 +200,6 @@ Do not expose this operation through the browser app.
 
 ## Unresolved Issues
 
-- Dedicated password update route is not implemented yet.
 - Email confirmation and reset redirect URLs must be configured in Supabase.
 - Profile editing is not implemented; account currently displays profile data only.
 - Admin UI and assignment UI are intentionally not included.
