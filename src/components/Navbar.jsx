@@ -4,12 +4,15 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { navItems } from '../data/content';
 import { ctaLabels, primaryOffer } from '../config/site';
+import { useAuth } from '../auth/AuthContext.jsx';
 import BrandLogo from './BrandLogo';
 import CTAButton from './CTAButton';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { loading, user } = useAuth();
   const desktopItems = navItems.filter((item) => !['/prenota', '/simulazione-39'].includes(item.to));
+  const authLink = user ? { to: '/account', label: 'Account' } : { to: '/login', label: 'Login' };
   const navLabel = (item) => {
     if (item.to === '/') return 'La piattaforma';
     if (item.to === '/simulazione-39') return `Simulazione ${primaryOffer.price}`;
@@ -42,6 +45,16 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden shrink-0 items-center gap-2 xl:flex">
+          <NavLink
+            to={authLink.to}
+            className={({ isActive }) =>
+              `focus-ring whitespace-nowrap rounded-full px-4 py-2.5 text-sm font-black transition ${
+                isActive ? 'bg-ink text-white shadow-sm' : 'border border-ink/10 bg-white text-ink hover:bg-linen'
+              }`
+            }
+          >
+            {loading ? '...' : authLink.label}
+          </NavLink>
           <CTAButton href="/simulazione-39" className="!min-h-11 whitespace-nowrap !px-5 !py-2.5 !text-sm" icon={false}>
             Prenota l'audit a 39 euro
           </CTAButton>
@@ -86,6 +99,17 @@ export default function Navbar() {
                 </NavLink>
               ),
             )}
+            <NavLink
+              to={authLink.to}
+              className={({ isActive }) =>
+                `whitespace-nowrap rounded-lg px-4 py-3 text-base font-bold ${
+                  isActive ? 'bg-ink text-white' : 'bg-white/80 text-ink hover:bg-mint/50'
+                }`
+              }
+              onClick={() => setOpen(false)}
+            >
+              {loading ? '...' : authLink.label}
+            </NavLink>
           </nav>
           <CTAButton className="mt-4 w-full" onClick={() => setOpen(false)}>
             Prenota l'audit a 39 euro
