@@ -25,6 +25,26 @@ const areas = [
       { label: 'Archivio ed eliminazione', to: '/admin/content/expressions/archive', icon: Archive, variant: 'secondary' },
     ],
   },
+  {
+    title: 'Business Expressions',
+    description: 'Crea e revisiona espressioni per lavoro, riunioni, colloqui e comunicazione professionale.',
+    status: 'Supabase attivo',
+    actions: [
+      { label: 'Apri editor e revisione', to: '/admin/content/business-expressions', icon: BookOpen, variant: 'primary' },
+      { label: 'Importa CSV o JSON', to: '/admin/content/business-expressions/import', icon: FileJson, variant: 'secondary' },
+      { label: 'Archivio ed eliminazione', to: '/admin/content/business-expressions/archive', icon: Archive, variant: 'secondary' },
+    ],
+  },
+  {
+    title: 'Hospitality Expressions',
+    description: 'Crea e revisiona espressioni per accoglienza, ristorazione, hotel e servizio agli ospiti.',
+    status: 'Supabase attivo',
+    actions: [
+      { label: 'Apri editor e revisione', to: '/admin/content/hospitality-expressions', icon: BookOpen, variant: 'primary' },
+      { label: 'Importa CSV o JSON', to: '/admin/content/hospitality-expressions/import', icon: FileJson, variant: 'secondary' },
+      { label: 'Archivio ed eliminazione', to: '/admin/content/hospitality-expressions/archive', icon: Archive, variant: 'secondary' },
+    ],
+  },
 ];
 
 export default function AdminContentOverview() {
@@ -62,13 +82,6 @@ export default function AdminContentOverview() {
             ))}
           </div>
 
-          <section className={`${adminSurface.panel} mt-6 p-6 sm:p-7`}>
-            <p className="text-xs font-black uppercase tracking-wide text-amber-700 dark:text-amber-300">Migrazione controllata</p>
-            <h2 className="mt-2 text-xl font-black text-ink dark:text-white">Business e Hospitality Expressions</h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/60">
-              I Trainer esistenti restano disponibili agli studenti. Entreranno in questa area soltanto dopo audit, classificazione e migrazione in Supabase.
-            </p>
-          </section>
         </div>
       </section>
     </>
