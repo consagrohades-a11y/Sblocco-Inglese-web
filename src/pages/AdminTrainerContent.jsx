@@ -443,7 +443,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
               ) : null}
             </form>
 
-            <div className="space-y-4 xl:sticky xl:top-4 xl:grid xl:max-h-[calc(100vh-6rem)] xl:grid-rows-[minmax(18rem,0.95fr)_minmax(18rem,1.05fr)] xl:gap-4 xl:space-y-0">
+            <div className="space-y-4 xl:sticky xl:top-4 xl:grid xl:h-[calc(100vh-6rem)] xl:grid-rows-[minmax(0,0.78fr)_minmax(0,1.22fr)] xl:gap-4 xl:space-y-0">
               <aside className="min-h-0 overflow-y-auto rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:[scrollbar-color:rgba(255,255,255,0.18)_transparent] xl:[scrollbar-width:thin]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
@@ -535,7 +535,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                   </div>
                 </div>
 
-                <div className="mt-4 max-h-[34rem] min-h-0 divide-y divide-ink/10 overflow-y-auto rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10 xl:flex-1">
+                <div className="mt-4 max-h-[34rem] min-h-0 divide-y divide-ink/10 overflow-y-auto overscroll-contain rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10 xl:max-h-none xl:flex-1 xl:[scrollbar-color:rgba(14,124,102,0.55)_transparent] xl:[scrollbar-width:thin]">
                   {loading ? <p className="p-4 text-sm font-bold text-ink/60">Caricamento...</p> : null}
                   {!loading && filteredCards.length === 0 ? <p className="p-4 text-sm font-bold text-ink/60">Nessuna carta trovata.</p> : null}
 
