@@ -2,6 +2,7 @@ import { supabase } from './supabaseClient.js';
 
 export const PRACTICE_TRAINERS = {
   word: { id: 'word', label: 'Word Trainer', itemType: 'word', domain: null },
+  mixed: { id: 'mixed', label: 'Deck misti', itemType: 'mixed', domain: null },
   general: { id: 'general', label: 'General Expressions', itemType: 'expression', domain: 'general' },
   business: { id: 'business', label: 'Business Expressions', itemType: 'expression', domain: 'business' },
   hospitality: { id: 'hospitality', label: 'Hospitality Expressions', itemType: 'expression', domain: 'hospitality' },
@@ -79,6 +80,32 @@ function normaliseExpression(card, trainerId) {
   };
 }
 
+function normaliseMixed(card) {
+  const isWord = card.item_type === 'word';
+  return {
+    id: card.id,
+    publicId: card.public_id,
+    trainerId: 'mixed',
+    itemType: card.item_type,
+    domain: card.primary_domain,
+    level: card.level,
+    category: card.category || 'Senza categoria',
+    batch: batchFromTags(card.tags),
+    decks: (card.deck_ids || []).map((id, index) => ({
+      id,
+      publicId: card.deck_public_ids?.[index] || '',
+      title: card.deck_titles?.[index] || '',
+    })),
+    english: card.english,
+    italian: card.italian,
+    acceptedEnglish: compact([card.english, ...(card.accepted_answers || [])]),
+    acceptedItalian: buildItalianAnswerVariants(card.italian, { wordCard: isWord }),
+    examples: compact([card.example_1, card.example_2]),
+    explanation: card.explanation || '',
+    tags: card.tags || [],
+  };
+}
+
 export async function loadPublishedPracticeCards(trainerId) {
   const trainer = PRACTICE_TRAINERS[trainerId];
   if (!trainer) throw new Error('Trainer non riconosciuto.');
@@ -87,6 +114,14 @@ export async function loadPublishedPracticeCards(trainerId) {
     const { data, error } = await supabase.rpc('list_published_word_cards');
     if (error) throw error;
     return (data || []).map(normaliseWord);
+  }
+
+  if (trainer.itemType === 'mixed') {
+    const { data, error } = await supabase.rpc('list_published_mixed_deck_cards', {
+      p_domain: null,
+    });
+    if (error) throw error;
+    return (data || []).map(normaliseMixed);
   }
 
   const { data, error } = await supabase.rpc('list_published_expression_cards', {

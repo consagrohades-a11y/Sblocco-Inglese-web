@@ -10,6 +10,7 @@ const emptyDeck = {
   title: '',
   description: '',
   collection_type: 'reusable',
+  content_type: 'expression',
   status: 'draft',
   card_ids: [],
 };
@@ -23,6 +24,16 @@ function slugify(value) {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
+}
+
+function normaliseIdInput(value) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-+/, '');
 }
 
 function batchOf(card) {
@@ -57,27 +68,37 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
+  const blankDeck = useMemo(() => ({ ...emptyDeck, content_type: isWord ? 'word' : 'expression' }), [isWord]);
+
   async function loadData(preferredDeckId = null) {
     setLoading(true);
-    const [{ data: deckData, error: deckError }, { data: cardData, error: cardError }] = await Promise.all([
+    const requests = [
       isWord
         ? supabase.rpc('admin_list_word_decks')
         : supabase.rpc('admin_list_expression_decks', { p_domain: domain }),
       supabase.rpc(isWord ? 'admin_list_word_cards' : 'admin_list_expression_cards'),
-    ]);
+    ];
+    if (!isWord) requests.push(supabase.rpc('admin_list_word_cards'));
+    const [deckResult, cardResult, wordResult] = await Promise.all(requests);
+    const deckError = deckResult.error;
+    const cardError = cardResult.error || wordResult?.error;
     if (deckError || cardError) {
       setError(`Impossibile caricare deck e ${cardLabel}. Applica la migrazione Deck in Supabase.`);
       setDecks([]);
       setCards([]);
     } else {
-      const nextDecks = deckData || [];
+      const nextDecks = deckResult.data || [];
       setDecks(nextDecks);
-      setCards((cardData || []).filter((card) => isWord || card.primary_domain === domain));
+      const expressionCards = (cardResult.data || [])
+        .filter((card) => isWord || card.primary_domain === domain)
+        .map((card) => ({ ...card, item_type: isWord ? 'word' : 'expression' }));
+      const wordCards = isWord ? [] : (wordResult.data || []).map((card) => ({ ...card, item_type: 'word' }));
+      setCards([...expressionCards, ...wordCards]);
       setError('');
       const deckToOpen = nextDecks.find((deck) => deck.id === preferredDeckId)
         || nextDecks.find((deck) => deck.id === selected.id);
       if (deckToOpen) {
-        setSelected({ ...emptyDeck, ...deckToOpen, card_ids: deckToOpen.card_ids || [] });
+        setSelected({ ...blankDeck, ...deckToOpen, card_ids: deckToOpen.card_ids || [] });
         setSelectedCardIds(deckToOpen.card_ids || []);
       }
     }
@@ -92,24 +113,26 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
   const filteredCards = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return cards.filter((card) =>
+      (isWord || selected.content_type === 'mixed' || card.item_type === 'expression')
+      &&
       (level === 'all' || card.level === level)
       && (category === 'all' || card.topic === category)
       && (batch === 'all' || batchOf(card) === batch)
       && (!needle || [card.public_id, card.lemma, card.canonical_text, card.italian_meaning, card.topic].some((value) => String(value || '').toLowerCase().includes(needle))));
-  }, [cards, query, level, category, batch]);
+  }, [cards, isWord, selected.content_type, query, level, category, batch]);
 
   const visibleIds = filteredCards.map((card) => card.id);
   const allVisibleSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedCardIds.includes(id));
 
   function openDeck(deck) {
-    setSelected({ ...emptyDeck, ...deck, card_ids: deck.card_ids || [] });
+    setSelected({ ...blankDeck, ...deck, card_ids: deck.card_ids || [] });
     setSelectedCardIds(deck.card_ids || []);
     setError('');
     setMessage('');
   }
 
   function newDeck() {
-    setSelected(emptyDeck);
+    setSelected(blankDeck);
     setSelectedCardIds([]);
     setError('');
     setMessage('');
@@ -124,6 +147,14 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
       return next;
     });
     setMessage('');
+  }
+
+  function updateContentType(value) {
+    updateField('content_type', value);
+    if (value === 'expression') {
+      const expressionIds = new Set(cards.filter((card) => card.item_type === 'expression').map((card) => card.id));
+      setSelectedCardIds((current) => current.filter((id) => expressionIds.has(id)));
+    }
   }
 
   function toggleCard(cardId) {
@@ -146,7 +177,7 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
     setMessage('');
     const { data: deckId, error: saveError } = await supabase.rpc(
       isWord ? 'admin_save_word_deck' : 'admin_save_expression_deck',
-      { p_deck: { ...selected, id: selected.id || null, content_domain: domain } },
+      { p_deck: { ...selected, id: selected.id || null, content_domain: domain, content_type: isWord ? 'word' : selected.content_type } },
     );
     if (saveError) {
       setError(saveError.message || 'Salvataggio deck non riuscito.');
@@ -175,7 +206,7 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
     if (deleteError) {
       setError(deleteError.message || 'Eliminazione deck non riuscita.');
     } else {
-      setSelected(emptyDeck);
+      setSelected(blankDeck);
       setSelectedCardIds([]);
       setMessage('Deck eliminato. Le card sono rimaste disponibili.');
       await loadData();
@@ -206,9 +237,10 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
               <p className="text-xs font-black uppercase tracking-wide text-moss">{selected.id ? 'Modifica deck' : 'Nuovo deck'}</p>
               <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Dati del deck</h2>
               <div className="mt-5 grid gap-4">
-                <Field label="ID pubblico"><input value={selected.public_id} onChange={(event) => updateField('public_id', slugify(event.target.value))} placeholder="travel-english" className={fieldClass} /></Field>
+                <Field label="ID pubblico"><input value={selected.public_id} onChange={(event) => updateField('public_id', normaliseIdInput(event.target.value))} onBlur={(event) => updateField('public_id', slugify(event.target.value))} placeholder="travel-english" className={fieldClass} /></Field>
                 <Field label="Titolo"><input value={selected.title} onChange={(event) => updateField('title', event.target.value)} placeholder="Travel English" className={fieldClass} /></Field>
                 <Field label="Descrizione"><textarea rows="4" value={selected.description || ''} onChange={(event) => updateField('description', event.target.value)} className={fieldClass} /></Field>
+                {!isWord ? <Field label="Contenuto"><select value={selected.content_type || 'expression'} onChange={(event) => updateContentType(event.target.value)} className={fieldClass}><option value="expression">Solo Expressions</option><option value="mixed">Misto: Words + Expressions</option></select></Field> : null}
                 <Field label="Tipo"><select value={selected.collection_type} onChange={(event) => updateField('collection_type', event.target.value)} className={fieldClass}><option value="reusable">Riutilizzabile</option><option value="starter_pack">Starter pack</option><option value="specialist">Specialistico</option></select></Field>
                 <Field label="Stato"><select value={selected.status} onChange={(event) => updateField('status', event.target.value)} className={fieldClass}><option value="draft">Bozza</option><option value="published">Pubblicato</option><option value="archived">Archiviato</option></select></Field>
               </div>
@@ -222,14 +254,14 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
               <div className="shrink-0">
                 <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-black uppercase tracking-wide text-moss">Composizione</p><h2 className="mt-1 text-xl font-black text-ink dark:text-white">{selectedCardIds.length} card nel deck</h2></div><button type="button" onClick={toggleVisible} disabled={!visibleIds.length} className="focus-ring rounded-full border border-ink/15 px-4 py-2 text-xs font-black text-ink disabled:opacity-40 dark:border-white/20 dark:text-white">{allVisibleSelected ? 'Rimuovi visibili' : 'Aggiungi visibili'}</button></div>
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                  <label className="relative sm:col-span-2"><Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-ink/40 dark:text-white/40" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={`Cerca ${isWord ? 'parola' : 'espressione'}, italiano, categoria o ID`} className={`${fieldClass} pl-9`} /></label>
+                  <label className="relative sm:col-span-2"><Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-ink/40 dark:text-white/40" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={`Cerca ${isWord ? 'parola' : selected.content_type === 'mixed' ? 'parola o espressione' : 'espressione'}, italiano, categoria o ID`} className={`${fieldClass} pl-9`} /></label>
                   <select value={level} onChange={(event) => setLevel(event.target.value)} className={fieldClass}><option value="all">Tutti i livelli</option>{levels.map((value) => <option key={value}>{value}</option>)}</select>
                   <select value={category} onChange={(event) => setCategory(event.target.value)} className={fieldClass}><option value="all">Tutte le categorie</option>{categories.map((value) => <option key={value}>{value}</option>)}</select>
                   <select value={batch} onChange={(event) => setBatch(event.target.value)} className={`${fieldClass} sm:col-span-2`}><option value="all">Tutti i batch</option>{batches.map((value) => <option key={value}>{value}</option>)}</select>
                 </div>
               </div>
               <div className="mt-4 min-h-0 flex-1 divide-y divide-ink/10 overflow-y-auto overscroll-contain rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10">
-                {filteredCards.map((card) => { const active = selectedCardIds.includes(card.id); return <button key={card.id} type="button" onClick={() => toggleCard(card.id)} className={`focus-ring flex w-full items-center gap-3 p-3 text-left transition ${active ? 'bg-mint/45 dark:bg-emerald-400/10' : 'hover:bg-linen/50 dark:hover:bg-white/5'}`}><span className={`grid h-6 w-6 shrink-0 place-items-center rounded-md border ${active ? 'border-moss bg-moss text-white' : 'border-ink/20 dark:border-white/20'}`}>{active ? <Check className="h-4 w-4" /> : null}</span><span className="min-w-0 flex-1"><span className="block truncate text-sm font-black text-ink dark:text-white">{card.lemma || card.canonical_text}</span><span className="block truncate text-xs font-semibold text-ink/50 dark:text-white/50">{card.italian_meaning} · {card.level} · {card.topic}</span></span></button>; })}
+                {filteredCards.map((card) => { const active = selectedCardIds.includes(card.id); return <button key={card.id} type="button" onClick={() => toggleCard(card.id)} className={`focus-ring flex w-full items-center gap-3 p-3 text-left transition ${active ? 'bg-mint/45 dark:bg-emerald-400/10' : 'hover:bg-linen/50 dark:hover:bg-white/5'}`}><span className={`grid h-6 w-6 shrink-0 place-items-center rounded-md border ${active ? 'border-moss bg-moss text-white' : 'border-ink/20 dark:border-white/20'}`}>{active ? <Check className="h-4 w-4" /> : null}</span><span className="min-w-0 flex-1"><span className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate text-sm font-black text-ink dark:text-white">{card.lemma || card.canonical_text}</span>{!isWord && selected.content_type === 'mixed' ? <span className="shrink-0 rounded-full border border-ink/10 px-2 py-0.5 text-[10px] font-black uppercase text-ink/50 dark:border-white/15 dark:text-white/55">{card.item_type === 'word' ? 'Word' : 'Expression'}</span> : null}</span><span className="block truncate text-xs font-semibold text-ink/50 dark:text-white/50">{card.italian_meaning} · {card.level} · {card.topic}</span></span></button>; })}
                 {!loading && filteredCards.length === 0 ? <p className="p-4 text-sm font-bold text-ink/55 dark:text-white/55">Nessuna card corrisponde ai filtri.</p> : null}
               </div>
             </section>
