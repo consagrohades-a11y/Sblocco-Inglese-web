@@ -4,6 +4,14 @@ import SEO from '../components/SEO';
 import SrsCard from '../components/SrsCard';
 import ContentAreaNav from '../components/admin/ContentAreaNav';
 import { supabase } from '../lib/supabaseClient.js';
+import {
+  filterAdminCards,
+  getNextQueueCard,
+  getQueueLabel,
+  getQueuePosition,
+  isCardPublishable,
+  reviewFilterOptions,
+} from '../lib/cardWorkflow.js';
 
 const emptyCard = {
   id: '',
@@ -33,13 +41,6 @@ const emptyCard = {
   review_decision: '',
   review_notes: '',
 };
-
-const reviewFilterOptions = [
-  { value: 'all', label: 'Tutte' },
-  { value: 'pending', label: 'Da revisionare' },
-  { value: 'approved', label: 'Approvate' },
-  { value: 'rejected', label: 'Rifiutate' },
-];
 
 const splitLines = (value) => String(value || '')
   .split('\n')
@@ -94,38 +95,21 @@ export default function AdminTrainerContent() {
     loadCards();
   }, []);
 
-  const filteredCards = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-
-    return cards.filter((card) => {
-      const matchesReview = reviewFilter === 'all' || card.review_status === reviewFilter;
-      const matchesQuery = !normalized || [card.canonical_text, card.italian_meaning, card.public_id, card.topic]
-        .some((value) => String(value || '').toLowerCase().includes(normalized));
-
-      return matchesReview && matchesQuery;
-    });
-  }, [cards, query, reviewFilter]);
+  const filteredCards = useMemo(
+    () => filterAdminCards(cards, reviewFilter, query, ['canonical_text', 'italian_meaning', 'public_id', 'topic']),
+    [cards, query, reviewFilter],
+  );
 
   const selectedQueueIndex = useMemo(
-    () => filteredCards.findIndex((card) => card.id === selected.id),
+    () => getQueuePosition(filteredCards, selected.id),
     [filteredCards, selected.id],
   );
-  const nextCard = selectedQueueIndex >= 0
-    ? filteredCards[selectedQueueIndex + 1] ?? null
-    : filteredCards[0] ?? null;
-  const queueLabel = selectedQueueIndex >= 0
-    ? `${selectedQueueIndex + 1} di ${filteredCards.length}`
-    : `${filteredCards.length} nella coda`;
-  const publishableCards = useMemo(() => filteredCards.filter((card) => (
-    card.review_status === 'approved'
-    && card.status !== 'published'
-    && card.status !== 'archived'
-    && (card.accepted_answers || []).length > 0
-    && String(card.pronunciation_ipa_us || '').trim()
-    && String(card.example_1 || '').trim()
-    && String(card.example_2 || '').trim()
-    && String(card.usage_note || '').trim()
-  )), [filteredCards]);
+  const nextCard = getNextQueueCard(filteredCards, selectedQueueIndex);
+  const queueLabel = getQueueLabel(filteredCards, selectedQueueIndex);
+  const publishableCards = useMemo(
+    () => filteredCards.filter((card) => isCardPublishable(card, 'expression')),
+    [filteredCards],
+  );
   const allPublishableSelected = publishableCards.length > 0
     && publishableCards.every((card) => selectedForPublish.includes(card.id));
 
@@ -255,12 +239,7 @@ export default function AdminTrainerContent() {
     setPublishingBatch(false);
   }
 
-  const canPublish = selected.review_status === 'approved'
-    && selected.accepted_answers.length > 0
-    && selected.example_1.trim()
-    && selected.example_2.trim()
-    && selected.usage_note.trim()
-    && selected.pronunciation_ipa_us.trim();
+  const canPublish = isCardPublishable(selected, 'expression');
 
   return (
     <>
