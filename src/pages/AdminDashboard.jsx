@@ -1,55 +1,45 @@
 import React from 'react';
+import { BarChart3, BookOpen, ClipboardList, Settings, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { useAuth } from '../auth/AuthContext.jsx';
+import { adminButton, adminSurface } from '../styles/adminUi.js';
 
 const sections = [
   {
     title: 'Studenti',
-    description: 'Visualizza gli account learner e prepara la gestione delle assegnazioni.',
-    status: 'Disponibile',
+    description: 'Account learner, profili, relazioni didattiche e accesso alle assegnazioni.',
     to: '/admin/learners',
-    cta: 'Apri studenti',
+    icon: Users,
+    status: 'Attivo',
+  },
+  {
+    title: 'Contenuti',
+    description: 'Word ed Expression card con importazione, revisione e pubblicazione.',
+    to: '/admin/content',
+    icon: BookOpen,
+    status: 'Attivo',
   },
   {
     title: 'Assegnazioni',
-    description: 'Crea percorsi e attività da assegnare agli studenti.',
-    status: 'Disponibile dai profili studenti',
+    description: 'Attività collegate agli studenti, con struttura pronta per filtri e progressi.',
+    to: '/admin/assignments',
+    icon: ClipboardList,
+    status: 'In sviluppo',
   },
   {
-    title: 'Expression Trainer',
-    description: 'Crea, revisiona, approva e pubblica nuove espressioni General direttamente in Supabase.',
-    status: 'Disponibile',
-    to: '/admin/content/trainers',
-    cta: 'Apri expression card',
+    title: 'Analisi',
+    description: 'Attività studenti, card difficili e risultati degli esercizi.',
+    to: '/admin/analytics',
+    icon: BarChart3,
+    status: 'In sviluppo',
   },
   {
-    title: 'Importa expression card',
-    description: 'Carica una singola expression card JSON, controlla l’anteprima e salvala come bozza.',
-    status: 'Disponibile',
-    to: '/admin/content/trainers/import',
-    cta: 'Importa expression card',
-  },
-  {
-    title: 'Word Trainer',
-    description: 'Crea, revisiona, approva e pubblica word card dal livello A0 al C1.',
-    status: 'Nuovo',
-    to: '/admin/content/words',
-    cta: 'Apri word card',
-  },
-  {
-    title: 'Importa Word batch',
-    description: 'Carica una tabella CSV o un JSON con più word card e importale tutte come bozze.',
-    status: 'Nuovo',
-    to: '/admin/content/words/import',
-    cta: 'Importa batch',
-  },
-  {
-    title: 'Elimina carta',
-    description: 'Trova ed elimina definitivamente una expression card non pubblicata, senza entrare in Supabase.',
-    status: 'Disponibile',
-    to: '/admin/content/trainers/delete',
-    cta: 'Gestisci eliminazione',
+    title: 'Impostazioni',
+    description: 'Tema dell’interfaccia e gestione dell’account amministratore.',
+    to: '/admin/settings',
+    icon: Settings,
+    status: 'Parziale',
   },
 ];
 
@@ -59,38 +49,48 @@ export default function AdminDashboard() {
 
   return (
     <>
-      <SEO title="Pannello admin | Sblocco Inglese" description="Pannello amministrativo di Sblocco Inglese." />
-      <section className="section-shell py-12 lg:py-16">
+      <SEO title="Dashboard admin | Sblocco Inglese" description="Workspace amministrativo di Sblocco Inglese." />
+      <section className="section-shell py-10 lg:py-14">
         <div className="mx-auto max-w-6xl">
-          <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-            <span className="eyebrow">Amministrazione</span>
-            <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <h1 className="text-3xl font-black leading-tight text-ink sm:text-4xl">Pannello admin</h1>
-                <p className="mt-3 max-w-2xl text-base leading-7 text-ink/70">Ciao {displayName}. Da qui gestisci studenti, assegnazioni e contenuti della piattaforma.</p>
-              </div>
-              <Link to="/account" className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-black text-ink transition hover:bg-linen">Torna al tuo account</Link>
+          <header className={`${adminSurface.panel} p-6 sm:p-8`}>
+            <span className="eyebrow">Dashboard</span>
+            <h1 className="mt-4 text-3xl font-black leading-tight text-ink dark:text-white sm:text-4xl">Ciao {displayName}</h1>
+            <p className="mt-3 max-w-2xl text-base leading-7 text-ink/70 dark:text-white/65">
+              Gestisci studenti, contenuti e attività da un unico workspace. Le funzioni non ancora collegate a dati reali sono indicate chiaramente.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link to="/admin/content/words" className={adminButton.primary}>Revisiona Word card</Link>
+              <Link to="/admin/content/expressions" className={adminButton.positive}>Revisiona Expressions</Link>
+              <Link to="/admin/learners" className={adminButton.secondary}>Apri studenti</Link>
             </div>
+          </header>
+
+          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {sections.map((section) => {
+              const Icon = section.icon;
+              return (
+                <Link key={section.title} to={section.to} className={`${adminSurface.panel} focus-ring group p-6 transition hover:-translate-y-0.5 hover:border-moss/25 hover:shadow-soft dark:hover:border-emerald-300/25`}>
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-mint text-moss dark:bg-emerald-400/15 dark:text-emerald-300">
+                      <Icon aria-hidden="true" className="h-5 w-5" />
+                    </span>
+                    <span className="rounded-full bg-linen px-3 py-1.5 text-[0.68rem] font-black uppercase tracking-wide text-ink/55 dark:bg-white/10 dark:text-white/55">{section.status}</span>
+                  </div>
+                  <h2 className="mt-5 text-xl font-black text-ink dark:text-white">{section.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">{section.description}</p>
+                  <span className="mt-5 inline-flex text-sm font-black text-moss group-hover:underline dark:text-emerald-300">Apri sezione</span>
+                </Link>
+              );
+            })}
           </div>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {sections.map((section) => (
-              <section key={section.title} className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
-                <p className="text-xs font-black uppercase tracking-wide text-moss">{section.status}</p>
-                <h2 className="mt-3 text-xl font-black text-ink">{section.title}</h2>
-                <p className="mt-2 text-sm leading-6 text-ink/65">{section.description}</p>
-                {section.to ? (
-                  <Link to={section.to} className="focus-ring mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss">{section.cta}</Link>
-                ) : null}
-              </section>
-            ))}
-          </div>
-
-          <div className="mt-8 rounded-2xl border border-moss/20 bg-mint/25 p-6">
-            <p className="text-xs font-black uppercase tracking-wide text-moss">Contenuti Trainer</p>
-            <h2 className="mt-2 text-xl font-black text-ink">Flusso diretto in Supabase</h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70">Le nuove card partono come bozze. Diventano visibili agli studenti solo dopo revisione, approvazione e pubblicazione.</p>
-          </div>
+          <section className="mt-6 rounded-2xl border border-moss/20 bg-mint/25 p-6 dark:border-emerald-300/20 dark:bg-emerald-400/10">
+            <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Flusso contenuti</p>
+            <h2 className="mt-2 text-xl font-black text-ink dark:text-white">Bozza, revisione, approvazione, pubblicazione</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70 dark:text-white/60">
+              Le card diventano visibili agli studenti soltanto dopo aver superato i requisiti di completezza ed essere state pubblicate.
+            </p>
+          </section>
         </div>
       </section>
     </>
