@@ -2,7 +2,12 @@ import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../SEO';
 import { supabase } from '../../lib/supabaseClient.js';
-import { extractImportedCards, findDuplicatePublicIds, parseCsv } from '../../lib/cardImport.js';
+import {
+  extractImportedCards,
+  findDuplicatePublicIds,
+  parseCsv,
+  prepareImportCards,
+} from '../../lib/cardImport.js';
 import { adminButton, adminSurface } from '../../styles/adminUi.js';
 import ContentAreaNav from './ContentAreaNav';
 
@@ -30,14 +35,30 @@ export default function CardImportWorkspace({
   columns,
   template,
   templateFileName,
+  existingRpcName,
+  existingFilter = (card) => card,
+  idPrefix,
+  duplicateFields = [],
 }) {
   const [cards, setCards] = useState([]);
   const [fileName, setFileName] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [preflight, setPreflight] = useState({
+    issues: [],
+    notes: [],
+    summary: { generatedIds: 0, idConflicts: 0, existingDuplicates: 0, contentDuplicates: 0 },
+  });
 
-  const validation = useMemo(() => cards.map(validateCard), [cards, validateCard]);
+  const validation = useMemo(() => cards.map((card, index) => {
+    const base = validateCard(card, index);
+    return {
+      ...base,
+      issues: [...base.issues, ...(preflight.issues[index] || [])],
+      notes: preflight.notes[index] || [],
+    };
+  }), [cards, preflight, validateCard]);
   const invalidRows = useMemo(() => validation.filter((item) => item.issues.length > 0), [validation]);
   const duplicateIds = useMemo(() => findDuplicatePublicIds(cards), [cards]);
   const canImport = cards.length > 0 && invalidRows.length === 0 && duplicateIds.length === 0 && !saving;
@@ -51,6 +72,11 @@ export default function CardImportWorkspace({
     setCards([]);
     setError('');
     setMessage('');
+    setPreflight({
+      issues: [],
+      notes: [],
+      summary: { generatedIds: 0, idConflicts: 0, existingDuplicates: 0, contentDuplicates: 0 },
+    });
 
     if (file.size > 5 * 1024 * 1024) {
       setError('Il file supera il limite di 5 MB.');
@@ -69,8 +95,26 @@ export default function CardImportWorkspace({
       if (!rawCards) throw new Error('Seleziona un file CSV o JSON.');
 
       const normalized = rawCards.map(normalizeCard);
-      setCards(normalized);
-      setMessage(`${normalized.length} ${normalized.length === 1 ? itemLabel : itemPlural} caricate nel controllo preliminare. Non sono ancora in Supabase.`);
+      let prepared = {
+        cards: normalized,
+        issues: normalized.map(() => []),
+        notes: normalized.map(() => []),
+        summary: { generatedIds: 0, idConflicts: 0, existingDuplicates: 0, contentDuplicates: 0 },
+      };
+
+      if (existingRpcName && idPrefix) {
+        const { data: existingData, error: existingError } = await supabase.rpc(existingRpcName);
+        if (existingError) throw new Error(existingError.message || 'Impossibile controllare gli ID già presenti.');
+        prepared = prepareImportCards(
+          normalized,
+          (existingData || []).filter(existingFilter),
+          { idPrefix, duplicateFields },
+        );
+      }
+
+      setCards(prepared.cards);
+      setPreflight({ issues: prepared.issues, notes: prepared.notes, summary: prepared.summary });
+      setMessage(`${prepared.cards.length} ${prepared.cards.length === 1 ? itemLabel : itemPlural} analizzate. Non sono ancora in Supabase.`);
     } catch (fileError) {
       setError(fileError instanceof Error ? fileError.message : 'File non valido.');
     }
@@ -90,6 +134,11 @@ export default function CardImportWorkspace({
       setMessage(`${data} ${data === 1 ? itemLabel : itemPlural} importate come bozze da revisionare.`);
       setCards([]);
       setFileName('');
+      setPreflight({
+        issues: [],
+        notes: [],
+        summary: { generatedIds: 0, idConflicts: 0, existingDuplicates: 0, contentDuplicates: 0 },
+      });
     }
     setSaving(false);
   }
@@ -146,7 +195,7 @@ export default function CardImportWorkspace({
                               </td>
                             ))}
                             <td className="px-4 py-3 text-xs font-bold text-ink dark:text-white/75">
-                              {result.issues.length ? result.issues.join('; ') : 'Valida'}
+                              {result.issues.length ? result.issues.join('; ') : result.notes.length ? result.notes.join('; ') : 'Pronta'}
                             </td>
                           </tr>
                         );
@@ -162,6 +211,9 @@ export default function CardImportWorkspace({
                   <div><dt className="font-black text-ink/45 dark:text-white/45">Card</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{cards.length}</dd></div>
                   <div><dt className="font-black text-ink/45 dark:text-white/45">Non valide</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{invalidRows.length}</dd></div>
                   <div><dt className="font-black text-ink/45 dark:text-white/45">ID duplicati</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{duplicateIds.length}</dd></div>
+                  <div><dt className="font-black text-ink/45 dark:text-white/45">ID generati</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{preflight.summary.generatedIds}</dd></div>
+                  <div><dt className="font-black text-ink/45 dark:text-white/45">Conflitti con Supabase</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{preflight.summary.idConflicts}</dd></div>
+                  <div><dt className="font-black text-ink/45 dark:text-white/45">Duplicati già presenti</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{preflight.summary.existingDuplicates + preflight.summary.contentDuplicates}</dd></div>
                 </dl>
                 {duplicateIds.length ? <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-400/25 dark:bg-red-400/10 dark:text-red-100">ID duplicati: {duplicateIds.join(', ')}</div> : null}
                 <button type="button" disabled={!canImport} onClick={importCards} className={`${adminButton.primary} mt-6 w-full`}>
