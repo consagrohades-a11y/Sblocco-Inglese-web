@@ -80,3 +80,86 @@ export function findDuplicatePublicIds(cards) {
 
   return Array.from(duplicates);
 }
+
+function comparisonValue(value) {
+  return String(value || '')
+    .toLocaleLowerCase('en')
+    .normalize('NFKC')
+    .replace(/[’‘`´]/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function contentKey(card, fields) {
+  const values = fields.map((field) => comparisonValue(card[field]));
+  return values.every(Boolean) ? values.join('\u241f') : '';
+}
+
+export function prepareImportCards(cards, existingCards, { idPrefix, duplicateFields }) {
+  const idPattern = new RegExp(`^${idPrefix}-(\\d{4})$`);
+  const occupiedIds = new Set(existingCards.map((card) => String(card.public_id || '').toLowerCase()).filter(Boolean));
+  const explicitIds = cards.map((card) => String(card.public_id || '').toLowerCase()).filter(Boolean);
+  explicitIds.forEach((id) => occupiedIds.add(id));
+
+  let nextNumber = [...occupiedIds].reduce((highest, id) => {
+    const match = id.match(idPattern);
+    return match ? Math.max(highest, Number(match[1])) : highest;
+  }, 0) + 1;
+
+  const preparedCards = cards.map((card) => {
+    if (String(card.public_id || '').trim()) return card;
+    while (occupiedIds.has(`${idPrefix}-${String(nextNumber).padStart(4, '0')}`)) nextNumber += 1;
+    if (nextNumber > 9999) throw new Error(`Non ci sono più ID disponibili per ${idPrefix}.`);
+    const publicId = `${idPrefix}-${String(nextNumber).padStart(4, '0')}`;
+    occupiedIds.add(publicId);
+    nextNumber += 1;
+    return { ...card, public_id: publicId, _generated_public_id: true };
+  });
+
+  const existingById = new Map(existingCards.map((card) => [String(card.public_id || '').toLowerCase(), card]));
+  const contentOwners = new Map();
+  existingCards.forEach((card) => {
+    const key = contentKey(card, duplicateFields);
+    if (key && !contentOwners.has(key)) contentOwners.set(key, card);
+  });
+
+  const issues = preparedCards.map(() => []);
+  const notes = preparedCards.map((card) => card._generated_public_id ? ['ID generato automaticamente'] : []);
+  let idConflicts = 0;
+  let existingDuplicates = 0;
+  let contentDuplicates = 0;
+
+  preparedCards.forEach((card, index) => {
+    const publicId = String(card.public_id || '').toLowerCase();
+    const existingWithId = existingById.get(publicId);
+    const key = contentKey(card, duplicateFields);
+
+    if (existingWithId) {
+      const sameContent = key && key === contentKey(existingWithId, duplicateFields);
+      issues[index].push(sameContent
+        ? `ID già presente con gli stessi contenuti: ${publicId}`
+        : `ID già presente con contenuti diversi: ${publicId}`);
+      if (sameContent) existingDuplicates += 1;
+      else idConflicts += 1;
+    }
+
+    const owner = key ? contentOwners.get(key) : null;
+    if (owner && String(owner.public_id || '').toLowerCase() !== publicId) {
+      issues[index].push(`Possibile duplicato della card ${owner.public_id}`);
+      contentDuplicates += 1;
+    }
+    if (key && !contentOwners.has(key)) contentOwners.set(key, card);
+  });
+
+  return {
+    cards: preparedCards,
+    issues,
+    notes,
+    summary: {
+      generatedIds: preparedCards.filter((card) => card._generated_public_id).length,
+      idConflicts,
+      existingDuplicates,
+      contentDuplicates,
+    },
+  };
+}
