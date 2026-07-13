@@ -30,6 +30,7 @@ export default function AdminAssignmentContent() {
   const [estimatedMinutes, setEstimatedMinutes] = useState('');
   const [practiceEnabled, setPracticeEnabled] = useState(false);
   const [practiceConfig, setPracticeConfig] = useState(DEFAULT_ASSIGNMENT_PRACTICE);
+  const [practiceAvailability, setPracticeAvailability] = useState({ cards: 0, questions: 0 });
   const [studyEnabled, setStudyEnabled] = useState(false);
   const [selectedDeckIds, setSelectedDeckIds] = useState([]);
   const [selectedItemIds, setSelectedItemIds] = useState([]);
@@ -85,6 +86,7 @@ export default function AdminAssignmentContent() {
   const selectedActivities = useMemo(() => selectedKeys
     .map((key) => assignmentActivityCatalog.find((activity) => activity.key === key))
     .filter(Boolean), [selectedKeys]);
+  const selectedStructureCount = selectedActivities.length + (studyEnabled ? 1 : 0) + (practiceEnabled ? 1 : 0);
 
   const isOverdue = Boolean(assignment?.deadline_at && new Date(assignment.deadline_at) < new Date() && assignment.status !== 'completed');
 
@@ -116,6 +118,14 @@ export default function AdminAssignmentContent() {
     }
     if (practiceEnabled && !practiceConfig.modes.length) {
       setError('Seleziona almeno un tipo di esercizio per la pratica mirata.');
+      return;
+    }
+    if (practiceEnabled && practiceAvailability.questions < 1) {
+      setError('Con questi filtri e tipi di esercizio non esistono domande utilizzabili. Modifica la selezione prima di pubblicare.');
+      return;
+    }
+    if (practiceEnabled && practiceConfig.question_count > practiceAvailability.questions) {
+      setError(`Puoi assegnare al massimo ${practiceAvailability.questions} domande con questa selezione.`);
       return;
     }
     if (studyEnabled && !resolvedItemIds.length) {
@@ -238,7 +248,7 @@ export default function AdminAssignmentContent() {
                 onResolvedItemIdsChange={setResolvedItemIds}
               />
 
-              <AssignmentPracticeEditor enabled={practiceEnabled} onEnabledChange={setPracticeEnabled} config={practiceConfig} onChange={setPracticeConfig} />
+              <AssignmentPracticeEditor enabled={practiceEnabled} onEnabledChange={setPracticeEnabled} config={practiceConfig} onChange={setPracticeConfig} onAvailabilityChange={setPracticeAvailability} />
 
               <div className="grid gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.65fr)]">
                 <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm">
@@ -255,10 +265,12 @@ export default function AdminAssignmentContent() {
                 <aside className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] lg:sticky lg:top-24 lg:self-start">
                   <div className="flex items-end justify-between gap-3">
                     <div><p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Anteprima struttura</p><h2 className="mt-1 text-lg font-black text-ink dark:text-white">Contenuti selezionati</h2></div>
-                    <span className="rounded-full bg-linen px-2.5 py-1 text-xs font-black text-ink/65 dark:bg-white/10 dark:text-white/65">{selectedActivities.length}</span>
+                    <span className="rounded-full bg-linen px-2.5 py-1 text-xs font-black text-ink/65 dark:bg-white/10 dark:text-white/65">{selectedStructureCount}</span>
                   </div>
-                  {selectedActivities.length === 0 ? <p className="mt-4 text-sm leading-6 text-ink/60 dark:text-white/60">Nessun contenuto selezionato.</p> : (
+                  {selectedStructureCount === 0 ? <p className="mt-4 text-sm leading-6 text-ink/60 dark:text-white/60">Nessun contenuto selezionato.</p> : (
                     <div className="mt-3 divide-y divide-ink/10 border-y border-ink/10 dark:divide-white/10 dark:border-white/10">
+                      {studyEnabled ? <div className="flex gap-3 py-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-sea/15 text-xs font-black text-sea">SRS</span><div><p className="text-sm font-black text-ink dark:text-white">Percorso guidato</p><p className="mt-1 text-xs font-semibold text-ink/55 dark:text-white/55">{resolvedItemIds.length} card selezionate</p></div></div> : null}
+                      {practiceEnabled ? <div className="flex gap-3 py-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mint text-xs font-black text-moss">P</span><div><p className="text-sm font-black text-ink dark:text-white">Pratica mirata</p><p className="mt-1 text-xs font-semibold text-ink/55 dark:text-white/55">{practiceConfig.question_count} domande, {practiceConfig.modes.length} tipi di esercizio</p></div></div> : null}
                       {selectedActivities.map((activity, index) => (
                         <div key={activity.key} className="flex gap-3 py-3">
                           <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mint text-xs font-black text-ink dark:bg-emerald-400/15 dark:text-emerald-200">{index + 1}</span>
