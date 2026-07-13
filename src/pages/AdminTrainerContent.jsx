@@ -42,6 +42,27 @@ const emptyCard = {
   review_notes: '',
 };
 
+const trainerDomains = {
+  general: {
+    navType: 'expression',
+    label: 'General Expressions',
+    idPrefix: 'general',
+    fallbackCategory: 'General English',
+  },
+  business: {
+    navType: 'business',
+    label: 'Business Expressions',
+    idPrefix: 'business',
+    fallbackCategory: 'Business English',
+  },
+  hospitality: {
+    navType: 'hospitality',
+    label: 'Hospitality Expressions',
+    idPrefix: 'hospitality',
+    fallbackCategory: 'Hospitality English',
+  },
+};
+
 const splitLines = (value) => String(value || '')
   .split('\n')
   .map((item) => item.trim())
@@ -62,9 +83,10 @@ function Field({ label, required = false, children }) {
 
 const inputClass = 'w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm font-semibold text-ink outline-none transition placeholder:text-ink/35 focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/15 dark:bg-[#101a17] dark:text-white dark:placeholder:text-white/35 dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
 
-export default function AdminTrainerContent() {
+export default function AdminTrainerContent({ domain = 'general' }) {
+  const domainConfig = trainerDomains[domain] || trainerDomains.general;
   const [cards, setCards] = useState([]);
-  const [selected, setSelected] = useState(emptyCard);
+  const [selected, setSelected] = useState(() => ({ ...emptyCard, primary_domain: domain }));
   const [query, setQuery] = useState('');
   const [reviewFilter, setReviewFilter] = useState('all');
   const [previewRevealed, setPreviewRevealed] = useState(false);
@@ -86,15 +108,20 @@ export default function AdminTrainerContent() {
       setError('Impossibile caricare i contenuti. Verifica che la migrazione admin_trainer_content sia stata applicata in Supabase.');
       setCards([]);
     } else {
-      setCards(data ?? []);
+      setCards((data ?? []).filter((card) => String(card.primary_domain || 'general').toLowerCase() === domain));
     }
 
     setLoading(false);
   }
 
   useEffect(() => {
+    setSelected({ ...emptyCard, primary_domain: domain });
+    setSelectedForPublish([]);
+    setPreviewRevealed(false);
+    setMessage('');
+    setError('');
     loadCards();
-  }, []);
+  }, [domain]);
 
   const filteredCards = useMemo(
     () => filterAdminCards(cards, reviewFilter, query, ['canonical_text', 'italian_meaning', 'public_id', 'topic']),
@@ -121,7 +148,7 @@ export default function AdminTrainerContent() {
 
     return {
       id: selected.public_id || 'preview-card',
-      category: selected.topic || selected.primary_context || 'General English',
+      category: selected.topic || selected.primary_context || domainConfig.fallbackCategory,
       level: selected.level || 'A2',
       type: 'Expression',
       expression: selected.canonical_text || 'Your English expression',
@@ -132,7 +159,7 @@ export default function AdminTrainerContent() {
       example2: selected.example_2 || 'Your second natural example will appear here.',
       note: selected.usage_note || selected.english_explanation || 'A specific usage note will appear here.',
     };
-  }, [selected]);
+  }, [domainConfig.fallbackCategory, selected]);
 
   function updateField(field, value) {
     setSelected((current) => ({ ...current, [field]: value }));
@@ -156,9 +183,200 @@ export default function AdminTrainerContent() {
   }
 
   function newCard() {
+    const pattern = new RegExp(`^${domainConfig.idPrefix}-(\\d{4})import React, { useEffect, useMemo, useState } from 'react';
+import SEO from '../components/SEO';
+import SrsCard from '../components/SrsCard';
+import ContentAreaNav from '../components/admin/ContentAreaNav';
+import { supabase } from '../lib/supabaseClient.js';
+import useDarkMode from '../hooks/useDarkMode.js';
+import {
+  filterAdminCards,
+  getNextQueueCard,
+  getQueueLabel,
+  getQueuePosition,
+  isCardPublishable,
+  reviewFilterOptions,
+} from '../lib/cardWorkflow.js';
+
+const emptyCard = {
+  id: '',
+  public_id: '',
+  canonical_text: '',
+  italian_meaning: '',
+  english_explanation: '',
+  communicative_function: '',
+  primary_context: '',
+  level: 'A2',
+  primary_domain: 'general',
+  topic: '',
+  priority: 'useful',
+  register: 'neutral',
+  usage_channel: 'both',
+  tone: '',
+  accepted_answers: [],
+  pronunciation_ipa_us: '',
+  pronunciation_learner_us: '',
+  example_1: '',
+  example_2: '',
+  usage_note: '',
+  collocations: [],
+  tags: [],
+  status: 'draft',
+  review_status: 'pending',
+  review_decision: '',
+  review_notes: '',
+};
+
+const trainerDomains = {
+  general: {
+    navType: 'expression',
+    label: 'General Expressions',
+    idPrefix: 'general',
+    fallbackCategory: 'General English',
+  },
+  business: {
+    navType: 'business',
+    label: 'Business Expressions',
+    idPrefix: 'business',
+    fallbackCategory: 'Business English',
+  },
+  hospitality: {
+    navType: 'hospitality',
+    label: 'Hospitality Expressions',
+    idPrefix: 'hospitality',
+    fallbackCategory: 'Hospitality English',
+  },
+};
+
+const splitLines = (value) => String(value || '')
+  .split('\n')
+  .map((item) => item.trim())
+  .filter(Boolean);
+
+const joinLines = (value) => (Array.isArray(value) ? value.join('\n') : '');
+
+function Field({ label, required = false, children }) {
+  return (
+    <label className="block">
+      <span className="text-xs font-black uppercase tracking-wide text-ink/55 dark:text-white/65">
+        {label}{required ? ' *' : ''}
+      </span>
+      <div className="mt-1.5">{children}</div>
+    </label>
+  );
+}
+
+const inputClass = 'w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm font-semibold text-ink outline-none transition placeholder:text-ink/35 focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/15 dark:bg-[#101a17] dark:text-white dark:placeholder:text-white/35 dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
+
+export default function AdminTrainerContent({ domain = 'general' }) {
+  const domainConfig = trainerDomains[domain] || trainerDomains.general;
+  const [cards, setCards] = useState([]);
+  const [selected, setSelected] = useState(() => ({ ...emptyCard, primary_domain: domain }));
+  const [query, setQuery] = useState('');
+  const [reviewFilter, setReviewFilter] = useState('all');
+  const [previewRevealed, setPreviewRevealed] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [selectedForPublish, setSelectedForPublish] = useState([]);
+  const [publishingBatch, setPublishingBatch] = useState(false);
+  const darkMode = useDarkMode();
+
+  async function loadCards() {
+    setLoading(true);
+    setError('');
+
+    const { data, error: rpcError } = await supabase.rpc('admin_list_expression_cards');
+
+    if (rpcError) {
+      setError('Impossibile caricare i contenuti. Verifica che la migrazione admin_trainer_content sia stata applicata in Supabase.');
+      setCards([]);
+    } else {
+      setCards((data ?? []).filter((card) => String(card.primary_domain || 'general').toLowerCase() === domain));
+    }
+
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    setSelected({ ...emptyCard, primary_domain: domain });
+    setSelectedForPublish([]);
+    setPreviewRevealed(false);
+    setMessage('');
+    setError('');
+    loadCards();
+  }, [domain]);
+
+  const filteredCards = useMemo(
+    () => filterAdminCards(cards, reviewFilter, query, ['canonical_text', 'italian_meaning', 'public_id', 'topic']),
+    [cards, query, reviewFilter],
+  );
+
+  const selectedQueueIndex = useMemo(
+    () => getQueuePosition(filteredCards, selected.id),
+    [filteredCards, selected.id],
+  );
+  const nextCard = getNextQueueCard(filteredCards, selectedQueueIndex);
+  const queueLabel = getQueueLabel(filteredCards, selectedQueueIndex);
+  const publishableCards = useMemo(
+    () => filteredCards.filter((card) => isCardPublishable(card, 'expression')),
+    [filteredCards],
+  );
+  const allPublishableSelected = publishableCards.length > 0
+    && publishableCards.every((card) => selectedForPublish.includes(card.id));
+
+  const previewCard = useMemo(() => {
+    const pronunciation = [selected.pronunciation_ipa_us, selected.pronunciation_learner_us]
+      .filter(Boolean)
+      .join('  ·  ');
+
+    return {
+      id: selected.public_id || 'preview-card',
+      category: selected.topic || selected.primary_context || domainConfig.fallbackCategory,
+      level: selected.level || 'A2',
+      type: 'Expression',
+      expression: selected.canonical_text || 'Your English expression',
+      pronunciation: pronunciation || 'American pronunciation will appear here',
+      italian: selected.italian_meaning || 'Il significato italiano apparirà qui',
+      collocations: selected.collocations.length > 0 ? selected.collocations.join(' · ') : '',
+      example1: selected.example_1 || 'Your first natural example will appear here.',
+      example2: selected.example_2 || 'Your second natural example will appear here.',
+      note: selected.usage_note || selected.english_explanation || 'A specific usage note will appear here.',
+    };
+  }, [domainConfig.fallbackCategory, selected]);
+
+  function updateField(field, value) {
+    setSelected((current) => ({ ...current, [field]: value }));
+    setMessage('');
+  }
+
+  function openCard(card, options = {}) {
     setSelected({
       ...emptyCard,
-      public_id: `general-${String(cards.length + 1).padStart(4, '0')}`,
+      ...card,
+      accepted_answers: card.accepted_answers ?? [],
+      collocations: card.collocations ?? [],
+      tags: card.tags ?? [],
+    });
+    setPreviewRevealed(false);
+    setMessage(options.feedback || '');
+    setError('');
+    if (options.scroll !== false) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+);
+    const highest = cards.reduce((max, card) => {
+      const match = String(card.public_id || '').match(pattern);
+      return match ? Math.max(max, Number(match[1])) : max;
+    }, 0);
+
+    setSelected({
+      ...emptyCard,
+      primary_domain: domain,
+      public_id: `${domainConfig.idPrefix}-${String(highest + 1).padStart(4, '0')}`,
     });
     setPreviewRevealed(false);
     setMessage('');
@@ -245,13 +463,13 @@ export default function AdminTrainerContent() {
   return (
     <>
       <SEO
-        title="Contenuti Trainer | Pannello admin | Sblocco Inglese"
-        description="Crea, revisiona e pubblica le carte Trainer."
+        title={`${domainConfig.label} | Pannello admin | Sblocco Inglese`}
+        description={`Crea, revisiona e pubblica le card ${domainConfig.label}.`}
       />
 
       <section className="section-shell py-5 lg:py-6">
         <div className="mx-auto max-w-[96rem]">
-          <ContentAreaNav type="expression" onNewCard={newCard} />
+          <ContentAreaNav type={domainConfig.navType} onNewCard={newCard} />
 
           <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(20rem,0.72fr)]">
             <form
