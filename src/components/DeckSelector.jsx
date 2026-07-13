@@ -1,6 +1,8 @@
 import React from 'react';
 import { SlidersHorizontal, X } from 'lucide-react';
 
+const supportedLevels = ['A0', 'A1', 'A2', 'B1', 'B2', 'C1'];
+
 function PillButton({ active, children, count, onClick, dark = false }) {
   return (
     <button
@@ -31,7 +33,7 @@ function PillButton({ active, children, count, onClick, dark = false }) {
 export default function DeckSelector({
   categories,
   categoryCounts = {},
-  levels = [],
+  levels = supportedLevels,
   selectedCategories,
   onToggleCategory,
   selectedLevels,
