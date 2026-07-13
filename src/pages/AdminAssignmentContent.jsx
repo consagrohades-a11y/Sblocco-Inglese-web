@@ -169,22 +169,40 @@ export default function AdminAssignmentContent() {
                 </div>
               </section>
 
-              <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(300px,0.8fr)]">
+              <div className="grid gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.65fr)]">
                 <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm">
                   <p className="text-xs font-black uppercase tracking-wide text-moss">Contenuti</p>
                   <h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Attività disponibili</h2>
                   <div className="mt-6 grid gap-4 sm:grid-cols-2">
                     {assignmentActivityCatalog.map((activity) => {
                       const selected = selectedKeys.includes(activity.key);
-                      return <button key={activity.key} type="button" onClick={() => toggleActivity(activity.key)} className={`focus-ring rounded-xl border p-5 text-left transition ${selected ? 'border-moss bg-mint/30 dark:border-emerald-300/40 dark:bg-emerald-400/15' : 'border-ink/10 bg-white hover:bg-linen/45 dark:border-white/10 dark:bg-white/[0.05] dark:hover:bg-white/10'}`}><span className="text-xs font-black uppercase tracking-wide text-moss">{activity.type === 'trainer' ? 'Trainer' : 'Unità grammaticale'}</span><h3 className="mt-2 text-base font-black text-ink dark:text-white">{activity.title}</h3><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">{activity.description}</p><span className="mt-4 inline-flex text-sm font-black text-moss">{selected ? 'Selezionata' : 'Aggiungi'}</span></button>;
+                      return <button key={activity.key} type="button" onClick={() => toggleActivity(activity.key)} className={`focus-ring rounded-xl border p-4 text-left transition ${selected ? 'border-moss bg-mint/30 dark:border-emerald-300/40 dark:bg-emerald-400/15' : 'border-ink/10 bg-white hover:bg-linen/45 dark:border-white/10 dark:bg-white/[0.05] dark:hover:bg-white/10'}`}><span className="text-xs font-black uppercase tracking-wide text-moss">{activity.type === 'trainer' ? 'Trainer' : 'Unità grammaticale'}</span><h3 className="mt-2 text-base font-black text-ink dark:text-white">{activity.title}</h3><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">{activity.description}</p><span className="mt-4 inline-flex text-sm font-black text-moss">{selected ? 'Selezionata' : 'Aggiungi'}</span></button>;
                     })}
                   </div>
                 </section>
 
-                <aside className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm lg:sticky lg:top-24 lg:self-start">
-                  <p className="text-xs font-black uppercase tracking-wide text-moss">Anteprima struttura</p>
-                  <h2 className="mt-2 text-xl font-black text-ink dark:text-white">Contenuti selezionati</h2>
-                  {selectedActivities.length === 0 ? <p className="mt-4 text-sm leading-6 text-ink/60 dark:text-white/60">Nessun contenuto selezionato.</p> : <div className="mt-4 grid gap-3">{selectedActivities.map((activity, index) => <div key={activity.key} className="rounded-xl border border-ink/10 bg-linen dark:border-white/10 dark:bg-white/10 dark:text-white/35 dark:bg-white/[0.05] p-4"><p className="text-sm font-black">{index + 1}. {activity.title}</p><div className="mt-3 flex gap-2"><button type="button" disabled={index === 0} onClick={() => moveActivity(index, -1)} className="rounded-full border bg-white px-3 py-1.5 text-xs font-black disabled:opacity-35">Su</button><button type="button" disabled={index === selectedActivities.length - 1} onClick={() => moveActivity(index, 1)} className="rounded-full border bg-white px-3 py-1.5 text-xs font-black disabled:opacity-35">Giù</button><button type="button" onClick={() => toggleActivity(activity.key)} className="ml-auto text-xs font-black text-red-700 underline dark:text-red-300">Rimuovi</button></div></div>)}</div>}
+                <aside className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] lg:sticky lg:top-24 lg:self-start">
+                  <div className="flex items-end justify-between gap-3">
+                    <div><p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Anteprima struttura</p><h2 className="mt-1 text-lg font-black text-ink dark:text-white">Contenuti selezionati</h2></div>
+                    <span className="rounded-full bg-linen px-2.5 py-1 text-xs font-black text-ink/65 dark:bg-white/10 dark:text-white/65">{selectedActivities.length}</span>
+                  </div>
+                  {selectedActivities.length === 0 ? <p className="mt-4 text-sm leading-6 text-ink/60 dark:text-white/60">Nessun contenuto selezionato.</p> : (
+                    <div className="mt-3 divide-y divide-ink/10 border-y border-ink/10 dark:divide-white/10 dark:border-white/10">
+                      {selectedActivities.map((activity, index) => (
+                        <div key={activity.key} className="flex gap-3 py-3">
+                          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mint text-xs font-black text-ink dark:bg-emerald-400/15 dark:text-emerald-200">{index + 1}</span>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-black leading-5 text-ink dark:text-white">{activity.title}</p>
+                            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                              <button type="button" disabled={index === 0} onClick={() => moveActivity(index, -1)} className="rounded-md border border-ink/15 bg-white px-2.5 py-1 text-xs font-black text-ink transition hover:bg-linen disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/15 dark:bg-white/10 dark:text-white dark:hover:bg-white/15">Su</button>
+                              <button type="button" disabled={index === selectedActivities.length - 1} onClick={() => moveActivity(index, 1)} className="rounded-md border border-ink/15 bg-white px-2.5 py-1 text-xs font-black text-ink transition hover:bg-linen disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/15 dark:bg-white/10 dark:text-white dark:hover:bg-white/15">Giù</button>
+                              <button type="button" onClick={() => toggleActivity(activity.key)} className="ml-auto rounded-md px-2 py-1 text-xs font-black text-red-700 transition hover:bg-red-50 dark:text-red-300 dark:hover:bg-red-300/10">Rimuovi</button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </aside>
               </div>
 

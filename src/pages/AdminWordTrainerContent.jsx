@@ -300,8 +300,8 @@ export default function AdminWordTrainerContent() {
               {!canPublish ? <p className="mt-3 text-xs font-bold leading-5 text-ink/55 dark:text-white/55">Per pubblicare servono approvazione, risposta accettata, IPA americana, due esempi e nota d'uso.</p> : null}
             </form>
 
-            <div className="space-y-4">
-              <aside className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:sticky xl:top-4 xl:z-20 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto xl:[scrollbar-color:rgba(255,255,255,0.18)_transparent] xl:[scrollbar-width:thin]">
+            <div className="space-y-4 xl:sticky xl:top-4 xl:grid xl:max-h-[calc(100vh-6rem)] xl:grid-rows-[minmax(18rem,0.95fr)_minmax(18rem,1.05fr)] xl:gap-4 xl:space-y-0">
+              <aside className="min-h-0 overflow-y-auto rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:[scrollbar-color:rgba(255,255,255,0.18)_transparent] xl:[scrollbar-width:thin]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div><p className="text-xs font-black uppercase tracking-wide text-moss">Anteprima dal vivo</p><h2 className="mt-1 text-lg font-black text-ink dark:text-white">Vista studente</h2></div>
                   {previewRevealed ? <button type="button" onClick={() => setPreviewRevealed(false)} className="focus-ring rounded-full border border-ink/15 px-4 py-2 text-xs font-black text-ink hover:bg-linen">Nascondi risposta</button> : null}
@@ -309,8 +309,8 @@ export default function AdminWordTrainerContent() {
                 <div className="mt-3"><SrsCard card={previewCard} dark={darkMode} progress={null} revealed={previewRevealed} onReveal={() => setPreviewRevealed(true)} onRate={() => {}} sessionLabel="Anteprima word card" targetLabel="Word" /></div>
               </aside>
 
-              <aside className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e]">
-                <h2 className="text-lg font-black text-ink dark:text-white">Word card in Supabase</h2>
+              <aside className="min-h-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:flex xl:flex-col xl:overflow-hidden">
+                <h2 className="shrink-0 text-lg font-black text-ink dark:text-white">Word card in Supabase</h2>
                 <input type="search" className={`${inputClass} mt-4`} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cerca parola, italiano, categoria o ID" />
                 <div className="mt-3 grid grid-cols-2 gap-2">{reviewFilterOptions.map((option) => <button key={option.value} type="button" onClick={() => setReviewFilter(option.value)} className={`focus-ring min-h-10 rounded-xl border px-3 py-2 text-sm font-black ${reviewFilter === option.value ? 'border-moss bg-moss text-white dark:border-emerald-300 dark:bg-emerald-400 dark:text-[#07120f]' : 'border-ink/10 bg-paper text-ink/70 dark:border-white/10 dark:bg-white/5 dark:text-white/65'}`}>{option.label}</button>)}</div>
                 <div className="mt-4 rounded-xl border border-moss/25 bg-mint/25 p-4 dark:border-emerald-300/25 dark:bg-emerald-400/10">
@@ -331,7 +331,7 @@ export default function AdminWordTrainerContent() {
                   </div>
                 </div>
 
-                <div className="mt-4 max-h-[34rem] divide-y divide-ink/10 overflow-y-auto rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10">
+                <div className="mt-4 max-h-[34rem] min-h-0 divide-y divide-ink/10 overflow-y-auto rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10 xl:flex-1">
                   {loading ? <p className="p-4 text-sm font-bold text-ink/60">Caricamento...</p> : null}
                   {!loading && filteredCards.length === 0 ? <p className="p-4 text-sm font-bold text-ink/60">Nessuna word card trovata.</p> : null}
                   {filteredCards.map((card) => {
