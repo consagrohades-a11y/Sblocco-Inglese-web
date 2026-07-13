@@ -61,7 +61,15 @@ export default function ContentAreaNav({ type, onNewCard }) {
               <Plus aria-hidden="true" className="h-4 w-4" />
               Nuova card
             </button>
-          ) : null}
+          ) : (
+            <Link
+              to={area.routes[0].to}
+              className="focus-ring inline-flex min-h-9 items-center gap-2 rounded-lg bg-white px-3 py-1.5 text-xs font-black text-ink transition hover:bg-emerald-100"
+            >
+              <Plus aria-hidden="true" className="h-4 w-4" />
+              Nuova card
+            </Link>
+          )}
           <Link
             to="/admin"
             className="focus-ring inline-flex min-h-9 items-center gap-2 rounded-lg border border-white/15 px-3 py-1.5 text-xs font-black text-white/75 transition hover:bg-white/10 hover:text-white"
