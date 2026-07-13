@@ -86,7 +86,7 @@ function normalizeImportedCard(raw) {
     english_explanation: String(firstValue(source, ['english_explanation', 'explanation', 'usage_explanation'])).trim(),
     communicative_function: String(firstValue(source, ['communicative_function', 'function'])).trim(),
     primary_context: String(firstValue(source, ['primary_context', 'context'])).trim(),
-    level: enumValue(firstValue(source, ['level'], 'A2'), ['A2', 'B1', 'B2'], 'A2'),
+    level: enumValue(firstValue(source, ['level'], 'A2'), ['A2', 'B1', 'B2', 'C1'], 'A2'),
     primary_domain: String(firstValue(source, ['primary_domain', 'domain'], 'general')).trim() || 'general',
     topic: String(firstValue(source, ['topic', 'category'])).trim(),
     priority: enumValue(
@@ -124,7 +124,7 @@ function downloadTemplate() {
   const template = {
     schema_version: '1.0',
     card: {
-      public_id: 'general-001',
+      public_id: 'general-0001',
       canonical_text: "I'm on my way.",
       italian_meaning: 'Sto arrivando. / Sono per strada.',
       english_explanation: 'Used when you have already left and are travelling toward the destination.',
