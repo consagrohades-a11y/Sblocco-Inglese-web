@@ -164,7 +164,7 @@ export default function AdminAssignmentContent() {
         sequence_index: 1,
         practice_config: {
           ...practiceConfig,
-          item_ids: studyEnabled ? resolvedItemIds : [],
+          item_ids: [],
         },
       });
       resources.forEach((resource, index) => { resource.sequence_index = index + 1; });
@@ -254,8 +254,6 @@ export default function AdminAssignmentContent() {
                 config={practiceConfig}
                 onChange={setPracticeConfig}
                 onAvailabilityChange={setPracticeAvailability}
-                allowedItemIds={resolvedItemIds}
-                restrictToAllowedItems={studyEnabled}
               />
 
               <div className="grid gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.65fr)]">
