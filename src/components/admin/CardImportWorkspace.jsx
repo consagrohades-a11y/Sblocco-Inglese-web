@@ -4,6 +4,7 @@ import SEO from '../SEO';
 import { supabase } from '../../lib/supabaseClient.js';
 import { extractImportedCards, findDuplicatePublicIds, parseCsv } from '../../lib/cardImport.js';
 import { adminButton, adminSurface } from '../../styles/adminUi.js';
+import ContentAreaNav from './ContentAreaNav';
 
 function downloadJsonTemplate(fileName, template) {
   const blob = new Blob([JSON.stringify(template, null, 2)], { type: 'application/json' });
@@ -16,6 +17,7 @@ function downloadJsonTemplate(fileName, template) {
 }
 
 export default function CardImportWorkspace({
+  type,
   title,
   description,
   itemLabel,
@@ -97,6 +99,7 @@ export default function CardImportWorkspace({
       <SEO title={`${title} | Admin | Sblocco Inglese`} description={description} />
       <section className="section-shell py-10 lg:py-14">
         <div className="mx-auto max-w-7xl">
+          <ContentAreaNav type={type} />
           <header className={`${adminSurface.panel} p-6 sm:p-8`}>
             <span className="eyebrow">Importazione contenuti</span>
             <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-4xl">{title}</h1>
