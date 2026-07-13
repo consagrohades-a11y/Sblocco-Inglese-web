@@ -89,7 +89,7 @@ function PageFallback() {
 
 export default function App() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-paper text-ink transition-colors duration-300 dark:bg-[#0f1715] dark:text-white">
+    <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-[#0f1715] dark:text-white">
       <ScrollManager />
       <Navbar />
       <main className="pb-24 xl:pb-0">
