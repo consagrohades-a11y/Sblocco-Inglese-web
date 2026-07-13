@@ -35,6 +35,7 @@ const Register = lazy(() => import('./pages/Register'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const UpdatePassword = lazy(() => import('./pages/UpdatePassword'));
 const Account = lazy(() => import('./pages/Account'));
+const AdminShell = lazy(() => import('./components/AdminShell'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AdminLearners = lazy(() => import('./pages/AdminLearners'));
 const AdminLearnerDetail = lazy(() => import('./pages/AdminLearnerDetail'));
@@ -45,6 +46,8 @@ const AdminTrainerCardImport = lazy(() => import('./pages/AdminTrainerCardImport
 const AdminTrainerCardDelete = lazy(() => import('./pages/AdminTrainerCardDelete'));
 const AdminWordTrainerContent = lazy(() => import('./pages/AdminWordTrainerContent'));
 const AdminWordTrainerImport = lazy(() => import('./pages/AdminWordTrainerImport'));
+const AdminContentOverview = lazy(() => import('./pages/AdminContentOverview'));
+const AdminSectionOverview = lazy(() => import('./pages/AdminSectionOverview'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
 
@@ -88,11 +91,14 @@ function PageFallback() {
 }
 
 export default function App() {
+  const location = useLocation();
+  const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
+
   return (
     <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-[#0f1715] dark:text-white">
       <ScrollManager />
-      <Navbar />
-      <main className="pb-24 xl:pb-0">
+      {!isAdmin ? <Navbar /> : null}
+      <main className={isAdmin ? '' : 'pb-24 xl:pb-0'}>
         <Suspense fallback={<PageFallback />}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -120,16 +126,26 @@ export default function App() {
             <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
             <Route path="/assignments" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
             <Route path="/assignments/:assignmentId" element={<ProtectedRoute><LearnerAssignmentDetail /></ProtectedRoute>} />
-            <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-            <Route path="/admin/learners" element={<AdminRoute><AdminLearners /></AdminRoute>} />
-            <Route path="/admin/learners/:learnerId" element={<AdminRoute><AdminLearnerDetail /></AdminRoute>} />
-            <Route path="/admin/learners/:learnerId/assignments/new" element={<AdminRoute><AdminCreateAssignment /></AdminRoute>} />
-            <Route path="/admin/learners/:learnerId/assignments/:assignmentId/content" element={<AdminRoute><AdminAssignmentContent /></AdminRoute>} />
-            <Route path="/admin/content/trainers" element={<AdminRoute><AdminTrainerContent /></AdminRoute>} />
-            <Route path="/admin/content/trainers/import" element={<AdminRoute><AdminTrainerCardImport /></AdminRoute>} />
-            <Route path="/admin/content/trainers/delete" element={<AdminRoute><AdminTrainerCardDelete /></AdminRoute>} />
-            <Route path="/admin/content/words" element={<AdminRoute><AdminWordTrainerContent /></AdminRoute>} />
-            <Route path="/admin/content/words/import" element={<AdminRoute><AdminWordTrainerImport /></AdminRoute>} />
+            <Route path="/admin" element={<AdminRoute><AdminShell /></AdminRoute>}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="learners" element={<AdminLearners />} />
+              <Route path="learners/:learnerId" element={<AdminLearnerDetail />} />
+              <Route path="learners/:learnerId/assignments/new" element={<AdminCreateAssignment />} />
+              <Route path="learners/:learnerId/assignments/:assignmentId/content" element={<AdminAssignmentContent />} />
+              <Route path="content" element={<AdminContentOverview />} />
+              <Route path="content/words" element={<AdminWordTrainerContent />} />
+              <Route path="content/words/import" element={<AdminWordTrainerImport />} />
+              <Route path="content/expressions" element={<AdminTrainerContent />} />
+              <Route path="content/expressions/import" element={<AdminTrainerCardImport />} />
+              <Route path="content/expressions/archive" element={<AdminTrainerCardDelete />} />
+              <Route path="assignments" element={<AdminSectionOverview section="assignments" />} />
+              <Route path="analytics" element={<AdminSectionOverview section="analytics" />} />
+              <Route path="settings" element={<AdminSectionOverview section="settings" />} />
+
+              <Route path="content/trainers" element={<Navigate to="/admin/content/expressions" replace />} />
+              <Route path="content/trainers/import" element={<Navigate to="/admin/content/expressions/import" replace />} />
+              <Route path="content/trainers/delete" element={<Navigate to="/admin/content/expressions/archive" replace />} />
+            </Route>
             <Route path="/levels/a1/be-basic-sentences" element={<A1UnitPage key="a1-be-basic-sentences" unitId="be-basic-sentences" />} />
             <Route path="/levels/a1/present-simple-normal-verbs" element={<A1UnitPage key="a1-present-simple-normal-verbs" unitId="present-simple-normal-verbs" />} />
             <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
@@ -142,9 +158,9 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      <Footer />
-      <StickyMobileCTA />
-      <BackToTopButton />
+      {!isAdmin ? <Footer /> : null}
+      {!isAdmin ? <StickyMobileCTA /> : null}
+      {!isAdmin ? <BackToTopButton /> : null}
     </div>
   );
 }
