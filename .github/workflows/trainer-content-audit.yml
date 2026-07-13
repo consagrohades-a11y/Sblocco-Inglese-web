@@ -1,0 +1,82 @@
+name: Trainer content audit
+
+on:
+  push:
+    branches:
+      - codex/trainer-card-audit-foundation
+    paths:
+      - 'src/data/generalExpressionCards.js'
+      - 'src/content/trainer/**'
+      - 'scripts/audit-general-expression-cards.mjs'
+      - 'scripts/validate-srs-cards.mjs'
+      - 'src/utils/validateSrsCards.js'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/trainer-content-audit.yml'
+  pull_request:
+    paths:
+      - 'src/data/generalExpressionCards.js'
+      - 'src/content/trainer/**'
+      - 'scripts/audit-general-expression-cards.mjs'
+      - 'scripts/validate-srs-cards.mjs'
+      - 'src/utils/validateSrsCards.js'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/trainer-content-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-general-expression:
+    name: Audit General Expression cards
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Trainer audit report
+        run: pnpm run audit:general-expression
+
+      - name: Validate existing SRS datasets
+        run: pnpm run validate:srs
+
+      - name: Build application
+        run: pnpm run build
+
+      - name: Add readable report to workflow summary
+        if: always()
+        run: |
+          if [ -f reports/trainer-audit/general-expression-audit.md ]; then
+            cat reports/trainer-audit/general-expression-audit.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'The audit report was not generated.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: general-expression-audit
+          path: |
+            reports/trainer-audit/general-expression-audit.md
+            reports/trainer-audit/general-expression-audit.json
+          if-no-files-found: error
+          retention-days: 30
