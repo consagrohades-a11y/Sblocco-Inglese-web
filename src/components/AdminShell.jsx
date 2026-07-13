@@ -33,6 +33,8 @@ const navigationGroups = [
       { label: 'Panoramica', to: '/admin/content', icon: BookOpen, end: true },
       { label: 'Word Trainer', to: '/admin/content/words', icon: BookOpen },
       { label: 'General Expressions', to: '/admin/content/expressions', icon: BookOpen },
+      { label: 'Business Expressions', to: '/admin/content/business-expressions', icon: BookOpen },
+      { label: 'Hospitality Expressions', to: '/admin/content/hospitality-expressions', icon: BookOpen },
     ],
   },
   {
