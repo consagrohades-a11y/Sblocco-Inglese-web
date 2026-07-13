@@ -169,8 +169,9 @@ revoke all on function public.get_assignment_practice_session(uuid, uuid) from p
 grant execute on function public.get_assignment_practice_session(uuid, uuid) to authenticated;
 
 drop function if exists public.record_practice_attempt(uuid, text, text, numeric, text, text, integer);
+drop function if exists public.record_practice_attempt(uuid, text, text, numeric, text, text, integer, uuid, uuid);
 
-create function public.record_practice_attempt(
+create or replace function public.record_practice_attempt(
   p_learning_item_id uuid,
   p_exercise_type text,
   p_result text,
