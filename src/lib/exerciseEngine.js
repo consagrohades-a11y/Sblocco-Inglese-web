@@ -115,13 +115,34 @@ function makeMultipleChoice(item, pool) {
   });
 }
 
-function makeSentenceCompletion(item) {
-  const target = item.english.trim();
-  const example = item.examples.find((value) => value.toLocaleLowerCase('en').includes(target.toLocaleLowerCase('en')));
-  if (!example || !target) return null;
+function stripInlineFormatting(value) {
+  return String(value || '')
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/<[^>]+>/g, '')
+    .replace(/[\\*_~`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
-  const start = example.toLocaleLowerCase('en').indexOf(target.toLocaleLowerCase('en'));
-  const prompt = `${example.slice(0, start)}_____ ${example.slice(start + target.length)}`.replace(/\s+/g, ' ').trim();
+function gapPrompt(example, target) {
+  const plainExample = stripInlineFormatting(example);
+  const plainTarget = stripInlineFormatting(target);
+  const start = plainExample.toLocaleLowerCase('en').indexOf(plainTarget.toLocaleLowerCase('en'));
+  if (start < 0) return null;
+
+  const before = plainExample.slice(0, start).trimEnd();
+  const after = plainExample.slice(start + plainTarget.length).trimStart();
+  const spaceBefore = before ? ' ' : '';
+  const spaceAfter = after && !/^[,.;:!?)]/.test(after) ? ' ' : '';
+  return `${before}${spaceBefore}_____${spaceAfter}${after}`.trim();
+}
+
+function makeSentenceCompletion(item) {
+  const target = stripInlineFormatting(item.english);
+  const prompt = item.examples.map((example) => gapPrompt(example, target)).find(Boolean);
+  if (!prompt || !target) return null;
+
   return baseQuestion(item, 'sentence_completion', {
     direction: 'gap_fill',
     instruction: 'Completa la frase in inglese',
