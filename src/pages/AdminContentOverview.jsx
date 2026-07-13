@@ -1,5 +1,5 @@
 import React from 'react';
-import { Archive, BookOpen, FileJson, FileSpreadsheet, Trash2 } from 'lucide-react';
+import { Archive, BookOpen, FileJson, FileSpreadsheet } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { adminButton, adminSurface } from '../styles/adminUi.js';
