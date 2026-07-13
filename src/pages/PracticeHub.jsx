@@ -156,14 +156,11 @@ export default function PracticeHub() {
     .filter((card) => (level === 'all' || card.level === level) && (deck === 'all' || (card.decks || []).some((item) => item.id === deck)))
     .map((card) => card.category)), [cards, level, deck]);
   const batches = useMemo(() => uniqueSorted(cards.map((card) => card.batch)), [cards]);
-  const assignedItemIds = useMemo(() => new Set(assignmentContext?.practice_config?.item_ids || []), [assignmentContext]);
   const filteredCards = useMemo(() => cards.filter((card) =>
-    (!assignedItemIds.size || assignedItemIds.has(card.id))
-    &&
     (level === 'all' || card.level === level)
     && (deck === 'all' || (card.decks || []).some((item) => item.id === deck))
     && (category === 'all' || card.category === category)
-    && (batch === 'all' || card.batch === batch)), [cards, level, deck, category, batch, assignedItemIds]);
+    && (batch === 'all' || card.batch === batch)), [cards, level, deck, category, batch]);
   const availableQuestions = useMemo(() => createPracticeSession(filteredCards, modes, 50).length, [filteredCards, modes]);
   const locked = Boolean(assignmentContext);
   const assignmentConfigurationMismatch = locked && questionCount > availableQuestions;
@@ -276,7 +273,7 @@ export default function PracticeHub() {
               </div>
 
               {loadError ? <p className="mt-4 flex items-center gap-2 rounded-lg border border-coral/30 bg-blush p-3 text-sm font-bold text-ink dark:border-rose-300/30 dark:bg-rose-300/10 dark:text-rose-100"><CircleAlert className="h-4 w-4 shrink-0" />{loadError}</p> : null}
-              {!loading && !loadError && assignmentConfigurationMismatch ? <p className="mt-4 flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm font-bold text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-amber-100"><CircleAlert className="mt-0.5 h-4 w-4 shrink-0" />Questa assegnazione richiede {questionCount} domande, ma le card assegnate ne possono generare solo {availableQuestions}. L’insegnante deve riaprire e salvare l’assegnazione.</p> : null}
+              {!loading && !loadError && assignmentConfigurationMismatch ? <p className="mt-4 flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm font-bold text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-amber-100"><CircleAlert className="mt-0.5 h-4 w-4 shrink-0" />Questa assegnazione richiede {questionCount} domande, ma i filtri e i tipi di esercizio scelti ne possono generare solo {availableQuestions}. L’insegnante deve riaprire e salvare l’assegnazione.</p> : null}
             </section>
           ) : finished ? (
             <section className="rounded-xl border border-ink/10 bg-white p-6 text-center shadow-soft dark:border-white/10 dark:bg-white/[0.06] sm:p-9">
