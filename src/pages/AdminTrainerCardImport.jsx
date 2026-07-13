@@ -70,6 +70,7 @@ function normalizeExpressionCard(source, domain) {
     usage_note: String(firstValue(source, ['usage_note', 'note'])).trim(),
     collocations: normalizeList(firstValue(source, ['collocations'], [])),
     tags: normalizeList(firstValue(source, ['tags'], [])),
+    deck_public_ids: normalizeList(firstValue(source, ['deck_public_ids', 'decks', 'collections'], [])),
     status: 'draft',
     review_status: 'pending',
     review_decision: '',
@@ -112,6 +113,7 @@ function createTemplate(domain, config) {
       usage_note: 'Add a specific usage note for this expression and context.',
       collocations: ['on my way now', 'already on my way'],
       tags: [domain, 'spoken'],
+      deck_public_ids: [`${domain}-essentials`],
     }],
   };
 }
@@ -120,6 +122,7 @@ const columns = [
   { key: 'public_id', label: 'ID' },
   { key: 'level', label: 'Livello' },
   { key: 'topic', label: 'Categoria' },
+  { key: 'deck_public_ids', label: 'Deck' },
   { key: 'canonical_text', label: 'Expression' },
   { key: 'italian_meaning', label: 'Italiano' },
 ];
