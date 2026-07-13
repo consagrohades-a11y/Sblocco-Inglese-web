@@ -34,6 +34,7 @@ const sections = {
 export default function AdminSectionOverview({ section }) {
   const config = sections[section];
   const Icon = config.icon;
+  const ActionIcon = config.action?.icon;
 
   return (
     <>
@@ -61,7 +62,7 @@ export default function AdminSectionOverview({ section }) {
             {config.action ? (
               <div className="mt-6">
                 <Link to={config.action.to} className={adminButton.primary}>
-                  <config.action.icon aria-hidden="true" className="h-4 w-4" />
+                  <ActionIcon aria-hidden="true" className="h-4 w-4" />
                   {config.action.label}
                 </Link>
               </div>
