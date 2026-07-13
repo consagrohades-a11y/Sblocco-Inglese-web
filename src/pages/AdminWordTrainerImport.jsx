@@ -96,6 +96,7 @@ const columns = [
 export default function AdminWordTrainerImport() {
   return (
     <CardImportWorkspace
+      type="word"
       title="Importa Word Trainer"
       description="Carica una singola word card o un batch CSV o JSON. Tutte le card vengono validate e salvate come bozze da revisionare."
       itemLabel="word card"
