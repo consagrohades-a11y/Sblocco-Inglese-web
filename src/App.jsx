@@ -24,6 +24,7 @@ const Trainer = lazy(() => import('./pages/Trainer'));
 const GeneralExpressionTrainer = lazy(() => import('./pages/GeneralExpressionTrainer'));
 const HospitalityExpressionTrainer = lazy(() => import('./pages/HospitalityExpressionTrainer'));
 const WordTrainer = lazy(() => import('./pages/WordTrainer'));
+const PracticeHub = lazy(() => import('./pages/PracticeHub'));
 const GrammarHub = lazy(() => import('./pages/GrammarHub'));
 const GrammarA1Hub = lazy(() => import('./pages/GrammarA1Hub'));
 const GrammarA1Topic = lazy(() => import('./pages/GrammarA1Test'));
@@ -57,24 +58,15 @@ function ScrollManager() {
 
   useEffect(() => {
     const hash = location.hash;
-    const isAuthHash =
-      hash.includes('access_token=') ||
-      hash.includes('refresh_token=') ||
-      hash.includes('error=') ||
-      hash.includes('error_code=');
+    const isAuthHash = hash.includes('access_token=') || hash.includes('refresh_token=') || hash.includes('error=') || hash.includes('error_code=');
 
     if (hash && !isAuthHash) {
-      const elementId = decodeURIComponent(hash.slice(1));
-      const target = document.getElementById(elementId);
-
+      const target = document.getElementById(decodeURIComponent(hash.slice(1)));
       if (target) {
-        window.setTimeout(() => {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 80);
+        window.setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
         return;
       }
     }
-
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location.pathname, location.hash]);
 
@@ -82,13 +74,7 @@ function ScrollManager() {
 }
 
 function PageFallback() {
-  return (
-    <div className="section-shell py-16">
-      <div className="mx-auto max-w-3xl rounded-lg border border-ink/10 bg-white p-6 text-center shadow-sm dark:border-white/10 dark:bg-white/[0.06]">
-        <p className="text-sm font-black text-ink dark:text-white">Loading...</p>
-      </div>
-    </div>
-  );
+  return <div className="section-shell py-16"><div className="mx-auto max-w-3xl rounded-lg border border-ink/10 bg-white p-6 text-center shadow-sm dark:border-white/10 dark:bg-white/[0.06]"><p className="text-sm font-black text-ink dark:text-white">Loading...</p></div></div>;
 }
 
 export default function App() {
@@ -115,6 +101,7 @@ export default function App() {
             <Route path="/trainers/general-expression" element={<GeneralExpressionTrainer />} />
             <Route path="/trainers/hospitality-expression" element={<HospitalityExpressionTrainer />} />
             <Route path="/trainers/word-trainer" element={<WordTrainer />} />
+            <Route path="/practice" element={<ProtectedRoute><PracticeHub /></ProtectedRoute>} />
             <Route path="/grammar" element={<GrammarHub />} />
             <Route path="/grammar/a1" element={<GrammarA1Hub />} />
             <Route path="/grammar/a1/:topicId" element={<GrammarA1Topic />} />
@@ -149,7 +136,6 @@ export default function App() {
               <Route path="assignments" element={<AdminSectionOverview section="assignments" />} />
               <Route path="analytics" element={<AdminSectionOverview section="analytics" />} />
               <Route path="settings" element={<AdminSectionOverview section="settings" />} />
-
               <Route path="content/trainers" element={<Navigate to="/admin/content/expressions" replace />} />
               <Route path="content/trainers/import" element={<Navigate to="/admin/content/expressions/import" replace />} />
               <Route path="content/trainers/delete" element={<Navigate to="/admin/content/expressions/archive" replace />} />
