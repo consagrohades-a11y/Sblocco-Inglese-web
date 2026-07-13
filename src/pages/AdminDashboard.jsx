@@ -17,22 +17,36 @@ const sections = [
     status: 'Disponibile dai profili studenti',
   },
   {
-    title: 'Contenuti Trainer',
+    title: 'Expression Trainer',
     description: 'Crea, revisiona, approva e pubblica nuove espressioni General direttamente in Supabase.',
     status: 'Disponibile',
     to: '/admin/content/trainers',
-    cta: 'Apri contenuti Trainer',
+    cta: 'Apri expression card',
   },
   {
-    title: 'Importazione rapida',
-    description: 'Carica una carta JSON, controlla l’anteprima e salvala in Supabase come bozza da revisionare.',
+    title: 'Importa expression card',
+    description: 'Carica una singola expression card JSON, controlla l’anteprima e salvala come bozza.',
     status: 'Disponibile',
     to: '/admin/content/trainers/import',
-    cta: 'Importa una carta',
+    cta: 'Importa expression card',
+  },
+  {
+    title: 'Word Trainer',
+    description: 'Crea, revisiona, approva e pubblica word card dal livello A0 al C1.',
+    status: 'Nuovo',
+    to: '/admin/content/words',
+    cta: 'Apri word card',
+  },
+  {
+    title: 'Importa Word batch',
+    description: 'Carica una tabella CSV o un JSON con più word card e importale tutte come bozze.',
+    status: 'Nuovo',
+    to: '/admin/content/words/import',
+    cta: 'Importa batch',
   },
   {
     title: 'Elimina carta',
-    description: 'Trova ed elimina definitivamente una carta Trainer non pubblicata, senza entrare in Supabase.',
+    description: 'Trova ed elimina definitivamente una expression card non pubblicata, senza entrare in Supabase.',
     status: 'Disponibile',
     to: '/admin/content/trainers/delete',
     cta: 'Gestisci eliminazione',
@@ -75,7 +89,7 @@ export default function AdminDashboard() {
           <div className="mt-8 rounded-2xl border border-moss/20 bg-mint/25 p-6">
             <p className="text-xs font-black uppercase tracking-wide text-moss">Contenuti Trainer</p>
             <h2 className="mt-2 text-xl font-black text-ink">Flusso diretto in Supabase</h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70">Le nuove carte partono come bozze. Puoi correggerle, approvarle e pubblicarle solo quando rispettano lo standard completo.</p>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70">Le nuove card partono come bozze. Diventano visibili agli studenti solo dopo revisione, approvazione e pubblicazione.</p>
           </div>
         </div>
       </section>
