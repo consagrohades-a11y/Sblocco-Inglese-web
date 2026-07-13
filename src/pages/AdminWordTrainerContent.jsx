@@ -43,6 +43,9 @@ const emptyCard = {
   example_2: '',
   usage_note: '',
   tags: [],
+  deck_ids: [],
+  deck_public_ids: [],
+  deck_titles: [],
   status: 'draft',
   review_status: 'pending',
   review_decision: '',
@@ -65,6 +68,7 @@ function Field({ label, required = false, children }) {
 
 export default function AdminWordTrainerContent() {
   const [cards, setCards] = useState([]);
+  const [decks, setDecks] = useState([]);
   const [selected, setSelected] = useState(emptyCard);
   const [query, setQuery] = useState('');
   const [reviewFilter, setReviewFilter] = useState('all');
@@ -79,12 +83,17 @@ export default function AdminWordTrainerContent() {
 
   async function loadCards() {
     setLoading(true);
-    const { data, error: rpcError } = await supabase.rpc('admin_list_word_cards');
-    if (rpcError) {
+    const [{ data, error: rpcError }, { data: deckData, error: deckError }] = await Promise.all([
+      supabase.rpc('admin_list_word_cards'),
+      supabase.rpc('admin_list_word_decks'),
+    ]);
+    if (rpcError || deckError) {
       setCards([]);
-      setError('Impossibile caricare le word card. Applica la migrazione word_trainer_content in Supabase.');
+      setDecks([]);
+      setError('Impossibile caricare word card e deck. Applica la migrazione Word deck in Supabase.');
     } else {
       setCards(data || []);
+      setDecks(deckData || []);
       setError('');
     }
     setLoading(false);
@@ -137,6 +146,9 @@ export default function AdminWordTrainerContent() {
       common_collocations: card.common_collocations || [],
       accepted_answers: card.accepted_answers || [],
       tags: card.tags || [],
+      deck_ids: card.deck_ids || [],
+      deck_public_ids: card.deck_public_ids || [],
+      deck_titles: card.deck_titles || [],
     });
     setPreviewRevealed(false);
     setMessage(options.feedback || '');
@@ -174,6 +186,15 @@ export default function AdminWordTrainerContent() {
     if (rpcError) {
       setError(rpcError.message || 'Salvataggio non riuscito.');
     } else {
+      const { error: deckError } = await supabase.rpc('admin_replace_word_deck_items_for_card', {
+        p_card_id: data,
+        p_deck_ids: selected.deck_ids || [],
+      });
+      if (deckError) {
+        setError(`Card salvata, ma i deck non sono stati aggiornati: ${deckError.message}`);
+        setSaving(false);
+        return;
+      }
       const successMessage = nextStatus === 'published' ? 'Word card pubblicata.' : nextReviewStatus === 'approved' ? 'Word card approvata.' : 'Bozza salvata.';
       await loadCards();
       if (nextCardBeforeSave) {
@@ -252,6 +273,16 @@ export default function AdminWordTrainerContent() {
                 <Field label="Parola inglese" required><input className={inputClass} value={selected.lemma} onChange={(e) => updateField('lemma', e.target.value)} /></Field>
                 <Field label="Significato italiano" required><input className={inputClass} value={selected.italian_meaning} onChange={(e) => updateField('italian_meaning', e.target.value)} /></Field>
                 <Field label="Categoria" required><input className={inputClass} value={selected.topic} onChange={(e) => updateField('topic', e.target.value)} placeholder="People & identity" /></Field>
+                <div className="sm:col-span-2">
+                  <Field label="Deck">
+                    <div className="flex flex-wrap gap-2 rounded-lg border border-ink/15 bg-white p-3 dark:border-white/15 dark:bg-[#101a17]">
+                      {decks.length ? decks.map((deck) => {
+                        const active = (selected.deck_ids || []).includes(deck.id);
+                        return <label key={deck.id} className={`flex cursor-pointer items-center gap-2 rounded-full border px-3 py-2 text-xs font-black transition ${active ? 'border-moss bg-mint/60 text-ink dark:border-emerald-300 dark:bg-emerald-400/15 dark:text-white' : 'border-ink/15 text-ink/65 dark:border-white/15 dark:text-white/65'}`}><input type="checkbox" checked={active} onChange={() => updateField('deck_ids', active ? selected.deck_ids.filter((id) => id !== deck.id) : [...(selected.deck_ids || []), deck.id])} className="h-4 w-4 accent-moss" />{deck.title}</label>;
+                      }) : <span className="text-sm font-semibold text-ink/50 dark:text-white/50">Nessun deck creato. Usa la sezione Deck nella barra superiore.</span>}
+                    </div>
+                  </Field>
+                </div>
                 <Field label="Parte del discorso" required><input className={inputClass} value={selected.part_of_speech} onChange={(e) => updateField('part_of_speech', e.target.value)} /></Field>
                 <Field label="Etichetta del significato"><input className={inputClass} value={selected.sense_label || ''} onChange={(e) => updateField('sense_label', e.target.value)} /></Field>
                 <Field label="Numerabilità"><select className={inputClass} value={selected.countability || ''} onChange={(e) => updateField('countability', e.target.value)}><option value="">Non applicabile</option><option value="countable">Countable</option><option value="uncountable">Uncountable</option><option value="both">Both</option></select></Field>

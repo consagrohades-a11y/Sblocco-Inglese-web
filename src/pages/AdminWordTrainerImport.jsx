@@ -48,6 +48,7 @@ function normalizeWordCard(source) {
     register: enumValue(String(firstValue(source, ['register'], 'neutral')).trim(), ['informal', 'neutral', 'professional', 'formal'], 'neutral'),
     usage_channel: enumValue(String(firstValue(source, ['usage_channel'], 'both')).trim(), ['spoken', 'written', 'both'], 'both'),
     tags: normalizeList(firstValue(source, ['tags'], [])),
+    deck_public_ids: normalizeList(firstValue(source, ['deck_public_ids', 'decks', 'collections'], [])),
     status: 'draft',
     review_status: 'pending',
     review_decision: '',
@@ -82,6 +83,7 @@ const template = {
     usage_note: 'The plural is people in most contexts.',
     common_collocations: ['young person', 'kind person'],
     tags: ['people', 'identity'],
+    deck_public_ids: ['essentials'],
   }],
 };
 
@@ -89,6 +91,7 @@ const columns = [
   { key: 'public_id', label: 'ID' },
   { key: 'level', label: 'Livello' },
   { key: 'topic', label: 'Categoria' },
+  { key: 'deck_public_ids', label: 'Deck' },
   { key: 'lemma', label: 'Word' },
   { key: 'italian_meaning', label: 'Italiano' },
 ];

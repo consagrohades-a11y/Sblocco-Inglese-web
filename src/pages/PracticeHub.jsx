@@ -80,6 +80,7 @@ export default function PracticeHub() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [level, setLevel] = useState('all');
+  const [deck, setDeck] = useState('all');
   const [category, setCategory] = useState('all');
   const [batch, setBatch] = useState('all');
   const [questionCount, setQuestionCount] = useState(10);
@@ -98,6 +99,7 @@ export default function PracticeHub() {
     setLoadError('');
     setCards([]);
     setLevel('all');
+    setDeck('all');
     setCategory('all');
     setBatch('all');
 
@@ -110,12 +112,20 @@ export default function PracticeHub() {
   }, [trainerId]);
 
   const levels = useMemo(() => uniqueSorted(cards.map((card) => card.level)), [cards]);
-  const categories = useMemo(() => uniqueSorted(cards.filter((card) => level === 'all' || card.level === level).map((card) => card.category)), [cards, level]);
+  const decks = useMemo(() => {
+    const byId = new Map();
+    cards.flatMap((card) => card.decks || []).forEach((item) => byId.set(item.id, item));
+    return Array.from(byId.values()).sort((a, b) => a.title.localeCompare(b.title));
+  }, [cards]);
+  const categories = useMemo(() => uniqueSorted(cards
+    .filter((card) => (level === 'all' || card.level === level) && (deck === 'all' || (card.decks || []).some((item) => item.id === deck)))
+    .map((card) => card.category)), [cards, level, deck]);
   const batches = useMemo(() => uniqueSorted(cards.map((card) => card.batch)), [cards]);
   const filteredCards = useMemo(() => cards.filter((card) =>
     (level === 'all' || card.level === level)
+    && (deck === 'all' || (card.decks || []).some((item) => item.id === deck))
     && (category === 'all' || card.category === category)
-    && (batch === 'all' || card.batch === batch)), [cards, level, category, batch]);
+    && (batch === 'all' || card.batch === batch)), [cards, level, deck, category, batch]);
 
   const current = session?.[index];
   const finished = session && index >= session.length;
@@ -194,6 +204,7 @@ export default function PracticeHub() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <PracticeSelect label="Trainer" value={trainerId} onChange={setTrainerId} options={Object.values(PRACTICE_TRAINERS).map((trainer) => ({ value: trainer.id, label: trainer.label }))} />
                 <PracticeSelect label="Livello" value={level} onChange={(value) => { setLevel(value); setCategory('all'); }} options={[{ value: 'all', label: 'Tutti i livelli' }, ...levels.map((value) => ({ value, label: value }))]} />
+                {trainerId === 'word' ? <PracticeSelect label="Deck" value={deck} onChange={(value) => { setDeck(value); setCategory('all'); }} disabled={!decks.length} options={[{ value: 'all', label: decks.length ? 'Tutti i deck' : 'Nessun deck disponibile' }, ...decks.map((item) => ({ value: item.id, label: item.title }))]} /> : null}
                 <PracticeSelect label="Categoria" value={category} onChange={setCategory} options={[{ value: 'all', label: 'Tutte le categorie' }, ...categories.map((value) => ({ value, label: value }))]} />
                 <PracticeSelect label="Batch" value={batch} onChange={setBatch} disabled={!batches.length} options={[{ value: 'all', label: batches.length ? 'Tutti i batch' : 'Nessun batch nelle card' }, ...batches.map((value) => ({ value, label: value }))]} />
               </div>

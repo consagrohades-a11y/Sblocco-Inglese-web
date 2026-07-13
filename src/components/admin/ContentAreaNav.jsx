@@ -1,5 +1,5 @@
 import React from 'react';
-import { Archive, FileUp, LayoutDashboard, Pencil, Plus } from 'lucide-react';
+import { Archive, FileUp, Layers3, LayoutDashboard, Pencil, Plus } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 
 const contentAreas = {
@@ -8,6 +8,7 @@ const contentAreas = {
     routes: [
       { label: 'Editor e revisione', to: '/admin/content/words', icon: Pencil, end: true },
       { label: 'Importazioni e batch', to: '/admin/content/words/import', icon: FileUp },
+      { label: 'Deck', to: '/admin/content/words/decks', icon: Layers3 },
       { label: 'Archivio', to: '/admin/content/words/archive', icon: Archive },
     ],
   },
