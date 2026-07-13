@@ -313,7 +313,7 @@ export default function AdminWordTrainerContent() {
               {error ? <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900">{error}</div> : null}
               {message ? <div className="mt-5 rounded-xl border border-moss/20 bg-mint/30 p-4 text-sm font-bold text-ink">{message}</div> : null}
 
-              <div className="sticky bottom-3 z-30 mt-6 rounded-2xl border border-ink/15 bg-white/95 p-3 shadow-[0_18px_55px_rgba(24,34,31,0.22)] backdrop-blur-xl dark:border-white/15 dark:bg-[#16211e]/95 dark:shadow-[0_18px_55px_rgba(0,0,0,0.45)] sm:p-4">
+              <div className="fixed bottom-3 left-1/2 z-[70] max-h-[45vh] w-[calc(100vw-1.5rem)] max-w-5xl -translate-x-1/2 overflow-y-auto rounded-2xl border border-ink/15 bg-white/95 p-3 shadow-[0_18px_55px_rgba(24,34,31,0.22)] backdrop-blur-xl dark:border-white/15 dark:bg-[#16211e]/95 dark:shadow-[0_18px_55px_rgba(0,0,0,0.45)] sm:p-4">
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <p className="text-xs font-black uppercase tracking-wide text-ink/55 dark:text-white/65">Coda di revisione · {queueLabel}</p>
                   {saving ? <span className="text-xs font-black text-moss dark:text-emerald-300">Salvataggio...</span> : null}
@@ -325,6 +325,7 @@ export default function AdminWordTrainerContent() {
                   <button disabled={saving || !nextCard} type="button" onClick={() => openCard(nextCard, { feedback: 'Prossima word card caricata.' })} className="focus-ring min-h-11 rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink transition hover:bg-linen disabled:cursor-not-allowed disabled:border-ink/5 disabled:bg-ink/5 disabled:text-ink/30 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:disabled:border-white/5 dark:disabled:bg-white/5 dark:disabled:text-white/25 sm:px-5">Prossima</button>
                 </div>
               </div>
+              <div aria-hidden="true" className="h-36 sm:h-28" />
 
               {!canPublish ? <p className="mt-3 text-xs font-bold leading-5 text-ink/50">Per pubblicare servono approvazione, risposta accettata, IPA americana, due esempi e nota d'uso.</p> : null}
             </form>
