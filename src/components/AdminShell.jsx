@@ -33,6 +33,8 @@ const navigationGroups = [
       { label: 'Panoramica', to: '/admin/content', icon: BookOpen, end: true },
       { label: 'Word Trainer', to: '/admin/content/words', icon: BookOpen },
       { label: 'General Expressions', to: '/admin/content/expressions', icon: BookOpen },
+      { label: 'Business Expressions', to: '/admin/content/business-expressions', icon: BookOpen },
+      { label: 'Hospitality Expressions', to: '/admin/content/hospitality-expressions', icon: BookOpen },
     ],
   },
   {
@@ -57,14 +59,14 @@ const navigationGroups = [
 
 function AdminNavigation({ onNavigate }) {
   return (
-    <nav className="mt-7 flex-1 overflow-y-auto px-3 pb-5" aria-label="Navigazione amministrazione">
-      <div className="space-y-6">
+    <nav className="mt-5 flex-1 overflow-y-auto px-3 pb-4 [scrollbar-color:rgba(255,255,255,0.2)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-track]:bg-transparent" aria-label="Navigazione amministrazione">
+      <div className="space-y-4">
         {navigationGroups.map((group) => (
           <section key={group.label}>
             <p className="px-3 text-[0.68rem] font-black uppercase tracking-[0.16em] text-white/45">
               {group.label}
             </p>
-            <div className="mt-2 grid gap-1">
+            <div className="mt-1 grid gap-0.5">
               {group.items.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -73,7 +75,7 @@ function AdminNavigation({ onNavigate }) {
                     to={item.to}
                     end={item.end}
                     onClick={onNavigate}
-                    className={({ isActive }) => `focus-ring flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-black transition ${
+                    className={({ isActive }) => `focus-ring flex min-h-10 items-center gap-3 rounded-xl px-3 py-2 text-sm font-black transition ${
                       isActive
                         ? 'bg-white text-ink shadow-sm'
                         : 'text-white/72 hover:bg-white/10 hover:text-white'
@@ -114,13 +116,13 @@ export default function AdminShell() {
 
   const sidebarContent = (
     <>
-      <div className="border-b border-white/10 px-5 py-5">
+      <div className="border-b border-white/10 px-4 py-4">
         <BrandLogo to="/admin" compact light />
-        <p className="mt-3 text-xs font-bold uppercase tracking-[0.15em] text-emerald-200/75">Admin workspace</p>
+        <p className="mt-2 text-xs font-bold uppercase tracking-[0.15em] text-emerald-200/75">Admin workspace</p>
       </div>
       <AdminNavigation onNavigate={() => setMobileOpen(false)} />
-      <div className="border-t border-white/10 p-4">
-        <div className="flex items-center gap-3 rounded-xl bg-white/[0.07] p-3">
+      <div className="border-t border-white/10 p-3">
+        <div className="flex items-center gap-3 rounded-xl bg-white/[0.07] p-2.5">
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-black text-white">{displayName}</p>
             {email ? <p className="mt-0.5 truncate text-xs font-semibold text-white/50">{email}</p> : null}
@@ -136,7 +138,7 @@ export default function AdminShell() {
 
   return (
     <div className="min-h-screen bg-paper text-ink dark:bg-[#0f1715] dark:text-white">
-      <aside aria-label="Workspace amministrazione" className="fixed inset-y-0 left-0 z-50 hidden w-72 flex-col overflow-hidden bg-ink shadow-2xl lg:flex">
+      <aside aria-label="Workspace amministrazione" className="fixed inset-y-0 left-0 z-50 hidden w-64 flex-col overflow-hidden bg-ink shadow-2xl lg:flex">
         {sidebarContent}
       </aside>
 
@@ -175,7 +177,7 @@ export default function AdminShell() {
         </div>
       ) : null}
 
-      <div className="min-w-0 lg:pl-72">
+      <div className="min-w-0 lg:pl-64">
         <Outlet />
       </div>
     </div>

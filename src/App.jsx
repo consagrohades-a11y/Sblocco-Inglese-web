@@ -140,6 +140,12 @@ export default function App() {
               <Route path="content/expressions" element={<AdminTrainerContent />} />
               <Route path="content/expressions/import" element={<AdminTrainerCardImport />} />
               <Route path="content/expressions/archive" element={<AdminTrainerCardDelete />} />
+              <Route path="content/business-expressions" element={<AdminTrainerContent domain="business" />} />
+              <Route path="content/business-expressions/import" element={<AdminTrainerCardImport domain="business" />} />
+              <Route path="content/business-expressions/archive" element={<AdminTrainerCardDelete domain="business" />} />
+              <Route path="content/hospitality-expressions" element={<AdminTrainerContent domain="hospitality" />} />
+              <Route path="content/hospitality-expressions/import" element={<AdminTrainerCardImport domain="hospitality" />} />
+              <Route path="content/hospitality-expressions/archive" element={<AdminTrainerCardDelete domain="hospitality" />} />
               <Route path="assignments" element={<AdminSectionOverview section="assignments" />} />
               <Route path="analytics" element={<AdminSectionOverview section="analytics" />} />
               <Route path="settings" element={<AdminSectionOverview section="settings" />} />
