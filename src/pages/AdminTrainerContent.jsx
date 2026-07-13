@@ -145,7 +145,7 @@ export default function AdminTrainerContent() {
   function newCard() {
     setSelected({
       ...emptyCard,
-      public_id: `general-${String(cards.length + 1).padStart(3, '0')}`,
+      public_id: `general-${String(cards.length + 1).padStart(4, '0')}`,
     });
     setPreviewRevealed(false);
     setMessage('');
@@ -262,6 +262,7 @@ export default function AdminTrainerContent() {
                     <option>A2</option>
                     <option>B1</option>
                     <option>B2</option>
+                    <option>C1</option>
                   </select>
                 </Field>
                 <Field label="Espressione inglese" required>
