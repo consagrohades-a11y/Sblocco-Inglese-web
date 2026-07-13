@@ -85,7 +85,7 @@ export default function AdminCreateAssignment() {
     navigate(`/admin/learners/${learnerId}`, { replace: true });
   }
 
-  const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40';
+  const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-[#101a17] dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
 
   return (
     <>
@@ -95,12 +95,12 @@ export default function AdminCreateAssignment() {
       />
       <section className="section-shell py-12 lg:py-16">
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
+          <div className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-soft sm:p-8">
             <span className="eyebrow">Assegnazione</span>
             <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h1 className="text-3xl font-black text-ink sm:text-4xl">Crea assegnazione</h1>
-                <p className="mt-3 text-base leading-7 text-ink/70">
+                <h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">Crea assegnazione</h1>
+                <p className="mt-3 text-base leading-7 text-ink/70 dark:text-white/65">
                   {loadingLearner
                     ? 'Caricamento studente...'
                     : learner
@@ -110,7 +110,7 @@ export default function AdminCreateAssignment() {
               </div>
               <Link
                 to={`/admin/learners/${learnerId}`}
-                className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-black text-ink transition hover:bg-linen"
+                className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white dark:border-white/20 dark:bg-white/10 dark:text-white px-5 py-2.5 text-sm font-black text-ink transition hover:bg-linen"
               >
                 Annulla
               </Link>
@@ -125,11 +125,11 @@ export default function AdminCreateAssignment() {
 
           {!loadingLearner && learner ? (
             <form className="mt-6 grid gap-6" onSubmit={(event) => event.preventDefault()}>
-              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm sm:p-8">
-                <h2 className="text-xl font-black text-ink">Informazioni principali</h2>
+              <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm sm:p-8">
+                <h2 className="text-xl font-black text-ink dark:text-white">Informazioni principali</h2>
 
                 <label className="mt-6 block">
-                  <span className="text-sm font-black text-ink">Titolo</span>
+                  <span className="text-sm font-black text-ink dark:text-white">Titolo</span>
                   <input
                     type="text"
                     value={title}
@@ -142,8 +142,8 @@ export default function AdminCreateAssignment() {
                 </label>
 
                 <label className="mt-5 block">
-                  <span className="text-sm font-black text-ink">Messaggio per lo studente</span>
-                  <span className="mt-1 block text-xs font-semibold leading-5 text-ink/50">
+                  <span className="text-sm font-black text-ink dark:text-white">Messaggio per lo studente</span>
+                  <span className="mt-1 block text-xs font-semibold leading-5 text-ink/50 dark:text-white/50">
                     Questo testo sarà visibile allo studente. Puoi inserire istruzioni, contesto, feedback o indicazioni personali.
                   </span>
                   <textarea
@@ -172,10 +172,10 @@ export default function AdminCreateAssignment() {
                 </label>
               </section>
 
-              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm sm:p-8">
-                <h2 className="text-xl font-black text-ink">Impostazioni</h2>
+              <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm sm:p-8">
+                <h2 className="text-xl font-black text-ink dark:text-white">Impostazioni</h2>
 
-                <label className="mt-6 flex items-start gap-3 rounded-xl border border-ink/10 bg-linen/40 p-4">
+                <label className="mt-6 flex items-start gap-3 rounded-xl border border-ink/10 bg-linen dark:border-white/10 dark:bg-white/10 dark:text-white/40 dark:bg-white/[0.05] p-4">
                   <input
                     type="checkbox"
                     checked={required}
@@ -183,8 +183,8 @@ export default function AdminCreateAssignment() {
                     className="mt-1 h-4 w-4"
                   />
                   <span>
-                    <span className="block text-sm font-black text-ink">Attività obbligatoria</span>
-                    <span className="mt-1 block text-xs font-semibold leading-5 text-ink/55">
+                    <span className="block text-sm font-black text-ink dark:text-white">Attività obbligatoria</span>
+                    <span className="mt-1 block text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">
                       Disattiva questa opzione se l’attività è facoltativa.
                     </span>
                   </span>
@@ -192,7 +192,7 @@ export default function AdminCreateAssignment() {
 
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
                   <label className="block">
-                    <span className="text-sm font-black text-ink">Scadenza</span>
+                    <span className="text-sm font-black text-ink dark:text-white">Scadenza</span>
                     <input
                       type="datetime-local"
                       value={deadline}
@@ -202,7 +202,7 @@ export default function AdminCreateAssignment() {
                   </label>
 
                   <label className="block">
-                    <span className="text-sm font-black text-ink">Tempo stimato, minuti</span>
+                    <span className="text-sm font-black text-ink dark:text-white">Tempo stimato, minuti</span>
                     <input
                       type="number"
                       min="1"
@@ -221,7 +221,7 @@ export default function AdminCreateAssignment() {
                   type="button"
                   disabled={submitting}
                   onClick={() => createAssignment(false)}
-                  className="focus-ring min-h-12 rounded-full border border-ink/15 bg-white px-6 py-3 text-sm font-black text-ink transition hover:bg-linen disabled:cursor-not-allowed disabled:opacity-50"
+                  className="focus-ring min-h-12 rounded-full border border-ink/15 bg-white dark:border-white/20 dark:bg-white/10 dark:text-white px-6 py-3 text-sm font-black text-ink transition hover:bg-linen dark:hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {submitting ? 'Salvataggio...' : 'Salva come bozza'}
                 </button>
