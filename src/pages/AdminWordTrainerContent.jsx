@@ -340,7 +340,7 @@ export default function AdminWordTrainerContent() {
                 <div className="mt-3"><SrsCard card={previewCard} dark={darkMode} progress={null} revealed={previewRevealed} onReveal={() => setPreviewRevealed(true)} onRate={() => {}} sessionLabel="Anteprima word card" targetLabel="Word" /></div>
               </aside>
 
-              <aside className="min-h-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:flex xl:flex-col xl:overflow-hidden">
+              <aside className="min-h-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:block xl:overflow-y-auto xl:overscroll-contain xl:[scrollbar-color:rgba(14,124,102,0.55)_transparent] xl:[scrollbar-width:thin]">
                 <h2 className="shrink-0 text-lg font-black text-ink dark:text-white">Word card in Supabase</h2>
                 <input type="search" className={`${inputClass} mt-4`} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cerca parola, italiano, categoria o ID" />
                 <div className="mt-3 grid grid-cols-2 gap-2">{reviewFilterOptions.map((option) => <button key={option.value} type="button" onClick={() => setReviewFilter(option.value)} className={`focus-ring min-h-10 rounded-xl border px-3 py-2 text-sm font-black ${reviewFilter === option.value ? 'border-moss bg-moss text-white dark:border-emerald-300 dark:bg-emerald-400 dark:text-[#07120f]' : 'border-ink/10 bg-paper text-ink/70 dark:border-white/10 dark:bg-white/5 dark:text-white/65'}`}>{option.label}</button>)}</div>
@@ -362,7 +362,7 @@ export default function AdminWordTrainerContent() {
                   </div>
                 </div>
 
-                <div className="mt-3 max-h-[34rem] min-h-24 divide-y divide-ink/10 overflow-y-auto overscroll-contain rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10 xl:max-h-none xl:flex-1 xl:[scrollbar-color:rgba(14,124,102,0.55)_transparent] xl:[scrollbar-width:thin]">
+                <div className="mt-3 max-h-[34rem] min-h-24 divide-y divide-ink/10 overflow-y-auto overscroll-contain rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10 xl:max-h-none xl:overflow-visible">
                   {loading ? <p className="p-4 text-sm font-bold text-ink/60">Caricamento...</p> : null}
                   {!loading && filteredCards.length === 0 ? <p className="p-4 text-sm font-bold text-ink/60">Nessuna word card trovata.</p> : null}
                   {filteredCards.map((card) => {
