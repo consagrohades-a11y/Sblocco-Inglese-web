@@ -70,6 +70,8 @@ export default function AdminTrainerContent() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [selectedForPublish, setSelectedForPublish] = useState([]);
+  const [publishingBatch, setPublishingBatch] = useState(false);
 
   async function loadCards() {
     setLoading(true);
@@ -103,6 +105,29 @@ export default function AdminTrainerContent() {
     });
   }, [cards, query, reviewFilter]);
 
+  const selectedQueueIndex = useMemo(
+    () => filteredCards.findIndex((card) => card.id === selected.id),
+    [filteredCards, selected.id],
+  );
+  const nextCard = selectedQueueIndex >= 0
+    ? filteredCards[selectedQueueIndex + 1] ?? null
+    : filteredCards[0] ?? null;
+  const queueLabel = selectedQueueIndex >= 0
+    ? `${selectedQueueIndex + 1} di ${filteredCards.length}`
+    : `${filteredCards.length} nella coda`;
+  const publishableCards = useMemo(() => filteredCards.filter((card) => (
+    card.review_status === 'approved'
+    && card.status !== 'published'
+    && card.status !== 'archived'
+    && (card.accepted_answers || []).length > 0
+    && String(card.pronunciation_ipa_us || '').trim()
+    && String(card.example_1 || '').trim()
+    && String(card.example_2 || '').trim()
+    && String(card.usage_note || '').trim()
+  )), [filteredCards]);
+  const allPublishableSelected = publishableCards.length > 0
+    && publishableCards.every((card) => selectedForPublish.includes(card.id));
+
   const previewCard = useMemo(() => {
     const pronunciation = [selected.pronunciation_ipa_us, selected.pronunciation_learner_us]
       .filter(Boolean)
@@ -128,7 +153,7 @@ export default function AdminTrainerContent() {
     setMessage('');
   }
 
-  function openCard(card) {
+  function openCard(card, options = {}) {
     setSelected({
       ...emptyCard,
       ...card,
@@ -137,9 +162,11 @@ export default function AdminTrainerContent() {
       tags: card.tags ?? [],
     });
     setPreviewRevealed(false);
-    setMessage('');
+    setMessage(options.feedback || '');
     setError('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (options.scroll !== false) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   function newCard() {
@@ -152,7 +179,8 @@ export default function AdminTrainerContent() {
     setError('');
   }
 
-  async function saveCard(nextStatus = selected.status, nextReviewStatus = selected.review_status) {
+  async function saveCard(nextStatus = selected.status, nextReviewStatus = selected.review_status, advanceToNext = false) {
+    const nextCardBeforeSave = advanceToNext ? nextCard : null;
     setSaving(true);
     setError('');
     setMessage('');
@@ -172,21 +200,58 @@ export default function AdminTrainerContent() {
     if (rpcError) {
       setError(rpcError.message || 'Salvataggio non riuscito.');
     } else {
-      setSelected((current) => ({
-        ...current,
-        id: data,
-        status: nextStatus,
-        review_status: nextReviewStatus,
-      }));
-      setMessage(nextStatus === 'published'
-        ? 'Carta pubblicata.'
-        : nextReviewStatus === 'approved'
-          ? 'Carta approvata.'
-          : 'Bozza salvata.');
+      const successMessage = nextStatus === 'published' ? 'Carta pubblicata.' : nextReviewStatus === 'approved' ? 'Carta approvata.' : 'Bozza salvata.';
       await loadCards();
+      if (nextCardBeforeSave) {
+        openCard(nextCardBeforeSave, { feedback: `${successMessage} Prossima carta caricata.` });
+      } else {
+        setSelected((current) => ({ ...current, id: data, status: nextStatus, review_status: nextReviewStatus }));
+        setMessage(advanceToNext ? `${successMessage} Hai completato l'ultima carta della coda.` : successMessage);
+      }
     }
 
     setSaving(false);
+  }
+
+  function togglePublishSelection(cardId) {
+    setSelectedForPublish((current) => current.includes(cardId)
+      ? current.filter((id) => id !== cardId)
+      : [...current, cardId]);
+  }
+
+  function toggleAllPublishable() {
+    const visibleIds = publishableCards.map((card) => card.id);
+    setSelectedForPublish((current) => {
+      if (allPublishableSelected) {
+        return current.filter((id) => !visibleIds.includes(id));
+      }
+      return Array.from(new Set([...current, ...visibleIds]));
+    });
+  }
+
+  async function publishSelectedCards() {
+    if (selectedForPublish.length === 0) return;
+    if (!window.confirm(`Pubblicare ${selectedForPublish.length} expression card approvate?`)) return;
+
+    setPublishingBatch(true);
+    setError('');
+    setMessage('');
+    const idsToPublish = [...selectedForPublish];
+    const { data, error: rpcError } = await supabase.rpc('admin_publish_expression_cards', {
+      p_card_ids: idsToPublish,
+    });
+
+    if (rpcError) {
+      setError(rpcError.message || 'Pubblicazione batch non riuscita.');
+    } else {
+      setSelectedForPublish([]);
+      setSelected((current) => idsToPublish.includes(current.id)
+        ? { ...current, status: 'published' }
+        : current);
+      setMessage(`${data || idsToPublish.length} expression card pubblicate.`);
+      await loadCards();
+    }
+    setPublishingBatch(false);
   }
 
   const canPublish = selected.review_status === 'approved'
@@ -366,16 +431,17 @@ export default function AdminTrainerContent() {
                 </div>
               ) : null}
 
-              <div className="mt-6 flex flex-wrap gap-3">
-                <button disabled={saving} type="submit" className="focus-ring min-h-11 rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white disabled:opacity-50">
-                  Salva bozza
-                </button>
-                <button disabled={saving} type="button" onClick={() => saveCard('approved', 'approved')} className="focus-ring min-h-11 rounded-full border border-moss/30 bg-mint/40 px-5 py-2.5 text-sm font-black text-ink disabled:opacity-50">
-                  Approva
-                </button>
-                <button disabled={saving || !canPublish} type="button" onClick={() => saveCard('published', 'approved')} className="focus-ring min-h-11 rounded-full bg-moss px-5 py-2.5 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-40">
-                  Pubblica
-                </button>
+              <div className="sticky bottom-3 z-30 mt-6 rounded-2xl border border-ink/15 bg-white/95 p-3 shadow-[0_18px_55px_rgba(24,34,31,0.22)] backdrop-blur-xl dark:border-white/15 dark:bg-[#16211e]/95 dark:shadow-[0_18px_55px_rgba(0,0,0,0.45)] sm:p-4">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <p className="text-xs font-black uppercase tracking-wide text-ink/55 dark:text-white/65">Coda di revisione · {queueLabel}</p>
+                  {saving ? <span className="text-xs font-black text-moss dark:text-emerald-300">Salvataggio...</span> : null}
+                </div>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <button disabled={saving} type="submit" className="focus-ring min-h-11 rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white transition hover:bg-moss disabled:cursor-not-allowed disabled:bg-ink/45 disabled:text-white/75 dark:bg-white dark:text-ink dark:hover:bg-emerald-200 dark:disabled:bg-white/20 dark:disabled:text-white/45 sm:px-5">Salva</button>
+                  <button disabled={saving} type="button" onClick={() => saveCard('approved', 'approved', true)} className="focus-ring min-h-11 rounded-full border border-moss/40 bg-mint/60 px-4 py-2.5 text-sm font-black text-ink transition hover:bg-mint disabled:cursor-not-allowed disabled:border-ink/10 disabled:bg-ink/5 disabled:text-ink/35 dark:border-emerald-300/45 dark:bg-emerald-400/15 dark:text-emerald-100 dark:hover:bg-emerald-400/25 dark:disabled:border-white/10 dark:disabled:bg-white/5 dark:disabled:text-white/30 sm:px-5">Approva e prossima</button>
+                  <button disabled={saving || !canPublish} type="button" onClick={() => saveCard('published', 'approved', true)} className="focus-ring min-h-11 rounded-full bg-moss px-4 py-2.5 text-sm font-black text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/25 disabled:text-ink/40 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-emerald-400/15 dark:disabled:text-white/30 sm:px-5">Pubblica e prossima</button>
+                  <button disabled={saving || !nextCard} type="button" onClick={() => openCard(nextCard, { feedback: 'Prossima carta caricata.' })} className="focus-ring min-h-11 rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink transition hover:bg-linen disabled:cursor-not-allowed disabled:border-ink/5 disabled:bg-ink/5 disabled:text-ink/30 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:disabled:border-white/5 dark:disabled:bg-white/5 dark:disabled:text-white/25 sm:px-5">Prossima</button>
+                </div>
               </div>
 
               {!canPublish ? (
@@ -385,8 +451,8 @@ export default function AdminTrainerContent() {
               ) : null}
             </form>
 
-            <div className="space-y-6 xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto xl:pr-1">
-              <aside className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
+            <div className="space-y-6">
+              <aside className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm xl:sticky xl:top-24 xl:z-20 dark:border-white/10 dark:bg-[#16211e]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="text-xs font-black uppercase tracking-wide text-moss">Anteprima dal vivo</p>
@@ -458,26 +524,52 @@ export default function AdminTrainerContent() {
                   </div>
                 </div>
 
-                <div className="mt-4 max-h-[34rem] divide-y divide-ink/10 overflow-y-auto rounded-xl border border-ink/10">
+                <div className="mt-4 rounded-xl border border-moss/25 bg-mint/25 p-4 dark:border-emerald-300/25 dark:bg-emerald-400/10">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Pubblicazione batch</p>
+                      <p className="mt-1 text-sm font-bold text-ink/70 dark:text-white/70">{publishableCards.length} expression card approvate e complete nei filtri attivi</p>
+                    </div>
+                    <span className="rounded-full bg-white px-3 py-1.5 text-xs font-black text-ink shadow-sm dark:bg-white/10 dark:text-white">{selectedForPublish.length} selezionate</span>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button type="button" disabled={publishableCards.length === 0 || publishingBatch} onClick={toggleAllPublishable} className="focus-ring min-h-10 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink hover:bg-linen disabled:cursor-not-allowed disabled:bg-ink/5 disabled:text-ink/30 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:disabled:bg-white/5 dark:disabled:text-white/25">
+                      {allPublishableSelected ? 'Deseleziona tutte visibili' : 'Seleziona tutte approvate'}
+                    </button>
+                    <button type="button" disabled={selectedForPublish.length === 0 || publishingBatch} onClick={publishSelectedCards} className="focus-ring min-h-10 rounded-full bg-moss px-4 py-2 text-xs font-black text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/25 disabled:text-ink/40 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-emerald-400/15 dark:disabled:text-white/30">
+                      {publishingBatch ? 'Pubblicazione...' : `Pubblica selezionate (${selectedForPublish.length})`}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-4 max-h-[34rem] divide-y divide-ink/10 overflow-y-auto rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10">
                   {loading ? <p className="p-4 text-sm font-bold text-ink/60">Caricamento...</p> : null}
                   {!loading && filteredCards.length === 0 ? <p className="p-4 text-sm font-bold text-ink/60">Nessuna carta trovata.</p> : null}
 
-                  {filteredCards.map((card) => (
-                    <button
-                      key={card.id}
-                      type="button"
-                      onClick={() => openCard(card)}
-                      className="focus-ring block w-full p-4 text-left transition hover:bg-linen/50"
-                    >
-                      <p className="font-black text-ink">{card.canonical_text}</p>
-                      <p className="mt-1 text-sm font-semibold text-ink/60">{card.italian_meaning}</p>
-                      <div className="mt-2 flex flex-wrap gap-2 text-[0.68rem] font-black uppercase tracking-wide text-ink/45">
-                        <span>{card.level}</span>
-                        <span>{card.status}</span>
-                        <span>{card.review_status}</span>
+                  {filteredCards.map((card) => {
+                    const publishable = publishableCards.some((item) => item.id === card.id);
+                    return (
+                      <div key={card.id} className="flex items-stretch transition hover:bg-linen/50 dark:hover:bg-white/5">
+                        <label className="flex w-12 shrink-0 items-center justify-center border-r border-ink/10 dark:border-white/10">
+                          <input
+                            type="checkbox"
+                            disabled={!publishable || publishingBatch}
+                            checked={selectedForPublish.includes(card.id)}
+                            onChange={() => togglePublishSelection(card.id)}
+                            aria-label={`Seleziona ${card.canonical_text} per la pubblicazione`}
+                            className="h-4 w-4 accent-emerald-600 disabled:opacity-25"
+                          />
+                        </label>
+                        <button type="button" onClick={() => openCard(card)} className="focus-ring block min-w-0 flex-1 p-4 text-left">
+                          <p className="font-black text-ink dark:text-white">{card.canonical_text}</p>
+                          <p className="mt-1 text-sm font-semibold text-ink/60 dark:text-white/60">{card.italian_meaning}</p>
+                          <div className="mt-2 flex flex-wrap gap-2 text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">
+                            <span>{card.level}</span><span>{card.status}</span><span>{card.review_status}</span>
+                          </div>
+                        </button>
                       </div>
-                    </button>
-                  ))}
+                    );
+                  })}
                 </div>
               </aside>
             </div>
