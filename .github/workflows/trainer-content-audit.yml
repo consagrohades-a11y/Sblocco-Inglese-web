@@ -1,6 +1,18 @@
 name: Trainer content audit
 
 on:
+  push:
+    branches:
+      - codex/trainer-card-audit-foundation
+    paths:
+      - 'src/data/generalExpressionCards.js'
+      - 'src/content/trainer/**'
+      - 'scripts/audit-general-expression-cards.mjs'
+      - 'scripts/validate-srs-cards.mjs'
+      - 'src/utils/validateSrsCards.js'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/trainer-content-audit.yml'
   pull_request:
     paths:
       - 'src/data/generalExpressionCards.js'
