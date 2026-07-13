@@ -183,191 +183,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
   }
 
   function newCard() {
-    const pattern = new RegExp(`^${domainConfig.idPrefix}-(\\d{4})import React, { useEffect, useMemo, useState } from 'react';
-import SEO from '../components/SEO';
-import SrsCard from '../components/SrsCard';
-import ContentAreaNav from '../components/admin/ContentAreaNav';
-import { supabase } from '../lib/supabaseClient.js';
-import useDarkMode from '../hooks/useDarkMode.js';
-import {
-  filterAdminCards,
-  getNextQueueCard,
-  getQueueLabel,
-  getQueuePosition,
-  isCardPublishable,
-  reviewFilterOptions,
-} from '../lib/cardWorkflow.js';
-
-const emptyCard = {
-  id: '',
-  public_id: '',
-  canonical_text: '',
-  italian_meaning: '',
-  english_explanation: '',
-  communicative_function: '',
-  primary_context: '',
-  level: 'A2',
-  primary_domain: 'general',
-  topic: '',
-  priority: 'useful',
-  register: 'neutral',
-  usage_channel: 'both',
-  tone: '',
-  accepted_answers: [],
-  pronunciation_ipa_us: '',
-  pronunciation_learner_us: '',
-  example_1: '',
-  example_2: '',
-  usage_note: '',
-  collocations: [],
-  tags: [],
-  status: 'draft',
-  review_status: 'pending',
-  review_decision: '',
-  review_notes: '',
-};
-
-const trainerDomains = {
-  general: {
-    navType: 'expression',
-    label: 'General Expressions',
-    idPrefix: 'general',
-    fallbackCategory: 'General English',
-  },
-  business: {
-    navType: 'business',
-    label: 'Business Expressions',
-    idPrefix: 'business',
-    fallbackCategory: 'Business English',
-  },
-  hospitality: {
-    navType: 'hospitality',
-    label: 'Hospitality Expressions',
-    idPrefix: 'hospitality',
-    fallbackCategory: 'Hospitality English',
-  },
-};
-
-const splitLines = (value) => String(value || '')
-  .split('\n')
-  .map((item) => item.trim())
-  .filter(Boolean);
-
-const joinLines = (value) => (Array.isArray(value) ? value.join('\n') : '');
-
-function Field({ label, required = false, children }) {
-  return (
-    <label className="block">
-      <span className="text-xs font-black uppercase tracking-wide text-ink/55 dark:text-white/65">
-        {label}{required ? ' *' : ''}
-      </span>
-      <div className="mt-1.5">{children}</div>
-    </label>
-  );
-}
-
-const inputClass = 'w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm font-semibold text-ink outline-none transition placeholder:text-ink/35 focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/15 dark:bg-[#101a17] dark:text-white dark:placeholder:text-white/35 dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
-
-export default function AdminTrainerContent({ domain = 'general' }) {
-  const domainConfig = trainerDomains[domain] || trainerDomains.general;
-  const [cards, setCards] = useState([]);
-  const [selected, setSelected] = useState(() => ({ ...emptyCard, primary_domain: domain }));
-  const [query, setQuery] = useState('');
-  const [reviewFilter, setReviewFilter] = useState('all');
-  const [previewRevealed, setPreviewRevealed] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
-  const [selectedForPublish, setSelectedForPublish] = useState([]);
-  const [publishingBatch, setPublishingBatch] = useState(false);
-  const darkMode = useDarkMode();
-
-  async function loadCards() {
-    setLoading(true);
-    setError('');
-
-    const { data, error: rpcError } = await supabase.rpc('admin_list_expression_cards');
-
-    if (rpcError) {
-      setError('Impossibile caricare i contenuti. Verifica che la migrazione admin_trainer_content sia stata applicata in Supabase.');
-      setCards([]);
-    } else {
-      setCards((data ?? []).filter((card) => String(card.primary_domain || 'general').toLowerCase() === domain));
-    }
-
-    setLoading(false);
-  }
-
-  useEffect(() => {
-    setSelected({ ...emptyCard, primary_domain: domain });
-    setSelectedForPublish([]);
-    setPreviewRevealed(false);
-    setMessage('');
-    setError('');
-    loadCards();
-  }, [domain]);
-
-  const filteredCards = useMemo(
-    () => filterAdminCards(cards, reviewFilter, query, ['canonical_text', 'italian_meaning', 'public_id', 'topic']),
-    [cards, query, reviewFilter],
-  );
-
-  const selectedQueueIndex = useMemo(
-    () => getQueuePosition(filteredCards, selected.id),
-    [filteredCards, selected.id],
-  );
-  const nextCard = getNextQueueCard(filteredCards, selectedQueueIndex);
-  const queueLabel = getQueueLabel(filteredCards, selectedQueueIndex);
-  const publishableCards = useMemo(
-    () => filteredCards.filter((card) => isCardPublishable(card, 'expression')),
-    [filteredCards],
-  );
-  const allPublishableSelected = publishableCards.length > 0
-    && publishableCards.every((card) => selectedForPublish.includes(card.id));
-
-  const previewCard = useMemo(() => {
-    const pronunciation = [selected.pronunciation_ipa_us, selected.pronunciation_learner_us]
-      .filter(Boolean)
-      .join('  ·  ');
-
-    return {
-      id: selected.public_id || 'preview-card',
-      category: selected.topic || selected.primary_context || domainConfig.fallbackCategory,
-      level: selected.level || 'A2',
-      type: 'Expression',
-      expression: selected.canonical_text || 'Your English expression',
-      pronunciation: pronunciation || 'American pronunciation will appear here',
-      italian: selected.italian_meaning || 'Il significato italiano apparirà qui',
-      collocations: selected.collocations.length > 0 ? selected.collocations.join(' · ') : '',
-      example1: selected.example_1 || 'Your first natural example will appear here.',
-      example2: selected.example_2 || 'Your second natural example will appear here.',
-      note: selected.usage_note || selected.english_explanation || 'A specific usage note will appear here.',
-    };
-  }, [domainConfig.fallbackCategory, selected]);
-
-  function updateField(field, value) {
-    setSelected((current) => ({ ...current, [field]: value }));
-    setMessage('');
-  }
-
-  function openCard(card, options = {}) {
-    setSelected({
-      ...emptyCard,
-      ...card,
-      accepted_answers: card.accepted_answers ?? [],
-      collocations: card.collocations ?? [],
-      tags: card.tags ?? [],
-    });
-    setPreviewRevealed(false);
-    setMessage(options.feedback || '');
-    setError('');
-    if (options.scroll !== false) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-);
+    const pattern = new RegExp(`^${domainConfig.idPrefix}-(\\d{4})$`);
     const highest = cards.reduce((max, card) => {
       const match = String(card.public_id || '').match(pattern);
       return match ? Math.max(max, Number(match[1])) : max;
@@ -606,7 +422,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                 </div>
               ) : null}
 
-              <div className="fixed bottom-2 left-1/2 z-[70] max-h-[45vh] w-[calc(100vw-1rem)] max-w-6xl -translate-x-1/2 lg:left-[16.5rem] lg:right-2 lg:w-auto lg:max-w-none lg:translate-x-0 xl:right-[34%] overflow-y-auto rounded-xl border border-ink/15 bg-white/95 p-2.5 shadow-[0_14px_40px_rgba(24,34,31,0.2)] backdrop-blur-xl dark:border-white/15 dark:bg-[#16211e]/95 dark:shadow-[0_14px_40px_rgba(0,0,0,0.42)] sm:p-3 lg:flex lg:items-center lg:justify-between lg:gap-4">
+              <div className="fixed bottom-2 left-1/2 z-[70] max-h-[45vh] w-[calc(100vw-1rem)] max-w-6xl -translate-x-1/2 overflow-y-auto rounded-xl border border-ink/15 bg-white/95 p-2.5 shadow-[0_14px_40px_rgba(24,34,31,0.2)] backdrop-blur-xl dark:border-white/15 dark:bg-[#16211e]/95 dark:shadow-[0_14px_40px_rgba(0,0,0,0.42)] sm:p-3 lg:left-[16.5rem] lg:right-2 lg:w-auto lg:max-w-none lg:translate-x-0 lg:flex lg:items-center lg:justify-between lg:gap-4 xl:right-[34%]">
                 <div className="mb-2 flex shrink-0 items-center justify-between gap-3 lg:mb-0">
                   <p className="text-xs font-black uppercase tracking-wide text-ink/55 dark:text-white/65">Coda di revisione · {queueLabel}</p>
                   {saving ? <span className="text-xs font-black text-moss dark:text-emerald-300">Salvataggio...</span> : null}
@@ -713,7 +529,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                     <button type="button" disabled={publishableCards.length === 0 || publishingBatch} onClick={toggleAllPublishable} className="focus-ring min-h-10 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink hover:bg-linen disabled:cursor-not-allowed disabled:bg-ink/5 disabled:text-ink/30 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:disabled:bg-white/5 dark:disabled:text-white/25">
                       {allPublishableSelected ? 'Deseleziona tutte visibili' : 'Seleziona tutte approvate'}
                     </button>
-                    <button type="button" disabled={selectedForPublish.length === 0 || publishingBatch} onClick={publishSelectedCards} className="focus-ring min-h-10 rounded-full bg-moss px-4 py-2 text-xs font-black text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/25 disabled:text-ink/40 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-white/10 dark:disabled:text-white/55">
+                    <button type="button" disabled={selectedForPublish.length === 0 || publishingBatch} onClick={publishSelectedCards} className="focus-ring min-h-10 rounded-full bg-moss px-4 py-2 text-xs font-black text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/20 disabled:text-ink/55 disabled:ring-1 disabled:ring-inset disabled:ring-moss/20 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-white/10 dark:disabled:text-white/55">
                       {publishingBatch ? 'Pubblicazione...' : `Pubblica selezionate (${selectedForPublish.length})`}
                     </button>
                   </div>
