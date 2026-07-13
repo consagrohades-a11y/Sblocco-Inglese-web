@@ -1,7 +1,7 @@
 import React from 'react';
 import { SlidersHorizontal, X } from 'lucide-react';
 
-const levels = ['A2', 'B1', 'B2'];
+const levels = ['A2', 'B1', 'B2', 'C1'];
 
 function PillButton({ active, children, count, onClick, dark = false }) {
   return (
