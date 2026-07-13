@@ -21,6 +21,7 @@ export default function CardArchiveWorkspace({
   titleField,
   meaningField,
   editorPath,
+  domain,
 }) {
   const [cards, setCards] = useState([]);
   const [query, setQuery] = useState('');
@@ -50,12 +51,13 @@ export default function CardArchiveWorkspace({
   const filteredCards = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return cards.filter((card) => {
+      const matchesDomain = !domain || String(card.primary_domain || 'general').toLowerCase() === domain;
       const matchesStatus = statusFilter === 'all' || card.status === statusFilter;
       const matchesText = !normalized || [card.public_id, card[titleField], card[meaningField], card.topic]
         .some((value) => String(value || '').toLowerCase().includes(normalized));
-      return matchesStatus && matchesText;
+      return matchesDomain && matchesStatus && matchesText;
     });
-  }, [cards, meaningField, query, statusFilter, titleField]);
+  }, [cards, domain, meaningField, query, statusFilter, titleField]);
 
   async function changeStatus(card, nextStatus) {
     setWorkingId(card.id);
