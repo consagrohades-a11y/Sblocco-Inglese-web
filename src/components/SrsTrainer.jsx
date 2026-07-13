@@ -96,6 +96,9 @@ export default function SrsTrainer({
   subtitle = trainer?.description || 'Review useful English with spaced repetition.',
   seoTitle = `${title} | Sblocco Inglese`,
   seoDescription = subtitle,
+  initialProgress = {},
+  onReview,
+  scopeNotice = '',
 }) {
   const filtersRef = useRef(null);
   const mobileFiltersRef = useRef(null);
@@ -104,7 +107,10 @@ export default function SrsTrainer({
   const trainerType = trainer?.cardType || 'expression';
   const targetLabel = trainerType === 'word' ? 'Word' : 'Expression';
   const targetPluralLabel = trainerType === 'word' ? 'words' : 'expressions';
-  const [progress, setProgress] = useState(() => cleanProgress(loadProgress(trainerCards, storageKey), trainerCards));
+  const [progress, setProgress] = useState(() => cleanProgress({
+    ...loadProgress(trainerCards, storageKey),
+    ...initialProgress,
+  }, trainerCards));
   const progressRef = useRef(progress);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedLevels, setSelectedLevels] = useState([]);
@@ -259,7 +265,14 @@ export default function SrsTrainer({
 
       const reviewTime = new Date();
       const today = getTodayISO(reviewTime);
-      setProgress((currentProgressMap) => reviewCard(currentCard.id, rating, currentProgressMap, today));
+      setProgress((currentProgressMap) => {
+        const nextProgress = reviewCard(currentCard.id, rating, currentProgressMap, today);
+        if (onReview) {
+          Promise.resolve(onReview({ card: currentCard, rating, progress: nextProgress[currentCard.id] }))
+            .catch(() => console.warn('Il ripasso è stato salvato sul dispositivo, ma la sincronizzazione account non è riuscita.'));
+        }
+        return nextProgress;
+      });
       setSessionRatings((ratings) => ({ ...ratings, [rating]: ratings[rating] + 1 }));
       setSessionReviewedCount((count) => count + 1);
       setSessionReviewedIds((ids) => (ids.includes(currentCard.id) ? ids : [...ids, currentCard.id]));
@@ -273,7 +286,7 @@ export default function SrsTrainer({
       setNow(reviewTime);
       setSessionStep((step) => step + 1);
     },
-    [currentCard],
+    [currentCard, onReview],
   );
 
   const handleAddCards = useCallback(() => {
@@ -438,6 +451,11 @@ export default function SrsTrainer({
           </div>
 
           <div className="mt-5 grid min-w-0 gap-5 lg:grid-cols-[minmax(260px,0.38fr)_minmax(0,1fr)] lg:items-start">
+            {scopeNotice ? (
+              <div className={`rounded-lg border px-4 py-3 text-sm font-bold leading-6 lg:col-span-2 ${isDark ? 'border-emerald-300/20 bg-emerald-400/10 text-emerald-100' : 'border-moss/20 bg-mint/45 text-ink'}`}>
+                {scopeNotice}
+              </div>
+            ) : null}
             <aside className="grid min-w-0 gap-4 lg:sticky lg:top-24">
               <ReviewStats
                 dueToday={stats.due}

@@ -18,6 +18,7 @@ export default function LearnerAssignmentDetail() {
   const { assignmentId } = useParams();
   const [assignment, setAssignment] = useState(null);
   const [resources, setResources] = useState([]);
+  const [studyScope, setStudyScope] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -28,7 +29,7 @@ export default function LearnerAssignmentDetail() {
       setLoading(true);
       setError('');
 
-      const [{ data, error: queryError }, { data: resourceData, error: resourceError }] = await Promise.all([
+      const [{ data, error: queryError }, { data: resourceData, error: resourceError }, { data: studyData, error: studyError }] = await Promise.all([
         supabase
           .from('assignments')
           .select('id, title, learner_note, status, required, deadline_at, estimated_minutes, published_at, created_at')
@@ -40,17 +41,24 @@ export default function LearnerAssignmentDetail() {
           .select('id, resource_key, resource_type, title, description, route, sequence_index, practice_config')
           .eq('assignment_id', assignmentId)
           .order('sequence_index', { ascending: true }),
+        supabase
+          .from('assignment_study_settings')
+          .select('include_in_srs, exercise_modes, snapshot_item_count')
+          .eq('assignment_id', assignmentId)
+          .maybeSingle(),
       ]);
 
       if (!active) return;
 
-      if (queryError || resourceError) {
+      if (queryError || resourceError || studyError) {
         setError('Non è stato possibile caricare questa attività.');
         setAssignment(null);
         setResources([]);
+        setStudyScope(null);
       } else {
         setAssignment(data ?? null);
         setResources(resourceData ?? []);
+        setStudyScope(studyData ?? null);
       }
 
       setLoading(false);
@@ -104,7 +112,16 @@ export default function LearnerAssignmentDetail() {
                 <p className="text-xs font-black uppercase tracking-wide text-moss">Contenuti</p>
                 <h2 className="mt-2 text-2xl font-black text-ink">Completa queste attività</h2>
 
-                {resources.length === 0 ? (
+                {studyScope?.include_in_srs ? (
+                  <div className="mt-5 rounded-xl border border-sea/25 bg-sea/5 p-5">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div><p className="text-xs font-black uppercase tracking-wide text-sea">Ripasso guidato</p><h3 className="mt-2 text-lg font-black text-ink">{studyScope.snapshot_item_count} card nel tuo SRS</h3><p className="mt-2 text-sm leading-6 text-ink/65">Le parole e le espressioni scelte dalla tua insegnante sono già entrate nei Trainer corretti.</p></div>
+                      <Link to="/trainers" className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-sea px-5 py-2.5 text-sm font-black text-white transition hover:bg-ink">Apri i Trainer</Link>
+                    </div>
+                  </div>
+                ) : null}
+
+                {resources.length === 0 && !studyScope?.include_in_srs ? (
                   <div className="mt-5 rounded-xl border border-dashed border-ink/15 bg-linen/35 p-5">
                     <p className="text-sm font-black text-ink">Nessun contenuto collegato</p>
                     <p className="mt-2 text-sm leading-6 text-ink/65">Segui le istruzioni scritte sopra. Non è stato collegato un trainer o un’unità specifica.</p>

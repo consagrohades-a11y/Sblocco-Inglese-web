@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import AssignmentPracticeEditor, { DEFAULT_ASSIGNMENT_PRACTICE } from '../components/admin/AssignmentPracticeEditor.jsx';
+import AssignmentStudyScopeEditor from '../components/admin/AssignmentStudyScopeEditor.jsx';
 import { assignmentActivityCatalog } from '../data/assignmentActivityCatalog.js';
 import { supabase } from '../lib/supabaseClient.js';
 
@@ -29,22 +30,33 @@ export default function AdminAssignmentContent() {
   const [estimatedMinutes, setEstimatedMinutes] = useState('');
   const [practiceEnabled, setPracticeEnabled] = useState(false);
   const [practiceConfig, setPracticeConfig] = useState(DEFAULT_ASSIGNMENT_PRACTICE);
+  const [studyEnabled, setStudyEnabled] = useState(false);
+  const [selectedDeckIds, setSelectedDeckIds] = useState([]);
+  const [selectedItemIds, setSelectedItemIds] = useState([]);
+  const [resolvedItemIds, setResolvedItemIds] = useState([]);
 
   useEffect(() => {
     let active = true;
     async function load() {
       setLoading(true);
       setError('');
-      const [{ data: assignmentData, error: assignmentError }, { data: resourceData, error: resourceError }] = await Promise.all([
+      const [
+        { data: assignmentData, error: assignmentError },
+        { data: resourceData, error: resourceError },
+        { data: studyData, error: studyError },
+      ] = await Promise.all([
         supabase.from('assignments')
           .select('id, learner_id, title, learner_note, reason, status, required, deadline_at, estimated_minutes, published_at, created_at')
           .eq('id', assignmentId).eq('learner_id', learnerId).maybeSingle(),
         supabase.from('assignment_resources')
           .select('id, resource_key, resource_type, title, description, route, sequence_index, practice_config').eq('assignment_id', assignmentId)
           .order('sequence_index', { ascending: true }),
+        supabase.from('assignment_study_settings')
+          .select('include_in_srs, exercise_modes, selected_deck_ids, selected_item_ids, snapshot_item_count')
+          .eq('assignment_id', assignmentId).maybeSingle(),
       ]);
       if (!active) return;
-      if (assignmentError || resourceError) {
+      if (assignmentError || resourceError || studyError) {
         setError('Non è stato possibile caricare l’assegnazione. Verifica che le migrazioni siano state applicate in Supabase.');
       } else if (!assignmentData) {
         setError('Assegnazione non trovata.');
@@ -60,6 +72,9 @@ export default function AdminAssignmentContent() {
         const practiceResource = (resourceData ?? []).find((item) => item.resource_type === 'practice_session');
         setPracticeEnabled(Boolean(practiceResource));
         setPracticeConfig({ ...DEFAULT_ASSIGNMENT_PRACTICE, ...(practiceResource?.practice_config || {}) });
+        setStudyEnabled(Boolean(studyData?.include_in_srs));
+        setSelectedDeckIds(studyData?.selected_deck_ids || []);
+        setSelectedItemIds(studyData?.selected_item_ids || []);
       }
       setLoading(false);
     }
@@ -103,6 +118,10 @@ export default function AdminAssignmentContent() {
       setError('Seleziona almeno un tipo di esercizio per la pratica mirata.');
       return;
     }
+    if (studyEnabled && !resolvedItemIds.length) {
+      setError('Seleziona almeno un deck, una parola o un’espressione per il percorso guidato.');
+      return;
+    }
     setSaving(true);
     const { error: updateError } = await supabase.rpc('admin_update_assignment', {
       target_assignment_id: assignmentId,
@@ -133,7 +152,10 @@ export default function AdminAssignmentContent() {
         description: `${practiceConfig.question_count} domande dal ${trainer === 'word' ? 'Word Trainer' : trainer === 'mixed' ? 'deck misto' : `${trainer} Expression Trainer`}`,
         route: '/practice',
         sequence_index: 1,
-        practice_config: practiceConfig,
+        practice_config: {
+          ...practiceConfig,
+          item_ids: studyEnabled ? resolvedItemIds : [],
+        },
       });
       resources.forEach((resource, index) => { resource.sequence_index = index + 1; });
     }
@@ -141,12 +163,26 @@ export default function AdminAssignmentContent() {
       target_assignment_id: assignmentId,
       resources,
     });
-    setSaving(false);
     if (resourcesError) {
+      setSaving(false);
       setError('I dati principali sono stati salvati, ma non è stato possibile salvare i contenuti.');
       return;
     }
 
+    const { error: studyError } = await supabase.rpc('admin_replace_assignment_study_scope', {
+      target_assignment_id: assignmentId,
+      p_item_ids: studyEnabled ? resolvedItemIds : [],
+      p_deck_ids: studyEnabled ? selectedDeckIds : [],
+      p_exercise_modes: practiceConfig.modes?.length ? practiceConfig.modes : DEFAULT_ASSIGNMENT_PRACTICE.modes,
+      p_include_in_srs: studyEnabled,
+    });
+    if (studyError) {
+      setSaving(false);
+      setError('I dati principali sono stati salvati, ma non è stato possibile aggiornare le card del percorso guidato.');
+      return;
+    }
+
+    setSaving(false);
     setAssignment((current) => ({ ...current, status: nextStatus || current.status, title: title.trim(), deadline_at: deadline ? new Date(deadline).toISOString() : null }));
     setSuccess(nextStatus === 'published' ? 'Assegnazione pubblicata.' : nextStatus === 'archived' ? 'Assegnazione archiviata.' : nextStatus === 'draft' ? 'Assegnazione riportata in bozza.' : 'Modifiche salvate.');
   }
@@ -191,6 +227,16 @@ export default function AdminAssignmentContent() {
                   </div>
                 </div>
               </section>
+
+              <AssignmentStudyScopeEditor
+                enabled={studyEnabled}
+                onEnabledChange={setStudyEnabled}
+                selectedDeckIds={selectedDeckIds}
+                onDeckIdsChange={setSelectedDeckIds}
+                selectedItemIds={selectedItemIds}
+                onItemIdsChange={setSelectedItemIds}
+                onResolvedItemIdsChange={setResolvedItemIds}
+              />
 
               <AssignmentPracticeEditor enabled={practiceEnabled} onEnabledChange={setPracticeEnabled} config={practiceConfig} onChange={setPracticeConfig} />
 

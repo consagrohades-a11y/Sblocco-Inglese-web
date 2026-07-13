@@ -55,6 +55,9 @@ function normaliseWord(card) {
     acceptedItalian: buildItalianAnswerVariants(card.italian_meaning, { wordCard: true }),
     examples: compact([card.example_1, card.example_2]),
     explanation: card.english_definition || card.usage_note || '',
+    pronunciation: [card.pronunciation_ipa_us, card.pronunciation_learner_us].filter(Boolean).join('  ·  '),
+    partOfSpeech: card.part_of_speech || '',
+    collocations: card.common_collocations || [],
     tags: card.tags || [],
   };
 }
@@ -76,6 +79,8 @@ function normaliseExpression(card, trainerId) {
     acceptedItalian: buildItalianAnswerVariants(card.italian_meaning),
     examples: compact([card.example_1, card.example_2]),
     explanation: card.english_explanation || card.usage_note || '',
+    pronunciation: [card.pronunciation_ipa_us, card.pronunciation_learner_us].filter(Boolean).join('  ·  '),
+    collocations: card.collocations || [],
     tags: card.tags || [],
   };
 }

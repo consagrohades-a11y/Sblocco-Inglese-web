@@ -156,11 +156,14 @@ export default function PracticeHub() {
     .filter((card) => (level === 'all' || card.level === level) && (deck === 'all' || (card.decks || []).some((item) => item.id === deck)))
     .map((card) => card.category)), [cards, level, deck]);
   const batches = useMemo(() => uniqueSorted(cards.map((card) => card.batch)), [cards]);
+  const assignedItemIds = useMemo(() => new Set(assignmentContext?.practice_config?.item_ids || []), [assignmentContext]);
   const filteredCards = useMemo(() => cards.filter((card) =>
+    (!assignedItemIds.size || assignedItemIds.has(card.id))
+    &&
     (level === 'all' || card.level === level)
     && (deck === 'all' || (card.decks || []).some((item) => item.id === deck))
     && (category === 'all' || card.category === category)
-    && (batch === 'all' || card.batch === batch)), [cards, level, deck, category, batch]);
+    && (batch === 'all' || card.batch === batch)), [cards, level, deck, category, batch, assignedItemIds]);
 
   const current = session?.[index];
   const finished = session && index >= session.length;
