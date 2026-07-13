@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Check, CheckCircle2, ChevronDown, CircleAlert, Loader2, RotateCcw, Sparkles } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import TrainerLayout from '../components/TrainerLayout';
 import { createPracticeSession, evaluateAnswer, EXERCISE_MODES } from '../lib/exerciseEngine.js';
 import { loadPublishedPracticeCards, PRACTICE_TRAINERS, recordPracticeAttempt } from '../lib/practiceContent.js';
+import { supabase } from '../lib/supabaseClient.js';
 
 const resultStyles = {
   correct: 'border-moss/35 bg-mint/70 text-ink dark:border-emerald-400/35 dark:bg-emerald-400/10 dark:text-emerald-100',
@@ -75,6 +76,12 @@ function PracticeSelect({ label, value, onChange, options, disabled = false }) {
 }
 
 export default function PracticeHub() {
+  const [searchParams] = useSearchParams();
+  const assignmentId = searchParams.get('assignmentId');
+  const resourceId = searchParams.get('resourceId');
+  const assignmentConfigRef = useRef(null);
+  const [assignmentContext, setAssignmentContext] = useState(null);
+  const [assignmentError, setAssignmentError] = useState('');
   const [trainerId, setTrainerId] = useState('word');
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -94,14 +101,42 @@ export default function PracticeHub() {
   const questionStartedAt = useRef(Date.now());
 
   useEffect(() => {
+    if (!assignmentId || !resourceId) return undefined;
+    let active = true;
+    setAssignmentError('');
+    supabase.rpc('get_assignment_practice_session', {
+      p_assignment_id: assignmentId,
+      p_resource_id: resourceId,
+    }).then(({ data, error }) => {
+      if (!active) return;
+      if (error || !data) {
+        setAssignmentError('Questa sessione assegnata non è disponibile.');
+        return;
+      }
+      const config = data.practice_config || {};
+      assignmentConfigRef.current = config;
+      setAssignmentContext(data);
+      setTrainerId(config.trainer_id || 'word');
+      setLevel(config.level || 'all');
+      setDeck(config.deck_id || 'all');
+      setCategory(config.category || 'all');
+      setBatch(config.batch || 'all');
+      setQuestionCount(config.question_count || 10);
+      setModes(config.modes?.length ? config.modes : ['italian_to_english']);
+    });
+    return () => { active = false; };
+  }, [assignmentId, resourceId]);
+
+  useEffect(() => {
     let active = true;
     setLoading(true);
     setLoadError('');
     setCards([]);
-    setLevel('all');
-    setDeck('all');
-    setCategory('all');
-    setBatch('all');
+    const lockedConfig = assignmentConfigRef.current?.trainer_id === trainerId ? assignmentConfigRef.current : null;
+    setLevel(lockedConfig?.level || 'all');
+    setDeck(lockedConfig?.deck_id || 'all');
+    setCategory(lockedConfig?.category || 'all');
+    setBatch(lockedConfig?.batch || 'all');
 
     loadPublishedPracticeCards(trainerId)
       .then((data) => { if (active) setCards(data); })
@@ -158,7 +193,7 @@ export default function PracticeHub() {
     setSaveError('');
 
     try {
-      await recordPracticeAttempt(current, response, evaluation, Date.now() - questionStartedAt.current);
+      await recordPracticeAttempt(current, response, evaluation, Date.now() - questionStartedAt.current, { assignmentId, resourceId });
     } catch (error) {
       setSaveError(error.message || 'Risposta valutata, ma il salvataggio non è riuscito.');
     }
@@ -185,6 +220,7 @@ export default function PracticeHub() {
     nearly_correct: 0,
     incorrect: 0,
   }), [results]);
+  const locked = Boolean(assignmentContext);
 
   return (
     <>
@@ -196,25 +232,28 @@ export default function PracticeHub() {
               <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint"><Sparkles className="h-4 w-4" />Pratica sincronizzata</span>
               <h1 className="mt-2 text-3xl font-black text-ink dark:text-white sm:text-4xl">Esercizi dalle tue card</h1>
             </div>
-            {session ? <button type="button" onClick={resetSession} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"><ArrowLeft className="h-4 w-4" />Cambia sessione</button> : null}
+            {locked ? <Link to={`/assignments/${assignmentId}`} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"><ArrowLeft className="h-4 w-4" />Torna all’attività</Link> : session ? <button type="button" onClick={resetSession} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"><ArrowLeft className="h-4 w-4" />Cambia sessione</button> : null}
           </div>
+
+          {assignmentError ? <p className="mb-5 flex items-center gap-2 rounded-lg border border-coral/30 bg-blush p-4 text-sm font-bold text-ink"><CircleAlert className="h-4 w-4" />{assignmentError}</p> : null}
+          {locked && !session ? <div className="mb-5 rounded-xl border border-moss/25 bg-mint/35 p-4 dark:border-emerald-300/25 dark:bg-emerald-400/10"><p className="text-xs font-black uppercase tracking-wide text-moss dark:text-mint">Attività assegnata</p><p className="mt-1 font-black text-ink dark:text-white">{assignmentContext.assignment_title}</p><p className="mt-1 text-sm text-ink/65 dark:text-white/65">I filtri sono stati scelti dall’insegnante. Premi Inizia quando sei pronto.</p></div> : null}
 
           {!session ? (
             <section className="rounded-xl border border-ink/10 bg-white p-5 shadow-soft dark:border-white/10 dark:bg-white/[0.06] sm:p-7">
               <div className="grid gap-5 sm:grid-cols-2">
-                <PracticeSelect label="Trainer" value={trainerId} onChange={setTrainerId} options={Object.values(PRACTICE_TRAINERS).map((trainer) => ({ value: trainer.id, label: trainer.label }))} />
-                <PracticeSelect label="Livello" value={level} onChange={(value) => { setLevel(value); setCategory('all'); }} options={[{ value: 'all', label: 'Tutti i livelli' }, ...levels.map((value) => ({ value, label: value }))]} />
-                <PracticeSelect label="Deck" value={deck} onChange={(value) => { setDeck(value); setCategory('all'); }} disabled={!decks.length} options={[{ value: 'all', label: decks.length ? 'Tutti i deck' : 'Nessun deck disponibile' }, ...decks.map((item) => ({ value: item.id, label: item.title }))]} />
-                <PracticeSelect label="Categoria" value={category} onChange={setCategory} options={[{ value: 'all', label: 'Tutte le categorie' }, ...categories.map((value) => ({ value, label: value }))]} />
-                <PracticeSelect label="Batch" value={batch} onChange={setBatch} disabled={!batches.length} options={[{ value: 'all', label: batches.length ? 'Tutti i batch' : 'Nessun batch nelle card' }, ...batches.map((value) => ({ value, label: value }))]} />
+                <PracticeSelect label="Trainer" value={trainerId} onChange={setTrainerId} disabled={locked} options={Object.values(PRACTICE_TRAINERS).map((trainer) => ({ value: trainer.id, label: trainer.label }))} />
+                <PracticeSelect label="Livello" value={level} onChange={(value) => { setLevel(value); setCategory('all'); }} disabled={locked} options={[{ value: 'all', label: 'Tutti i livelli' }, ...levels.map((value) => ({ value, label: value }))]} />
+                <PracticeSelect label="Deck" value={deck} onChange={(value) => { setDeck(value); setCategory('all'); }} disabled={locked || !decks.length} options={[{ value: 'all', label: decks.length ? 'Tutti i deck' : 'Nessun deck disponibile' }, ...decks.map((item) => ({ value: item.id, label: item.title }))]} />
+                <PracticeSelect label="Categoria" value={category} onChange={setCategory} disabled={locked} options={[{ value: 'all', label: 'Tutte le categorie' }, ...categories.map((value) => ({ value, label: value }))]} />
+                <PracticeSelect label="Batch" value={batch} onChange={setBatch} disabled={locked || !batches.length} options={[{ value: 'all', label: batches.length ? 'Tutti i batch' : 'Nessun batch nelle card' }, ...batches.map((value) => ({ value, label: value }))]} />
               </div>
 
               <fieldset className="mt-6">
                 <legend className="text-sm font-black text-ink dark:text-white">Tipi di esercizio</legend>
                 <div className="mt-3 grid gap-2 sm:grid-cols-2">
                   {EXERCISE_MODES.map((mode) => (
-                    <label key={mode.id} className={`flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 text-sm font-bold transition ${modes.includes(mode.id) ? 'border-moss bg-mint/60 text-ink dark:border-emerald-400 dark:bg-emerald-400/10 dark:text-white' : 'border-ink/10 text-ink/70 dark:border-white/15 dark:text-white/70'}`}>
-                      <input type="checkbox" checked={modes.includes(mode.id)} onChange={() => toggleMode(mode.id)} className="h-4 w-4 accent-moss" />
+                    <label key={mode.id} className={`flex items-center gap-3 rounded-lg border px-4 py-3 text-sm font-bold transition ${locked ? 'cursor-not-allowed' : 'cursor-pointer'} ${modes.includes(mode.id) ? 'border-moss bg-mint/60 text-ink dark:border-emerald-400 dark:bg-emerald-400/10 dark:text-white' : 'border-ink/10 text-ink/70 dark:border-white/15 dark:text-white/70'}`}>
+                      <input type="checkbox" checked={modes.includes(mode.id)} disabled={locked} onChange={() => toggleMode(mode.id)} className="h-4 w-4 accent-moss" />
                       {mode.label}
                     </label>
                   ))}
@@ -222,7 +261,7 @@ export default function PracticeHub() {
               </fieldset>
 
               <div className="mt-6 flex flex-wrap items-end justify-between gap-4 border-t border-ink/10 pt-5 dark:border-white/10">
-                <div className="w-44"><PracticeSelect label="Numero di domande" value={String(questionCount)} onChange={(value) => setQuestionCount(Number(value))} options={[5, 10, 15, 20].map((value) => ({ value: String(value), label: String(value) }))} /></div>
+                <div className="w-44"><PracticeSelect label="Numero di domande" value={String(questionCount)} onChange={(value) => setQuestionCount(Number(value))} disabled={locked} options={[5, 10, 15, 20].map((value) => ({ value: String(value), label: String(value) }))} /></div>
                 <div className="text-right">
                   <p className="mb-2 text-xs font-bold text-ink/55 dark:text-white/55">{loading ? 'Caricamento...' : `${filteredCards.length} card pubblicate disponibili`}</p>
                   <button type="button" onClick={startSession} disabled={loading || Boolean(loadError) || !filteredCards.length || !modes.length} className="focus-ring rounded-full bg-ink px-6 py-3 text-sm font-black text-white shadow-sm transition hover:bg-moss disabled:cursor-not-allowed disabled:bg-ink/25 disabled:text-ink/45 dark:bg-mint dark:text-ink dark:hover:bg-white dark:disabled:bg-white/15 dark:disabled:text-white/35">
@@ -241,7 +280,7 @@ export default function PracticeHub() {
               <div className="mx-auto mt-6 grid max-w-xl grid-cols-3 gap-3">
                 {[[summary.correct, 'Corrette'], [summary.nearly_correct, 'Quasi'], [summary.incorrect, 'Sbagliate']].map(([value, label]) => <div key={label} className="rounded-lg bg-paper p-4 dark:bg-white/10"><p className="text-2xl font-black text-ink dark:text-white">{value}</p><p className="text-xs font-bold text-ink/55 dark:text-white/55">{label}</p></div>)}
               </div>
-              <button type="button" onClick={resetSession} className="focus-ring mt-7 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-black text-white dark:bg-mint dark:text-ink"><RotateCcw className="h-4 w-4" />Nuova sessione</button>
+              {locked ? <Link to={`/assignments/${assignmentId}`} className="focus-ring mt-7 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-black text-white dark:bg-mint dark:text-ink"><CheckCircle2 className="h-4 w-4" />Torna all’attività</Link> : <button type="button" onClick={resetSession} className="focus-ring mt-7 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-black text-white dark:bg-mint dark:text-ink"><RotateCcw className="h-4 w-4" />Nuova sessione</button>}
             </section>
           ) : (
             <section className="rounded-xl border border-ink/10 bg-white p-5 shadow-soft dark:border-white/10 dark:bg-white/[0.06] sm:p-8">
