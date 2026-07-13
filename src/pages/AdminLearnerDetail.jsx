@@ -144,6 +144,12 @@ export default function AdminLearnerDetail() {
                           {assignment.estimated_minutes ? <span>{assignment.estimated_minutes} min stimati</span> : null}
                           {assignment.deadline_at ? <span>Scadenza: {formatDate(assignment.deadline_at, true)}</span> : null}
                         </div>
+                        <Link
+                          to={`/admin/learners/${learnerId}/assignments/${assignment.id}/content`}
+                          className="focus-ring mt-4 inline-flex min-h-10 items-center justify-center rounded-full border border-ink/15 bg-white px-4 py-2 text-sm font-black text-ink transition hover:bg-linen"
+                        >
+                          Gestisci contenuti
+                        </Link>
                       </article>
                     ))}
                   </div>
