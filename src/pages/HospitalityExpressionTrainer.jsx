@@ -1,18 +1,6 @@
 import React from 'react';
-import SrsTrainer from '../components/SrsTrainer';
-import { hospitalityExpressionCards } from '../data/hospitalityExpressionCards';
-import { getTrainerById } from '../data/trainerConfig';
+import DatabaseSrsTrainerPage from '../components/DatabaseSrsTrainerPage.jsx';
 
 export default function HospitalityExpressionTrainer() {
-  const trainer = getTrainerById('hospitality-expression');
-
-  return (
-    <SrsTrainer
-      cards={hospitalityExpressionCards}
-      trainer={trainer}
-      storageKey={trainer.storageKey}
-      seoTitle="Hospitality Expression Trainer | Sblocco Inglese"
-      seoDescription="Practice 150 natural English expressions for hotels, restaurants, guest service, reservations and hospitality problem-solving."
-    />
-  );
+  return <DatabaseSrsTrainerPage trainerId="hospitality-expression" seoTitle="Hospitality Expression Trainer | Sblocco Inglese" seoDescription="Espressioni professionali per hospitality, ripasso SRS e percorso guidato." />;
 }
