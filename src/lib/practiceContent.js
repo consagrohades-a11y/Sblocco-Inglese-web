@@ -11,8 +11,20 @@ function compact(values) {
   return Array.from(new Set(values.map((value) => String(value || '').trim()).filter(Boolean)));
 }
 
-function italianVariants(value) {
-  return compact([value, ...String(value || '').split(/[;/|]/)]);
+export function buildItalianAnswerVariants(value) {
+  const meaning = String(value || '').trim();
+  const alternatives = meaning.split(/[;/|]/);
+  const withoutParentheticalNote = meaning.replace(/\s*\([^)]*\)\s*$/, '').trim();
+  const explanatoryNote = meaning.match(
+    /^(.+?),\s*(?:(?:intes[oaie]\s+come)|(?:nel\s+senso\s+di)|(?:in\s+questo\s+senso)|(?:riferit[oaie]\s+a)|cioè|ossia|qui\s+come)\b/i,
+  )?.[1];
+
+  return compact([
+    meaning,
+    ...alternatives,
+    withoutParentheticalNote,
+    explanatoryNote,
+  ]);
 }
 
 function batchFromTags(tags = []) {
@@ -33,7 +45,7 @@ function normaliseWord(card) {
     english: card.lemma,
     italian: card.italian_meaning,
     acceptedEnglish: compact([card.lemma, ...(card.accepted_answers || [])]),
-    acceptedItalian: italianVariants(card.italian_meaning),
+    acceptedItalian: buildItalianAnswerVariants(card.italian_meaning),
     examples: compact([card.example_1, card.example_2]),
     explanation: card.english_definition || card.usage_note || '',
     tags: card.tags || [],
@@ -53,7 +65,7 @@ function normaliseExpression(card, trainerId) {
     english: card.canonical_text,
     italian: card.italian_meaning,
     acceptedEnglish: compact([card.canonical_text, ...(card.accepted_answers || [])]),
-    acceptedItalian: italianVariants(card.italian_meaning),
+    acceptedItalian: buildItalianAnswerVariants(card.italian_meaning),
     examples: compact([card.example_1, card.example_2]),
     explanation: card.english_explanation || card.usage_note || '',
     tags: card.tags || [],
