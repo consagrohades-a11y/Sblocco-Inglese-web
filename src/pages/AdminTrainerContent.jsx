@@ -36,6 +36,9 @@ const emptyCard = {
   usage_note: '',
   collocations: [],
   tags: [],
+  deck_ids: [],
+  deck_public_ids: [],
+  deck_titles: [],
   status: 'draft',
   review_status: 'pending',
   review_decision: '',
@@ -86,6 +89,7 @@ const inputClass = 'w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 
 export default function AdminTrainerContent({ domain = 'general' }) {
   const domainConfig = trainerDomains[domain] || trainerDomains.general;
   const [cards, setCards] = useState([]);
+  const [decks, setDecks] = useState([]);
   const [selected, setSelected] = useState(() => ({ ...emptyCard, primary_domain: domain }));
   const [query, setQuery] = useState('');
   const [reviewFilter, setReviewFilter] = useState('all');
@@ -102,13 +106,18 @@ export default function AdminTrainerContent({ domain = 'general' }) {
     setLoading(true);
     setError('');
 
-    const { data, error: rpcError } = await supabase.rpc('admin_list_expression_cards');
+    const [{ data, error: rpcError }, { data: deckData, error: deckError }] = await Promise.all([
+      supabase.rpc('admin_list_expression_cards'),
+      supabase.rpc('admin_list_expression_decks', { p_domain: domain }),
+    ]);
 
-    if (rpcError) {
-      setError('Impossibile caricare i contenuti. Verifica che la migrazione admin_trainer_content sia stata applicata in Supabase.');
+    if (rpcError || deckError) {
+      setError('Impossibile caricare contenuti e deck. Verifica che la migrazione Expression deck sia stata applicata in Supabase.');
       setCards([]);
+      setDecks([]);
     } else {
       setCards((data ?? []).filter((card) => String(card.primary_domain || 'general').toLowerCase() === domain));
+      setDecks(deckData || []);
     }
 
     setLoading(false);
@@ -173,6 +182,9 @@ export default function AdminTrainerContent({ domain = 'general' }) {
       accepted_answers: card.accepted_answers ?? [],
       collocations: card.collocations ?? [],
       tags: card.tags ?? [],
+      deck_ids: card.deck_ids ?? [],
+      deck_public_ids: card.deck_public_ids ?? [],
+      deck_titles: card.deck_titles ?? [],
     });
     setPreviewRevealed(false);
     setMessage(options.feedback || '');
@@ -220,6 +232,15 @@ export default function AdminTrainerContent({ domain = 'general' }) {
     if (rpcError) {
       setError(rpcError.message || 'Salvataggio non riuscito.');
     } else {
+      const { error: deckError } = await supabase.rpc('admin_replace_expression_deck_items_for_card', {
+        p_card_id: data,
+        p_deck_ids: selected.deck_ids || [],
+      });
+      if (deckError) {
+        setError(`Carta salvata, ma i deck non sono stati aggiornati: ${deckError.message}`);
+        setSaving(false);
+        return;
+      }
       const successMessage = nextStatus === 'published' ? 'Carta pubblicata.' : nextReviewStatus === 'approved' ? 'Carta approvata.' : 'Bozza salvata.';
       await loadCards();
       if (nextCardBeforeSave) {
@@ -336,6 +357,16 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                 <Field label="Categoria">
                   <input className={inputClass} value={selected.topic} onChange={(event) => updateField('topic', event.target.value)} />
                 </Field>
+                <div className="md:col-span-2">
+                  <Field label="Deck">
+                    <div className="flex flex-wrap gap-2 rounded-lg border border-ink/15 bg-white p-3 dark:border-white/15 dark:bg-[#101a17]">
+                      {decks.length ? decks.map((deck) => {
+                        const active = (selected.deck_ids || []).includes(deck.id);
+                        return <label key={deck.id} className={`flex cursor-pointer items-center gap-2 rounded-full border px-3 py-2 text-xs font-black transition ${active ? 'border-moss bg-mint/60 text-ink dark:border-emerald-300 dark:bg-emerald-400/15 dark:text-white' : 'border-ink/15 text-ink/65 dark:border-white/15 dark:text-white/65'}`}><input type="checkbox" checked={active} onChange={() => updateField('deck_ids', active ? selected.deck_ids.filter((id) => id !== deck.id) : [...(selected.deck_ids || []), deck.id])} className="h-4 w-4 accent-moss" />{deck.title}</label>;
+                      }) : <span className="text-sm font-semibold text-ink/50 dark:text-white/50">Nessun deck creato per questo Trainer.</span>}
+                    </div>
+                  </Field>
+                </div>
                 <Field label="Registro">
                   <select className={inputClass} value={selected.register} onChange={(event) => updateField('register', event.target.value)}>
                     <option value="informal">Informale</option>
@@ -443,7 +474,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
               ) : null}
             </form>
 
-            <div className="space-y-4 xl:sticky xl:top-4 xl:grid xl:h-[calc(100vh-6rem)] xl:grid-rows-[minmax(0,0.78fr)_minmax(0,1.22fr)] xl:gap-4 xl:space-y-0">
+            <div className="space-y-4 xl:sticky xl:top-4 xl:grid xl:h-[calc(100vh-6rem)] xl:grid-rows-[13rem_minmax(0,1fr)] xl:gap-4 xl:space-y-0">
               <aside className="min-h-0 overflow-y-auto rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:[scrollbar-color:rgba(255,255,255,0.18)_transparent] xl:[scrollbar-width:thin]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
@@ -517,7 +548,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                   </div>
                 </div>
 
-                <div className="mt-4 rounded-xl border border-moss/25 bg-mint/25 p-4 dark:border-emerald-300/25 dark:bg-emerald-400/10">
+                <div className="mt-3 shrink-0 rounded-xl border border-moss/25 bg-mint/25 p-3 dark:border-emerald-300/25 dark:bg-emerald-400/10">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Pubblicazione batch</p>
@@ -535,7 +566,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                   </div>
                 </div>
 
-                <div className="mt-4 max-h-[34rem] min-h-0 divide-y divide-ink/10 overflow-y-auto overscroll-contain rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10 xl:max-h-none xl:flex-1 xl:[scrollbar-color:rgba(14,124,102,0.55)_transparent] xl:[scrollbar-width:thin]">
+                <div className="mt-3 max-h-[34rem] min-h-24 divide-y divide-ink/10 overflow-y-auto overscroll-contain rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10 xl:max-h-none xl:flex-1 xl:[scrollbar-color:rgba(14,124,102,0.55)_transparent] xl:[scrollbar-width:thin]">
                   {loading ? <p className="p-4 text-sm font-bold text-ink/60">Caricamento...</p> : null}
                   {!loading && filteredCards.length === 0 ? <p className="p-4 text-sm font-bold text-ink/60">Nessuna carta trovata.</p> : null}
 

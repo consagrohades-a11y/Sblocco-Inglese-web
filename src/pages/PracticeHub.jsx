@@ -204,7 +204,7 @@ export default function PracticeHub() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <PracticeSelect label="Trainer" value={trainerId} onChange={setTrainerId} options={Object.values(PRACTICE_TRAINERS).map((trainer) => ({ value: trainer.id, label: trainer.label }))} />
                 <PracticeSelect label="Livello" value={level} onChange={(value) => { setLevel(value); setCategory('all'); }} options={[{ value: 'all', label: 'Tutti i livelli' }, ...levels.map((value) => ({ value, label: value }))]} />
-                {trainerId === 'word' ? <PracticeSelect label="Deck" value={deck} onChange={(value) => { setDeck(value); setCategory('all'); }} disabled={!decks.length} options={[{ value: 'all', label: decks.length ? 'Tutti i deck' : 'Nessun deck disponibile' }, ...decks.map((item) => ({ value: item.id, label: item.title }))]} /> : null}
+                <PracticeSelect label="Deck" value={deck} onChange={(value) => { setDeck(value); setCategory('all'); }} disabled={!decks.length} options={[{ value: 'all', label: decks.length ? 'Tutti i deck' : 'Nessun deck disponibile' }, ...decks.map((item) => ({ value: item.id, label: item.title }))]} />
                 <PracticeSelect label="Categoria" value={category} onChange={setCategory} options={[{ value: 'all', label: 'Tutte le categorie' }, ...categories.map((value) => ({ value, label: value }))]} />
                 <PracticeSelect label="Batch" value={batch} onChange={setBatch} disabled={!batches.length} options={[{ value: 'all', label: batches.length ? 'Tutti i batch' : 'Nessun batch nelle card' }, ...batches.map((value) => ({ value, label: value }))]} />
               </div>

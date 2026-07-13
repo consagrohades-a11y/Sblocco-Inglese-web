@@ -68,7 +68,7 @@ function normaliseExpression(card, trainerId) {
     level: card.level,
     category: card.category || 'Senza categoria',
     batch: batchFromTags(card.tags),
-    decks: [],
+    decks: (card.deck_ids || []).map((id, index) => ({ id, publicId: card.deck_public_ids?.[index] || '', title: card.deck_titles?.[index] || '' })),
     english: card.canonical_text,
     italian: card.italian_meaning,
     acceptedEnglish: compact([card.canonical_text, ...(card.accepted_answers || [])]),

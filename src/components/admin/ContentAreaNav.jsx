@@ -17,6 +17,7 @@ const contentAreas = {
     routes: [
       { label: 'Editor e revisione', to: '/admin/content/expressions', icon: Pencil, end: true },
       { label: 'Importazioni e batch', to: '/admin/content/expressions/import', icon: FileUp },
+      { label: 'Deck', to: '/admin/content/expressions/decks', icon: Layers3 },
       { label: 'Archivio', to: '/admin/content/expressions/archive', icon: Archive },
     ],
   },
@@ -25,6 +26,7 @@ const contentAreas = {
     routes: [
       { label: 'Editor e revisione', to: '/admin/content/business-expressions', icon: Pencil, end: true },
       { label: 'Importazioni e batch', to: '/admin/content/business-expressions/import', icon: FileUp },
+      { label: 'Deck', to: '/admin/content/business-expressions/decks', icon: Layers3 },
       { label: 'Archivio', to: '/admin/content/business-expressions/archive', icon: Archive },
     ],
   },
@@ -33,6 +35,7 @@ const contentAreas = {
     routes: [
       { label: 'Editor e revisione', to: '/admin/content/hospitality-expressions', icon: Pencil, end: true },
       { label: 'Importazioni e batch', to: '/admin/content/hospitality-expressions/import', icon: FileUp },
+      { label: 'Deck', to: '/admin/content/hospitality-expressions/decks', icon: Layers3 },
       { label: 'Archivio', to: '/admin/content/hospitality-expressions/archive', icon: Archive },
     ],
   },
