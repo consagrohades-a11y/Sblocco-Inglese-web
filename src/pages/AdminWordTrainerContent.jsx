@@ -2,7 +2,16 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import SrsCard from '../components/SrsCard';
+import ContentAreaNav from '../components/admin/ContentAreaNav';
 import { supabase } from '../lib/supabaseClient.js';
+import {
+  filterAdminCards,
+  getNextQueueCard,
+  getQueueLabel,
+  getQueuePosition,
+  isCardPublishable,
+  reviewFilterOptions,
+} from '../lib/cardWorkflow.js';
 
 const emptyCard = {
   id: '',
@@ -41,13 +50,6 @@ const emptyCard = {
 };
 
 const levels = ['A0', 'A1', 'A2', 'B1', 'B2', 'C1'];
-const reviewFilters = [
-  ['all', 'Tutte'],
-  ['pending', 'Da revisionare'],
-  ['approved', 'Approvate'],
-  ['rejected', 'Rifiutate'],
-];
-
 const inputClass = 'w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none transition focus:border-moss focus:ring-4 focus:ring-mint/40';
 const splitLines = (value) => String(value || '').split(/\r?\n|\s*\|\s*/).map((item) => item.trim()).filter(Boolean);
 const joinLines = (value) => Array.isArray(value) ? value.join('\n') : '';
@@ -89,36 +91,21 @@ export default function AdminWordTrainerContent() {
 
   useEffect(() => { loadCards(); }, []);
 
-  const filteredCards = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    return cards.filter((card) => {
-      const matchesReview = reviewFilter === 'all' || card.review_status === reviewFilter;
-      const matchesText = !normalized || [card.public_id, card.lemma, card.italian_meaning, card.topic]
-        .some((value) => String(value || '').toLowerCase().includes(normalized));
-      return matchesReview && matchesText;
-    });
-  }, [cards, query, reviewFilter]);
+  const filteredCards = useMemo(
+    () => filterAdminCards(cards, reviewFilter, query, ['public_id', 'lemma', 'italian_meaning', 'topic']),
+    [cards, query, reviewFilter],
+  );
 
   const selectedQueueIndex = useMemo(
-    () => filteredCards.findIndex((card) => card.id === selected.id),
+    () => getQueuePosition(filteredCards, selected.id),
     [filteredCards, selected.id],
   );
-  const nextCard = selectedQueueIndex >= 0
-    ? filteredCards[selectedQueueIndex + 1] ?? null
-    : filteredCards[0] ?? null;
-  const queueLabel = selectedQueueIndex >= 0
-    ? `${selectedQueueIndex + 1} di ${filteredCards.length}`
-    : `${filteredCards.length} nella coda`;
-  const publishableCards = useMemo(() => filteredCards.filter((card) => (
-    card.review_status === 'approved'
-    && card.status !== 'published'
-    && card.status !== 'archived'
-    && (card.accepted_answers || []).length > 0
-    && String(card.pronunciation_ipa_us || '').trim()
-    && String(card.example_1 || '').trim()
-    && String(card.example_2 || '').trim()
-    && String(card.usage_note || '').trim()
-  )), [filteredCards]);
+  const nextCard = getNextQueueCard(filteredCards, selectedQueueIndex);
+  const queueLabel = getQueueLabel(filteredCards, selectedQueueIndex);
+  const publishableCards = useMemo(
+    () => filteredCards.filter((card) => isCardPublishable(card, 'word')),
+    [filteredCards],
+  );
   const allPublishableSelected = publishableCards.length > 0
     && publishableCards.every((card) => selectedForPublish.includes(card.id));
 
@@ -239,18 +226,14 @@ export default function AdminWordTrainerContent() {
     setPublishingBatch(false);
   }
 
-  const canPublish = selected.review_status === 'approved'
-    && selected.accepted_answers.length > 0
-    && selected.pronunciation_ipa_us.trim()
-    && selected.example_1.trim()
-    && selected.example_2.trim()
-    && selected.usage_note.trim();
+  const canPublish = isCardPublishable(selected, 'word');
 
   return (
     <>
       <SEO title="Word Trainer content | Pannello admin | Sblocco Inglese" description="Crea, revisiona e pubblica le word card." />
       <section className="section-shell py-10 lg:py-14">
         <div className="mx-auto max-w-[96rem]">
+          <ContentAreaNav type="word" />
           <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
             <span className="eyebrow">Contenuti Word Trainer</span>
             <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
@@ -342,7 +325,7 @@ export default function AdminWordTrainerContent() {
               <aside className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
                 <h2 className="text-xl font-black text-ink">Word card in Supabase</h2>
                 <input type="search" className={`${inputClass} mt-4`} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cerca parola, italiano, categoria o ID" />
-                <div className="mt-3 grid grid-cols-2 gap-2">{reviewFilters.map(([value, label]) => <button key={value} type="button" onClick={() => setReviewFilter(value)} className={`focus-ring min-h-10 rounded-xl border px-3 py-2 text-sm font-black ${reviewFilter === value ? 'border-moss bg-moss text-white' : 'border-ink/10 bg-paper text-ink/70'}`}>{label}</button>)}</div>
+                <div className="mt-3 grid grid-cols-2 gap-2">{reviewFilterOptions.map((option) => <button key={option.value} type="button" onClick={() => setReviewFilter(option.value)} className={`focus-ring min-h-10 rounded-xl border px-3 py-2 text-sm font-black ${reviewFilter === option.value ? 'border-moss bg-moss text-white dark:border-emerald-300 dark:bg-emerald-400 dark:text-[#07120f]' : 'border-ink/10 bg-paper text-ink/70 dark:border-white/10 dark:bg-white/5 dark:text-white/65'}`}>{option.label}</button>)}</div>
                 <div className="mt-4 rounded-xl border border-moss/25 bg-mint/25 p-4 dark:border-emerald-300/25 dark:bg-emerald-400/10">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>

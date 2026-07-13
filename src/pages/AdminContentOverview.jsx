@@ -12,6 +12,7 @@ const areas = [
     actions: [
       { label: 'Apri editor e revisione', to: '/admin/content/words', icon: BookOpen, variant: 'primary' },
       { label: 'Importa CSV o JSON', to: '/admin/content/words/import', icon: FileSpreadsheet, variant: 'secondary' },
+      { label: 'Archivio ed eliminazione', to: '/admin/content/words/archive', icon: Archive, variant: 'secondary' },
     ],
   },
   {
