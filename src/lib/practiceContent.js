@@ -131,7 +131,7 @@ export async function loadPublishedPracticeCards(trainerId) {
   return (data || []).map((card) => normaliseExpression(card, trainerId));
 }
 
-export async function recordPracticeAttempt(question, response, evaluation, responseTimeMs) {
+export async function recordPracticeAttempt(question, response, evaluation, responseTimeMs, assignment = {}) {
   const { data, error } = await supabase.rpc('record_practice_attempt', {
     p_learning_item_id: question.learningItemId,
     p_exercise_type: question.exerciseType,
@@ -144,6 +144,8 @@ export async function recordPracticeAttempt(question, response, evaluation, resp
     }),
     p_submitted_response: response,
     p_response_time_ms: Math.max(0, Math.round(responseTimeMs)),
+    p_assignment_id: assignment.assignmentId || null,
+    p_assignment_resource_id: assignment.resourceId || null,
   });
 
   if (error) throw error;
