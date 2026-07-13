@@ -30,6 +30,13 @@ const sections = [
     to: '/admin/content/trainers/import',
     cta: 'Importa una carta',
   },
+  {
+    title: 'Elimina carta',
+    description: 'Trova ed elimina definitivamente una carta Trainer non pubblicata, senza entrare in Supabase.',
+    status: 'Disponibile',
+    to: '/admin/content/trainers/delete',
+    cta: 'Gestisci eliminazione',
+  },
 ];
 
 export default function AdminDashboard() {
@@ -52,7 +59,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {sections.map((section) => (
               <section key={section.title} className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
                 <p className="text-xs font-black uppercase tracking-wide text-moss">{section.status}</p>
