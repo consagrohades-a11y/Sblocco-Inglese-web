@@ -16,7 +16,15 @@ function unique(values) {
   return Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b, 'it'));
 }
 
-export default function AssignmentPracticeEditor({ enabled, onEnabledChange, config, onChange, onAvailabilityChange }) {
+export default function AssignmentPracticeEditor({
+  enabled,
+  onEnabledChange,
+  config,
+  onChange,
+  onAvailabilityChange,
+  allowedItemIds = [],
+  restrictToAllowedItems = false,
+}) {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -33,19 +41,22 @@ export default function AssignmentPracticeEditor({ enabled, onEnabledChange, con
     return () => { active = false; };
   }, [enabled, config.trainer_id]);
 
+  const allowedItemIdSet = useMemo(() => new Set(allowedItemIds), [allowedItemIds]);
+  const scopedCards = useMemo(() => cards.filter((card) =>
+    !restrictToAllowedItems || allowedItemIdSet.has(card.id)), [cards, restrictToAllowedItems, allowedItemIdSet]);
   const decks = useMemo(() => {
     const values = new Map();
-    cards.flatMap((card) => card.decks || []).forEach((deck) => values.set(deck.id, deck));
+    scopedCards.flatMap((card) => card.decks || []).forEach((deck) => values.set(deck.id, deck));
     return Array.from(values.values()).sort((a, b) => a.title.localeCompare(b.title, 'it'));
-  }, [cards]);
-  const levels = useMemo(() => unique(cards.map((card) => card.level)), [cards]);
-  const categories = useMemo(() => unique(cards.filter((card) => !config.level || card.level === config.level).map((card) => card.category)), [cards, config.level]);
-  const batches = useMemo(() => unique(cards.map((card) => card.batch)), [cards]);
-  const availableCards = useMemo(() => cards.filter((card) =>
+  }, [scopedCards]);
+  const levels = useMemo(() => unique(scopedCards.map((card) => card.level)), [scopedCards]);
+  const categories = useMemo(() => unique(scopedCards.filter((card) => !config.level || card.level === config.level).map((card) => card.category)), [scopedCards, config.level]);
+  const batches = useMemo(() => unique(scopedCards.map((card) => card.batch)), [scopedCards]);
+  const availableCards = useMemo(() => scopedCards.filter((card) =>
     (!config.level || card.level === config.level)
     && (!config.deck_id || (card.decks || []).some((deck) => deck.id === config.deck_id))
     && (!config.category || card.category === config.category)
-    && (!config.batch || card.batch === config.batch)), [cards, config]);
+    && (!config.batch || card.batch === config.batch)), [scopedCards, config]);
   const availableQuestions = useMemo(() => createPracticeSession(availableCards, config.modes, 50).length, [availableCards, config.modes]);
   const questionOptions = useMemo(() => Array.from(new Set([5, 10, 15, 20, availableQuestions]
     .filter((value) => value > 0 && value <= availableQuestions))).sort((a, b) => a - b), [availableQuestions]);
@@ -80,7 +91,7 @@ export default function AssignmentPracticeEditor({ enabled, onEnabledChange, con
           <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Batch</span><select value={config.batch || ''} onChange={(event) => update('batch', event.target.value || null)} className={fieldClass}><option value="">Tutti i batch</option>{batches.map((value) => <option key={value}>{value}</option>)}</select></label>
           <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Numero di domande</span><select value={config.question_count} onChange={(event) => update('question_count', Number(event.target.value))} className={fieldClass}>{questionOptions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
           <fieldset className="sm:col-span-2 lg:col-span-3"><legend className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Tipi di esercizio</legend><div className="mt-2 grid gap-2 sm:grid-cols-2">{EXERCISE_MODES.map((mode) => <label key={mode.id} className={`flex cursor-pointer gap-2 rounded-lg border px-3 py-2.5 text-sm font-bold ${config.modes.includes(mode.id) ? 'border-moss bg-white/70 dark:border-emerald-300/40 dark:bg-white/10 dark:text-white' : 'border-ink/10 text-ink/60 dark:border-white/10 dark:text-white/60'}`}><input type="checkbox" checked={config.modes.includes(mode.id)} onChange={() => toggleMode(mode.id)} className="accent-moss" />{mode.label}</label>)}</div></fieldset>
-          <p className="sm:col-span-2 lg:col-span-3 text-sm font-bold text-ink/60 dark:text-white/60">{loading ? 'Caricamento card pubblicate...' : error || `${availableCards.length} card e ${availableQuestions} domande disponibili con questi filtri.`}</p>
+          <p className="sm:col-span-2 lg:col-span-3 text-sm font-bold text-ink/60 dark:text-white/60">{loading ? 'Caricamento card pubblicate...' : error || `${availableCards.length} card assegnate compatibili e ${availableQuestions} domande disponibili con questi filtri.`}</p>
         </div>
       ) : null}
     </section>
