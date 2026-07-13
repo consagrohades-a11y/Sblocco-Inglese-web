@@ -38,7 +38,7 @@ export default function DeckSelector({
   selectedLevels,
   onToggleLevel,
   onClear,
-  dark = false
+  dark = false,
 }) {
   const hasFilters = selectedCategories.length > 0 || selectedLevels.length > 0;
 
@@ -50,8 +50,8 @@ export default function DeckSelector({
             <SlidersHorizontal aria-hidden="true" className="h-4 w-4" />
           </span>
           <div className="min-w-0">
-            <h2 className={`text-sm font-black ${dark ? 'text-white' : 'text-ink'}`}>Filters</h2>
-            <p className={`text-xs font-semibold ${dark ? 'text-white/60' : 'text-ink/55'}`}>Nessuna selezione = tutto il deck.</p>
+            <h2 className={`text-sm font-black ${dark ? 'text-white' : 'text-ink'}`}>Scegli cosa allenare</h2>
+            <p className={`text-xs font-semibold ${dark ? 'text-white/60' : 'text-ink/55'}`}>Puoi selezionare più categorie e livelli. Nessuna selezione mostra tutto.</p>
           </div>
         </div>
         <button
@@ -65,13 +65,13 @@ export default function DeckSelector({
           }`}
         >
           <X aria-hidden="true" className="h-3.5 w-3.5" />
-          Clear filters
+          Azzera filtri
         </button>
       </div>
 
       <div className="mt-4 grid min-w-0 gap-3">
         <div className="min-w-0">
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Categories</p>
+          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Categorie</p>
           <div className="mt-2 flex min-w-0 max-w-full flex-wrap gap-2" aria-label="Filtra per categoria">
             {categories.map((category) => (
               <PillButton
@@ -88,7 +88,7 @@ export default function DeckSelector({
         </div>
 
         <div className={`min-w-0 border-t pt-3 ${dark ? 'border-white/10' : 'border-ink/10'}`}>
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Levels</p>
+          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Livelli</p>
           <div className="mt-2 flex min-w-0 max-w-full flex-wrap gap-2" aria-label="Filtra per livello">
             {levels.map((level) => (
               <PillButton key={level} active={selectedLevels.includes(level)} onClick={() => onToggleLevel(level)} dark={dark}>
