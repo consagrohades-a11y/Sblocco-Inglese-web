@@ -7,6 +7,8 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
+    "audit:general-expression": "node scripts/audit-general-expression-cards.mjs",
+    "audit:general-expression:strict": "node scripts/audit-general-expression-cards.mjs --strict",
     "validate:auth": "node scripts/validate-auth-foundation.mjs",
     "validate:supabase": "node scripts/validate-supabase-config.mjs",
     "validate:srs": "node scripts/validate-srs-cards.mjs"
