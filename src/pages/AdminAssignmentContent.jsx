@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
+import AssignmentPracticeEditor, { DEFAULT_ASSIGNMENT_PRACTICE } from '../components/admin/AssignmentPracticeEditor.jsx';
 import { assignmentActivityCatalog } from '../data/assignmentActivityCatalog.js';
 import { supabase } from '../lib/supabaseClient.js';
 
@@ -26,6 +27,8 @@ export default function AdminAssignmentContent() {
   const [required, setRequired] = useState(true);
   const [deadline, setDeadline] = useState('');
   const [estimatedMinutes, setEstimatedMinutes] = useState('');
+  const [practiceEnabled, setPracticeEnabled] = useState(false);
+  const [practiceConfig, setPracticeConfig] = useState(DEFAULT_ASSIGNMENT_PRACTICE);
 
   useEffect(() => {
     let active = true;
@@ -37,7 +40,7 @@ export default function AdminAssignmentContent() {
           .select('id, learner_id, title, learner_note, reason, status, required, deadline_at, estimated_minutes, published_at, created_at')
           .eq('id', assignmentId).eq('learner_id', learnerId).maybeSingle(),
         supabase.from('assignment_resources')
-          .select('resource_key, sequence_index').eq('assignment_id', assignmentId)
+          .select('id, resource_key, resource_type, title, description, route, sequence_index, practice_config').eq('assignment_id', assignmentId)
           .order('sequence_index', { ascending: true }),
       ]);
       if (!active) return;
@@ -53,7 +56,10 @@ export default function AdminAssignmentContent() {
         setRequired(Boolean(assignmentData.required));
         setDeadline(toLocalInput(assignmentData.deadline_at));
         setEstimatedMinutes(assignmentData.estimated_minutes ? String(assignmentData.estimated_minutes) : '');
-        setSelectedKeys((resourceData ?? []).map((item) => item.resource_key));
+        setSelectedKeys((resourceData ?? []).filter((item) => assignmentActivityCatalog.some((activity) => activity.key === item.resource_key)).map((item) => item.resource_key));
+        const practiceResource = (resourceData ?? []).find((item) => item.resource_type === 'practice_session');
+        setPracticeEnabled(Boolean(practiceResource));
+        setPracticeConfig({ ...DEFAULT_ASSIGNMENT_PRACTICE, ...(practiceResource?.practice_config || {}) });
       }
       setLoading(false);
     }
@@ -93,6 +99,10 @@ export default function AdminAssignmentContent() {
       setError('Il tempo stimato deve essere maggiore di zero.');
       return;
     }
+    if (practiceEnabled && !practiceConfig.modes.length) {
+      setError('Seleziona almeno un tipo di esercizio per la pratica mirata.');
+      return;
+    }
     setSaving(true);
     const { error: updateError } = await supabase.rpc('admin_update_assignment', {
       target_assignment_id: assignmentId,
@@ -114,6 +124,19 @@ export default function AdminAssignmentContent() {
       key: activity.key, type: activity.type, title: activity.title,
       description: activity.description, route: activity.route, sequence_index: index + 1,
     }));
+    if (practiceEnabled) {
+      const trainer = practiceConfig.trainer_id;
+      resources.unshift({
+        key: 'targeted-practice',
+        type: 'practice_session',
+        title: 'Pratica mirata',
+        description: `${practiceConfig.question_count} domande dal ${trainer === 'word' ? 'Word Trainer' : trainer === 'mixed' ? 'deck misto' : `${trainer} Expression Trainer`}`,
+        route: '/practice',
+        sequence_index: 1,
+        practice_config: practiceConfig,
+      });
+      resources.forEach((resource, index) => { resource.sequence_index = index + 1; });
+    }
     const { error: resourcesError } = await supabase.rpc('admin_replace_assignment_resources', {
       target_assignment_id: assignmentId,
       resources,
@@ -168,6 +191,8 @@ export default function AdminAssignmentContent() {
                   </div>
                 </div>
               </section>
+
+              <AssignmentPracticeEditor enabled={practiceEnabled} onEnabledChange={setPracticeEnabled} config={practiceConfig} onChange={setPracticeConfig} />
 
               <div className="grid gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.65fr)]">
                 <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm">

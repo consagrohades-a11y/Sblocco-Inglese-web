@@ -37,7 +37,7 @@ export default function LearnerAssignmentDetail() {
           .maybeSingle(),
         supabase
           .from('assignment_resources')
-          .select('id, resource_key, resource_type, title, description, route, sequence_index')
+          .select('id, resource_key, resource_type, title, description, route, sequence_index, practice_config')
           .eq('assignment_id', assignmentId)
           .order('sequence_index', { ascending: true }),
       ]);
@@ -116,12 +116,12 @@ export default function LearnerAssignmentDetail() {
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                           <div>
                             <p className="text-xs font-black uppercase tracking-wide text-moss">
-                              {index + 1}. {resource.resource_type === 'trainer' ? 'Trainer' : 'Unità grammaticale'}
+                              {index + 1}. {resource.resource_type === 'practice_session' ? 'Pratica mirata' : resource.resource_type === 'trainer' ? 'Trainer' : 'Unità grammaticale'}
                             </p>
                             <h3 className="mt-2 text-lg font-black text-ink">{resource.title}</h3>
                             {resource.description ? <p className="mt-2 text-sm leading-6 text-ink/65">{resource.description}</p> : null}
                           </div>
-                          <Link to={resource.route} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss">
+                          <Link to={resource.resource_type === 'practice_session' ? `/practice?assignmentId=${assignment.id}&resourceId=${resource.id}` : resource.route} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss">
                             Inizia
                           </Link>
                         </div>
