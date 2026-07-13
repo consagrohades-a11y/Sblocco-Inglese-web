@@ -19,6 +19,22 @@ const contentAreas = {
       { label: 'Archivio', to: '/admin/content/expressions/archive', icon: Archive },
     ],
   },
+  business: {
+    label: 'Business Expressions',
+    routes: [
+      { label: 'Editor e revisione', to: '/admin/content/business-expressions', icon: Pencil, end: true },
+      { label: 'Importazioni e batch', to: '/admin/content/business-expressions/import', icon: FileUp },
+      { label: 'Archivio', to: '/admin/content/business-expressions/archive', icon: Archive },
+    ],
+  },
+  hospitality: {
+    label: 'Hospitality Expressions',
+    routes: [
+      { label: 'Editor e revisione', to: '/admin/content/hospitality-expressions', icon: Pencil, end: true },
+      { label: 'Importazioni e batch', to: '/admin/content/hospitality-expressions/import', icon: FileUp },
+      { label: 'Archivio', to: '/admin/content/hospitality-expressions/archive', icon: Archive },
+    ],
+  },
 };
 
 export default function ContentAreaNav({ type, onNewCard }) {
