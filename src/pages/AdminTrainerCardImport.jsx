@@ -16,7 +16,37 @@ const requiredFields = [
   ['primary_context', 'Contesto principale'],
 ];
 
-function normalizeExpressionCard(source) {
+const importDomains = {
+  general: {
+    navType: 'expression',
+    label: 'General Expressions',
+    idPrefix: 'general',
+    editorPath: '/admin/content/expressions',
+    archivePath: '/admin/content/expressions/archive',
+    exampleContext: 'Everyday conversation',
+    exampleTopic: 'Everyday Conversation',
+  },
+  business: {
+    navType: 'business',
+    label: 'Business Expressions',
+    idPrefix: 'business',
+    editorPath: '/admin/content/business-expressions',
+    archivePath: '/admin/content/business-expressions/archive',
+    exampleContext: 'Professional communication',
+    exampleTopic: 'Meetings',
+  },
+  hospitality: {
+    navType: 'hospitality',
+    label: 'Hospitality Expressions',
+    idPrefix: 'hospitality',
+    editorPath: '/admin/content/hospitality-expressions',
+    archivePath: '/admin/content/hospitality-expressions/archive',
+    exampleContext: 'Guest service',
+    exampleTopic: 'Welcoming guests',
+  },
+};
+
+function normalizeExpressionCard(source, domain) {
   return {
     id: null,
     public_id: String(firstValue(source, ['public_id', 'external_key', 'id_pubblico'])).trim(),
@@ -26,7 +56,7 @@ function normalizeExpressionCard(source) {
     communicative_function: String(firstValue(source, ['communicative_function', 'function'])).trim(),
     primary_context: String(firstValue(source, ['primary_context', 'context'])).trim(),
     level: String(firstValue(source, ['level'], 'A2')).trim().toUpperCase(),
-    primary_domain: String(firstValue(source, ['primary_domain', 'domain'], 'general')).trim() || 'general',
+    primary_domain: domain,
     topic: String(firstValue(source, ['topic', 'category'])).trim(),
     priority: enumValue(String(firstValue(source, ['priority'], 'useful')).trim(), ['essential', 'high_frequency', 'useful', 'specialised', 'advanced_low_frequency'], 'useful'),
     register: enumValue(String(firstValue(source, ['register'], 'neutral')).trim(), ['informal', 'neutral', 'professional', 'formal'], 'neutral'),
@@ -47,41 +77,44 @@ function normalizeExpressionCard(source) {
   };
 }
 
-function validateExpressionCard(card, index) {
+function validateExpressionCard(card, index, idPrefix) {
   const issues = requiredFields
     .filter(([key]) => !String(card[key] || '').trim())
     .map(([, label]) => `${label} mancante`);
 
   if (!expressionLevels.includes(card.level)) issues.push(`Livello non valido: ${card.level || '-'}`);
-  if (!/^general-\d{4}$/.test(card.public_id)) issues.push('ID non conforme, usa general-0001');
+  const idPattern = new RegExp(`^${idPrefix}-\\d{4}$`);
+  if (!idPattern.test(card.public_id)) issues.push(`ID non conforme, usa ${idPrefix}-0001`);
   return { row: index + 2, publicId: card.public_id || '-', issues };
 }
 
-const template = {
-  cards: [{
-    public_id: 'general-0001',
-    canonical_text: "I'm on my way.",
-    italian_meaning: 'Sto arrivando. / Sono per strada.',
-    english_explanation: 'Used when you have already left and are travelling toward the destination.',
-    communicative_function: 'Giving an arrival update',
-    primary_context: 'Everyday conversation',
-    level: 'A2',
-    primary_domain: 'general',
-    topic: 'Everyday Conversation',
-    priority: 'high_frequency',
-    register: 'neutral',
-    usage_channel: 'spoken',
-    tone: 'reassuring',
-    accepted_answers: ["I'm on my way."],
-    pronunciation_ipa_us: '/aɪm ɑn maɪ weɪ/',
-    pronunciation_learner_us: 'aim ahn mai way',
-    example_1: "I'm on my way now. I should be there in ten minutes.",
-    example_2: "Sorry I'm late, but I'm on my way.",
-    usage_note: 'Use this after you have left, not while you are still preparing to go.',
-    collocations: ['on my way now', 'already on my way'],
-    tags: ['arrival', 'movement', 'spoken'],
-  }],
-};
+function createTemplate(domain, config) {
+  return {
+    cards: [{
+      public_id: `${config.idPrefix}-0001`,
+      canonical_text: "I'm on my way.",
+      italian_meaning: 'Sto arrivando. / Sono per strada.',
+      english_explanation: 'Used to communicate clearly and naturally in the selected context.',
+      communicative_function: 'Giving an update',
+      primary_context: config.exampleContext,
+      level: 'A2',
+      primary_domain: domain,
+      topic: config.exampleTopic,
+      priority: 'high_frequency',
+      register: domain === 'general' ? 'neutral' : 'professional',
+      usage_channel: 'spoken',
+      tone: 'helpful',
+      accepted_answers: ["I'm on my way."],
+      pronunciation_ipa_us: '/aɪm ɑn maɪ weɪ/',
+      pronunciation_learner_us: 'aim ahn mai way',
+      example_1: "I'm on my way now. I should be there in ten minutes.",
+      example_2: "Sorry I'm late, but I'm on my way.",
+      usage_note: 'Add a specific usage note for this expression and context.',
+      collocations: ['on my way now', 'already on my way'],
+      tags: [domain, 'spoken'],
+    }],
+  };
+}
 
 const columns = [
   { key: 'public_id', label: 'ID' },
@@ -91,22 +124,24 @@ const columns = [
   { key: 'italian_meaning', label: 'Italiano' },
 ];
 
-export default function AdminTrainerCardImport() {
+export default function AdminTrainerCardImport({ domain = 'general' }) {
+  const config = importDomains[domain] || importDomains.general;
+
   return (
     <CardImportWorkspace
-      type="expression"
-      title="Importa General Expressions"
-      description="Carica una singola expression card o un batch CSV o JSON. Tutte le card vengono validate e salvate come bozze da revisionare."
+      type={config.navType}
+      title={`Importa ${config.label}`}
+      description={`Carica una singola card o un batch CSV o JSON per ${config.label}. Tutte le card vengono validate e salvate come bozze da revisionare.`}
       itemLabel="expression card"
       itemPlural="expression card"
-      editorPath="/admin/content/expressions"
-      archivePath="/admin/content/expressions/archive"
+      editorPath={config.editorPath}
+      archivePath={config.archivePath}
       rpcName="admin_import_expression_cards"
-      normalizeCard={normalizeExpressionCard}
-      validateCard={validateExpressionCard}
+      normalizeCard={(source) => normalizeExpressionCard(source, domain)}
+      validateCard={(card, index) => validateExpressionCard(card, index, config.idPrefix)}
       columns={columns}
-      template={template}
-      templateFileName="general-expression-import-template.json"
+      template={createTemplate(domain, config)}
+      templateFileName={`${config.idPrefix}-expression-import-template.json`}
     />
   );
 }
