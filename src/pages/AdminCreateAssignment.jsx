@@ -1,0 +1,243 @@
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import SEO from '../components/SEO';
+import { supabase } from '../lib/supabaseClient.js';
+
+export default function AdminCreateAssignment() {
+  const { learnerId } = useParams();
+  const navigate = useNavigate();
+  const [learner, setLearner] = useState(null);
+  const [loadingLearner, setLoadingLearner] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [title, setTitle] = useState('');
+  const [learnerMessage, setLearnerMessage] = useState('');
+  const [privateNote, setPrivateNote] = useState('');
+  const [required, setRequired] = useState(true);
+  const [deadline, setDeadline] = useState('');
+  const [estimatedMinutes, setEstimatedMinutes] = useState('');
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadLearner() {
+      setLoadingLearner(true);
+      setError('');
+
+      const { data, error: rpcError } = await supabase.rpc('admin_get_learner_detail', {
+        target_learner_id: learnerId,
+      });
+
+      if (!active) return;
+
+      if (rpcError) {
+        setError('Non è stato possibile caricare lo studente.');
+        setLearner(null);
+      } else {
+        setLearner(data?.[0] ?? null);
+      }
+
+      setLoadingLearner(false);
+    }
+
+    loadLearner();
+
+    return () => {
+      active = false;
+    };
+  }, [learnerId]);
+
+  async function createAssignment(publishNow) {
+    setError('');
+
+    if (!title.trim()) {
+      setError('Inserisci un titolo per l’assegnazione.');
+      return;
+    }
+
+    const parsedMinutes = estimatedMinutes ? Number.parseInt(estimatedMinutes, 10) : null;
+
+    if (parsedMinutes !== null && (!Number.isInteger(parsedMinutes) || parsedMinutes <= 0)) {
+      setError('Il tempo stimato deve essere un numero maggiore di zero.');
+      return;
+    }
+
+    setSubmitting(true);
+
+    const { error: createError } = await supabase.rpc('admin_create_assignment', {
+      target_learner_id: learnerId,
+      assignment_title: title.trim(),
+      learner_message: learnerMessage.trim() || null,
+      private_admin_note: privateNote.trim() || null,
+      is_required: required,
+      deadline_at_value: deadline ? new Date(deadline).toISOString() : null,
+      estimated_minutes_value: parsedMinutes,
+      publish_now: publishNow,
+    });
+
+    setSubmitting(false);
+
+    if (createError) {
+      setError('Non è stato possibile creare l’assegnazione. Verifica che la migrazione admin_create_assignment sia stata applicata in Supabase.');
+      return;
+    }
+
+    navigate(`/admin/learners/${learnerId}`, { replace: true });
+  }
+
+  const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40';
+
+  return (
+    <>
+      <SEO
+        title="Crea assegnazione | Pannello admin | Sblocco Inglese"
+        description="Crea una nuova assegnazione per uno studente."
+      />
+      <section className="section-shell py-12 lg:py-16">
+        <div className="mx-auto max-w-4xl">
+          <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
+            <span className="eyebrow">Assegnazione</span>
+            <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h1 className="text-3xl font-black text-ink sm:text-4xl">Crea assegnazione</h1>
+                <p className="mt-3 text-base leading-7 text-ink/70">
+                  {loadingLearner
+                    ? 'Caricamento studente...'
+                    : learner
+                      ? `Nuova attività per ${learner.display_name || learner.email}.`
+                      : 'Studente non trovato.'}
+                </p>
+              </div>
+              <Link
+                to={`/admin/learners/${learnerId}`}
+                className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-black text-ink transition hover:bg-linen"
+              >
+                Annulla
+              </Link>
+            </div>
+          </div>
+
+          {error ? (
+            <div className="mt-6 border-l-4 border-red-400 bg-red-50 p-5 text-sm font-bold leading-6 text-red-900">
+              {error}
+            </div>
+          ) : null}
+
+          {!loadingLearner && learner ? (
+            <form className="mt-6 grid gap-6" onSubmit={(event) => event.preventDefault()}>
+              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm sm:p-8">
+                <h2 className="text-xl font-black text-ink">Informazioni principali</h2>
+
+                <label className="mt-6 block">
+                  <span className="text-sm font-black text-ink">Titolo</span>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                    maxLength={160}
+                    required
+                    placeholder="Esempio: Ripasso present simple"
+                    className={fieldClass}
+                  />
+                </label>
+
+                <label className="mt-5 block">
+                  <span className="text-sm font-black text-ink">Messaggio per lo studente</span>
+                  <span className="mt-1 block text-xs font-semibold leading-5 text-ink/50">
+                    Questo testo sarà visibile allo studente. Puoi inserire istruzioni, contesto, feedback o indicazioni personali.
+                  </span>
+                  <textarea
+                    value={learnerMessage}
+                    onChange={(event) => setLearnerMessage(event.target.value)}
+                    rows={6}
+                    maxLength={3000}
+                    placeholder="Scrivi qui ciò che vuoi che lo studente legga..."
+                    className={fieldClass}
+                  />
+                </label>
+
+                <label className="mt-5 block rounded-xl border border-amber-200 bg-amber-50 p-4">
+                  <span className="text-sm font-black text-amber-950">Nota privata admin</span>
+                  <span className="mt-1 block text-xs font-semibold leading-5 text-amber-900/70">
+                    Solo tu puoi vedere questa nota. Non sarà mostrata allo studente.
+                  </span>
+                  <textarea
+                    value={privateNote}
+                    onChange={(event) => setPrivateNote(event.target.value)}
+                    rows={4}
+                    maxLength={3000}
+                    placeholder="Esempio: difficoltà osservate, obiettivo della prossima lezione, motivo dell’assegnazione..."
+                    className={fieldClass}
+                  />
+                </label>
+              </section>
+
+              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm sm:p-8">
+                <h2 className="text-xl font-black text-ink">Impostazioni</h2>
+
+                <label className="mt-6 flex items-start gap-3 rounded-xl border border-ink/10 bg-linen/40 p-4">
+                  <input
+                    type="checkbox"
+                    checked={required}
+                    onChange={(event) => setRequired(event.target.checked)}
+                    className="mt-1 h-4 w-4"
+                  />
+                  <span>
+                    <span className="block text-sm font-black text-ink">Attività obbligatoria</span>
+                    <span className="mt-1 block text-xs font-semibold leading-5 text-ink/55">
+                      Disattiva questa opzione se l’attività è facoltativa.
+                    </span>
+                  </span>
+                </label>
+
+                <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                  <label className="block">
+                    <span className="text-sm font-black text-ink">Scadenza</span>
+                    <input
+                      type="datetime-local"
+                      value={deadline}
+                      onChange={(event) => setDeadline(event.target.value)}
+                      className={fieldClass}
+                    />
+                  </label>
+
+                  <label className="block">
+                    <span className="text-sm font-black text-ink">Tempo stimato, minuti</span>
+                    <input
+                      type="number"
+                      min="1"
+                      step="1"
+                      value={estimatedMinutes}
+                      onChange={(event) => setEstimatedMinutes(event.target.value)}
+                      placeholder="20"
+                      className={fieldClass}
+                    />
+                  </label>
+                </div>
+              </section>
+
+              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  disabled={submitting}
+                  onClick={() => createAssignment(false)}
+                  className="focus-ring min-h-12 rounded-full border border-ink/15 bg-white px-6 py-3 text-sm font-black text-ink transition hover:bg-linen disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {submitting ? 'Salvataggio...' : 'Salva come bozza'}
+                </button>
+                <button
+                  type="button"
+                  disabled={submitting}
+                  onClick={() => createAssignment(true)}
+                  className="focus-ring min-h-12 rounded-full bg-ink px-6 py-3 text-sm font-black text-white transition hover:bg-moss disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {submitting ? 'Pubblicazione...' : 'Pubblica per lo studente'}
+                </button>
+              </div>
+            </form>
+          ) : null}
+        </div>
+      </section>
+    </>
+  );
+}

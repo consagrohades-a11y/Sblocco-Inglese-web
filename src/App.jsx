@@ -38,6 +38,7 @@ const Account = lazy(() => import('./pages/Account'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AdminLearners = lazy(() => import('./pages/AdminLearners'));
 const AdminLearnerDetail = lazy(() => import('./pages/AdminLearnerDetail'));
+const AdminCreateAssignment = lazy(() => import('./pages/AdminCreateAssignment'));
 
 function ScrollManager() {
   const location = useLocation();
@@ -108,38 +109,11 @@ export default function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/update-password" element={<UpdatePassword />} />
-            <Route
-              path="/account"
-              element={(
-                <ProtectedRoute>
-                  <Account />
-                </ProtectedRoute>
-              )}
-            />
-            <Route
-              path="/admin"
-              element={(
-                <AdminRoute>
-                  <AdminDashboard />
-                </AdminRoute>
-              )}
-            />
-            <Route
-              path="/admin/learners"
-              element={(
-                <AdminRoute>
-                  <AdminLearners />
-                </AdminRoute>
-              )}
-            />
-            <Route
-              path="/admin/learners/:learnerId"
-              element={(
-                <AdminRoute>
-                  <AdminLearnerDetail />
-                </AdminRoute>
-              )}
-            />
+            <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+            <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+            <Route path="/admin/learners" element={<AdminRoute><AdminLearners /></AdminRoute>} />
+            <Route path="/admin/learners/:learnerId" element={<AdminRoute><AdminLearnerDetail /></AdminRoute>} />
+            <Route path="/admin/learners/:learnerId/assignments/new" element={<AdminRoute><AdminCreateAssignment /></AdminRoute>} />
             <Route path="/levels/a1/be-basic-sentences" element={<A1UnitPage key="a1-be-basic-sentences" unitId="be-basic-sentences" />} />
             <Route path="/levels/a1/present-simple-normal-verbs" element={<A1UnitPage key="a1-present-simple-normal-verbs" unitId="present-simple-normal-verbs" />} />
             <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
