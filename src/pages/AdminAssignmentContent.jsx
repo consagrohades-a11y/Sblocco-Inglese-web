@@ -248,7 +248,15 @@ export default function AdminAssignmentContent() {
                 onResolvedItemIdsChange={setResolvedItemIds}
               />
 
-              <AssignmentPracticeEditor enabled={practiceEnabled} onEnabledChange={setPracticeEnabled} config={practiceConfig} onChange={setPracticeConfig} onAvailabilityChange={setPracticeAvailability} />
+              <AssignmentPracticeEditor
+                enabled={practiceEnabled}
+                onEnabledChange={setPracticeEnabled}
+                config={practiceConfig}
+                onChange={setPracticeConfig}
+                onAvailabilityChange={setPracticeAvailability}
+                allowedItemIds={resolvedItemIds}
+                restrictToAllowedItems={studyEnabled}
+              />
 
               <div className="grid gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.65fr)]">
                 <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm">
