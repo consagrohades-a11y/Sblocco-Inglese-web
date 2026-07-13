@@ -95,7 +95,7 @@ export default function AdminTrainerCardDelete() {
 
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
-                to="/admin/content/trainers"
+                to="/admin/content/expressions"
                 className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss"
               >
                 Torna all’editor

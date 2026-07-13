@@ -276,7 +276,7 @@ export default function AdminTrainerCardImport() {
                 Scarica modello
               </button>
               <Link
-                to="/admin/content/trainers"
+                to="/admin/content/expressions"
                 className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-black text-ink transition hover:bg-linen"
               >
                 Torna all'editor
