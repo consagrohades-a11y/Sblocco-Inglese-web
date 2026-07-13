@@ -25,6 +25,16 @@ function slugify(value) {
     .replace(/^-|-$/g, '');
 }
 
+function normalizeIdInput(value) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-+/, '');
+}
+
 function batchOf(card) {
   const tag = (card.tags || []).find((value) => String(value).toLowerCase().startsWith('batch:'));
   return tag ? tag.slice(tag.indexOf(':') + 1).trim() : '';
@@ -206,7 +216,7 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
               <p className="text-xs font-black uppercase tracking-wide text-moss">{selected.id ? 'Modifica deck' : 'Nuovo deck'}</p>
               <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Dati del deck</h2>
               <div className="mt-5 grid gap-4">
-                <Field label="ID pubblico"><input value={selected.public_id} onChange={(event) => updateField('public_id', slugify(event.target.value))} placeholder="travel-english" className={fieldClass} /></Field>
+                <Field label="ID pubblico"><input value={selected.public_id} onChange={(event) => updateField('public_id', normalizeIdInput(event.target.value))} onBlur={() => updateField('public_id', slugify(selected.public_id))} placeholder="travel-english" className={fieldClass} /></Field>
                 <Field label="Titolo"><input value={selected.title} onChange={(event) => updateField('title', event.target.value)} placeholder="Travel English" className={fieldClass} /></Field>
                 <Field label="Descrizione"><textarea rows="4" value={selected.description || ''} onChange={(event) => updateField('description', event.target.value)} className={fieldClass} /></Field>
                 <Field label="Tipo"><select value={selected.collection_type} onChange={(event) => updateField('collection_type', event.target.value)} className={fieldClass}><option value="reusable">Riutilizzabile</option><option value="starter_pack">Starter pack</option><option value="specialist">Specialistico</option></select></Field>
