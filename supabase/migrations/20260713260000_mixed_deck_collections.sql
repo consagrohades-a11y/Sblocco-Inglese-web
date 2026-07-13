@@ -254,7 +254,7 @@ as $$
   join public.expressions e on e.id = li.id
   where li.item_type = 'expression' and li.status = 'published'
 
-  order by level, category, public_id;
+  order by 4, 6, 2;
 $$;
 
 revoke all on function public.list_published_mixed_deck_cards(text) from public;
