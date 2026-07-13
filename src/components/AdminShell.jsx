@@ -136,7 +136,7 @@ export default function AdminShell() {
 
   return (
     <div className="min-h-screen bg-paper text-ink dark:bg-[#0f1715] dark:text-white">
-      <aside className="fixed inset-y-0 left-0 z-50 hidden w-72 flex-col overflow-hidden bg-ink shadow-2xl lg:flex">
+      <aside aria-label="Workspace amministrazione" className="fixed inset-y-0 left-0 z-50 hidden w-72 flex-col overflow-hidden bg-ink shadow-2xl lg:flex">
         {sidebarContent}
       </aside>
 
@@ -161,7 +161,7 @@ export default function AdminShell() {
             onClick={() => setMobileOpen(false)}
             aria-label="Chiudi navigazione admin"
           />
-          <aside className="absolute inset-y-0 left-0 flex w-[min(20rem,calc(100vw-3rem))] flex-col overflow-hidden bg-ink shadow-2xl">
+          <aside aria-label="Workspace amministrazione mobile" className="absolute inset-y-0 left-0 flex w-[min(20rem,calc(100vw-3rem))] flex-col overflow-hidden bg-ink shadow-2xl">
             <button
               type="button"
               onClick={() => setMobileOpen(false)}
