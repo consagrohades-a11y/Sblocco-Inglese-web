@@ -39,6 +39,7 @@ const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AdminLearners = lazy(() => import('./pages/AdminLearners'));
 const AdminLearnerDetail = lazy(() => import('./pages/AdminLearnerDetail'));
 const AdminCreateAssignment = lazy(() => import('./pages/AdminCreateAssignment'));
+const AdminAssignmentContent = lazy(() => import('./pages/AdminAssignmentContent'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
 
@@ -118,6 +119,7 @@ export default function App() {
             <Route path="/admin/learners" element={<AdminRoute><AdminLearners /></AdminRoute>} />
             <Route path="/admin/learners/:learnerId" element={<AdminRoute><AdminLearnerDetail /></AdminRoute>} />
             <Route path="/admin/learners/:learnerId/assignments/new" element={<AdminRoute><AdminCreateAssignment /></AdminRoute>} />
+            <Route path="/admin/learners/:learnerId/assignments/:assignmentId/content" element={<AdminRoute><AdminAssignmentContent /></AdminRoute>} />
             <Route path="/levels/a1/be-basic-sentences" element={<A1UnitPage key="a1-be-basic-sentences" unitId="be-basic-sentences" />} />
             <Route path="/levels/a1/present-simple-normal-verbs" element={<A1UnitPage key="a1-present-simple-normal-verbs" unitId="present-simple-normal-verbs" />} />
             <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
