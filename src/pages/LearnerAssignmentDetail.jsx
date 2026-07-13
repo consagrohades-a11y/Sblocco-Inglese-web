@@ -17,6 +17,7 @@ function formatDate(value) {
 export default function LearnerAssignmentDetail() {
   const { assignmentId } = useParams();
   const [assignment, setAssignment] = useState(null);
+  const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -27,20 +28,29 @@ export default function LearnerAssignmentDetail() {
       setLoading(true);
       setError('');
 
-      const { data, error: queryError } = await supabase
-        .from('assignments')
-        .select('id, title, learner_note, status, required, deadline_at, estimated_minutes, published_at, created_at')
-        .eq('id', assignmentId)
-        .in('status', ['published', 'completed'])
-        .maybeSingle();
+      const [{ data, error: queryError }, { data: resourceData, error: resourceError }] = await Promise.all([
+        supabase
+          .from('assignments')
+          .select('id, title, learner_note, status, required, deadline_at, estimated_minutes, published_at, created_at')
+          .eq('id', assignmentId)
+          .in('status', ['published', 'completed'])
+          .maybeSingle(),
+        supabase
+          .from('assignment_resources')
+          .select('id, resource_key, resource_type, title, description, route, sequence_index')
+          .eq('assignment_id', assignmentId)
+          .order('sequence_index', { ascending: true }),
+      ]);
 
       if (!active) return;
 
-      if (queryError) {
+      if (queryError || resourceError) {
         setError('Non è stato possibile caricare questa attività.');
         setAssignment(null);
+        setResources([]);
       } else {
         setAssignment(data ?? null);
+        setResources(resourceData ?? []);
       }
 
       setLoading(false);
@@ -90,11 +100,35 @@ export default function LearnerAssignmentDetail() {
                 </p>
               </section>
 
-              <section className="mt-8 rounded-xl border border-dashed border-ink/15 bg-linen/35 p-5">
-                <p className="text-sm font-black text-ink">Contenuti dell’attività</p>
-                <p className="mt-2 text-sm leading-6 text-ink/65">
-                  Il titolo e le istruzioni sono disponibili. Nel prossimo passaggio collegheremo esercizi, raccolte e trainer a questa attività.
-                </p>
+              <section className="mt-8">
+                <p className="text-xs font-black uppercase tracking-wide text-moss">Contenuti</p>
+                <h2 className="mt-2 text-2xl font-black text-ink">Completa queste attività</h2>
+
+                {resources.length === 0 ? (
+                  <div className="mt-5 rounded-xl border border-dashed border-ink/15 bg-linen/35 p-5">
+                    <p className="text-sm font-black text-ink">Nessun contenuto collegato</p>
+                    <p className="mt-2 text-sm leading-6 text-ink/65">Segui le istruzioni scritte sopra. Non è stato collegato un trainer o un’unità specifica.</p>
+                  </div>
+                ) : (
+                  <div className="mt-5 grid gap-4">
+                    {resources.map((resource, index) => (
+                      <article key={resource.id} className="rounded-xl border border-ink/10 bg-white p-5 shadow-sm">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                          <div>
+                            <p className="text-xs font-black uppercase tracking-wide text-moss">
+                              {index + 1}. {resource.resource_type === 'trainer' ? 'Trainer' : 'Unità grammaticale'}
+                            </p>
+                            <h3 className="mt-2 text-lg font-black text-ink">{resource.title}</h3>
+                            {resource.description ? <p className="mt-2 text-sm leading-6 text-ink/65">{resource.description}</p> : null}
+                          </div>
+                          <Link to={resource.route} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss">
+                            Inizia
+                          </Link>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                )}
               </section>
             </article>
           ) : null}
