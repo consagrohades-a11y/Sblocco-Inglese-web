@@ -1,4 +1,4 @@
-export const trainerCardLevels = ['A2', 'B1', 'B2'];
+export const trainerCardLevels = ['A2', 'B1', 'B2', 'C1'];
 
 export const trainerCardTypes = ['expression', 'word'];
 
@@ -55,7 +55,7 @@ export const reviewedExpressionContract = {
   itemType: 'expression',
   trainerDomain: 'general | business | hospitality',
   category: 'Controlled learner-facing category.',
-  cefrLevel: 'A2 | B1 | B2',
+  cefrLevel: 'A2 | B1 | B2 | C1',
   englishTarget: 'Primary learner-facing English expression.',
   italianPrompt: 'Natural and sufficiently unambiguous Italian meaning.',
   acceptedAnswers: 'Zero or more reviewed valid English alternatives.',
