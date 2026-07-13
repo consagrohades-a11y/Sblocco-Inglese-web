@@ -117,7 +117,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
       setDecks([]);
     } else {
       setCards((data ?? []).filter((card) => String(card.primary_domain || 'general').toLowerCase() === domain));
-      setDecks(deckData || []);
+      setDecks((deckData || []).filter((deck) => deck.content_type === 'expression'));
     }
 
     setLoading(false);
@@ -510,7 +510,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                 </div>
               </aside>
 
-              <aside className="min-h-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:flex xl:flex-col xl:overflow-hidden">
+              <aside className="min-h-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:block xl:overflow-y-auto xl:overscroll-contain xl:[scrollbar-color:rgba(14,124,102,0.55)_transparent] xl:[scrollbar-width:thin]">
                 <h2 className="shrink-0 text-lg font-black text-ink dark:text-white">Carte in Supabase</h2>
 
                 <div className="mt-4 grid gap-3">
@@ -566,7 +566,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                   </div>
                 </div>
 
-                <div className="mt-3 max-h-[34rem] min-h-24 divide-y divide-ink/10 overflow-y-auto overscroll-contain rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10 xl:max-h-none xl:flex-1 xl:[scrollbar-color:rgba(14,124,102,0.55)_transparent] xl:[scrollbar-width:thin]">
+                <div className="mt-3 max-h-[34rem] min-h-24 divide-y divide-ink/10 overflow-y-auto overscroll-contain rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10 xl:max-h-none xl:overflow-visible">
                   {loading ? <p className="p-4 text-sm font-bold text-ink/60">Caricamento...</p> : null}
                   {!loading && filteredCards.length === 0 ? <p className="p-4 text-sm font-bold text-ink/60">Nessuna carta trovata.</p> : null}
 
