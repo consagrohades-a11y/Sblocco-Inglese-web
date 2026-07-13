@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import SrsCard from '../components/SrsCard';
+import ContentAreaNav from '../components/admin/ContentAreaNav';
 import { supabase } from '../lib/supabaseClient.js';
 
 const emptyCard = {
@@ -251,6 +252,7 @@ export default function AdminWordTrainerContent() {
       <SEO title="Word Trainer content | Pannello admin | Sblocco Inglese" description="Crea, revisiona e pubblica le word card." />
       <section className="section-shell py-10 lg:py-14">
         <div className="mx-auto max-w-[96rem]">
+          <ContentAreaNav type="word" />
           <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
             <span className="eyebrow">Contenuti Word Trainer</span>
             <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
