@@ -156,14 +156,14 @@ export default function PracticeHub() {
     .filter((card) => (level === 'all' || card.level === level) && (deck === 'all' || (card.decks || []).some((item) => item.id === deck)))
     .map((card) => card.category)), [cards, level, deck]);
   const batches = useMemo(() => uniqueSorted(cards.map((card) => card.batch)), [cards]);
-  const assignedItemIds = useMemo(() => new Set(assignmentContext?.practice_config?.item_ids || []), [assignmentContext]);
   const filteredCards = useMemo(() => cards.filter((card) =>
-    (!assignedItemIds.size || assignedItemIds.has(card.id))
-    &&
     (level === 'all' || card.level === level)
     && (deck === 'all' || (card.decks || []).some((item) => item.id === deck))
     && (category === 'all' || card.category === category)
-    && (batch === 'all' || card.batch === batch)), [cards, level, deck, category, batch, assignedItemIds]);
+    && (batch === 'all' || card.batch === batch)), [cards, level, deck, category, batch]);
+  const availableQuestions = useMemo(() => createPracticeSession(filteredCards, modes, 50).length, [filteredCards, modes]);
+  const locked = Boolean(assignmentContext);
+  const assignmentConfigurationMismatch = locked && questionCount > availableQuestions;
 
   const current = session?.[index];
   const finished = session && index >= session.length;
@@ -175,6 +175,7 @@ export default function PracticeHub() {
   }
 
   function startSession() {
+    if (assignmentConfigurationMismatch) return;
     const questions = createPracticeSession(filteredCards, modes, questionCount);
     if (!questions.length) return;
     setSession(questions);
@@ -223,8 +224,6 @@ export default function PracticeHub() {
     nearly_correct: 0,
     incorrect: 0,
   }), [results]);
-  const locked = Boolean(assignmentContext);
-
   return (
     <>
       <SEO title="Pratica | Sblocco Inglese" description="Esercizi generati dalle card pubblicate nei Trainer." />
@@ -266,14 +265,15 @@ export default function PracticeHub() {
               <div className="mt-6 flex flex-wrap items-end justify-between gap-4 border-t border-ink/10 pt-5 dark:border-white/10">
                 <div className="w-44"><PracticeSelect label="Numero di domande" value={String(questionCount)} onChange={(value) => setQuestionCount(Number(value))} disabled={locked} options={[5, 10, 15, 20].map((value) => ({ value: String(value), label: String(value) }))} /></div>
                 <div className="text-right">
-                  <p className="mb-2 text-xs font-bold text-ink/55 dark:text-white/55">{loading ? 'Caricamento...' : `${filteredCards.length} card pubblicate disponibili`}</p>
-                  <button type="button" onClick={startSession} disabled={loading || Boolean(loadError) || !filteredCards.length || !modes.length} className="focus-ring rounded-full bg-ink px-6 py-3 text-sm font-black text-white shadow-sm transition hover:bg-moss disabled:cursor-not-allowed disabled:bg-ink/25 disabled:text-ink/45 dark:bg-mint dark:text-ink dark:hover:bg-white dark:disabled:bg-white/15 dark:disabled:text-white/35">
+                  <p className="mb-2 text-xs font-bold text-ink/55 dark:text-white/55">{loading ? 'Caricamento...' : `${filteredCards.length} card e ${availableQuestions} domande disponibili`}</p>
+                  <button type="button" onClick={startSession} disabled={loading || Boolean(loadError) || !filteredCards.length || !modes.length || assignmentConfigurationMismatch} className="focus-ring rounded-full bg-ink px-6 py-3 text-sm font-black text-white shadow-sm transition hover:bg-moss disabled:cursor-not-allowed disabled:bg-ink/25 disabled:text-ink/45 dark:bg-mint dark:text-ink dark:hover:bg-white dark:disabled:bg-white/15 dark:disabled:text-white/35">
                     {loading ? <Loader2 className="mr-2 inline h-4 w-4 animate-spin" /> : null}Inizia
                   </button>
                 </div>
               </div>
 
               {loadError ? <p className="mt-4 flex items-center gap-2 rounded-lg border border-coral/30 bg-blush p-3 text-sm font-bold text-ink dark:border-rose-300/30 dark:bg-rose-300/10 dark:text-rose-100"><CircleAlert className="h-4 w-4 shrink-0" />{loadError}</p> : null}
+              {!loading && !loadError && assignmentConfigurationMismatch ? <p className="mt-4 flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm font-bold text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-amber-100"><CircleAlert className="mt-0.5 h-4 w-4 shrink-0" />Questa assegnazione richiede {questionCount} domande, ma i filtri e i tipi di esercizio scelti ne possono generare solo {availableQuestions}. L’insegnante deve riaprire e salvare l’assegnazione.</p> : null}
             </section>
           ) : finished ? (
             <section className="rounded-xl border border-ink/10 bg-white p-6 text-center shadow-soft dark:border-white/10 dark:bg-white/[0.06] sm:p-9">

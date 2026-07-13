@@ -16,7 +16,13 @@ function unique(values) {
   return Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b, 'it'));
 }
 
-export default function AssignmentPracticeEditor({ enabled, onEnabledChange, config, onChange, onAvailabilityChange }) {
+export default function AssignmentPracticeEditor({
+  enabled,
+  onEnabledChange,
+  config,
+  onChange,
+  onAvailabilityChange,
+}) {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -80,7 +86,7 @@ export default function AssignmentPracticeEditor({ enabled, onEnabledChange, con
           <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Batch</span><select value={config.batch || ''} onChange={(event) => update('batch', event.target.value || null)} className={fieldClass}><option value="">Tutti i batch</option>{batches.map((value) => <option key={value}>{value}</option>)}</select></label>
           <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Numero di domande</span><select value={config.question_count} onChange={(event) => update('question_count', Number(event.target.value))} className={fieldClass}>{questionOptions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
           <fieldset className="sm:col-span-2 lg:col-span-3"><legend className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Tipi di esercizio</legend><div className="mt-2 grid gap-2 sm:grid-cols-2">{EXERCISE_MODES.map((mode) => <label key={mode.id} className={`flex cursor-pointer gap-2 rounded-lg border px-3 py-2.5 text-sm font-bold ${config.modes.includes(mode.id) ? 'border-moss bg-white/70 dark:border-emerald-300/40 dark:bg-white/10 dark:text-white' : 'border-ink/10 text-ink/60 dark:border-white/10 dark:text-white/60'}`}><input type="checkbox" checked={config.modes.includes(mode.id)} onChange={() => toggleMode(mode.id)} className="accent-moss" />{mode.label}</label>)}</div></fieldset>
-          <p className="sm:col-span-2 lg:col-span-3 text-sm font-bold text-ink/60 dark:text-white/60">{loading ? 'Caricamento card pubblicate...' : error || `${availableCards.length} card e ${availableQuestions} domande disponibili con questi filtri.`}</p>
+          <p className="sm:col-span-2 lg:col-span-3 text-sm font-bold text-ink/60 dark:text-white/60">{loading ? 'Caricamento card pubblicate...' : error || `${availableCards.length} card pubblicate compatibili e ${availableQuestions} domande disponibili con questi filtri.`}</p>
         </div>
       ) : null}
     </section>
