@@ -94,6 +94,7 @@ const columns = [
 export default function AdminTrainerCardImport() {
   return (
     <CardImportWorkspace
+      type="expression"
       title="Importa General Expressions"
       description="Carica una singola expression card o un batch CSV o JSON. Tutte le card vengono validate e salvate come bozze da revisionare."
       itemLabel="expression card"
