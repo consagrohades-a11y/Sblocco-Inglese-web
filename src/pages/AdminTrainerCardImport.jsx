@@ -92,7 +92,7 @@ function validateExpressionCard(card, index, idPrefix) {
 function createTemplate(domain, config) {
   return {
     cards: [{
-      public_id: `${config.idPrefix}-0001`,
+      public_id: '',
       canonical_text: "I'm on my way.",
       italian_meaning: 'Sto arrivando. / Sono per strada.',
       english_explanation: 'Used to communicate clearly and naturally in the selected context.',
@@ -145,6 +145,10 @@ export default function AdminTrainerCardImport({ domain = 'general' }) {
       columns={columns}
       template={createTemplate(domain, config)}
       templateFileName={`${config.idPrefix}-expression-import-template.json`}
+      existingRpcName="admin_list_expression_cards"
+      existingFilter={(card) => String(card.primary_domain || 'general').toLowerCase() === domain}
+      idPrefix={config.idPrefix}
+      duplicateFields={['canonical_text', 'italian_meaning']}
     />
   );
 }

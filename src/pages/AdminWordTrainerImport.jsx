@@ -68,7 +68,7 @@ function validateWordCard(card, index) {
 
 const template = {
   cards: [{
-    public_id: 'word-0001',
+    public_id: '',
     level: 'A0',
     topic: 'People & identity',
     lemma: 'person',
@@ -112,6 +112,9 @@ export default function AdminWordTrainerImport() {
       columns={columns}
       template={template}
       templateFileName="word-card-import-template.json"
+      existingRpcName="admin_list_word_cards"
+      idPrefix="word"
+      duplicateFields={['lemma', 'italian_meaning', 'part_of_speech']}
     />
   );
 }
