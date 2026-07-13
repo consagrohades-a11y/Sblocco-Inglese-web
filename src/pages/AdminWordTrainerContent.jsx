@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import SrsCard from '../components/SrsCard';
 import ContentAreaNav from '../components/admin/ContentAreaNav';
@@ -235,23 +234,9 @@ export default function AdminWordTrainerContent() {
       <SEO title="Word Trainer content | Pannello admin | Sblocco Inglese" description="Crea, revisiona e pubblica le word card." />
       <section className="section-shell py-5 lg:py-6">
         <div className="mx-auto max-w-[96rem]">
-          <ContentAreaNav type="word" />
-          <header className="rounded-2xl border border-ink/10 bg-white p-4 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-5">
-            <span className="eyebrow">Contenuti Word Trainer</span>
-            <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <h1 className="text-2xl font-black text-ink dark:text-white sm:text-3xl">Word card A0-C1</h1>
-                <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70 dark:text-white/65">Solo le card complete, approvate e pubblicate diventano visibili nel Word Trainer.</p>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <button type="button" onClick={newCard} className="focus-ring min-h-10 rounded-full bg-ink px-4 py-2 text-sm font-black text-white hover:bg-moss dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300">Nuova word card</button>
-                <Link to="/admin/content/words/import" className="focus-ring inline-flex min-h-10 items-center rounded-full border border-ink/15 px-4 py-2 text-sm font-black text-ink hover:bg-linen dark:border-white/20 dark:text-white dark:hover:bg-white/10">Importa batch</Link>
-                <Link to="/admin" className="focus-ring inline-flex min-h-11 items-center rounded-full border border-ink/15 px-5 py-2.5 text-sm font-black text-ink hover:bg-linen">Pannello admin</Link>
-              </div>
-            </div>
-          </header>
+          <ContentAreaNav type="word" onNewCard={newCard} />
 
-          <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(20rem,0.72fr)]">
+          <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(20rem,0.72fr)]">
             <form onSubmit={(event) => { event.preventDefault(); saveCard(); }} className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink/10 pb-3 dark:border-white/10">
                 <div>
@@ -298,7 +283,7 @@ export default function AdminWordTrainerContent() {
               {error ? <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900">{error}</div> : null}
               {message ? <div className="mt-5 rounded-xl border border-moss/20 bg-mint/30 p-4 text-sm font-bold text-ink">{message}</div> : null}
 
-              <div className="fixed bottom-2 left-1/2 z-[70] max-h-[45vh] w-[calc(100vw-1rem)] max-w-6xl -translate-x-1/2 overflow-y-auto rounded-xl border border-ink/15 bg-white/95 p-2.5 shadow-[0_14px_40px_rgba(24,34,31,0.2)] backdrop-blur-xl dark:border-white/15 dark:bg-[#16211e]/95 dark:shadow-[0_14px_40px_rgba(0,0,0,0.42)] sm:p-3 lg:flex lg:items-center lg:justify-between lg:gap-4">
+              <div className="fixed bottom-2 left-1/2 z-[70] max-h-[45vh] w-[calc(100vw-1rem)] max-w-6xl -translate-x-1/2 lg:left-[16.5rem] lg:right-2 lg:w-auto lg:max-w-none lg:translate-x-0 xl:right-[34%] overflow-y-auto rounded-xl border border-ink/15 bg-white/95 p-2.5 shadow-[0_14px_40px_rgba(24,34,31,0.2)] backdrop-blur-xl dark:border-white/15 dark:bg-[#16211e]/95 dark:shadow-[0_14px_40px_rgba(0,0,0,0.42)] sm:p-3 lg:flex lg:items-center lg:justify-between lg:gap-4">
                 <div className="mb-2 flex shrink-0 items-center justify-between gap-3 lg:mb-0">
                   <p className="text-xs font-black uppercase tracking-wide text-ink/55 dark:text-white/65">Coda di revisione · {queueLabel}</p>
                   {saving ? <span className="text-xs font-black text-moss dark:text-emerald-300">Salvataggio...</span> : null}
@@ -316,7 +301,7 @@ export default function AdminWordTrainerContent() {
             </form>
 
             <div className="space-y-4">
-              <aside className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:sticky xl:top-4 xl:z-20">
+              <aside className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:sticky xl:top-4 xl:z-20 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto xl:[scrollbar-color:rgba(255,255,255,0.18)_transparent] xl:[scrollbar-width:thin]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div><p className="text-xs font-black uppercase tracking-wide text-moss">Anteprima dal vivo</p><h2 className="mt-1 text-lg font-black text-ink dark:text-white">Vista studente</h2></div>
                   {previewRevealed ? <button type="button" onClick={() => setPreviewRevealed(false)} className="focus-ring rounded-full border border-ink/15 px-4 py-2 text-xs font-black text-ink hover:bg-linen">Nascondi risposta</button> : null}
