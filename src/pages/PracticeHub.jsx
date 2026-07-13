@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, CheckCircle2, CircleAlert, Loader2, RotateCcw, Sparkles } from 'lucide-react';
+import { ArrowLeft, Check, CheckCircle2, ChevronDown, CircleAlert, Loader2, RotateCcw, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import TrainerLayout from '../components/TrainerLayout';
@@ -14,6 +14,64 @@ const resultStyles = {
 
 function uniqueSorted(values) {
   return Array.from(new Set(values.filter(Boolean))).sort((left, right) => left.localeCompare(right, 'it'));
+}
+
+function PracticeSelect({ label, value, onChange, options, disabled = false }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef(null);
+  const selected = options.find((option) => option.value === value) || options[0];
+
+  useEffect(() => {
+    if (!open) return undefined;
+    function closeMenu(event) {
+      if (event.key === 'Escape' || (event.type === 'mousedown' && !rootRef.current?.contains(event.target))) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', closeMenu);
+    document.addEventListener('keydown', closeMenu);
+    return () => {
+      document.removeEventListener('mousedown', closeMenu);
+      document.removeEventListener('keydown', closeMenu);
+    };
+  }, [open]);
+
+  return (
+    <div ref={rootRef} className="relative grid gap-2">
+      <span className="text-sm font-black text-ink dark:text-white">{label}</span>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => setOpen((current) => !current)}
+        className="focus-ring flex min-h-12 w-full items-center justify-between gap-3 rounded-lg border border-ink/15 bg-white px-4 py-3 text-left text-sm font-black text-ink transition hover:border-moss disabled:cursor-not-allowed disabled:opacity-55 dark:border-white/20 dark:bg-[#17231f] dark:text-white dark:hover:border-emerald-300"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+      >
+        <span className="truncate">{selected?.label}</span>
+        <ChevronDown className={`h-4 w-4 shrink-0 transition ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && !disabled ? (
+        <div role="listbox" className="absolute left-0 right-0 top-full z-40 mt-2 max-h-64 overflow-y-auto rounded-lg border border-ink/15 bg-white p-1.5 shadow-soft dark:border-white/15 dark:bg-[#17231f]">
+          {options.map((option) => {
+            const active = option.value === value;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                role="option"
+                aria-selected={active}
+                onClick={() => { onChange(option.value); setOpen(false); }}
+                className={`focus-ring flex w-full items-center justify-between gap-3 rounded-md px-3 py-2.5 text-left text-sm font-black transition ${active ? 'bg-mint text-ink dark:bg-emerald-400/15 dark:text-white' : 'text-ink/75 hover:bg-linen dark:text-white/75 dark:hover:bg-white/10 dark:hover:text-white'}`}
+              >
+                <span>{option.label}</span>
+                {active ? <Check className="h-4 w-4 shrink-0 text-moss dark:text-mint" /> : null}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 export default function PracticeHub() {
@@ -134,29 +192,10 @@ export default function PracticeHub() {
           {!session ? (
             <section className="rounded-xl border border-ink/10 bg-white p-5 shadow-soft dark:border-white/10 dark:bg-white/[0.06] sm:p-7">
               <div className="grid gap-5 sm:grid-cols-2">
-                <label className="grid gap-2 text-sm font-black text-ink dark:text-white">Trainer
-                  <select value={trainerId} onChange={(event) => setTrainerId(event.target.value)} className="focus-ring rounded-lg border border-ink/15 bg-white px-4 py-3 text-ink dark:border-white/20 dark:bg-[#17231f] dark:text-white">
-                    {Object.values(PRACTICE_TRAINERS).map((trainer) => <option key={trainer.id} value={trainer.id}>{trainer.label}</option>)}
-                  </select>
-                </label>
-                <label className="grid gap-2 text-sm font-black text-ink dark:text-white">Livello
-                  <select value={level} onChange={(event) => { setLevel(event.target.value); setCategory('all'); }} className="focus-ring rounded-lg border border-ink/15 bg-white px-4 py-3 text-ink dark:border-white/20 dark:bg-[#17231f] dark:text-white">
-                    <option value="all">Tutti i livelli</option>
-                    {levels.map((value) => <option key={value} value={value}>{value}</option>)}
-                  </select>
-                </label>
-                <label className="grid gap-2 text-sm font-black text-ink dark:text-white">Categoria
-                  <select value={category} onChange={(event) => setCategory(event.target.value)} className="focus-ring rounded-lg border border-ink/15 bg-white px-4 py-3 text-ink dark:border-white/20 dark:bg-[#17231f] dark:text-white">
-                    <option value="all">Tutte le categorie</option>
-                    {categories.map((value) => <option key={value} value={value}>{value}</option>)}
-                  </select>
-                </label>
-                <label className="grid gap-2 text-sm font-black text-ink dark:text-white">Batch
-                  <select value={batch} onChange={(event) => setBatch(event.target.value)} disabled={!batches.length} className="focus-ring rounded-lg border border-ink/15 bg-white px-4 py-3 text-ink disabled:opacity-55 dark:border-white/20 dark:bg-[#17231f] dark:text-white">
-                    <option value="all">{batches.length ? 'Tutti i batch' : 'Nessun batch nelle card'}</option>
-                    {batches.map((value) => <option key={value} value={value}>{value}</option>)}
-                  </select>
-                </label>
+                <PracticeSelect label="Trainer" value={trainerId} onChange={setTrainerId} options={Object.values(PRACTICE_TRAINERS).map((trainer) => ({ value: trainer.id, label: trainer.label }))} />
+                <PracticeSelect label="Livello" value={level} onChange={(value) => { setLevel(value); setCategory('all'); }} options={[{ value: 'all', label: 'Tutti i livelli' }, ...levels.map((value) => ({ value, label: value }))]} />
+                <PracticeSelect label="Categoria" value={category} onChange={setCategory} options={[{ value: 'all', label: 'Tutte le categorie' }, ...categories.map((value) => ({ value, label: value }))]} />
+                <PracticeSelect label="Batch" value={batch} onChange={setBatch} disabled={!batches.length} options={[{ value: 'all', label: batches.length ? 'Tutti i batch' : 'Nessun batch nelle card' }, ...batches.map((value) => ({ value, label: value }))]} />
               </div>
 
               <fieldset className="mt-6">
@@ -172,11 +211,7 @@ export default function PracticeHub() {
               </fieldset>
 
               <div className="mt-6 flex flex-wrap items-end justify-between gap-4 border-t border-ink/10 pt-5 dark:border-white/10">
-                <label className="grid gap-2 text-sm font-black text-ink dark:text-white">Numero di domande
-                  <select value={questionCount} onChange={(event) => setQuestionCount(Number(event.target.value))} className="focus-ring rounded-lg border border-ink/15 bg-white px-4 py-2.5 text-ink dark:border-white/20 dark:bg-[#17231f] dark:text-white">
-                    {[5, 10, 15, 20].map((value) => <option key={value} value={value}>{value}</option>)}
-                  </select>
-                </label>
+                <div className="w-44"><PracticeSelect label="Numero di domande" value={String(questionCount)} onChange={(value) => setQuestionCount(Number(value))} options={[5, 10, 15, 20].map((value) => ({ value: String(value), label: String(value) }))} /></div>
                 <div className="text-right">
                   <p className="mb-2 text-xs font-bold text-ink/55 dark:text-white/55">{loading ? 'Caricamento...' : `${filteredCards.length} card pubblicate disponibili`}</p>
                   <button type="button" onClick={startSession} disabled={loading || Boolean(loadError) || !filteredCards.length || !modes.length} className="focus-ring rounded-full bg-ink px-6 py-3 text-sm font-black text-white shadow-sm transition hover:bg-moss disabled:cursor-not-allowed disabled:bg-ink/25 disabled:text-ink/45 dark:bg-mint dark:text-ink dark:hover:bg-white dark:disabled:bg-white/15 dark:disabled:text-white/35">
