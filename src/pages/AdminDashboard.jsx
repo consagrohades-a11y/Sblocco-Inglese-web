@@ -23,6 +23,13 @@ const sections = [
     to: '/admin/content/trainers',
     cta: 'Apri contenuti Trainer',
   },
+  {
+    title: 'Importazione rapida',
+    description: 'Carica una carta JSON, controlla l’anteprima e salvala in Supabase come bozza da revisionare.',
+    status: 'Disponibile',
+    to: '/admin/content/trainers/import',
+    cta: 'Importa una carta',
+  },
 ];
 
 export default function AdminDashboard() {
@@ -45,7 +52,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {sections.map((section) => (
               <section key={section.title} className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
                 <p className="text-xs font-black uppercase tracking-wide text-moss">{section.status}</p>
