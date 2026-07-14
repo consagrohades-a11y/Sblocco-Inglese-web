@@ -67,10 +67,10 @@ export async function saveDiagnosticRule(rule) {
 }
 
 export async function archiveDiagnosticCode(code, archived = true) {
-  const { error } = await supabase
-    .from('exercise_builder_diagnostic_codes')
-    .update({ status: archived ? 'archived' : 'active' })
-    .eq('code', code);
+  const { error } = await supabase.rpc('admin_set_exercise_builder_diagnostic_code_status', {
+    p_code: code,
+    p_status: archived ? 'archived' : 'active',
+  });
   throwIfError(error);
 }
 
