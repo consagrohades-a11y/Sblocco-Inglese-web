@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import SrsTrainer from './SrsTrainer.jsx';
 import SEO from './SEO.jsx';
 import TrainerLayout from './TrainerLayout.jsx';
@@ -6,6 +7,7 @@ import { getTrainerById } from '../data/trainerConfig.js';
 import { loadGuidedSrsTrainer, recordGuidedSrsReview } from '../lib/guidedSrsContent.js';
 
 export default function DatabaseSrsTrainerPage({ trainerId, seoTitle, seoDescription, title, subtitle }) {
+  const [searchParams] = useSearchParams();
   const trainer = getTrainerById(trainerId);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
@@ -24,6 +26,8 @@ export default function DatabaseSrsTrainerPage({ trainerId, seoTitle, seoDescrip
     cardCount: result.cards.length,
     categories: Array.from(new Set(result.cards.map((card) => card.category))),
   }) : trainer, [result, trainer]);
+  const requestedReturnTo = searchParams.get('returnTo') || '';
+  const returnTo = requestedReturnTo.startsWith('/assignments/') ? requestedReturnTo : '';
 
   if (!result || error) {
     return (
@@ -66,7 +70,10 @@ export default function DatabaseSrsTrainerPage({ trainerId, seoTitle, seoDescrip
       seoDescription={seoDescription}
       initialProgress={result.initialProgress}
       onReview={({ card, rating }) => recordGuidedSrsReview(card, rating)}
-      scopeNotice={result.guided ? 'Percorso guidato attivo: nel ripasso trovi soltanto le card assegnate dalla tua insegnante.' : ''}
+      scopeNotice={result.guided ? `Questo Trainer contiene ${result.cards.length} card assegnate dalla tua insegnante.` : ''}
+      persistLocalProgress={!result.guided}
+      allowProgressReset={!result.guided}
+      returnTo={returnTo}
     />
   );
 }
