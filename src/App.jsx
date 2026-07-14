@@ -52,6 +52,7 @@ const AdminWordTrainerArchive = lazy(() => import('./pages/AdminWordTrainerArchi
 const AdminContentOverview = lazy(() => import('./pages/AdminContentOverview'));
 const AdminSectionOverview = lazy(() => import('./pages/AdminSectionOverview'));
 const AdminExerciseBuilder = lazy(() => import('./pages/AdminExerciseBuilder'));
+const AdminExerciseBuilderReview = lazy(() => import('./pages/AdminExerciseBuilderReview'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
 const LearnerProgress = lazy(() => import('./pages/LearnerProgress'));
@@ -126,6 +127,7 @@ export default function App() {
               <Route path="learners/:learnerId/assignments/:assignmentId/content" element={<AdminAssignmentContent />} />
               <Route path="content" element={<AdminContentOverview />} />
               <Route path="content/exercises" element={<AdminExerciseBuilder />} />
+              <Route path="content/exercises/review" element={<AdminExerciseBuilderReview />} />
               <Route path="content/words" element={<AdminWordTrainerContent />} />
               <Route path="content/words/import" element={<AdminWordTrainerImport />} />
               <Route path="content/words/decks" element={<AdminWordDecks />} />
