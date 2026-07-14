@@ -114,6 +114,7 @@ export async function loadExerciseBuilderCatalogForAdmin() {
     publicId: row.public_id,
     status: row.status,
     versionId: row.current_version_id,
+    publishedAt: row.published_at,
     ...(Array.isArray(row.exercise_builder_exercise_versions)
       ? row.exercise_builder_exercise_versions[0]
       : row.exercise_builder_exercise_versions),
@@ -127,4 +128,12 @@ export async function setExerciseBuilderCatalogStatus(entityType, entityId, next
     p_next_status: nextStatus,
   });
   throwIfError(error);
+}
+
+export async function deleteUnusedExerciseBuilderExercise(exerciseId) {
+  const { data, error } = await supabase.rpc('admin_delete_unused_exercise_builder_exercise', {
+    p_exercise_id: exerciseId,
+  });
+  throwIfError(error);
+  return data || {};
 }

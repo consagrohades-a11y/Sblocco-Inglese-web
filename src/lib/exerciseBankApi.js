@@ -12,6 +12,7 @@ export async function loadExerciseQuestionBank() {
   const { data: questions, error: questionError } = await supabase
     .from('exercise_builder_questions')
     .select('id, public_id, status, current_version_id, created_at, updated_at')
+    .not('current_version_id', 'is', null)
     .order('created_at', { ascending: false });
   throwIfError(questionError);
 
@@ -41,22 +42,28 @@ export async function loadExerciseQuestionBank() {
   });
   const byVersion = currentVersionMap(versions);
 
-  return (questions || []).map((question) => ({
-    id: question.id,
-    publicId: question.public_id,
-    status: question.status,
-    createdAt: question.created_at,
-    updatedAt: question.updated_at,
-    poolCount: poolCounts.get(question.id)?.size || 0,
-    ...(byVersion.get(question.current_version_id) || {}),
-    versionId: question.current_version_id,
-  }));
+  return (questions || []).map((question) => {
+    const version = byVersion.get(question.current_version_id);
+    if (!version || version.question_id !== question.id) return null;
+    const { id: versionId, question_id: _questionId, ...versionFields } = version;
+    return {
+      ...versionFields,
+      id: question.id,
+      publicId: question.public_id,
+      status: question.status,
+      createdAt: question.created_at,
+      updatedAt: question.updated_at,
+      poolCount: poolCounts.get(question.id)?.size || 0,
+      versionId,
+    };
+  }).filter(Boolean);
 }
 
 export async function loadExercisePools() {
   const { data: pools, error: poolError } = await supabase
     .from('exercise_builder_pools')
     .select('id, public_id, status, current_version_id, created_at, updated_at')
+    .not('current_version_id', 'is', null)
     .order('created_at', { ascending: false });
   throwIfError(poolError);
 
@@ -86,16 +93,21 @@ export async function loadExercisePools() {
   });
   const byVersion = currentVersionMap(versions);
 
-  return (pools || []).map((pool) => ({
-    id: pool.id,
-    publicId: pool.public_id,
-    status: pool.status,
-    createdAt: pool.created_at,
-    updatedAt: pool.updated_at,
-    ...(byVersion.get(pool.current_version_id) || {}),
-    ...(stats.get(pool.current_version_id) || { questionCount: 0, pinnedCount: 0 }),
-    versionId: pool.current_version_id,
-  }));
+  return (pools || []).map((pool) => {
+    const version = byVersion.get(pool.current_version_id);
+    if (!version || version.pool_id !== pool.id) return null;
+    const { id: versionId, pool_id: _poolId, ...versionFields } = version;
+    return {
+      ...versionFields,
+      id: pool.id,
+      publicId: pool.public_id,
+      status: pool.status,
+      createdAt: pool.created_at,
+      updatedAt: pool.updated_at,
+      ...(stats.get(pool.current_version_id) || { questionCount: 0, pinnedCount: 0 }),
+      versionId,
+    };
+  }).filter(Boolean);
 }
 
 export async function loadExercisePoolDetail(poolId) {

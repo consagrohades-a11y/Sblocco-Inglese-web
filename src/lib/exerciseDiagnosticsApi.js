@@ -66,6 +66,15 @@ export async function saveDiagnosticRule(rule) {
   return data || payload.rule_key;
 }
 
+export async function importDiagnosticTaxonomy(payload, conflictMode = 'update') {
+  const { data, error } = await supabase.rpc('admin_import_exercise_builder_diagnostic_taxonomy', {
+    p_payload: payload,
+    p_conflict_mode: conflictMode,
+  });
+  throwIfError(error);
+  return data || {};
+}
+
 export async function archiveDiagnosticCode(code, archived = true) {
   const { error } = await supabase.rpc('admin_set_exercise_builder_diagnostic_code_status', {
     p_code: code,
