@@ -52,6 +52,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
   const attempt = payload.attempt;
   const settings = payload.exercise.settings || {};
   const summary = attempt.result_summary || {};
+  const canShowBreakdown = settings.show_score !== false && payload.sections.some((section) => section.feedback_timing !== 'hidden');
   return (
     <div className="mx-auto max-w-4xl">
       <div className="rounded-3xl border border-ink/10 bg-white p-7 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-10">
@@ -64,11 +65,11 @@ function FinalResult({ payload, assignmentId, resourceId }) {
             <p className="mt-2 text-sm font-bold opacity-75">{Number(attempt.earned_points || 0).toFixed(1)} / {Number(attempt.max_points || 0).toFixed(1)} punti</p>
           </div>
         ) : <p className="mt-7 rounded-xl border border-moss/20 bg-mint/20 p-5 text-sm font-bold text-ink dark:border-emerald-300/20 dark:bg-emerald-400/10 dark:text-white">La consegna è stata registrata. Il punteggio non è visibile per questa attività.</p>}
-        <div className="mt-6 grid gap-3 sm:grid-cols-4">
+        {canShowBreakdown ? <div className="mt-6 grid gap-3 sm:grid-cols-4">
           {[['Corrette', summary.correct || 0], ['Quasi corrette', summary.nearly_correct || 0], ['Da rivedere', summary.incorrect || 0], ['Non risposte', summary.unanswered || 0]].map(([label, value]) => (
             <div key={label} className="rounded-xl border border-ink/10 bg-linen/40 p-4 dark:border-white/10 dark:bg-white/[0.05]"><p className="text-2xl font-black text-ink dark:text-white">{value}</p><p className="mt-1 text-xs font-bold text-ink/55 dark:text-white/55">{label}</p></div>
           ))}
-        </div>
+        </div> : null}
         <div className="mt-8 flex flex-wrap gap-3">
           <Link to={`/assignments/${assignmentId}`} className="focus-ring rounded-full bg-ink px-5 py-3 text-sm font-black text-white dark:bg-emerald-300 dark:text-[#102019]">Torna all’attività</Link>
           {settings.allow_retry !== false ? <Link to={`/exercises?assignmentId=${assignmentId}&resourceId=${resourceId}&newAttempt=1`} className="focus-ring rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white">Riprova con un nuovo tentativo</Link> : null}
@@ -113,7 +114,12 @@ export default function ExercisePlayer() {
       setError('');
       try {
         const result = await openAssignedExercise({ assignmentId, resourceId, startNew });
-        if (active) setPayload(result);
+        if (active) {
+          setPayload(result);
+          if (startNew && result.attempt?.status === 'in_progress') {
+            window.history.replaceState(window.history.state, '', `/exercises?assignmentId=${encodeURIComponent(assignmentId)}&resourceId=${encodeURIComponent(resourceId)}`);
+          }
+        }
       } catch (loadError) {
         if (active) setError(loadError.message || 'Non è stato possibile aprire l’esercizio.');
       } finally {
