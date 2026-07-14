@@ -32,3 +32,61 @@ jobs:
 
       - name: Build site
         run: npm run build
+
+  database:
+    name: Validate Supabase migrations
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: sblocco_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d sblocco_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: sblocco_test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Bootstrap Supabase auth stubs
+        run: |
+          psql -v ON_ERROR_STOP=1 <<'SQL'
+          create role anon nologin;
+          create role authenticated nologin;
+          create role service_role nologin;
+          create schema auth;
+          create table auth.users (
+            id uuid primary key,
+            email text,
+            raw_user_meta_data jsonb not null default '{}'::jsonb,
+            created_at timestamptz not null default now(),
+            confirmed_at timestamptz,
+            last_sign_in_at timestamptz
+          );
+          create function auth.uid() returns uuid language sql stable as $$ select null::uuid $$;
+          create function auth.role() returns text language sql stable as $$ select 'authenticated'::text $$;
+          create function auth.email() returns text language sql stable as $$ select null::text $$;
+          create function auth.jwt() returns jsonb language sql stable as $$ select '{}'::jsonb $$;
+          SQL
+
+      - name: Apply Supabase migrations
+        run: |
+          set -euo pipefail
+          for migration in $(find supabase/migrations -maxdepth 1 -type f -name '*.sql' | sort); do
+            echo "Applying ${migration}"
+            psql -v ON_ERROR_STOP=1 -f "${migration}"
+          done
