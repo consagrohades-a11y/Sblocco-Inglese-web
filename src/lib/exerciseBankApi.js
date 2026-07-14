@@ -45,15 +45,16 @@ export async function loadExerciseQuestionBank() {
   return (questions || []).map((question) => {
     const version = byVersion.get(question.current_version_id);
     if (!version || version.question_id !== question.id) return null;
+    const { id: versionId, question_id: _questionId, ...versionFields } = version;
     return {
+      ...versionFields,
       id: question.id,
       publicId: question.public_id,
       status: question.status,
       createdAt: question.created_at,
       updatedAt: question.updated_at,
       poolCount: poolCounts.get(question.id)?.size || 0,
-      ...version,
-      versionId: question.current_version_id,
+      versionId,
     };
   }).filter(Boolean);
 }
@@ -95,15 +96,16 @@ export async function loadExercisePools() {
   return (pools || []).map((pool) => {
     const version = byVersion.get(pool.current_version_id);
     if (!version || version.pool_id !== pool.id) return null;
+    const { id: versionId, pool_id: _poolId, ...versionFields } = version;
     return {
+      ...versionFields,
       id: pool.id,
       publicId: pool.public_id,
       status: pool.status,
       createdAt: pool.created_at,
       updatedAt: pool.updated_at,
-      ...version,
       ...(stats.get(pool.current_version_id) || { questionCount: 0, pinnedCount: 0 }),
-      versionId: pool.current_version_id,
+      versionId,
     };
   }).filter(Boolean);
 }
