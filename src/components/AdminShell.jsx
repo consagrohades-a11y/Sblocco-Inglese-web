@@ -39,6 +39,7 @@ const navigationGroups = [
       { label: 'Exercise Builder', to: '/admin/content/exercises', icon: Blocks, end: true },
       { label: 'Revisioni esercizi', to: '/admin/content/exercises/review', icon: FileCheck2 },
       { label: 'Libreria esercizi', to: '/admin/content/exercises/library', icon: BookOpen },
+      { label: 'Diagnostica esercizi', to: '/admin/content/exercises/diagnostics', icon: BarChart3 },
       { label: 'Word Trainer', to: '/admin/content/words', icon: BookOpen },
       { label: 'General Expressions', to: '/admin/content/expressions', icon: BookOpen },
       { label: 'Business Expressions', to: '/admin/content/business-expressions', icon: BookOpen },
