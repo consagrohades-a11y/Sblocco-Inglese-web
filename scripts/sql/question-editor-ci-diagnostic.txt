@@ -1,0 +1,6 @@
+FAILED_MIGRATION=supabase/migrations/20260714220000_exercise_builder_pool_editor.sql
+
+CREATE FUNCTION
+psql:supabase/migrations/20260714220000_exercise_builder_pool_editor.sql:171: ERROR:  column version.title does not exist
+LINE 15:     'title', version.title,
+                      ^
