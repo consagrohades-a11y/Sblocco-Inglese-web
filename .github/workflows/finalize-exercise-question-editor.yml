@@ -1,0 +1,86 @@
+name: Finalize Exercise Builder question editor
+
+on:
+  push:
+    branches:
+      - agent/exercise-builder-question-editor
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/exercise-builder-question-editor
+          fetch-depth: 0
+
+      - name: Wire editor, smoke test, and token-safe word order
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+
+          const appPath = 'src/App.jsx';
+          let app = fs.readFileSync(appPath, 'utf8');
+          const importAnchor = "const AdminExerciseQuestionBank = lazy(() => import('./pages/AdminExerciseQuestionBank'));";
+          if (!app.includes("const AdminExerciseQuestionEditor = lazy(() => import('./pages/AdminExerciseQuestionEditor'));")) {
+            if (!app.includes(importAnchor)) throw new Error('Missing Question Bank import anchor');
+            app = app.replace(importAnchor, `${importAnchor}\nconst AdminExerciseQuestionEditor = lazy(() => import('./pages/AdminExerciseQuestionEditor'));`);
+          }
+          const routeAnchor = '              <Route path="content/exercises/questions" element={<AdminExerciseQuestionBank />} />';
+          if (!app.includes('path="content/exercises/questions/edit"')) {
+            if (!app.includes(routeAnchor)) throw new Error('Missing Question Bank route anchor');
+            app = app.replace(routeAnchor, `${routeAnchor}\n              <Route path="content/exercises/questions/edit" element={<AdminExerciseQuestionEditor />} />`);
+          }
+          fs.writeFileSync(appPath, app);
+
+          const shellPath = 'src/components/AdminShell.jsx';
+          let shell = fs.readFileSync(shellPath, 'utf8');
+          const navAnchor = "      { label: 'Question Bank', to: '/admin/content/exercises/questions', icon: BookOpen },";
+          if (!shell.includes("to: '/admin/content/exercises/questions/edit'")) {
+            if (!shell.includes(navAnchor)) throw new Error('Missing Question Bank navigation anchor');
+            shell = shell.replace(navAnchor, `${navAnchor}\n      { label: 'Question Editor', to: '/admin/content/exercises/questions/edit', icon: FileCheck2 },`);
+          }
+          fs.writeFileSync(shellPath, shell);
+
+          const editorPath = 'src/pages/AdminExerciseQuestionEditor.jsx';
+          let editor = fs.readFileSync(editorPath, 'utf8');
+          const start = editor.indexOf('function WordOrderEditor');
+          const end = editor.indexOf('\n\nfunction DiagnosticPatterns', start);
+          if (start < 0 || end < 0) throw new Error('Missing WordOrderEditor block');
+          const replacement = `function WordOrderEditor({ question, setQuestion }) {
+  const tokens = question.content.tokens || [];
+  function setOrder(text) {
+    const words = text.split('\\n');
+    const nextTokens = words.map((word, index) => ({ key: tokens[index]?.key || uid('token'), text: word }));
+    setQuestion({ ...question, content: { ...question.content, tokens: nextTokens, correct_order: nextTokens.map((token) => token.key) } });
+  }
+  return <label className="text-xs font-black text-ink/60 dark:text-white/60">Ordine corretto, un token per riga<textarea rows={7} value={tokens.map((token) => token.text).join('\\n')} onChange={(event) => setOrder(event.target.value)} className={fieldClass} /><span className="mt-2 block font-semibold text-ink/45 dark:text-white/45">Le parole duplicate ricevono automaticamente identificatori diversi.</span></label>;
+}`;
+          editor = `${editor.slice(0, start)}${replacement}${editor.slice(end)}`;
+          fs.writeFileSync(editorPath, editor);
+
+          const buildPath = '.github/workflows/build.yml';
+          let build = fs.readFileSync(buildPath, 'utf8');
+          const smokeAnchor = '      - name: Smoke test Exercise Builder composer\n        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/exercise-builder-composer-smoke.sql\n';
+          if (!build.includes('Smoke test Exercise Builder question editor')) {
+            if (!build.includes(smokeAnchor)) throw new Error('Missing composer smoke anchor');
+            build = build.replace(smokeAnchor, `${smokeAnchor}\n      - name: Smoke test Exercise Builder question editor\n        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/exercise-builder-question-editor-smoke.sql\n`);
+          }
+          fs.writeFileSync(buildPath, build);
+
+          fs.rmSync('.github/workflows/finalize-exercise-question-editor.yml');
+          NODE
+
+      - name: Commit finalized editor
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Finalize Exercise Builder question editor"
+          git push origin HEAD:agent/exercise-builder-question-editor
