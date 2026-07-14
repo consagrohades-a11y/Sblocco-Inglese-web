@@ -1,0 +1,55 @@
+name: Fix Exercise Builder Question Editor contract
+
+on:
+  push:
+    branches:
+      - agent/exercise-builder-question-editor
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/exercise-builder-question-editor
+          fetch-depth: 0
+
+      - name: Align Question Editor schema and UI
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+
+          fs.writeFileSync(
+            'supabase/migrations/20260714235000_exercise_builder_question_media.sql',
+            `-- Compatibility fields required by the visual Question Editor.\n\nalter table public.exercise_builder_question_versions\n  add column if not exists media jsonb not null default '[]'::jsonb;\n\nalter table public.exercise_builder_question_versions\n  drop constraint if exists exercise_builder_question_versions_media_check;\nalter table public.exercise_builder_question_versions\n  add constraint exercise_builder_question_versions_media_check\n  check (jsonb_typeof(media) = 'array');\n`
+          );
+
+          const migrationPath = 'supabase/migrations/20260714240000_exercise_builder_question_editor.sql';
+          let migration = fs.readFileSync(migrationPath, 'utf8');
+          migration = migration.replace(
+            "if v_difficulty not in ('easy', 'standard', 'challenge') then",
+            "if v_difficulty not in ('support', 'standard', 'challenge') then"
+          );
+          fs.writeFileSync(migrationPath, migration);
+
+          const pagePath = 'src/pages/AdminExerciseQuestionEditor.jsx';
+          let page = fs.readFileSync(pagePath, 'utf8');
+          page = page.replace('<option value="easy">Facile</option>', '<option value="support">Supporto</option>');
+          fs.writeFileSync(pagePath, page);
+
+          fs.rmSync('.github/workflows/fix-question-editor-contract.yml');
+          NODE
+
+      - name: Commit contract fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Fix Question Editor schema contract"
+          git push origin HEAD:agent/exercise-builder-question-editor
