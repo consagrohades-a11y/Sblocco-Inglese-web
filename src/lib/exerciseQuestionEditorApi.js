@@ -4,9 +4,9 @@ function throwIfError(error) {
   if (error) throw error;
 }
 
-export async function loadExerciseQuestionEditorDetail(questionId) {
-  const { data, error } = await supabase.rpc('admin_get_exercise_builder_question_detail', {
-    p_question_id: questionId,
+export async function loadExerciseQuestionEditorDetail(questionReference) {
+  const { data, error } = await supabase.rpc('admin_get_exercise_builder_question_detail_by_reference', {
+    p_reference: String(questionReference || ''),
   });
   throwIfError(error);
   return data || null;
