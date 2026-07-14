@@ -96,7 +96,7 @@ export async function loadPublishedExerciseCatalog() {
   return (data || []).map((row) => {
     const item = currentExerciseVersion(row);
     return item ? { ...item, publishedAt: row.published_at } : null;
-  }).filter(Boolean);
+  }).filter((item) => item?.review_status === 'approved');
 }
 
 export async function loadExerciseBuilderCatalogForAdmin() {
