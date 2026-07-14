@@ -1,0 +1,46 @@
+name: Wire Exercise Builder bank UI
+
+on:
+  push:
+    branches:
+      - agent/exercise-builder-bank-ui
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/exercise-builder-bank-ui
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Apply route and navigation wiring
+        run: |
+          if [ ! -f scripts/wire-exercise-bank-ui.mjs ]; then
+            echo "Wiring script already consumed."
+            exit 0
+          fi
+          node scripts/wire-exercise-bank-ui.mjs
+
+      - name: Commit wiring
+        run: |
+          if git diff --quiet; then
+            echo "No wiring changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Wire Exercise Builder bank UI"
+          git push origin HEAD:agent/exercise-builder-bank-ui
