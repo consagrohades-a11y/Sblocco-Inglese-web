@@ -1,0 +1,69 @@
+/* Question Editor workspace
+   The admin sidebar reduces usable content width, so Tailwind's viewport-based
+   xl/2xl breakpoints are not enough on their own. Keep the review queue usable
+   without squeezing the actual editor. */
+
+@media (min-width: 1280px) and (max-width: 1799.98px) {
+  section.section-shell > div[class*="max-w-[1600px]"] > div.mt-6.grid {
+    grid-template-columns: minmax(0, 1fr) 22rem !important;
+    align-items: start;
+  }
+
+  section.section-shell > div[class*="max-w-[1600px]"] > div.mt-6.grid > aside:first-child {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  section.section-shell > div[class*="max-w-[1600px]"] > div.mt-6.grid > main {
+    grid-column: 1;
+    grid-row: 2;
+    min-width: 0;
+  }
+
+  section.section-shell > div[class*="max-w-[1600px]"] > div.mt-6.grid > aside:last-child {
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
+    min-width: 0;
+  }
+
+  section.section-shell > div[class*="max-w-[1600px]"] > div.mt-6.grid > aside:first-child > div.mt-3.grid[class*="grid-cols-2"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  section.section-shell > div[class*="max-w-[1600px]"] > div.mt-6.grid > aside:first-child > div.mt-3.grid:not([class*="grid-cols-2"]) {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(16rem, 20rem);
+    grid-template-columns: none;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+  }
+}
+
+@media (min-width: 1800px) {
+  section.section-shell > div[class*="max-w-[1600px]"] > div.mt-6.grid {
+    grid-template-columns: 17rem minmax(38rem, 1fr) 22rem !important;
+    align-items: start;
+  }
+
+  section.section-shell > div[class*="max-w-[1600px]"] > div.mt-6.grid > aside:first-child,
+  section.section-shell > div[class*="max-w-[1600px]"] > div.mt-6.grid > aside:last-child {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 1279.98px) {
+  section.section-shell > div[class*="max-w-[1600px]"] > div.mt-6.grid > aside:first-child,
+  section.section-shell > div[class*="max-w-[1600px]"] > div.mt-6.grid > aside:last-child {
+    position: static !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
