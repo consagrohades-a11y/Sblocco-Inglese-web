@@ -7,14 +7,7 @@ const logoSrc = '/assets/brand/chat-chat.svg';
 function LogoContent({ compact = false, light = false }) {
   return (
     <span className="inline-flex min-w-0 items-center gap-3">
-      <span className={`grid shrink-0 place-items-center rounded-lg border shadow-sm ${
-        compact ? 'h-10 w-10' : 'h-11 w-11'
-      } ${
-        light ? 'border-white/15 bg-white/10' : 'border-ink/10 bg-white'
-      }`}
-      >
-        <img src={logoSrc} alt="" className={compact ? 'h-6 w-6' : 'h-7 w-7'} />
-      </span>
+      <img src={logoSrc} alt="" className={`shrink-0 object-contain ${compact ? 'h-9 w-9' : 'h-10 w-10'}`} />
       <span className="min-w-0">
         <span className={`block truncate font-black leading-tight ${
           compact ? 'text-sm sm:text-base' : 'text-sm sm:text-base'
@@ -47,7 +40,7 @@ export default function BrandLogo({ to = '/', compact = false, light = false, cl
   }
 
   return (
-    <Link to={to} className={`focus-ring rounded-lg ${className}`}>
+    <Link to={to} className={`focus-ring rounded-md ${className}`}>
       <LogoContent compact={compact} light={light} />
     </Link>
   );
