@@ -56,6 +56,8 @@ const AdminExerciseBuilder = lazy(() => import('./pages/AdminExerciseBuilder'));
 const AdminExerciseBuilderReview = lazy(() => import('./pages/AdminExerciseBuilderReview'));
 const AdminExerciseBuilderLibrary = lazy(() => import('./pages/AdminExerciseBuilderLibrary'));
 const AdminExerciseDiagnostics = lazy(() => import('./pages/AdminExerciseDiagnostics'));
+const AdminExerciseQuestionBank = lazy(() => import('./pages/AdminExerciseQuestionBank'));
+const AdminExercisePools = lazy(() => import('./pages/AdminExercisePools'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
 const LearnerProgress = lazy(() => import('./pages/LearnerProgress'));
@@ -134,6 +136,8 @@ export default function App() {
               <Route path="content/exercises/review" element={<AdminExerciseBuilderReview />} />
               <Route path="content/exercises/library" element={<AdminExerciseBuilderLibrary />} />
               <Route path="content/exercises/diagnostics" element={<AdminExerciseDiagnostics />} />
+              <Route path="content/exercises/questions" element={<AdminExerciseQuestionBank />} />
+              <Route path="content/exercises/pools" element={<AdminExercisePools />} />
               <Route path="content/words" element={<AdminWordTrainerContent />} />
               <Route path="content/words/import" element={<AdminWordTrainerImport />} />
               <Route path="content/words/decks" element={<AdminWordDecks />} />
