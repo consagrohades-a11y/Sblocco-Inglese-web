@@ -1,0 +1,103 @@
+name: Verify Exercise Builder composer
+
+on:
+  push:
+    branches:
+      - agent/exercise-builder-composer-ui
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  verify:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: sblocco_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d sblocco_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: sblocco_test
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/exercise-builder-composer-ui
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install and build
+        run: |
+          npm install --no-audit --no-fund
+          npm run validate:srs
+          npm run build
+
+      - name: Bootstrap Supabase auth stubs
+        run: |
+          psql -v ON_ERROR_STOP=1 <<'SQL'
+          create role anon nologin;
+          create role authenticated nologin;
+          create role service_role nologin;
+          create schema auth;
+          create table auth.users (
+            id uuid primary key,
+            email text,
+            raw_user_meta_data jsonb not null default '{}'::jsonb,
+            created_at timestamptz not null default now(),
+            confirmed_at timestamptz,
+            last_sign_in_at timestamptz
+          );
+          create function auth.uid() returns uuid language sql stable as $$ select null::uuid $$;
+          create function auth.role() returns text language sql stable as $$ select 'authenticated'::text $$;
+          create function auth.email() returns text language sql stable as $$ select null::text $$;
+          create function auth.jwt() returns jsonb language sql stable as $$ select '{}'::jsonb $$;
+          SQL
+
+      - name: Apply migrations and smoke test
+        run: |
+          set -euo pipefail
+          for migration in $(find supabase/migrations -maxdepth 1 -type f -name '*.sql' | sort); do
+            echo "Applying ${migration}"
+            psql -v ON_ERROR_STOP=1 -f "${migration}"
+          done
+          psql -v ON_ERROR_STOP=1 -f scripts/sql/exercise-builder-composer-smoke.sql
+
+      - name: Remove temporary workflows
+        run: |
+          rm -f \
+            .github/workflows/wire-exercise-composer-ui.yml \
+            .github/workflows/wire-exercise-composer-smoke.yml \
+            .github/workflows/finalize-exercise-composer-ui.yml \
+            .github/workflows/verify-exercise-composer.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Finalize verified Exercise Builder composer"
+            git push origin HEAD:agent/exercise-builder-composer-ui
+          fi
+
+      - name: Mark pull request ready
+        run: gh pr ready 78 --repo consagrohades-a11y/Sblocco-Inglese-web
