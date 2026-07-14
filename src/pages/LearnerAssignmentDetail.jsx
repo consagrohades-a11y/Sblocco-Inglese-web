@@ -26,6 +26,19 @@ function formatDate(value) {
   }).format(new Date(value));
 }
 
+function resourceTypeLabel(resource) {
+  if (resource.resource_type === 'practice_session') return 'Pratica mirata';
+  if (resource.resource_type === 'custom_exercise') return 'Esercizio personalizzato';
+  if (resource.resource_type === 'trainer') return 'Trainer';
+  return 'Unità grammaticale';
+}
+
+function resourceDestination(resource, assignmentId) {
+  if (resource.resource_type === 'practice_session') return `/practice?assignmentId=${assignmentId}&resourceId=${resource.id}`;
+  if (resource.resource_type === 'custom_exercise') return `/exercises?assignmentId=${assignmentId}&resourceId=${resource.id}`;
+  return resource.route;
+}
+
 export default function LearnerAssignmentDetail() {
   const { assignmentId } = useParams();
   const [assignment, setAssignment] = useState(null);
@@ -56,7 +69,7 @@ export default function LearnerAssignmentDetail() {
           .maybeSingle(),
         supabase
           .from('assignment_resources')
-          .select('id, resource_key, resource_type, title, description, route, sequence_index, practice_config')
+          .select('id, resource_key, resource_type, title, description, route, sequence_index, practice_config, exercise_config')
           .eq('assignment_id', assignmentId)
           .order('sequence_index', { ascending: true }),
         supabase
@@ -178,12 +191,13 @@ export default function LearnerAssignmentDetail() {
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                           <div>
                             <p className="text-xs font-black uppercase tracking-wide text-moss">
-                              {index + 1}. {resource.resource_type === 'practice_session' ? 'Pratica mirata' : resource.resource_type === 'trainer' ? 'Trainer' : 'Unità grammaticale'}
+                              {index + 1}. {resourceTypeLabel(resource)}
                             </p>
                             <h3 className="mt-2 text-lg font-black text-ink dark:text-white">{resource.title}</h3>
                             {resource.description ? <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">{resource.description}</p> : null}
+                            {resource.resource_type === 'custom_exercise' ? <p className="mt-2 text-xs font-bold text-violet-700 dark:text-violet-300">Autosave attivo · nuove domande a ogni tentativo quando usa una pool</p> : null}
                           </div>
-                          <Link to={resource.resource_type === 'practice_session' ? `/practice?assignmentId=${assignment.id}&resourceId=${resource.id}` : resource.route} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss">
+                          <Link to={resourceDestination(resource, assignment.id)} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss">
                             Inizia
                           </Link>
                         </div>
