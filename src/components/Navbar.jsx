@@ -1,119 +1,249 @@
-import React from 'react';
-import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { navItems } from '../data/content';
-import { ctaLabels, primaryOffer } from '../config/site';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ArrowRight,
+  BarChart3,
+  BookOpen,
+  ChevronDown,
+  ClipboardList,
+  GraduationCap,
+  LogOut,
+  Menu,
+  Settings,
+  Sparkles,
+  X,
+} from 'lucide-react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import BrandLogo from './BrandLogo';
-import CTAButton from './CTAButton';
 
-export default function Navbar() {
+const publicItems = [
+  { label: 'Metodo', to: '/#come-funziona' },
+  { label: 'Corsi', to: '/percorsi' },
+  { label: 'Trainer', to: '/trainers' },
+  { label: 'English Foundations', to: '/grammar' },
+  { label: 'Founder', to: '/recensioni' },
+];
+
+const learnerItems = [
+  { label: 'Attività', to: '/assignments', icon: ClipboardList },
+  { label: 'Trainer', to: '/trainers', icon: Sparkles },
+  { label: 'Corsi', to: '/percorsi', icon: BookOpen },
+  { label: 'Progressi', to: '/progressi', icon: BarChart3 },
+];
+
+function isRouteActive(pathname, to) {
+  if (to === '/') return pathname === '/';
+  return pathname === to || pathname.startsWith(`${to}/`);
+}
+
+function AccountMenu({ displayName, isAdmin, onSignOut }) {
   const [open, setOpen] = useState(false);
-  const { loading, user } = useAuth();
-  const desktopItems = navItems.filter((item) => !['/prenota', '/simulazione-39'].includes(item.to));
-  const authLink = user ? { to: '/account', label: 'Account' } : { to: '/login', label: 'Login' };
-  const navLabel = (item) => {
-    if (item.to === '/') return 'La piattaforma';
-    if (item.to === '/simulazione-39') return `Simulazione ${primaryOffer.price}`;
-    if (item.to === '/grammar') return 'English Foundations';
-    return item.label;
-  };
+  const menuRef = useRef(null);
+  const initial = displayName?.trim()?.charAt(0)?.toUpperCase() || 'A';
 
-  const navClass = ({ isActive }) =>
-    `focus-ring whitespace-nowrap rounded-full px-3 py-2 text-[0.82rem] font-black transition 2xl:px-4 2xl:text-sm ${
-      isActive ? 'bg-ink text-white shadow-sm' : 'text-ink/70 hover:bg-white hover:text-ink'
-    }`;
+  useEffect(() => {
+    function handlePointerDown(event) {
+      if (!menuRef.current?.contains(event.target)) setOpen(false);
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') setOpen(false);
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-ink/10 bg-paper/90 shadow-sm backdrop-blur-xl transition-colors">
-      <div className="section-shell flex min-h-[76px] items-center justify-between gap-4 py-2">
-        <BrandLogo />
+    <div ref={menuRef} className="relative">
+      <button
+        type="button"
+        className="focus-ring flex min-h-11 items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] p-1.5 pr-3 text-white transition hover:border-[#8b5cf6]/50 hover:bg-white/[0.11]"
+        aria-label="Apri menu account"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
+        <span className="grid h-8 w-8 place-items-center rounded-full bg-[#dcefe8] text-sm font-black text-[#0b1411] shadow-[0_0_18px_rgba(139,92,246,0.22)]">
+          {initial}
+        </span>
+        <span className="hidden max-w-28 truncate text-sm font-extrabold lg:block">{displayName || 'Account'}</span>
+        <ChevronDown aria-hidden="true" className={`h-4 w-4 text-white/60 transition ${open ? 'rotate-180' : ''}`} />
+      </button>
 
-        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1.5 xl:flex 2xl:gap-2" aria-label="Navigazione principale">
-          {desktopItems.map((item) =>
-            item.to.includes('#') ? (
-              <a key={item.to} href={item.to} className={navClass({ isActive: false })}>
-                {navLabel(item)}
-              </a>
-            ) : (
-              <NavLink key={item.to} to={item.to} className={navClass}>
-                {navLabel(item)}
+      {open ? (
+        <div
+          role="menu"
+          className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-white/15 bg-[#101a17] p-2 text-white shadow-[0_24px_70px_rgba(0,0,0,0.42),0_0_32px_rgba(139,92,246,0.12)]"
+        >
+          <div className="border-b border-white/10 px-3 py-3">
+            <p className="truncate text-sm font-black">{displayName || 'Il tuo account'}</p>
+            <p className="mt-0.5 text-xs font-semibold text-white/55">Profilo e impostazioni</p>
+          </div>
+          <Link role="menuitem" to="/account" onClick={() => setOpen(false)} className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white">
+            <Settings aria-hidden="true" className="h-4 w-4 text-[#81d7c0]" />
+            Account
+          </Link>
+          {isAdmin ? (
+            <Link role="menuitem" to="/admin" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white">
+              <GraduationCap aria-hidden="true" className="h-4 w-4 text-[#81d7c0]" />
+              Pannello admin
+            </Link>
+          ) : null}
+          <button role="menuitem" type="button" onClick={onSignOut} className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-bold text-white/70 transition hover:bg-[#8b5cf6]/15 hover:text-white">
+            <LogOut aria-hidden="true" className="h-4 w-4 text-[#b7a3ff]" />
+            Esci
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+export default function Navbar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [compact, setCompact] = useState(false);
+  const { loading, profile, signOut, user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const isLearner = profile?.role === 'learner' && profile?.status === 'active';
+  const isAdmin = profile?.role === 'admin' && profile?.status === 'active';
+  const displayName = profile?.display_name || user?.user_metadata?.display_name || 'Account';
+  const items = useMemo(() => (isLearner ? learnerItems : publicItems), [isLearner]);
+
+  useEffect(() => {
+    function handleScroll() {
+      setCompact(window.scrollY > 24);
+    }
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname, location.hash]);
+
+  async function handleSignOut() {
+    setMobileOpen(false);
+    await signOut();
+    navigate('/', { replace: true });
+  }
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b1311]/95 text-white shadow-[0_14px_42px_rgba(3,8,7,0.26)] backdrop-blur-xl">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-[#7c3aed]/[0.10] blur-3xl" />
+        <div className="absolute left-1/3 top-0 h-px w-1/3 bg-gradient-to-r from-transparent via-[#a78bfa]/50 to-transparent" />
+        <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-[#0e7c66]/20 via-[#65d6b8]/65 to-[#7c3aed]/35" />
+      </div>
+
+      <div className={`section-shell relative flex items-center justify-between gap-4 transition-[min-height,padding] duration-300 ${compact ? 'min-h-[64px] py-1.5' : 'min-h-[78px] py-2.5'}`}>
+        <BrandLogo to={isLearner ? '/assignments' : '/'} compact={compact} light />
+
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex" aria-label={isLearner ? 'Navigazione studente' : 'Navigazione principale'}>
+          {items.map((item) => {
+            const active = isRouteActive(location.pathname, item.to.split('#')[0]);
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={`focus-ring whitespace-nowrap rounded-full px-3.5 py-2.5 text-sm font-extrabold tracking-[-0.01em] transition 2xl:px-4 ${
+                  active
+                    ? 'bg-[#dcefe8] text-[#0b1411] shadow-[0_0_22px_rgba(139,92,246,0.16)]'
+                    : 'text-white/72 hover:bg-white/[0.08] hover:text-white'
+                }`}
+              >
+                {item.label}
               </NavLink>
-            ),
-          )}
+            );
+          })}
         </nav>
 
         <div className="hidden shrink-0 items-center gap-2 xl:flex">
-          <NavLink
-            to={authLink.to}
-            className={({ isActive }) =>
-              `focus-ring whitespace-nowrap rounded-full px-4 py-2.5 text-sm font-black transition ${
-                isActive ? 'bg-ink text-white shadow-sm' : 'border border-ink/10 bg-white text-ink hover:bg-linen'
-              }`
-            }
-          >
-            {loading ? '...' : authLink.label}
-          </NavLink>
-          <CTAButton href="/simulazione-39" className="!min-h-11 whitespace-nowrap !px-5 !py-2.5 !text-sm" icon={false}>
-            Prenota l'audit a 39 euro
-          </CTAButton>
+          {isLearner ? (
+            <Link to="/assignments" className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-[#13866f] px-5 py-2.5 text-sm font-black text-white shadow-[0_10px_28px_rgba(14,124,102,0.24),0_0_24px_rgba(139,92,246,0.12)] transition hover:-translate-y-0.5 hover:bg-[#18a085]">
+              Continua
+              <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </Link>
+          ) : (
+            <Link to="/prenota" className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-[#13866f] px-5 py-2.5 text-sm font-black text-white shadow-[0_10px_28px_rgba(14,124,102,0.24),0_0_24px_rgba(139,92,246,0.12)] transition hover:-translate-y-0.5 hover:bg-[#18a085]">
+              Inizia il tuo percorso
+              <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </Link>
+          )}
+
+          {!loading && user ? (
+            <AccountMenu displayName={displayName} isAdmin={isAdmin} onSignOut={handleSignOut} />
+          ) : !loading ? (
+            <NavLink to="/login" className="focus-ring rounded-full border border-white/15 bg-white/[0.06] px-4 py-2.5 text-sm font-extrabold text-white/85 transition hover:border-[#8b5cf6]/45 hover:bg-white/[0.10] hover:text-white">
+              Accedi
+            </NavLink>
+          ) : (
+            <span className="h-11 w-20 animate-pulse rounded-full bg-white/10" aria-label="Caricamento account" />
+          )}
         </div>
 
         <button
           type="button"
-          className="focus-ring inline-flex h-10 w-10 items-center justify-center rounded-full border border-ink/10 bg-white text-ink shadow-sm xl:hidden"
-          aria-label={open ? 'Chiudi menu' : 'Apri menu'}
-          aria-expanded={open}
-          onClick={() => setOpen((value) => !value)}
+          className="focus-ring inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.07] text-white transition hover:border-[#8b5cf6]/45 hover:bg-white/[0.12] xl:hidden"
+          aria-label={mobileOpen ? 'Chiudi menu' : 'Apri menu'}
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((value) => !value)}
         >
-          {open ? <X aria-hidden="true" className="h-5 w-5" /> : <Menu aria-hidden="true" className="h-5 w-5" />}
+          {mobileOpen ? <X aria-hidden="true" className="h-5 w-5" /> : <Menu aria-hidden="true" className="h-5 w-5" />}
         </button>
       </div>
 
-      {open ? (
-        <div className="border-t border-ink/10 bg-paper/95 px-5 pb-5 pt-3 shadow-soft xl:hidden">
-          <nav className="grid gap-2" aria-label="Navigazione mobile">
-            {navItems.map((item) =>
-              item.to.includes('#') ? (
-                <a
-                  key={item.to}
-                  href={item.to}
-                  className="whitespace-nowrap rounded-lg bg-white/80 px-4 py-3 text-base font-bold text-ink hover:bg-mint/50"
-                  onClick={() => setOpen(false)}
-                >
-                  {navLabel(item)}
-                </a>
-              ) : (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className={({ isActive }) =>
-                    `whitespace-nowrap rounded-lg px-4 py-3 text-base font-bold ${
-                      isActive ? 'bg-ink text-white' : 'bg-white/80 text-ink hover:bg-mint/50'
-                    }`
-                  }
-                  onClick={() => setOpen(false)}
-                >
-                  {navLabel(item)}
+      {mobileOpen ? (
+        <div className="relative border-t border-white/10 bg-[#0d1714]/98 px-5 pb-6 pt-4 shadow-[0_24px_50px_rgba(0,0,0,0.38)] xl:hidden">
+          <nav className="mx-auto grid max-w-lg gap-2" aria-label={isLearner ? 'Navigazione studente mobile' : 'Navigazione mobile'}>
+            {isLearner ? (
+              <Link to="/assignments" className="focus-ring mb-2 flex min-h-12 items-center justify-between rounded-2xl bg-[#13866f] px-4 py-3 text-base font-black text-white shadow-[0_10px_26px_rgba(14,124,102,0.20)]">
+                Continua
+                <ArrowRight aria-hidden="true" className="h-5 w-5" />
+              </Link>
+            ) : null}
+
+            {items.map((item) => {
+              const Icon = item.icon;
+              const active = isRouteActive(location.pathname, item.to.split('#')[0]);
+              return (
+                <NavLink key={item.to} to={item.to} className={`focus-ring flex min-h-12 items-center gap-3 rounded-2xl px-4 py-3 text-base font-extrabold transition ${active ? 'bg-[#dcefe8] text-[#0b1411]' : 'bg-white/[0.05] text-white/80 hover:bg-white/[0.10] hover:text-white'}`}>
+                  {Icon ? <Icon aria-hidden="true" className={`h-5 w-5 ${active ? 'text-[#0e7c66]' : 'text-[#81d7c0]'}`} /> : null}
+                  {item.label}
                 </NavLink>
-              ),
-            )}
-            <NavLink
-              to={authLink.to}
-              className={({ isActive }) =>
-                `whitespace-nowrap rounded-lg px-4 py-3 text-base font-bold ${
-                  isActive ? 'bg-ink text-white' : 'bg-white/80 text-ink hover:bg-mint/50'
-                }`
-              }
-              onClick={() => setOpen(false)}
-            >
-              {loading ? '...' : authLink.label}
-            </NavLink>
+              );
+            })}
+
+            {!isLearner ? (
+              <Link to="/prenota" className="focus-ring mt-2 flex min-h-12 items-center justify-between rounded-2xl bg-[#13866f] px-4 py-3 text-base font-black text-white">
+                Inizia il tuo percorso
+                <ArrowRight aria-hidden="true" className="h-5 w-5" />
+              </Link>
+            ) : null}
+
+            {!loading && user ? (
+              <>
+                <Link to="/account" className="focus-ring mt-2 flex min-h-12 items-center gap-3 rounded-2xl border border-white/12 bg-white/[0.07] px-4 py-3 text-base font-extrabold text-white">
+                  <span className="grid h-8 w-8 place-items-center rounded-full bg-[#dcefe8] text-sm font-black text-[#0b1411]">{displayName.charAt(0).toUpperCase()}</span>
+                  Account
+                </Link>
+                {isAdmin ? <Link to="/admin" className="focus-ring flex min-h-12 items-center gap-3 rounded-2xl bg-white/[0.05] px-4 py-3 text-base font-extrabold text-white/80"><GraduationCap aria-hidden="true" className="h-5 w-5 text-[#81d7c0]" />Pannello admin</Link> : null}
+                <button type="button" onClick={handleSignOut} className="focus-ring flex min-h-12 items-center gap-3 rounded-2xl bg-white/[0.05] px-4 py-3 text-left text-base font-extrabold text-white/70">
+                  <LogOut aria-hidden="true" className="h-5 w-5 text-[#b7a3ff]" />
+                  Esci
+                </button>
+              </>
+            ) : !loading ? (
+              <Link to="/login" className="focus-ring mt-2 flex min-h-12 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.07] px-4 py-3 text-base font-extrabold text-white">Accedi</Link>
+            ) : null}
           </nav>
-          <CTAButton className="mt-4 w-full" onClick={() => setOpen(false)}>
-            Prenota l'audit a 39 euro
-          </CTAButton>
         </div>
       ) : null}
     </header>
