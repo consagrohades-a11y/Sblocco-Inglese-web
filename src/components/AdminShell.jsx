@@ -41,6 +41,7 @@ const navigationGroups = [
       { label: 'Libreria esercizi', to: '/admin/content/exercises/library', icon: BookOpen },
       { label: 'Diagnostica esercizi', to: '/admin/content/exercises/diagnostics', icon: BarChart3 },
       { label: 'Question Bank', to: '/admin/content/exercises/questions', icon: BookOpen },
+      { label: 'Question Editor', to: '/admin/content/exercises/questions/edit', icon: FileCheck2 },
       { label: 'Pool Builder', to: '/admin/content/exercises/pools', icon: Blocks },
       { label: 'Exercise Composer', to: '/admin/content/exercises/composer', icon: ClipboardList },
       { label: 'Word Trainer', to: '/admin/content/words', icon: BookOpen },
