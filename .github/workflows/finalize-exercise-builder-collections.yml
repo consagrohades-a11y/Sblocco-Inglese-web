@@ -1,0 +1,93 @@
+name: Finalize Exercise Builder Collections
+
+on:
+  push:
+    branches:
+      - agent/exercise-builder-collections
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/exercise-builder-collections
+          fetch-depth: 0
+
+      - name: Merge current main and finalize wiring
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge --no-edit origin/main
+
+          node <<'NODE'
+          const fs = require('fs');
+
+          const appPath = 'src/App.jsx';
+          let app = fs.readFileSync(appPath, 'utf8');
+          const importAnchor = "const AdminExerciseQuestionEditor = lazy(() => import('./pages/AdminExerciseQuestionEditor'));";
+          if (!app.includes("const AdminExerciseCollections = lazy(() => import('./pages/AdminExerciseCollections'));")) {
+            if (!app.includes(importAnchor)) throw new Error('Missing Collections import anchor');
+            app = app.replace(importAnchor, `${importAnchor}\nconst AdminExerciseCollections = lazy(() => import('./pages/AdminExerciseCollections'));`);
+          }
+          const routeAnchor = '              <Route path="content/exercises/composer" element={<AdminExerciseComposer />} />';
+          if (!app.includes('path="content/exercises/collections"')) {
+            if (!app.includes(routeAnchor)) throw new Error('Missing Collections route anchor');
+            app = app.replace(routeAnchor, `${routeAnchor}\n              <Route path="content/exercises/collections" element={<AdminExerciseCollections />} />`);
+          }
+          fs.writeFileSync(appPath, app);
+
+          const shellPath = 'src/components/AdminShell.jsx';
+          let shell = fs.readFileSync(shellPath, 'utf8');
+          const navAnchor = "      { label: 'Exercise Composer', to: '/admin/content/exercises/composer', icon: ClipboardList },";
+          if (!shell.includes("to: '/admin/content/exercises/collections'")) {
+            if (!shell.includes(navAnchor)) throw new Error('Missing Collections navigation anchor');
+            shell = shell.replace(navAnchor, `${navAnchor}\n      { label: 'Collections', to: '/admin/content/exercises/collections', icon: Blocks },`);
+          }
+          fs.writeFileSync(shellPath, shell);
+
+          const pagePath = 'src/pages/AdminExerciseCollections.jsx';
+          let page = fs.readFileSync(pagePath, 'utf8');
+          const replacements = [
+            [
+              'mt-6 grid gap-6 xl:grid-cols-[18rem_minmax(0,1fr)_24rem]',
+              'mt-6 grid items-start gap-6 xl:grid-cols-[18rem_minmax(0,1fr)] 2xl:grid-cols-[18rem_minmax(0,1fr)_24rem]'
+            ],
+            [
+              'dark:border-white/10 dark:bg-[#16211e] xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto"><div className="flex items-center justify-between gap-2"><p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Collections</p>',
+              'dark:border-white/10 dark:bg-[#16211e] xl:sticky xl:top-24 xl:row-span-2 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto"><div className="flex items-center justify-between gap-2"><p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Collections</p>'
+            ],
+            [
+              '<main className="grid min-w-0 gap-6">',
+              '<main className="grid min-w-0 gap-6 xl:col-start-2 xl:row-start-1 2xl:col-start-2">'
+            ],
+            [
+              '<aside className={`rounded-2xl border p-5 shadow-sm xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto ${colorClasses[collection.colorKey] || colorClasses.emerald}`}>',
+              '<aside className={`min-w-0 rounded-2xl border p-5 shadow-sm xl:col-start-2 xl:row-start-2 2xl:sticky 2xl:top-24 2xl:col-start-3 2xl:row-start-1 2xl:max-h-[calc(100vh-7rem)] 2xl:overflow-y-auto ${colorClasses[collection.colorKey] || colorClasses.emerald}`}>'
+            ]
+          ];
+          for (const [before, after] of replacements) {
+            if (!page.includes(before)) throw new Error(`Missing Collections layout fragment: ${before.slice(0, 90)}`);
+            page = page.replace(before, after);
+          }
+          fs.writeFileSync(pagePath, page);
+
+          for (const path of [
+            '.github/workflows/verify-exercise-builder-collections.yml',
+            '.github/workflows/finalize-exercise-builder-collections.yml'
+          ]) {
+            if (fs.existsSync(path)) fs.rmSync(path);
+          }
+          NODE
+
+      - name: Commit finalized Collections
+        run: |
+          git add -A
+          git commit -m "Finalize responsive Exercise Builder Collections"
+          git push origin HEAD:agent/exercise-builder-collections
