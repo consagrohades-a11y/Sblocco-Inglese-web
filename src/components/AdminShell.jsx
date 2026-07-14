@@ -45,6 +45,7 @@ const navigationGroups = [
       { label: 'Pool Builder', to: '/admin/content/exercises/pools', icon: Blocks },
       { label: 'Exercise Composer', to: '/admin/content/exercises/composer', icon: ClipboardList },
       { label: 'Collections', to: '/admin/content/exercises/collections', icon: Blocks },
+      { label: 'Risultati esercizi', to: '/admin/content/exercises/results', icon: BarChart3 },
       { label: 'Word Trainer', to: '/admin/content/words', icon: BookOpen },
       { label: 'General Expressions', to: '/admin/content/expressions', icon: BookOpen },
       { label: 'Business Expressions', to: '/admin/content/business-expressions', icon: BookOpen },
