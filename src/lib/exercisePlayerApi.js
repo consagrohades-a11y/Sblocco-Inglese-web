@@ -4,10 +4,11 @@ function throwIfError(error) {
   if (error) throw error;
 }
 
-export async function openAssignedExercise({ assignmentId, resourceId }) {
-  const { data, error } = await supabase.rpc('get_or_create_assigned_exercise_attempt', {
+export async function openAssignedExercise({ assignmentId, resourceId, startNew = false }) {
+  const { data, error } = await supabase.rpc('open_assigned_exercise_attempt', {
     p_assignment_id: assignmentId,
     p_resource_id: resourceId,
+    p_start_new: startNew,
   });
   throwIfError(error);
   if (!data) throw new Error('Esercizio non disponibile.');
