@@ -1,0 +1,79 @@
+name: Finalize Exercise Builder composer UI
+
+on:
+  push:
+    branches:
+      - agent/exercise-builder-composer-ui
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/exercise-builder-composer-ui
+          fetch-depth: 0
+
+      - name: Ensure composer wiring and CI smoke test
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+
+          const appPath = 'src/App.jsx';
+          let app = fs.readFileSync(appPath, 'utf8');
+          const importAnchor = "const AdminExercisePools = lazy(() => import('./pages/AdminExercisePools'));";
+          if (!app.includes("const AdminExerciseComposer = lazy(() => import('./pages/AdminExerciseComposer'));")) {
+            if (!app.includes(importAnchor)) throw new Error('Missing composer import anchor');
+            app = app.replace(importAnchor, `${importAnchor}\nconst AdminExerciseComposer = lazy(() => import('./pages/AdminExerciseComposer'));`);
+          }
+          const routeAnchor = '              <Route path="content/exercises/pools" element={<AdminExercisePools />} />';
+          if (!app.includes('path="content/exercises/composer"')) {
+            if (!app.includes(routeAnchor)) throw new Error('Missing composer route anchor');
+            app = app.replace(routeAnchor, `${routeAnchor}\n              <Route path="content/exercises/composer" element={<AdminExerciseComposer />} />`);
+          }
+          fs.writeFileSync(appPath, app);
+
+          const shellPath = 'src/components/AdminShell.jsx';
+          let shell = fs.readFileSync(shellPath, 'utf8');
+          const navAnchor = "      { label: 'Pool Builder', to: '/admin/content/exercises/pools', icon: Blocks },";
+          if (!shell.includes("to: '/admin/content/exercises/composer'")) {
+            if (!shell.includes(navAnchor)) throw new Error('Missing composer navigation anchor');
+            shell = shell.replace(navAnchor, `${navAnchor}\n      { label: 'Exercise Composer', to: '/admin/content/exercises/composer', icon: ClipboardList },`);
+          }
+          fs.writeFileSync(shellPath, shell);
+
+          const buildPath = '.github/workflows/build.yml';
+          let build = fs.readFileSync(buildPath, 'utf8');
+          if (!build.includes('Smoke test Exercise Builder composer')) {
+            const migrationAnchor = '            psql -v ON_ERROR_STOP=1 -f "${migration}"\n          done\n';
+            if (!build.includes(migrationAnchor)) throw new Error('Missing migration loop anchor');
+            build = build.replace(migrationAnchor, `${migrationAnchor}\n      - name: Smoke test Exercise Builder composer\n        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/exercise-builder-composer-smoke.sql\n`);
+          }
+          fs.writeFileSync(buildPath, build);
+
+          for (const path of [
+            '.github/workflows/wire-exercise-composer-ui.yml',
+            '.github/workflows/wire-exercise-composer-smoke.yml',
+            '.github/workflows/finalize-exercise-composer-ui.yml',
+          ]) {
+            if (fs.existsSync(path)) fs.rmSync(path);
+          }
+          NODE
+
+      - name: Commit finalized composer wiring
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No composer wiring changes to commit."
+            exit 0
+          fi
+          git commit -m "Finalize Exercise Builder composer UI"
+          git push origin HEAD:agent/exercise-builder-composer-ui
