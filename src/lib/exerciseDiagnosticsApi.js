@@ -53,10 +53,16 @@ export async function saveDiagnosticCode({ code, messages = {}, ...fields }) {
     });
   });
 
+  const { error: deleteError } = await supabase
+    .from('exercise_builder_diagnostic_messages')
+    .delete()
+    .eq('diagnostic_code', normalizedCode);
+  throwIfError(deleteError);
+
   if (rows.length) {
     const { error: messageError } = await supabase
       .from('exercise_builder_diagnostic_messages')
-      .upsert(rows, { onConflict: 'diagnostic_code,language,message_level' });
+      .insert(rows);
     throwIfError(messageError);
   }
 
