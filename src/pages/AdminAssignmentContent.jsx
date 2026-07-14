@@ -202,7 +202,7 @@ export default function AdminAssignmentContent() {
   return (
     <>
       <SEO title="Gestisci assegnazione | Sblocco Inglese" description="Modifica, completa e pubblica un’assegnazione." />
-      <section className="section-shell py-12 lg:py-16">
+      <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-6xl">
           <div className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-soft sm:p-8">
             <span className="eyebrow">Assegnazione</span>
@@ -210,7 +210,7 @@ export default function AdminAssignmentContent() {
               <div>
                 <h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">Gestisci assegnazione</h1>
                 <div className="mt-3 flex flex-wrap gap-2 text-xs font-black">
-                  {assignment ? <span className="rounded-full bg-linen px-3 py-1.5">Stato: {assignment.status}</span> : null}
+                  {assignment ? <span className="rounded-full bg-linen px-3 py-1.5 text-ink dark:bg-white/10 dark:text-white">Stato: {assignment.status}</span> : null}
                   {isOverdue ? <span className="rounded-full bg-red-100 px-3 py-1.5 text-red-800">Scaduta</span> : null}
                 </div>
               </div>
@@ -229,8 +229,8 @@ export default function AdminAssignmentContent() {
                 <div className="mt-5 grid gap-5">
                   <label><span className="text-sm font-black">Titolo</span><input value={title} onChange={(e) => setTitle(e.target.value)} className={fieldClass} /></label>
                   <label><span className="text-sm font-black">Messaggio visibile allo studente</span><textarea rows={5} value={learnerMessage} onChange={(e) => setLearnerMessage(e.target.value)} className={fieldClass} /></label>
-                  <label className="rounded-xl border border-amber-200 bg-amber-50 p-4"><span className="text-sm font-black text-amber-950">Nota privata admin</span><textarea rows={4} value={privateNote} onChange={(e) => setPrivateNote(e.target.value)} className={fieldClass} /></label>
-                  <label className="flex items-start gap-3 rounded-xl border border-ink/10 bg-linen dark:border-white/10 dark:bg-white/10 dark:text-white/40 dark:bg-white/[0.05] p-4"><input type="checkbox" checked={required} onChange={(e) => setRequired(e.target.checked)} className="mt-1" /><span className="text-sm font-black">Attività obbligatoria</span></label>
+                  <label className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-300/30 dark:bg-amber-300/10"><span className="text-sm font-black text-amber-950 dark:text-amber-100">Nota privata admin</span><textarea rows={4} value={privateNote} onChange={(e) => setPrivateNote(e.target.value)} className={fieldClass} /></label>
+                  <label className="flex items-start gap-3 rounded-xl border border-ink/10 bg-linen p-4 text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"><input type="checkbox" checked={required} onChange={(e) => setRequired(e.target.checked)} className="mt-1" /><span className="text-sm font-black">Attività obbligatoria</span></label>
                   <div className="grid gap-5 sm:grid-cols-2">
                     <label><span className="text-sm font-black">Scadenza</span><input type="datetime-local" value={deadline} onChange={(e) => setDeadline(e.target.value)} className={fieldClass} /><span className="mt-2 block text-xs font-semibold text-ink/50 dark:text-white/50">Dopo la scadenza l’attività resta accessibile, ma viene segnalata come scaduta.</span></label>
                     <label><span className="text-sm font-black">Tempo stimato, minuti</span><input type="number" min="1" value={estimatedMinutes} onChange={(e) => setEstimatedMinutes(e.target.value)} className={fieldClass} /></label>
