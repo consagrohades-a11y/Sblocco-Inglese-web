@@ -9,7 +9,7 @@ function resultClasses(status) {
   return 'border-rose-300 bg-rose-50 text-rose-950 dark:border-rose-300/30 dark:bg-rose-400/10 dark:text-rose-100';
 }
 
-function ResultPanel({ result, showCorrectAnswers = true, showExplanations = true }) {
+function ResultPanel({ result, showScore = true, showCorrectAnswers = true, showExplanations = true }) {
   if (!result) return null;
   const label = result.status === 'correct'
     ? 'Corretto'
@@ -23,7 +23,7 @@ function ResultPanel({ result, showCorrectAnswers = true, showExplanations = tru
     <div className={`mt-5 rounded-xl border p-4 ${resultClasses(result.status)}`}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-black">{label}</p>
-        <p className="text-xs font-black">{Number(result.earned_points || 0).toFixed(1)} / {Number(result.max_points || 0).toFixed(1)} punti</p>
+        {showScore ? <p className="text-xs font-black">{Number(result.earned_points || 0).toFixed(1)} / {Number(result.max_points || 0).toFixed(1)} punti</p> : null}
       </div>
       {showCorrectAnswers && result.correct_answer !== null && result.correct_answer !== undefined ? (
         <div className="mt-3 text-sm leading-6">
@@ -83,12 +83,9 @@ function BlankInput({ blank, value, onChange, select, disabled }) {
 function GapFill({ question, answer, onChange, select = false, disabled }) {
   const values = answer && typeof answer === 'object' && !Array.isArray(answer) ? answer : {};
   const blanks = question.content?.blanks || [];
-  const markers = /(\{\{[^}]+\}\}|_{3,})/g;
-  const parts = question.prompt.split(markers);
+  const parts = question.prompt.split(/(\{\{[^}]+\}\}|_{3,})/g);
   let blankIndex = 0;
-  const hasMarkers = parts.some((part) => markers.test(part));
-  markers.lastIndex = 0;
-
+  const hasMarkers = parts.some((part) => /^\{\{[^}]+\}\}$/.test(part) || /^_{3,}$/.test(part));
   const setBlank = (key, value) => onChange({ ...values, [key]: value });
 
   if (hasMarkers) {
@@ -208,6 +205,7 @@ export default function ExerciseQuestionRenderer({
   answer,
   onChange,
   disabled = false,
+  showScore = true,
   showCorrectAnswers = true,
   showExplanations = true,
 }) {
@@ -235,7 +233,7 @@ export default function ExerciseQuestionRenderer({
         ) : null}
       </div>
 
-      <ResultPanel result={item.result} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} />
+      <ResultPanel result={item.result} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} />
     </article>
   );
 }
