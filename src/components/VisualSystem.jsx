@@ -128,21 +128,21 @@ export function FeatureList({ items, className = '', light = false }) {
 
 export function ProductCard({ label, title, text, meta, to, action = 'Apri', icon: Icon }) {
   return (
-    <article className="brand-card kinetic-card flex h-full flex-col p-5 pt-6 sm:p-6 sm:pt-7">
+    <article className="brand-card kinetic-card flex h-full flex-col p-5 pt-6 dark:border-white/10 dark:bg-[#16211e] sm:p-6 sm:pt-7">
       <div className="flex items-start justify-between gap-3">
         {label ? (
-          <span className="rounded-full bg-mint px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-moss">
+          <span className="rounded-full bg-mint px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-moss dark:bg-emerald-300/15 dark:text-mint">
             {label}
           </span>
         ) : null}
         {Icon ? (
-          <span className="grid h-10 w-10 place-items-center rounded-lg bg-paper text-moss">
+          <span className="grid h-10 w-10 place-items-center rounded-lg bg-paper text-moss dark:bg-white/10 dark:text-mint">
             <Icon aria-hidden="true" className="h-5 w-5" />
           </span>
         ) : null}
       </div>
-      <h3 className="mt-5 text-2xl font-black leading-tight text-ink">{title}</h3>
-      <p className="mt-3 flex-1 text-sm font-semibold leading-6 text-ink/70">{text}</p>
+      <h3 className="mt-5 text-2xl font-black leading-tight text-ink dark:text-white">{title}</h3>
+      <p className="mt-3 flex-1 text-sm font-semibold leading-6 text-ink/70 dark:text-white/70">{text}</p>
       {meta ? <div className="mt-5">{meta}</div> : null}
       {to ? (
         <Link

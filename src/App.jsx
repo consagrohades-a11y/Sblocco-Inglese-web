@@ -18,7 +18,6 @@ import NotFound from './pages/NotFound';
 import ProtectedRoute from './auth/ProtectedRoute';
 import AdminRoute from './auth/AdminRoute';
 import { legalPages } from './data/legalPages';
-import './trainer-overrides.css';
 
 const Trainer = lazy(() => import('./pages/Trainer'));
 const GeneralExpressionTrainer = lazy(() => import('./pages/GeneralExpressionTrainer'));
@@ -54,6 +53,7 @@ const AdminContentOverview = lazy(() => import('./pages/AdminContentOverview'));
 const AdminSectionOverview = lazy(() => import('./pages/AdminSectionOverview'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
+const LearnerProgress = lazy(() => import('./pages/LearnerProgress'));
 
 function ScrollManager() {
   const location = useLocation();
@@ -116,6 +116,7 @@ export default function App() {
             <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
             <Route path="/assignments" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
             <Route path="/assignments/:assignmentId" element={<ProtectedRoute><LearnerAssignmentDetail /></ProtectedRoute>} />
+            <Route path="/progressi" element={<ProtectedRoute><LearnerProgress /></ProtectedRoute>} />
             <Route path="/admin" element={<AdminRoute><AdminShell /></AdminRoute>}>
               <Route index element={<AdminDashboard />} />
               <Route path="learners" element={<AdminLearners />} />

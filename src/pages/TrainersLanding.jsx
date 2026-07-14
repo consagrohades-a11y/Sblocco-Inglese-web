@@ -31,7 +31,14 @@ const srsSteps = [
   'Scegli trainer, categorie e livello.',
   'Vedi prima le card da ripassare oggi.',
   'Scopri la risposta, poi scegli Again / Hard / Good / Easy.',
-  'Il sistema salva i progressi su questo browser.',
+  'Con un percorso guidato i progressi vengono sincronizzati sul tuo account.',
+];
+
+const guidedTrainerScopes = [
+  ['word-trainer', 'word', null],
+  ['general-expression', 'expression', 'general'],
+  ['business-expression', 'expression', 'business'],
+  ['hospitality-expression', 'expression', 'hospitality'],
 ];
 
 function TrainerMeta({ trainer }) {
@@ -51,6 +58,7 @@ function TrainerMeta({ trainer }) {
 
 export default function TrainersLanding() {
   const [publishedWords, setPublishedWords] = useState(null);
+  const [guidedCounts, setGuidedCounts] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -59,6 +67,33 @@ export default function TrainersLanding() {
       if (active && !error) setPublishedWords(data || []);
     }
     loadWordMeta();
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    async function loadGuidedTrainerCounts() {
+      const { data: authData } = await supabase.auth.getSession();
+      if (!authData?.session) {
+        if (active) setGuidedCounts(null);
+        return;
+      }
+      const responses = await Promise.all(guidedTrainerScopes.map(([, itemType, domain]) => supabase.rpc('get_learner_srs_scope', {
+        p_item_type: itemType,
+        p_domain: domain,
+      })));
+      if (!active || responses.some((response) => response.error)) return;
+      const guided = responses.some((response) => Boolean(response.data?.guided));
+      if (!guided) {
+        setGuidedCounts(null);
+        return;
+      }
+      setGuidedCounts(Object.fromEntries(responses.map((response, index) => [
+        guidedTrainerScopes[index][0],
+        response.data?.item_ids?.length || 0,
+      ])));
+    }
+    loadGuidedTrainerCounts();
     return () => { active = false; };
   }, []);
 
@@ -72,6 +107,39 @@ export default function TrainersLanding() {
   }), [publishedWords]);
 
   const totalCards = liveTrainerConfig.reduce((sum, trainer) => sum + trainer.cardCount, 0);
+
+  if (guidedCounts) {
+    const assignedTrainers = liveTrainerConfig
+      .filter((trainer) => guidedCounts[trainer.id] > 0)
+      .map((trainer) => ({ ...trainer, cardCount: guidedCounts[trainer.id] }));
+    return (
+      <>
+        <SEO title="I tuoi Trainer | Sblocco Inglese" description="Le card assegnate nel tuo percorso guidato." />
+        <TrainerLayout>
+          <div className="rounded-xl border border-moss/20 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+            <span className="eyebrow">Il tuo ripasso</span>
+            <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-5xl">Scegli il Trainer da aprire</h1>
+            <p className="mt-4 max-w-3xl text-base leading-7 text-ink/70 dark:text-white/70">Qui trovi soltanto i Trainer che contengono card assegnate dalla tua insegnante. Ogni sessione propone fino a 10 card alla volta.</p>
+            <CTAButton href="/assignments" variant="secondary" className="mt-6">Torna alle attività</CTAButton>
+          </div>
+
+          <div className="mt-8 grid gap-5 sm:grid-cols-2">
+            {assignedTrainers.map((trainer) => (
+              <ProductCard
+                key={trainer.id}
+                label={`${trainer.cardCount} card assegnate`}
+                title={trainer.title}
+                text={trainer.description}
+                to={trainer.route}
+                action="Apri questo Trainer"
+                meta={<div className="rounded-lg bg-paper p-4 dark:bg-white/10"><img src={trainer.visual} alt="" className="mx-auto h-24 w-24 object-contain" /></div>}
+              />
+            ))}
+          </div>
+        </TrainerLayout>
+      </>
+    );
+  }
 
   return (
     <>
@@ -123,7 +191,7 @@ export default function TrainersLanding() {
         </div>
 
         <div className="mt-12">
-          <SectionHeader eyebrow="Scegli un trainer" icon={CheckCircle2} title="Quattro deck, un unico sistema." copy="Ogni trainer ha categorie e progressi separati. Puoi usarli in modo leggero, senza login, direttamente dal browser. 10 card per deck al giorno, così è realmente efficace." />
+          <SectionHeader eyebrow="Scegli un trainer" icon={CheckCircle2} title="Quattro deck, un unico sistema." copy="Ogni trainer ha categorie e progressi separati. Puoi usarli in modo leggero, senza login, direttamente dal browser. Ogni sessione propone fino a 10 card alla volta." />
           <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {liveTrainerConfig.map((trainer) => (
               <ProductCard

@@ -1,8 +1,10 @@
 import React from 'react';
-import { Brain, Dumbbell, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { Brain, ClipboardList, Dumbbell, Menu, X } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext.jsx';
 import { trainerConfig, trainerHome } from '../data/trainerConfig';
+import { supabase } from '../lib/supabaseClient.js';
 
 const practiceHome = {
   id: 'practice',
@@ -10,6 +12,20 @@ const practiceHome = {
   title: 'Pratica con le card',
   shortTitle: 'Pratica',
 };
+
+const assignmentsHome = {
+  id: 'assignments',
+  route: '/assignments',
+  title: 'Le mie attività',
+  shortTitle: 'Attività',
+};
+
+const guidedTrainerScopes = [
+  ['word-trainer', 'word', null],
+  ['general-expression', 'expression', 'general'],
+  ['business-expression', 'expression', 'business'],
+  ['hospitality-expression', 'expression', 'hospitality'],
+];
 
 function navClass({ isActive }) {
   return `focus-ring rounded-full px-3 py-2 text-sm font-black transition ${
@@ -21,7 +37,35 @@ function navClass({ isActive }) {
 
 export default function TrainerNav() {
   const [open, setOpen] = useState(false);
-  const items = [trainerHome, practiceHome, ...trainerConfig];
+  const [guidedCounts, setGuidedCounts] = useState(null);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      setGuidedCounts(null);
+      return undefined;
+    }
+    let active = true;
+    Promise.all(guidedTrainerScopes.map(([, itemType, domain]) => supabase.rpc('get_learner_srs_scope', {
+      p_item_type: itemType,
+      p_domain: domain,
+    }))).then((responses) => {
+      if (!active || responses.some((response) => response.error)) return;
+      if (!responses.some((response) => Boolean(response.data?.guided))) {
+        setGuidedCounts(null);
+        return;
+      }
+      setGuidedCounts(Object.fromEntries(responses.map((response, index) => [
+        guidedTrainerScopes[index][0],
+        response.data?.item_ids?.length || 0,
+      ])));
+    });
+    return () => { active = false; };
+  }, [user?.id]);
+
+  const items = useMemo(() => guidedCounts
+    ? [assignmentsHome, trainerHome, ...trainerConfig.filter((trainer) => guidedCounts[trainer.id] > 0)]
+    : [trainerHome, practiceHome, ...trainerConfig], [guidedCounts]);
 
   return (
     <div className="rounded-lg border border-ink/10 bg-white/90 p-3 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/[0.06]">
@@ -40,6 +84,7 @@ export default function TrainerNav() {
           {items.map((item) => (
             <NavLink key={item.id} to={item.route} end={item.route === '/trainers'} className={navClass}>
               {item.id === 'practice' ? <Dumbbell aria-hidden="true" className="mr-1.5 inline h-4 w-4" /> : null}
+              {item.id === 'assignments' ? <ClipboardList aria-hidden="true" className="mr-1.5 inline h-4 w-4" /> : null}
               {item.shortTitle}
             </NavLink>
           ))}

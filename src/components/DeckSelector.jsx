@@ -42,6 +42,12 @@ export default function DeckSelector({
   dark = false,
 }) {
   const hasFilters = selectedCategories.length > 0 || selectedLevels.length > 0;
+  const filterSummary = hasFilters
+    ? [
+        selectedCategories.length ? `${selectedCategories.length} ${selectedCategories.length === 1 ? 'categoria' : 'categorie'}` : '',
+        selectedLevels.length ? `${selectedLevels.length} ${selectedLevels.length === 1 ? 'livello' : 'livelli'}` : '',
+      ].filter(Boolean).join(' e ')
+    : 'Nessun filtro: tutte le card assegnate.';
 
   return (
     <section className={`min-w-0 max-w-full overflow-hidden rounded-lg border p-3 shadow-sm sm:p-4 ${dark ? 'border-white/10 bg-white/[0.06]' : 'border-ink/10 bg-white/80'}`}>
@@ -51,8 +57,8 @@ export default function DeckSelector({
             <SlidersHorizontal aria-hidden="true" className="h-4 w-4" />
           </span>
           <div className="min-w-0">
-            <h2 className={`text-sm font-black ${dark ? 'text-white' : 'text-ink'}`}>Filters</h2>
-            <p className={`text-xs font-semibold ${dark ? 'text-white/60' : 'text-ink/55'}`}>Nessuna selezione = tutto il deck.</p>
+            <h2 className={`text-sm font-black ${dark ? 'text-white' : 'text-ink'}`}>Filtri</h2>
+            <p className={`text-xs font-semibold ${dark ? 'text-white/60' : 'text-ink/55'}`}>{filterSummary}</p>
           </div>
         </div>
         <button
@@ -66,13 +72,13 @@ export default function DeckSelector({
           }`}
         >
           <X aria-hidden="true" className="h-3.5 w-3.5" />
-          Clear filters
+          Azzera
         </button>
       </div>
 
       <div className="mt-4 grid min-w-0 gap-3">
         <div className="min-w-0">
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Categories</p>
+          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Categorie</p>
           <div className="mt-2 flex min-w-0 max-w-full flex-wrap gap-2" aria-label="Filtra per categoria">
             {categories.map((category) => (
               <PillButton
@@ -89,7 +95,7 @@ export default function DeckSelector({
         </div>
 
         <div className={`min-w-0 border-t pt-3 ${dark ? 'border-white/10' : 'border-ink/10'}`}>
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Levels</p>
+          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Livelli</p>
           <div className="mt-2 flex min-w-0 max-w-full flex-wrap gap-2" aria-label="Filtra per livello">
             {levels.map((level) => (
               <PillButton key={level} active={selectedLevels.includes(level)} onClick={() => onToggleLevel(level)} dark={dark}>
