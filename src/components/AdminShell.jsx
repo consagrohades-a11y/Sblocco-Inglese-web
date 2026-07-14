@@ -47,6 +47,7 @@ const navigationGroups = [
       { label: 'Exercise Composer', to: '/admin/content/exercises/composer', icon: ClipboardList },
       { label: 'Collections', to: '/admin/content/exercises/collections', icon: Blocks },
       { label: 'Risultati esercizi', to: '/admin/content/exercises/results', icon: BarChart3 },
+      { label: 'Pulizia e archivio', to: '/admin/content/exercises/maintenance', icon: FileCheck2 },
       { label: 'Word Trainer', to: '/admin/content/words', icon: BookOpen },
       { label: 'General Expressions', to: '/admin/content/expressions', icon: BookOpen },
       { label: 'Business Expressions', to: '/admin/content/business-expressions', icon: BookOpen },
@@ -246,7 +247,7 @@ export default function AdminShell() {
             <button
               type="button"
               onClick={() => setMobileOpen(false)}
-              className="focus-ring absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/15 hover:text-white"
+              className="focus-ring absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/15"
               aria-label="Chiudi menu"
             >
               <X aria-hidden="true" className="h-5 w-5" />
