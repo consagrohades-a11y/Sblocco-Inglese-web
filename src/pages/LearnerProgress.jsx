@@ -49,15 +49,20 @@ function MetricCard({ icon: Icon, eyebrow, value, detail, tone = 'emerald' }) {
   const toneClasses = tone === 'violet'
     ? 'bg-[#8b5cf6]/12 text-[#d3c8ff] ring-[#8b5cf6]/20'
     : 'bg-[#19a684]/12 text-[#9ce8d3] ring-[#19a684]/20';
+  const cardClasses = tone === 'violet'
+    ? 'border-[#9b87f5]/20 bg-gradient-to-br from-[#8b5cf6]/[0.12] via-white/[0.055] to-white/[0.025]'
+    : 'border-[#5ad6b3]/20 bg-gradient-to-br from-[#19a684]/[0.12] via-white/[0.055] to-white/[0.025]';
 
   return (
-    <article className="rounded-2xl border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.16)]">
-      <div className={`grid h-11 w-11 place-items-center rounded-xl ring-1 ${toneClasses}`}>
+    <article className={`relative overflow-hidden rounded-2xl border p-5 shadow-[0_18px_50px_rgba(0,0,0,0.16)] ${cardClasses}`}>
+      <div aria-hidden="true" className={`absolute -right-10 -top-12 h-28 w-28 rounded-full blur-2xl ${tone === 'violet' ? 'bg-[#8b5cf6]/20' : 'bg-[#22c59d]/18'}`} />
+      <div className={`relative grid h-11 w-11 place-items-center rounded-xl ring-1 ${toneClasses}`}>
         <Icon aria-hidden="true" className="h-5 w-5" />
       </div>
-      <p className="mt-5 text-xs font-black uppercase tracking-[0.12em] text-white/55">{eyebrow}</p>
-      <p className="mt-2 text-3xl font-black tracking-[-0.04em] text-white">{value}</p>
-      <p className="mt-1 text-sm font-semibold leading-6 text-white/58">{detail}</p>
+      <p className="relative mt-5 text-xs font-black uppercase tracking-[0.12em] text-white/55">{eyebrow}</p>
+      <p className="relative mt-2 text-3xl font-black tracking-[-0.04em] text-white">{value}</p>
+      <p className="relative mt-1 text-sm font-semibold leading-6 text-white/58">{detail}</p>
+      <div aria-hidden="true" className={`absolute inset-x-0 bottom-0 h-0.5 ${tone === 'violet' ? 'bg-gradient-to-r from-transparent via-[#9b87f5]/70 to-transparent' : 'bg-gradient-to-r from-transparent via-[#53d6b3]/70 to-transparent'}`} />
     </article>
   );
 }
@@ -73,6 +78,33 @@ function ProgressBar({ label, value, total, color = 'bg-[#22a988]' }) {
       </div>
       <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-white/[0.08]">
         <div className={`h-full rounded-full transition-all duration-500 ${color}`} style={{ width: `${percentage}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function ProgressIllustration() {
+  return (
+    <div className="relative mx-auto h-44 w-72" aria-hidden="true">
+      <div className="absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#68d8ba]/20 bg-[#19a684]/[0.055] shadow-[0_0_60px_rgba(25,166,132,0.12)]" />
+      <div className="absolute left-1/2 top-1/2 h-24 w-56 -translate-x-1/2 -translate-y-1/2 rotate-[-12deg] rounded-[50%] border border-[#9b87f5]/25" />
+      <div className="absolute left-1/2 top-1/2 h-20 w-52 -translate-x-1/2 -translate-y-1/2 rotate-[24deg] rounded-[50%] border border-[#68d8ba]/20" />
+
+      <div className="absolute left-1/2 top-1/2 grid h-20 w-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-3xl border border-[#80dfc5]/25 bg-gradient-to-br from-[#1b8f76]/35 to-[#6f4bb7]/20 text-[#b9f1e1] shadow-[0_18px_50px_rgba(0,0,0,0.25),0_0_28px_rgba(139,92,246,0.14)]">
+        <Brain className="h-9 w-9" />
+      </div>
+
+      <div className="absolute left-5 top-5 grid h-10 w-10 place-items-center rounded-2xl border border-[#68d8ba]/20 bg-[#10241f] text-[#8fe5cc] shadow-lg">
+        <BookOpenCheck className="h-5 w-5" />
+      </div>
+      <div className="absolute right-4 top-8 grid h-9 w-9 place-items-center rounded-full border border-[#9b87f5]/25 bg-[#1b1728] text-[#c9bbff] shadow-lg">
+        <Sparkles className="h-4 w-4" />
+      </div>
+      <div className="absolute bottom-3 right-10 grid h-11 w-11 place-items-center rounded-2xl border border-[#68d8ba]/20 bg-[#10241f] text-[#8fe5cc] shadow-lg">
+        <CheckCircle2 className="h-5 w-5" />
+      </div>
+      <div className="absolute bottom-5 left-8 grid h-9 w-9 place-items-center rounded-full border border-[#9b87f5]/25 bg-[#1b1728] text-[#c9bbff] shadow-lg">
+        <Flame className="h-4 w-4" />
       </div>
     </div>
   );
@@ -204,7 +236,7 @@ export default function LearnerProgress() {
         </div>
 
         <div className="section-shell relative py-10 sm:py-14 lg:py-16">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-[#8de1c9]/20 bg-[#19a684]/10 px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-[#a6ead7]">
                 <BarChart3 aria-hidden="true" className="h-4 w-4" />
@@ -218,10 +250,13 @@ export default function LearnerProgress() {
               </p>
             </div>
 
-            <Link to={stats.openAssignments.length > 0 ? '/assignments' : '/trainers'} className="focus-ring inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#16866f] px-6 py-3 text-sm font-black text-white shadow-[0_14px_36px_rgba(14,124,102,0.25),0_0_26px_rgba(139,92,246,0.12)] transition hover:-translate-y-0.5 hover:bg-[#1a9e83]">
-              {stats.openAssignments.length > 0 ? 'Continua le attività' : 'Apri i Trainer'}
-              <ArrowRight aria-hidden="true" className="h-4 w-4" />
-            </Link>
+            <div className="grid justify-items-start gap-3 lg:justify-items-center">
+              <div className="hidden lg:block"><ProgressIllustration /></div>
+              <Link to={stats.openAssignments.length > 0 ? '/assignments' : '/trainers'} className="focus-ring inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#16866f] to-[#1a9a7e] px-6 py-3 text-sm font-black text-white shadow-[0_14px_36px_rgba(14,124,102,0.25),0_0_26px_rgba(139,92,246,0.12)] transition hover:-translate-y-0.5 hover:brightness-110">
+                {stats.openAssignments.length > 0 ? 'Continua le attività' : 'Apri i Trainer'}
+                <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
 
           {loading ? (
@@ -245,7 +280,7 @@ export default function LearnerProgress() {
               </div>
 
               <div className="mt-6 grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
-                <article className="rounded-3xl border border-white/10 bg-white/[0.055] p-6 shadow-[0_22px_70px_rgba(0,0,0,0.18)] sm:p-7">
+                <article className="rounded-3xl border border-[#65d6b8]/15 bg-gradient-to-br from-[#19a684]/[0.07] via-white/[0.05] to-transparent p-6 shadow-[0_22px_70px_rgba(0,0,0,0.18)] sm:p-7">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <p className="text-xs font-black uppercase tracking-[0.12em] text-[#8edfc8]">Ripasso SRS</p>
@@ -275,7 +310,7 @@ export default function LearnerProgress() {
                   )}
                 </article>
 
-                <article className="rounded-3xl border border-white/10 bg-white/[0.055] p-6 shadow-[0_22px_70px_rgba(0,0,0,0.18)] sm:p-7">
+                <article className="rounded-3xl border border-[#9b87f5]/15 bg-gradient-to-br from-[#8b5cf6]/[0.07] via-white/[0.05] to-transparent p-6 shadow-[0_22px_70px_rgba(0,0,0,0.18)] sm:p-7">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-xs font-black uppercase tracking-[0.12em] text-[#c8baff]">Ultimi 7 giorni</p>
