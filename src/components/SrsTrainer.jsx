@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { CalendarClock, CheckCircle2, Moon, RotateCcw, Sparkles, Sun } from 'lucide-react';
+import { ArrowLeft, CalendarClock, CheckCircle2, Moon, RotateCcw, Sparkles, Sun } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import DeckSelector from './DeckSelector';
 import ReviewStats from './ReviewStats';
 import SEO from './SEO';
@@ -99,6 +100,9 @@ export default function SrsTrainer({
   initialProgress = {},
   onReview,
   scopeNotice = '',
+  persistLocalProgress = true,
+  allowProgressReset = true,
+  returnTo = '',
 }) {
   const filtersRef = useRef(null);
   const mobileFiltersRef = useRef(null);
@@ -108,14 +112,18 @@ export default function SrsTrainer({
   const targetLabel = trainerType === 'word' ? 'Word' : 'Expression';
   const targetPluralLabel = trainerType === 'word' ? 'words' : 'expressions';
   const [progress, setProgress] = useState(() => cleanProgress({
-    ...loadProgress(trainerCards, storageKey),
+    ...(persistLocalProgress ? loadProgress(trainerCards, storageKey) : {}),
     ...initialProgress,
   }, trainerCards));
   const progressRef = useRef(progress);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedLevels, setSelectedLevels] = useState([]);
   const [now, setNow] = useState(() => new Date());
-  const [sessionQueue, setSessionQueue] = useState([]);
+  const [sessionQueue, setSessionQueue] = useState(() => buildReviewQueue(trainerCards, progress, [], {
+    today: getTodayISO(new Date()),
+    totalLimit: SESSION_LIMIT,
+    newLimit: DAILY_NEW_LIMIT,
+  }).map((card) => card.id));
   const [sessionReviewedCount, setSessionReviewedCount] = useState(0);
   const [sessionReviewedIds, setSessionReviewedIds] = useState([]);
   const [sessionTargetCount, setSessionTargetCount] = useState(0);
@@ -219,9 +227,9 @@ export default function SrsTrainer({
   }, [trainerCards, validationOptions]);
 
   useEffect(() => {
-    saveProgress(progress, storageKey);
+    if (persistLocalProgress) saveProgress(progress, storageKey);
     progressRef.current = progress;
-  }, [progress, storageKey]);
+  }, [persistLocalProgress, progress, storageKey]);
 
   useEffect(() => {
     window.localStorage.setItem(themeStorageKey, theme);
@@ -242,6 +250,14 @@ export default function SrsTrainer({
     setAnswerVisible(false);
     setSessionStep((step) => step + 1);
   }, [selectedCategoryKey, selectedLevelKey, buildSessionIds]);
+
+  useEffect(() => {
+    if (currentCard || sessionReviewedCount > 0 || filteredCards.length === 0) return;
+    const recoveredIds = buildSessionIds();
+    if (!recoveredIds.length) return;
+    setSessionQueue(recoveredIds);
+    setSessionTargetCount(recoveredIds.length);
+  }, [currentCard, sessionReviewedCount, filteredCards.length, buildSessionIds]);
 
   useEffect(() => {
     if (sessionQueue.length > 0 && !currentCard) {
@@ -345,7 +361,7 @@ export default function SrsTrainer({
         newLimit: DAILY_NEW_LIMIT,
       }).map((card) => card.id);
       setProgress({});
-      saveProgress({}, storageKey);
+      if (persistLocalProgress) saveProgress({}, storageKey);
       setNow(new Date());
       setSessionQueue(resetQueue);
       setSessionReviewedCount(0);
@@ -435,18 +451,21 @@ export default function SrsTrainer({
                 {isDark ? <Sun aria-hidden="true" className="h-4 w-4" /> : <Moon aria-hidden="true" className="h-4 w-4" />}
                 {isDark ? 'Light' : 'Dark'}
               </button>
-              <button
-                type="button"
-                onClick={handleReset}
-                className={`focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-extrabold transition lg:justify-self-end ${
-                  isDark
-                    ? 'border-white/15 bg-white/[0.08] text-white hover:border-coral/40 hover:bg-blush hover:text-ink'
-                    : 'border-ink/15 bg-white text-ink hover:border-coral/30 hover:bg-blush'
-                }`}
-              >
-                <RotateCcw aria-hidden="true" className="h-4 w-4" />
-                Azzera progressi
-              </button>
+              {returnTo ? <Link to={returnTo} className={`focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-extrabold transition ${isDark ? 'border-white/15 bg-white/[0.08] text-white hover:bg-white/15' : 'border-ink/15 bg-white text-ink hover:bg-linen'}`}><ArrowLeft aria-hidden="true" className="h-4 w-4" />Torna all’attività</Link> : null}
+              {allowProgressReset ? (
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className={`focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-extrabold transition lg:justify-self-end ${
+                    isDark
+                      ? 'border-white/15 bg-white/[0.08] text-white hover:border-coral/40 hover:bg-blush hover:text-ink'
+                      : 'border-ink/15 bg-white text-ink hover:border-coral/30 hover:bg-blush'
+                  }`}
+                >
+                  <RotateCcw aria-hidden="true" className="h-4 w-4" />
+                  Azzera progressi
+                </button>
+              ) : null}
             </div>
           </div>
 
@@ -458,11 +477,12 @@ export default function SrsTrainer({
             ) : null}
             <aside className="grid min-w-0 gap-4 lg:sticky lg:top-24">
               <ReviewStats
-                dueToday={stats.due}
-                newAvailable={stats.newAvailableToday}
+                totalCards={trainerCards.length}
+                filteredCards={filteredCards.length}
                 reviewedToday={stats.reviewedToday}
                 sessionReviewed={sessionReviewedCount}
                 sessionLimit={activeSessionTarget}
+                guided={Boolean(scopeNotice)}
                 dark={isDark}
                 compact
               />
