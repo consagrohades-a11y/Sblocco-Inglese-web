@@ -4,6 +4,7 @@ import {
   Blocks,
   BookOpen,
   ClipboardList,
+  FileCheck2,
   LayoutDashboard,
   Menu,
   PanelLeftClose,
@@ -35,7 +36,8 @@ const navigationGroups = [
     label: 'Contenuti',
     items: [
       { label: 'Panoramica', to: '/admin/content', icon: BookOpen, end: true },
-      { label: 'Exercise Builder', to: '/admin/content/exercises', icon: Blocks },
+      { label: 'Exercise Builder', to: '/admin/content/exercises', icon: Blocks, end: true },
+      { label: 'Revisioni esercizi', to: '/admin/content/exercises/review', icon: FileCheck2 },
       { label: 'Word Trainer', to: '/admin/content/words', icon: BookOpen },
       { label: 'General Expressions', to: '/admin/content/expressions', icon: BookOpen },
       { label: 'Business Expressions', to: '/admin/content/business-expressions', icon: BookOpen },
