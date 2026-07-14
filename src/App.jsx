@@ -60,6 +60,7 @@ const AdminExerciseQuestionBank = lazy(() => import('./pages/AdminExerciseQuesti
 const AdminExercisePools = lazy(() => import('./pages/AdminExercisePools'));
 const AdminExerciseComposer = lazy(() => import('./pages/AdminExerciseComposer'));
 const AdminExerciseQuestionEditor = lazy(() => import('./pages/AdminExerciseQuestionEditor'));
+const AdminExerciseCollections = lazy(() => import('./pages/AdminExerciseCollections'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
 const LearnerProgress = lazy(() => import('./pages/LearnerProgress'));
@@ -142,6 +143,7 @@ export default function App() {
               <Route path="content/exercises/questions/edit" element={<AdminExerciseQuestionEditor />} />
               <Route path="content/exercises/pools" element={<AdminExercisePools />} />
               <Route path="content/exercises/composer" element={<AdminExerciseComposer />} />
+              <Route path="content/exercises/collections" element={<AdminExerciseCollections />} />
               <Route path="content/words" element={<AdminWordTrainerContent />} />
               <Route path="content/words/import" element={<AdminWordTrainerImport />} />
               <Route path="content/words/decks" element={<AdminWordDecks />} />
