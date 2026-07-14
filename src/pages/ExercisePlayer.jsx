@@ -32,7 +32,7 @@ function answerIsEmpty(answer, type) {
   return !String(answer).trim();
 }
 
-function SectionScore({ section }) {
+function SectionScore({ section, showScore = true }) {
   if (section.status !== 'completed') return null;
   const earned = Number(section.earned_points || 0);
   const maximum = Number(section.max_points || 0);
@@ -41,14 +41,14 @@ function SectionScore({ section }) {
     <div className="rounded-2xl border border-moss/20 bg-mint/25 p-5 dark:border-emerald-300/25 dark:bg-emerald-400/10">
       <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Sezione completata</p>
       <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
-        <div><p className="text-3xl font-black text-ink dark:text-white">{percentage}%</p><p className="mt-1 text-sm font-semibold text-ink/60 dark:text-white/60">{earned.toFixed(1)} / {maximum.toFixed(1)} punti</p></div>
-        <p className="max-w-md text-sm leading-6 text-ink/65 dark:text-white/65">Le risposte sono state salvate. Il feedback visibile dipende dalle impostazioni scelte per questa sezione.</p>
+        {showScore ? <div><p className="text-3xl font-black text-ink dark:text-white">{percentage}%</p><p className="mt-1 text-sm font-semibold text-ink/60 dark:text-white/60">{earned.toFixed(1)} / {maximum.toFixed(1)} punti</p></div> : <p className="text-lg font-black text-ink dark:text-white">Le risposte sono state salvate.</p>}
+        <p className="max-w-md text-sm leading-6 text-ink/65 dark:text-white/65">Il feedback visibile dipende dalle impostazioni scelte per questa sezione.</p>
       </div>
     </div>
   );
 }
 
-function FinalResult({ payload, assignmentId }) {
+function FinalResult({ payload, assignmentId, resourceId }) {
   const attempt = payload.attempt;
   const settings = payload.exercise.settings || {};
   const summary = attempt.result_summary || {};
@@ -63,7 +63,7 @@ function FinalResult({ payload, assignmentId }) {
             <p className="mt-2 text-5xl font-black">{Math.round(Number(attempt.score || 0))}%</p>
             <p className="mt-2 text-sm font-bold opacity-75">{Number(attempt.earned_points || 0).toFixed(1)} / {Number(attempt.max_points || 0).toFixed(1)} punti</p>
           </div>
-        ) : null}
+        ) : <p className="mt-7 rounded-xl border border-moss/20 bg-mint/20 p-5 text-sm font-bold text-ink dark:border-emerald-300/20 dark:bg-emerald-400/10 dark:text-white">La consegna è stata registrata. Il punteggio non è visibile per questa attività.</p>}
         <div className="mt-6 grid gap-3 sm:grid-cols-4">
           {[['Corrette', summary.correct || 0], ['Quasi corrette', summary.nearly_correct || 0], ['Da rivedere', summary.incorrect || 0], ['Non risposte', summary.unanswered || 0]].map(([label, value]) => (
             <div key={label} className="rounded-xl border border-ink/10 bg-linen/40 p-4 dark:border-white/10 dark:bg-white/[0.05]"><p className="text-2xl font-black text-ink dark:text-white">{value}</p><p className="mt-1 text-xs font-bold text-ink/55 dark:text-white/55">{label}</p></div>
@@ -71,7 +71,7 @@ function FinalResult({ payload, assignmentId }) {
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link to={`/assignments/${assignmentId}`} className="focus-ring rounded-full bg-ink px-5 py-3 text-sm font-black text-white dark:bg-emerald-300 dark:text-[#102019]">Torna all’attività</Link>
-          {settings.allow_retry !== false ? <Link to={`/exercises?assignmentId=${assignmentId}&resourceId=${payload.exercise.resource_id || ''}`} className="focus-ring rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white">Riprova</Link> : null}
+          {settings.allow_retry !== false ? <Link to={`/exercises?assignmentId=${assignmentId}&resourceId=${resourceId}&newAttempt=1`} className="focus-ring rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white">Riprova con un nuovo tentativo</Link> : null}
         </div>
       </div>
 
@@ -80,7 +80,7 @@ function FinalResult({ payload, assignmentId }) {
           <section key={section.id} className="rounded-2xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-[#16211e] sm:p-7">
             <h2 className="text-xl font-black text-ink dark:text-white">{section.title}</h2>
             <div className="mt-5 grid gap-4">
-              {section.questions.map((item) => <ExerciseQuestionRenderer key={item.id} item={item} answer={item.answer} onChange={() => {}} disabled showCorrectAnswers={settings.show_correct_answers !== false} showExplanations={settings.show_explanations !== false} />)}
+              {section.questions.map((item) => <ExerciseQuestionRenderer key={item.id} item={item} answer={item.answer} onChange={() => {}} disabled showScore={settings.show_score !== false} showCorrectAnswers={settings.show_correct_answers !== false} showExplanations={settings.show_explanations !== false} />)}
             </div>
           </section>
         ))}
@@ -93,6 +93,7 @@ export default function ExercisePlayer() {
   const [searchParams] = useSearchParams();
   const assignmentId = searchParams.get('assignmentId') || '';
   const resourceId = searchParams.get('resourceId') || '';
+  const startNew = searchParams.get('newAttempt') === '1';
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -108,9 +109,11 @@ export default function ExercisePlayer() {
         setLoading(false);
         return;
       }
+      setLoading(true);
+      setError('');
       try {
-        const result = await openAssignedExercise({ assignmentId, resourceId });
-        if (active) setPayload({ ...result, exercise: { ...result.exercise, resource_id: resourceId } });
+        const result = await openAssignedExercise({ assignmentId, resourceId, startNew });
+        if (active) setPayload(result);
       } catch (loadError) {
         if (active) setError(loadError.message || 'Non è stato possibile aprire l’esercizio.');
       } finally {
@@ -122,7 +125,7 @@ export default function ExercisePlayer() {
       active = false;
       saveTimers.current.forEach((timer) => window.clearTimeout(timer));
     };
-  }, [assignmentId, resourceId]);
+  }, [assignmentId, resourceId, startNew]);
 
   const sectionIndex = payload?.attempt?.current_section_index || 0;
   const questionIndex = payload?.attempt?.current_question_index || 0;
@@ -153,6 +156,7 @@ export default function ExercisePlayer() {
     } catch (saveError) {
       setSaveStatus('Errore di salvataggio');
       setError(saveError.message || 'Non è stato possibile salvare la risposta.');
+      throw saveError;
     }
   }
 
@@ -162,22 +166,22 @@ export default function ExercisePlayer() {
     const existing = saveTimers.current.get(item.id);
     if (existing) window.clearTimeout(existing);
     const timer = window.setTimeout(() => {
-      persistAnswer(item, answer, currentSectionPosition, currentQuestionPosition);
+      persistAnswer(item, answer, currentSectionPosition, currentQuestionPosition).catch(() => {});
       saveTimers.current.delete(item.id);
     }, 550);
     saveTimers.current.set(item.id, timer);
   }
 
   async function flushSection(section, currentSectionPosition) {
-    const pending = section.questions.map(async (item, index) => {
+    for (let index = 0; index < section.questions.length; index += 1) {
+      const item = section.questions[index];
       const timer = saveTimers.current.get(item.id);
       if (timer) {
         window.clearTimeout(timer);
         saveTimers.current.delete(item.id);
       }
-      return persistAnswer(item, item.answer ?? null, currentSectionPosition, index);
-    });
-    await Promise.all(pending);
+      await persistAnswer(item, item.answer ?? null, currentSectionPosition, index);
+    }
   }
 
   async function completeSection() {
@@ -189,7 +193,7 @@ export default function ExercisePlayer() {
     try {
       await flushSection(currentSection, sectionIndex);
       const result = await completeExerciseSection({ attemptId: payload.attempt.id, sectionId: currentSection.id });
-      setPayload({ ...result, exercise: { ...result.exercise, resource_id: resourceId } });
+      setPayload(result);
     } catch (sectionError) {
       setError(sectionError.message || 'Non è stato possibile completare la sezione.');
     } finally {
@@ -203,7 +207,7 @@ export default function ExercisePlayer() {
     setError('');
     try {
       const result = await submitExerciseAttempt(payload.attempt.id);
-      setPayload({ ...result, exercise: { ...result.exercise, resource_id: resourceId } });
+      setPayload(result);
     } catch (submitError) {
       setError(submitError.message || 'Non è stato possibile consegnare l’esercizio.');
     } finally {
@@ -225,7 +229,7 @@ export default function ExercisePlayer() {
   if (loading) return <div className="section-shell py-16"><div className="mx-auto max-w-3xl rounded-2xl border border-ink/10 bg-white p-8 text-center text-sm font-black dark:border-white/10 dark:bg-[#16211e]">Caricamento esercizio...</div></div>;
   if (error && !payload) return <div className="section-shell py-16"><div className="mx-auto max-w-3xl rounded-2xl border border-red-200 bg-red-50 p-8 text-red-950"><h1 className="text-2xl font-black">Esercizio non disponibile</h1><p className="mt-3 text-sm leading-6">{error}</p><Link to={`/assignments/${assignmentId}`} className="mt-5 inline-flex font-black underline">Torna all’attività</Link></div></div>;
   if (!payload) return null;
-  if (payload.attempt.status === 'submitted') return <><SEO title={`${payload.exercise.title} | Sblocco Inglese`} description="Risultato dell’esercizio assegnato." /><section className="section-shell py-10 lg:py-14"><FinalResult payload={payload} assignmentId={assignmentId} /></section></>;
+  if (payload.attempt.status === 'submitted') return <><SEO title={`${payload.exercise.title} | Sblocco Inglese`} description="Risultato dell’esercizio assegnato." /><section className="section-shell py-10 lg:py-14"><FinalResult payload={payload} assignmentId={assignmentId} resourceId={resourceId} /></section></>;
 
   const progress = totalQuestions ? Math.round((completedQuestions / totalQuestions) * 100) : 0;
   const sectionCompleted = currentSection?.status === 'completed';
@@ -256,8 +260,8 @@ export default function ExercisePlayer() {
 
             {sectionCompleted ? (
               <div className="grid gap-5">
-                <SectionScore section={currentSection} />
-                {currentSection.feedback_timing === 'section_end' ? currentSection.questions.map((item) => <ExerciseQuestionRenderer key={item.id} item={item} answer={item.answer} onChange={() => {}} disabled showCorrectAnswers={settings.show_correct_answers !== false} showExplanations={settings.show_explanations !== false} />) : null}
+                <SectionScore section={currentSection} showScore={settings.show_score !== false} />
+                {currentSection.feedback_timing === 'section_end' ? currentSection.questions.map((item) => <ExerciseQuestionRenderer key={item.id} item={item} answer={item.answer} onChange={() => {}} disabled showScore={settings.show_score !== false} showCorrectAnswers={settings.show_correct_answers !== false} showExplanations={settings.show_explanations !== false} />) : null}
                 <button type="button" disabled={busy} onClick={continueAfterSection} className="justify-self-end rounded-full bg-ink px-6 py-3 text-sm font-black text-white dark:bg-emerald-300 dark:text-[#102019]">{sectionIndex >= payload.sections.length - 1 ? (busy ? 'Consegna...' : 'Concludi esercizio') : 'Continua'}</button>
               </div>
             ) : displayMode === 'all_questions' ? (
