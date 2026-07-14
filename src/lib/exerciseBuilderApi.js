@@ -160,3 +160,11 @@ export async function promoteExerciseBuilderImportItems(batchId, itemIds) {
   if (error) throw error;
   return data;
 }
+
+export async function deleteExerciseBuilderImportBatch(batchId) {
+  const { data, error } = await supabase.rpc('admin_delete_exercise_builder_import_batch', {
+    p_batch_id: batchId,
+  });
+  if (error) throw error;
+  return data || {};
+}
