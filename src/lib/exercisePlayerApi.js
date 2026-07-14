@@ -4,6 +4,23 @@ function throwIfError(error) {
   if (error) throw error;
 }
 
+function currentExerciseVersion(row) {
+  const relation = Array.isArray(row.exercise_builder_exercise_versions)
+    ? row.exercise_builder_exercise_versions[0]
+    : row.exercise_builder_exercise_versions;
+
+  if (!relation) return null;
+
+  const { id: relationVersionId, ...versionFields } = relation;
+  return {
+    ...versionFields,
+    id: row.id,
+    publicId: row.public_id,
+    status: row.status,
+    versionId: row.current_version_id || relationVersionId,
+  };
+}
+
 export async function openAssignedExercise({ assignmentId, resourceId, startNew = false }) {
   const { data, error } = await supabase.rpc('open_assigned_exercise_attempt', {
     p_assignment_id: assignmentId,
@@ -72,18 +89,14 @@ export async function loadPublishedExerciseCatalog() {
       )
     `)
     .eq('status', 'published')
+    .not('current_version_id', 'is', null)
     .order('published_at', { ascending: false });
   throwIfError(error);
 
-  return (data || []).map((row) => ({
-    id: row.id,
-    publicId: row.public_id,
-    status: row.status,
-    versionId: row.current_version_id,
-    ...(Array.isArray(row.exercise_builder_exercise_versions)
-      ? row.exercise_builder_exercise_versions[0]
-      : row.exercise_builder_exercise_versions),
-  }));
+  return (data || []).map((row) => {
+    const item = currentExerciseVersion(row);
+    return item ? { ...item, publishedAt: row.published_at } : null;
+  }).filter(Boolean);
 }
 
 export async function loadExerciseBuilderCatalogForAdmin() {
@@ -107,18 +120,18 @@ export async function loadExerciseBuilderCatalogForAdmin() {
         created_at
       )
     `)
+    .not('current_version_id', 'is', null)
     .order('created_at', { ascending: false });
   throwIfError(error);
-  return (data || []).map((row) => ({
-    id: row.id,
-    publicId: row.public_id,
-    status: row.status,
-    versionId: row.current_version_id,
-    publishedAt: row.published_at,
-    ...(Array.isArray(row.exercise_builder_exercise_versions)
-      ? row.exercise_builder_exercise_versions[0]
-      : row.exercise_builder_exercise_versions),
-  }));
+
+  return (data || []).map((row) => {
+    const item = currentExerciseVersion(row);
+    return item ? {
+      ...item,
+      createdAt: row.created_at,
+      publishedAt: row.published_at,
+    } : null;
+  }).filter(Boolean);
 }
 
 export async function setExerciseBuilderCatalogStatus(entityType, entityId, nextStatus) {
