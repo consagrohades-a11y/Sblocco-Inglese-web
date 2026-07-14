@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
+import ExerciseDiagnosticSummary from '../components/exercises/ExerciseDiagnosticSummary.jsx';
 import ExerciseQuestionRenderer from '../components/exercises/ExerciseQuestionRenderer.jsx';
 import {
   completeExerciseSection,
@@ -70,6 +71,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
             <div key={label} className="rounded-xl border border-ink/10 bg-linen/40 p-4 dark:border-white/10 dark:bg-white/[0.05]"><p className="text-2xl font-black text-ink dark:text-white">{value}</p><p className="mt-1 text-xs font-bold text-ink/55 dark:text-white/55">{label}</p></div>
           ))}
         </div> : null}
+        {settings.show_diagnostic_summary !== false ? <div className="mt-6"><ExerciseDiagnosticSummary summary={summary.diagnostic_summary} /></div> : null}
         <div className="mt-8 flex flex-wrap gap-3">
           <Link to={`/assignments/${assignmentId}`} className="focus-ring rounded-full bg-ink px-5 py-3 text-sm font-black text-white dark:bg-emerald-300 dark:text-[#102019]">Torna all’attività</Link>
           {settings.allow_retry !== false ? <Link to={`/exercises?assignmentId=${assignmentId}&resourceId=${resourceId}&newAttempt=1`} className="focus-ring rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white">Riprova con un nuovo tentativo</Link> : null}
