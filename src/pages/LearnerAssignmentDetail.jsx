@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ArrowLeft, CalendarClock, CheckCircle2, Clock3, Sparkles } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
+import { useAuth } from '../auth/AuthContext.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 
 const trainerDestinations = {
@@ -39,8 +41,14 @@ function resourceDestination(resource, assignmentId) {
   return resource.route;
 }
 
+function firstNameFromProfile(profile, user) {
+  const displayName = profile?.display_name || user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'studente';
+  return String(displayName).trim().split(/\s+/)[0] || 'studente';
+}
+
 export default function LearnerAssignmentDetail() {
   const { assignmentId } = useParams();
+  const { profile, user } = useAuth();
   const [assignment, setAssignment] = useState(null);
   const [resources, setResources] = useState([]);
   const [studyScope, setStudyScope] = useState(null);
@@ -121,91 +129,128 @@ export default function LearnerAssignmentDetail() {
   }, [assignmentId]);
 
   const title = assignment?.title || 'Attività';
+  const firstName = useMemo(() => firstNameFromProfile(profile, user), [profile, user]);
+  const totalActivities = resources.length + (studyScope?.include_in_srs ? trainerBreakdown.length : 0);
 
   return (
     <>
       <SEO title={`${title} | Sblocco Inglese`} description="Dettaglio della tua attività Sblocco Inglese." />
-      <section className="section-shell py-12 dark:bg-[#0f1715] lg:py-16">
+      <section className="section-shell py-10 dark:bg-[#0f1715] lg:py-14">
         <div className="mx-auto max-w-4xl">
-          <Link to="/assignments" className="text-sm font-black text-moss underline dark:text-mint">Torna alle attività</Link>
+          <Link to="/assignments" className="inline-flex items-center gap-2 text-sm font-black text-moss underline dark:text-mint">
+            <ArrowLeft className="h-4 w-4" />Torna alle attività
+          </Link>
 
-          {loading ? <div className="mt-5 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65">Caricamento attività...</div> : null}
-          {error ? <div className="mt-5 border-l-4 border-red-400 bg-red-50 p-5 text-sm font-bold text-red-900">{error}</div> : null}
+          <header className="mt-5 overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-[#16211e]">
+            <div className="relative p-6 sm:p-8 lg:p-10">
+              <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-violet-200/40 blur-3xl dark:bg-violet-400/10" />
+              <div className="pointer-events-none absolute -bottom-20 left-10 h-44 w-44 rounded-full bg-mint/70 blur-3xl dark:bg-emerald-400/10" />
+              <div className="relative">
+                <span className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-violet-800 dark:border-violet-300/20 dark:bg-violet-400/10 dark:text-violet-200">
+                  <Sparkles className="h-3.5 w-3.5" />Benvenuto nel tuo spazio
+                </span>
+                <h1 className="mt-5 text-3xl font-black leading-tight text-ink dark:text-white sm:text-5xl">{firstName}, come stai?</h1>
+                <p className="mt-4 max-w-3xl text-lg font-semibold leading-8 text-ink/65 dark:text-white/65">Ecco cosa devi fare oggi e fino a quando ci rivediamo.</p>
+              </div>
+            </div>
+
+            {!loading && !error && assignment ? (
+              <div className="grid gap-3 border-t border-ink/10 bg-linen/35 p-5 dark:border-white/10 dark:bg-white/[0.035] sm:grid-cols-3 sm:px-8 lg:px-10">
+                <div className="flex items-center gap-3 rounded-2xl border border-ink/10 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-moss dark:text-emerald-300" />
+                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Da completare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{totalActivities || 1} {totalActivities === 1 ? 'attività' : 'attività'}</p></div>
+                </div>
+                <div className="flex items-center gap-3 rounded-2xl border border-ink/10 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
+                  <Clock3 className="h-5 w-5 shrink-0 text-violet-700 dark:text-violet-300" />
+                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Tempo stimato</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{assignment.estimated_minutes ? `${assignment.estimated_minutes} minuti` : 'Segui il tuo ritmo'}</p></div>
+                </div>
+                <div className="flex items-center gap-3 rounded-2xl border border-ink/10 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
+                  <CalendarClock className="h-5 w-5 shrink-0 text-sea dark:text-cyan-200" />
+                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Quando</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{assignment.deadline_at ? formatDate(assignment.deadline_at) : 'Prima della prossima lezione'}</p></div>
+                </div>
+              </div>
+            ) : null}
+          </header>
+
+          {loading ? <div className="mt-5 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 dark:border-white/10 dark:bg-[#16211e] dark:text-white/65">Caricamento attività...</div> : null}
+          {error ? <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-5 text-sm font-bold text-red-900 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100">{error}</div> : null}
 
           {!loading && !error && !assignment ? (
-            <div className="mt-5 rounded-2xl border border-ink/10 bg-white p-7 shadow-sm">
-              <h1 className="text-2xl font-black text-ink">Attività non disponibile</h1>
-              <p className="mt-2 text-sm leading-6 text-ink/65">L’attività potrebbe non appartenere al tuo account, non essere ancora pubblicata oppure non essere più accessibile.</p>
+            <div className="mt-5 rounded-2xl border border-ink/10 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-[#16211e]">
+              <h2 className="text-2xl font-black text-ink dark:text-white">Attività non disponibile</h2>
+              <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">L’attività potrebbe non appartenere al tuo account, non essere ancora pubblicata oppure non essere più accessibile.</p>
             </div>
           ) : null}
 
           {!loading && !error && assignment ? (
-            <article className="mt-5 rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
-              <span className="eyebrow">Attività assegnata</span>
-              <h1 className="mt-4 text-3xl font-black leading-tight text-ink dark:text-white sm:text-4xl">{assignment.title}</h1>
+            <article className="mt-6 overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-[#16211e]">
+              <div className="p-6 sm:p-8">
+                <span className="eyebrow">Il tuo piano</span>
+                <h2 className="mt-4 text-3xl font-black leading-tight text-ink dark:text-white sm:text-4xl">{assignment.title}</h2>
 
-              <div className="mt-6 flex flex-wrap gap-3 text-xs font-black text-ink/60">
-                <span className="rounded-full border border-ink/10 bg-linen px-3 py-1.5 dark:border-white/10 dark:bg-white/10 dark:text-white/70">{assignment.required ? 'Obbligatoria' : 'Facoltativa'}</span>
-                {assignment.estimated_minutes ? <span className="rounded-full border border-ink/10 bg-linen px-3 py-1.5 dark:border-white/10 dark:bg-white/10 dark:text-white/70">{assignment.estimated_minutes} min stimati</span> : null}
-                {assignment.deadline_at ? <span className="rounded-full border border-ink/10 bg-linen px-3 py-1.5 dark:border-white/10 dark:bg-white/10 dark:text-white/70">Scadenza: {formatDate(assignment.deadline_at)}</span> : null}
-              </div>
+                <div className="mt-6 flex flex-wrap gap-3 text-xs font-black text-ink/60 dark:text-white/70">
+                  <span className="rounded-full border border-ink/10 bg-linen px-3 py-1.5 dark:border-white/10 dark:bg-white/10">{assignment.required ? 'Obbligatoria' : 'Facoltativa'}</span>
+                  {assignment.estimated_minutes ? <span className="rounded-full border border-ink/10 bg-linen px-3 py-1.5 dark:border-white/10 dark:bg-white/10">{assignment.estimated_minutes} min stimati</span> : null}
+                  {assignment.deadline_at ? <span className="rounded-full border border-ink/10 bg-linen px-3 py-1.5 dark:border-white/10 dark:bg-white/10">Scadenza: {formatDate(assignment.deadline_at)}</span> : null}
+                </div>
 
-              <section className="mt-8 rounded-xl border border-moss/20 bg-mint/25 p-5 dark:border-emerald-300/25 dark:bg-emerald-400/10">
-                <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-mint">Messaggio per te</p>
-                <p className="mt-3 whitespace-pre-wrap text-base leading-7 text-ink/75 dark:text-white/75">
-                  {assignment.learner_note || 'Non ci sono istruzioni aggiuntive per questa attività.'}
-                </p>
-              </section>
+                <section className="mt-8 rounded-2xl border border-moss/20 bg-mint/25 p-5 dark:border-emerald-300/25 dark:bg-emerald-400/10 sm:p-6">
+                  <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-mint">Messaggio per te</p>
+                  <p className="mt-3 whitespace-pre-wrap text-base leading-7 text-ink/75 dark:text-white/75">
+                    {assignment.learner_note || 'Completa le attività qui sotto con calma. Tutto ciò che salvi resterà disponibile fino alla prossima lezione.'}
+                  </p>
+                </section>
 
-              <section className="mt-8">
-                <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-mint">Contenuti</p>
-                <h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Completa queste attività</h2>
+                <section className="mt-8">
+                  <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-mint">Oggi</p>
+                  <h3 className="mt-2 text-2xl font-black text-ink dark:text-white">Completa queste attività</h3>
 
-                {studyScope?.include_in_srs ? (
-                  <div className="mt-5 rounded-xl border border-sea/25 bg-sea/5 p-5 dark:border-cyan-300/25 dark:bg-cyan-300/[0.08]">
-                    <div>
-                      <p className="text-xs font-black uppercase tracking-wide text-sea dark:text-cyan-200">Card assegnate nei Trainer SRS</p>
-                      <h3 className="mt-2 text-lg font-black text-ink dark:text-white">{studyScope.snapshot_item_count} card totali</h3>
-                      <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Apri direttamente il Trainer che contiene le card assegnate per questa attività.</p>
+                  {studyScope?.include_in_srs ? (
+                    <div className="mt-5 rounded-2xl border border-sea/25 bg-sea/5 p-5 dark:border-cyan-300/25 dark:bg-cyan-300/[0.08]">
+                      <div>
+                        <p className="text-xs font-black uppercase tracking-wide text-sea dark:text-cyan-200">Card assegnate nei Trainer SRS</p>
+                        <h4 className="mt-2 text-lg font-black text-ink dark:text-white">{studyScope.snapshot_item_count} card totali</h4>
+                        <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Apri direttamente il Trainer che contiene le card assegnate per questa attività.</p>
+                      </div>
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                        {trainerBreakdown.map((trainer) => (
+                          <Link key={trainer.id} to={`${trainer.route}?returnTo=${encodeURIComponent(`/assignments/${assignment.id}`)}`} className="focus-ring flex min-h-14 items-center justify-between gap-3 rounded-xl border border-sea/20 bg-white px-4 py-3 text-ink transition hover:border-sea hover:bg-cyan-50 dark:border-white/15 dark:bg-white/[0.08] dark:text-white dark:hover:border-cyan-300/45 dark:hover:bg-white/[0.12]">
+                            <span className="text-sm font-black">{trainer.label}</span>
+                            <span className="rounded-full bg-sea px-2.5 py-1 text-xs font-black text-white">{trainer.count}</span>
+                          </Link>
+                        ))}
+                      </div>
                     </div>
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                      {trainerBreakdown.map((trainer) => (
-                        <Link key={trainer.id} to={`${trainer.route}?returnTo=${encodeURIComponent(`/assignments/${assignment.id}`)}`} className="focus-ring flex min-h-14 items-center justify-between gap-3 rounded-xl border border-sea/20 bg-white px-4 py-3 text-ink transition hover:border-sea hover:bg-cyan-50 dark:border-white/15 dark:bg-white/[0.08] dark:text-white dark:hover:border-cyan-300/45 dark:hover:bg-white/[0.12]">
-                          <span className="text-sm font-black">{trainer.label}</span>
-                          <span className="rounded-full bg-sea px-2.5 py-1 text-xs font-black text-white">{trainer.count}</span>
-                        </Link>
+                  ) : null}
+
+                  {resources.length === 0 && !studyScope?.include_in_srs ? (
+                    <div className="mt-5 rounded-xl border border-dashed border-ink/15 bg-linen/35 p-5 dark:border-white/15 dark:bg-white/[0.04]">
+                      <p className="text-sm font-black text-ink dark:text-white">Nessun contenuto collegato</p>
+                      <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Segui le istruzioni scritte sopra. Non è stato collegato un trainer o un’unità specifica.</p>
+                    </div>
+                  ) : (
+                    <div className="mt-5 grid gap-4">
+                      {resources.map((resource, index) => (
+                        <article key={resource.id} className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-white/10 dark:bg-white/[0.06]">
+                          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                              <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">
+                                {index + 1}. {resourceTypeLabel(resource)}
+                              </p>
+                              <h4 className="mt-2 text-lg font-black text-ink dark:text-white">{resource.title}</h4>
+                              {resource.description ? <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">{resource.description}</p> : null}
+                              {resource.resource_type === 'custom_exercise' ? <p className="mt-2 text-xs font-bold text-violet-700 dark:text-violet-300">Autosave attivo · nuove domande a ogni tentativo quando usa una pool</p> : null}
+                            </div>
+                            <Link to={resourceDestination(resource, assignment.id)} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss dark:bg-emerald-300 dark:text-[#102019]">
+                              Inizia
+                            </Link>
+                          </div>
+                        </article>
                       ))}
                     </div>
-                  </div>
-                ) : null}
-
-                {resources.length === 0 && !studyScope?.include_in_srs ? (
-                  <div className="mt-5 rounded-xl border border-dashed border-ink/15 bg-linen/35 p-5">
-                    <p className="text-sm font-black text-ink">Nessun contenuto collegato</p>
-                    <p className="mt-2 text-sm leading-6 text-ink/65">Segui le istruzioni scritte sopra. Non è stato collegato un trainer o un’unità specifica.</p>
-                  </div>
-                ) : (
-                  <div className="mt-5 grid gap-4">
-                    {resources.map((resource, index) => (
-                      <article key={resource.id} className="rounded-xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.06]">
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                          <div>
-                            <p className="text-xs font-black uppercase tracking-wide text-moss">
-                              {index + 1}. {resourceTypeLabel(resource)}
-                            </p>
-                            <h3 className="mt-2 text-lg font-black text-ink dark:text-white">{resource.title}</h3>
-                            {resource.description ? <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">{resource.description}</p> : null}
-                            {resource.resource_type === 'custom_exercise' ? <p className="mt-2 text-xs font-bold text-violet-700 dark:text-violet-300">Autosave attivo · nuove domande a ogni tentativo quando usa una pool</p> : null}
-                          </div>
-                          <Link to={resourceDestination(resource, assignment.id)} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss">
-                            Inizia
-                          </Link>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                )}
-              </section>
+                  )}
+                </section>
+              </div>
             </article>
           ) : null}
         </div>
