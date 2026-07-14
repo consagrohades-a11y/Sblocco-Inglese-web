@@ -18,7 +18,6 @@ import NotFound from './pages/NotFound';
 import ProtectedRoute from './auth/ProtectedRoute';
 import AdminRoute from './auth/AdminRoute';
 import { legalPages } from './data/legalPages';
-import './trainer-overrides.css';
 
 const Trainer = lazy(() => import('./pages/Trainer'));
 const GeneralExpressionTrainer = lazy(() => import('./pages/GeneralExpressionTrainer'));
