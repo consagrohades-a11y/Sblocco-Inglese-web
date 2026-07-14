@@ -40,6 +40,7 @@ const navigationGroups = [
       { label: 'Revisioni esercizi', to: '/admin/content/exercises/review', icon: FileCheck2 },
       { label: 'Libreria esercizi', to: '/admin/content/exercises/library', icon: BookOpen },
       { label: 'Diagnostica esercizi', to: '/admin/content/exercises/diagnostics', icon: BarChart3 },
+      { label: 'Importa tassonomia', to: '/admin/content/exercises/diagnostics/import', icon: FileCheck2 },
       { label: 'Question Bank', to: '/admin/content/exercises/questions', icon: BookOpen },
       { label: 'Question Editor', to: '/admin/content/exercises/questions/edit', icon: FileCheck2 },
       { label: 'Pool Builder', to: '/admin/content/exercises/pools', icon: Blocks },
@@ -245,7 +246,7 @@ export default function AdminShell() {
             <button
               type="button"
               onClick={() => setMobileOpen(false)}
-              className="focus-ring absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/15"
+              className="focus-ring absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/15 hover:text-white"
               aria-label="Chiudi menu"
             >
               <X aria-hidden="true" className="h-5 w-5" />
