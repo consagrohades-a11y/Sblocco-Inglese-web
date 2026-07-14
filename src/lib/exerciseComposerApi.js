@@ -8,6 +8,7 @@ export async function loadExerciseComposerCatalog() {
   const { data: exercises, error: exerciseError } = await supabase
     .from('exercise_builder_exercises')
     .select('id, public_id, status, current_version_id, created_at, updated_at')
+    .not('current_version_id', 'is', null)
     .order('created_at', { ascending: false });
   throwIfError(exerciseError);
 
@@ -21,15 +22,21 @@ export async function loadExerciseComposerCatalog() {
   throwIfError(versionError);
   const versionMap = new Map((versions || []).map((version) => [version.id, version]));
 
-  return (exercises || []).map((exercise) => ({
-    id: exercise.id,
-    publicId: exercise.public_id,
-    status: exercise.status,
-    createdAt: exercise.created_at,
-    updatedAt: exercise.updated_at,
-    versionId: exercise.current_version_id,
-    ...(versionMap.get(exercise.current_version_id) || {}),
-  }));
+  return (exercises || []).map((exercise) => {
+    const version = versionMap.get(exercise.current_version_id);
+    if (!version || version.exercise_id !== exercise.id) return null;
+
+    const { id: versionId, exercise_id: _exerciseId, ...versionFields } = version;
+    return {
+      ...versionFields,
+      id: exercise.id,
+      publicId: exercise.public_id,
+      status: exercise.status,
+      createdAt: exercise.created_at,
+      updatedAt: exercise.updated_at,
+      versionId,
+    };
+  }).filter(Boolean);
 }
 
 export async function loadExerciseComposerDetail(exerciseId) {
