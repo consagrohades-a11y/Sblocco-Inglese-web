@@ -227,14 +227,16 @@ export default function PracticeHub() {
   return (
     <>
       <SEO title="Pratica | Sblocco Inglese" description="Esercizi generati dalle card pubblicate nei Trainer." />
-      <TrainerLayout>
+      <TrainerLayout showNav={!locked}>
         <div className="mx-auto max-w-5xl">
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="relative mb-5 flex flex-wrap items-center justify-between gap-4 overflow-hidden rounded-2xl border border-moss/15 bg-gradient-to-br from-white via-white to-mint/35 p-5 shadow-sm dark:border-white/10 dark:from-[#16211e] dark:via-[#16211e] dark:to-[#17352c] sm:p-6">
+            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-moss via-coral to-[#ffc457]" />
             <div>
-              <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint"><Sparkles className="h-4 w-4" />Pratica sincronizzata</span>
-              <h1 className="mt-2 text-3xl font-black text-ink dark:text-white sm:text-4xl">Esercizi dalle tue card</h1>
+              <span className="inline-flex items-center gap-2 rounded-full border border-moss/15 bg-mint/55 px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-moss dark:border-emerald-300/20 dark:bg-emerald-300/10 dark:text-mint"><Sparkles className="h-4 w-4" />Pratica sincronizzata</span>
+              <h1 className="mt-3 text-3xl font-black text-ink dark:text-white sm:text-4xl">Esercizi dalle tue card</h1>
+              {session && !finished ? <p className="mt-2 text-sm font-semibold text-ink/60 dark:text-white/60">Completa una domanda alla volta. Il risultato viene salvato automaticamente.</p> : null}
             </div>
-            {locked ? <Link to={`/assignments/${assignmentId}`} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"><ArrowLeft className="h-4 w-4" />Torna all’attività</Link> : session ? <button type="button" onClick={resetSession} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"><ArrowLeft className="h-4 w-4" />Cambia sessione</button> : null}
+            {locked ? <Link to={`/assignments/${assignmentId}`} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/12 bg-white/85 px-4 py-2.5 text-sm font-black text-ink shadow-sm transition hover:border-moss/30 hover:bg-white dark:border-white/15 dark:bg-white/10 dark:text-white"><ArrowLeft className="h-4 w-4 text-moss dark:text-mint" />Torna all’attività</Link> : session ? <button type="button" onClick={resetSession} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"><ArrowLeft className="h-4 w-4" />Cambia sessione</button> : null}
           </div>
 
           {assignmentError ? <p className="mb-5 flex items-center gap-2 rounded-lg border border-coral/30 bg-blush p-4 text-sm font-bold text-ink"><CircleAlert className="h-4 w-4" />{assignmentError}</p> : null}
@@ -286,19 +288,23 @@ export default function PracticeHub() {
               {locked ? <Link to={`/assignments/${assignmentId}`} className="focus-ring mt-7 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-black text-white dark:bg-mint dark:text-ink"><CheckCircle2 className="h-4 w-4" />Torna all’attività</Link> : <button type="button" onClick={resetSession} className="focus-ring mt-7 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-black text-white dark:bg-mint dark:text-ink"><RotateCcw className="h-4 w-4" />Nuova sessione</button>}
             </section>
           ) : (
-            <section className="rounded-xl border border-ink/10 bg-white p-5 shadow-soft dark:border-white/10 dark:bg-white/[0.06] sm:p-8">
-              <div className="flex items-center justify-between gap-4 text-xs font-black uppercase tracking-[0.1em] text-ink/50 dark:text-white/50">
-                <span>{current.instruction}</span><span>{index + 1} / {session.length}</span>
+            <section className="relative overflow-hidden rounded-2xl border border-moss/15 bg-gradient-to-br from-white via-white to-[#fffaf0] p-5 shadow-soft dark:border-white/10 dark:from-[#14201c] dark:via-[#14201c] dark:to-[#292019] sm:p-8">
+              <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-moss via-coral to-[#ffc457]" />
+              <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-black uppercase tracking-[0.1em]">
+                <span className="inline-flex items-center gap-2 rounded-full border border-coral/15 bg-[#fff1df] px-3 py-1.5 text-[#9a3f29] dark:border-coral/25 dark:bg-coral/15 dark:text-[#ffc7b0]"><Sparkles className="h-3.5 w-3.5" />{current.instruction}</span>
+                <span className="rounded-full border border-moss/15 bg-mint/55 px-3 py-1.5 text-moss dark:border-emerald-300/20 dark:bg-emerald-300/10 dark:text-mint">Domanda {index + 1} di {session.length}</span>
               </div>
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-ink/10 dark:bg-white/10"><div className="h-full rounded-full bg-moss transition-all" style={{ width: `${((index + 1) / session.length) * 100}%` }} /></div>
-              <p className="mt-8 text-center text-2xl font-black leading-tight text-ink dark:text-white sm:text-4xl">{current.prompt}</p>
+              <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-ink/10 dark:bg-white/10"><div className="h-full rounded-full bg-gradient-to-r from-moss via-coral to-[#ffc457] transition-all" style={{ width: `${((index + 1) / session.length) * 100}%` }} /></div>
+              <div className="mt-7 rounded-2xl border border-ink/[0.06] bg-mint/20 px-5 py-7 text-center dark:border-white/[0.06] dark:bg-white/[0.045] sm:px-7">
+                <p className="text-2xl font-black leading-tight text-ink dark:text-white sm:text-4xl">{current.prompt}</p>
+              </div>
 
-              <form onSubmit={submitAnswer} className="mt-8">
+              <form onSubmit={submitAnswer} className="mt-5">
                 {current.options ? (
                   <div className="grid gap-3 sm:grid-cols-2">
                     {current.options.map((option) => <button key={option} type="button" disabled={Boolean(feedback)} onClick={() => setResponse(option)} className={`focus-ring rounded-lg border px-4 py-4 text-left text-sm font-black transition ${response === option ? 'border-moss bg-mint text-ink dark:border-emerald-400 dark:bg-emerald-400/15 dark:text-white' : 'border-ink/10 bg-paper text-ink hover:border-moss dark:border-white/15 dark:bg-white/[0.06] dark:text-white'}`}>{option}</button>)}
                   </div>
-                ) : <input autoFocus value={response} onChange={(event) => setResponse(event.target.value)} disabled={Boolean(feedback)} placeholder="Scrivi la risposta..." className="focus-ring w-full rounded-lg border border-ink/15 bg-paper px-5 py-4 text-lg font-bold text-ink placeholder:text-ink/35 dark:border-white/20 dark:bg-[#17231f] dark:text-white dark:placeholder:text-white/35" />}
+                ) : <label className="grid gap-2"><span className="text-xs font-black uppercase tracking-[0.08em] text-ink/50 dark:text-white/50">La tua risposta</span><input autoFocus value={response} onChange={(event) => setResponse(event.target.value)} disabled={Boolean(feedback)} placeholder="Scrivi la risposta..." className="focus-ring w-full rounded-xl border-2 border-moss/20 bg-white px-5 py-4 text-lg font-bold text-ink shadow-inner placeholder:text-ink/35 transition focus:border-moss dark:border-emerald-300/20 dark:bg-[#17231f] dark:text-white dark:placeholder:text-white/35 dark:focus:border-emerald-300/55" /></label>}
 
                 {feedback ? (
                   <div className={`mt-5 rounded-lg border p-4 ${resultStyles[feedback.result]}`}>
@@ -309,8 +315,9 @@ export default function PracticeHub() {
                 ) : null}
                 {saveError ? <p className="mt-3 text-sm font-bold text-coral dark:text-rose-300">{saveError}</p> : null}
 
-                <div className="mt-6 flex justify-end">
-                  {feedback ? <button type="button" onClick={nextQuestion} className="focus-ring rounded-full bg-moss px-6 py-3 text-sm font-black text-white dark:bg-mint dark:text-ink">Prossima</button> : <button type="submit" disabled={!response.trim()} className="focus-ring rounded-full bg-ink px-6 py-3 text-sm font-black text-white disabled:cursor-not-allowed disabled:bg-ink/25 disabled:text-ink/45 dark:bg-mint dark:text-ink dark:disabled:bg-white/15 dark:disabled:text-white/35">Controlla</button>}
+                <div className="mt-5 flex items-center justify-between gap-4">
+                  <p className="hidden text-xs font-semibold text-ink/45 dark:text-white/45 sm:block">Rispondi, poi controlla prima di continuare.</p>
+                  {feedback ? <button type="button" onClick={nextQuestion} className="focus-ring ml-auto inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-moss to-[#15977c] px-6 py-3 text-sm font-black text-white shadow-lift transition hover:-translate-y-0.5 hover:brightness-110">Prossima<ArrowLeft className="h-4 w-4 rotate-180" /></button> : <button type="submit" disabled={!response.trim()} className="focus-ring ml-auto rounded-full bg-gradient-to-r from-moss to-[#15977c] px-7 py-3 text-sm font-black text-white shadow-lift transition hover:-translate-y-0.5 hover:brightness-110 disabled:cursor-not-allowed disabled:from-ink/20 disabled:to-ink/20 disabled:text-ink/40 disabled:shadow-none dark:disabled:from-white/10 dark:disabled:to-white/10 dark:disabled:text-white/30">Controlla risposta</button>}
                 </div>
               </form>
             </section>
