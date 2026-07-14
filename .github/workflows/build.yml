@@ -88,5 +88,15 @@ jobs:
           set -euo pipefail
           for migration in $(find supabase/migrations -maxdepth 1 -type f -name '*.sql' | sort); do
             echo "Applying ${migration}"
-            psql -v ON_ERROR_STOP=1 -f "${migration}"
+            if ! psql -v ON_ERROR_STOP=1 -f "${migration}" > /tmp/current-migration.log 2>&1; then
+              echo "Migration failed: ${migration}"
+              cat /tmp/current-migration.log
+              exit 1
+            fi
           done
+
+      - name: Smoke test Exercise Builder composer
+        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/exercise-builder-composer-smoke.sql
+
+      - name: Smoke test Exercise Builder question editor
+        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/exercise-builder-question-editor-smoke.sql
