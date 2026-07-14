@@ -13,11 +13,12 @@ function StatTile({ label, value, helper, dark = false }) {
 }
 
 export default function ReviewStats({
-  dueToday,
-  newAvailable,
+  totalCards,
+  filteredCards,
   reviewedToday,
   sessionReviewed,
   sessionLimit,
+  guided = false,
   dark = false,
   compact = false,
 }) {
@@ -26,10 +27,10 @@ export default function ReviewStats({
   return (
     <div className="grid gap-3">
       <div className={`grid grid-cols-2 gap-2 sm:gap-3 ${compact ? '' : 'lg:grid-cols-4'}`}>
-        <StatTile dark={dark} label="Due today" value={dueToday} helper="da ripassare" />
-        <StatTile dark={dark} label="New available" value={newAvailable} helper="oggi" />
-        <StatTile dark={dark} label="Reviewed today" value={reviewedToday} helper="su questo browser" />
-        <StatTile dark={dark} label="Cards reviewed" value={sessionReviewed} helper="in this session" />
+        <StatTile dark={dark} label={guided ? 'Card assegnate' : 'Card disponibili'} value={totalCards} helper="in questo Trainer" />
+        <StatTile dark={dark} label="Con questi filtri" value={filteredCards} helper="card visibili" />
+        <StatTile dark={dark} label="Sessione attuale" value={sessionLimit} helper="massimo 10 card" />
+        <StatTile dark={dark} label="Ripassate oggi" value={reviewedToday} helper={`${sessionReviewed} in questa sessione`} />
       </div>
       <div className={`h-2 overflow-hidden rounded-full ${dark ? 'bg-white/10' : 'bg-white'}`}>
         <div className="h-full rounded-full bg-moss transition-all" style={{ width: `${progressPercent}%` }} />
