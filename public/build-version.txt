@@ -1,0 +1,4 @@
+Sblocco Inglese production build
+git_commit_base: d7c8c161a8d0c6b91aee9fd14291f2f4a0f6f002
+feature: learner-assignment-exercise-redesign
+triggered_at: 2026-07-14T20:10:00+02:00
