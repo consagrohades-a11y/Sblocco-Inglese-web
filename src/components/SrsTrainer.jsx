@@ -105,7 +105,6 @@ export default function SrsTrainer({
   returnTo = '',
 }) {
   const filtersRef = useRef(null);
-  const mobileFiltersRef = useRef(null);
   const cardRef = useRef(null);
   const trainerCards = cards || [];
   const trainerType = trainer?.cardType || 'expression';
@@ -126,7 +125,7 @@ export default function SrsTrainer({
   }).map((card) => card.id));
   const [sessionReviewedCount, setSessionReviewedCount] = useState(0);
   const [sessionReviewedIds, setSessionReviewedIds] = useState([]);
-  const [sessionTargetCount, setSessionTargetCount] = useState(0);
+  const [sessionTargetCount, setSessionTargetCount] = useState(() => sessionQueue.length);
   const [sessionRatings, setSessionRatings] = useState(emptyRatings);
   const [answerVisible, setAnswerVisible] = useState(false);
   const [sessionStep, setSessionStep] = useState(0);
@@ -379,9 +378,7 @@ export default function SrsTrainer({
   };
 
   const scrollToFilters = () => {
-    const desktopFiltersVisible = typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches;
-    const target = desktopFiltersVisible ? filtersRef.current : mobileFiltersRef.current;
-    target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    filtersRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   const activeSessionTarget = currentCard ? Math.max(sessionTargetCount, sessionReviewedCount + sessionQueue.length) : sessionTargetCount;
@@ -469,30 +466,14 @@ export default function SrsTrainer({
             </div>
           </div>
 
-          <div className="mt-5 grid min-w-0 gap-5 lg:grid-cols-[minmax(260px,0.38fr)_minmax(0,1fr)] lg:items-start">
-            {scopeNotice ? (
-              <div className={`rounded-lg border px-4 py-3 text-sm font-bold leading-6 lg:col-span-2 ${isDark ? 'border-emerald-300/20 bg-emerald-400/10 text-emerald-100' : 'border-moss/20 bg-mint/45 text-ink'}`}>
-                {scopeNotice}
-              </div>
-            ) : null}
-            <aside className="grid min-w-0 gap-4 lg:sticky lg:top-24">
-              <ReviewStats
-                totalCards={trainerCards.length}
-                filteredCards={filteredCards.length}
-                reviewedToday={stats.reviewedToday}
-                sessionReviewed={sessionReviewedCount}
-                sessionLimit={activeSessionTarget}
-                guided={Boolean(scopeNotice)}
-                dark={isDark}
-                compact
-              />
+          {scopeNotice ? (
+            <div className={`mt-5 rounded-lg border px-4 py-3 text-sm font-bold leading-6 ${isDark ? 'border-emerald-300/20 bg-emerald-400/10 text-emerald-100' : 'border-moss/20 bg-mint/45 text-ink'}`}>
+              {scopeNotice}
+            </div>
+          ) : null}
 
-              <div ref={filtersRef} className="hidden min-w-0 lg:block">
-                <DeckSelector {...deckSelectorProps} />
-              </div>
-            </aside>
-
-            <div className="min-w-0">
+          <div className="mt-5 grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(300px,360px)] lg:items-start">
+            <main className="min-w-0">
               {currentCard ? (
                 <div ref={cardRef} className="scroll-mt-24">
                   <SrsCard
@@ -618,11 +599,24 @@ export default function SrsTrainer({
                   <CompletionStats ratings={sessionRatings} reviewed={sessionReviewedCount} dark={isDark} />
                 </SessionPanel>
               ) : null}
-            </div>
+            </main>
 
-            <div ref={mobileFiltersRef} className="min-w-0 lg:hidden">
-              <DeckSelector {...deckSelectorProps} />
-            </div>
+            <aside className="grid min-w-0 gap-4 lg:sticky lg:top-20">
+              <ReviewStats
+                totalCards={trainerCards.length}
+                filteredCards={filteredCards.length}
+                reviewedToday={stats.reviewedToday}
+                sessionReviewed={sessionReviewedCount}
+                sessionLimit={activeSessionTarget}
+                guided={Boolean(scopeNotice)}
+                dark={isDark}
+                compact
+              />
+
+              <div ref={filtersRef} className="min-w-0">
+                <DeckSelector {...deckSelectorProps} />
+              </div>
+            </aside>
           </div>
         </div>
       </TrainerLayout>
