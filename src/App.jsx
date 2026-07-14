@@ -1,6 +1,7 @@
 import React from 'react';
 import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import StickyMobileCTA from './components/StickyMobileCTA';
@@ -184,6 +185,7 @@ export default function App() {
       {!isAdmin ? <Footer /> : null}
       {!isAdmin ? <StickyMobileCTA /> : null}
       {!isAdmin ? <BackToTopButton /> : null}
+      <SpeedInsights />
     </div>
   );
 }
