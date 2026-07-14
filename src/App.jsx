@@ -24,6 +24,7 @@ const GeneralExpressionTrainer = lazy(() => import('./pages/GeneralExpressionTra
 const HospitalityExpressionTrainer = lazy(() => import('./pages/HospitalityExpressionTrainer'));
 const WordTrainer = lazy(() => import('./pages/WordTrainer'));
 const PracticeHub = lazy(() => import('./pages/PracticeHub'));
+const ExercisePlayer = lazy(() => import('./pages/ExercisePlayer'));
 const GrammarHub = lazy(() => import('./pages/GrammarHub'));
 const GrammarA1Hub = lazy(() => import('./pages/GrammarA1Hub'));
 const GrammarA1Topic = lazy(() => import('./pages/GrammarA1Test'));
@@ -53,6 +54,7 @@ const AdminContentOverview = lazy(() => import('./pages/AdminContentOverview'));
 const AdminSectionOverview = lazy(() => import('./pages/AdminSectionOverview'));
 const AdminExerciseBuilder = lazy(() => import('./pages/AdminExerciseBuilder'));
 const AdminExerciseBuilderReview = lazy(() => import('./pages/AdminExerciseBuilderReview'));
+const AdminExerciseBuilderLibrary = lazy(() => import('./pages/AdminExerciseBuilderLibrary'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
 const LearnerProgress = lazy(() => import('./pages/LearnerProgress'));
@@ -106,6 +108,7 @@ export default function App() {
             <Route path="/trainers/hospitality-expression" element={<HospitalityExpressionTrainer />} />
             <Route path="/trainers/word-trainer" element={<WordTrainer />} />
             <Route path="/practice" element={<ProtectedRoute><PracticeHub /></ProtectedRoute>} />
+            <Route path="/exercises" element={<ProtectedRoute><ExercisePlayer /></ProtectedRoute>} />
             <Route path="/grammar" element={<GrammarHub />} />
             <Route path="/grammar/a1" element={<GrammarA1Hub />} />
             <Route path="/grammar/a1/:topicId" element={<GrammarA1Topic />} />
@@ -128,6 +131,7 @@ export default function App() {
               <Route path="content" element={<AdminContentOverview />} />
               <Route path="content/exercises" element={<AdminExerciseBuilder />} />
               <Route path="content/exercises/review" element={<AdminExerciseBuilderReview />} />
+              <Route path="content/exercises/library" element={<AdminExerciseBuilderLibrary />} />
               <Route path="content/words" element={<AdminWordTrainerContent />} />
               <Route path="content/words/import" element={<AdminWordTrainerImport />} />
               <Route path="content/words/decks" element={<AdminWordDecks />} />
