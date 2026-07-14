@@ -49,7 +49,7 @@ begin
     raise exception 'Invalid CEFR level.';
   end if;
   if v_topic is null or v_primary_skill is null then raise exception 'Topic and primary skill are required.'; end if;
-  if v_difficulty not in ('easy', 'standard', 'challenge') then raise exception 'Invalid difficulty.'; end if;
+  if v_difficulty not in ('support', 'standard', 'challenge') then raise exception 'Invalid difficulty.'; end if;
 
   if v_type in ('multiple_choice', 'multiple_select') then
     if jsonb_typeof(v_content -> 'options') <> 'array' or jsonb_array_length(v_content -> 'options') < 2 then
