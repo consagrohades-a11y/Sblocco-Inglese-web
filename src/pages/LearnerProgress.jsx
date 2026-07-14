@@ -46,23 +46,23 @@ function formatDeadline(value) {
 }
 
 function MetricCard({ icon: Icon, eyebrow, value, detail, tone = 'emerald' }) {
-  const toneClasses = tone === 'violet'
-    ? 'bg-[#8b5cf6]/12 text-[#d3c8ff] ring-[#8b5cf6]/20'
+  const toneClasses = tone === 'coral'
+    ? 'bg-[#e86f51]/12 text-[#ffd3c2] ring-[#e86f51]/20'
     : 'bg-[#19a684]/12 text-[#9ce8d3] ring-[#19a684]/20';
-  const cardClasses = tone === 'violet'
-    ? 'border-[#9b87f5]/20 bg-gradient-to-br from-[#8b5cf6]/[0.12] via-white/[0.055] to-white/[0.025]'
+  const cardClasses = tone === 'coral'
+    ? 'border-[#e86f51]/20 bg-gradient-to-br from-[#e86f51]/[0.12] via-white/[0.055] to-white/[0.025]'
     : 'border-[#5ad6b3]/20 bg-gradient-to-br from-[#19a684]/[0.12] via-white/[0.055] to-white/[0.025]';
 
   return (
     <article className={`relative overflow-hidden rounded-2xl border p-5 shadow-[0_18px_50px_rgba(0,0,0,0.16)] ${cardClasses}`}>
-      <div aria-hidden="true" className={`absolute -right-10 -top-12 h-28 w-28 rounded-full blur-2xl ${tone === 'violet' ? 'bg-[#8b5cf6]/20' : 'bg-[#22c59d]/18'}`} />
+      <div aria-hidden="true" className={`absolute -right-10 -top-12 h-28 w-28 rounded-full blur-2xl ${tone === 'coral' ? 'bg-[#e86f51]/20' : 'bg-[#22c59d]/18'}`} />
       <div className={`relative grid h-11 w-11 place-items-center rounded-xl ring-1 ${toneClasses}`}>
         <Icon aria-hidden="true" className="h-5 w-5" />
       </div>
       <p className="relative mt-5 text-xs font-black uppercase tracking-[0.12em] text-white/55">{eyebrow}</p>
       <p className="relative mt-2 text-3xl font-black tracking-[-0.04em] text-white">{value}</p>
       <p className="relative mt-1 text-sm font-semibold leading-6 text-white/58">{detail}</p>
-      <div aria-hidden="true" className={`absolute inset-x-0 bottom-0 h-0.5 ${tone === 'violet' ? 'bg-gradient-to-r from-transparent via-[#9b87f5]/70 to-transparent' : 'bg-gradient-to-r from-transparent via-[#53d6b3]/70 to-transparent'}`} />
+      <div aria-hidden="true" className={`absolute inset-x-0 bottom-0 h-0.5 ${tone === 'coral' ? 'bg-gradient-to-r from-transparent via-[#e86f51]/70 to-[#ffc457]/30' : 'bg-gradient-to-r from-transparent via-[#53d6b3]/70 to-transparent'}`} />
     </article>
   );
 }
@@ -87,7 +87,7 @@ function ProgressIllustration() {
   return (
     <div className="relative mx-auto h-44 w-72" aria-hidden="true">
       <div className="absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#68d8ba]/20 bg-[#19a684]/[0.055] shadow-[0_0_60px_rgba(25,166,132,0.12)]" />
-      <div className="absolute left-1/2 top-1/2 h-24 w-56 -translate-x-1/2 -translate-y-1/2 rotate-[-12deg] rounded-[50%] border border-[#9b87f5]/25" />
+      <div className="absolute left-1/2 top-1/2 h-24 w-56 -translate-x-1/2 -translate-y-1/2 rotate-[-12deg] rounded-[50%] border border-[#e86f51]/25" />
       <div className="absolute left-1/2 top-1/2 h-20 w-52 -translate-x-1/2 -translate-y-1/2 rotate-[24deg] rounded-[50%] border border-[#68d8ba]/20" />
 
       <div className="absolute left-1/2 top-1/2 grid h-20 w-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-3xl border border-[#80dfc5]/25 bg-gradient-to-br from-[#1b8f76]/35 to-[#6f4bb7]/20 text-[#b9f1e1] shadow-[0_18px_50px_rgba(0,0,0,0.25),0_0_28px_rgba(139,92,246,0.14)]">
@@ -97,13 +97,13 @@ function ProgressIllustration() {
       <div className="absolute left-5 top-5 grid h-10 w-10 place-items-center rounded-2xl border border-[#68d8ba]/20 bg-[#10241f] text-[#8fe5cc] shadow-lg">
         <BookOpenCheck className="h-5 w-5" />
       </div>
-      <div className="absolute right-4 top-8 grid h-9 w-9 place-items-center rounded-full border border-[#9b87f5]/25 bg-[#1b1728] text-[#c9bbff] shadow-lg">
+      <div className="absolute right-4 top-8 grid h-9 w-9 place-items-center rounded-full border border-[#e86f51]/25 bg-[#291a16] text-[#ffc9b4] shadow-lg">
         <Sparkles className="h-4 w-4" />
       </div>
       <div className="absolute bottom-3 right-10 grid h-11 w-11 place-items-center rounded-2xl border border-[#68d8ba]/20 bg-[#10241f] text-[#8fe5cc] shadow-lg">
         <CheckCircle2 className="h-5 w-5" />
       </div>
-      <div className="absolute bottom-5 left-8 grid h-9 w-9 place-items-center rounded-full border border-[#9b87f5]/25 bg-[#1b1728] text-[#c9bbff] shadow-lg">
+      <div className="absolute bottom-5 left-8 grid h-9 w-9 place-items-center rounded-full border border-[#ffc457]/25 bg-[#2b2416] text-[#ffe29b] shadow-lg">
         <Flame className="h-4 w-4" />
       </div>
     </div>
@@ -230,7 +230,7 @@ export default function LearnerProgress() {
       <SEO title="I miei progressi | Sblocco Inglese" description="Assegnazioni, ripasso SRS e attività completate nel tuo percorso." />
       <section className="relative overflow-hidden bg-[#0b1311] text-white">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <div className="absolute -right-24 top-4 h-80 w-80 rounded-full bg-[#7c3aed]/[0.11] blur-3xl" />
+          <div className="absolute -right-24 top-4 h-80 w-80 rounded-full bg-[#e86f51]/[0.10] blur-3xl" />
           <div className="absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-[#0e7c66]/[0.15] blur-3xl" />
           <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.55) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.55) 1px, transparent 1px)', backgroundSize: '64px 64px' }} />
         </div>
@@ -274,9 +274,9 @@ export default function LearnerProgress() {
             <>
               <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 <MetricCard icon={Clock3} eyebrow="Da completare" value={stats.openAssignments.length} detail="assegnazioni pubblicate" />
-                <MetricCard icon={CheckCircle2} eyebrow="Completate" value={stats.completedAssignments.length} detail="assegnazioni concluse" tone="violet" />
+                <MetricCard icon={CheckCircle2} eyebrow="Completate" value={stats.completedAssignments.length} detail="assegnazioni concluse" tone="coral" />
                 <MetricCard icon={Flame} eyebrow="Questa settimana" value={stats.reviewedThisWeek} detail="ripassi registrati" />
-                <MetricCard icon={Brain} eyebrow="Card consolidate" value={stats.strong} detail={`su ${stats.assigned} assegnate`} tone="violet" />
+                <MetricCard icon={Brain} eyebrow="Card consolidate" value={stats.strong} detail={`su ${stats.assigned} assegnate`} tone="coral" />
               </div>
 
               <div className="mt-6 grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
@@ -296,7 +296,7 @@ export default function LearnerProgress() {
                     <div className="mt-7 grid gap-5">
                       <ProgressBar label="Da iniziare" value={stats.newCards} total={stats.assigned} color="bg-white/35" />
                       <ProgressBar label="In apprendimento" value={stats.learning} total={stats.assigned} />
-                      <ProgressBar label="Consolidate" value={stats.strong} total={stats.assigned} color="bg-[#8b5cf6]" />
+                      <ProgressBar label="Consolidate" value={stats.strong} total={stats.assigned} color="bg-gradient-to-r from-[#e86f51] to-[#ffc457]" />
                       <div className="flex items-center justify-between rounded-2xl border border-[#8de1c9]/15 bg-[#19a684]/[0.08] px-4 py-3">
                         <span className="flex items-center gap-2 text-sm font-extrabold text-white/75"><RefreshCw aria-hidden="true" className="h-4 w-4 text-[#8edfc8]" />Da ripassare ora</span>
                         <span className="text-lg font-black text-white">{stats.due}</span>
@@ -310,13 +310,13 @@ export default function LearnerProgress() {
                   )}
                 </article>
 
-                <article className="rounded-3xl border border-[#9b87f5]/15 bg-gradient-to-br from-[#8b5cf6]/[0.07] via-white/[0.05] to-transparent p-6 shadow-[0_22px_70px_rgba(0,0,0,0.18)] sm:p-7">
+                <article className="rounded-3xl border border-[#e86f51]/15 bg-gradient-to-br from-[#e86f51]/[0.07] via-white/[0.05] to-[#ffc457]/[0.025] p-6 shadow-[0_22px_70px_rgba(0,0,0,0.18)] sm:p-7">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-[0.12em] text-[#c8baff]">Ultimi 7 giorni</p>
+                      <p className="text-xs font-black uppercase tracking-[0.12em] text-[#ffc7b0]">Ultimi 7 giorni</p>
                       <h2 className="mt-2 text-2xl font-black tracking-[-0.03em] text-white">Ritmo di ripasso</h2>
                     </div>
-                    <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#8b5cf6]/12 text-[#d3c8ff] ring-1 ring-[#8b5cf6]/20">
+                    <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#e86f51]/12 text-[#ffd3c2] ring-1 ring-[#e86f51]/20">
                       <CalendarDays aria-hidden="true" className="h-5 w-5" />
                     </div>
                   </div>
@@ -329,7 +329,7 @@ export default function LearnerProgress() {
                         <div key={day.key} className="flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-2">
                           <span className="text-xs font-black text-white/65">{day.count || ''}</span>
                           <div className="flex h-36 w-full items-end overflow-hidden rounded-xl bg-white/[0.05]">
-                            <div className={`w-full rounded-xl transition-all duration-500 ${isToday ? 'bg-gradient-to-t from-[#14846d] to-[#66d7b9]' : 'bg-gradient-to-t from-[#5b3aa7] to-[#9a7cea]'}`} style={{ height: `${height}%` }} />
+                            <div className={`w-full rounded-xl transition-all duration-500 ${isToday ? 'bg-gradient-to-t from-[#14846d] to-[#66d7b9]' : 'bg-gradient-to-t from-[#c76545] to-[#ffc457]'}`} style={{ height: `${height}%` }} />
                           </div>
                           <span className={`text-[0.68rem] font-black uppercase ${isToday ? 'text-[#9ce8d3]' : 'text-white/45'}`}>{day.label}</span>
                         </div>
@@ -340,19 +340,19 @@ export default function LearnerProgress() {
                 </article>
               </div>
 
-              <article className="mt-6 rounded-3xl border border-white/10 bg-white/[0.055] p-6 shadow-[0_22px_70px_rgba(0,0,0,0.18)] sm:p-7">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <article className="mt-5 rounded-3xl border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_55px_rgba(0,0,0,0.16)] sm:p-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-xs font-black uppercase tracking-[0.12em] text-[#8edfc8]">Assegnazioni</p>
-                    <h2 className="mt-2 text-2xl font-black tracking-[-0.03em] text-white">Il prossimo passo</h2>
+                    <h2 className="mt-1.5 text-xl font-black tracking-[-0.03em] text-white sm:text-2xl">Il prossimo passo</h2>
                   </div>
                   <Link to="/assignments" className="text-sm font-black text-[#9ce8d3] underline decoration-[#9ce8d3]/35 underline-offset-4 hover:text-white">Vedi tutte le attività</Link>
                 </div>
 
                 {stats.openAssignments.length > 0 ? (
-                  <div className="mt-6 grid gap-3 md:grid-cols-2">
+                  <div className="mt-4 flex flex-wrap gap-3">
                     {stats.openAssignments.slice(0, 4).map((assignment) => (
-                      <Link key={assignment.id} to={`/assignments/${assignment.id}`} className="group flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-black/10 p-4 transition hover:border-[#8edfc8]/30 hover:bg-white/[0.075]">
+                      <Link key={assignment.id} to={`/assignments/${assignment.id}`} className="group flex min-w-[min(100%,18rem)] flex-1 items-center justify-between gap-4 rounded-2xl border border-white/10 bg-black/10 px-4 py-3 transition hover:border-[#8edfc8]/30 hover:bg-white/[0.075]">
                         <div className="min-w-0">
                           <p className="truncate font-black text-white">{assignment.title}</p>
                           <p className="mt-1 flex flex-wrap gap-2 text-xs font-bold text-white/48">
@@ -365,9 +365,9 @@ export default function LearnerProgress() {
                     ))}
                   </div>
                 ) : (
-                  <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-[#8b5cf6]/15 bg-[#8b5cf6]/[0.07] p-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-[#e86f51]/15 bg-gradient-to-r from-[#e86f51]/[0.07] to-[#ffc457]/[0.035] p-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="flex items-center gap-2 font-black text-white"><BookOpenCheck aria-hidden="true" className="h-5 w-5 text-[#c8baff]" />Hai completato le attività disponibili</p>
+                      <p className="flex items-center gap-2 font-black text-white"><BookOpenCheck aria-hidden="true" className="h-5 w-5 text-[#ffc7b0]" />Hai completato le attività disponibili</p>
                       <p className="mt-1 text-sm leading-6 text-white/55">Puoi continuare con il ripasso oppure scegliere un Trainer.</p>
                     </div>
                     <Link to="/trainers" className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.08] px-5 py-2.5 text-sm font-black text-white transition hover:bg-white/[0.13]">
