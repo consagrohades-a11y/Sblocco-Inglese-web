@@ -1,0 +1,153 @@
+name: Verify Exercise Builder Collections
+
+on:
+  push:
+    branches:
+      - agent/exercise-builder-collections
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  verify:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: sblocco_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d sblocco_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: sblocco_test
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/exercise-builder-collections
+          fetch-depth: 0
+
+      - name: Wire Collections UI and CI smoke test
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+
+          const appPath = 'src/App.jsx';
+          let app = fs.readFileSync(appPath, 'utf8');
+          const importCandidates = [
+            "const AdminExerciseComposer = lazy(() => import('./pages/AdminExerciseComposer'));",
+            "const AdminExercisePools = lazy(() => import('./pages/AdminExercisePools'));",
+          ];
+          const importAnchor = importCandidates.find((candidate) => app.includes(candidate));
+          if (!app.includes("const AdminExerciseCollections = lazy(() => import('./pages/AdminExerciseCollections'));")) {
+            if (!importAnchor) throw new Error('Missing Exercise Builder import anchor');
+            app = app.replace(importAnchor, `${importAnchor}\nconst AdminExerciseCollections = lazy(() => import('./pages/AdminExerciseCollections'));`);
+          }
+
+          const routeCandidates = [
+            '              <Route path="content/exercises/composer" element={<AdminExerciseComposer />} />',
+            '              <Route path="content/exercises/pools" element={<AdminExercisePools />} />',
+          ];
+          const routeAnchor = routeCandidates.find((candidate) => app.includes(candidate));
+          if (!app.includes('path="content/exercises/collections"')) {
+            if (!routeAnchor) throw new Error('Missing Exercise Builder route anchor');
+            app = app.replace(routeAnchor, `${routeAnchor}\n              <Route path="content/exercises/collections" element={<AdminExerciseCollections />} />`);
+          }
+          fs.writeFileSync(appPath, app);
+
+          const shellPath = 'src/components/AdminShell.jsx';
+          let shell = fs.readFileSync(shellPath, 'utf8');
+          const navCandidates = [
+            "      { label: 'Exercise Composer', to: '/admin/content/exercises/composer', icon: ClipboardList },",
+            "      { label: 'Pool Builder', to: '/admin/content/exercises/pools', icon: Blocks },",
+          ];
+          const navAnchor = navCandidates.find((candidate) => shell.includes(candidate));
+          if (!shell.includes("to: '/admin/content/exercises/collections'")) {
+            if (!navAnchor) throw new Error('Missing Exercise Builder navigation anchor');
+            shell = shell.replace(navAnchor, `${navAnchor}\n      { label: 'Collections', to: '/admin/content/exercises/collections', icon: BookOpen },`);
+          }
+          fs.writeFileSync(shellPath, shell);
+
+          const buildPath = '.github/workflows/build.yml';
+          let build = fs.readFileSync(buildPath, 'utf8');
+          if (!build.includes('Smoke test Exercise Builder collections')) {
+            const migrationAnchor = '            psql -v ON_ERROR_STOP=1 -f "${migration}"\n          done\n';
+            if (!build.includes(migrationAnchor)) throw new Error('Missing migration loop anchor');
+            build = build.replace(migrationAnchor, `${migrationAnchor}\n      - name: Smoke test Exercise Builder collections\n        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/exercise-builder-collections-smoke.sql\n`);
+          }
+          fs.writeFileSync(buildPath, build);
+          NODE
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Validate frontend
+        run: |
+          npm install --no-audit --no-fund
+          npm run validate:srs
+          npm run build
+
+      - name: Bootstrap Supabase auth stubs
+        run: |
+          psql -v ON_ERROR_STOP=1 <<'SQL'
+          create role anon nologin;
+          create role authenticated nologin;
+          create role service_role nologin;
+          create schema auth;
+          create table auth.users (
+            id uuid primary key,
+            email text,
+            raw_user_meta_data jsonb not null default '{}'::jsonb,
+            created_at timestamptz not null default now(),
+            confirmed_at timestamptz,
+            last_sign_in_at timestamptz
+          );
+          create function auth.uid() returns uuid language sql stable as $$ select null::uuid $$;
+          create function auth.role() returns text language sql stable as $$ select 'authenticated'::text $$;
+          create function auth.email() returns text language sql stable as $$ select null::text $$;
+          create function auth.jwt() returns jsonb language sql stable as $$ select '{}'::jsonb $$;
+          SQL
+
+      - name: Validate migrations and Collections behavior
+        run: |
+          set -euo pipefail
+          for migration in $(find supabase/migrations -maxdepth 1 -type f -name '*.sql' | sort); do
+            echo "Applying ${migration}"
+            psql -v ON_ERROR_STOP=1 -f "${migration}"
+          done
+          psql -v ON_ERROR_STOP=1 -f scripts/sql/exercise-builder-collections-smoke.sql
+
+      - name: Commit finalized Collections UI
+        run: |
+          rm -f .github/workflows/verify-exercise-builder-collections.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Finalize verified Exercise Builder Collections"
+            git push origin HEAD:agent/exercise-builder-collections
+          fi
+
+      - name: Mark pull request ready
+        run: |
+          PR_NUMBER=$(gh pr list --repo consagrohades-a11y/Sblocco-Inglese-web --head agent/exercise-builder-collections --state open --json number --jq '.[0].number')
+          test -n "$PR_NUMBER"
+          gh pr ready "$PR_NUMBER" --repo consagrohades-a11y/Sblocco-Inglese-web
