@@ -17,6 +17,52 @@ function resultClasses(status) {
   return 'border-rose-300 bg-rose-50 text-rose-950 dark:border-rose-300/30 dark:bg-rose-400/10 dark:text-rose-100';
 }
 
+const preferredAnswerKeys = [
+  'correct_answer',
+  'correct_answers',
+  'accepted_answer',
+  'accepted_answers',
+  'answer',
+  'answers',
+  'value',
+  'text',
+];
+
+const technicalAnswerKeys = new Set([
+  'key',
+  'status',
+  'max_points',
+  'earned_points',
+  'points',
+  'score',
+  'is_correct',
+  'explanation',
+]);
+
+function collectCorrectAnswers(value) {
+  if (value === null || value === undefined || value === '') return [];
+  if (typeof value === 'string' || typeof value === 'number') return [String(value)];
+  if (typeof value === 'boolean') return value ? ['Sì'] : ['No'];
+  if (Array.isArray(value)) return value.flatMap(collectCorrectAnswers);
+
+  if (typeof value === 'object') {
+    const preferred = preferredAnswerKeys
+      .filter((key) => Object.prototype.hasOwnProperty.call(value, key))
+      .flatMap((key) => collectCorrectAnswers(value[key]));
+    if (preferred.length) return preferred;
+
+    return Object.entries(value)
+      .filter(([key]) => !technicalAnswerKeys.has(key))
+      .flatMap(([, nestedValue]) => collectCorrectAnswers(nestedValue));
+  }
+
+  return [];
+}
+
+function cleanCorrectAnswers(value) {
+  return [...new Set(collectCorrectAnswers(value).map((item) => item.trim()).filter(Boolean))];
+}
+
 function QuestionTypeIcon({ type }) {
   const className = 'h-4 w-4';
   if (type === 'translation') return <Languages className={className} />;
@@ -36,6 +82,7 @@ function ResultPanel({ result, showScore = true, showCorrectAnswers = true, show
       : result.status === 'unanswered'
         ? 'Non risposto'
         : 'Da rivedere';
+  const correctAnswers = cleanCorrectAnswers(result.correct_answer);
 
   return (
     <div className={`mt-5 rounded-xl border p-4 ${resultClasses(result.status)}`}>
@@ -43,10 +90,10 @@ function ResultPanel({ result, showScore = true, showCorrectAnswers = true, show
         <p className="text-sm font-black">{label}</p>
         {showScore ? <p className="text-xs font-black">{Number(result.earned_points || 0).toFixed(1)} / {Number(result.max_points || 0).toFixed(1)} punti</p> : null}
       </div>
-      {showCorrectAnswers && result.correct_answer !== null && result.correct_answer !== undefined ? (
+      {showCorrectAnswers && correctAnswers.length ? (
         <div className="mt-3 text-sm leading-6">
-          <span className="font-black">Risposta accettata: </span>
-          <span>{typeof result.correct_answer === 'string' ? result.correct_answer : JSON.stringify(result.correct_answer)}</span>
+          <span className="font-black">{correctAnswers.length === 1 ? 'Risposta giusta' : 'Risposte giuste'}: </span>
+          <span>{correctAnswers.join(' · ')}</span>
         </div>
       ) : null}
       {showExplanations && result.explanation ? (
