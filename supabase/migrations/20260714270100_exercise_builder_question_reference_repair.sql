@@ -1,33 +1,27 @@
 -- Repair incomplete question identities and resolve admin question references safely.
 
--- Restore missing current-version pointers from the latest available version.
+-- Restore missing or invalid current-version pointers from the latest available version.
 update public.exercise_builder_questions question
-set current_version_id = latest.id
-from lateral (
+set current_version_id = (
   select version.id
   from public.exercise_builder_question_versions version
   where version.question_id = question.id
   order by version.version_number desc, version.created_at desc
   limit 1
-) latest
-where question.current_version_id is null;
-
--- Repair pointers that reference a version belonging to another identity.
-update public.exercise_builder_questions question
-set current_version_id = latest.id
-from lateral (
-  select version.id
-  from public.exercise_builder_question_versions version
-  where version.question_id = question.id
-  order by version.version_number desc, version.created_at desc
-  limit 1
-) latest
-where question.current_version_id is not null
-  and not exists (
+)
+where (
+    question.current_version_id is null
+    or not exists (
+      select 1
+      from public.exercise_builder_question_versions current_version
+      where current_version.id = question.current_version_id
+        and current_version.question_id = question.id
+    )
+  )
+  and exists (
     select 1
-    from public.exercise_builder_question_versions current_version
-    where current_version.id = question.current_version_id
-      and current_version.question_id = question.id
+    from public.exercise_builder_question_versions available_version
+    where available_version.question_id = question.id
   );
 
 create or replace function public.admin_get_exercise_builder_question_detail_by_reference(p_reference text)
