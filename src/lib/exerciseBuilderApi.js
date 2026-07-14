@@ -103,3 +103,60 @@ export async function loadExerciseBuilderOverview() {
     recentBatches: recentBatches || [],
   };
 }
+
+export async function loadExerciseBuilderReviewQueue() {
+  const { data: batches, error: batchError } = await supabase
+    .from('exercise_builder_import_batches')
+    .select('id, source_name, entity_type, status, valid_count, warning_count, invalid_count, created_at, updated_at')
+    .in('status', ['validated', 'in_review', 'partially_imported', 'imported'])
+    .order('created_at', { ascending: false })
+    .limit(30);
+
+  if (batchError) throw batchError;
+  const batchIds = (batches || []).map((batch) => batch.id);
+  if (batchIds.length === 0) return [];
+
+  const { data: items, error: itemError } = await supabase
+    .from('exercise_builder_import_items')
+    .select('id, batch_id, item_index, client_key, entity_type, validation_status, selected, payload, errors, warnings, promoted_entity_id, created_at')
+    .in('batch_id', batchIds)
+    .order('item_index', { ascending: true });
+
+  if (itemError) throw itemError;
+  const itemsByBatch = new Map();
+  (items || []).forEach((item) => {
+    const list = itemsByBatch.get(item.batch_id) || [];
+    list.push(item);
+    itemsByBatch.set(item.batch_id, list);
+  });
+
+  return (batches || []).map((batch) => ({
+    ...batch,
+    items: itemsByBatch.get(batch.id) || [],
+  }));
+}
+
+export async function updateExerciseBuilderImportItemSelection(itemId, selected) {
+  const { error } = await supabase
+    .from('exercise_builder_import_items')
+    .update({ selected })
+    .eq('id', itemId)
+    .is('promoted_entity_id', null);
+
+  if (error) throw error;
+}
+
+export async function promoteExerciseBuilderImportItems(batchId, itemIds) {
+  if (!batchId) throw new Error('Batch mancante.');
+  if (!Array.isArray(itemIds) || itemIds.length === 0) {
+    throw new Error('Seleziona almeno un elemento da promuovere.');
+  }
+
+  const { data, error } = await supabase.rpc('promote_exercise_builder_import_batch', {
+    p_batch_id: batchId,
+    p_item_ids: itemIds,
+  });
+
+  if (error) throw error;
+  return data;
+}
