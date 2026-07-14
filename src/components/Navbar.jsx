@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  ArrowLeft,
   ArrowRight,
   BarChart3,
   BookOpen,
@@ -114,6 +115,18 @@ export default function Navbar() {
   const isAdmin = profile?.role === 'admin' && profile?.status === 'active';
   const displayName = profile?.display_name || user?.user_metadata?.display_name || 'Account';
   const items = useMemo(() => (isLearner ? learnerItems : publicItems), [isLearner]);
+  const routeParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const requestedReturnTo = routeParams.get('returnTo') || '';
+  const practiceAssignmentId = routeParams.get('assignmentId') || '';
+  const safeReturnTo = requestedReturnTo.startsWith('/assignments/') ? requestedReturnTo : '';
+  const assignmentDetail = location.pathname.startsWith('/assignments/');
+  const learnerAction = safeReturnTo
+    ? { label: 'Torna all’attività', to: safeReturnTo, back: true }
+    : location.pathname === '/practice' && practiceAssignmentId
+      ? { label: 'Torna all’attività', to: `/assignments/${practiceAssignmentId}`, back: true }
+        : assignmentDetail
+        ? { label: 'Torna alle attività', to: '/assignments', back: true }
+        : { label: 'Indietro', to: '', back: true };
 
   useEffect(() => {
     function handleScroll() {
@@ -132,6 +145,11 @@ export default function Navbar() {
     setMobileOpen(false);
     await signOut();
     navigate('/', { replace: true });
+  }
+
+  function handleLearnerBack() {
+    if (window.history.length > 1) navigate(-1);
+    else navigate('/assignments');
   }
 
   return (
@@ -167,10 +185,18 @@ export default function Navbar() {
 
         <div className="hidden shrink-0 items-center gap-2 2xl:flex">
           {isLearner ? (
-            <Link to="/assignments" className="focus-ring inline-flex h-10 items-center gap-2 rounded-full bg-[#137d68] px-4 text-sm font-extrabold text-white shadow-[0_8px_22px_rgba(14,124,102,0.18),0_0_18px_rgba(139,92,246,0.08)] transition hover:-translate-y-px hover:bg-[#19947b]">
-              Continua
-              <ArrowRight aria-hidden="true" className="h-4 w-4" />
-            </Link>
+            learnerAction.to ? (
+              <Link to={learnerAction.to} className="focus-ring inline-flex h-10 items-center gap-2 rounded-full bg-[#137d68] px-4 text-sm font-extrabold text-white shadow-[0_8px_22px_rgba(14,124,102,0.18),0_0_18px_rgba(232,111,81,0.08)] transition hover:-translate-y-px hover:bg-[#19947b]">
+                {learnerAction.back ? <ArrowLeft aria-hidden="true" className="h-4 w-4" /> : null}
+                {learnerAction.label}
+                {!learnerAction.back ? <ArrowRight aria-hidden="true" className="h-4 w-4" /> : null}
+              </Link>
+            ) : (
+              <button type="button" onClick={handleLearnerBack} className="focus-ring inline-flex h-10 items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 text-sm font-extrabold text-white transition hover:border-coral/35 hover:bg-white/[0.10]">
+                <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+                {learnerAction.label}
+              </button>
+            )
           ) : (
             <Link to="/prenota" className="focus-ring inline-flex h-10 items-center gap-2 rounded-full bg-[#137d68] px-4 text-sm font-extrabold text-white shadow-[0_8px_22px_rgba(14,124,102,0.18),0_0_18px_rgba(139,92,246,0.08)] transition hover:-translate-y-px hover:bg-[#19947b]">
               Inizia il tuo percorso
@@ -204,10 +230,17 @@ export default function Navbar() {
         <div className="relative border-t border-white/10 bg-[#0d1714]/98 px-5 pb-6 pt-4 shadow-[0_24px_50px_rgba(0,0,0,0.38)] 2xl:hidden">
           <nav className="mx-auto grid max-w-lg gap-2" aria-label={isLearner ? 'Navigazione studente mobile' : 'Navigazione mobile'}>
             {isLearner ? (
-              <Link to="/assignments" className="focus-ring mb-2 flex min-h-12 items-center justify-between rounded-2xl bg-[#13866f] px-4 py-3 text-base font-black text-white shadow-[0_10px_26px_rgba(14,124,102,0.20)]">
-                Continua
-                <ArrowRight aria-hidden="true" className="h-5 w-5" />
-              </Link>
+              learnerAction.to ? (
+                <Link to={learnerAction.to} className="focus-ring mb-2 flex min-h-12 items-center justify-between rounded-2xl bg-[#13866f] px-4 py-3 text-base font-black text-white shadow-[0_10px_26px_rgba(14,124,102,0.20)]">
+                  <span className="flex items-center gap-2">{learnerAction.back ? <ArrowLeft aria-hidden="true" className="h-5 w-5" /> : null}{learnerAction.label}</span>
+                  {!learnerAction.back ? <ArrowRight aria-hidden="true" className="h-5 w-5" /> : null}
+                </Link>
+              ) : (
+                <button type="button" onClick={handleLearnerBack} className="focus-ring mb-2 flex min-h-12 w-full items-center gap-2 rounded-2xl border border-white/15 bg-white/[0.07] px-4 py-3 text-left text-base font-black text-white">
+                  <ArrowLeft aria-hidden="true" className="h-5 w-5" />
+                  {learnerAction.label}
+                </button>
+              )
             ) : null}
 
             {items.map((item) => {
