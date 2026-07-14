@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowLeft, BookOpenCheck, CheckCircle2, Clock3, Layers3, Play, RotateCcw, Save } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import ExerciseDiagnosticSummary from '../components/exercises/ExerciseDiagnosticSummary.jsx';
@@ -31,6 +32,80 @@ function answerIsEmpty(answer, type) {
   if (Array.isArray(answer)) return answer.length === 0;
   if (typeof answer === 'object') return Object.values(answer).every((value) => !String(value || '').trim());
   return !String(answer).trim();
+}
+
+function feedbackLabel(value) {
+  if (value === 'section_end') return 'Feedback alla fine della sezione';
+  if (value === 'exercise_end') return 'Resoconto alla fine';
+  return 'Feedback non mostrato';
+}
+
+function ExerciseIntro({ payload, assignmentId, onStart }) {
+  const attempt = payload.attempt;
+  const totalQuestions = payload.sections.reduce((sum, section) => sum + section.questions.length, 0);
+  const hasProgress = attempt.current_section_index > 0
+    || attempt.current_question_index > 0
+    || payload.sections.some((section) => section.status === 'completed')
+    || payload.sections.some((section) => section.questions.some((item) => !answerIsEmpty(item.answer, item.question.type)));
+  const estimatedMinutes = payload.exercise.estimated_minutes || payload.exercise.estimatedMinutes;
+
+  return (
+    <section className="section-shell py-10 dark:bg-[#0f1715] lg:py-14">
+      <div className="mx-auto max-w-4xl">
+        <Link to={`/assignments/${assignmentId}`} className="inline-flex items-center gap-2 text-sm font-black text-moss underline dark:text-emerald-300">
+          <ArrowLeft className="h-4 w-4" />Torna all’attività
+        </Link>
+
+        <article className="mt-5 overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-[#16211e]">
+          <div className="p-6 sm:p-8 lg:p-10">
+            <span className="eyebrow">Esercizio assegnato</span>
+            <h1 className="mt-4 text-3xl font-black leading-tight text-ink dark:text-white sm:text-5xl">{payload.exercise.title}</h1>
+            {payload.exercise.description ? <p className="mt-4 max-w-3xl text-base leading-7 text-ink/65 dark:text-white/65">{payload.exercise.description}</p> : null}
+
+            <div className="mt-6 flex flex-wrap gap-2 text-xs font-black text-ink/65 dark:text-white/70">
+              <span className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-linen px-3 py-2 dark:border-white/10 dark:bg-white/10"><BookOpenCheck className="h-4 w-4" />{payload.exercise.level}</span>
+              {estimatedMinutes ? <span className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-linen px-3 py-2 dark:border-white/10 dark:bg-white/10"><Clock3 className="h-4 w-4" />Circa {estimatedMinutes} min</span> : null}
+              <span className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-linen px-3 py-2 dark:border-white/10 dark:bg-white/10"><Layers3 className="h-4 w-4" />{payload.sections.length} {payload.sections.length === 1 ? 'sezione' : 'sezioni'}</span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-linen px-3 py-2 dark:border-white/10 dark:bg-white/10"><CheckCircle2 className="h-4 w-4" />{totalQuestions} {totalQuestions === 1 ? 'attività' : 'attività'}</span>
+            </div>
+
+            <section className="mt-8 rounded-2xl border border-moss/20 bg-mint/25 p-5 dark:border-emerald-300/25 dark:bg-emerald-400/10 sm:p-6">
+              <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Prima di iniziare</p>
+              <p className="mt-3 whitespace-pre-wrap text-base leading-7 text-ink/75 dark:text-white/75">{payload.exercise.instructions || 'Completa le sezioni con calma. Le risposte vengono salvate automaticamente.'}</p>
+              <div className="mt-4 flex items-center gap-2 text-xs font-black text-ink/55 dark:text-white/60"><Save className="h-4 w-4" />Autosave attivo. Puoi chiudere e riprendere più tardi.</div>
+            </section>
+
+            <section className="mt-8">
+              <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Cosa farai</p>
+              <h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Le sezioni dell’esercizio</h2>
+              <div className="mt-5 grid gap-3">
+                {payload.sections.map((section, index) => (
+                  <article key={section.id} className="flex flex-col gap-3 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.05] sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Sezione {index + 1}</p>
+                      <h3 className="mt-1 text-lg font-black text-ink dark:text-white">{section.title}</h3>
+                      {section.instructions ? <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">{section.instructions}</p> : null}
+                    </div>
+                    <div className="shrink-0 text-left sm:text-right">
+                      <p className="text-sm font-black text-ink dark:text-white">{section.questions.length} {section.questions.length === 1 ? 'domanda' : 'domande'}</p>
+                      <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">{feedbackLabel(section.feedback_timing)}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          <div className="flex flex-col gap-3 border-t border-ink/10 bg-linen/35 p-5 dark:border-white/10 dark:bg-white/[0.035] sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-10">
+            <p className="text-sm font-semibold text-ink/55 dark:text-white/55">{hasProgress ? 'Hai già iniziato questo tentativo. Riprenderai dal punto salvato.' : 'Il tentativo inizierà quando premi il pulsante.'}</p>
+            <button type="button" onClick={onStart} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-black text-white transition hover:bg-moss dark:bg-emerald-300 dark:text-[#102019]">
+              {hasProgress ? <RotateCcw className="h-4 w-4" /> : <Play className="h-4 w-4" />}{hasProgress ? 'Riprendi esercizio' : 'Inizia esercizio'}
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+  );
 }
 
 function SectionScore({ section, showScore = true }) {
@@ -98,6 +173,7 @@ export default function ExercisePlayer() {
   const resourceId = searchParams.get('resourceId') || '';
   const startNew = searchParams.get('newAttempt') === '1';
   const [payload, setPayload] = useState(null);
+  const [showIntro, setShowIntro] = useState(true);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -118,6 +194,7 @@ export default function ExercisePlayer() {
         const result = await openAssignedExercise({ assignmentId, resourceId, startNew });
         if (active) {
           setPayload(result);
+          setShowIntro(result.attempt?.status !== 'submitted');
           if (startNew && result.attempt?.status === 'in_progress') {
             window.history.replaceState(window.history.state, '', `/exercises?assignmentId=${encodeURIComponent(assignmentId)}&resourceId=${encodeURIComponent(resourceId)}`);
           }
@@ -238,6 +315,7 @@ export default function ExercisePlayer() {
   if (error && !payload) return <div className="section-shell py-16"><div className="mx-auto max-w-3xl rounded-2xl border border-red-200 bg-red-50 p-8 text-red-950"><h1 className="text-2xl font-black">Esercizio non disponibile</h1><p className="mt-3 text-sm leading-6">{error}</p><Link to={`/assignments/${assignmentId}`} className="mt-5 inline-flex font-black underline">Torna all’attività</Link></div></div>;
   if (!payload) return null;
   if (payload.attempt.status === 'submitted') return <><SEO title={`${payload.exercise.title} | Sblocco Inglese`} description="Risultato dell’esercizio assegnato." /><section className="section-shell py-10 lg:py-14"><FinalResult payload={payload} assignmentId={assignmentId} resourceId={resourceId} /></section></>;
+  if (showIntro) return <><SEO title={`${payload.exercise.title} | Sblocco Inglese`} description="Introduzione all’esercizio assegnato." /><ExerciseIntro payload={payload} assignmentId={assignmentId} onStart={() => setShowIntro(false)} /></>;
 
   const progress = totalQuestions ? Math.round((completedQuestions / totalQuestions) * 100) : 0;
   const sectionCompleted = currentSection?.status === 'completed';
@@ -246,25 +324,34 @@ export default function ExercisePlayer() {
   return (
     <>
       <SEO title={`${payload.exercise.title} | Sblocco Inglese`} description="Completa il tuo esercizio assegnato." />
-      <section className="section-shell py-7 lg:py-10">
+      <section className="section-shell py-7 dark:bg-[#0f1715] lg:py-10">
         <div className="mx-auto max-w-5xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <Link to={`/assignments/${assignmentId}`} className="text-sm font-black text-moss underline dark:text-emerald-300">Torna all’attività</Link>
-            <p className={`text-xs font-black ${saveStatus === 'Errore di salvataggio' ? 'text-red-700' : 'text-ink/50 dark:text-white/50'}`}>{saveStatus || 'Autosave attivo'}</p>
+            <button type="button" onClick={() => setShowIntro(true)} className="inline-flex items-center gap-2 text-sm font-black text-moss underline dark:text-emerald-300"><ArrowLeft className="h-4 w-4" />Panoramica esercizio</button>
+            <p className={`inline-flex items-center gap-2 text-xs font-black ${saveStatus === 'Errore di salvataggio' ? 'text-red-700' : 'text-ink/50 dark:text-white/50'}`}><Save className="h-3.5 w-3.5" />{saveStatus || 'Autosave attivo'}</p>
           </div>
 
-          <header className="mt-5 rounded-3xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-              <div><span className="eyebrow">{payload.exercise.public_id} · {payload.exercise.level}</span><h1 className="mt-3 text-3xl font-black leading-tight text-ink dark:text-white sm:text-4xl">{payload.exercise.title}</h1><p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">{payload.exercise.instructions}</p></div>
-              <div className="shrink-0 text-sm font-black text-ink/55 dark:text-white/55">Sezione {sectionIndex + 1} di {payload.sections.length}</div>
+          <header className="mt-5 overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-[#16211e]">
+            <div className="p-6 sm:p-8">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                <div><span className="eyebrow">{payload.exercise.public_id} · {payload.exercise.level}</span><h1 className="mt-3 text-3xl font-black leading-tight text-ink dark:text-white sm:text-4xl">{payload.exercise.title}</h1><p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">{payload.exercise.instructions}</p></div>
+                <div className="shrink-0 rounded-full border border-ink/10 bg-linen px-4 py-2 text-sm font-black text-ink/60 dark:border-white/10 dark:bg-white/10 dark:text-white/70">Sezione {sectionIndex + 1} di {payload.sections.length}</div>
+              </div>
             </div>
-            <div className="mt-6 h-2 overflow-hidden rounded-full bg-ink/10 dark:bg-white/10"><div className="h-full rounded-full bg-moss transition-all dark:bg-emerald-300" style={{ width: `${progress}%` }} /></div>
+            <div className="border-t border-ink/10 bg-linen/35 px-6 py-4 dark:border-white/10 dark:bg-white/[0.035] sm:px-8">
+              <div className="flex items-center justify-between gap-4 text-xs font-black text-ink/50 dark:text-white/50"><span>{completedQuestions} di {totalQuestions} completate</span><span>{progress}%</span></div>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-ink/10 dark:bg-white/10"><div className="h-full rounded-full bg-moss transition-all dark:bg-emerald-300" style={{ width: `${progress}%` }} /></div>
+            </div>
           </header>
 
-          {error ? <div className="mt-5 border-l-4 border-red-400 bg-red-50 p-4 text-sm font-bold text-red-950">{error}</div> : null}
+          {error ? <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-950 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100">{error}</div> : null}
 
           <section className="mt-6">
-            <div className="mb-4"><p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Sezione {sectionIndex + 1}</p><h2 className="mt-1 text-2xl font-black text-ink dark:text-white">{currentSection.title}</h2>{currentSection.instructions ? <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">{currentSection.instructions}</p> : null}</div>
+            <div className="mb-4 rounded-2xl border border-moss/20 bg-mint/20 p-5 dark:border-emerald-300/20 dark:bg-emerald-400/[0.08]">
+              <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Sezione {sectionIndex + 1}</p>
+              <h2 className="mt-1 text-2xl font-black text-ink dark:text-white">{currentSection.title}</h2>
+              {currentSection.instructions ? <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">{currentSection.instructions}</p> : null}
+            </div>
 
             {sectionCompleted ? (
               <div className="grid gap-5">
@@ -279,7 +366,7 @@ export default function ExercisePlayer() {
               </div>
             ) : (
               <div>
-                <div className="mb-3 flex items-center justify-between gap-3 text-xs font-black text-ink/50 dark:text-white/50"><span>Domanda {questionIndex + 1} di {currentSection.questions.length}</span><span>{currentSection.questions[questionIndex]?.question?.type?.replaceAll('_', ' ')}</span></div>
+                <div className="mb-3 flex items-center justify-between gap-3 px-1 text-xs font-black text-ink/50 dark:text-white/50"><span>Domanda {questionIndex + 1} di {currentSection.questions.length}</span><span className="rounded-full bg-linen px-3 py-1.5 dark:bg-white/10">{currentSection.questions[questionIndex]?.question?.type?.replaceAll('_', ' ')}</span></div>
                 <ExerciseQuestionRenderer
                   item={currentSection.questions[questionIndex]}
                   answer={currentSection.questions[questionIndex]?.answer}
