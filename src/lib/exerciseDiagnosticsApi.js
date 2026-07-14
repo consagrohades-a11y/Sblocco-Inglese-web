@@ -29,9 +29,8 @@ export async function saveDiagnosticCode({ code, messages = {}, ...fields }) {
   const normalizedCode = String(code || '').trim().toUpperCase().replace(/[^A-Z0-9_]+/g, '_');
   if (!normalizedCode) throw new Error('Inserisci un codice diagnostico.');
 
-  const { error: codeError } = await supabase
-    .from('exercise_builder_diagnostic_codes')
-    .upsert({
+  const { data, error } = await supabase.rpc('admin_save_exercise_builder_diagnostic_code', {
+    p_payload: {
       code: normalizedCode,
       label: fields.label?.trim(),
       primary_skill: fields.primary_skill?.trim(),
@@ -42,31 +41,11 @@ export async function saveDiagnosticCode({ code, messages = {}, ...fields }) {
       category: fields.category || 'learning',
       recommended_resources: Array.isArray(fields.recommended_resources) ? fields.recommended_resources : [],
       status: fields.status || 'active',
-    }, { onConflict: 'code' });
-  throwIfError(codeError);
-
-  const rows = [];
-  ['it', 'en'].forEach((language) => {
-    ['reminder', 'weakness', 'subtopic_review', 'topic_review'].forEach((level) => {
-      const text = String(messages[`${language}:${level}`] || '').trim();
-      if (text) rows.push({ diagnostic_code: normalizedCode, language, message_level: level, message_text: text });
-    });
+      messages,
+    },
   });
-
-  const { error: deleteError } = await supabase
-    .from('exercise_builder_diagnostic_messages')
-    .delete()
-    .eq('diagnostic_code', normalizedCode);
-  throwIfError(deleteError);
-
-  if (rows.length) {
-    const { error: messageError } = await supabase
-      .from('exercise_builder_diagnostic_messages')
-      .insert(rows);
-    throwIfError(messageError);
-  }
-
-  return normalizedCode;
+  throwIfError(error);
+  return data || normalizedCode;
 }
 
 export async function saveDiagnosticRule(rule) {
@@ -80,11 +59,11 @@ export async function saveDiagnosticRule(rule) {
     status: rule.status || 'active',
   };
   if (!payload.rule_key || !payload.topic) throw new Error('Regola e topic sono obbligatori.');
-  const { error } = await supabase
-    .from('exercise_builder_diagnostic_rules')
-    .upsert(payload, { onConflict: 'rule_key' });
+  const { data, error } = await supabase.rpc('admin_save_exercise_builder_diagnostic_rule', {
+    p_payload: payload,
+  });
   throwIfError(error);
-  return payload.rule_key;
+  return data || payload.rule_key;
 }
 
 export async function archiveDiagnosticCode(code, archived = true) {
