@@ -1,7 +1,35 @@
 import { supabase } from './supabaseClient.js';
 
+const RECOVERABLE_ATTEMPT_MESSAGES = [
+  'open attempt not found',
+  'open section not found',
+];
+
 function throwIfError(error) {
   if (error) throw error;
+}
+
+function isRecoverableAttemptError(error) {
+  const message = String(error?.message || error || '').toLowerCase();
+  return RECOVERABLE_ATTEMPT_MESSAGES.some((candidate) => message.includes(candidate));
+}
+
+async function recoverExerciseAttemptState(error, attemptId, sectionId = null) {
+  if (!isRecoverableAttemptError(error)) throw error;
+
+  let payload;
+  try {
+    payload = await openExerciseAttempt(attemptId);
+  } catch {
+    throw error;
+  }
+
+  if (payload?.attempt?.status === 'submitted') return payload;
+  if (sectionId && payload?.sections?.some((section) => section.id === sectionId && section.status === 'completed')) {
+    return payload;
+  }
+
+  throw error;
 }
 
 function currentExerciseVersion(row) {
@@ -55,7 +83,7 @@ export async function saveExerciseAnswer({
     p_current_section_index: currentSectionIndex,
     p_current_question_index: currentQuestionIndex,
   });
-  throwIfError(error);
+  if (error) return recoverExerciseAttemptState(error, attemptId);
   return data;
 }
 
@@ -64,7 +92,7 @@ export async function completeExerciseSection({ attemptId, sectionId }) {
     p_attempt_id: attemptId,
     p_section_id: sectionId,
   });
-  throwIfError(error);
+  if (error) return recoverExerciseAttemptState(error, attemptId, sectionId);
   return data;
 }
 
@@ -72,7 +100,7 @@ export async function submitExerciseAttempt(attemptId) {
   const { data, error } = await supabase.rpc('submit_exercise_builder_attempt', {
     p_attempt_id: attemptId,
   });
-  throwIfError(error);
+  if (error) return recoverExerciseAttemptState(error, attemptId);
   return data;
 }
 
