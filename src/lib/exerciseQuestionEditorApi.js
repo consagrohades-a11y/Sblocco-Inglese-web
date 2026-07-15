@@ -16,6 +16,7 @@ export async function saveExerciseQuestionVersion({ questionId = null, question 
   const { data, error } = await supabase.rpc('admin_save_exercise_builder_question_version', {
     p_question_id: questionId,
     p_payload: {
+      schema_version: 2,
       question_type: question.questionType,
       title: question.title || null,
       prompt: question.prompt,
