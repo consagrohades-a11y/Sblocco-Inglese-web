@@ -17,6 +17,7 @@ import ExerciseQuestionRenderer from '../components/exercises/ExerciseQuestionRe
 import {
   completeExerciseSection,
   openAssignedExercise,
+  openExerciseAttempt,
   saveExerciseAnswer,
   submitExerciseAttempt,
 } from '../lib/exercisePlayerApi.js';
@@ -67,14 +68,75 @@ function FinalResult({ payload, assignmentId, resourceId }) {
   const settings = payload.exercise.settings || {};
   const summary = attempt.result_summary || {};
   const pending = Number(summary.pending_review || 0);
-  const reviewed = ['reviewed', 'approved'].includes(attempt.review_status);
-  return <section className="section-shell py-10 dark:bg-[#171310] lg:py-14"><div className="mx-auto max-w-4xl"><article className="rounded-3xl border border-clay/15 bg-[#fffdf9] p-7 shadow-soft dark:border-white/10 dark:bg-[#211b18] sm:p-10"><span className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-wide ${pending ? 'bg-violet-100 text-violet-800 dark:bg-violet-300/10 dark:text-violet-200' : 'bg-blush text-clay dark:bg-coral/10 dark:text-[#f7a98d]'}`}>{pending ? <Clock3 className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}{pending ? 'Consegnato, valutazione in arrivo' : 'Esercizio completato'}</span><h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-5xl">{payload.exercise.title}</h1>{pending ? <div className="mt-7 rounded-2xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-300/20 dark:bg-violet-400/[0.07]"><p className="text-lg font-black text-violet-950 dark:text-violet-100">{pending} {pending === 1 ? 'produzione deve' : 'produzioni devono'} essere valutata dall’insegnante</p><p className="mt-2 text-sm font-semibold leading-6 text-violet-900/70 dark:text-violet-100/70">Il punteggio finale e le considerazioni appariranno nella tua area studente dopo la revisione.</p></div> : settings.show_score !== false && attempt.score !== null ? <div className="mt-7 rounded-2xl bg-coral p-6 text-white dark:bg-[#ff8b6c] dark:text-[#21140f]"><p className="text-xs font-black uppercase tracking-wide opacity-70">Risultato finale</p><p className="mt-2 text-5xl font-black">{Math.round(Number(attempt.score || 0))}%</p><p className="mt-2 text-sm font-bold opacity-80">{Number(attempt.earned_points || 0).toFixed(1)} / {Number(attempt.max_points || 0).toFixed(1)} punti</p></div> : null}{reviewed && attempt.teacher_note ? <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-300/20 dark:bg-emerald-400/[0.07]"><p className="text-xs font-black uppercase tracking-wide text-emerald-800 dark:text-emerald-200">Considerazioni dell’insegnante</p><p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-7 text-emerald-950 dark:text-emerald-100">{attempt.teacher_note}</p></div> : null}{settings.show_diagnostic_summary !== false && !pending ? <div className="mt-6"><ExerciseDiagnosticSummary summary={summary.diagnostic_summary} /></div> : null}<div className="mt-8 flex flex-wrap gap-3"><Link to={`/assignments/${assignmentId}`} className="rounded-full bg-coral px-5 py-3 text-sm font-black text-white dark:bg-[#ff8b6c] dark:text-[#21140f]">Torna all’attività</Link>{settings.allow_retry !== false && !pending ? <Link to={`/exercises?assignmentId=${assignmentId}&resourceId=${resourceId}&newAttempt=1`} className="rounded-full border border-clay/20 bg-white px-5 py-3 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white">Nuovo tentativo</Link> : null}</div></article><div className="mt-6 grid gap-5">{payload.sections.map((section) => <section key={section.id} className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 dark:border-white/10 dark:bg-[#211b18] sm:p-7"><h2 className="text-xl font-black text-ink dark:text-white">{section.title}</h2><div className="mt-5 grid gap-5">{section.questions.map((item) => <article key={item.id} className="rounded-xl border border-ink/10 p-4 dark:border-white/10"><ExerciseQuestionRenderer item={item} answer={item.answer} onChange={() => {}} disabled showScore={settings.show_score !== false} showCorrectAnswers={settings.show_correct_answers !== false} showExplanations={settings.show_explanations !== false} attemptId={attempt.id} /></article>)}</div></section>)}</div></div></section>;
+  const reviewPublished = attempt.review_status === 'approved';
+  const awaitingPublishedReview = pending > 0 || attempt.review_status === 'reviewed';
+
+  return (
+    <section className="section-shell py-10 dark:bg-[#171310] lg:py-14">
+      <div className="mx-auto max-w-4xl">
+        <article className="rounded-3xl border border-clay/15 bg-[#fffdf9] p-7 shadow-soft dark:border-white/10 dark:bg-[#211b18] sm:p-10">
+          <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-wide ${awaitingPublishedReview ? 'bg-violet-100 text-violet-800 dark:bg-violet-300/10 dark:text-violet-200' : 'bg-blush text-clay dark:bg-coral/10 dark:text-[#f7a98d]'}`}>
+            {awaitingPublishedReview ? <Clock3 className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}
+            {awaitingPublishedReview ? 'Consegnato, valutazione in arrivo' : 'Esercizio completato'}
+          </span>
+          <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-5xl">{payload.exercise.title}</h1>
+          {awaitingPublishedReview ? (
+            <div className="mt-7 rounded-2xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-300/20 dark:bg-violet-400/[0.07]">
+              <p className="text-lg font-black text-violet-950 dark:text-violet-100">La valutazione dell’insegnante non è ancora stata pubblicata</p>
+              <p className="mt-2 text-sm font-semibold leading-6 text-violet-900/70 dark:text-violet-100/70">Riceverai una notifica nella tua area studente quando punteggio e considerazioni saranno pronti.</p>
+            </div>
+          ) : settings.show_score !== false && attempt.score !== null ? (
+            <div className="mt-7 rounded-2xl bg-coral p-6 text-white dark:bg-[#ff8b6c] dark:text-[#21140f]">
+              <p className="text-xs font-black uppercase tracking-wide opacity-70">Risultato finale</p>
+              <p className="mt-2 text-5xl font-black">{Math.round(Number(attempt.score || 0))}%</p>
+              <p className="mt-2 text-sm font-bold opacity-80">{Number(attempt.earned_points || 0).toFixed(1)} / {Number(attempt.max_points || 0).toFixed(1)} punti</p>
+            </div>
+          ) : null}
+          {reviewPublished && attempt.teacher_note ? (
+            <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-300/20 dark:bg-emerald-400/[0.07]">
+              <p className="text-xs font-black uppercase tracking-wide text-emerald-800 dark:text-emerald-200">Considerazioni dell’insegnante</p>
+              <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-7 text-emerald-950 dark:text-emerald-100">{attempt.teacher_note}</p>
+            </div>
+          ) : null}
+          {settings.show_diagnostic_summary !== false && !awaitingPublishedReview ? <div className="mt-6"><ExerciseDiagnosticSummary summary={summary.diagnostic_summary} /></div> : null}
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link to={`/assignments/${assignmentId}`} className="rounded-full bg-coral px-5 py-3 text-sm font-black text-white dark:bg-[#ff8b6c] dark:text-[#21140f]">Torna all’attività</Link>
+            {settings.allow_retry !== false && !awaitingPublishedReview ? <Link to={`/exercises?assignmentId=${assignmentId}&resourceId=${resourceId}&newAttempt=1`} className="rounded-full border border-clay/20 bg-white px-5 py-3 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white">Nuovo tentativo</Link> : null}
+          </div>
+        </article>
+        <div className="mt-6 grid gap-5">
+          {payload.sections.map((section) => (
+            <section key={section.id} className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 dark:border-white/10 dark:bg-[#211b18] sm:p-7">
+              <h2 className="text-xl font-black text-ink dark:text-white">{section.title}</h2>
+              <div className="mt-5 grid gap-5">
+                {section.questions.map((item) => (
+                  <article key={item.id} className="rounded-xl border border-ink/10 p-4 dark:border-white/10">
+                    <ExerciseQuestionRenderer
+                      item={item}
+                      answer={item.answer}
+                      onChange={() => {}}
+                      disabled
+                      showScore={!awaitingPublishedReview && settings.show_score !== false}
+                      showCorrectAnswers={!awaitingPublishedReview && settings.show_correct_answers !== false}
+                      showExplanations={!awaitingPublishedReview && settings.show_explanations !== false}
+                      attemptId={attempt.id}
+                    />
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default function ExercisePlayerV2() {
   const [searchParams] = useSearchParams();
   const assignmentId = searchParams.get('assignmentId') || '';
   const resourceId = searchParams.get('resourceId') || '';
+  const requestedAttemptId = searchParams.get('attemptId') || '';
   const startNew = searchParams.get('newAttempt') === '1';
   const [payload, setPayload] = useState(null);
   const [showIntro, setShowIntro] = useState(true);
@@ -87,10 +149,12 @@ export default function ExercisePlayerV2() {
   useEffect(() => {
     let active = true;
     async function load() {
-      if (!assignmentId || !resourceId) { setError('Collegamento esercizio incompleto.'); setLoading(false); return; }
+      if (!requestedAttemptId && (!assignmentId || !resourceId)) { setError('Collegamento esercizio incompleto.'); setLoading(false); return; }
       setLoading(true); setError('');
       try {
-        const result = await openAssignedExercise({ assignmentId, resourceId, startNew });
+        const result = requestedAttemptId
+          ? await openExerciseAttempt(requestedAttemptId)
+          : await openAssignedExercise({ assignmentId, resourceId, startNew });
         if (!active) return;
         setPayload(result);
         setShowIntro(result.attempt?.status !== 'submitted');
@@ -100,7 +164,7 @@ export default function ExercisePlayerV2() {
     }
     load();
     return () => { active = false; saveTimers.current.forEach((timer) => window.clearTimeout(timer)); };
-  }, [assignmentId, resourceId, startNew]);
+  }, [assignmentId, resourceId, requestedAttemptId, startNew]);
 
   const sectionIndex = payload?.attempt?.current_section_index || 0;
   const questionIndex = payload?.attempt?.current_question_index || 0;

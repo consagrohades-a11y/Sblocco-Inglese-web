@@ -52,6 +52,27 @@ function MultipleChoice({ question, answer, onChange, disabled, multiple = false
   return <div className="grid gap-3 sm:grid-cols-2">{options.map((option) => <button key={option.key} type="button" disabled={disabled} onClick={() => choose(option.key)} className={`focus-ring rounded-xl border px-4 py-4 text-left text-sm font-black transition ${selected.has(option.key) ? 'border-moss bg-mint/60 text-ink dark:border-emerald-300 dark:bg-emerald-400/15 dark:text-white' : 'border-ink/10 bg-white text-ink hover:border-moss/40 dark:border-white/15 dark:bg-white/[0.05] dark:text-white'}`}>{option.text}</button>)}</div>;
 }
 
+function DialogueChoice({ question, answer, onChange, disabled }) {
+  const content = question.content || {};
+  return (
+    <div className="grid gap-5">
+      {content.scenario ? <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold leading-6 text-amber-950 dark:border-amber-300/20 dark:bg-amber-300/[0.07] dark:text-amber-100">{content.scenario}</div> : null}
+      <div className="grid gap-3">
+        {(content.turns || []).map((turn, index) => (
+          <div key={turn.key || index} className={`flex ${index % 2 ? 'justify-end' : 'justify-start'}`}>
+            <div className={`max-w-[88%] rounded-2xl border p-4 ${index % 2 ? 'border-violet-200 bg-violet-50 dark:border-violet-300/20 dark:bg-violet-400/[0.07]' : 'border-cyan-200 bg-cyan-50 dark:border-cyan-300/20 dark:bg-cyan-400/[0.07]'}`}>
+              <p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/40 dark:text-white/40">{turn.speaker}</p>
+              <p className="mt-1 text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">{turn.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      {content.response_prompt ? <p className="text-base font-black leading-7 text-ink dark:text-white">{content.response_prompt}</p> : null}
+      <MultipleChoice question={question} answer={answer} onChange={onChange} disabled={disabled} />
+    </div>
+  );
+}
+
 function GapFill({ question, answer, onChange, disabled, select = false }) {
   const values = answer && typeof answer === 'object' && !Array.isArray(answer) ? answer : {};
   return <div className="grid gap-4">{(question.content?.blanks || []).map((blank, index) => <label key={blank.key} className="grid gap-2"><span className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Spazio {index + 1}</span>{select ? <select value={values[blank.key] || ''} onChange={(event) => onChange({ ...values, [blank.key]: event.target.value })} disabled={disabled} className="focus-ring rounded-xl border-2 border-ink/10 bg-white px-4 py-3 text-base font-bold text-ink dark:border-white/15 dark:bg-[#101a17] dark:text-white"><option value="">Scegli...</option>{(blank.options || []).map((option) => <option key={option}>{option}</option>)}</select> : <TextAnswer value={values[blank.key] || ''} onChange={(value) => onChange({ ...values, [blank.key]: value })} disabled={disabled} />}</label>)}</div>;
@@ -221,6 +242,7 @@ export default function ExerciseQuestionRendererV2({
   const result = item?.result || null;
   const input = useMemo(() => {
     if (type === 'multiple_choice') return <MultipleChoice question={question} answer={answer} onChange={onChange} disabled={disabled} />;
+    if (type === 'dialogue_choice') return <DialogueChoice question={question} answer={answer} onChange={onChange} disabled={disabled} />;
     if (type === 'multiple_select') return <MultipleChoice question={question} answer={answer} onChange={onChange} disabled={disabled} multiple />;
     if (type === 'gap_fill') return <GapFill question={question} answer={answer} onChange={onChange} disabled={disabled} />;
     if (type === 'select_gap') return <GapFill question={question} answer={answer} onChange={onChange} disabled={disabled} select />;
@@ -234,5 +256,5 @@ export default function ExerciseQuestionRendererV2({
     return <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">Tipologia non supportata: {type || 'sconosciuta'}.</p>;
   }, [type, question, answer, onChange, disabled, attemptId, item?.id]);
 
-  return <div><div className="mb-4 flex items-start gap-3">{type === 'dialogue_roleplay' ? <MessageCircleMore className="mt-0.5 h-5 w-5 shrink-0 text-violet-700 dark:text-violet-200" /> : type === 'audio_response' ? <Mic className="mt-0.5 h-5 w-5 shrink-0 text-violet-700 dark:text-violet-200" /> : type === 'reading_comprehension' ? <BookOpen className="mt-0.5 h-5 w-5 shrink-0 text-cyan-700 dark:text-cyan-200" /> : null}<div>{question.prompt ? <p className="text-lg font-black leading-7 text-ink dark:text-white">{question.prompt}</p> : null}{question.instructions ? <p className="mt-1 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">{question.instructions}</p> : null}</div></div>{input}<ResultPanel result={result} teacherComment={item?.teacher_comment} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} /></div>;
+  return <div><div className="mb-4 flex items-start gap-3">{['dialogue_choice', 'dialogue_roleplay'].includes(type) ? <MessageCircleMore className="mt-0.5 h-5 w-5 shrink-0 text-violet-700 dark:text-violet-200" /> : type === 'audio_response' ? <Mic className="mt-0.5 h-5 w-5 shrink-0 text-violet-700 dark:text-violet-200" /> : type === 'reading_comprehension' ? <BookOpen className="mt-0.5 h-5 w-5 shrink-0 text-cyan-700 dark:text-cyan-200" /> : null}<div>{question.prompt ? <p className="text-lg font-black leading-7 text-ink dark:text-white">{question.prompt}</p> : null}{question.instructions ? <p className="mt-1 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">{question.instructions}</p> : null}</div></div>{input}<ResultPanel result={result} teacherComment={item?.teacher_comment} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} /></div>;
 }

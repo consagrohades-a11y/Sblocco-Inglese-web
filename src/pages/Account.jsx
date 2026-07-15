@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
+import LearnerNotificationsPanel from '../components/learner/LearnerNotificationsPanel.jsx';
 import AuthNotice from '../components/auth/AuthNotice';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { getAuthErrorMessage } from '../auth/authMessages';
@@ -216,6 +217,8 @@ export default function Account() {
               </div>
             ) : null}
           </header>
+
+          {isLearner ? <LearnerNotificationsPanel limit={3} /> : null}
 
           {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 dark:border-white/10 dark:bg-[#211b18] dark:text-white/65">Caricamento profilo...</div> : null}
           {error ? <div className="mt-6"><AuthNotice tone="error">{error}</AuthNotice></div> : null}

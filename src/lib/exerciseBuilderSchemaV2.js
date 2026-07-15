@@ -11,6 +11,7 @@ export const EXERCISE_BUILDER_QUESTION_TYPES = [
   'error_correction',
   'word_order',
   'content_block',
+  'dialogue_choice',
   'written_response',
   'dialogue_roleplay',
   'audio_response',
@@ -164,7 +165,7 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
   if (!EXERCISE_BUILDER_QUESTION_TYPES.includes(questionType)) {
     errors.push(pathMessage(path, `type non valido. Usa ${EXERCISE_BUILDER_QUESTION_TYPES.join(', ')}.`));
   }
-  if (schemaVersion === 1 && ['written_response', 'dialogue_roleplay', 'audio_response', 'reading_comprehension'].includes(questionType)) {
+  if (schemaVersion === 1 && ['dialogue_choice', 'written_response', 'dialogue_roleplay', 'audio_response', 'reading_comprehension'].includes(questionType)) {
     errors.push(pathMessage(path, 'i nuovi tipi di produzione e comprensione richiedono schema_version 2.'));
   }
   if (!prompt) errors.push(pathMessage(path, 'prompt obbligatorio.'));
@@ -181,7 +182,7 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
     if (!stringArray(diagnostics.tested_codes).length) warnings.push(pathMessage(path, 'aggiungi almeno un diagnostics.tested_codes prima della pubblicazione.'));
   }
 
-  if (questionType === 'multiple_choice' || questionType === 'multiple_select') {
+  if (questionType === 'multiple_choice' || questionType === 'multiple_select' || questionType === 'dialogue_choice') {
     const rawOptions = Array.isArray(source.options) ? source.options : Array.isArray(content.options) ? content.options : [];
     const options = rawOptions.map(normalizeOption).filter((option) => option.text);
     const explicitCorrect = source.correct_answer ?? content.correct_answer;
@@ -191,9 +192,25 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
     }
     const correctCount = options.filter((option) => option.is_correct).length;
     if (options.length < 2) errors.push(pathMessage(path, 'servono almeno due opzioni.'));
-    if (questionType === 'multiple_choice' && correctCount !== 1) errors.push(pathMessage(path, 'multiple_choice richiede esattamente una risposta corretta.'));
+    if (['multiple_choice', 'dialogue_choice'].includes(questionType) && correctCount !== 1) errors.push(pathMessage(path, `${questionType} richiede esattamente una risposta corretta.`));
     if (questionType === 'multiple_select' && correctCount < 1) errors.push(pathMessage(path, 'multiple_select richiede almeno una risposta corretta.'));
     content.options = options;
+  }
+
+  if (questionType === 'dialogue_choice') {
+    const rawTurns = Array.isArray(source.turns) ? source.turns : Array.isArray(content.turns) ? content.turns : [];
+    content.scenario = text(source.scenario || content.scenario) || null;
+    content.response_prompt = text(source.response_prompt || content.response_prompt) || prompt;
+    content.turns = rawTurns.map((turn, index) => ({
+      key: text(turn?.key) || `turn_${index + 1}`,
+      speaker: text(turn?.speaker),
+      text: text(turn?.text),
+    }));
+    if (content.turns.length < 2) errors.push(pathMessage(path, 'dialogue_choice richiede almeno due turni.'));
+    content.turns.forEach((turn, index) => {
+      if (!turn.speaker || !turn.text) errors.push(pathMessage(`${path}.turns[${index}]`, 'speaker e text sono obbligatori.'));
+    });
+    grading.mode = 'automatic';
   }
 
   if (questionType === 'gap_fill' || questionType === 'select_gap') {
@@ -550,6 +567,39 @@ const basicQuestion = {
 
 export const exerciseBuilderTemplates = {
   question: { schema_version: 2, entity_type: 'question', question: basicQuestion },
+  dialogue_choice: {
+    schema_version: 2,
+    entity_type: 'question',
+    question: {
+      type: 'dialogue_choice',
+      title: 'Choosing the best reply',
+      prompt: 'Choose the most natural reply to complete the dialogue.',
+      instructions: 'Leggi il dialogo e scegli la risposta più adatta.',
+      instruction_language: 'it',
+      level: 'A2',
+      topic: 'everyday_conversation',
+      primary_skill: 'functional_language',
+      learning_objective: 'Choose an appropriate response in a short everyday exchange.',
+      difficulty: 'standard',
+      content: {
+        scenario: 'Two colleagues are arranging a lunch break.',
+        response_prompt: 'What should Alex say next?',
+        turns: [
+          { key: 'turn_1', speaker: 'Sam', text: 'Are you free for lunch at one?' },
+          { key: 'turn_2', speaker: 'Alex', text: 'I have a meeting until half past one.' },
+        ],
+        options: [
+          { key: 'option_1', text: 'Could we meet at two instead?', is_correct: true, error_code: null },
+          { key: 'option_2', text: 'I ate lunch yesterday.', is_correct: false, error_code: 'FUNCTIONAL_LANGUAGE_CONTEXT' },
+        ],
+      },
+      grading: { mode: 'automatic', weight: 1, nearly_correct_multiplier: 0.5 },
+      feedback: { explanation: 'The first reply acknowledges the timing problem and suggests an alternative.' },
+      diagnostics: { tested_codes: ['FUNCTIONAL_LANGUAGE_RESPONSE'], fallback_error_code: 'FUNCTIONAL_LANGUAGE_CONTEXT' },
+      tags: ['dialogue', 'functional-language'],
+      foundation_links: [],
+    },
+  },
   written_response: {
     schema_version: 2,
     entity_type: 'question',

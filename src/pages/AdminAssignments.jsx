@@ -194,7 +194,7 @@ export default function AdminAssignments() {
     const { data, error: queryError } = await supabase.rpc('admin_list_assignments_overview');
     if (queryError) {
       setAssignments([]);
-      setError('Non è stato possibile caricare le assegnazioni. Applica la migrazione della console assegnazioni in Supabase.');
+      setError(`Non è stato possibile caricare le assegnazioni${queryError.message ? `: ${queryError.message}` : '.'}`);
     } else {
       setAssignments(data || []);
     }
