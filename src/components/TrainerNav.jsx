@@ -64,7 +64,7 @@ export default function TrainerNav() {
   }, [user?.id]);
 
   const items = useMemo(() => guidedCounts
-    ? [assignmentsHome, trainerHome, ...trainerConfig.filter((trainer) => guidedCounts[trainer.id] > 0)]
+    ? [assignmentsHome, trainerHome, ...trainerConfig.filter((trainer) => trainer.id === 'travel-expression' || guidedCounts[trainer.id] > 0)]
     : [trainerHome, practiceHome, ...trainerConfig], [guidedCounts]);
 
   return (

@@ -22,6 +22,7 @@ import { legalPages } from './data/legalPages';
 const Trainer = lazy(() => import('./pages/Trainer'));
 const GeneralExpressionTrainer = lazy(() => import('./pages/GeneralExpressionTrainer'));
 const HospitalityExpressionTrainer = lazy(() => import('./pages/HospitalityExpressionTrainer'));
+const TravelExpressionTrainer = lazy(() => import('./pages/TravelExpressionTrainer'));
 const WordTrainer = lazy(() => import('./pages/WordTrainer'));
 const PracticeHub = lazy(() => import('./pages/PracticeHub'));
 const ExercisePlayer = lazy(() => import('./pages/ExercisePlayer'));
@@ -117,6 +118,7 @@ export default function App() {
             <Route path="/trainers/business-expression" element={<Trainer />} />
             <Route path="/trainers/general-expression" element={<GeneralExpressionTrainer />} />
             <Route path="/trainers/hospitality-expression" element={<HospitalityExpressionTrainer />} />
+            <Route path="/trainers/travel-expression" element={<TravelExpressionTrainer />} />
             <Route path="/trainers/word-trainer" element={<WordTrainer />} />
             <Route path="/practice" element={<ProtectedRoute><PracticeHub /></ProtectedRoute>} />
             <Route path="/exercises" element={<ProtectedRoute><ExercisePlayer /></ProtectedRoute>} />
