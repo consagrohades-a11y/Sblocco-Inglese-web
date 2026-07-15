@@ -47,7 +47,7 @@ export default function AdminCreateAssignment() {
     };
   }, [learnerId]);
 
-  async function createAssignment(publishNow) {
+  async function createAssignment() {
     setError('');
 
     if (!title.trim()) {
@@ -64,7 +64,7 @@ export default function AdminCreateAssignment() {
 
     setSubmitting(true);
 
-    const { error: createError } = await supabase.rpc('admin_create_assignment', {
+    const { data: createdAssignmentId, error: createError } = await supabase.rpc('admin_create_assignment', {
       target_learner_id: learnerId,
       assignment_title: title.trim(),
       learner_message: learnerMessage.trim() || null,
@@ -72,17 +72,20 @@ export default function AdminCreateAssignment() {
       is_required: required,
       deadline_at_value: deadline ? new Date(deadline).toISOString() : null,
       estimated_minutes_value: parsedMinutes,
-      publish_now: publishNow,
+      publish_now: false,
     });
 
     setSubmitting(false);
 
-    if (createError) {
+    if (createError || !createdAssignmentId) {
       setError('Non è stato possibile creare l’assegnazione. Verifica che la migrazione admin_create_assignment sia stata applicata in Supabase.');
       return;
     }
 
-    navigate(`/admin/learners/${learnerId}`, { replace: true });
+    navigate(`/admin/learners/${learnerId}/assignments/${createdAssignmentId}/content`, {
+      replace: true,
+      state: { assignmentCreated: true },
+    });
   }
 
   const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-[#101a17] dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
@@ -95,22 +98,22 @@ export default function AdminCreateAssignment() {
       />
       <section className="section-shell py-12 lg:py-16">
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-soft sm:p-8">
-            <span className="eyebrow">Assegnazione</span>
+          <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+            <span className="eyebrow">Nuova assegnazione</span>
             <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">Crea assegnazione</h1>
+                <h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">1. Informazioni principali</h1>
                 <p className="mt-3 text-base leading-7 text-ink/70 dark:text-white/65">
                   {loadingLearner
                     ? 'Caricamento studente...'
                     : learner
-                      ? `Nuova attività per ${learner.display_name || learner.email}.`
+                      ? `Prepara una nuova attività per ${learner.display_name || learner.email}. Nel passaggio successivo sceglierai deck, batch, esercizi e Trainer.`
                       : 'Studente non trovato.'}
                 </p>
               </div>
               <Link
                 to={`/admin/learners/${learnerId}`}
-                className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white dark:border-white/20 dark:bg-white/10 dark:text-white px-5 py-2.5 text-sm font-black text-ink transition hover:bg-linen"
+                className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-black text-ink transition hover:bg-linen dark:border-white/20 dark:bg-white/10 dark:text-white"
               >
                 Annulla
               </Link>
@@ -125,8 +128,8 @@ export default function AdminCreateAssignment() {
 
           {!loadingLearner && learner ? (
             <form className="mt-6 grid gap-6" onSubmit={(event) => event.preventDefault()}>
-              <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm sm:p-8">
-                <h2 className="text-xl font-black text-ink dark:text-white">Informazioni principali</h2>
+              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+                <h2 className="text-xl font-black text-ink dark:text-white">Titolo e messaggi</h2>
 
                 <label className="mt-6 block">
                   <span className="text-sm font-black text-ink dark:text-white">Titolo</span>
@@ -143,97 +146,55 @@ export default function AdminCreateAssignment() {
 
                 <label className="mt-5 block">
                   <span className="text-sm font-black text-ink dark:text-white">Messaggio per lo studente</span>
-                  <span className="mt-1 block text-xs font-semibold leading-5 text-ink/50 dark:text-white/50">
-                    Questo testo sarà visibile allo studente. Puoi inserire istruzioni, contesto, feedback o indicazioni personali.
-                  </span>
+                  <span className="mt-1 block text-xs font-semibold leading-5 text-ink/50 dark:text-white/50">Visibile allo studente nella pagina dell’attività.</span>
                   <textarea
                     value={learnerMessage}
                     onChange={(event) => setLearnerMessage(event.target.value)}
                     rows={6}
                     maxLength={3000}
-                    placeholder="Scrivi qui ciò che vuoi che lo studente legga..."
+                    placeholder="Scrivi istruzioni, contesto o indicazioni personali..."
                     className={fieldClass}
                   />
                 </label>
 
-                <label className="mt-5 block rounded-xl border border-amber-200 bg-amber-50 p-4">
-                  <span className="text-sm font-black text-amber-950">Nota privata admin</span>
-                  <span className="mt-1 block text-xs font-semibold leading-5 text-amber-900/70">
-                    Solo tu puoi vedere questa nota. Non sarà mostrata allo studente.
-                  </span>
+                <label className="mt-5 block rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-300/30 dark:bg-amber-300/10">
+                  <span className="text-sm font-black text-amber-950 dark:text-amber-100">Nota privata admin</span>
+                  <span className="mt-1 block text-xs font-semibold leading-5 text-amber-900/70 dark:text-amber-100/60">Visibile soltanto nell’area amministrativa.</span>
                   <textarea
                     value={privateNote}
                     onChange={(event) => setPrivateNote(event.target.value)}
                     rows={4}
                     maxLength={3000}
-                    placeholder="Esempio: difficoltà osservate, obiettivo della prossima lezione, motivo dell’assegnazione..."
+                    placeholder="Difficoltà osservate, obiettivo della prossima lezione, motivo dell’assegnazione..."
                     className={fieldClass}
                   />
                 </label>
               </section>
 
-              <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm sm:p-8">
+              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-8">
                 <h2 className="text-xl font-black text-ink dark:text-white">Impostazioni</h2>
 
-                <label className="mt-6 flex items-start gap-3 rounded-xl border border-ink/10 bg-linen dark:border-white/10 dark:bg-white/10 dark:text-white/40 dark:bg-white/[0.05] p-4">
-                  <input
-                    type="checkbox"
-                    checked={required}
-                    onChange={(event) => setRequired(event.target.checked)}
-                    className="mt-1 h-4 w-4"
-                  />
-                  <span>
-                    <span className="block text-sm font-black text-ink dark:text-white">Attività obbligatoria</span>
-                    <span className="mt-1 block text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">
-                      Disattiva questa opzione se l’attività è facoltativa.
-                    </span>
-                  </span>
+                <label className="mt-6 flex items-start gap-3 rounded-xl border border-ink/10 bg-linen p-4 dark:border-white/10 dark:bg-white/[0.05]">
+                  <input type="checkbox" checked={required} onChange={(event) => setRequired(event.target.checked)} className="mt-1 h-4 w-4" />
+                  <span><span className="block text-sm font-black text-ink dark:text-white">Attività obbligatoria</span><span className="mt-1 block text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">Disattiva questa opzione per un’attività facoltativa.</span></span>
                 </label>
 
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                  <label className="block">
-                    <span className="text-sm font-black text-ink dark:text-white">Scadenza</span>
-                    <input
-                      type="datetime-local"
-                      value={deadline}
-                      onChange={(event) => setDeadline(event.target.value)}
-                      className={fieldClass}
-                    />
-                  </label>
-
-                  <label className="block">
-                    <span className="text-sm font-black text-ink dark:text-white">Tempo stimato, minuti</span>
-                    <input
-                      type="number"
-                      min="1"
-                      step="1"
-                      value={estimatedMinutes}
-                      onChange={(event) => setEstimatedMinutes(event.target.value)}
-                      placeholder="20"
-                      className={fieldClass}
-                    />
-                  </label>
+                  <label className="block"><span className="text-sm font-black text-ink dark:text-white">Scadenza</span><input type="datetime-local" value={deadline} onChange={(event) => setDeadline(event.target.value)} className={fieldClass} /></label>
+                  <label className="block"><span className="text-sm font-black text-ink dark:text-white">Tempo stimato, minuti</span><input type="number" min="1" step="1" value={estimatedMinutes} onChange={(event) => setEstimatedMinutes(event.target.value)} placeholder="20" className={fieldClass} /></label>
                 </div>
               </section>
 
-              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-                <button
-                  type="button"
-                  disabled={submitting}
-                  onClick={() => createAssignment(false)}
-                  className="focus-ring min-h-12 rounded-full border border-ink/15 bg-white dark:border-white/20 dark:bg-white/10 dark:text-white px-6 py-3 text-sm font-black text-ink transition hover:bg-linen dark:hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {submitting ? 'Salvataggio...' : 'Salva come bozza'}
-                </button>
-                <button
-                  type="button"
-                  disabled={submitting}
-                  onClick={() => createAssignment(true)}
-                  className="focus-ring min-h-12 rounded-full bg-ink px-6 py-3 text-sm font-black text-white transition hover:bg-moss disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {submitting ? 'Pubblicazione...' : 'Pubblica per lo studente'}
-                </button>
-              </div>
+              <section className="rounded-2xl border border-moss/20 bg-mint/25 p-5 dark:border-emerald-300/20 dark:bg-emerald-400/[0.06]">
+                <p className="text-sm font-black text-ink dark:text-white">Passaggio successivo</p>
+                <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">L’assegnazione verrà creata come bozza e si aprirà subito l’editor completo. Potrai aggiungere contenuti e pubblicarla senza tornare indietro.</p>
+                <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                  <Link to={`/admin/learners/${learnerId}`} className="focus-ring min-h-12 rounded-full border border-ink/15 bg-white px-6 py-3 text-center text-sm font-black text-ink transition hover:bg-linen dark:border-white/20 dark:bg-white/10 dark:text-white">Annulla</Link>
+                  <button type="button" disabled={submitting} onClick={createAssignment} className="focus-ring min-h-12 rounded-full bg-ink px-6 py-3 text-sm font-black text-white transition hover:bg-moss disabled:cursor-not-allowed disabled:opacity-50">
+                    {submitting ? 'Creazione...' : 'Crea e scegli i contenuti'}
+                  </button>
+                </div>
+              </section>
             </form>
           ) : null}
         </div>
