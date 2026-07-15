@@ -46,6 +46,7 @@ const AdminAssignmentContent = lazy(() => import('./pages/AdminAssignmentContent
 const AdminTrainerContent = lazy(() => import('./pages/AdminTrainerContent'));
 const AdminTrainerCardImport = lazy(() => import('./pages/AdminTrainerCardImport'));
 const AdminTrainerCardDelete = lazy(() => import('./pages/AdminTrainerCardDelete'));
+const AdminTravelTrainer = lazy(() => import('./pages/AdminTravelTrainer'));
 const AdminWordTrainerContent = lazy(() => import('./pages/AdminWordTrainerContent'));
 const AdminWordTrainerImport = lazy(() => import('./pages/AdminWordTrainerImport'));
 const AdminWordDecks = lazy(() => import('./pages/AdminWordDecks'));
@@ -171,6 +172,7 @@ export default function App() {
               <Route path="content/hospitality-expressions/import" element={<AdminTrainerCardImport domain="hospitality" />} />
               <Route path="content/hospitality-expressions/decks" element={<AdminDecks itemType="expression" domain="hospitality" />} />
               <Route path="content/hospitality-expressions/archive" element={<AdminTrainerCardDelete domain="hospitality" />} />
+              <Route path="content/travel-expressions" element={<AdminTravelTrainer />} />
               <Route path="assignments" element={<AdminSectionOverview section="assignments" />} />
               <Route path="analytics" element={<AdminAnalytics />} />
               <Route path="analytics/learners/:learnerId" element={<AdminLearnerAnalytics />} />
