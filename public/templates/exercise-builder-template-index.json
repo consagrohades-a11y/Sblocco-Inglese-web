@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "templates": [
+    { "key": "multiple_choice", "entity_type": "question" },
+    { "key": "multiple_select", "entity_type": "question" },
+    { "key": "gap_fill", "entity_type": "question" },
+    { "key": "select_gap", "entity_type": "question" },
+    { "key": "translation", "entity_type": "question" },
+    { "key": "error_correction", "entity_type": "question" },
+    { "key": "word_order", "entity_type": "question" },
+    { "key": "content_block", "entity_type": "question" },
+    { "key": "dialogue_choice", "entity_type": "question" },
+    { "key": "reading_comprehension", "entity_type": "question" },
+    { "key": "written_response", "entity_type": "question" },
+    { "key": "dialogue_roleplay", "entity_type": "question" },
+    { "key": "audio_response", "entity_type": "question" },
+    { "key": "question_pool", "entity_type": "question_pool" },
+    { "key": "exercise", "entity_type": "exercise" },
+    { "key": "bundle", "entity_type": "bundle" }
+  ]
+}
