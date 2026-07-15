@@ -35,6 +35,13 @@ export const assignmentActivityCatalog = [
     route: '/trainers/hospitality-expression',
   },
   {
+    key: 'travel-expression-trainer',
+    type: 'trainer',
+    title: 'Travel Expression Trainer',
+    description: '100 espressioni per prenotazioni, aeroporto, alloggio, trasporti, ristoranti, problemi ed emergenze.',
+    route: '/trainers/travel-expression',
+  },
+  {
     key: 'word-trainer',
     type: 'trainer',
     title: 'Word Trainer',
