@@ -52,6 +52,8 @@ const AdminDecks = lazy(() => import('./pages/AdminDecks'));
 const AdminWordTrainerArchive = lazy(() => import('./pages/AdminWordTrainerArchive'));
 const AdminContentOverview = lazy(() => import('./pages/AdminContentOverview'));
 const AdminSectionOverview = lazy(() => import('./pages/AdminSectionOverview'));
+const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics'));
+const AdminLearnerAnalytics = lazy(() => import('./pages/AdminLearnerAnalytics'));
 const AdminExerciseBuilder = lazy(() => import('./pages/AdminExerciseBuilder'));
 const AdminExerciseBuilderReview = lazy(() => import('./pages/AdminExerciseBuilderReview'));
 const AdminExerciseBuilderLibrary = lazy(() => import('./pages/AdminExerciseBuilderLibrary'));
@@ -88,7 +90,6 @@ function ScrollManager() {
 
   return null;
 }
-
 function PageFallback() {
   return <div className="section-shell py-16"><div className="mx-auto max-w-3xl rounded-lg border border-ink/10 bg-white p-6 text-center shadow-sm dark:border-white/10 dark:bg-white/[0.06]"><p className="text-sm font-black text-ink dark:text-white">Loading...</p></div></div>;
 }
@@ -169,7 +170,8 @@ export default function App() {
               <Route path="content/hospitality-expressions/decks" element={<AdminDecks itemType="expression" domain="hospitality" />} />
               <Route path="content/hospitality-expressions/archive" element={<AdminTrainerCardDelete domain="hospitality" />} />
               <Route path="assignments" element={<AdminSectionOverview section="assignments" />} />
-              <Route path="analytics" element={<AdminSectionOverview section="analytics" />} />
+              <Route path="analytics" element={<AdminAnalytics />} />
+              <Route path="analytics/learners/:learnerId" element={<AdminLearnerAnalytics />} />
               <Route path="settings" element={<AdminSectionOverview section="settings" />} />
               <Route path="content/trainers" element={<Navigate to="/admin/content/expressions" replace />} />
               <Route path="content/trainers/import" element={<Navigate to="/admin/content/expressions/import" replace />} />
