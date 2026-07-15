@@ -47,14 +47,16 @@ export default function SrsCard({
   card,
   progress,
   revealed,
-  onReveal,
-  onRate,
+  answerVisible = false,
+  onReveal = () => {},
+  onRate = () => {},
   sessionLabel,
   targetLabel,
   dark = false,
 }) {
   const targetText = card?.expression || card?.word || 'Contenuto mancante';
   const displayTargetLabel = targetLabel || (card?.word ? 'Word' : 'Expression');
+  const isRevealed = revealed ?? answerVisible;
   const safeCard = {
     id: card?.id || 'missing-card-id',
     category: card?.category || 'Categoria mancante',
@@ -116,7 +118,7 @@ export default function SrsCard({
             {safeCard.pronunciation}
           </p>
 
-          {!revealed ? (
+          {!isRevealed ? (
             <button
               type="button"
               onClick={onReveal}
@@ -128,7 +130,7 @@ export default function SrsCard({
           ) : null}
         </div>
 
-        {revealed ? (
+        {isRevealed ? (
           <div className={`mt-4 border-t pt-4 ${dark ? 'border-white/10' : 'border-ink/10'}`}>
             <div className={`mx-auto max-w-2xl rounded-lg p-4 text-center ${dark ? 'bg-mint/15' : 'bg-mint/60'}`}>
               <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-mint' : 'text-moss'}`}>Italiano</p>
