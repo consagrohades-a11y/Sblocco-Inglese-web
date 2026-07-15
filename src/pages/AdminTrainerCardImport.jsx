@@ -134,12 +134,12 @@ export default function AdminTrainerCardImport({ domain = 'general' }) {
     <CardImportWorkspace
       type={config.navType}
       title={`Importa ${config.label}`}
-      description={`Carica una singola card o un batch CSV o JSON per ${config.label}. Tutte le card vengono validate e salvate come bozze da revisionare.`}
+      description={`Carica una singola card o un batch CSV o JSON per ${config.label}. Le card nuove o sostituite vengono salvate come bozze da revisionare.`}
       itemLabel="expression card"
       itemPlural="expression card"
       editorPath={config.editorPath}
       archivePath={config.archivePath}
-      rpcName="admin_import_expression_cards"
+      rpcName="admin_import_expression_cards_with_duplicate_policy"
       normalizeCard={(source) => normalizeExpressionCard(source, domain)}
       validateCard={(card, index) => validateExpressionCard(card, index, config.idPrefix)}
       columns={columns}
