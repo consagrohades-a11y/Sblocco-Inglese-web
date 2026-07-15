@@ -83,6 +83,7 @@ export async function loadPublishedExerciseCatalog() {
       id,
       public_id,
       status,
+      generated_from_collection,
       current_version_id,
       published_at,
       exercise_builder_exercise_versions!exercise_builder_exercises_current_version_fk(
@@ -98,6 +99,7 @@ export async function loadPublishedExerciseCatalog() {
       )
     `)
     .eq('status', 'published')
+    .eq('generated_from_collection', false)
     .not('current_version_id', 'is', null)
     .order('published_at', { ascending: false });
   throwIfError(error);
@@ -115,6 +117,7 @@ export async function loadExerciseBuilderCatalogForAdmin() {
       id,
       public_id,
       status,
+      generated_from_collection,
       current_version_id,
       created_at,
       published_at,
@@ -129,6 +132,7 @@ export async function loadExerciseBuilderCatalogForAdmin() {
         created_at
       )
     `)
+    .eq('generated_from_collection', false)
     .not('current_version_id', 'is', null)
     .order('created_at', { ascending: false });
   throwIfError(error);

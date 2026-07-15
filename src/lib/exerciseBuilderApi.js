@@ -78,7 +78,7 @@ export async function loadExerciseBuilderOverview() {
   ] = await Promise.all([
     supabase.from('exercise_builder_questions').select('*', { count: 'exact', head: true }),
     supabase.from('exercise_builder_pools').select('*', { count: 'exact', head: true }),
-    supabase.from('exercise_builder_exercises').select('*', { count: 'exact', head: true }),
+    supabase.from('exercise_builder_exercises').select('*', { count: 'exact', head: true }).eq('generated_from_collection', false),
     supabase
       .from('exercise_builder_import_items')
       .select('*', { count: 'exact', head: true })

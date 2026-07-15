@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
+import { loadCollectionQuestionCandidates } from '../lib/exerciseCollectionsApi.js';
 import {
   loadExercisePoolDetail,
   loadExercisePools,
@@ -92,9 +93,25 @@ export default function AdminExercisePools() {
       if (!active) return;
       const requestedIds = (searchParams.get('questionIds') || '').split(',').filter(Boolean);
       const requestedPoolId = searchParams.get('poolId');
+      const requestedCollectionId = searchParams.get('collectionId');
       if (searchParams.get('new') === '1' || (!requestedPoolId && !poolData.length)) {
         setPool({ ...EMPTY_POOL });
-        setMemberships(questionData.filter((item) => requestedIds.includes(item.id)).map((item) => membershipFromQuestion(item)));
+        let importedMemberships = questionData.filter((item) => requestedIds.includes(item.id)).map((item) => membershipFromQuestion(item));
+        if (requestedCollectionId) {
+          try {
+            const importResult = await loadCollectionQuestionCandidates(requestedCollectionId);
+            const candidateMap = new Map((importResult.candidates || []).map((item) => [item.question_id, item.question_version_id]));
+            importedMemberships = questionData
+              .filter((item) => candidateMap.has(item.id))
+              .map((item) => ({ ...membershipFromQuestion(item), questionVersionId: candidateMap.get(item.id) || item.versionId }));
+            const notes = [`${importedMemberships.length} domande compatibili importate dalla Collection`];
+            if (importResult.incompatible_count) notes.push(`${importResult.incompatible_count} esercizi completi esclusi`);
+            setSuccess(`${notes.join(', ')}. I duplicati sono stati rimossi.`);
+          } catch (importError) {
+            setError(importError.message || 'Non è stato possibile importare la Collection nella pool.');
+          }
+        }
+        setMemberships(importedMemberships);
       } else {
         const targetId = requestedPoolId || poolData[0]?.id;
         if (targetId) await openPool(targetId);
