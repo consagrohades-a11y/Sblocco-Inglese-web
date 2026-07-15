@@ -81,23 +81,23 @@ begin
       current_date - (v_chart_days - 1),
       current_date,
       interval '1 day'
-    )::date day
+    )::date activity_date
   ),
   daily_activity as (
     select coalesce(jsonb_agg(jsonb_build_object(
-      'date', day.day,
-      'srs_reviews', (select count(*) from period_reviews review where review.created_at >= day.day and review.created_at < day.day + 1),
-      'exercise_attempts', (select count(*) from submitted_attempts attempt where attempt.submitted_at >= day.day and attempt.submitted_at < day.day + 1),
+      'date', calendar.activity_date,
+      'srs_reviews', (select count(*) from period_reviews review where review.created_at >= calendar.activity_date and review.created_at < calendar.activity_date + 1),
+      'exercise_attempts', (select count(*) from submitted_attempts attempt where attempt.submitted_at >= calendar.activity_date and attempt.submitted_at < calendar.activity_date + 1),
       'active_learners', (
         select count(distinct activity.learner_id)
         from (
-          select review.learner_id from period_reviews review where review.created_at >= day.day and review.created_at < day.day + 1
+          select review.learner_id from period_reviews review where review.created_at >= calendar.activity_date and review.created_at < calendar.activity_date + 1
           union all
-          select attempt.learner_id from period_attempts attempt where attempt.activity_at >= day.day and attempt.activity_at < day.day + 1
+          select attempt.learner_id from period_attempts attempt where attempt.activity_at >= calendar.activity_date and attempt.activity_at < calendar.activity_date + 1
         ) activity
       )
-    ) order by day.day), '[]'::jsonb) payload
-    from calendar_days day
+    ) order by calendar.activity_date), '[]'::jsonb) payload
+    from calendar_days calendar
   ),
   learner_rows as (
     select
@@ -364,15 +364,15 @@ begin
       current_date - (v_chart_days - 1),
       current_date,
       interval '1 day'
-    )::date day
+    )::date activity_date
   ),
   daily_activity as (
     select coalesce(jsonb_agg(jsonb_build_object(
-      'date', day.day,
-      'srs_reviews', (select count(*) from period_reviews review where review.created_at >= day.day and review.created_at < day.day + 1),
-      'exercise_attempts', (select count(*) from period_attempts attempt where attempt.status = 'submitted' and attempt.submitted_at >= day.day and attempt.submitted_at < day.day + 1)
-    ) order by day.day), '[]'::jsonb) payload
-    from calendar_days day
+      'date', calendar.activity_date,
+      'srs_reviews', (select count(*) from period_reviews review where review.created_at >= calendar.activity_date and review.created_at < calendar.activity_date + 1),
+      'exercise_attempts', (select count(*) from period_attempts attempt where attempt.status = 'submitted' and attempt.submitted_at >= calendar.activity_date and attempt.submitted_at < calendar.activity_date + 1)
+    ) order by calendar.activity_date), '[]'::jsonb) payload
+    from calendar_days calendar
   ),
   card_rows as (
     select
