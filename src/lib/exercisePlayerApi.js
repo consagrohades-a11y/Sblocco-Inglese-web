@@ -32,6 +32,15 @@ export async function openAssignedExercise({ assignmentId, resourceId, startNew 
   return data;
 }
 
+export async function openExerciseAttempt(attemptId) {
+  const { data, error } = await supabase.rpc('exercise_builder_attempt_payload', {
+    p_attempt_id: attemptId,
+  });
+  throwIfError(error);
+  if (!data) throw new Error('Tentativo non disponibile.');
+  return data;
+}
+
 export async function saveExerciseAnswer({
   attemptId,
   attemptQuestionId,

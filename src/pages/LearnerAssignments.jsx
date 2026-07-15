@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import LearnerNotificationsPanel from '../components/learner/LearnerNotificationsPanel.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 
@@ -200,6 +201,8 @@ export default function LearnerAssignments() {
               </div>
             </div>
           </header>
+
+          <LearnerNotificationsPanel />
 
           {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 dark:border-white/10 dark:bg-[#211b18] dark:text-white/65">Caricamento attività...</div> : null}
           {error ? <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-sm font-bold text-red-900 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100">{error}</div> : null}

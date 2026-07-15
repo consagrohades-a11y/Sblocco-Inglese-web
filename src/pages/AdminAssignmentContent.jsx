@@ -60,7 +60,8 @@ export default function AdminAssignmentContent() {
       ]);
       if (!active) return;
       if (assignmentError || resourceError || studyError) {
-        setError('Non è stato possibile caricare l’assegnazione. Verifica che le migrazioni siano state applicate in Supabase.');
+        const loadError = assignmentError || resourceError || studyError;
+        setError(`Non è stato possibile caricare l’assegnazione${loadError?.message ? `: ${loadError.message}` : '.'}`);
       } else if (!assignmentData) {
         setError('Assegnazione non trovata.');
       } else {
@@ -155,7 +156,7 @@ export default function AdminAssignmentContent() {
     });
     if (updateError) {
       setSaving(false);
-      setError('Non è stato possibile aggiornare l’assegnazione. Applica la migrazione admin_update_assignment in Supabase.');
+      setError(`Non è stato possibile aggiornare l’assegnazione${updateError.message ? `: ${updateError.message}` : '.'}`);
       return;
     }
 
