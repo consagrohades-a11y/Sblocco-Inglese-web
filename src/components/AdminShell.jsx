@@ -13,6 +13,7 @@ import {
   MessageSquareText,
   PanelLeftClose,
   PanelLeftOpen,
+  Plane,
   Settings,
   UserRound,
   Users,
@@ -58,12 +59,13 @@ const navigationGroups = [
   {
     id: 'expressions',
     label: 'Espressioni',
-    description: 'General, Business e Hospitality',
+    description: 'General, Business, Hospitality e Travel',
     icon: MessageSquareText,
     items: [
       { label: 'Espressioni generali', to: '/admin/content/expressions', icon: MessageSquareText },
       { label: 'Espressioni business', to: '/admin/content/business-expressions', icon: MessageSquareText },
       { label: 'Espressioni hospitality', to: '/admin/content/hospitality-expressions', icon: MessageSquareText },
+      { label: 'Travel Trainer', to: '/admin/content/travel-expressions', icon: Plane },
     ],
   },
   {

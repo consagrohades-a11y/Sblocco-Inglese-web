@@ -1,5 +1,5 @@
 import React from 'react';
-import { Archive, BookOpen, FileJson, FileSpreadsheet } from 'lucide-react';
+import { Archive, BookOpen, FileJson, FileSpreadsheet, Plane } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { adminButton, adminSurface } from '../styles/adminUi.js';
@@ -43,6 +43,14 @@ const areas = [
       { label: 'Apri editor e revisione', to: '/admin/content/hospitality-expressions', icon: BookOpen, variant: 'primary' },
       { label: 'Importa CSV o JSON', to: '/admin/content/hospitality-expressions/import', icon: FileJson, variant: 'secondary' },
       { label: 'Archivio ed eliminazione', to: '/admin/content/hospitality-expressions/archive', icon: Archive, variant: 'secondary' },
+    ],
+  },
+  {
+    title: 'Travel Expression Trainer',
+    description: 'Gestisci in un unico spazio le Travel card, il catalogo iniziale, le nuove importazioni e la pubblicazione nel Trainer.',
+    status: 'Supabase attivo',
+    actions: [
+      { label: 'Gestisci Travel Trainer', to: '/admin/content/travel-expressions', icon: Plane, variant: 'primary' },
     ],
   },
 ];
