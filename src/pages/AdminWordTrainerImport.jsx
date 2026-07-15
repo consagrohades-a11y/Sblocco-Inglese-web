@@ -101,12 +101,12 @@ export default function AdminWordTrainerImport() {
     <CardImportWorkspace
       type="word"
       title="Importa Word Trainer"
-      description="Carica una singola word card o un batch CSV o JSON. Tutte le card vengono validate e salvate come bozze da revisionare."
+      description="Carica una singola word card o un batch CSV o JSON. Le card nuove o sostituite vengono salvate come bozze da revisionare."
       itemLabel="word card"
       itemPlural="word card"
       editorPath="/admin/content/words"
       archivePath="/admin/content/words/archive"
-      rpcName="admin_import_word_cards"
+      rpcName="admin_import_word_cards_with_duplicate_policy"
       normalizeCard={normalizeWordCard}
       validateCard={validateWordCard}
       columns={columns}
