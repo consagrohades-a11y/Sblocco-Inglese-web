@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   BarChart3,
   Blocks,
   BookOpen,
+  ChevronDown,
+  CircleHelp,
   ClipboardList,
   FileCheck2,
+  Languages,
   LayoutDashboard,
   Menu,
+  MessageSquareText,
   PanelLeftClose,
   PanelLeftOpen,
   Settings,
@@ -21,53 +25,89 @@ import { useAuth } from '../auth/AuthContext.jsx';
 
 const navigationGroups = [
   {
-    label: 'Workspace',
+    id: 'home',
+    label: 'Home admin',
+    description: 'Riepilogo generale',
+    icon: LayoutDashboard,
     items: [
       { label: 'Dashboard', to: '/admin', icon: LayoutDashboard, end: true },
     ],
   },
   {
+    id: 'learners',
     label: 'Studenti',
+    description: 'Account e attività assegnate',
+    icon: Users,
     items: [
-      { label: 'Tutti gli studenti', to: '/admin/learners', icon: Users },
+      { label: 'Elenco studenti', to: '/admin/learners', icon: Users },
+      { label: 'Assegnazioni', to: '/admin/assignments', icon: ClipboardList },
     ],
   },
   {
-    label: 'Contenuti',
+    id: 'words',
+    label: 'Parole',
+    description: 'Word Trainer, batch e deck',
+    icon: Languages,
     items: [
-      { label: 'Panoramica', to: '/admin/content', icon: BookOpen, end: true },
-      { label: 'Exercise Builder', to: '/admin/content/exercises', icon: Blocks, end: true },
-      { label: 'Revisioni esercizi', to: '/admin/content/exercises/review', icon: FileCheck2 },
+      { label: 'Libreria e modifica', to: '/admin/content/words', icon: BookOpen, end: true },
+      { label: 'Importa e gestisci batch', to: '/admin/content/words/import', icon: FileCheck2 },
+      { label: 'Deck di parole', to: '/admin/content/words/decks', icon: Blocks },
+      { label: 'Archivio parole', to: '/admin/content/words/archive', icon: FileCheck2 },
+    ],
+  },
+  {
+    id: 'expressions',
+    label: 'Espressioni',
+    description: 'General, Business e Hospitality',
+    icon: MessageSquareText,
+    items: [
+      { label: 'Espressioni generali', to: '/admin/content/expressions', icon: MessageSquareText },
+      { label: 'Espressioni business', to: '/admin/content/business-expressions', icon: MessageSquareText },
+      { label: 'Espressioni hospitality', to: '/admin/content/hospitality-expressions', icon: MessageSquareText },
+    ],
+  },
+  {
+    id: 'questions',
+    label: 'Domande',
+    description: 'Banca, modifica, pool e diagnosi',
+    icon: CircleHelp,
+    items: [
+      { label: 'Banca domande', to: '/admin/content/exercises/questions', icon: BookOpen, end: true },
+      { label: 'Modifica domande', to: '/admin/content/exercises/questions/edit', icon: FileCheck2 },
+      { label: 'Gruppi di domande', to: '/admin/content/exercises/pools', icon: Blocks },
+      { label: 'Regole diagnostiche', to: '/admin/content/exercises/diagnostics', icon: BarChart3, end: true },
+      { label: 'Importa diagnostica', to: '/admin/content/exercises/diagnostics/import', icon: FileCheck2 },
+    ],
+  },
+  {
+    id: 'exercises',
+    label: 'Esercizi',
+    description: 'Creazione, pubblicazione e risultati',
+    icon: Blocks,
+    items: [
+      { label: 'Panoramica esercizi', to: '/admin/content/exercises', icon: LayoutDashboard, end: true },
+      { label: 'Importa e revisiona', to: '/admin/content/exercises/review', icon: FileCheck2 },
+      { label: 'Componi esercizi', to: '/admin/content/exercises/composer', icon: ClipboardList },
       { label: 'Libreria esercizi', to: '/admin/content/exercises/library', icon: BookOpen },
-      { label: 'Diagnostica esercizi', to: '/admin/content/exercises/diagnostics', icon: BarChart3 },
-      { label: 'Importa tassonomia', to: '/admin/content/exercises/diagnostics/import', icon: FileCheck2 },
-      { label: 'Question Bank', to: '/admin/content/exercises/questions', icon: BookOpen },
-      { label: 'Question Editor', to: '/admin/content/exercises/questions/edit', icon: FileCheck2 },
-      { label: 'Pool Builder', to: '/admin/content/exercises/pools', icon: Blocks },
-      { label: 'Exercise Composer', to: '/admin/content/exercises/composer', icon: ClipboardList },
-      { label: 'Collections', to: '/admin/content/exercises/collections', icon: Blocks },
-      { label: 'Risultati esercizi', to: '/admin/content/exercises/results', icon: BarChart3 },
-      { label: 'Pulizia e archivio', to: '/admin/content/exercises/maintenance', icon: FileCheck2 },
-      { label: 'Word Trainer', to: '/admin/content/words', icon: BookOpen },
-      { label: 'General Expressions', to: '/admin/content/expressions', icon: BookOpen },
-      { label: 'Business Expressions', to: '/admin/content/business-expressions', icon: BookOpen },
-      { label: 'Hospitality Expressions', to: '/admin/content/hospitality-expressions', icon: BookOpen },
+      { label: 'Raccolte di esercizi', to: '/admin/content/exercises/collections', icon: Blocks },
+      { label: 'Risultati studenti', to: '/admin/content/exercises/results', icon: BarChart3 },
+      { label: 'Archivio e pulizia', to: '/admin/content/exercises/maintenance', icon: FileCheck2 },
     ],
   },
   {
-    label: 'Assegnazioni',
-    items: [
-      { label: 'Panoramica', to: '/admin/assignments', icon: ClipboardList },
-    ],
-  },
-  {
+    id: 'analysis',
     label: 'Analisi',
+    description: 'Attività, progressi e risultati',
+    icon: BarChart3,
     items: [
       { label: 'Attività e risultati', to: '/admin/analytics', icon: BarChart3 },
     ],
   },
   {
+    id: 'settings',
     label: 'Impostazioni',
+    description: 'Tema e account admin',
+    icon: Settings,
     items: [
       { label: 'Tema e account', to: '/admin/settings', icon: Settings },
     ],
@@ -79,40 +119,116 @@ function getInitialSidebarState() {
   return window.localStorage.getItem('sblocco_admin_sidebar') === 'collapsed';
 }
 
-function AdminNavigation({ onNavigate, collapsed = false }) {
+function getInitialOpenGroups() {
+  if (typeof window === 'undefined') return ['home', 'learners'];
+  try {
+    const stored = JSON.parse(window.localStorage.getItem('sblocco_admin_groups') || '[]');
+    return Array.isArray(stored) && stored.length ? stored : ['home', 'learners'];
+  } catch {
+    return ['home', 'learners'];
+  }
+}
+
+function itemMatchesPath(item, pathname) {
+  if (item.end) return pathname === item.to;
+  return pathname === item.to || pathname.startsWith(`${item.to}/`);
+}
+
+function activeGroupForPath(pathname) {
+  return navigationGroups.find((group) => group.items.some((item) => itemMatchesPath(item, pathname)))?.id || 'home';
+}
+
+function AdminNavigation({ onNavigate, collapsed = false, pathname }) {
+  const activeGroupId = useMemo(() => activeGroupForPath(pathname), [pathname]);
+  const [openGroups, setOpenGroups] = useState(getInitialOpenGroups);
+
+  useEffect(() => {
+    setOpenGroups((current) => current.includes(activeGroupId) ? current : [...current, activeGroupId]);
+  }, [activeGroupId]);
+
+  useEffect(() => {
+    window.localStorage.setItem('sblocco_admin_groups', JSON.stringify(openGroups));
+  }, [openGroups]);
+
+  function toggleGroup(groupId) {
+    setOpenGroups((current) => current.includes(groupId)
+      ? current.filter((id) => id !== groupId)
+      : [...current, groupId]);
+  }
+
+  if (collapsed) {
+    return (
+      <nav className="mt-4 flex-1 overflow-y-auto px-2 pb-4 [scrollbar-color:rgba(255,255,255,0.2)_transparent] [scrollbar-width:thin]" aria-label="Navigazione amministrazione">
+        <div className="grid gap-1.5">
+          {navigationGroups.map((group) => {
+            const GroupIcon = group.icon;
+            const groupActive = group.id === activeGroupId;
+            return (
+              <Link
+                key={group.id}
+                to={group.items[0].to}
+                onClick={onNavigate}
+                title={`${group.label}: ${group.description}`}
+                aria-label={group.label}
+                className={`focus-ring flex h-11 items-center justify-center rounded-xl transition ${groupActive ? 'bg-white text-ink shadow-sm' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+              >
+                <GroupIcon aria-hidden="true" className="h-5 w-5" />
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+    );
+  }
+
   return (
-    <nav className={`mt-4 flex-1 overflow-y-auto pb-4 [scrollbar-color:rgba(255,255,255,0.2)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-track]:bg-transparent ${collapsed ? 'px-2' : 'px-3'}`} aria-label="Navigazione amministrazione">
-      <div className={collapsed ? 'space-y-2' : 'space-y-4'}>
-        {navigationGroups.map((group) => (
-          <section key={group.label}>
-            <p className={collapsed ? 'sr-only' : 'px-3 text-[0.68rem] font-black uppercase tracking-[0.16em] text-white/45'}>
-              {group.label}
-            </p>
-            <div className={collapsed ? 'grid gap-1' : 'mt-1 grid gap-0.5'}>
-              {group.items.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.end}
-                    onClick={onNavigate}
-                    title={collapsed ? item.label : undefined}
-                    aria-label={collapsed ? item.label : undefined}
-                    className={({ isActive }) => `focus-ring flex min-h-10 items-center rounded-xl py-2 text-sm font-black transition ${collapsed ? 'justify-center px-2' : 'gap-3 px-3'} ${
-                      isActive
-                        ? 'bg-white text-ink shadow-sm'
-                        : 'text-white/72 hover:bg-white/10 hover:text-white'
-                    }`}
-                  >
-                    <Icon aria-hidden="true" className={collapsed ? 'h-5 w-5 shrink-0' : 'h-4 w-4 shrink-0'} />
-                    <span className={collapsed ? 'sr-only' : ''}>{item.label}</span>
-                  </NavLink>
-                );
-              })}
-            </div>
-          </section>
-        ))}
+    <nav className="mt-3 flex-1 overflow-y-auto px-3 pb-4 [scrollbar-color:rgba(255,255,255,0.2)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-track]:bg-transparent" aria-label="Navigazione amministrazione">
+      <div className="grid gap-1.5">
+        {navigationGroups.map((group) => {
+          const GroupIcon = group.icon;
+          const open = openGroups.includes(group.id);
+          const groupActive = group.id === activeGroupId;
+          return (
+            <section key={group.id} className={`overflow-hidden rounded-xl border transition ${groupActive ? 'border-white/20 bg-white/[0.07]' : 'border-transparent'}`}>
+              <button
+                type="button"
+                onClick={() => toggleGroup(group.id)}
+                className={`focus-ring flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition ${groupActive ? 'text-white' : 'text-white/72 hover:bg-white/[0.07] hover:text-white'}`}
+                aria-expanded={open}
+                aria-controls={`admin-group-${group.id}`}
+              >
+                <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${groupActive ? 'bg-white text-ink' : 'bg-white/[0.08] text-white/75'}`}>
+                  <GroupIcon aria-hidden="true" className="h-4 w-4" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-black">{group.label}</span>
+                  <span className="mt-0.5 block truncate text-[0.68rem] font-semibold text-white/42">{group.description}</span>
+                </span>
+                <ChevronDown aria-hidden="true" className={`h-4 w-4 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+              </button>
+
+              {open ? (
+                <div id={`admin-group-${group.id}`} className="grid gap-0.5 px-2 pb-2">
+                  {group.items.map((item) => {
+                    const ItemIcon = item.icon;
+                    return (
+                      <NavLink
+                        key={item.to}
+                        to={item.to}
+                        end={item.end}
+                        onClick={onNavigate}
+                        className={({ isActive }) => `focus-ring flex min-h-9 items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-black transition ${isActive ? 'bg-white text-ink shadow-sm' : 'text-white/62 hover:bg-white/10 hover:text-white'}`}
+                      >
+                        <ItemIcon aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+                        <span>{item.label}</span>
+                      </NavLink>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </section>
+          );
+        })}
       </div>
     </nav>
   );
@@ -172,11 +288,14 @@ export default function AdminShell() {
               <PanelLeftOpen aria-hidden="true" className="h-4 w-4" />
             </button>
           ) : (
-            <p className="mt-2 text-xs font-bold uppercase tracking-[0.15em] text-emerald-200/75">Admin workspace</p>
+            <div className="mt-2">
+              <p className="text-xs font-bold uppercase tracking-[0.15em] text-emerald-200/75">Pannello admin</p>
+              <p className="mt-1 text-[0.68rem] font-semibold text-white/40">Scegli un’area e poi lo strumento.</p>
+            </div>
           )}
         </div>
 
-        <AdminNavigation onNavigate={() => setMobileOpen(false)} collapsed={collapsed} />
+        <AdminNavigation onNavigate={() => setMobileOpen(false)} collapsed={collapsed} pathname={location.pathname} />
 
         <div className={`border-t border-white/10 ${collapsed ? 'grid justify-items-center gap-2 p-2' : 'p-3'}`}>
           {collapsed ? (
@@ -213,11 +332,11 @@ export default function AdminShell() {
   return (
     <div
       className="min-h-screen bg-paper text-ink dark:bg-[#0f1715] dark:text-white"
-      style={{ '--admin-sidebar-width': sidebarCollapsed ? '5rem' : '16rem' }}
+      style={{ '--admin-sidebar-width': sidebarCollapsed ? '5rem' : '18rem' }}
     >
       <aside
         aria-label="Workspace amministrazione"
-        className={`fixed inset-y-0 left-0 z-50 hidden flex-col overflow-hidden bg-ink shadow-2xl transition-[width] duration-200 lg:flex ${sidebarCollapsed ? 'w-20' : 'w-64'}`}
+        className={`fixed inset-y-0 left-0 z-50 hidden flex-col overflow-hidden bg-ink shadow-2xl transition-[width] duration-200 lg:flex ${sidebarCollapsed ? 'w-20' : 'w-72'}`}
       >
         {renderSidebarContent(sidebarCollapsed)}
       </aside>
@@ -243,7 +362,7 @@ export default function AdminShell() {
             onClick={() => setMobileOpen(false)}
             aria-label="Chiudi navigazione admin"
           />
-          <aside aria-label="Workspace amministrazione mobile" className="absolute inset-y-0 left-0 flex w-[min(20rem,calc(100vw-3rem))] flex-col overflow-hidden bg-ink shadow-2xl">
+          <aside aria-label="Workspace amministrazione mobile" className="absolute inset-y-0 left-0 flex w-[min(22rem,calc(100vw-2rem))] flex-col overflow-hidden bg-ink shadow-2xl">
             <button
               type="button"
               onClick={() => setMobileOpen(false)}
@@ -257,7 +376,7 @@ export default function AdminShell() {
         </div>
       ) : null}
 
-      <div className={`min-w-0 transition-[padding] duration-200 ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
+      <div className={`min-w-0 transition-[padding] duration-200 ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
         <Outlet />
       </div>
     </div>

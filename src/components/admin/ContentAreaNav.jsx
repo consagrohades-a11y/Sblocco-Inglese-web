@@ -4,39 +4,39 @@ import { Link, NavLink } from 'react-router-dom';
 
 const contentAreas = {
   word: {
-    label: 'Word Trainer',
+    label: 'Parole',
     routes: [
-      { label: 'Editor e revisione', to: '/admin/content/words', icon: Pencil, end: true },
-      { label: 'Importazioni e batch', to: '/admin/content/words/import', icon: FileUp },
-      { label: 'Deck', to: '/admin/content/words/decks', icon: Layers3 },
-      { label: 'Archivio', to: '/admin/content/words/archive', icon: Archive },
+      { label: 'Libreria e modifica', to: '/admin/content/words', icon: Pencil, end: true },
+      { label: 'Importa e gestisci batch', to: '/admin/content/words/import', icon: FileUp },
+      { label: 'Deck pubblicabili', to: '/admin/content/words/decks', icon: Layers3 },
+      { label: 'Archivio e rimozione', to: '/admin/content/words/archive', icon: Archive },
     ],
   },
   expression: {
-    label: 'General Expressions',
+    label: 'Espressioni generali',
     routes: [
-      { label: 'Editor e revisione', to: '/admin/content/expressions', icon: Pencil, end: true },
-      { label: 'Importazioni e batch', to: '/admin/content/expressions/import', icon: FileUp },
-      { label: 'Deck', to: '/admin/content/expressions/decks', icon: Layers3 },
-      { label: 'Archivio', to: '/admin/content/expressions/archive', icon: Archive },
+      { label: 'Libreria e modifica', to: '/admin/content/expressions', icon: Pencil, end: true },
+      { label: 'Importa e gestisci batch', to: '/admin/content/expressions/import', icon: FileUp },
+      { label: 'Deck pubblicabili', to: '/admin/content/expressions/decks', icon: Layers3 },
+      { label: 'Archivio e rimozione', to: '/admin/content/expressions/archive', icon: Archive },
     ],
   },
   business: {
-    label: 'Business Expressions',
+    label: 'Espressioni business',
     routes: [
-      { label: 'Editor e revisione', to: '/admin/content/business-expressions', icon: Pencil, end: true },
-      { label: 'Importazioni e batch', to: '/admin/content/business-expressions/import', icon: FileUp },
-      { label: 'Deck', to: '/admin/content/business-expressions/decks', icon: Layers3 },
-      { label: 'Archivio', to: '/admin/content/business-expressions/archive', icon: Archive },
+      { label: 'Libreria e modifica', to: '/admin/content/business-expressions', icon: Pencil, end: true },
+      { label: 'Importa e gestisci batch', to: '/admin/content/business-expressions/import', icon: FileUp },
+      { label: 'Deck pubblicabili', to: '/admin/content/business-expressions/decks', icon: Layers3 },
+      { label: 'Archivio e rimozione', to: '/admin/content/business-expressions/archive', icon: Archive },
     ],
   },
   hospitality: {
-    label: 'Hospitality Expressions',
+    label: 'Espressioni hospitality',
     routes: [
-      { label: 'Editor e revisione', to: '/admin/content/hospitality-expressions', icon: Pencil, end: true },
-      { label: 'Importazioni e batch', to: '/admin/content/hospitality-expressions/import', icon: FileUp },
-      { label: 'Deck', to: '/admin/content/hospitality-expressions/decks', icon: Layers3 },
-      { label: 'Archivio', to: '/admin/content/hospitality-expressions/archive', icon: Archive },
+      { label: 'Libreria e modifica', to: '/admin/content/hospitality-expressions', icon: Pencil, end: true },
+      { label: 'Importa e gestisci batch', to: '/admin/content/hospitality-expressions/import', icon: FileUp },
+      { label: 'Deck pubblicabili', to: '/admin/content/hospitality-expressions/decks', icon: Layers3 },
+      { label: 'Archivio e rimozione', to: '/admin/content/hospitality-expressions/archive', icon: Archive },
     ],
   },
 };
@@ -95,7 +95,7 @@ export default function ContentAreaNav({ type, onNewCard }) {
             className="focus-ring inline-flex min-h-9 items-center gap-2 rounded-lg border border-white/15 px-3 py-1.5 text-xs font-black text-white/75 transition hover:bg-white/10 hover:text-white"
           >
             <LayoutDashboard aria-hidden="true" className="h-4 w-4" />
-            Pannello admin
+            Home admin
           </Link>
         </div>
       </div>
