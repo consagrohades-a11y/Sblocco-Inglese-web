@@ -1,19 +1,12 @@
 import React from 'react';
-import { BarChart3, ClipboardList, Settings, Users } from 'lucide-react';
+import { BarChart3, Settings, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import ThemeToggle from '../components/ThemeToggle';
+import AdminAssignments from './AdminAssignments.jsx';
 import { adminButton, adminSurface } from '../styles/adminUi.js';
 
 const sections = {
-  assignments: {
-    eyebrow: 'Assegnazioni',
-    title: 'Gestione delle attività',
-    description: 'Le assegnazioni attuali vengono create e gestite dal profilo del singolo studente. La vista globale arriverà insieme a filtri, stati e progressi sincronizzati.',
-    icon: ClipboardList,
-    action: { label: 'Apri gli studenti', to: '/admin/learners', icon: Users },
-    items: ['Attive', 'Bozze', 'Completate', 'Archiviate'],
-  },
   analytics: {
     eyebrow: 'Analisi',
     title: 'Attività e risultati',
@@ -32,6 +25,8 @@ const sections = {
 };
 
 export default function AdminSectionOverview({ section }) {
+  if (section === 'assignments') return <AdminAssignments />;
+
   const config = sections[section];
   const Icon = config.icon;
   const ActionIcon = config.action?.icon;
