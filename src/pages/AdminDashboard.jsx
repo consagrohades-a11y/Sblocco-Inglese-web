@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3, BookOpen, ClipboardList, Settings, Users } from 'lucide-react';
+import { BarChart3, BookOpen, ClipboardList, Plane, Settings, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { useAuth } from '../auth/AuthContext.jsx';
@@ -21,18 +21,25 @@ const sections = [
     status: 'Attivo',
   },
   {
+    title: 'Travel Trainer',
+    description: 'Aggiungi, importa, modifica e pubblica direttamente le espressioni per i viaggi.',
+    to: '/admin/content/travel-expressions',
+    icon: Plane,
+    status: 'Attivo',
+  },
+  {
     title: 'Assegnazioni',
     description: 'Attività collegate agli studenti, con struttura pronta per filtri e progressi.',
     to: '/admin/assignments',
     icon: ClipboardList,
-    status: 'In sviluppo',
+    status: 'Attivo',
   },
   {
     title: 'Analisi',
     description: 'Attività studenti, card difficili e risultati degli esercizi.',
     to: '/admin/analytics',
     icon: BarChart3,
-    status: 'In sviluppo',
+    status: 'Attivo',
   },
   {
     title: 'Impostazioni',
@@ -56,10 +63,11 @@ export default function AdminDashboard() {
             <span className="eyebrow">Dashboard</span>
             <h1 className="mt-4 text-3xl font-black leading-tight text-ink dark:text-white sm:text-4xl">Ciao {displayName}</h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-ink/70 dark:text-white/65">
-              Gestisci studenti, contenuti e attività da un unico workspace. Le funzioni non ancora collegate a dati reali sono indicate chiaramente.
+              Gestisci studenti, contenuti e attività da un unico workspace. Il Travel Trainer ora ha un’area diretta per creare e pubblicare le tue card.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/admin/content/words" className={adminButton.primary}>Revisiona Word card</Link>
+              <Link to="/admin/content/travel-expressions" className={adminButton.primary}><Plane className="h-4 w-4" />Gestisci Travel Trainer</Link>
+              <Link to="/admin/content/words" className={adminButton.secondary}>Revisiona Word card</Link>
               <Link to="/admin/content/expressions" className={adminButton.positive}>Revisiona Expressions</Link>
               <Link to="/admin/learners" className={adminButton.secondary}>Apri studenti</Link>
             </div>
