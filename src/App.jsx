@@ -66,6 +66,7 @@ const AdminExerciseResults = lazy(() => import('./pages/AdminExerciseResults'));
 const AdminExerciseMaintenance = lazy(() => import('./pages/AdminExerciseMaintenance'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
+const LearnerCollectionPath = lazy(() => import('./pages/LearnerCollectionPath'));
 const LearnerProgress = lazy(() => import('./pages/LearnerProgress'));
 
 function ScrollManager() {
@@ -118,6 +119,7 @@ export default function App() {
             <Route path="/trainers/word-trainer" element={<WordTrainer />} />
             <Route path="/practice" element={<ProtectedRoute><PracticeHub /></ProtectedRoute>} />
             <Route path="/exercises" element={<ProtectedRoute><ExercisePlayer /></ProtectedRoute>} />
+            <Route path="/collections" element={<ProtectedRoute><LearnerCollectionPath /></ProtectedRoute>} />
             <Route path="/grammar" element={<GrammarHub />} />
             <Route path="/grammar/a1" element={<GrammarA1Hub />} />
             <Route path="/grammar/a1/:topicId" element={<GrammarA1Topic />} />

@@ -39,6 +39,7 @@ function formatDate(value) {
 }
 
 function resourceTypeLabel(resource) {
+  if (resource.resource_type === 'exercise_collection') return 'Percorso Collection';
   if (resource.resource_type === 'practice_session') return 'Pratica mirata';
   if (resource.resource_type === 'custom_exercise') return 'Esercizio personalizzato';
   if (resource.resource_type === 'trainer') return 'Trainer';
@@ -46,6 +47,7 @@ function resourceTypeLabel(resource) {
 }
 
 function resourceDestination(resource, assignmentId) {
+  if (resource.resource_type === 'exercise_collection') return `/collections?assignmentId=${assignmentId}&resourceId=${resource.id}`;
   if (resource.resource_type === 'practice_session') return `/practice?assignmentId=${assignmentId}&resourceId=${resource.id}`;
   if (resource.resource_type === 'custom_exercise') return `/exercises?assignmentId=${assignmentId}&resourceId=${resource.id}`;
   return resource.route;
@@ -87,7 +89,7 @@ export default function LearnerAssignmentDetail() {
           .maybeSingle(),
         supabase
           .from('assignment_resources')
-          .select('id, resource_key, resource_type, title, description, route, sequence_index, practice_config, exercise_config')
+          .select('id, resource_key, resource_type, title, description, route, sequence_index, practice_config, exercise_config, collection_config, collection_snapshot, collection_parent_resource_id')
           .eq('assignment_id', assignmentId)
           .order('sequence_index', { ascending: true }),
         supabase
@@ -116,7 +118,7 @@ export default function LearnerAssignmentDetail() {
         setTrainerBreakdown([]);
       } else {
         setAssignment(data ?? null);
-        setResources(resourceData ?? []);
+        setResources((resourceData ?? []).filter((item) => !item.collection_parent_resource_id));
         setStudyScope(studyData ?? null);
         const grouped = new Map();
         (learningItemData ?? []).forEach((item) => {
@@ -258,6 +260,7 @@ export default function LearnerAssignmentDetail() {
                               <h4 className="mt-2 text-lg font-black text-ink dark:text-white">{resource.title}</h4>
                               {resource.description ? <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">{resource.description}</p> : null}
                               {resource.resource_type === 'custom_exercise' ? <p className="mt-2 text-xs font-bold text-clay dark:text-[#f7a98d]">Autosave attivo · nuove domande a ogni tentativo quando usa una pool</p> : null}
+                              {resource.resource_type === 'exercise_collection' ? <p className="mt-2 text-xs font-bold text-clay dark:text-[#f7a98d]">Versione {resource.collection_config?.version_number} · {resource.collection_snapshot?.items?.length || 0} tappe in ordine · avanzamento salvato</p> : null}
                             </div>
                             <Link to={resourceDestination(resource, assignment.id)} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-coral px-5 py-2.5 text-sm font-black text-white transition hover:bg-clay dark:bg-[#ff8b6c] dark:text-[#21140f] dark:hover:bg-[#f7a98d]">
                               Inizia

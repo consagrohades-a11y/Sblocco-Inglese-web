@@ -7,7 +7,8 @@ function throwIfError(error) {
 export async function loadExerciseComposerCatalog() {
   const { data: exercises, error: exerciseError } = await supabase
     .from('exercise_builder_exercises')
-    .select('id, public_id, status, current_version_id, created_at, updated_at')
+    .select('id, public_id, status, current_version_id, generated_from_collection, created_at, updated_at')
+    .eq('generated_from_collection', false)
     .not('current_version_id', 'is', null)
     .order('created_at', { ascending: false });
   throwIfError(exerciseError);

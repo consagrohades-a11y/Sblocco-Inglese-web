@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
+import AssignmentCollectionPicker from '../components/admin/AssignmentCollectionPicker.jsx';
 import AssignmentExercisePicker from '../components/admin/AssignmentExercisePicker.jsx';
 import AssignmentPracticeEditor, { DEFAULT_ASSIGNMENT_PRACTICE } from '../components/admin/AssignmentPracticeEditor.jsx';
 import AssignmentStudyScopeEditor from '../components/admin/AssignmentStudyScopeEditor.jsx';
@@ -20,6 +21,7 @@ export default function AdminAssignmentContent() {
   const [assignment, setAssignment] = useState(null);
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [selectedExerciseResources, setSelectedExerciseResources] = useState([]);
+  const [selectedCollectionResources, setSelectedCollectionResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -52,7 +54,7 @@ export default function AdminAssignmentContent() {
           .select('id, learner_id, title, learner_note, reason, status, required, deadline_at, estimated_minutes, published_at, created_at')
           .eq('id', assignmentId).eq('learner_id', learnerId).maybeSingle(),
         supabase.from('assignment_resources')
-          .select('id, resource_key, resource_type, title, description, route, sequence_index, practice_config, exercise_config').eq('assignment_id', assignmentId)
+          .select('id, resource_key, resource_type, title, description, route, sequence_index, practice_config, exercise_config, collection_config, collection_snapshot, collection_parent_resource_id').eq('assignment_id', assignmentId)
           .order('sequence_index', { ascending: true }),
         supabase.from('assignment_study_settings')
           .select('include_in_srs, exercise_modes, selected_deck_ids, selected_item_ids, snapshot_item_count')
@@ -73,13 +75,25 @@ export default function AdminAssignmentContent() {
         setDeadline(toLocalInput(assignmentData.deadline_at));
         setEstimatedMinutes(assignmentData.estimated_minutes ? String(assignmentData.estimated_minutes) : '');
         setSelectedKeys((resourceData ?? []).filter((item) => assignmentActivityCatalog.some((activity) => activity.key === item.resource_key)).map((item) => item.resource_key));
-        setSelectedExerciseResources((resourceData ?? []).filter((item) => item.resource_type === 'custom_exercise').map((item) => ({
+        setSelectedExerciseResources((resourceData ?? []).filter((item) => item.resource_type === 'custom_exercise' && !item.collection_parent_resource_id).map((item) => ({
           key: item.resource_key,
           type: item.resource_type,
           title: item.title,
           description: item.description,
           route: item.route,
           exercise_config: item.exercise_config,
+        })));
+        setSelectedCollectionResources((resourceData ?? []).filter((item) => item.resource_type === 'exercise_collection').map((item) => ({
+          collectionId: item.collection_config?.collection_id,
+          collectionVersionId: item.collection_config?.collection_version_id,
+          publicId: item.collection_snapshot?.public_id || 'Collection',
+          title: item.title,
+          description: item.description,
+          versionNumber: item.collection_config?.version_number,
+          completionRule: item.collection_config?.completion_rule || 'all_items',
+          requiredPercent: Number(item.collection_config?.required_percent || 100),
+          requiredScore: Number(item.collection_config?.required_score || 70),
+          itemCount: item.collection_snapshot?.items?.length || 0,
         })));
         const practiceResource = (resourceData ?? []).find((item) => item.resource_type === 'practice_session');
         setPracticeEnabled(Boolean(practiceResource));
@@ -97,7 +111,7 @@ export default function AdminAssignmentContent() {
   const selectedActivities = useMemo(() => selectedKeys
     .map((key) => assignmentActivityCatalog.find((activity) => activity.key === key))
     .filter(Boolean), [selectedKeys]);
-  const selectedStructureCount = selectedActivities.length + selectedExerciseResources.length + (studyEnabled ? 1 : 0) + (practiceEnabled ? 1 : 0);
+  const selectedStructureCount = selectedActivities.length + selectedExerciseResources.length + selectedCollectionResources.length + (studyEnabled ? 1 : 0) + (practiceEnabled ? 1 : 0);
 
   const isOverdue = Boolean(assignment?.deadline_at && new Date(assignment.deadline_at) < new Date() && assignment.status !== 'completed');
 
@@ -192,6 +206,20 @@ export default function AdminAssignmentContent() {
       return;
     }
 
+    const { error: collectionsError } = await supabase.rpc('admin_replace_assignment_collections', {
+      target_assignment_id: assignmentId,
+      p_collections: selectedCollectionResources.map((item) => ({
+        collection_id: item.collectionId,
+        collection_version_id: item.collectionVersionId,
+        required_score: item.requiredScore || 70,
+      })),
+    });
+    if (collectionsError) {
+      setSaving(false);
+      setError(`I dati principali sono stati salvati, ma non è stato possibile salvare i percorsi Collection: ${collectionsError.message}`);
+      return;
+    }
+
     const { error: studyError } = await supabase.rpc('admin_replace_assignment_study_scope', {
       target_assignment_id: assignmentId,
       p_item_ids: studyEnabled ? resolvedItemIds : [],
@@ -271,6 +299,8 @@ export default function AdminAssignmentContent() {
 
               <AssignmentExercisePicker value={selectedExerciseResources} onChange={setSelectedExerciseResources} />
 
+              <AssignmentCollectionPicker value={selectedCollectionResources} onChange={setSelectedCollectionResources} />
+
               <div className="grid gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.65fr)]">
                 <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm">
                   <p className="text-xs font-black uppercase tracking-wide text-moss">Contenuti</p>
@@ -293,6 +323,7 @@ export default function AdminAssignmentContent() {
                       {studyEnabled ? <div className="flex gap-3 py-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-sea/15 text-xs font-black text-sea">SRS</span><div><p className="text-sm font-black text-ink dark:text-white">Percorso guidato</p><p className="mt-1 text-xs font-semibold text-ink/55 dark:text-white/55">{resolvedItemIds.length} card selezionate</p></div></div> : null}
                       {practiceEnabled ? <div className="flex gap-3 py-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mint text-xs font-black text-moss">P</span><div><p className="text-sm font-black text-ink dark:text-white">Pratica mirata</p><p className="mt-1 text-xs font-semibold text-ink/55 dark:text-white/55">{practiceConfig.question_count} domande, {practiceConfig.modes.length} tipi di esercizio</p></div></div> : null}
                       {selectedExerciseResources.map((resource) => <div key={resource.key} className="flex gap-3 py-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-violet-100 text-xs font-black text-violet-800 dark:bg-violet-300/15 dark:text-violet-200">EX</span><div><p className="text-sm font-black text-ink dark:text-white">{resource.title}</p><p className="mt-1 text-xs font-semibold text-ink/55 dark:text-white/55">Exercise Builder · punteggio minimo {resource.exercise_config?.required_score ?? 70}%</p></div></div>)}
+                      {selectedCollectionResources.map((resource) => <div key={resource.collectionVersionId} className="flex gap-3 py-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-cyan-100 text-[0.65rem] font-black text-cyan-800 dark:bg-cyan-300/15 dark:text-cyan-200">COL</span><div><p className="text-sm font-black text-ink dark:text-white">{resource.title}</p><p className="mt-1 text-xs font-semibold text-ink/55 dark:text-white/55">Versione {resource.versionNumber} · {resource.itemCount} tappe · snapshot stabile</p></div></div>)}
                       {selectedActivities.map((activity, index) => (
                         <div key={activity.key} className="flex gap-3 py-3">
                           <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mint text-xs font-black text-ink dark:bg-emerald-400/15 dark:text-emerald-200">{index + 1}</span>
