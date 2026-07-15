@@ -73,9 +73,10 @@ export function findDuplicatePublicIds(cards) {
   const duplicates = new Set();
 
   cards.forEach((card) => {
-    if (!card.public_id) return;
-    if (seen.has(card.public_id)) duplicates.add(card.public_id);
-    seen.add(card.public_id);
+    const publicId = String(card.public_id || '').toLowerCase().trim();
+    if (!publicId) return;
+    if (seen.has(publicId)) duplicates.add(publicId);
+    seen.add(publicId);
   });
 
   return Array.from(duplicates);
@@ -93,6 +94,10 @@ function comparisonValue(value) {
 function contentKey(card, fields) {
   const values = fields.map((field) => comparisonValue(card[field]));
   return values.every(Boolean) ? values.join('\u241f') : '';
+}
+
+function duplicateLabel(card) {
+  return card.lemma || card.canonical_text || card.display_target || card.public_id || 'card esistente';
 }
 
 export function prepareImportCards(cards, existingCards, { idPrefix, duplicateFields }) {
@@ -117,49 +122,79 @@ export function prepareImportCards(cards, existingCards, { idPrefix, duplicateFi
   });
 
   const existingById = new Map(existingCards.map((card) => [String(card.public_id || '').toLowerCase(), card]));
-  const contentOwners = new Map();
+  const existingByContent = new Map();
   existingCards.forEach((card) => {
     const key = contentKey(card, duplicateFields);
-    if (key && !contentOwners.has(key)) contentOwners.set(key, card);
+    if (key && !existingByContent.has(key)) existingByContent.set(key, card);
   });
 
+  const incomingContentOwners = new Map();
   const issues = preparedCards.map(() => []);
   const notes = preparedCards.map((card) => card._generated_public_id ? ['ID generato automaticamente'] : []);
+  const duplicates = preparedCards.map(() => null);
   let idConflicts = 0;
   let existingDuplicates = 0;
   let contentDuplicates = 0;
+  let batchDuplicates = 0;
 
   preparedCards.forEach((card, index) => {
     const publicId = String(card.public_id || '').toLowerCase();
-    const existingWithId = existingById.get(publicId);
+    const existingWithId = existingById.get(publicId) || null;
     const key = contentKey(card, duplicateFields);
+    const existingWithContent = key ? existingByContent.get(key) || null : null;
+    const incomingOwnerIndex = key ? incomingContentOwners.get(key) : undefined;
 
-    if (existingWithId) {
-      const sameContent = key && key === contentKey(existingWithId, duplicateFields);
-      issues[index].push(sameContent
-        ? `ID già presente con gli stessi contenuti: ${publicId}`
-        : `ID già presente con contenuti diversi: ${publicId}`);
-      if (sameContent) existingDuplicates += 1;
-      else idConflicts += 1;
+    if (incomingOwnerIndex !== undefined) {
+      issues[index].push(`Contenuto duplicato nello stesso file, già presente alla riga ${incomingOwnerIndex + 2}`);
+      batchDuplicates += 1;
+    } else if (key) {
+      incomingContentOwners.set(key, index);
     }
 
-    const owner = key ? contentOwners.get(key) : null;
-    if (owner && String(owner.public_id || '').toLowerCase() !== publicId) {
-      issues[index].push(`Possibile duplicato della card ${owner.public_id}`);
-      contentDuplicates += 1;
+    if (existingWithId && existingWithContent && existingWithId.id !== existingWithContent.id) {
+      issues[index].push(`Conflitto ambiguo: l’ID corrisponde a ${existingWithId.public_id}, ma il contenuto corrisponde a ${existingWithContent.public_id}`);
+      idConflicts += 1;
+      return;
     }
-    if (key && !contentOwners.has(key)) contentOwners.set(key, card);
+
+    const target = existingWithId || existingWithContent;
+    if (!target) return;
+
+    const sameId = Boolean(existingWithId);
+    const sameContent = Boolean(existingWithContent && existingWithContent.id === target.id);
+    const kind = sameId && sameContent
+      ? 'same_id_same_content'
+      : sameId
+        ? 'public_id_conflict'
+        : 'content_duplicate';
+
+    duplicates[index] = {
+      kind,
+      existingId: target.id,
+      existingPublicId: target.public_id,
+      existingLabel: duplicateLabel(target),
+      sameId,
+      sameContent,
+    };
+
+    if (kind === 'same_id_same_content') existingDuplicates += 1;
+    else if (kind === 'public_id_conflict') idConflicts += 1;
+    else contentDuplicates += 1;
+
+    notes[index].push(`Duplicato di ${target.public_id}: scegli Sostituisci o Salta`);
   });
 
   return {
     cards: preparedCards,
     issues,
     notes,
+    duplicates,
     summary: {
       generatedIds: preparedCards.filter((card) => card._generated_public_id).length,
       idConflicts,
       existingDuplicates,
       contentDuplicates,
+      batchDuplicates,
     },
   };
 }
