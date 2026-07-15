@@ -17,6 +17,7 @@ import {
 import SEO from '../components/SEO';
 import { useAuth } from '../auth/AuthContext.jsx';
 import {
+  exerciseBuilderTemplateManifest,
   exerciseBuilderTemplates,
   stringifyExerciseBuilderTemplate,
   validateExerciseBuilderJson,
@@ -26,11 +27,42 @@ import {
   loadExerciseBuilderOverview,
 } from '../lib/exerciseBuilderApi.js';
 
-const TEMPLATE_OPTIONS = [
-  { key: 'question', label: 'Domanda' },
-  { key: 'question_pool', label: 'Pool' },
-  { key: 'exercise', label: 'Esercizio' },
+const QUICK_TEMPLATE_OPTIONS = [
+  { key: 'question', label: 'Domanda base' },
+  { key: 'question_pool', label: 'Pool completo' },
+  { key: 'exercise', label: 'Esercizio completo' },
   { key: 'bundle', label: 'Bundle completo' },
+];
+
+const QUESTION_LABELS = {
+  multiple_choice: 'Scelta multipla',
+  multiple_select: 'Selezione multipla',
+  gap_fill: 'Completamento aperto',
+  select_gap: 'Completamento a scelta',
+  translation: 'Traduzione',
+  error_correction: 'Correzione errore',
+  word_order: 'Riordino parole',
+  content_block: 'Blocco di contenuto',
+  dialogue_choice: 'Dialogo a scelta',
+  reading_comprehension: 'Lettura e comprensione',
+  written_response: 'Produzione scritta',
+  dialogue_roleplay: 'Dialogo con personaggio',
+  audio_response: 'Risposta audio',
+};
+
+const TEMPLATE_GROUPS = [
+  {
+    label: 'Pacchetti completi',
+    keys: ['question_pool', 'exercise', 'bundle'],
+  },
+  {
+    label: 'Domande automatiche',
+    keys: ['multiple_choice', 'multiple_select', 'gap_fill', 'select_gap', 'translation', 'error_correction', 'word_order', 'dialogue_choice'],
+  },
+  {
+    label: 'Contenuti e produzioni',
+    keys: ['content_block', 'reading_comprehension', 'written_response', 'dialogue_roleplay', 'audio_response'],
+  },
 ];
 
 const EMPTY_OVERVIEW = {
@@ -40,6 +72,15 @@ const EMPTY_OVERVIEW = {
   reviewCount: 0,
   recentBatches: [],
 };
+
+function templateMeta(key) {
+  const stored = exerciseBuilderTemplateManifest.find((item) => item.key === key);
+  return {
+    key,
+    label: QUESTION_LABELS[key] || stored?.label || key,
+    fileName: stored?.fileName || `exercise-builder-${key}-template.json`,
+  };
+}
 
 function formatDate(value) {
   if (!value) return '';
@@ -51,13 +92,13 @@ function formatDate(value) {
   }).format(new Date(value));
 }
 
-function downloadJson(type) {
-  const content = stringifyExerciseBuilderTemplate(type);
+function downloadJson(option) {
+  const content = stringifyExerciseBuilderTemplate(option.key);
   const blob = new Blob([content], { type: 'application/json;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `exercise-builder-${type}-template.json`;
+  link.download = option.fileName;
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -123,7 +164,7 @@ export default function AdminExerciseBuilder() {
   const [overviewError, setOverviewError] = useState('');
   const [loadingOverview, setLoadingOverview] = useState(true);
   const [jsonText, setJsonText] = useState(() => stringifyExerciseBuilderTemplate('bundle'));
-  const [sourceName, setSourceName] = useState('Pasted JSON');
+  const [sourceName, setSourceName] = useState('Bundle completo v2');
   const [validation, setValidation] = useState(null);
   const [selectedIndexes, setSelectedIndexes] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -135,8 +176,7 @@ export default function AdminExerciseBuilder() {
     setLoadingOverview(true);
     setOverviewError('');
     try {
-      const nextOverview = await loadExerciseBuilderOverview();
-      setOverview(nextOverview);
+      setOverview(await loadExerciseBuilderOverview());
     } catch (error) {
       setOverview(EMPTY_OVERVIEW);
       setOverviewError(error.message || 'Applica prima la migrazione Exercise Builder in Supabase.');
@@ -151,15 +191,13 @@ export default function AdminExerciseBuilder() {
 
   const counts = useMemo(() => {
     const result = { valid: 0, warning: 0, invalid: 0 };
-    (validation?.items || []).forEach((item) => {
-      result[item.status] += 1;
-    });
+    (validation?.items || []).forEach((item) => { result[item.status] += 1; });
     return result;
   }, [validation]);
 
   const selectedCount = selectedIndexes.length;
 
-  function replaceJson(nextText, nextSourceName = 'Pasted JSON') {
+  function replaceJson(nextText, nextSourceName = 'JSON incollato') {
     setJsonText(nextText);
     setSourceName(nextSourceName);
     setValidation(null);
@@ -168,14 +206,15 @@ export default function AdminExerciseBuilder() {
     setSavedBatch(null);
   }
 
+  function useTemplate(option) {
+    replaceJson(JSON.stringify(exerciseBuilderTemplates[option.key], null, 2), `Template: ${option.label}`);
+    setTemplateMenuOpen(false);
+  }
+
   function validateCurrentJson() {
     const result = validateExerciseBuilderJson(jsonText);
     setValidation(result);
-    setSelectedIndexes(
-      result.items
-        .filter((item) => item.status !== 'invalid')
-        .map((item) => item.index),
-    );
+    setSelectedIndexes(result.items.filter((item) => item.status !== 'invalid').map((item) => item.index));
     setSaveError('');
     setSavedBatch(null);
   }
@@ -190,18 +229,13 @@ export default function AdminExerciseBuilder() {
   }
 
   function selectAllImportable() {
-    setSelectedIndexes(
-      (validation?.items || [])
-        .filter((item) => item.status !== 'invalid')
-        .map((item) => item.index),
-    );
+    setSelectedIndexes((validation?.items || []).filter((item) => item.status !== 'invalid').map((item) => item.index));
   }
 
   async function handleFile(event) {
     const file = event.target.files?.[0];
     if (!file) return;
-    const content = await file.text();
-    replaceJson(content, file.name);
+    replaceJson(await file.text(), file.name);
     event.target.value = '';
   }
 
@@ -237,44 +271,37 @@ export default function AdminExerciseBuilder() {
               <p className="text-xs font-black uppercase tracking-[0.16em] text-moss dark:text-mint">Contenuti</p>
               <h1 className="mt-2 text-3xl font-black tracking-tight text-ink dark:text-white sm:text-4xl">Exercise Builder</h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
-                Importa JSON generati esternamente, valida ogni elemento e salva soltanto le bozze che vuoi revisionare. Questo spazio resta separato da English Foundations e dai Trainer.
+                Importa JSON schema v1 o v2. I modelli aggiornati coprono tutti i tipi automatici, le produzioni manuali, audio, dialoghi e reading.
               </p>
             </div>
             <div className="relative flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink shadow-sm transition hover:border-moss dark:border-white/15 dark:bg-white/[0.07] dark:text-white"
-              >
-                <Upload aria-hidden="true" className="h-4 w-4" />
-                Carica JSON
+              <button type="button" onClick={() => fileInputRef.current?.click()} className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink shadow-sm transition hover:border-moss dark:border-white/15 dark:bg-white/[0.07] dark:text-white">
+                <Upload aria-hidden="true" className="h-4 w-4" /> Carica JSON
               </button>
               <input ref={fileInputRef} type="file" accept="application/json,.json" className="hidden" onChange={handleFile} />
-              <button
-                type="button"
-                onClick={() => setTemplateMenuOpen((open) => !open)}
-                className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-sm font-black text-white transition hover:bg-moss"
-                aria-expanded={templateMenuOpen}
-              >
-                <Download aria-hidden="true" className="h-4 w-4" />
-                Template JSON
-                <ChevronDown aria-hidden="true" className="h-4 w-4" />
+              <button type="button" onClick={() => setTemplateMenuOpen((open) => !open)} className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-sm font-black text-white transition hover:bg-moss" aria-expanded={templateMenuOpen}>
+                <Download aria-hidden="true" className="h-4 w-4" /> Template JSON <ChevronDown aria-hidden="true" className="h-4 w-4" />
               </button>
               {templateMenuOpen ? (
-                <div className="absolute right-0 top-12 z-20 min-w-56 rounded-xl border border-ink/10 bg-white p-2 shadow-xl dark:border-white/10 dark:bg-[#18231f]">
-                  {TEMPLATE_OPTIONS.map((option) => (
-                    <button
-                      key={option.key}
-                      type="button"
-                      onClick={() => {
-                        downloadJson(option.key);
-                        setTemplateMenuOpen(false);
-                      }}
-                      className="focus-ring flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-bold text-ink transition hover:bg-linen dark:text-white dark:hover:bg-white/10"
-                    >
-                      <FileJson aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />
-                      {option.label}
-                    </button>
+                <div className="absolute right-0 top-12 z-30 max-h-[36rem] w-[min(24rem,calc(100vw-2rem))] overflow-y-auto rounded-2xl border border-ink/10 bg-white p-2 shadow-xl dark:border-white/10 dark:bg-[#18231f]">
+                  {TEMPLATE_GROUPS.map((group) => (
+                    <div key={group.label} className="border-b border-ink/10 py-2 last:border-b-0 dark:border-white/10">
+                      <p className="px-3 pb-1 text-[0.65rem] font-black uppercase tracking-[0.12em] text-ink/40 dark:text-white/40">{group.label}</p>
+                      {group.keys.map((key) => {
+                        const option = templateMeta(key);
+                        return (
+                          <div key={key} className="flex items-center gap-1 rounded-lg hover:bg-linen dark:hover:bg-white/10">
+                            <button type="button" onClick={() => useTemplate(option)} className="focus-ring flex min-w-0 flex-1 items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-bold text-ink dark:text-white">
+                              <FileJson aria-hidden="true" className="h-4 w-4 shrink-0 text-moss dark:text-mint" />
+                              <span className="truncate">{option.label}</span>
+                            </button>
+                            <button type="button" onClick={() => downloadJson(option)} className="focus-ring rounded-lg p-2 text-moss hover:bg-white dark:text-mint dark:hover:bg-white/10" aria-label={`Scarica ${option.label}`}>
+                              <Download aria-hidden="true" className="h-4 w-4" />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
                   ))}
                 </div>
               ) : null}
@@ -291,10 +318,7 @@ export default function AdminExerciseBuilder() {
           {overviewError ? (
             <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-300/25 dark:bg-amber-300/10 dark:text-amber-100">
               <AlertTriangle aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0" />
-              <div>
-                <p className="font-black">Database Exercise Builder non ancora disponibile</p>
-                <p className="mt-1 font-semibold opacity-80">{overviewError}</p>
-              </div>
+              <div><p className="font-black">Database Exercise Builder non disponibile</p><p className="mt-1 font-semibold opacity-80">{overviewError}</p></div>
             </div>
           ) : null}
 
@@ -307,83 +331,31 @@ export default function AdminExerciseBuilder() {
                   <p className="mt-1 text-xs font-semibold text-ink/50 dark:text-white/50">{sourceName}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {TEMPLATE_OPTIONS.map((option) => (
-                    <button
-                      key={option.key}
-                      type="button"
-                      onClick={() => replaceJson(JSON.stringify(exerciseBuilderTemplates[option.key], null, 2), `${option.label} template`)}
-                      className="focus-ring rounded-lg border border-ink/10 bg-linen/60 px-3 py-2 text-xs font-black text-ink transition hover:border-moss dark:border-white/10 dark:bg-white/[0.06] dark:text-white"
-                    >
+                  {QUICK_TEMPLATE_OPTIONS.map((option) => (
+                    <button key={option.key} type="button" onClick={() => useTemplate(templateMeta(option.key))} className="focus-ring rounded-lg border border-ink/10 bg-linen/60 px-3 py-2 text-xs font-black text-ink transition hover:border-moss dark:border-white/10 dark:bg-white/[0.06] dark:text-white">
                       Usa {option.label.toLowerCase()}
                     </button>
                   ))}
                 </div>
               </div>
-
-              <textarea
-                value={jsonText}
-                onChange={(event) => replaceJson(event.target.value, sourceName)}
-                spellCheck="false"
-                className="mt-4 min-h-[34rem] w-full resize-y rounded-xl border border-ink/15 bg-[#101915] p-4 font-mono text-xs leading-6 text-emerald-50 outline-none transition focus:border-emerald-400 sm:text-sm"
-                aria-label="JSON Exercise Builder"
-              />
-
+              <textarea value={jsonText} onChange={(event) => replaceJson(event.target.value, sourceName)} spellCheck="false" className="mt-4 min-h-[34rem] w-full resize-y rounded-xl border border-ink/15 bg-[#101915] p-4 font-mono text-xs leading-6 text-emerald-50 outline-none transition focus:border-emerald-400 sm:text-sm" aria-label="JSON Exercise Builder" />
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                <p className="flex items-center gap-2 text-xs font-semibold text-ink/55 dark:text-white/55">
-                  <CircleHelp aria-hidden="true" className="h-4 w-4" />
-                  Gli ID tecnici presenti nel JSON vengono ignorati.
-                </p>
-                <button
-                  type="button"
-                  onClick={validateCurrentJson}
-                  className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-xl bg-moss px-5 py-2.5 text-sm font-black text-white transition hover:bg-ink"
-                >
-                  <ClipboardCheck aria-hidden="true" className="h-4 w-4" />
-                  Valida JSON
-                </button>
+                <p className="flex items-center gap-2 text-xs font-semibold text-ink/55 dark:text-white/55"><CircleHelp aria-hidden="true" className="h-4 w-4" /> Gli ID tecnici presenti nel JSON vengono ignorati.</p>
+                <button type="button" onClick={validateCurrentJson} className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-xl bg-moss px-5 py-2.5 text-sm font-black text-white transition hover:bg-ink"><ClipboardCheck aria-hidden="true" className="h-4 w-4" /> Valida JSON</button>
               </div>
             </article>
 
             <div className="min-w-0 space-y-5">
               <article className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.06] sm:p-5">
                 <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">2. Validazione</p>
-                    <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Elementi trovati</h2>
-                  </div>
-                  {validation ? (
-                    <div className="flex gap-2 text-xs font-black">
-                      <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200">{counts.valid} validi</span>
-                      <span className="rounded-full bg-amber-100 px-2.5 py-1 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100">{counts.warning} avvisi</span>
-                      <span className="rounded-full bg-red-100 px-2.5 py-1 text-red-900 dark:bg-red-300/10 dark:text-red-100">{counts.invalid} errori</span>
-                    </div>
-                  ) : null}
+                  <div><p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">2. Validazione</p><h2 className="mt-1 text-xl font-black text-ink dark:text-white">Elementi trovati</h2></div>
+                  {validation ? <div className="flex gap-2 text-xs font-black"><span className="rounded-full bg-emerald-100 px-2.5 py-1 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200">{counts.valid} validi</span><span className="rounded-full bg-amber-100 px-2.5 py-1 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100">{counts.warning} avvisi</span><span className="rounded-full bg-red-100 px-2.5 py-1 text-red-900 dark:bg-red-300/10 dark:text-red-100">{counts.invalid} errori</span></div> : null}
                 </div>
-
-                {!validation ? (
-                  <div className="mt-4 rounded-xl border border-dashed border-ink/15 bg-linen/35 p-5 text-sm leading-6 text-ink/60 dark:border-white/15 dark:bg-white/[0.04] dark:text-white/60">
-                    Valida il JSON per vedere domande, pool ed esercizi separatamente.
-                  </div>
-                ) : null}
-
-                {validation?.errors.length > 0 ? (
-                  <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-950 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100">
-                    <p className="font-black">Il file non può essere importato</p>
-                    <ul className="mt-2 space-y-1 font-semibold">
-                      {validation.errors.map((error) => <li key={error}>• {error}</li>)}
-                    </ul>
-                  </div>
-                ) : null}
-
+                {!validation ? <div className="mt-4 rounded-xl border border-dashed border-ink/15 bg-linen/35 p-5 text-sm leading-6 text-ink/60 dark:border-white/15 dark:bg-white/[0.04] dark:text-white/60">Valida il JSON per vedere domande, pool ed esercizi separatamente.</div> : null}
+                {validation?.errors.length > 0 ? <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-950 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100"><p className="font-black">Il file non può essere importato</p><ul className="mt-2 space-y-1 font-semibold">{validation.errors.map((error) => <li key={error}>• {error}</li>)}</ul></div> : null}
                 {validation?.items.length > 0 ? (
                   <>
-                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                      <p className="text-sm font-black text-ink dark:text-white">{selectedCount} selezionati</p>
-                      <div className="flex gap-2">
-                        <button type="button" onClick={selectAllImportable} className="focus-ring rounded-lg border border-ink/10 px-3 py-2 text-xs font-black text-ink dark:border-white/15 dark:text-white">Seleziona validi</button>
-                        <button type="button" onClick={() => setSelectedIndexes([])} className="focus-ring rounded-lg border border-ink/10 px-3 py-2 text-xs font-black text-ink dark:border-white/15 dark:text-white">Deseleziona</button>
-                      </div>
-                    </div>
+                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3"><p className="text-sm font-black text-ink dark:text-white">{selectedCount} selezionati</p><div className="flex gap-2"><button type="button" onClick={selectAllImportable} className="focus-ring rounded-lg border border-ink/10 px-3 py-2 text-xs font-black text-ink dark:border-white/15 dark:text-white">Seleziona validi</button><button type="button" onClick={() => setSelectedIndexes([])} className="focus-ring rounded-lg border border-ink/10 px-3 py-2 text-xs font-black text-ink dark:border-white/15 dark:text-white">Deseleziona</button></div></div>
                     <div className="mt-3 max-h-[34rem] space-y-3 overflow-y-auto pr-1">
                       {validation.items.map((item) => {
                         const meta = statusMeta(item.status);
@@ -391,33 +363,12 @@ export default function AdminExerciseBuilder() {
                         return (
                           <article key={`${item.entityType}-${item.index}`} className={`rounded-xl border p-3 transition ${selected ? 'border-moss bg-mint/20 dark:border-emerald-300/35 dark:bg-emerald-300/[0.08]' : 'border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.03]'}`}>
                             <div className="flex items-start gap-3">
-                              <input
-                                type="checkbox"
-                                checked={selected}
-                                disabled={item.status === 'invalid'}
-                                onChange={() => toggleItem(item)}
-                                className="mt-1 h-4 w-4 accent-emerald-700"
-                                aria-label={`Seleziona ${itemTitle(item)}`}
-                              />
+                              <input type="checkbox" checked={selected} disabled={item.status === 'invalid'} onChange={() => toggleItem(item)} className="mt-1 h-4 w-4 accent-emerald-700" aria-label={`Seleziona ${itemTitle(item)}`} />
                               <div className="min-w-0 flex-1">
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <span className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-moss dark:text-mint">{entityLabel(item.entityType)}</span>
-                                  <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.68rem] font-black ${meta.className}`}>
-                                    <meta.Icon aria-hidden="true" className="h-3 w-3" />
-                                    {meta.label}
-                                  </span>
-                                </div>
+                                <div className="flex flex-wrap items-center gap-2"><span className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-moss dark:text-mint">{entityLabel(item.entityType)}</span><span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.68rem] font-black ${meta.className}`}><meta.Icon aria-hidden="true" className="h-3 w-3" />{meta.label}</span></div>
                                 <h3 className="mt-1 line-clamp-2 text-sm font-black text-ink dark:text-white">{itemTitle(item)}</h3>
-                                {item.errors.length > 0 ? (
-                                  <ul className="mt-2 space-y-1 text-xs font-semibold leading-5 text-red-800 dark:text-red-200">
-                                    {item.errors.map((error) => <li key={error}>• {error}</li>)}
-                                  </ul>
-                                ) : null}
-                                {item.warnings.length > 0 ? (
-                                  <ul className="mt-2 space-y-1 text-xs font-semibold leading-5 text-amber-800 dark:text-amber-100">
-                                    {item.warnings.map((warning) => <li key={warning}>• {warning}</li>)}
-                                  </ul>
-                                ) : null}
+                                {item.errors.length > 0 ? <ul className="mt-2 space-y-1 text-xs font-semibold leading-5 text-red-800 dark:text-red-200">{item.errors.map((error) => <li key={error}>• {error}</li>)}</ul> : null}
+                                {item.warnings.length > 0 ? <ul className="mt-2 space-y-1 text-xs font-semibold leading-5 text-amber-800 dark:text-amber-100">{item.warnings.map((warning) => <li key={warning}>• {warning}</li>)}</ul> : null}
                               </div>
                             </div>
                           </article>
@@ -429,46 +380,18 @@ export default function AdminExerciseBuilder() {
               </article>
 
               <article className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.06] sm:p-5">
-                <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">3. Salvataggio</p>
-                <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Crea batch di revisione</h2>
-                <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">
-                  Il batch conserva il JSON originale e gli elementi normalizzati. Nessun ID pubblico viene ancora assegnato.
-                </p>
-
-                {savedBatch ? (
-                  <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950 dark:border-emerald-300/25 dark:bg-emerald-300/10 dark:text-emerald-100">
-                    <p className="font-black">Batch salvato</p>
-                    <p className="mt-1 font-semibold opacity-80">{savedBatch.source_name} è pronto per la revisione.</p>
-                  </div>
-                ) : null}
-                {saveError ? (
-                  <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-950 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100">{saveError}</div>
-                ) : null}
-
-                <button
-                  type="button"
-                  onClick={saveImportBatch}
-                  disabled={saving || !validation || validation.errors.length > 0 || selectedCount === 0 || Boolean(overviewError)}
-                  className="focus-ring mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  {saving ? <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" /> : <ClipboardCheck aria-hidden="true" className="h-4 w-4" />}
-                  Salva {selectedCount || 0} elementi da revisionare
-                </button>
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">3. Salvataggio</p><h2 className="mt-1 text-xl font-black text-ink dark:text-white">Crea batch di revisione</h2>
+                <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">Il batch conserva il JSON originale e gli elementi normalizzati. Nessun ID pubblico viene ancora assegnato.</p>
+                {savedBatch ? <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950 dark:border-emerald-300/25 dark:bg-emerald-300/10 dark:text-emerald-100"><p className="font-black">Batch salvato</p><p className="mt-1 font-semibold opacity-80">{savedBatch.source_name} è pronto per la revisione.</p></div> : null}
+                {saveError ? <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-950 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100">{saveError}</div> : null}
+                <button type="button" onClick={saveImportBatch} disabled={saving || !validation || validation.errors.length > 0 || selectedCount === 0 || Boolean(overviewError)} className="focus-ring mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss disabled:cursor-not-allowed disabled:opacity-40">{saving ? <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" /> : <ClipboardCheck aria-hidden="true" className="h-4 w-4" />} Salva {selectedCount || 0} elementi da revisionare</button>
               </article>
 
               <article className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.06] sm:p-5">
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">Importazioni recenti</p>
                 <div className="mt-3 space-y-2">
-                  {overview.recentBatches.length === 0 ? (
-                    <p className="rounded-xl border border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/50 dark:border-white/15 dark:text-white/50">Nessun batch salvato.</p>
-                  ) : overview.recentBatches.map((batch) => (
-                    <div key={batch.id} className="flex items-center justify-between gap-3 rounded-xl border border-ink/10 px-3 py-3 dark:border-white/10">
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-black text-ink dark:text-white">{batch.source_name}</p>
-                        <p className="mt-0.5 text-xs font-semibold text-ink/45 dark:text-white/45">{entityLabel(batch.entity_type)} · {formatDate(batch.created_at)}</p>
-                      </div>
-                      <span className="shrink-0 rounded-full bg-linen px-2.5 py-1 text-xs font-black text-ink dark:bg-white/10 dark:text-white">{batch.valid_count + batch.warning_count}</span>
-                    </div>
+                  {overview.recentBatches.length === 0 ? <p className="rounded-xl border border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/50 dark:border-white/15 dark:text-white/50">Nessun batch salvato.</p> : overview.recentBatches.map((batch) => (
+                    <div key={batch.id} className="flex items-center justify-between gap-3 rounded-xl border border-ink/10 px-3 py-3 dark:border-white/10"><div className="min-w-0"><p className="truncate text-sm font-black text-ink dark:text-white">{batch.source_name}</p><p className="mt-0.5 text-xs font-semibold text-ink/45 dark:text-white/45">{entityLabel(batch.entity_type)} · {formatDate(batch.created_at)}</p></div><span className="shrink-0 rounded-full bg-linen px-2.5 py-1 text-xs font-black text-ink dark:bg-white/10 dark:text-white">{batch.valid_count + batch.warning_count}</span></div>
                   ))}
                 </div>
               </article>
