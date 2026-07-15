@@ -224,7 +224,8 @@ as $$
     and public.is_admin();
 $$;
 
-create or replace function public.admin_set_exercise_builder_collection_status(
+drop function if exists public.admin_set_exercise_builder_collection_status(uuid, text);
+create function public.admin_set_exercise_builder_collection_status(
   p_collection_id uuid,
   p_status text
 )
