@@ -110,16 +110,16 @@ export default function TrainersLanding() {
 
   if (guidedCounts) {
     const assignedTrainers = liveTrainerConfig
-      .filter((trainer) => guidedCounts[trainer.id] > 0)
-      .map((trainer) => ({ ...trainer, cardCount: guidedCounts[trainer.id] }));
+      .filter((trainer) => trainer.id === 'travel-expression' || guidedCounts[trainer.id] > 0)
+      .map((trainer) => trainer.id === 'travel-expression' ? trainer : { ...trainer, cardCount: guidedCounts[trainer.id] });
     return (
       <>
-        <SEO title="I tuoi Trainer | Sblocco Inglese" description="Le card assegnate nel tuo percorso guidato." />
+        <SEO title="I tuoi Trainer | Sblocco Inglese" description="Le card assegnate nel tuo percorso guidato e il Travel Trainer." />
         <TrainerLayout>
           <div className="rounded-xl border border-moss/20 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
             <span className="eyebrow">Il tuo ripasso</span>
             <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-5xl">Scegli il Trainer da aprire</h1>
-            <p className="mt-4 max-w-3xl text-base leading-7 text-ink/70 dark:text-white/70">Qui trovi soltanto i Trainer che contengono card assegnate dalla tua insegnante. Ogni sessione propone fino a 10 card alla volta.</p>
+            <p className="mt-4 max-w-3xl text-base leading-7 text-ink/70 dark:text-white/70">Qui trovi i Trainer assegnati dalla tua insegnante e il Travel Trainer completo. Ogni sessione propone fino a 10 card alla volta.</p>
             <CTAButton href="/assignments" variant="secondary" className="mt-6">Torna alle attività</CTAButton>
           </div>
 
@@ -127,7 +127,7 @@ export default function TrainersLanding() {
             {assignedTrainers.map((trainer) => (
               <ProductCard
                 key={trainer.id}
-                label={`${trainer.cardCount} card assegnate`}
+                label={trainer.id === 'travel-expression' ? `${trainer.cardCount} card incluse` : `${trainer.cardCount} card assegnate`}
                 title={trainer.title}
                 text={trainer.description}
                 to={trainer.route}
@@ -162,7 +162,7 @@ export default function TrainersLanding() {
                 Un ambiente di ripasso concreto per recuperare più velocemente parole, frasi e risposte quando devi parlare inglese davvero: colloqui, call, lavoro, viaggi, clienti e conversazioni reali.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <CTAButton href="/trainers/business-expression" variant="contrast">Inizia dal Business Trainer</CTAButton>
+                <CTAButton href="/trainers/travel-expression" variant="contrast">Apri il Travel Trainer</CTAButton>
                 <CTAButton href="/prenota#booking-form" variant="secondary">Prima fai la simulazione {primaryOffer.price}</CTAButton>
               </div>
             </div>
@@ -191,7 +191,7 @@ export default function TrainersLanding() {
         </div>
 
         <div className="mt-12">
-          <SectionHeader eyebrow="Scegli un trainer" icon={CheckCircle2} title="Quattro deck, un unico sistema." copy="Ogni trainer ha categorie e progressi separati. Puoi usarli in modo leggero, senza login, direttamente dal browser. Ogni sessione propone fino a 10 card alla volta." />
+          <SectionHeader eyebrow="Scegli un trainer" icon={CheckCircle2} title="Cinque trainer, un unico sistema." copy="Ogni trainer ha categorie e progressi separati. Puoi usarli in modo leggero, senza login, direttamente dal browser. Ogni sessione propone fino a 10 card alla volta." />
           <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {liveTrainerConfig.map((trainer) => (
               <ProductCard
