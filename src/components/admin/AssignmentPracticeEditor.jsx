@@ -5,6 +5,7 @@ import { loadPublishedPracticeCards, PRACTICE_TRAINERS } from '../../lib/practic
 export const DEFAULT_ASSIGNMENT_PRACTICE = {
   trainer_id: 'word',
   deck_id: null,
+  deck_ids: [],
   level: null,
   category: null,
   batch: null,
@@ -16,13 +17,12 @@ function unique(values) {
   return Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b, 'it'));
 }
 
-export default function AssignmentPracticeEditor({
-  enabled,
-  onEnabledChange,
-  config,
-  onChange,
-  onAvailabilityChange,
-}) {
+function selectedDeckIds(config) {
+  const values = Array.isArray(config?.deck_ids) ? config.deck_ids : config?.deck_id ? [config.deck_id] : [];
+  return Array.from(new Set(values.map((value) => String(value || '').trim()).filter(Boolean)));
+}
+
+export default function AssignmentPracticeEditor({ enabled, onEnabledChange, config, onChange, onAvailabilityChange }) {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -39,19 +39,25 @@ export default function AssignmentPracticeEditor({
     return () => { active = false; };
   }, [enabled, config.trainer_id]);
 
+  const selectedIds = useMemo(() => selectedDeckIds(config), [config.deck_id, config.deck_ids]);
+  const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
   const decks = useMemo(() => {
     const values = new Map();
     cards.flatMap((card) => card.decks || []).forEach((deck) => values.set(deck.id, deck));
     return Array.from(values.values()).sort((a, b) => a.title.localeCompare(b.title, 'it'));
   }, [cards]);
+  const deckCounts = useMemo(() => new Map(decks.map((deck) => [deck.id, cards.filter((card) => (card.decks || []).some((item) => item.id === deck.id)).length])), [cards, decks]);
   const levels = useMemo(() => unique(cards.map((card) => card.level)), [cards]);
-  const categories = useMemo(() => unique(cards.filter((card) => !config.level || card.level === config.level).map((card) => card.category)), [cards, config.level]);
+  const categories = useMemo(() => unique(cards
+    .filter((card) => !config.level || card.level === config.level)
+    .filter((card) => !selectedIds.length || (card.decks || []).some((deck) => selectedSet.has(deck.id)))
+    .map((card) => card.category)), [cards, config.level, selectedIds.length, selectedSet]);
   const batches = useMemo(() => unique(cards.map((card) => card.batch)), [cards]);
   const availableCards = useMemo(() => cards.filter((card) =>
     (!config.level || card.level === config.level)
-    && (!config.deck_id || (card.decks || []).some((deck) => deck.id === config.deck_id))
+    && (!selectedIds.length || (card.decks || []).some((deck) => selectedSet.has(deck.id)))
     && (!config.category || card.category === config.category)
-    && (!config.batch || card.batch === config.batch)), [cards, config]);
+    && (!config.batch || card.batch === config.batch)), [cards, config.level, config.category, config.batch, selectedIds.length, selectedSet]);
   const availableQuestions = useMemo(() => createPracticeSession(availableCards, config.modes, 50).length, [availableCards, config.modes]);
   const questionOptions = useMemo(() => Array.from(new Set([5, 10, 15, 20, availableQuestions]
     .filter((value) => value > 0 && value <= availableQuestions))).sort((a, b) => a - b), [availableQuestions]);
@@ -61,10 +67,17 @@ export default function AssignmentPracticeEditor({
 
   useEffect(() => {
     onAvailabilityChange?.({ cards: availableCards.length, questions: availableQuestions });
-    if (enabled && !loading && availableQuestions > 0 && config.question_count > availableQuestions) {
-      update('question_count', availableQuestions);
-    }
+    if (enabled && !loading && availableQuestions > 0 && config.question_count > availableQuestions) update('question_count', availableQuestions);
   }, [enabled, loading, availableCards.length, availableQuestions, config.question_count]);
+
+  function setDecks(ids) {
+    const values = Array.from(new Set(ids.filter(Boolean)));
+    onChange({ ...config, deck_ids: values, deck_id: values.length === 1 ? values[0] : null, category: null });
+  }
+
+  function toggleDeck(id) {
+    setDecks(selectedSet.has(id) ? selectedIds.filter((value) => value !== id) : [...selectedIds, id]);
+  }
 
   function toggleMode(mode) {
     update('modes', config.modes.includes(mode) ? config.modes.filter((value) => value !== mode) : [...config.modes, mode]);
@@ -74,19 +87,30 @@ export default function AssignmentPracticeEditor({
     <section className="rounded-2xl border border-moss/25 bg-mint/15 p-5 shadow-sm dark:border-emerald-300/20 dark:bg-emerald-400/[0.06] sm:p-6">
       <label className="flex cursor-pointer items-start gap-3">
         <input type="checkbox" checked={enabled} onChange={(event) => onEnabledChange(event.target.checked)} className="mt-1 h-4 w-4 accent-moss" />
-        <span><span className="block text-lg font-black text-ink dark:text-white">Pratica mirata</span><span className="mt-1 block text-sm text-ink/65 dark:text-white/60">Lo studente apre una sessione già filtrata e i risultati restano collegati a questa assegnazione.</span></span>
+        <span><span className="block text-lg font-black text-ink dark:text-white">Pratica mirata</span><span className="mt-1 block text-sm text-ink/65 dark:text-white/60">Combina uno o più deck in una sola sessione assegnata.</span></span>
       </label>
 
       {enabled ? (
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Trainer</span><select value={config.trainer_id} onChange={(event) => onChange({ ...DEFAULT_ASSIGNMENT_PRACTICE, trainer_id: event.target.value })} className={fieldClass}>{Object.values(PRACTICE_TRAINERS).map((trainer) => <option key={trainer.id} value={trainer.id}>{trainer.label}</option>)}</select></label>
-          <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Deck</span><select value={config.deck_id || ''} onChange={(event) => update('deck_id', event.target.value || null)} className={fieldClass}><option value="">Tutti i deck</option>{decks.map((deck) => <option key={deck.id} value={deck.id}>{deck.title}</option>)}</select></label>
           <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Livello</span><select value={config.level || ''} onChange={(event) => onChange({ ...config, level: event.target.value || null, category: null })} className={fieldClass}><option value="">Tutti i livelli</option>{levels.map((value) => <option key={value}>{value}</option>)}</select></label>
           <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Categoria</span><select value={config.category || ''} onChange={(event) => update('category', event.target.value || null)} className={fieldClass}><option value="">Tutte le categorie</option>{categories.map((value) => <option key={value}>{value}</option>)}</select></label>
           <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Batch</span><select value={config.batch || ''} onChange={(event) => update('batch', event.target.value || null)} className={fieldClass}><option value="">Tutti i batch</option>{batches.map((value) => <option key={value}>{value}</option>)}</select></label>
           <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Numero di domande</span><select value={config.question_count} onChange={(event) => update('question_count', Number(event.target.value))} className={fieldClass}>{questionOptions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
+
+          <fieldset className="sm:col-span-2 lg:col-span-3 rounded-xl border border-ink/10 bg-white/55 p-4 dark:border-white/10 dark:bg-white/[0.04]">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div><legend className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Deck inclusi</legend><p className="mt-1 text-xs font-semibold text-ink/50 dark:text-white/50">Nessuna selezione significa tutte le card compatibili.</p></div>
+              <div className="flex gap-2"><button type="button" onClick={() => setDecks(decks.map((deck) => deck.id))} className="rounded-full border border-moss/25 px-3 py-1.5 text-[0.7rem] font-black text-moss dark:text-mint">Tutti</button><button type="button" onClick={() => setDecks([])} className="rounded-full border border-ink/15 px-3 py-1.5 text-[0.7rem] font-black text-ink/55 dark:text-white/55">Azzera</button></div>
+            </div>
+            <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+              {decks.map((deck) => <label key={deck.id} className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 ${selectedSet.has(deck.id) ? 'border-moss bg-mint/55 dark:border-emerald-300/35 dark:bg-emerald-400/10' : 'border-ink/10 bg-white/70 dark:border-white/10 dark:bg-white/[0.04]'}`}><input type="checkbox" checked={selectedSet.has(deck.id)} onChange={() => toggleDeck(deck.id)} className="mt-1 h-4 w-4 accent-moss" /><span className="min-w-0"><span className="block truncate text-sm font-black text-ink dark:text-white">{deck.title}</span><span className="mt-1 block text-xs font-semibold text-ink/50 dark:text-white/50">{deckCounts.get(deck.id) || 0} card</span></span></label>)}
+              {!decks.length && !loading ? <p className="text-sm font-semibold text-ink/50 dark:text-white/50">Nessun deck pubblicato disponibile.</p> : null}
+            </div>
+          </fieldset>
+
           <fieldset className="sm:col-span-2 lg:col-span-3"><legend className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Tipi di esercizio</legend><div className="mt-2 grid gap-2 sm:grid-cols-2">{EXERCISE_MODES.map((mode) => <label key={mode.id} className={`flex cursor-pointer gap-2 rounded-lg border px-3 py-2.5 text-sm font-bold ${config.modes.includes(mode.id) ? 'border-moss bg-white/70 dark:border-emerald-300/40 dark:bg-white/10 dark:text-white' : 'border-ink/10 text-ink/60 dark:border-white/10 dark:text-white/60'}`}><input type="checkbox" checked={config.modes.includes(mode.id)} onChange={() => toggleMode(mode.id)} className="accent-moss" />{mode.label}</label>)}</div></fieldset>
-          <p className="sm:col-span-2 lg:col-span-3 text-sm font-bold text-ink/60 dark:text-white/60">{loading ? 'Caricamento card pubblicate...' : error || `${availableCards.length} card pubblicate compatibili e ${availableQuestions} domande disponibili con questi filtri.`}</p>
+          <p className="sm:col-span-2 lg:col-span-3 text-sm font-bold text-ink/60 dark:text-white/60">{loading ? 'Caricamento card pubblicate...' : error || `${selectedIds.length || 'Tutti i'} deck · ${availableCards.length} card uniche · ${availableQuestions} domande disponibili.`}</p>
         </div>
       ) : null}
     </section>
