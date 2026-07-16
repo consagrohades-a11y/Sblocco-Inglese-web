@@ -109,16 +109,17 @@ export function validateSrsCards(cards, expectedCategories = expectedSrsCategory
       ['example1', 'example2'].forEach((exampleField) => {
         const example = String(card?.[exampleField] || '').trim();
         const normalizedExample = example.toLowerCase().replace(/\s+/g, ' ');
+        const plainExample = example.replace(/\*\*/g, '').trim();
 
         if (!normalizedExample.includes(boldTarget)) {
           warnings.push(`${label}: ${exampleField} must contain the complete target in bold.`);
         }
 
-        if (example && !/[.!?]$/.test(example)) {
+        if (plainExample && !/[.!?]$/.test(plainExample)) {
           warnings.push(`${label}: ${exampleField} must end with sentence punctuation.`);
         }
 
-        if (example.replace(/\*\*/g, '').split(/\s+/).length < 5) {
+        if (plainExample.split(/\s+/).length < 5) {
           warnings.push(`${label}: ${exampleField} is too short to provide useful context.`);
         }
 
