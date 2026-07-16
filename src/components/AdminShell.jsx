@@ -41,6 +41,7 @@ const navigationGroups = [
     icon: Users,
     items: [
       { label: 'Elenco studenti', to: '/admin/learners', icon: Users },
+      { label: 'Gruppi e cohort', to: '/admin/groups', icon: Users },
       { label: 'Assegnazioni', to: '/admin/assignments', icon: ClipboardList },
     ],
   },

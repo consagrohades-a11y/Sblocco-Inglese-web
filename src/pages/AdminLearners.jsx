@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { supabase } from '../lib/supabaseClient.js';
+import { loadLearnerGroups } from '../lib/learnerGroupsApi.js';
 
 const languageLabels = {
   it: 'Italiano',
@@ -30,6 +31,8 @@ export default function AdminLearners() {
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('all');
+  const [groups, setGroups] = useState([]);
+  const [groupId, setGroupId] = useState('all');
 
   useEffect(() => {
     let active = true;
@@ -38,7 +41,10 @@ export default function AdminLearners() {
       setLoading(true);
       setError('');
 
-      const { data, error: rpcError } = await supabase.rpc('admin_list_learners');
+      const [{ data, error: rpcError }, loadedGroups] = await Promise.all([
+        supabase.rpc('admin_list_learners'),
+        loadLearnerGroups().catch(() => []),
+      ]);
 
       if (!active) return;
 
@@ -47,6 +53,7 @@ export default function AdminLearners() {
         setLearners([]);
       } else {
         setLearners(data ?? []);
+        setGroups(loadedGroups);
       }
 
       setLoading(false);
@@ -64,12 +71,14 @@ export default function AdminLearners() {
 
     return learners.filter((learner) => {
       const matchesStatus = status === 'all' || learner.status === status;
+      const selectedGroup = groups.find((group) => group.id === groupId);
+      const matchesGroup = groupId === 'all' || (selectedGroup?.member_ids || []).includes(learner.id);
       const matchesQuery = !normalizedQuery || [learner.display_name, learner.email]
         .some((value) => String(value ?? '').toLowerCase().includes(normalizedQuery));
 
-      return matchesStatus && matchesQuery;
+      return matchesStatus && matchesGroup && matchesQuery;
     });
-  }, [learners, query, status]);
+  }, [groupId, groups, learners, query, status]);
 
   return (
     <>
@@ -95,7 +104,7 @@ export default function AdminLearners() {
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-4 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-5 shadow-sm md:grid-cols-[1fr_auto]">
+          <div className="mt-6 grid gap-4 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-5 shadow-sm md:grid-cols-[1fr_auto_auto]">
             <label className="block">
               <span className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Cerca</span>
               <input
@@ -118,6 +127,13 @@ export default function AdminLearners() {
                 <option value="active">Attivi</option>
                 <option value="suspended">Sospesi</option>
                 <option value="deleted">Eliminati</option>
+              </select>
+            </label>
+            <label className="block md:min-w-56">
+              <span className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Gruppo</span>
+              <select value={groupId} onChange={(event) => setGroupId(event.target.value)} className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white">
+                <option value="all">Tutti i gruppi</option>
+                {groups.map((group) => <option key={group.id} value={group.id}>{group.name}</option>)}
               </select>
             </label>
           </div>

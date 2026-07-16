@@ -14,9 +14,10 @@ import {
   Send,
   UserRound,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { supabase } from '../lib/supabaseClient.js';
+import { loadAssignmentGroupLinks } from '../lib/learnerGroupsApi.js';
 
 const statusLabels = {
   draft: 'Bozza',
@@ -81,6 +82,7 @@ function AssignmentCard({ assignment, busy, onStatusChange }) {
                 Senza contenuti
               </span>
             ) : null}
+            {assignment.group_name ? <Link to={`/admin/groups/${assignment.group_id}`} className="rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-black text-violet-800 dark:border-violet-300/25 dark:bg-violet-300/10 dark:text-violet-100">{assignment.group_name}</Link> : null}
           </div>
 
           <h2 className="mt-3 text-xl font-black text-ink dark:text-white">{assignment.title}</h2>
@@ -179,10 +181,12 @@ function AssignmentCard({ assignment, busy, onStatusChange }) {
 }
 
 export default function AdminAssignments() {
+  const [searchParams] = useSearchParams();
   const [assignments, setAssignments] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('active');
   const [contentFilter, setContentFilter] = useState('all');
+  const [groupFilter, setGroupFilter] = useState(searchParams.get('group') || 'all');
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
   const [error, setError] = useState('');
@@ -191,12 +195,16 @@ export default function AdminAssignments() {
   async function loadAssignments() {
     setLoading(true);
     setError('');
-    const { data, error: queryError } = await supabase.rpc('admin_list_assignments_overview');
+    const [{ data, error: queryError }, groupLinks] = await Promise.all([
+      supabase.rpc('admin_list_assignments_overview'),
+      loadAssignmentGroupLinks().catch(() => []),
+    ]);
     if (queryError) {
       setAssignments([]);
       setError(`Non è stato possibile caricare le assegnazioni${queryError.message ? `: ${queryError.message}` : '.'}`);
     } else {
-      setAssignments(data || []);
+      const links = new Map(groupLinks.map((link) => [link.assignment_id, link]));
+      setAssignments((data || []).map((assignment) => ({ ...assignment, ...(links.get(assignment.id) || {}) })));
     }
     setLoading(false);
   }
@@ -208,6 +216,7 @@ export default function AdminAssignments() {
     [assignment.status]: (result[assignment.status] || 0) + 1,
     overdue: result.overdue + (isOverdue(assignment) ? 1 : 0),
   }), { draft: 0, published: 0, completed: 0, archived: 0, overdue: 0 }), [assignments]);
+  const groups = useMemo(() => Array.from(new Map(assignments.filter((assignment) => assignment.group_id).map((assignment) => [assignment.group_id, assignment.group_name])).entries()), [assignments]);
 
   const filteredAssignments = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -219,12 +228,13 @@ export default function AdminAssignments() {
       if (contentFilter === 'without_content' && assignment.has_content) return false;
       if (contentFilter === 'exercise' && !(assignment.resource_types || []).includes('custom_exercise')) return false;
       if (contentFilter === 'practice' && !(assignment.resource_types || []).includes('practice_session')) return false;
+      if (groupFilter !== 'all' && assignment.group_id !== groupFilter) return false;
       if (!term) return true;
       return [assignment.title, assignment.learner_name, assignment.learner_email]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(term));
     });
-  }, [assignments, search, statusFilter, contentFilter]);
+  }, [assignments, search, statusFilter, contentFilter, groupFilter]);
 
   async function changeStatus(assignment, nextStatus) {
     setBusyId(assignment.id);
@@ -279,7 +289,7 @@ export default function AdminAssignments() {
           </div>
 
           <section className="mt-5 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-5">
-            <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_13rem_15rem_auto]">
+            <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_13rem_15rem_14rem_auto]">
               <label className="relative">
                 <Search className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-ink/35 dark:text-white/35" />
                 <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cerca studente, email o assegnazione" className="w-full rounded-xl border border-ink/15 bg-white py-3 pl-10 pr-4 text-sm font-semibold outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white" />
@@ -300,7 +310,8 @@ export default function AdminAssignments() {
                 <option value="exercise">Con esercizio</option>
                 <option value="practice">Con pratica mirata</option>
               </select>
-              <button type="button" onClick={() => { setSearch(''); setStatusFilter('active'); setContentFilter('all'); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-ink/15 px-4 text-sm font-black text-ink dark:border-white/20 dark:text-white">
+              <select value={groupFilter} onChange={(event) => setGroupFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white"><option value="all">Tutti i gruppi</option>{groups.map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select>
+              <button type="button" onClick={() => { setSearch(''); setStatusFilter('active'); setContentFilter('all'); setGroupFilter('all'); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-ink/15 px-4 text-sm font-black text-ink dark:border-white/20 dark:text-white">
                 <Filter className="h-4 w-4" />Azzera
               </button>
             </div>
