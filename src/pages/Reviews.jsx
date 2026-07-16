@@ -4,28 +4,28 @@ import AboutSection from '../components/AboutSection';
 import ReviewCarousel from '../components/ReviewCarousel';
 import SEO from '../components/SEO';
 import SectionReveal from '../components/SectionReveal';
-import { primaryOffer } from '../config/site';
 import { reviews } from '../data/content';
 
 export default function Reviews() {
   return (
     <>
       <SEO
-        title="Founder e recensioni | Sblocco Inglese"
-        description={`Founder, recensioni e prove di esperienza per la simulazione inglese da ${primaryOffer.price}: speaking, colloqui e situazioni pratiche per italiani.`}
+        title="Rhema e recensioni | Sblocco Inglese"
+        description={`Conosci Rhema e leggi le esperienze degli studenti con Sblocco Inglese: speaking, colloqui e situazioni pratiche per italiani.`}
       />
 
-      <section className="section-shell pb-12 pt-12 lg:pt-16">
+      <section className="section-shell bg-paper pb-12 pt-12 dark:bg-[#0f1715] lg:pt-16">
         <span className="eyebrow">
           <Award aria-hidden="true" className="h-3.5 w-3.5" />
-          Prova e fiducia
+          Esperienza e metodo
         </span>
-        <h1 className="mt-5 max-w-4xl whitespace-nowrap text-3xl font-black leading-tight text-ink sm:text-5xl">
-          Founder e recensioni
+        <h1 className="mt-5 max-w-4xl text-3xl font-black leading-tight text-ink dark:text-white sm:text-5xl">
+          Chi sono e cosa dicono gli studenti
         </h1>
-        <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70">
-          Qui trovi il lato umano e la prova pratica del progetto: chi è Rhema, come lavora con gli studenti e perché il
-          metodo Sblocco Inglese non nasce da conversazione casuale.
+        <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/70 dark:text-white/70">
+          Conosci Rhema, scopri come lavora e leggi le esperienze degli studenti.
+          Il metodo Sblocco Inglese nasce da lezioni strutturate, correzioni
+          mirate e situazioni concrete.
         </p>
       </section>
 

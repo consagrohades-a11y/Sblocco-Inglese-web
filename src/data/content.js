@@ -384,7 +384,7 @@ export const percorsoOffers = [
     description:
       'Percorso privato per chi ha un colloquio o una scadenza ravvicinata e ha bisogno di preparare risposte, simulazioni e correzioni in modo più intensivo.',
     includes: [
-      '6 sessioni private (la cadenza delle sessioni la scegli tu, urgency matters)',
+      '6 sessioni private, con una cadenza adatta alla tua scadenza',
       'preparazione risposte',
       'simulazione colloquio',
       'feedback scritto',
