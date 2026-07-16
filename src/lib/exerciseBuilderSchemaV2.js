@@ -31,7 +31,7 @@ export const EXERCISE_BUILDER_SKILLS = [
 ];
 
 const TOP_LEVEL_TYPES = ['question', 'question_pool', 'exercise', 'bundle'];
-const FEEDBACK_TIMINGS = ['section_end', 'exercise_end', 'hidden'];
+const FEEDBACK_TIMINGS = ['question_end', 'section_end', 'exercise_end', 'hidden'];
 const DISPLAY_MODES = ['one_at_a_time', 'all_questions'];
 const SELECTION_MODES = ['fixed', 'pool', 'mixed'];
 const SELECTION_STRATEGIES = ['random', 'avoid_recent', 'unseen_first', 'balanced'];

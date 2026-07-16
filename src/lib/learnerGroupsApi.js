@@ -50,6 +50,20 @@ export async function createGroupAssignmentBatch({ groupId, sourceAssignmentId, 
   return data;
 }
 
+export async function createEmptyGroupAssignmentBatch({ groupId, title, learnerNote, adminNote, required, deadlineAt, estimatedMinutes }) {
+  const { data, error } = await supabase.rpc('admin_create_empty_group_assignment_batch', {
+    p_group_id: groupId,
+    p_title: title,
+    p_learner_note: learnerNote || null,
+    p_admin_note: adminNote || null,
+    p_required: required,
+    p_deadline_at: deadlineAt || null,
+    p_estimated_minutes: estimatedMinutes || null,
+  });
+  throwIfError(error);
+  return data;
+}
+
 export async function loadAssignmentGroupLinks() {
   const { data, error } = await supabase.rpc('admin_list_assignment_group_links');
   throwIfError(error);

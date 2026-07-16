@@ -115,12 +115,12 @@ function defaultSkill(type) {
   return 'grammar';
 }
 
-function emptyQuestion() {
+function emptyQuestion(type = 'multiple_choice') {
   return {
     id: null, publicId: '', status: 'draft', versionNumber: null,
-    questionType: 'multiple_choice', title: '', prompt: '', instructions: '', instructionLanguage: 'it',
-    level: 'A1', topic: '', subtopic: '', primarySkill: 'grammar', learningObjective: '', difficulty: 'standard',
-    tagsText: '', content: defaultContent('multiple_choice'),
+    questionType: type, title: '', prompt: type === 'content_block' ? 'Prima di iniziare' : '', instructions: '', instructionLanguage: 'it',
+    level: 'A1', topic: '', subtopic: '', primarySkill: defaultSkill(type), learningObjective: '', difficulty: 'standard',
+    tagsText: type === 'content_block' ? 'spiegazione, scaffolding' : '', content: defaultContent(type),
     grading: { mode: 'automatic', weight: 1, nearly_correct_multiplier: 0.5 },
     feedback: { correct: '', incorrect: '', explanation: '' },
     diagnostics: { tested_codes: [], fallback_error_code: null, answer_error_mappings: [] }, media: [],
@@ -336,7 +336,12 @@ export default function AdminExerciseQuestionEditorV2() {
     finally { setLoading(false); }
   }
 
-  function createNew() { setQuestion(emptyQuestion()); setPreviewAnswer(null); setSearchParams({ new: '1' }); setSuccess('Nuova domanda pronta.'); setError(''); }
+  function createNew() {
+    const requestedType = searchParams.get('type');
+    const type = TYPE_GROUPS.flatMap(([, values]) => values.map(([value]) => value)).includes(requestedType) ? requestedType : 'multiple_choice';
+    setQuestion(emptyQuestion(type)); setPreviewAnswer(null); setSearchParams({ new: '1', ...(type !== 'multiple_choice' ? { type } : {}) });
+    setSuccess(type === 'content_block' ? 'Nuova pagina di spiegazione pronta.' : 'Nuova domanda pronta.'); setError('');
+  }
   const filteredCatalog = useMemo(() => applyFilters(catalog), [catalog, catalogSearch, catalogStatus, catalogLevel, catalogType, catalogTopic]);
   const catalogLevels = useMemo(() => [...new Set(catalog.map((item) => item.level).filter(Boolean))].sort(), [catalog]);
   const catalogTypes = useMemo(() => [...new Set(catalog.map((item) => item.question_type).filter(Boolean))].sort(), [catalog]);

@@ -7,6 +7,11 @@
       "file_name": "exercise-builder-question-template.json"
     },
     {
+      "key": "content_block",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-content_block-template.json"
+    },
+    {
       "key": "multiple_choice",
       "entity_type": "question",
       "file_name": "exercise-builder-question-multiple_choice-template.json"
@@ -40,11 +45,6 @@
       "key": "word_order",
       "entity_type": "question",
       "file_name": "exercise-builder-question-word_order-template.json"
-    },
-    {
-      "key": "content_block",
-      "entity_type": "question",
-      "file_name": "exercise-builder-question-content_block-template.json"
     },
     {
       "key": "dialogue_choice",
@@ -85,6 +85,11 @@
       "key": "exercise",
       "entity_type": "exercise",
       "file_name": "exercise-builder-exercise-template.json"
+    },
+    {
+      "key": "guided_exercise",
+      "entity_type": "exercise",
+      "file_name": "exercise-builder-guided-exercise-template.json"
     },
     {
       "key": "bundle",

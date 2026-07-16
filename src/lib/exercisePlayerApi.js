@@ -96,6 +96,15 @@ export async function completeExerciseSection({ attemptId, sectionId }) {
   return data;
 }
 
+export async function checkExerciseQuestion({ attemptId, attemptQuestionId }) {
+  const { data, error } = await supabase.rpc('complete_exercise_builder_question', {
+    p_attempt_id: attemptId,
+    p_attempt_question_id: attemptQuestionId,
+  });
+  if (error) return recoverExerciseAttemptState(error, attemptId);
+  return data;
+}
+
 export async function submitExerciseAttempt(attemptId) {
   const { data, error } = await supabase.rpc('submit_exercise_builder_attempt', {
     p_attempt_id: attemptId,
