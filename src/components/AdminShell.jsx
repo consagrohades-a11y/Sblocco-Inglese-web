@@ -379,7 +379,7 @@ export default function AdminShell() {
         </div>
       ) : null}
 
-      <div className={`min-w-0 transition-[padding] duration-200 ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
+      <div className={`min-w-0 overflow-x-clip transition-[padding] duration-200 ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
         <Outlet />
       </div>
     </div>
