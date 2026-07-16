@@ -1,11 +1,18 @@
 import React from 'react';
-import { BarChart3, BookOpen, ClipboardList, Plane, Settings, Users } from 'lucide-react';
+import { BarChart3, BookOpen, ClipboardList, Mail, Plane, Settings, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { adminButton, adminSurface } from '../styles/adminUi.js';
 
 const sections = [
+  {
+    title: 'Lead e cohort',
+    description: 'Profili dal quiz pubblico, idoneità alla beta, richieste di ricontatto e stato commerciale.',
+    to: '/admin/leads',
+    icon: Mail,
+    status: 'Nuovo',
+  },
   {
     title: 'Studenti',
     description: 'Account learner, profili, relazioni didattiche e accesso alle assegnazioni.',
@@ -63,10 +70,11 @@ export default function AdminDashboard() {
             <span className="eyebrow">Dashboard</span>
             <h1 className="mt-4 text-3xl font-black leading-tight text-ink dark:text-white sm:text-4xl">Ciao {displayName}</h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-ink/70 dark:text-white/65">
-              Gestisci studenti, contenuti e attività da un unico workspace. Il Travel Trainer ora ha un’area diretta per creare e pubblicare le tue card.
+              Gestisci recruitment, studenti, contenuti e attività da un unico workspace. I profili pubblici ora entrano direttamente in una pipeline dedicata alla beta e alle liste d’interesse.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/admin/content/travel-expressions" className={adminButton.primary}><Plane className="h-4 w-4" />Gestisci Travel Trainer</Link>
+              <Link to="/admin/leads" className={adminButton.primary}><Mail className="h-4 w-4" />Apri lead assessment</Link>
+              <Link to="/admin/content/travel-expressions" className={adminButton.secondary}><Plane className="h-4 w-4" />Gestisci Travel Trainer</Link>
               <Link to="/admin/content/words" className={adminButton.secondary}>Revisiona Word card</Link>
               <Link to="/admin/content/expressions" className={adminButton.positive}>Revisiona Expressions</Link>
               <Link to="/admin/learners" className={adminButton.secondary}>Apri studenti</Link>
@@ -93,10 +101,10 @@ export default function AdminDashboard() {
           </div>
 
           <section className="mt-6 rounded-2xl border border-moss/20 bg-mint/25 p-6 dark:border-emerald-300/20 dark:bg-emerald-400/10">
-            <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Flusso contenuti</p>
-            <h2 className="mt-2 text-xl font-black text-ink dark:text-white">Bozza, revisione, approvazione, pubblicazione</h2>
+            <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Flusso recruitment</p>
+            <h2 className="mt-2 text-xl font-black text-ink dark:text-white">Profilo, qualifica, ricontatto, cohort</h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70 dark:text-white/60">
-              Le card diventano visibili agli studenti soltanto dopo aver superato i requisiti di completezza ed essere state pubblicate.
+              Ogni assessment salva contesto, difficoltà, percorso consigliato, idoneità alla beta e consensi. Puoi quindi contattare le persone giuste con un messaggio pertinente.
             </p>
           </section>
         </div>

@@ -46,11 +46,9 @@ function AccountMenu({ displayName, isAdmin, onSignOut }) {
     function handlePointerDown(event) {
       if (!menuRef.current?.contains(event.target)) setOpen(false);
     }
-
     function handleKeyDown(event) {
       if (event.key === 'Escape') setOpen(false);
     }
-
     document.addEventListener('pointerdown', handlePointerDown);
     document.addEventListener('keydown', handleKeyDown);
     return () => {
@@ -69,47 +67,27 @@ function AccountMenu({ displayName, isAdmin, onSignOut }) {
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
-        <span className="grid h-8 w-8 place-items-center rounded-full bg-mint text-sm font-extrabold text-ink">
-          {initial}
-        </span>
+        <span className="grid h-8 w-8 place-items-center rounded-full bg-mint text-sm font-extrabold text-ink">{initial}</span>
         <ChevronDown aria-hidden="true" className={`h-3.5 w-3.5 text-white/55 transition ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open ? (
-        <div
-          role="menu"
-          className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-white/15 bg-[#101a17] p-2 text-white shadow-[0_24px_70px_rgba(0,0,0,0.42)]"
-        >
+        <div role="menu" className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-white/15 bg-[#101a17] p-2 text-white shadow-[0_24px_70px_rgba(0,0,0,0.42)]">
           <div className="border-b border-white/10 px-3 py-3">
             <p className="truncate text-sm font-black">{displayName || 'Il tuo account'}</p>
             <p className="mt-0.5 text-xs font-semibold text-white/55">Profilo e impostazioni</p>
           </div>
-          <Link
-            role="menuitem"
-            to="/account"
-            onClick={() => setOpen(false)}
-            className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white"
-          >
+          <Link role="menuitem" to="/account" onClick={() => setOpen(false)} className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white">
             <Settings aria-hidden="true" className="h-4 w-4 text-mint" />
             Account
           </Link>
           {isAdmin ? (
-            <Link
-              role="menuitem"
-              to="/admin"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white"
-            >
+            <Link role="menuitem" to="/admin" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white">
               <GraduationCap aria-hidden="true" className="h-4 w-4 text-mint" />
               Pannello admin
             </Link>
           ) : null}
-          <button
-            role="menuitem"
-            type="button"
-            onClick={onSignOut}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-bold text-white/70 transition hover:bg-coral/15 hover:text-white"
-          >
+          <button role="menuitem" type="button" onClick={onSignOut} className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-bold text-white/70 transition hover:bg-coral/15 hover:text-white">
             <LogOut aria-hidden="true" className="h-4 w-4 text-[#ffb89a]" />
             Esci
           </button>
@@ -147,7 +125,6 @@ export default function Navbar() {
     function handleScroll() {
       setCompact(window.scrollY > 24);
     }
-
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -182,13 +159,7 @@ export default function Navbar() {
           {items.map((item) => {
             const active = isRouteActive(location.pathname, item.to);
             return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={`focus-ring relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold transition ${
-                  active ? 'text-white' : 'text-white/68 hover:bg-white/[0.05] hover:text-white'
-                }`}
-              >
+              <NavLink key={item.to} to={item.to} className={`focus-ring relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'text-white' : 'text-white/68 hover:bg-white/[0.05] hover:text-white'}`}>
                 {item.label}
                 {active ? <span aria-hidden="true" className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-mint via-coral to-butter" /> : null}
               </NavLink>
@@ -199,29 +170,20 @@ export default function Navbar() {
         <div className="hidden shrink-0 items-center gap-2 xl:flex">
           {isLearner ? (
             learnerAction.to ? (
-              <Link
-                to={learnerAction.to}
-                className="focus-ring inline-flex h-10 items-center gap-2 rounded-full bg-moss px-4 text-sm font-extrabold text-white transition hover:-translate-y-px hover:bg-[#19947b]"
-              >
+              <Link to={learnerAction.to} className="focus-ring inline-flex h-10 items-center gap-2 rounded-full bg-moss px-4 text-sm font-extrabold text-white transition hover:-translate-y-px hover:bg-[#19947b]">
                 <ArrowLeft aria-hidden="true" className="h-4 w-4" />
                 {learnerAction.label}
               </Link>
             ) : (
-              <button
-                type="button"
-                onClick={handleLearnerBack}
-                className="focus-ring inline-flex h-10 items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 text-sm font-extrabold text-white transition hover:bg-white/[0.10]"
-              >
+              <button type="button" onClick={handleLearnerBack} className="focus-ring inline-flex h-10 items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 text-sm font-extrabold text-white transition hover:bg-white/[0.10]">
                 <ArrowLeft aria-hidden="true" className="h-4 w-4" />
                 {learnerAction.label}
               </button>
             )
           ) : (
-            <Link
-              to="/corsi/business-english-flow"
-              className="focus-ring inline-flex h-10 items-center gap-2 rounded-full bg-moss px-4 text-sm font-extrabold text-white transition hover:-translate-y-px hover:bg-[#19947b]"
-            >
-              Business English Flow
+            <Link to="/assessment" className="focus-ring inline-flex h-10 items-center gap-2 rounded-full bg-moss px-4 text-sm font-extrabold text-white transition hover:-translate-y-px hover:bg-[#19947b]">
+              <Sparkles aria-hidden="true" className="h-4 w-4" />
+              Profilo gratuito
               <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </Link>
           )}
@@ -229,10 +191,7 @@ export default function Navbar() {
           {!loading && user ? (
             <AccountMenu displayName={displayName} isAdmin={isAdmin} onSignOut={handleSignOut} />
           ) : !loading ? (
-            <NavLink
-              to="/login"
-              className="focus-ring inline-flex h-10 items-center rounded-full border border-white/12 bg-white/[0.045] px-4 text-sm font-semibold text-white/80 transition hover:bg-white/[0.08] hover:text-white"
-            >
+            <NavLink to="/login" className="focus-ring inline-flex h-10 items-center rounded-full border border-white/12 bg-white/[0.045] px-4 text-sm font-semibold text-white/80 transition hover:bg-white/[0.08] hover:text-white">
               Accedi
             </NavLink>
           ) : (
@@ -272,13 +231,7 @@ export default function Navbar() {
               const Icon = item.icon;
               const active = isRouteActive(location.pathname, item.to);
               return (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className={`focus-ring flex min-h-12 items-center gap-3 rounded-2xl px-4 py-3 text-base font-extrabold transition ${
-                    active ? 'bg-mint text-ink' : 'bg-white/[0.05] text-white/80 hover:bg-white/[0.10] hover:text-white'
-                  }`}
-                >
+                <NavLink key={item.to} to={item.to} className={`focus-ring flex min-h-12 items-center gap-3 rounded-2xl px-4 py-3 text-base font-extrabold transition ${active ? 'bg-mint text-ink' : 'bg-white/[0.05] text-white/80 hover:bg-white/[0.10] hover:text-white'}`}>
                   {Icon ? <Icon aria-hidden="true" className={`h-5 w-5 ${active ? 'text-moss' : 'text-mint'}`} /> : null}
                   {item.label}
                 </NavLink>
@@ -286,8 +239,8 @@ export default function Navbar() {
             })}
 
             {!isLearner ? (
-              <Link to="/corsi/business-english-flow" className="focus-ring mt-2 flex min-h-12 items-center justify-between rounded-2xl bg-moss px-4 py-3 text-base font-black text-white">
-                Business English Flow
+              <Link to="/assessment" className="focus-ring mt-2 flex min-h-12 items-center justify-between rounded-2xl bg-moss px-4 py-3 text-base font-black text-white">
+                <span className="flex items-center gap-2"><Sparkles aria-hidden="true" className="h-5 w-5" />Profilo gratuito</span>
                 <ArrowRight aria-hidden="true" className="h-5 w-5" />
               </Link>
             ) : null}
@@ -310,9 +263,7 @@ export default function Navbar() {
                 </button>
               </>
             ) : !loading ? (
-              <Link to="/login" className="focus-ring mt-2 flex min-h-12 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.07] px-4 py-3 text-base font-extrabold text-white">
-                Accedi
-              </Link>
+              <Link to="/login" className="focus-ring mt-2 flex min-h-12 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.07] px-4 py-3 text-base font-extrabold text-white">Accedi</Link>
             ) : null}
           </nav>
         </div>
