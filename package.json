@@ -9,6 +9,7 @@
     "preview": "vite preview --host 127.0.0.1",
     "audit:general-expression": "node scripts/audit-general-expression-cards.mjs",
     "audit:general-expression:strict": "node scripts/audit-general-expression-cards.mjs --strict",
+    "generate:exercise-templates": "node scripts/write-exercise-builder-templates.mjs",
     "validate:auth": "node scripts/validate-auth-foundation.mjs",
     "validate:exercise-templates": "node scripts/validate-exercise-builder-templates.mjs",
     "validate:supabase": "node scripts/validate-supabase-config.mjs",

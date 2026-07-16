@@ -1,0 +1,809 @@
+{
+  "schema_version": 2,
+  "entity_type": "bundle",
+  "questions": [
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {
+        "explanation": "Milk is uncountable, so use much."
+      },
+      "foundation_links": [],
+      "client_key": "question_multiple_choice",
+      "type": "multiple_choice",
+      "tags": [
+        "multiple_choice",
+        "automatic"
+      ],
+      "title": "Multiple choice",
+      "prompt": "There is not _____ milk in the fridge.",
+      "instructions": "Scegli una risposta.",
+      "level": "A1",
+      "topic": "quantifiers",
+      "primary_skill": "grammar",
+      "learning_objective": "Choose the correct quantifier.",
+      "content": {
+        "options": [
+          {
+            "key": "many",
+            "text": "many",
+            "is_correct": false,
+            "error_code": "QUANTIFIER_MUCH_MANY"
+          },
+          {
+            "key": "much",
+            "text": "much",
+            "is_correct": true
+          },
+          {
+            "key": "few",
+            "text": "a few",
+            "is_correct": false,
+            "error_code": "COUNTABILITY"
+          }
+        ]
+      },
+      "grading": {
+        "mode": "automatic",
+        "weight": 1,
+        "nearly_correct_multiplier": 0.5
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "QUANTIFIER_MUCH_MANY",
+          "COUNTABILITY"
+        ],
+        "fallback_error_code": "QUANTIFIER_GENERAL"
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_multiple_select",
+      "type": "multiple_select",
+      "tags": [
+        "multiple_select",
+        "automatic"
+      ],
+      "title": "Multiple select",
+      "prompt": "Which sentences are correct?",
+      "instructions": "Seleziona tutte le risposte corrette.",
+      "level": "A2",
+      "topic": "present_perfect",
+      "primary_skill": "grammar",
+      "learning_objective": "Recognise correct present perfect forms.",
+      "content": {
+        "options": [
+          {
+            "key": "a",
+            "text": "I have already finished.",
+            "is_correct": true
+          },
+          {
+            "key": "b",
+            "text": "She has never visited Rome.",
+            "is_correct": true
+          },
+          {
+            "key": "c",
+            "text": "We have went home.",
+            "is_correct": false,
+            "error_code": "PAST_PARTICIPLE_FORM"
+          }
+        ]
+      },
+      "grading": {
+        "mode": "automatic",
+        "weight": 1,
+        "nearly_correct_multiplier": 0.5
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "PRESENT_PERFECT_FORM"
+        ],
+        "fallback_error_code": "PRESENT_PERFECT_GENERAL"
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_gap_fill",
+      "type": "gap_fill",
+      "tags": [
+        "gap_fill",
+        "automatic"
+      ],
+      "title": "Open gap fill",
+      "prompt": "Complete the sentence.",
+      "instructions": "Scrivi la parola mancante.",
+      "level": "A1",
+      "topic": "present_simple",
+      "primary_skill": "grammar",
+      "learning_objective": "Use the third-person singular form.",
+      "content": {
+        "text_template": "She [[blank_1]] to work every day.",
+        "blanks": [
+          {
+            "key": "blank_1",
+            "accepted_answers": [
+              "goes"
+            ],
+            "points": 1,
+            "feedback": {},
+            "answer_error_mappings": [
+              {
+                "answer": "go",
+                "error_code": "PRESENT_SIMPLE_THIRD_PERSON"
+              }
+            ]
+          }
+        ]
+      },
+      "grading": {
+        "mode": "per_blank",
+        "weight": 1,
+        "nearly_correct_multiplier": 0.5
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "PRESENT_SIMPLE_THIRD_PERSON"
+        ],
+        "fallback_error_code": "PRESENT_SIMPLE_GENERAL"
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_select_gap",
+      "type": "select_gap",
+      "tags": [
+        "select_gap",
+        "automatic"
+      ],
+      "title": "Select gap",
+      "prompt": "Complete the sentence.",
+      "instructions": "Scegli dal menu.",
+      "level": "A1",
+      "topic": "present_simple",
+      "primary_skill": "grammar",
+      "learning_objective": "Choose the correct verb form.",
+      "content": {
+        "text_template": "I [[blank_1]] coffee every morning.",
+        "blanks": [
+          {
+            "key": "blank_1",
+            "accepted_answers": [
+              "drink"
+            ],
+            "options": [
+              "drink",
+              "drinks",
+              "drinking"
+            ],
+            "points": 1,
+            "feedback": {},
+            "answer_error_mappings": []
+          }
+        ]
+      },
+      "grading": {
+        "mode": "per_blank",
+        "weight": 1,
+        "nearly_correct_multiplier": 0.5
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "PRESENT_SIMPLE_FORM"
+        ],
+        "fallback_error_code": "PRESENT_SIMPLE_GENERAL"
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_translation",
+      "type": "translation",
+      "tags": [
+        "translation",
+        "automatic"
+      ],
+      "title": "Translation",
+      "prompt": "Traduci: Sto aspettando una risposta.",
+      "instructions": "Scrivi una traduzione naturale.",
+      "level": "A2",
+      "topic": "present_continuous",
+      "primary_skill": "grammar",
+      "learning_objective": "Translate an action in progress.",
+      "content": {
+        "accepted_answers": [
+          "I'm waiting for an answer.",
+          "I am waiting for an answer."
+        ]
+      },
+      "grading": {
+        "mode": "automatic",
+        "weight": 1,
+        "nearly_correct_multiplier": 0.5
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "PRESENT_CONTINUOUS_FORM"
+        ],
+        "fallback_error_code": "TRANSLATION_GENERAL"
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_error_correction",
+      "type": "error_correction",
+      "tags": [
+        "error_correction",
+        "automatic"
+      ],
+      "title": "Error correction",
+      "prompt": "Correct: He do not like coffee.",
+      "instructions": "Riscrivi la frase corretta.",
+      "level": "A1",
+      "topic": "present_simple",
+      "primary_skill": "grammar",
+      "learning_objective": "Correct a third-person negative.",
+      "content": {
+        "accepted_answers": [
+          "He doesn't like coffee.",
+          "He does not like coffee."
+        ]
+      },
+      "grading": {
+        "mode": "automatic",
+        "weight": 1,
+        "nearly_correct_multiplier": 0.5
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "PRESENT_SIMPLE_NEGATIVE"
+        ],
+        "fallback_error_code": "ERROR_CORRECTION_GENERAL"
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_word_order",
+      "type": "word_order",
+      "tags": [
+        "word_order",
+        "automatic"
+      ],
+      "title": "Word order",
+      "prompt": "Put the words in order.",
+      "instructions": "Riordina tutte le parole.",
+      "level": "A1",
+      "topic": "questions",
+      "primary_skill": "word_order",
+      "learning_objective": "Build a present simple question.",
+      "content": {
+        "tokens": [
+          "do",
+          "you",
+          "where",
+          "live"
+        ],
+        "correct_order": [
+          "where",
+          "do",
+          "you",
+          "live"
+        ],
+        "terminal_punctuation": "?"
+      },
+      "grading": {
+        "mode": "automatic",
+        "weight": 1,
+        "nearly_correct_multiplier": 0.5
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "QUESTION_WORD_ORDER"
+        ],
+        "fallback_error_code": "WORD_ORDER_GENERAL"
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_content_block",
+      "type": "content_block",
+      "tags": [
+        "content_block",
+        "automatic"
+      ],
+      "title": "Instruction block",
+      "prompt": "Before you begin",
+      "instructions": "Leggi prima di continuare.",
+      "level": "B1",
+      "topic": "integrated_skills",
+      "primary_skill": "reading",
+      "learning_objective": "Read shared instructions.",
+      "content": {
+        "body": "Use this block for instructions, grammar notes, examples or shared context."
+      },
+      "grading": {
+        "mode": "automatic",
+        "weight": 1,
+        "nearly_correct_multiplier": 0.5
+      },
+      "diagnostics": {
+        "tested_codes": [],
+        "fallback_error_code": null
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_dialogue_choice",
+      "type": "dialogue_choice",
+      "tags": [
+        "dialogue_choice",
+        "automatic"
+      ],
+      "title": "Dialogue choice",
+      "prompt": "Choose the most natural reply.",
+      "instructions": "Leggi il dialogo e scegli.",
+      "level": "A2",
+      "topic": "everyday_conversation",
+      "primary_skill": "functional_language",
+      "learning_objective": "Choose an appropriate response.",
+      "content": {
+        "scenario": "Two colleagues are arranging lunch.",
+        "response_prompt": "What should Alex say next?",
+        "turns": [
+          {
+            "key": "turn_1",
+            "speaker": "Sam",
+            "text": "Are you free at one?"
+          },
+          {
+            "key": "turn_2",
+            "speaker": "Alex",
+            "text": "I have a meeting until half past one."
+          }
+        ],
+        "options": [
+          {
+            "key": "a",
+            "text": "Could we meet at two instead?",
+            "is_correct": true
+          },
+          {
+            "key": "b",
+            "text": "I ate yesterday.",
+            "is_correct": false,
+            "error_code": "FUNCTIONAL_LANGUAGE_CONTEXT"
+          }
+        ]
+      },
+      "grading": {
+        "mode": "automatic",
+        "weight": 1,
+        "nearly_correct_multiplier": 0.5
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "FUNCTIONAL_LANGUAGE_RESPONSE"
+        ],
+        "fallback_error_code": "FUNCTIONAL_LANGUAGE_CONTEXT"
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_reading_comprehension",
+      "type": "reading_comprehension",
+      "tags": [
+        "reading_comprehension",
+        "automatic"
+      ],
+      "title": "Reading comprehension",
+      "prompt": "Read the text and answer all questions.",
+      "instructions": "Leggi prima per il senso generale.",
+      "level": "B1",
+      "topic": "workplace_reading",
+      "primary_skill": "reading",
+      "learning_objective": "Identify main ideas and details.",
+      "content": {
+        "title": "A new hybrid work policy",
+        "source_note": "Original teaching text.",
+        "passage": "Employees may work remotely for up to two days each week. Teams must agree on shared office days. New employees will work in the office during their first month.",
+        "items": [
+          {
+            "key": "item_1",
+            "type": "multiple_choice",
+            "prompt": "What is the text about?",
+            "points": 1,
+            "options": [
+              {
+                "key": "a",
+                "text": "A work policy.",
+                "is_correct": true
+              },
+              {
+                "key": "b",
+                "text": "A holiday.",
+                "is_correct": false
+              }
+            ]
+          },
+          {
+            "key": "item_2",
+            "type": "true_false",
+            "prompt": "Employees can work remotely every day.",
+            "points": 1,
+            "options": [
+              {
+                "key": "true",
+                "text": "Vero",
+                "is_correct": false
+              },
+              {
+                "key": "false",
+                "text": "Falso",
+                "is_correct": true
+              }
+            ]
+          },
+          {
+            "key": "item_3",
+            "type": "short_answer",
+            "prompt": "How long must new employees work in the office?",
+            "points": 1,
+            "accepted_answers": [
+              "one month",
+              "their first month"
+            ]
+          }
+        ]
+      },
+      "grading": {
+        "mode": "per_item",
+        "weight": 1,
+        "nearly_correct_multiplier": 0.5
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "READING_MAIN_IDEA",
+          "READING_DETAIL"
+        ],
+        "fallback_error_code": "READING_GENERAL"
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_written_response",
+      "type": "written_response",
+      "tags": [
+        "written_response",
+        "manual-review"
+      ],
+      "title": "Written production",
+      "prompt": "Write an email explaining why you missed a meeting and propose a new time.",
+      "instructions": "Rispetta tutti i punti.",
+      "level": "B1",
+      "topic": "professional_communication",
+      "primary_skill": "writing",
+      "learning_objective": "Write a clear professional email.",
+      "content": {
+        "context": "You missed a project meeting.",
+        "min_words": 80,
+        "max_words": 140,
+        "required_points": [
+          "Apologise",
+          "Explain briefly",
+          "Propose a new time"
+        ],
+        "model_answer": "",
+        "rubric": [
+          {
+            "key": "task",
+            "label": "Consegna",
+            "description": "",
+            "max_points": 4
+          },
+          {
+            "key": "accuracy",
+            "label": "Accuratezza",
+            "description": "",
+            "max_points": 3
+          },
+          {
+            "key": "range",
+            "label": "Lessico e registro",
+            "description": "",
+            "max_points": 3
+          }
+        ]
+      },
+      "grading": {
+        "mode": "manual_review",
+        "weight": 10
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "WRITING_TASK_ACHIEVEMENT"
+        ],
+        "fallback_error_code": "WRITING_GENERAL"
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_dialogue_roleplay",
+      "type": "dialogue_roleplay",
+      "tags": [
+        "dialogue_roleplay",
+        "manual-review"
+      ],
+      "title": "Dialogue production",
+      "prompt": "Complete the conversation as the character you choose.",
+      "instructions": "Scegli il personaggio e produci le sue battute.",
+      "level": "B1",
+      "topic": "hospitality_complaints",
+      "primary_skill": "interaction",
+      "learning_objective": "Respond to a complaint and negotiate a solution.",
+      "content": {
+        "scenario": "A guest reports a noisy room.",
+        "response_mode": "written",
+        "characters": [
+          {
+            "key": "guest",
+            "name": "Guest",
+            "description": "Explain the problem.",
+            "selectable": true
+          },
+          {
+            "key": "receptionist",
+            "name": "Receptionist",
+            "description": "Offer a solution.",
+            "selectable": true
+          }
+        ],
+        "turns": [
+          {
+            "key": "turn_1",
+            "speaker": "guest",
+            "prompt": "Explain the problem.",
+            "learner_response": true
+          },
+          {
+            "key": "turn_2",
+            "speaker": "receptionist",
+            "prompt": "Ask a question.",
+            "learner_response": true
+          },
+          {
+            "key": "turn_3",
+            "speaker": "guest",
+            "prompt": "Clarify your request.",
+            "learner_response": true
+          },
+          {
+            "key": "turn_4",
+            "speaker": "receptionist",
+            "prompt": "Offer a solution.",
+            "learner_response": true
+          }
+        ],
+        "model_responses": {},
+        "rubric": [
+          {
+            "key": "interaction",
+            "label": "Gestione del dialogo",
+            "description": "",
+            "max_points": 4
+          },
+          {
+            "key": "language",
+            "label": "Funzioni comunicative",
+            "description": "",
+            "max_points": 3
+          },
+          {
+            "key": "accuracy",
+            "label": "Accuratezza",
+            "description": "",
+            "max_points": 3
+          }
+        ]
+      },
+      "grading": {
+        "mode": "manual_review",
+        "weight": 10
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "INTERACTION_RESPONSE"
+        ],
+        "fallback_error_code": "INTERACTION_GENERAL"
+      }
+    },
+    {
+      "instruction_language": "it",
+      "difficulty": "standard",
+      "feedback": {},
+      "foundation_links": [],
+      "client_key": "question_audio_response",
+      "type": "audio_response",
+      "tags": [
+        "audio_response",
+        "manual-review"
+      ],
+      "title": "Audio response",
+      "prompt": "Record a short answer about a memorable trip.",
+      "instructions": "Riascolta prima di consegnare.",
+      "level": "B1",
+      "topic": "past_experiences",
+      "primary_skill": "speaking",
+      "learning_objective": "Describe a past experience clearly.",
+      "content": {
+        "context": "Say where you went, what happened and why it was memorable.",
+        "min_seconds": 30,
+        "max_seconds": 90,
+        "allow_rerecord": true,
+        "model_transcript": "",
+        "rubric": [
+          {
+            "key": "task",
+            "label": "Contenuto",
+            "description": "",
+            "max_points": 3
+          },
+          {
+            "key": "fluency",
+            "label": "Fluidità",
+            "description": "",
+            "max_points": 3
+          },
+          {
+            "key": "accuracy",
+            "label": "Accuratezza",
+            "description": "",
+            "max_points": 2
+          },
+          {
+            "key": "pronunciation",
+            "label": "Pronuncia",
+            "description": "",
+            "max_points": 2
+          }
+        ]
+      },
+      "grading": {
+        "mode": "manual_review",
+        "weight": 10
+      },
+      "diagnostics": {
+        "tested_codes": [
+          "SPEAKING_PAST_EXPERIENCE"
+        ],
+        "fallback_error_code": "SPEAKING_GENERAL"
+      }
+    }
+  ],
+  "pools": [
+    {
+      "client_key": "pool_integrated_review",
+      "name": "Integrated review pool",
+      "description": "Every supported automatic and manual question structure.",
+      "level": "Mixed",
+      "topic": "integrated_skills",
+      "primary_skill": "grammar",
+      "tags": [
+        "template",
+        "all-types"
+      ],
+      "foundation_links": [],
+      "questions": [],
+      "question_refs": [
+        "question_multiple_choice",
+        "question_multiple_select",
+        "question_gap_fill",
+        "question_select_gap",
+        "question_translation",
+        "question_error_correction",
+        "question_word_order",
+        "question_content_block",
+        "question_dialogue_choice",
+        "question_reading_comprehension",
+        "question_written_response",
+        "question_dialogue_roleplay",
+        "question_audio_response"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "client_key": "exercise_integrated_skills",
+      "title": "Integrated skills practice",
+      "description": "A complete example containing all supported question types.",
+      "instructions": "Complete every section. Manual productions remain pending until teacher feedback is published.",
+      "instruction_language": "it",
+      "level": "Mixed",
+      "topic": "integrated_skills",
+      "estimated_minutes": 45,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "section_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "section_automatic",
+          "title": "Automatic questions",
+          "instructions": "Complete the automatically graded activities.",
+          "selection_mode": "fixed",
+          "feedback_timing": "section_end",
+          "questions": [],
+          "question_refs": [
+            "question_multiple_choice",
+            "question_multiple_select",
+            "question_gap_fill",
+            "question_select_gap",
+            "question_translation",
+            "question_error_correction",
+            "question_word_order",
+            "question_content_block",
+            "question_dialogue_choice",
+            "question_reading_comprehension"
+          ],
+          "pool_rules": []
+        },
+        {
+          "client_key": "section_manual",
+          "title": "Teacher-reviewed production",
+          "instructions": "Submit every production for review.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [],
+          "question_refs": [
+            "question_written_response",
+            "question_dialogue_roleplay",
+            "question_audio_response"
+          ],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "template",
+        "integrated"
+      ],
+      "foundation_links": []
+    }
+  ]
+}

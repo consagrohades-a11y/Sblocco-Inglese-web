@@ -9,6 +9,9 @@ import {
   saveExerciseQuestionVersion,
   setExerciseQuestionStatus,
 } from '../lib/exerciseQuestionEditorApi.js';
+import {
+  normalizeWordOrderAuthoringContent,
+} from '../lib/wordOrderPresentation.js';
 
 const TYPE_GROUPS = [
   ['Risposte automatiche', [
@@ -78,7 +81,7 @@ function defaultContent(type) {
   if (type === 'gap_fill') return { text_template: '[[blank_1]]', blanks: [{ key: 'blank_1', accepted_answers: [''], points: 1 }] };
   if (type === 'select_gap') return { text_template: '[[blank_1]]', blanks: [{ key: 'blank_1', accepted_answers: [''], options: ['', ''], points: 1 }] };
   if (type === 'translation' || type === 'error_correction') return { accepted_answers: [''] };
-  if (type === 'word_order') return { tokens: [{ key: uid('token'), text: '' }, { key: uid('token'), text: '' }], correct_order: ['', ''] };
+  if (type === 'word_order') return { tokens: [{ key: uid('token'), text: '' }, { key: uid('token'), text: '' }], correct_order: ['', ''], terminal_punctuation: null };
   if (type === 'content_block') return { body: '' };
   if (type === 'written_response') return { context: '', min_words: 60, max_words: 120, required_points: [], rubric: defaultRubric('writing'), model_answer: '' };
   if (type === 'dialogue_roleplay') return {
@@ -358,7 +361,10 @@ export default function AdminExerciseQuestionEditorV2() {
     setSaving(true); setError(''); setSuccess('');
     try {
       const manual = ['written_response', 'dialogue_roleplay', 'audio_response'].includes(question.questionType);
-      const normalized = manual ? { ...question, grading: { ...question.grading, mode: 'manual_review', weight: rubricTotal(question.content.rubric) } } : question;
+      const authoringQuestion = question.questionType === 'word_order'
+        ? { ...question, content: normalizeWordOrderAuthoringContent(question.content) }
+        : question;
+      const normalized = manual ? { ...authoringQuestion, grading: { ...authoringQuestion.grading, mode: 'manual_review', weight: rubricTotal(authoringQuestion.content.rubric) } } : authoringQuestion;
       const result = await saveExerciseQuestionVersion({ questionId: question.id, question: { ...normalized, tags: normalized.tagsText.split(',').map((item) => item.trim()).filter(Boolean) } });
       await loadBase(); await openQuestion(result.id, { preserveSuccess: true }); setSuccess(`${result.public_id}, versione ${result.version_number}, salvata.`);
     } catch (saveError) { setError(saveError.message || 'Non è stato possibile salvare la domanda.'); }

@@ -15,6 +15,10 @@ import {
   createExerciseAudioSignedUrl,
   uploadExerciseAudioSubmission,
 } from '../../lib/exerciseSubmissionApi.js';
+import {
+  wordOrderDisplayToken,
+  wordOrderTerminalPunctuation,
+} from '../../lib/wordOrderPresentation.js';
 
 const resultStyles = {
   correct: 'border-emerald-200 bg-emerald-50 text-emerald-950 dark:border-emerald-300/25 dark:bg-emerald-400/10 dark:text-emerald-100',
@@ -115,9 +119,17 @@ function WordOrder({ question, answer, onChange, disabled }) {
   const remaining = tokenInstances.filter((token) => !usedKeys.has(token.instanceKey));
   const dragRef = useRef(null);
   const [draggingKey, setDraggingKey] = useState(null);
+  const terminalPunctuation = wordOrderTerminalPunctuation(question.content);
   function emit(next) { onChange(next.map((token) => token.text)); }
   function append(token) { emit([...selected, token]); }
   function remove(index) { emit(selected.filter((_, current) => current !== index)); }
+  function move(index, direction) {
+    const target = index + direction;
+    if (disabled || target < 0 || target >= selected.length) return;
+    const next = [...selected];
+    [next[index], next[target]] = [next[target], next[index]];
+    emit(next);
+  }
   function startDrag(event, payload) {
     if (disabled) return;
     dragRef.current = payload;
@@ -150,9 +162,9 @@ function WordOrder({ question, answer, onChange, disabled }) {
   return <div className="grid gap-4">
     <p className="text-xs font-semibold text-ink/50 dark:text-white/50">Fai clic sulle parole oppure trascinale. Puoi anche trascinare le parole già scelte per riordinarle.</p>
     <div onDragOver={(event) => event.preventDefault()} onDrop={(event) => dropInAnswer(event)} className="min-h-20 rounded-xl border border-dashed border-moss/35 bg-mint/20 p-3 dark:border-emerald-300/25 dark:bg-emerald-400/[0.06]" aria-label="Frase costruita">
-      <div className="flex min-h-12 flex-wrap items-center gap-2">{selected.map((token, index) => <button key={`${token.instanceKey}-${index}`} type="button" disabled={disabled} draggable={!disabled} onDragStart={(event) => startDrag(event, { source: 'selected', token, index })} onDragEnd={endDrag} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.stopPropagation(); dropInAnswer(event, index); }} onClick={() => remove(index)} title="Trascina per riordinare o fai clic per rimuovere" className={`cursor-grab rounded-lg bg-ink px-3 py-2 text-sm font-black text-white transition active:cursor-grabbing dark:bg-emerald-300 dark:text-[#102019] ${draggingKey === token.instanceKey ? 'opacity-45' : ''}`}>{token.text}</button>)}</div>
+      <div className="flex min-h-12 flex-wrap items-center gap-2">{selected.map((token, index) => <span key={`${token.instanceKey}-${index}`} className={`inline-flex min-h-11 overflow-hidden rounded-lg bg-ink text-white shadow-sm transition dark:bg-emerald-300 dark:text-[#102019] ${draggingKey === token.instanceKey ? 'opacity-45' : ''}`}><button type="button" disabled={disabled || index === 0} onClick={() => move(index, -1)} className="min-w-8 px-2 text-base font-black disabled:opacity-20" aria-label={`Sposta ${wordOrderDisplayToken(token.text, terminalPunctuation)} a sinistra`}>&larr;</button><button type="button" disabled={disabled} draggable={!disabled} onDragStart={(event) => startDrag(event, { source: 'selected', token, index })} onDragEnd={endDrag} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.stopPropagation(); dropInAnswer(event, index); }} onClick={() => remove(index)} title="Trascina per riordinare o fai clic per rimuovere" className="cursor-grab border-x border-white/20 px-3 py-2 text-sm font-black active:cursor-grabbing dark:border-[#102019]/15">{wordOrderDisplayToken(token.text, terminalPunctuation)}</button><button type="button" disabled={disabled || index === selected.length - 1} onClick={() => move(index, 1)} className="min-w-8 px-2 text-base font-black disabled:opacity-20" aria-label={`Sposta ${wordOrderDisplayToken(token.text, terminalPunctuation)} a destra`}>&rarr;</button></span>)}{selected.length && terminalPunctuation ? <span className="px-1 text-xl font-black text-ink dark:text-white" aria-label={`Punteggiatura finale ${terminalPunctuation}`}>{terminalPunctuation}</span> : null}</div>
     </div>
-    <div onDragOver={(event) => event.preventDefault()} onDrop={dropInBank} className="flex min-h-14 flex-wrap items-center gap-2 rounded-xl border border-transparent p-2" aria-label="Parole disponibili">{remaining.map((token) => <button key={token.instanceKey} type="button" disabled={disabled} draggable={!disabled} onDragStart={(event) => startDrag(event, { source: 'remaining', token })} onDragEnd={endDrag} onClick={() => append(token)} title="Trascina nella frase o fai clic per aggiungere" className={`cursor-grab rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm font-black text-ink transition active:cursor-grabbing dark:border-white/20 dark:bg-white/[0.06] dark:text-white ${draggingKey === token.instanceKey ? 'opacity-45' : ''}`}>{token.text}</button>)}</div>
+    <div onDragOver={(event) => event.preventDefault()} onDrop={dropInBank} className="flex min-h-14 flex-wrap items-center gap-2 rounded-xl border border-transparent p-2" aria-label="Parole disponibili">{remaining.map((token) => <button key={token.instanceKey} type="button" disabled={disabled} draggable={!disabled} onDragStart={(event) => startDrag(event, { source: 'remaining', token })} onDragEnd={endDrag} onClick={() => append(token)} title="Trascina nella frase o fai clic per aggiungere" className={`min-h-11 cursor-grab rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm font-black text-ink transition active:cursor-grabbing dark:border-white/20 dark:bg-white/[0.06] dark:text-white ${draggingKey === token.instanceKey ? 'opacity-45' : ''}`}>{wordOrderDisplayToken(token.text, terminalPunctuation)}</button>)}</div>
   </div>;
 }
 

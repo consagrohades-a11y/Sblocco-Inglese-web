@@ -65,7 +65,7 @@ const questions = {
   word_order: q('word_order', {
     title: 'Word order', prompt: 'Put the words in order.', instructions: 'Riordina tutte le parole.',
     level: 'A1', topic: 'questions', primary_skill: 'word_order', learning_objective: 'Build a present simple question.',
-    content: { tokens: ['do', 'you', 'where', 'live'], correct_order: ['where', 'do', 'you', 'live'] }, grading: automatic(),
+    content: { tokens: ['do', 'you', 'where', 'live'], correct_order: ['where', 'do', 'you', 'live'], terminal_punctuation: '?' }, grading: automatic(),
     diagnostics: diagnostics(['QUESTION_WORD_ORDER'], 'WORD_ORDER_GENERAL'),
   }),
   content_block: q('content_block', {

@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   BookOpen,
   CalendarDays,
+  CheckCircle2,
   Coffee,
   ListChecks,
   NotebookPen,
@@ -13,6 +14,7 @@ import {
 import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { useAuth } from '../auth/AuthContext.jsx';
+import { loadLearnerAssignmentProgress } from '../lib/assignmentProgressApi.js';
 import { supabase } from '../lib/supabaseClient.js';
 
 const trainerDestinations = {
@@ -65,6 +67,7 @@ export default function LearnerAssignmentDetail() {
   const [resources, setResources] = useState([]);
   const [studyScope, setStudyScope] = useState(null);
   const [trainerBreakdown, setTrainerBreakdown] = useState([]);
+  const [progress, setProgress] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -80,6 +83,7 @@ export default function LearnerAssignmentDetail() {
         { data: resourceData, error: resourceError },
         { data: studyData, error: studyError },
         { data: assignmentItemData, error: assignmentItemError },
+        progressData,
       ] = await Promise.all([
         supabase
           .from('assignments')
@@ -101,6 +105,7 @@ export default function LearnerAssignmentDetail() {
           .from('assignment_items')
           .select('learning_item_id')
           .eq('assignment_id', assignmentId),
+        loadLearnerAssignmentProgress(assignmentId).catch(() => null),
       ]);
 
       const learningItemIds = (assignmentItemData ?? []).map((item) => item.learning_item_id).filter(Boolean);
@@ -116,10 +121,12 @@ export default function LearnerAssignmentDetail() {
         setResources([]);
         setStudyScope(null);
         setTrainerBreakdown([]);
+        setProgress(null);
       } else {
         setAssignment(data ?? null);
         setResources((resourceData ?? []).filter((item) => !item.collection_parent_resource_id));
         setStudyScope(studyData ?? null);
+        setProgress(progressData ?? null);
         const grouped = new Map();
         (learningItemData ?? []).forEach((item) => {
           const trainer = trainerForLearningItem(item);
@@ -142,7 +149,11 @@ export default function LearnerAssignmentDetail() {
 
   const title = assignment?.title || 'Attività';
   const firstName = useMemo(() => firstNameFromProfile(profile, user), [profile, user]);
-  const totalActivities = resources.length + (studyScope?.include_in_srs ? trainerBreakdown.length : 0);
+  const fallbackActivities = resources.length + (studyScope?.include_in_srs ? trainerBreakdown.length : 0);
+  const resourceProgress = useMemo(() => new Map((progress?.resources || []).map((item) => [item.resource_id, item])), [progress]);
+  const totalActivities = String(progress
+    ? Number(progress.remaining_activities || 0) + (studyScope?.include_in_srs ? trainerBreakdown.length : 0)
+    : fallbackActivities);
 
   return (
     <>
@@ -257,13 +268,14 @@ export default function LearnerAssignmentDetail() {
                           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div>
                               <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-coral dark:text-[#ff9678]"><Star className="h-3.5 w-3.5 fill-butter text-clay" />{index + 1}. {resourceTypeLabel(resource)}</p>
+                              {['completed', 'review'].includes(resourceProgress.get(resource.id)?.state) ? <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-black text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200"><CheckCircle2 className="h-3.5 w-3.5" />{resourceProgress.get(resource.id)?.state === 'review' ? 'Consegnata · in valutazione' : 'Completata'}</p> : null}
                               <h4 className="mt-2 text-lg font-black text-ink dark:text-white">{resource.title}</h4>
                               {resource.description ? <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">{resource.description}</p> : null}
                               {resource.resource_type === 'custom_exercise' ? <p className="mt-2 text-xs font-bold text-clay dark:text-[#f7a98d]">Autosave attivo · nuove domande a ogni tentativo quando usa una pool</p> : null}
                               {resource.resource_type === 'exercise_collection' ? <p className="mt-2 text-xs font-bold text-clay dark:text-[#f7a98d]">Versione {resource.collection_config?.version_number} · {resource.collection_snapshot?.items?.length || 0} tappe in ordine · avanzamento salvato</p> : null}
                             </div>
                             <Link to={resourceDestination(resource, assignment.id)} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-coral px-5 py-2.5 text-sm font-black text-white transition hover:bg-clay dark:bg-[#ff8b6c] dark:text-[#21140f] dark:hover:bg-[#f7a98d]">
-                              Inizia
+                              {['completed', 'review'].includes(resourceProgress.get(resource.id)?.state) ? 'Vedi risultato' : resourceProgress.get(resource.id)?.state === 'in_progress' ? 'Continua' : 'Inizia'}
                             </Link>
                           </div>
                         </article>

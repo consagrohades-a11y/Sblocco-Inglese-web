@@ -1,0 +1,40 @@
+{
+  "schema_version": 2,
+  "entity_type": "question",
+  "question": {
+    "instruction_language": "it",
+    "difficulty": "standard",
+    "feedback": {},
+    "foundation_links": [],
+    "client_key": "question_translation",
+    "type": "translation",
+    "tags": [
+      "translation",
+      "automatic"
+    ],
+    "title": "Translation",
+    "prompt": "Traduci: Sto aspettando una risposta.",
+    "instructions": "Scrivi una traduzione naturale.",
+    "level": "A2",
+    "topic": "present_continuous",
+    "primary_skill": "grammar",
+    "learning_objective": "Translate an action in progress.",
+    "content": {
+      "accepted_answers": [
+        "I'm waiting for an answer.",
+        "I am waiting for an answer."
+      ]
+    },
+    "grading": {
+      "mode": "automatic",
+      "weight": 1,
+      "nearly_correct_multiplier": 0.5
+    },
+    "diagnostics": {
+      "tested_codes": [
+        "PRESENT_CONTINUOUS_FORM"
+      ],
+      "fallback_error_code": "TRANSLATION_GENERAL"
+    }
+  }
+}

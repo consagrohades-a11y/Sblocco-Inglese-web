@@ -1,0 +1,144 @@
+{
+  "schema_version": 2,
+  "entity_type": "question",
+  "question": {
+    "instruction_language": "en",
+    "difficulty": "standard",
+    "feedback": {},
+    "foundation_links": [],
+    "client_key": "question_dialogue_roleplay_audio_per_turn",
+    "type": "dialogue_roleplay",
+    "tags": [
+      "sommelier",
+      "hospitality",
+      "audio-roleplay",
+      "manual-review"
+    ],
+    "title": "Recommend a wine",
+    "prompt": "Respond to the customer as the sommelier.",
+    "instructions": "Record one answer for each of your turns.",
+    "level": "B1",
+    "topic": "wine_service",
+    "primary_skill": "interaction",
+    "learning_objective": "Recommend a wine and justify the choice in a realistic customer conversation.",
+    "content": {
+      "scenario": "A customer needs a wine for a dinner with grilled fish.",
+      "response_mode": "audio_per_turn",
+      "characters": [
+        {
+          "key": "customer",
+          "name": "Customer",
+          "description": "Asks for a suitable wine.",
+          "selectable": false
+        },
+        {
+          "key": "sommelier",
+          "name": "Sommelier",
+          "description": "Recommends and explains the pairing.",
+          "selectable": true
+        }
+      ],
+      "turns": [
+        {
+          "key": "turn_1",
+          "speaker": "customer",
+          "text": "Good evening. I'm looking for a wine for a dinner party.",
+          "learner_response": false
+        },
+        {
+          "key": "turn_2",
+          "speaker": "sommelier",
+          "prompt": "Open the interaction and ask what food will be served.",
+          "learner_response": true,
+          "required": true,
+          "direction": "Sound welcoming and professional.",
+          "objective": "Greet the customer and ask about the food.",
+          "hint": "Think about a natural opening question.",
+          "retry_hint": "Try using: What will you be serving?",
+          "constraints": {
+            "min_seconds": 6,
+            "max_seconds": 25,
+            "required_points": [
+              "Greet the customer",
+              "Ask about the food"
+            ],
+            "recommended_language": [
+              "Good evening. How can I help?"
+            ],
+            "required_language": [
+              "What will you be serving?"
+            ],
+            "avoid_language": []
+          }
+        },
+        {
+          "key": "turn_3",
+          "speaker": "customer",
+          "text": "We're having grilled fish, but one guest doesn't like very dry wines.",
+          "learner_response": false
+        },
+        {
+          "key": "turn_4",
+          "speaker": "sommelier",
+          "prompt": "Recommend one wine and explain the pairing.",
+          "learner_response": true,
+          "required": true,
+          "direction": "Give a clear recommendation without sounding overly technical.",
+          "context": "The guest prefers a wine that is not extremely dry.",
+          "objective": "Recommend a suitable wine and justify the pairing.",
+          "hint": "Mention the style or origin of the wine.",
+          "retry_hint": "Make the connection between the fish and your recommendation explicit.",
+          "constraints": {
+            "min_seconds": 10,
+            "max_seconds": 35,
+            "required_points": [
+              "Recommend one wine",
+              "Explain the pairing",
+              "Mention origin or style"
+            ],
+            "recommended_language": [
+              "I'd recommend",
+              "It pairs well with"
+            ],
+            "required_language": [],
+            "avoid_language": [
+              "It is good",
+              "Very tasty"
+            ]
+          }
+        }
+      ],
+      "rubric": [
+        {
+          "key": "interaction",
+          "label": "Interaction",
+          "description": "Responds naturally to the customer's information.",
+          "max_points": 4
+        },
+        {
+          "key": "functional_language",
+          "label": "Professional language",
+          "description": "Uses suitable recommendation and pairing language.",
+          "max_points": 3
+        },
+        {
+          "key": "fluency",
+          "label": "Fluency",
+          "description": "Speaks clearly with manageable hesitation.",
+          "max_points": 3
+        }
+      ],
+      "model_responses": {}
+    },
+    "grading": {
+      "mode": "manual_review",
+      "weight": 10
+    },
+    "diagnostics": {
+      "tested_codes": [
+        "INTERACTION_RESPONSE"
+      ],
+      "fallback_error_code": "INTERACTION_GENERAL"
+    }
+  }
+}

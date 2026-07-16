@@ -1,22 +1,95 @@
 {
   "schema_version": 2,
   "templates": [
-    { "key": "multiple_choice", "entity_type": "question" },
-    { "key": "multiple_select", "entity_type": "question" },
-    { "key": "gap_fill", "entity_type": "question" },
-    { "key": "select_gap", "entity_type": "question" },
-    { "key": "translation", "entity_type": "question" },
-    { "key": "error_correction", "entity_type": "question" },
-    { "key": "word_order", "entity_type": "question" },
-    { "key": "content_block", "entity_type": "question" },
-    { "key": "dialogue_choice", "entity_type": "question" },
-    { "key": "reading_comprehension", "entity_type": "question" },
-    { "key": "written_response", "entity_type": "question" },
-    { "key": "dialogue_roleplay", "entity_type": "question" },
-    { "key": "dialogue_roleplay_audio_per_turn", "entity_type": "question" },
-    { "key": "audio_response", "entity_type": "question" },
-    { "key": "question_pool", "entity_type": "question_pool" },
-    { "key": "exercise", "entity_type": "exercise" },
-    { "key": "bundle", "entity_type": "bundle" }
+    {
+      "key": "question",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-template.json"
+    },
+    {
+      "key": "multiple_choice",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-multiple_choice-template.json"
+    },
+    {
+      "key": "multiple_select",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-multiple_select-template.json"
+    },
+    {
+      "key": "gap_fill",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-gap_fill-template.json"
+    },
+    {
+      "key": "select_gap",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-select_gap-template.json"
+    },
+    {
+      "key": "translation",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-translation-template.json"
+    },
+    {
+      "key": "error_correction",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-error_correction-template.json"
+    },
+    {
+      "key": "word_order",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-word_order-template.json"
+    },
+    {
+      "key": "content_block",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-content_block-template.json"
+    },
+    {
+      "key": "dialogue_choice",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-dialogue_choice-template.json"
+    },
+    {
+      "key": "reading_comprehension",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-reading_comprehension-template.json"
+    },
+    {
+      "key": "written_response",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-written_response-template.json"
+    },
+    {
+      "key": "dialogue_roleplay",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-dialogue_roleplay-template.json"
+    },
+    {
+      "key": "audio_response",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-audio_response-template.json"
+    },
+    {
+      "key": "dialogue_roleplay_audio_per_turn",
+      "entity_type": "question",
+      "file_name": "exercise-builder-question-dialogue-roleplay-audio-per-turn-template.json"
+    },
+    {
+      "key": "question_pool",
+      "entity_type": "question_pool",
+      "file_name": "exercise-builder-question-pool-template.json"
+    },
+    {
+      "key": "exercise",
+      "entity_type": "exercise",
+      "file_name": "exercise-builder-exercise-template.json"
+    },
+    {
+      "key": "bundle",
+      "entity_type": "bundle",
+      "file_name": "exercise-builder-bundle-template.json"
+    }
   ]
 }
