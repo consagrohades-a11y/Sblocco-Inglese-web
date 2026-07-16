@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { CheckCircle2, Filter, Mail, MessageCircle, RefreshCw, Search, Sparkles, UserRoundCheck } from 'lucide-react';
+import { BarChart3, CheckCircle2, ExternalLink, Filter, Mail, MessageCircle, RefreshCw, Search, Sparkles, UserRoundCheck } from 'lucide-react';
 import SEO from '../components/SEO';
 import { loadAssessmentLeads, updateAssessmentLead } from '../lib/assessmentLeadsApi.js';
 
@@ -25,6 +25,74 @@ const courseLabels = {
 };
 
 const inputClass = 'w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss dark:border-white/15 dark:bg-white/[0.05] dark:text-white';
+
+function LeadDiagnosticDetails({ lead }) {
+  const result = lead?.result && typeof lead.result === 'object' ? lead.result : null;
+  const dimensions = Array.isArray(result?.dimensions) ? result.dimensions : [];
+  const performance = result?.performance && typeof result.performance === 'object' ? result.performance : null;
+  const recommendation = result?.recommendation && typeof result.recommendation === 'object' ? result.recommendation : null;
+
+  return (
+    <details open className="mt-5 overflow-hidden rounded-2xl border border-violet-200 bg-violet-50/55 dark:border-violet-300/20 dark:bg-violet-400/[0.07]">
+      <summary className="focus-ring flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-4 text-sm font-black text-violet-950 dark:text-violet-100">
+        <span className="flex items-center gap-2"><BarChart3 aria-hidden="true" className="h-4 w-4" />Diagnosi del lead</span>
+        <span className="text-xs font-bold text-violet-700/65 dark:text-violet-200/65">Mostra / nascondi</span>
+      </summary>
+      <div className="border-t border-violet-200/70 px-4 pb-5 pt-4 dark:border-violet-300/15">
+        {!result ? (
+          <p className="text-sm font-semibold leading-6 text-ink/60 dark:text-white/60">Questo lead non contiene ancora un risultato diagnostico completo.</p>
+        ) : (
+          <div className="grid gap-4">
+            <div>
+              <p className="text-[0.65rem] font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">Profilo principale</p>
+              <p className="mt-2 text-base font-black leading-6 text-ink dark:text-white">{result.primaryTitle || lead.primary_blocker}</p>
+              {result.primarySummary ? <p className="mt-2 text-xs font-semibold leading-6 text-ink/60 dark:text-white/60">{result.primarySummary}</p> : null}
+            </div>
+
+            {dimensions.length ? (
+              <div className="grid gap-2 sm:grid-cols-2">
+                {dimensions.map((dimension) => (
+                  <div key={dimension.key || dimension.label} className="rounded-xl border border-violet-200/70 bg-white/80 p-3 dark:border-white/10 dark:bg-white/[0.05]">
+                    <p className="text-[0.65rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">{dimension.label}</p>
+                    <div className="mt-2 flex items-end justify-between gap-2">
+                      <p className="text-xl font-black text-ink dark:text-white">{Math.round(Number(dimension.score || 0))}</p>
+                      {dimension.level ? <p className="text-[0.65rem] font-black text-violet-700 dark:text-violet-300">{dimension.level}</p> : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
+            {performance ? (
+              <div className="rounded-xl bg-ink p-4 text-white dark:bg-black/25">
+                <p className="text-[0.65rem] font-black uppercase tracking-wide text-mint">Performance osservata</p>
+                <div className="mt-2 flex items-end justify-between gap-3">
+                  <p className="text-sm font-black">{performance.observedLabel || 'Risultato disponibile'}</p>
+                  {Number.isFinite(Number(performance.observedScore)) ? <p className="text-2xl font-black">{Math.round(Number(performance.observedScore))}</p> : null}
+                </div>
+                {performance.alignmentTitle ? <p className="mt-3 border-t border-white/10 pt-3 text-xs font-semibold leading-5 text-white/65">{performance.alignmentTitle}</p> : null}
+              </div>
+            ) : null}
+
+            {recommendation ? (
+              <div className="rounded-xl border border-moss/20 bg-mint/45 p-4 dark:border-mint/20 dark:bg-mint/[0.08]">
+                <p className="text-[0.65rem] font-black uppercase tracking-wide text-moss dark:text-mint">Percorso consigliato</p>
+                <p className="mt-2 text-sm font-black text-ink dark:text-white">{recommendation.name || courseLabels[lead.recommended_course] || lead.recommended_course}</p>
+                {recommendation.reason ? <p className="mt-2 text-xs font-semibold leading-6 text-ink/60 dark:text-white/60">{recommendation.reason}</p> : null}
+              </div>
+            ) : null}
+
+            {lead.result_token ? (
+              <a href={`/profilo/${lead.result_token}`} target="_blank" rel="noreferrer" className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-violet-300 bg-white px-4 py-2.5 text-xs font-black text-violet-900 dark:border-violet-300/30 dark:bg-white/10 dark:text-violet-100">
+                Apri il risultato completo <ExternalLink aria-hidden="true" className="h-4 w-4" />
+              </a>
+            ) : null}
+          </div>
+        )}
+      </div>
+    </details>
+  );
+}
 
 export default function AdminAssessmentLeads() {
   const [leads, setLeads] = useState([]);
@@ -175,6 +243,7 @@ export default function AdminAssessmentLeads() {
                     {selected.whatsapp ? <a href={`https://wa.me/${selected.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="focus-ring flex items-center gap-3 rounded-xl border border-ink/10 p-3 text-sm font-black dark:border-white/10"><MessageCircle aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />{selected.whatsapp}</a> : null}
                   </div>
                   <div className="mt-5 rounded-2xl bg-linen/65 p-4 dark:bg-white/[0.05]"><p className="text-xs font-black uppercase tracking-wide text-coral">Blocco principale</p><p className="mt-2 text-sm font-bold leading-6">{selected.primary_blocker}</p></div>
+                  <LeadDiagnosticDetails lead={selected} />
                   <div className="mt-5 grid grid-cols-2 gap-3 text-xs font-bold">
                     <div className="rounded-xl border border-ink/10 p-3 dark:border-white/10"><p className="text-ink/40 dark:text-white/40">Email risultato</p><p className="mt-1 font-black">{selected.email_status}</p></div>
                     <div className="rounded-xl border border-ink/10 p-3 dark:border-white/10"><p className="text-ink/40 dark:text-white/40">Marketing</p><p className="mt-1 font-black">{selected.marketing_consent ? 'Consenso sì' : 'Solo risultato'}</p></div>
