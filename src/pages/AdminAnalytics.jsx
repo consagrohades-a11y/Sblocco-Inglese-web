@@ -13,6 +13,7 @@ import {
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import { loadAdminLearningAnalytics } from "../lib/adminAnalyticsApi.js";
+import { loadLearnerGroups } from "../lib/learnerGroupsApi.js";
 
 const periodOptions = [
   { value: 7, label: "7 giorni" },
@@ -199,12 +200,19 @@ export default function AdminAnalytics() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("all");
   const [attentionOnly, setAttentionOnly] = useState(false);
+  const [groups, setGroups] = useState([]);
+  const [groupId, setGroupId] = useState("all");
 
   async function load() {
     setLoading(true);
     setError("");
     try {
-      setData(await loadAdminLearningAnalytics(period));
+      const [analytics, loadedGroups] = await Promise.all([
+        loadAdminLearningAnalytics(period),
+        loadLearnerGroups().catch(() => []),
+      ]);
+      setData(analytics);
+      setGroups(loadedGroups);
     } catch (loadError) {
       setError(
         loadError.message || "Non è stato possibile caricare le analisi.",
@@ -220,7 +228,9 @@ export default function AdminAnalytics() {
 
   const learners = useMemo(() => {
     const term = query.trim().toLowerCase();
+    const selectedGroup = groups.find((group) => group.id === groupId);
     return (data?.learners || []).filter((learner) => {
+      if (groupId !== "all" && !(selectedGroup?.member_ids || []).includes(learner.id)) return false;
       if (status !== "all" && learner.status !== status) return false;
       if (
         attentionOnly &&
@@ -236,7 +246,7 @@ export default function AdminAnalytics() {
           .includes(term),
       );
     });
-  }, [attentionOnly, data?.learners, query, status]);
+  }, [attentionOnly, data?.learners, groupId, groups, query, status]);
 
   const overview = data?.overview || {};
 
@@ -387,7 +397,7 @@ export default function AdminAnalytics() {
                       </button>
                     </div>
                   </div>
-                  <div className="mt-5 grid gap-3 lg:grid-cols-[minmax(14rem,1fr)_12rem_auto]">
+                  <div className="mt-5 grid gap-3 lg:grid-cols-[minmax(14rem,1fr)_12rem_14rem_auto]">
                     <label className="relative">
                       <Search className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-ink/35 dark:text-white/35" />
                       <input
@@ -407,6 +417,7 @@ export default function AdminAnalytics() {
                       <option value="suspended">Sospesi</option>
                       <option value="deleted">Eliminati</option>
                     </select>
+                    <select value={groupId} onChange={(event) => setGroupId(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-black dark:border-white/20 dark:bg-[#101a17] dark:text-white"><option value="all">Tutti i gruppi</option>{groups.map((group) => <option key={group.id} value={group.id}>{group.name}</option>)}</select>
                     <label className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-black text-amber-950 dark:border-amber-300/20 dark:bg-amber-300/10 dark:text-amber-100">
                       <input
                         type="checkbox"
