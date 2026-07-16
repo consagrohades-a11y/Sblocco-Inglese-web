@@ -15,11 +15,11 @@ export default function DatabaseSrsTrainerPage({ trainerId, seoTitle, seoDescrip
   useEffect(() => {
     let active = true;
     setError('');
-    loadGuidedSrsTrainer(trainerId)
+    loadGuidedSrsTrainer(trainerId, { assignmentId: searchParams.get('assignmentId') || '' })
       .then((data) => { if (active) setResult(data); })
       .catch(() => { if (active) setError('Non è stato possibile caricare il Trainer. Verifica che la migrazione guided_srs_assignments sia stata applicata.'); });
     return () => { active = false; };
-  }, [trainerId]);
+  }, [trainerId, searchParams]);
 
   const liveTrainer = useMemo(() => result ? ({
     ...trainer,
@@ -70,7 +70,7 @@ export default function DatabaseSrsTrainerPage({ trainerId, seoTitle, seoDescrip
       seoDescription={seoDescription}
       initialProgress={result.initialProgress}
       onReview={({ card, rating }) => recordGuidedSrsReview(card, rating)}
-      scopeNotice={result.guided ? `Questo Trainer contiene ${result.cards.length} card assegnate dalla tua insegnante.` : ''}
+      scopeNotice={result.guided ? `${result.assignmentScoped ? 'Questa sezione' : 'Questo Trainer'} contiene ${result.cards.length} card assegnate dalla tua insegnante.` : ''}
       persistLocalProgress={!result.guided}
       allowProgressReset={!result.guided}
       returnTo={returnTo}

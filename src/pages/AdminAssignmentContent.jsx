@@ -51,7 +51,7 @@ export default function AdminAssignmentContent() {
         { data: studyData, error: studyError },
       ] = await Promise.all([
         supabase.from('assignments')
-          .select('id, learner_id, title, learner_note, reason, status, required, deadline_at, estimated_minutes, published_at, created_at')
+          .select('id, learner_id, title, learner_note, reason, status, required, deadline_at, estimated_minutes, published_at, created_at, group_batch_id')
           .eq('id', assignmentId).eq('learner_id', learnerId).maybeSingle(),
         supabase.from('assignment_resources')
           .select('id, resource_key, resource_type, title, description, route, sequence_index, practice_config, exercise_config, collection_config, collection_snapshot, collection_parent_resource_id').eq('assignment_id', assignmentId)
@@ -233,9 +233,21 @@ export default function AdminAssignmentContent() {
       return;
     }
 
+    if (assignment?.group_batch_id) {
+      const { error: syncError } = await supabase.rpc('admin_sync_group_assignment_batch_from_assignment', {
+        p_source_assignment_id: assignmentId,
+      });
+      if (syncError) {
+        setSaving(false);
+        setError(`Questa assegnazione è stata salvata, ma la sincronizzazione del gruppo non è riuscita: ${syncError.message}`);
+        return;
+      }
+    }
+
     setSaving(false);
     setAssignment((current) => ({ ...current, status: nextStatus || current.status, title: title.trim(), deadline_at: deadline ? new Date(deadline).toISOString() : null }));
-    setSuccess(nextStatus === 'published' ? 'Assegnazione pubblicata.' : nextStatus === 'archived' ? 'Assegnazione archiviata.' : nextStatus === 'draft' ? 'Assegnazione riportata in bozza.' : 'Modifiche salvate.');
+    const groupSuffix = assignment?.group_batch_id ? ' Modifiche sincronizzate con tutto il gruppo.' : '';
+    setSuccess((nextStatus === 'published' ? 'Assegnazione pubblicata.' : nextStatus === 'archived' ? 'Assegnazione archiviata.' : nextStatus === 'draft' ? 'Assegnazione riportata in bozza.' : 'Modifiche salvate.') + groupSuffix);
   }
 
   const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-[#101a17] dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';

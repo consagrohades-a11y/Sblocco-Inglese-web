@@ -187,8 +187,8 @@ const audioPerTurnRoleplay = q('dialogue_roleplay', {
 });
 
 const order = [
-  'multiple_choice', 'multiple_select', 'gap_fill', 'select_gap', 'translation', 'error_correction', 'word_order',
-  'content_block', 'dialogue_choice', 'reading_comprehension', 'written_response', 'dialogue_roleplay', 'audio_response',
+  'content_block', 'multiple_choice', 'multiple_select', 'gap_fill', 'select_gap', 'translation', 'error_correction', 'word_order',
+  'dialogue_choice', 'reading_comprehension', 'written_response', 'dialogue_roleplay', 'audio_response',
 ];
 const manualTypes = new Set(['written_response', 'dialogue_roleplay', 'audio_response']);
 const automaticQuestions = order.filter((type) => !manualTypes.has(type)).map((type) => clone(questions[type]));
@@ -228,6 +228,22 @@ const bundleExercise = {
     section('section_manual', 'Teacher-reviewed production', 'Submit every production for review.', 'exercise_end', manualQuestions, true),
   ],
 };
+const guidedExercise = {
+  client_key: 'exercise_guided_explanation_practice',
+  title: 'Explanation and guided practice',
+  description: 'A teaching page followed by scaffolded questions with optional immediate feedback.',
+  instructions: 'Read the explanation, study the examples, then complete the practice.',
+  instruction_language: 'it', level: 'A1', topic: 'guided_practice', estimated_minutes: 12,
+  settings: { ...clone(settings), display_mode: 'one_at_a_time' },
+  sections: [section(
+    'section_explain_then_practise',
+    'Capire e provare',
+    'La prima attività è una pagina di spiegazione e non viene valutata.',
+    'question_end',
+    [questions.content_block, questions.multiple_choice, questions.select_gap, questions.word_order],
+  )],
+  tags: ['template', 'guided', 'explanation-first'], foundation_links: [],
+};
 
 export const exerciseBuilderTemplates = {
   question: { schema_version: 2, entity_type: 'question', question: clone(questions.multiple_choice) },
@@ -235,6 +251,7 @@ export const exerciseBuilderTemplates = {
   dialogue_roleplay_audio_per_turn: { schema_version: 2, entity_type: 'question', question: clone(audioPerTurnRoleplay) },
   question_pool: { schema_version: 2, entity_type: 'question_pool', pool },
   exercise: { schema_version: 2, entity_type: 'exercise', exercise },
+  guided_exercise: { schema_version: 2, entity_type: 'exercise', exercise: guidedExercise },
   bundle: {
     schema_version: 2, entity_type: 'bundle', questions: order.map((type) => clone(questions[type])),
     pools: [bundlePool], exercises: [bundleExercise],
@@ -247,6 +264,7 @@ export const exerciseBuilderTemplateManifest = [
   { key: 'dialogue_roleplay_audio_per_turn', entityType: 'question', label: 'dialogue_roleplay · audio per turn', fileName: 'exercise-builder-question-dialogue-roleplay-audio-per-turn-template.json' },
   { key: 'question_pool', entityType: 'question_pool', label: 'Pool con tutti i tipi', fileName: 'exercise-builder-question-pool-template.json' },
   { key: 'exercise', entityType: 'exercise', label: 'Esercizio completo', fileName: 'exercise-builder-exercise-template.json' },
+  { key: 'guided_exercise', entityType: 'exercise', label: 'Spiegazione + pratica guidata', fileName: 'exercise-builder-guided-exercise-template.json' },
   { key: 'bundle', entityType: 'bundle', label: 'Bundle completo', fileName: 'exercise-builder-bundle-template.json' },
 ];
 

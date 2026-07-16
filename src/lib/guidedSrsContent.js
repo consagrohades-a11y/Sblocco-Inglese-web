@@ -44,7 +44,7 @@ function toSrsCard(card) {
   };
 }
 
-export async function loadGuidedSrsTrainer(trainerConfigId) {
+export async function loadGuidedSrsTrainer(trainerConfigId, { assignmentId = '' } = {}) {
   const sourceId = SRS_TRAINER_SOURCES[trainerConfigId];
   const source = PRACTICE_TRAINERS[sourceId];
   if (!source) throw new Error('Trainer non riconosciuto.');
@@ -55,10 +55,12 @@ export async function loadGuidedSrsTrainer(trainerConfigId) {
   let scope = { guided: false, item_ids: [], states: [] };
 
   if (session) {
-    const { data, error } = await supabase.rpc('get_learner_srs_scope', {
+    const args = {
       p_item_type: source.itemType,
       p_domain: source.domain,
-    });
+    };
+    if (assignmentId) args.p_assignment_id = assignmentId;
+    const { data, error } = await supabase.rpc('get_learner_srs_scope', args);
     if (error) throw error;
     scope = data || scope;
   }
@@ -76,6 +78,7 @@ export async function loadGuidedSrsTrainer(trainerConfigId) {
   return {
     cards: visibleCards.map(toSrsCard),
     guided: Boolean(scope.guided),
+    assignmentScoped: Boolean(assignmentId),
     initialProgress,
   };
 }

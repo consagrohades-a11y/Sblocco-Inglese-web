@@ -52,6 +52,7 @@ function resourceDestination(resource, assignmentId) {
   if (resource.resource_type === 'exercise_collection') return `/collections?assignmentId=${assignmentId}&resourceId=${resource.id}`;
   if (resource.resource_type === 'practice_session') return `/practice?assignmentId=${assignmentId}&resourceId=${resource.id}`;
   if (resource.resource_type === 'custom_exercise') return `/exercises?assignmentId=${assignmentId}&resourceId=${resource.id}`;
+  if (resource.resource_type === 'trainer') return `${resource.route}?assignmentId=${encodeURIComponent(assignmentId)}&returnTo=${encodeURIComponent(`/assignments/${assignmentId}`)}`;
   return resource.route;
 }
 
@@ -247,7 +248,7 @@ export default function LearnerAssignmentDetail() {
                       </div>
                       <div className="mt-4 grid gap-3 sm:grid-cols-2">
                         {trainerBreakdown.map((trainer) => (
-                          <Link key={trainer.id} to={`${trainer.route}?returnTo=${encodeURIComponent(`/assignments/${assignment.id}`)}`} className="focus-ring flex min-h-14 items-center justify-between gap-3 rounded-xl border border-clay/15 bg-white px-4 py-3 text-ink transition hover:border-coral hover:bg-blush/35 dark:border-white/15 dark:bg-white/[0.08] dark:text-white dark:hover:border-coral/40 dark:hover:bg-coral/[0.08]">
+                          <Link key={trainer.id} to={`${trainer.route}?assignmentId=${encodeURIComponent(assignment.id)}&returnTo=${encodeURIComponent(`/assignments/${assignment.id}`)}`} className="focus-ring flex min-h-14 items-center justify-between gap-3 rounded-xl border border-clay/15 bg-white px-4 py-3 text-ink transition hover:border-coral hover:bg-blush/35 dark:border-white/15 dark:bg-white/[0.08] dark:text-white dark:hover:border-coral/40 dark:hover:bg-coral/[0.08]">
                             <span className="text-sm font-black">{trainer.label}</span>
                             <span className="rounded-full bg-coral px-2.5 py-1 text-xs font-black text-white">{trainer.count}</span>
                           </Link>
