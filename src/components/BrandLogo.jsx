@@ -12,14 +12,14 @@ function LogoContent({ compact = false, light = false }) {
         <span className={`block truncate font-black leading-tight ${
           compact ? 'text-sm sm:text-base' : 'text-sm sm:text-base'
         } ${
-          light ? 'text-white' : 'text-ink'
+          light ? 'text-white' : 'text-ink dark:text-white'
         }`}
         >
           {brandName}
         </span>
         {!compact ? (
           <span className={`hidden text-xs font-semibold sm:block ${
-            light ? 'text-white/70' : 'text-ink/60'
+            light ? 'text-white/70' : 'text-ink/60 dark:text-white/60'
           }`}
           >
             Corsi, simulazioni e trainer.
