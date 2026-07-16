@@ -31,7 +31,7 @@ export default function StickyMobileCTA() {
           {isLearner ? <ClipboardList aria-hidden="true" className="h-5 w-5" /> : <Sparkles aria-hidden="true" className="h-5 w-5" />}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-[#8edfc8]">{isLearner ? 'Il tuo percorso' : 'Profilo gratuito'}</p>
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-[#8edfc8]">{isLearner ? 'Il tuo percorso' : 'Sblocco Check'}</p>
           <p className="truncate text-sm font-black text-white">{isLearner ? 'Riprendi da dove eri rimasto' : 'Scopri cosa ti blocca davvero'}</p>
         </div>
         {isLearner && assignmentReturnTo ? (

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -13,6 +13,7 @@ import {
   RotateCcw,
   Sparkles,
   Target,
+  Volume2,
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
@@ -24,7 +25,7 @@ import {
   submitAssessmentLead,
 } from '../lib/assessmentLeadsApi.js';
 
-const STORAGE_KEY = 'sblocco_public_assessment_v1';
+const STORAGE_KEY = 'sblocco_check_v2';
 
 function OptionCard({ option, selected, onSelect, multiple = false }) {
   return (
@@ -46,32 +47,49 @@ function OptionCard({ option, selected, onSelect, multiple = false }) {
   );
 }
 
-function ListeningQuestion({ question, value, onChange, replayCount, onReplay }) {
+function ListeningQuestion({ question, value = {}, onChange, replayCount, onReplay }) {
+  const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
-  const [unsupported, setUnsupported] = useState(false);
+  const [audioError, setAudioError] = useState(false);
+
+  useEffect(() => {
+    setPlaying(false);
+    setAudioError(false);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  }, [question.audioSrc]);
 
   function playAudio() {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      setUnsupported(true);
-      return;
-    }
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(question.audioText);
-    utterance.lang = 'en-GB';
-    utterance.rate = 0.94;
-    utterance.pitch = 1;
-    utterance.onstart = () => setPlaying(true);
-    utterance.onend = () => setPlaying(false);
-    utterance.onerror = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    setAudioError(false);
+    audio.currentTime = 0;
+    audio.play().catch(() => {
       setPlaying(false);
-      setUnsupported(true);
-    };
-    onReplay();
-    window.speechSynthesis.speak(utterance);
+      setAudioError(true);
+    });
   }
 
   return (
     <div>
+      <audio
+        ref={audioRef}
+        src={question.audioSrc}
+        preload="metadata"
+        onPlay={() => {
+          setPlaying(true);
+          onReplay();
+        }}
+        onEnded={() => setPlaying(false)}
+        onPause={() => setPlaying(false)}
+        onError={() => {
+          setPlaying(false);
+          setAudioError(true);
+        }}
+      />
+
       <div className="relative overflow-hidden rounded-[1.75rem] bg-ink p-5 text-white sm:p-6">
         <div className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-cyan-300/10 blur-3xl" />
         <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center">
@@ -79,28 +97,59 @@ function ListeningQuestion({ question, value, onChange, replayCount, onReplay })
             type="button"
             onClick={playAudio}
             className="focus-ring grid h-16 w-16 shrink-0 place-items-center rounded-full bg-butter text-ink shadow-lg transition hover:scale-105"
-            aria-label="Riproduci il listening"
+            aria-label={playing ? 'Riascolta il messaggio' : 'Riproduci il messaggio'}
           >
-            {playing ? <span className="flex gap-1"><span className="h-4 w-1 animate-pulse rounded-full bg-ink" /><span className="h-6 w-1 animate-pulse rounded-full bg-ink" /><span className="h-4 w-1 animate-pulse rounded-full bg-ink" /></span> : <Play aria-hidden="true" className="ml-1 h-6 w-6" />}
+            {playing ? (
+              <span className="flex gap-1">
+                <span className="h-4 w-1 animate-pulse rounded-full bg-ink" />
+                <span className="h-6 w-1 animate-pulse rounded-full bg-ink" />
+                <span className="h-4 w-1 animate-pulse rounded-full bg-ink" />
+              </span>
+            ) : (
+              <Play aria-hidden="true" className="ml-1 h-6 w-6" />
+            )}
           </button>
+
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-cyan-200/70">Audio breve</p>
-            <p className="mt-2 text-lg font-black">Ascolta il messaggio e identifica il motivo principale.</p>
-            <div className="mt-4 flex items-center gap-2 text-xs font-bold text-white/48">
-              <Headphones aria-hidden="true" className="h-4 w-4" />
-              {replayCount ? `${replayCount} ${replayCount === 1 ? 'ascolto' : 'ascolti'}` : 'Non ancora ascoltato'}
+            <p className="text-xs font-black uppercase tracking-[0.12em] text-cyan-200/70">Voce reale</p>
+            <p className="mt-2 text-lg font-black">{question.audioPrompt}</p>
+            <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-bold text-white/48">
+              <span className="inline-flex items-center gap-2">
+                <Headphones aria-hidden="true" className="h-4 w-4" />
+                {replayCount ? `${replayCount} ${replayCount === 1 ? 'ascolto' : 'ascolti'}` : 'Non ancora ascoltato'}
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <Volume2 aria-hidden="true" className="h-4 w-4" />
+                Cuffie consigliate
+              </span>
             </div>
           </div>
         </div>
-        {unsupported ? (
+
+        {audioError ? (
           <div className="relative mt-5 rounded-xl border border-amber-200/20 bg-amber-200/10 p-4 text-sm font-semibold leading-6 text-amber-100">
-            Il browser non riesce a riprodurre la voce. Usa questo testo di emergenza: “{question.audioText}”
+            L’audio non si è caricato. Controlla la connessione e premi di nuovo il pulsante. Il testo non viene mostrato per non alterare il risultato.
           </div>
         ) : null}
       </div>
-      <div className="mt-4 grid gap-3">
-        {question.options.map((option) => (
-          <OptionCard key={option.value} option={option} selected={value === option.value} onSelect={() => onChange(option.value)} />
+
+      <div className="mt-6 grid gap-7">
+        {question.items.map((item, itemIndex) => (
+          <section key={item.id}>
+            <p className="mb-3 text-sm font-black leading-6 text-ink dark:text-white">
+              {itemIndex + 1}. {item.prompt}
+            </p>
+            <div className="grid gap-3">
+              {item.options.map((option) => (
+                <OptionCard
+                  key={option.value}
+                  option={option}
+                  selected={value[item.id] === option.value}
+                  onSelect={() => onChange(item.id, option.value)}
+                />
+              ))}
+            </div>
+          </section>
         ))}
       </div>
     </div>
@@ -113,19 +162,20 @@ function Intro({ onStart }) {
       <div>
         <span className="inline-flex items-center gap-2 rounded-full border border-mint/25 bg-mint/10 px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-mint">
           <Sparkles aria-hidden="true" className="h-4 w-4" />
-          Profilo Sblocco gratuito
+          Sblocco Check
         </span>
         <h1 className="mt-6 max-w-4xl text-5xl font-black leading-[0.96] text-white sm:text-6xl">
-          Capisci cosa ti blocca prima di scegliere un corso.
+          Scopri cosa ti blocca quando devi usare davvero l’inglese.
         </h1>
         <p className="mt-6 max-w-3xl text-lg font-semibold leading-8 text-white/72 sm:text-xl">
-          Non riceverai un generico “sei B1”. Il profilo distingue fondamenta, listening, risposta sotto pressione e recupero del linguaggio, poi ti indica il percorso più sensato.
+          Non è soltanto un questionario su come ti senti. Risponderai a domande di inglese pratico, scenari reali e tre listening con voce umana, poi confronteremo performance e autovalutazione.
         </p>
+
         <div className="mt-7 grid gap-3 sm:grid-cols-3">
           {[
-            [Clock3, '6-8 minuti', 'Un passaggio alla volta'],
-            [Target, 'Profilo pratico', 'Basato sulle tue situazioni reali'],
-            [Mail, 'Risultato via email', 'Nessun account obbligatorio'],
+            [Clock3, '10-12 minuti', '22 passaggi brevi'],
+            [Target, 'Prova pratica', 'Strutture, comunicazione e scenari'],
+            [Headphones, '3 listening reali', 'Nessuna voce artificiale'],
           ].map(([Icon, title, text]) => (
             <div key={title} className="rounded-2xl border border-white/12 bg-white/[0.06] p-4">
               <Icon aria-hidden="true" className="h-5 w-5 text-mint" />
@@ -134,41 +184,42 @@ function Intro({ onStart }) {
             </div>
           ))}
         </div>
+
         <button
           type="button"
           onClick={onStart}
           className="focus-ring mt-8 inline-flex min-h-13 items-center justify-center gap-2 rounded-full bg-butter px-7 py-3.5 text-base font-black text-ink shadow-xl transition hover:-translate-y-0.5 hover:bg-white"
         >
-          Inizia il profilo
+          Inizia lo Sblocco Check
           <ArrowRight aria-hidden="true" className="h-5 w-5" />
         </button>
-        <p className="mt-4 text-xs font-semibold leading-5 text-white/42">Non è una certificazione ufficiale CEFR e non sostituisce un esame linguistico.</p>
+        <p className="mt-4 text-xs font-semibold leading-5 text-white/42">È una valutazione orientativa e non sostituisce una certificazione ufficiale CEFR.</p>
       </div>
 
       <div className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-white/[0.07] p-5 shadow-2xl backdrop-blur sm:p-7">
         <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-butter/12 blur-3xl" />
-        <p className="relative text-xs font-black uppercase tracking-[0.12em] text-mint">Il profilo che riceverai</p>
+        <p className="relative text-xs font-black uppercase tracking-[0.12em] text-mint">Cosa analizzeremo</p>
         <div className="relative mt-5 grid gap-4">
           {[
-            ['Strutture e fondamenta', 68, 'from-coral to-butter'],
-            ['Comprensione in tempo reale', 47, 'from-cyan-400 to-mint'],
-            ['Risposta sotto pressione', 39, 'from-violet-400 to-coral'],
-            ['Recupero del linguaggio', 56, 'from-butter to-mint'],
-          ].map(([label, score, tone]) => (
-            <div key={label} className="rounded-2xl border border-white/10 bg-[#13211d]/80 p-4">
-              <div className="flex items-center justify-between gap-4">
-                <p className="text-sm font-black text-white">{label}</p>
-                <span className="text-sm font-black text-mint">{score}</span>
-              </div>
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
-                <div className={`h-full rounded-full bg-gradient-to-r ${tone}`} style={{ width: `${score}%` }} />
+            [BarChart3, 'Performance osservata', 'Quanto riesci a riconoscere e usare nelle domande pratiche.'],
+            [Headphones, 'Comprensione reale', 'Informazioni principali, dettagli e significato implicito.'],
+            [Target, 'Risposta funzionale', 'Come gestisci chiarimenti, problemi e aggiornamenti.'],
+            [Sparkles, 'Punto di sblocco', 'La priorità da cui partire e il percorso più coerente.'],
+          ].map(([Icon, title, text]) => (
+            <div key={title} className="flex gap-4 rounded-2xl border border-white/10 bg-[#13211d]/80 p-4">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/[0.07] text-mint">
+                <Icon aria-hidden="true" className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-black text-white">{title}</p>
+                <p className="mt-1 text-xs font-semibold leading-5 text-white/48">{text}</p>
               </div>
             </div>
           ))}
         </div>
         <div className="relative mt-5 rounded-2xl bg-mint p-5 text-ink">
-          <p className="text-xs font-black uppercase tracking-[0.1em] text-moss">Esempio di insight</p>
-          <p className="mt-2 text-lg font-black leading-6">Sai più inglese di quanto riesci a usare sotto pressione.</p>
+          <p className="text-xs font-black uppercase tracking-[0.1em] text-moss">Non solo un livello</p>
+          <p className="mt-2 text-lg font-black leading-6">Vedrai la differenza tra ciò che sai, ciò che percepisci e ciò che riesci a usare.</p>
         </div>
       </div>
     </div>
@@ -179,7 +230,7 @@ export default function Assessment() {
   const [searchParams] = useSearchParams();
   const [phase, setPhase] = useState('intro');
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({ listening_replays: 0 });
+  const [answers, setAnswers] = useState({});
   const [startedAt, setStartedAt] = useState(Date.now());
   const [contact, setContact] = useState({ name: '', email: '', profession: '', whatsapp: '', resultConsent: false, marketingConsent: false, website: '' });
   const [submitting, setSubmitting] = useState(false);
@@ -220,6 +271,16 @@ export default function Assessment() {
     setAnswers((current) => ({ ...current, [question.id]: value }));
   }
 
+  function setListeningAnswer(itemId, value) {
+    setAnswers((current) => ({
+      ...current,
+      [question.id]: {
+        ...(current[question.id] || {}),
+        [itemId]: value,
+      },
+    }));
+  }
+
   function toggleMultiple(value) {
     const current = Array.isArray(answers[question.id]) ? answers[question.id] : [];
     if (current.includes(value)) {
@@ -233,6 +294,7 @@ export default function Assessment() {
   function canContinue() {
     const value = answers[question.id];
     if (question.type === 'multiple') return Array.isArray(value) && value.length > 0;
+    if (question.type === 'listening') return question.items.every((item) => Boolean(value?.[item.id]));
     return Boolean(value);
   }
 
@@ -243,6 +305,7 @@ export default function Assessment() {
       return;
     }
     setStep((current) => current + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function back() {
@@ -251,14 +314,16 @@ export default function Assessment() {
       return;
     }
     setStep((current) => current - 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function restart() {
-    setAnswers({ listening_replays: 0 });
+    setAnswers({});
     setStep(0);
     setPhase('intro');
     setLeadToken('');
     setEmailStatus('');
+    setFollowupRequested(false);
     window.localStorage.removeItem(STORAGE_KEY);
   }
 
@@ -290,7 +355,7 @@ export default function Assessment() {
     event.preventDefault();
     setSubmitError('');
     if (!contact.name.trim() || !contact.email.trim()) {
-      setSubmitError('Inserisci nome ed email per ricevere il profilo completo.');
+      setSubmitError('Inserisci nome ed email per ricevere il risultato completo.');
       return;
     }
     if (!contact.resultConsent) {
@@ -321,13 +386,13 @@ export default function Assessment() {
         utm_campaign: searchParams.get('utm_campaign') || '',
       };
       const lead = await submitAssessmentLead(payload);
-      if (!lead?.result_token) throw new Error('Il profilo non è stato salvato correttamente.');
+      if (!lead?.result_token) throw new Error('Il risultato non è stato salvato correttamente.');
       setLeadToken(lead.result_token);
       setPhase('result');
       window.localStorage.removeItem(STORAGE_KEY);
       sendResultEmail(lead.result_token);
     } catch (error) {
-      setSubmitError(error.message || 'Non è stato possibile salvare il profilo. Riprova.');
+      setSubmitError(error.message || 'Non è stato possibile salvare il risultato. Riprova.');
     } finally {
       setSubmitting(false);
     }
@@ -340,7 +405,7 @@ export default function Assessment() {
 
   return (
     <>
-      <SEO title="Profilo Sblocco gratuito | Sblocco Inglese" description="Scopri cosa limita davvero il tuo inglese e quale percorso è più adatto tra Business English, speaking, listening, colloqui e fondamenta." />
+      <SEO title="Sblocco Check | Sblocco Inglese" description="Metti alla prova inglese pratico, listening e comunicazione reale. Scopri il tuo punto di sblocco e il percorso più coerente." />
       <section className="relative min-h-[calc(100svh-68px)] overflow-hidden bg-ink py-10 text-white sm:py-14 lg:py-16">
         <div className="pointer-events-none absolute left-0 top-0 h-72 w-72 rounded-full bg-mint/8 blur-3xl" />
         <div className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full bg-coral/8 blur-3xl" />
@@ -349,9 +414,12 @@ export default function Assessment() {
 
           {phase === 'quiz' ? (
             <div className="mx-auto max-w-4xl">
-              <div className="mb-5 flex items-center justify-between gap-4 text-xs font-black uppercase tracking-[0.1em] text-white/48">
-                <span>Passaggio {step + 1} di {assessmentQuestions.length}</span>
-                <span>{progress}%</span>
+              <div className="mb-4 flex items-end justify-between gap-4">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">{question.section}</p>
+                  <p className="mt-1 text-xs font-bold text-white/42">Passaggio {step + 1} di {assessmentQuestions.length}</p>
+                </div>
+                <span className="text-xs font-black text-white/48">{progress}%</span>
               </div>
               <div className="mb-7 h-2 overflow-hidden rounded-full bg-white/10">
                 <div className="h-full rounded-full bg-gradient-to-r from-mint via-butter to-coral transition-all duration-500" style={{ width: `${progress}%` }} />
@@ -366,10 +434,13 @@ export default function Assessment() {
                   {question.type === 'listening' ? (
                     <ListeningQuestion
                       question={question}
-                      value={answers[question.id]}
-                      onChange={setAnswer}
-                      replayCount={Number(answers.listening_replays || 0)}
-                      onReplay={() => setAnswers((current) => ({ ...current, listening_replays: Number(current.listening_replays || 0) + 1 }))}
+                      value={answers[question.id] || {}}
+                      onChange={setListeningAnswer}
+                      replayCount={Number(answers[question.replayKey] || 0)}
+                      onReplay={() => setAnswers((current) => ({
+                        ...current,
+                        [question.replayKey]: Number(current[question.replayKey] || 0) + 1,
+                      }))}
                     />
                   ) : (
                     <div className={`grid gap-3 ${question.options.length > 5 ? 'md:grid-cols-2' : ''}`}>
@@ -402,7 +473,7 @@ export default function Assessment() {
                     onClick={next}
                     className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-moss px-5 py-2.5 text-sm font-black text-white transition hover:bg-[#096d58] disabled:cursor-not-allowed disabled:opacity-35"
                   >
-                    {step === assessmentQuestions.length - 1 ? 'Calcola il profilo' : 'Continua'}
+                    {step === assessmentQuestions.length - 1 ? 'Calcola il risultato' : 'Continua'}
                     <ArrowRight aria-hidden="true" className="h-4 w-4" />
                   </button>
                 </div>
@@ -417,15 +488,21 @@ export default function Assessment() {
                   <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-butter/12 blur-3xl" />
                   <span className="relative inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-moss">
                     <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
-                    Profilo calcolato
+                    Sblocco Check completato
                   </span>
                   <h1 className="relative mt-5 text-4xl font-black leading-tight sm:text-5xl">{result.primaryTitle}</h1>
                   <p className="relative mt-5 text-base font-semibold leading-8 text-white/68">{result.primarySummary}</p>
+
                   <div className="relative mt-7 grid gap-3 sm:grid-cols-2">
-                    {result.dimensions.map((dimension) => (
-                      <div key={dimension.key} className="rounded-2xl border border-white/10 bg-[#13211d]/85 p-4">
+                    {[
+                      'Performance osservata',
+                      'Listening reale',
+                      'Confronto con la tua percezione',
+                      'Percorso consigliato',
+                    ].map((label) => (
+                      <div key={label} className="rounded-2xl border border-white/10 bg-[#13211d]/85 p-4">
                         <div className="flex items-center justify-between gap-4">
-                          <p className="text-sm font-black">{dimension.label}</p>
+                          <p className="text-sm font-black">{label}</p>
                           <LockKeyhole aria-hidden="true" className="h-4 w-4 text-white/28" />
                         </div>
                         <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
@@ -434,12 +511,12 @@ export default function Assessment() {
                       </div>
                     ))}
                   </div>
-                  <p className="relative mt-5 text-xs font-semibold leading-5 text-white/42">Inserisci la tua email per vedere punteggi, percorso consigliato e idoneità alla cohort beta.</p>
+                  <p className="relative mt-5 text-xs font-semibold leading-5 text-white/42">Inserisci la tua email per vedere i punteggi, il confronto tra performance e autovalutazione, il percorso consigliato e l’eventuale idoneità alla cohort beta.</p>
                 </section>
 
                 <form onSubmit={submitContact} className="rounded-[2rem] border border-ink/10 bg-paper p-6 text-ink shadow-2xl dark:border-white/10 dark:bg-[#121d1a] dark:text-white sm:p-8">
                   <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Ricevi il risultato</p>
-                  <h2 className="mt-3 text-3xl font-black leading-tight">Dove devo inviarti il profilo completo?</h2>
+                  <h2 className="mt-3 text-3xl font-black leading-tight">Dove devo inviarti l’analisi completa?</h2>
                   <p className="mt-4 text-sm font-semibold leading-7 text-ink/58 dark:text-white/58">Accettiamo Gmail, Outlook, email di lavoro o qualsiasi altro indirizzo valido.</p>
 
                   <div className="mt-6 grid gap-4">
@@ -472,7 +549,7 @@ export default function Assessment() {
                   {submitError ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-bold text-red-900 dark:bg-red-400/10 dark:text-red-200">{submitError}</p> : null}
 
                   <button type="submit" disabled={submitting} className="focus-ring mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-moss px-6 py-3 text-base font-black text-white transition hover:bg-[#096d58] disabled:opacity-55">
-                    {submitting ? 'Sto preparando il profilo...' : 'Sblocca e invia il risultato'}
+                    {submitting ? 'Sto preparando l’analisi...' : 'Sblocca e invia il risultato'}
                     <Mail aria-hidden="true" className="h-5 w-5" />
                   </button>
                   <button type="button" onClick={() => setPhase('quiz')} className="mt-3 inline-flex w-full items-center justify-center gap-2 py-2 text-xs font-black text-ink/45 dark:text-white/45">
@@ -497,7 +574,7 @@ export default function Assessment() {
               <div className="mt-8 flex justify-center">
                 <button type="button" onClick={restart} className="focus-ring inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-5 py-3 text-sm font-black text-white/70 transition hover:bg-white/10 hover:text-white">
                   <RotateCcw aria-hidden="true" className="h-4 w-4" />
-                  Rifai il profilo
+                  Rifai lo Sblocco Check
                 </button>
               </div>
             </div>

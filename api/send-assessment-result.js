@@ -23,6 +23,7 @@ function safeUrl(value, fallback) {
 function resultEmailHtml({ name, profession, result, resultUrl }) {
   const dimensions = Array.isArray(result?.dimensions) ? result.dimensions : [];
   const recommendation = result?.recommendation || {};
+  const performance = result?.performance || {};
   const dimensionHtml = dimensions.map((item) => `
     <tr>
       <td style="padding:12px 0;border-bottom:1px solid #e6eee9;font-weight:700;color:#14221e;">${escapeHtml(item.label)}</td>
@@ -30,28 +31,38 @@ function resultEmailHtml({ name, profession, result, resultUrl }) {
     </tr>
   `).join('');
 
+  const comparisonHtml = performance?.comparison?.title ? `
+    <div style="margin-top:24px;border-radius:20px;background:#f7f2e9;padding:22px;">
+      <p style="margin:0;color:#e86f51;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Percezione e uso reale</p>
+      <h2 style="margin:8px 0 0;font-size:23px;line-height:1.25;">${escapeHtml(performance.comparison.title)}</h2>
+      <p style="margin:12px 0 0;color:#52665f;font-size:14px;line-height:1.7;">${escapeHtml(performance.comparison.summary || '')}</p>
+      <p style="margin:14px 0 0;color:#0e7c66;font-size:13px;font-weight:800;">Performance osservata: ${Number(performance.observedScore || 0)} · Autovalutazione: ${Number(performance.selfPerceptionScore || 0)}</p>
+    </div>
+  ` : '';
+
   return `<!doctype html>
   <html lang="it">
     <body style="margin:0;background:#f7f2e9;font-family:Arial,sans-serif;color:#14221e;">
       <div style="max-width:680px;margin:0 auto;padding:28px 16px;">
         <div style="overflow:hidden;border-radius:28px;background:#111f1b;color:#fff;box-shadow:0 20px 50px rgba(17,31,27,.18);">
           <div style="padding:34px 30px;background:linear-gradient(135deg,#111f1b 0%,#173d33 100%);">
-            <p style="margin:0;color:#81d7c0;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">Il tuo Profilo Sblocco</p>
-            <h1 style="margin:14px 0 0;font-size:34px;line-height:1.08;">${escapeHtml(name)}, ${escapeHtml(result?.primaryTitle || 'il tuo profilo è pronto')}</h1>
+            <p style="margin:0;color:#81d7c0;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">Il tuo Sblocco Check</p>
+            <h1 style="margin:14px 0 0;font-size:34px;line-height:1.08;">${escapeHtml(name)}, ${escapeHtml(result?.primaryTitle || 'il tuo risultato è pronto')}</h1>
             <p style="margin:18px 0 0;color:rgba(255,255,255,.72);font-size:16px;line-height:1.7;">${escapeHtml(result?.primarySummary || '')}</p>
             ${profession ? `<p style="margin:18px 0 0;color:rgba(255,255,255,.48);font-size:13px;">Contesto: ${escapeHtml(profession)}</p>` : ''}
           </div>
           <div style="background:#fff;padding:28px 30px;color:#14221e;">
             <p style="margin:0 0 8px;color:#e86f51;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Le quattro aree</p>
             <table role="presentation" style="width:100%;border-collapse:collapse;font-size:14px;">${dimensionHtml}</table>
+            ${comparisonHtml}
             <div style="margin-top:26px;border-radius:20px;background:#e0f4ed;padding:22px;">
               <p style="margin:0;color:#0e7c66;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Percorso consigliato</p>
               <h2 style="margin:8px 0 0;font-size:26px;">${escapeHtml(recommendation.name || '')}</h2>
               <p style="margin:12px 0 0;color:#38554c;font-size:15px;line-height:1.7;">${escapeHtml(recommendation.reason || '')}</p>
               ${recommendation.price ? `<p style="margin:14px 0 0;font-weight:800;">${escapeHtml(recommendation.price)}</p>` : ''}
             </div>
-            <a href="${escapeHtml(resultUrl)}" style="display:block;margin-top:24px;border-radius:999px;background:#0e7c66;color:#fff;padding:15px 20px;text-align:center;text-decoration:none;font-weight:800;">Apri il profilo completo</a>
-            <p style="margin:20px 0 0;color:#71827c;font-size:12px;line-height:1.6;">Questo profilo orienta il percorso e non sostituisce una certificazione ufficiale del livello CEFR.</p>
+            <a href="${escapeHtml(resultUrl)}" style="display:block;margin-top:24px;border-radius:999px;background:#0e7c66;color:#fff;padding:15px 20px;text-align:center;text-decoration:none;font-weight:800;">Apri il risultato completo</a>
+            <p style="margin:20px 0 0;color:#71827c;font-size:12px;line-height:1.6;">Lo Sblocco Check orienta il percorso e non sostituisce una certificazione ufficiale del livello CEFR.</p>
           </div>
         </div>
       </div>
@@ -98,9 +109,9 @@ export default async function handler(request, response) {
     body: JSON.stringify({
       from,
       to: [email],
-      subject: `${name}, il tuo Profilo Sblocco è pronto`,
+      subject: `${name}, il tuo Sblocco Check è pronto`,
       html: resultEmailHtml({ name, profession, result, resultUrl }),
-      text: `${name}, il tuo Profilo Sblocco è pronto.\n\n${result.primaryTitle || ''}\n${result.primarySummary || ''}\n\nPercorso consigliato: ${result.recommendation?.name || ''}\n\nApri il risultato: ${resultUrl}`,
+      text: `${name}, il tuo Sblocco Check è pronto.\n\n${result.primaryTitle || ''}\n${result.primarySummary || ''}\n\nPercorso consigliato: ${result.recommendation?.name || ''}\n\nApri il risultato: ${resultUrl}`,
     }),
   });
 

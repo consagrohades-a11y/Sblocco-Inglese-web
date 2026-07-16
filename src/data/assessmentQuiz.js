@@ -1,9 +1,10 @@
 export const assessmentQuestions = [
   {
     id: 'goal',
+    section: 'Obiettivo',
     eyebrow: 'Il punto di partenza',
     title: 'Dove vuoi sentire la differenza per prima?',
-    description: 'Scegli il contesto che conta di più adesso. Potremo comunque tenere conto anche degli altri.',
+    description: 'Scegli il contesto che conta di più adesso. Il risultato terrà conto anche delle competenze pratiche che mostrerai.',
     type: 'single',
     options: [
       { value: 'business', label: 'Lavoro e Business English', description: 'Riunioni, call, clienti, aggiornamenti e comunicazione professionale.' },
@@ -16,6 +17,7 @@ export const assessmentQuestions = [
   },
   {
     id: 'situations',
+    section: 'Obiettivo',
     eyebrow: 'Le situazioni reali',
     title: 'In quali momenti senti maggiormente il limite?',
     description: 'Puoi scegliere fino a quattro situazioni.',
@@ -34,6 +36,7 @@ export const assessmentQuestions = [
   },
   {
     id: 'speaking_blocker',
+    section: 'Come lo vivi',
     eyebrow: 'Quando devi rispondere',
     title: 'Cosa succede più spesso mentre parli?',
     description: 'Scegli la risposta che descrive meglio il momento reale, non quello ideale.',
@@ -49,6 +52,7 @@ export const assessmentQuestions = [
   },
   {
     id: 'listening_blocker',
+    section: 'Come lo vivi',
     eyebrow: 'Quando ascolti',
     title: 'Quale difficoltà descrive meglio il tuo listening?',
     description: 'Il problema non è sempre “non capisco”. Spesso riguarda dettagli, velocità o capacità di reagire.',
@@ -64,6 +68,7 @@ export const assessmentQuestions = [
   },
   {
     id: 'foundations',
+    section: 'Come lo vivi',
     eyebrow: 'Le fondamenta',
     title: 'Quanto sono stabili le strutture di base?',
     description: 'Pensa a frasi, domande, presente, passato e futuro essenziale.',
@@ -77,9 +82,10 @@ export const assessmentQuestions = [
   },
   {
     id: 'level',
+    section: 'Come lo vivi',
     eyebrow: 'Il livello percepito',
     title: 'Dove ti collocheresti oggi?',
-    description: 'Non deve essere perfetto. Serve solo per evitare di consigliarti un formato troppo facile o troppo avanzato.',
+    description: 'Non deve essere perfetto. Confronteremo questa percezione con le risposte pratiche.',
     type: 'single',
     options: [
       { value: 'beginner', label: 'Principiante assoluto o quasi' },
@@ -92,34 +98,263 @@ export const assessmentQuestions = [
     ],
   },
   {
-    id: 'language_check',
-    eyebrow: 'Un segnale pratico',
-    title: 'Quale risposta suona più naturale in una situazione di lavoro?',
-    description: 'Non preoccuparti del voto. Questa domanda serve solo a confrontare percezione e riconoscimento.',
+    id: 'present_question',
+    section: 'English in action',
+    eyebrow: 'Strutture pratiche 1 di 4',
+    title: 'Completa la domanda più naturale.',
+    description: 'How often ___ you speak English at work?',
     type: 'single',
+    correctAnswer: 'b',
     options: [
-      { value: 'a', label: 'I am agree, but we need more informations.' },
-      { value: 'b', label: 'I agree, but we need some more information.' },
-      { value: 'c', label: 'I agree myself, but we need other informations.' },
-      { value: 'd', label: 'I am in agreement, but we are needing more information.' },
+      { value: 'a', label: 'are' },
+      { value: 'b', label: 'do' },
+      { value: 'c', label: 'does' },
+      { value: 'd', label: 'have' },
     ],
   },
   {
-    id: 'listening_check',
-    eyebrow: 'Listening rapido',
-    title: 'Ascolta una volta e scegli l’informazione principale.',
-    description: 'Puoi riascoltare. Il numero di replay ci aiuta a capire quanto supporto ti serve.',
-    type: 'listening',
-    audioText: "We need to move the meeting to Thursday because the client hasn't approved the final figures yet.",
+    id: 'past_update',
+    section: 'English in action',
+    eyebrow: 'Strutture pratiche 2 di 4',
+    title: 'Scegli la frase corretta.',
+    description: 'Ieri abbiamo inviato la versione finale al cliente.',
+    type: 'single',
+    correctAnswer: 'a',
     options: [
-      { value: 'a', label: 'La riunione è cancellata perché il cliente ha rifiutato il progetto.' },
-      { value: 'b', label: 'La riunione viene spostata a giovedì perché mancano ancora i dati approvati.' },
-      { value: 'c', label: 'Il cliente vuole ricevere i dati finali entro giovedì.' },
-      { value: 'd', label: 'La riunione resta oggi, ma senza il cliente.' },
+      { value: 'a', label: 'Yesterday we sent the final version to the client.' },
+      { value: 'b', label: 'Yesterday we sended the final version to the client.' },
+      { value: 'c', label: 'Yesterday we have send the final version to the client.' },
+      { value: 'd', label: 'Yesterday we were send the final version to the client.' },
+    ],
+  },
+  {
+    id: 'future_intention',
+    section: 'English in action',
+    eyebrow: 'Strutture pratiche 3 di 4',
+    title: 'Completa la frase.',
+    description: 'We ___ launch the new service next month. The plan is already approved.',
+    type: 'single',
+    correctAnswer: 'c',
+    options: [
+      { value: 'a', label: 'will to' },
+      { value: 'b', label: 'going' },
+      { value: 'c', label: 'are going to' },
+      { value: 'd', label: 'are go to' },
+    ],
+  },
+  {
+    id: 'information_quantity',
+    section: 'English in action',
+    eyebrow: 'Strutture pratiche 4 di 4',
+    title: 'Quale frase è corretta e naturale?',
+    description: 'Devi chiedere altri dettagli sul nuovo orario.',
+    type: 'single',
+    correctAnswer: 'b',
+    options: [
+      { value: 'a', label: 'Could you send me more informations about the new schedule?' },
+      { value: 'b', label: 'Could you send me some more information about the new schedule?' },
+      { value: 'c', label: 'Could you send me an information about the new schedule?' },
+      { value: 'd', label: 'Could you send me many information about the new schedule?' },
+    ],
+  },
+  {
+    id: 'meeting_naturalness',
+    section: 'English in action',
+    eyebrow: 'In riunione 1 di 4',
+    title: 'Non sei convinto/a da una proposta. Cosa suona meglio?',
+    description: 'Scegli la risposta che mantiene il confronto professionale e diretto.',
+    type: 'single',
+    correctAnswer: 'd',
+    options: [
+      { value: 'a', label: 'I do not agree with you because this idea is wrong.' },
+      { value: 'b', label: 'I am not agree, this cannot function.' },
+      { value: 'c', label: 'For me no, we need another thing.' },
+      { value: 'd', label: 'I see your point, but I’m not sure this will solve the main issue.' },
+    ],
+  },
+  {
+    id: 'clarification',
+    section: 'English in action',
+    eyebrow: 'In riunione 2 di 4',
+    title: 'Hai perso l’ultimo passaggio. Come chiedi di ripeterlo?',
+    description: 'La frase deve essere naturale e abbastanza professionale.',
+    type: 'single',
+    correctAnswer: 'a',
+    options: [
+      { value: 'a', label: 'Sorry, could you go over the last point again?' },
+      { value: 'b', label: 'Can you repeat again what you have said before?' },
+      { value: 'c', label: 'I didn’t listen. Say it another time.' },
+      { value: 'd', label: 'Excuse me, I have not understood nothing.' },
+    ],
+  },
+  {
+    id: 'delay_update',
+    section: 'English in action',
+    eyebrow: 'In riunione 3 di 4',
+    title: 'Qual è l’aggiornamento più chiaro?',
+    description: 'Il progetto è in ritardo di due giorni perché manca l’approvazione finale.',
+    type: 'single',
+    correctAnswer: 'c',
+    options: [
+      { value: 'a', label: 'The project has a delay because we wait the final approval.' },
+      { value: 'b', label: 'We are late of two days for the final approval.' },
+      { value: 'c', label: 'We’re running two days behind schedule because we’re still waiting for final approval.' },
+      { value: 'd', label: 'The project is delayed since two days because approval is missing.' },
+    ],
+  },
+  {
+    id: 'vocabulary_context',
+    section: 'English in action',
+    eyebrow: 'In riunione 4 di 4',
+    title: 'Scegli la parola giusta.',
+    description: 'We need to finish this by Friday. Friday is our ___.',
+    type: 'single',
+    correctAnswer: 'b',
+    options: [
+      { value: 'a', label: 'shift' },
+      { value: 'b', label: 'deadline' },
+      { value: 'c', label: 'request' },
+      { value: 'd', label: 'issue' },
+    ],
+  },
+  {
+    id: 'scenario_delay',
+    section: 'English in action',
+    eyebrow: 'Scenario reale 1 di 2',
+    title: 'Un collega chiede perché la consegna sarà in ritardo.',
+    description: 'Quale risposta dà causa, conseguenza e prossimo aggiornamento con maggiore chiarezza?',
+    type: 'single',
+    correctAnswer: 'a',
+    options: [
+      { value: 'a', label: 'We’re waiting for the supplier’s confirmation, so delivery will be two days late. I’ll update you by 3 p.m.' },
+      { value: 'b', label: 'There is a problem with the supplier and the delivery is not possible at the moment.' },
+      { value: 'c', label: 'The supplier didn’t answer, therefore maybe we will have a delay, I don’t know.' },
+      { value: 'd', label: 'Because of the supplier. I’ll let you know.' },
+    ],
+  },
+  {
+    id: 'scenario_clarify',
+    section: 'English in action',
+    eyebrow: 'Scenario reale 2 di 2',
+    title: 'La richiesta del cliente non è chiara.',
+    description: 'Quale risposta controlla la comprensione senza sembrare insicura?',
+    type: 'single',
+    correctAnswer: 'd',
+    options: [
+      { value: 'a', label: 'I don’t understand what you want.' },
+      { value: 'b', label: 'Can you explain better your request?' },
+      { value: 'c', label: 'What do you mean exactly with this?' },
+      { value: 'd', label: 'Just to make sure I understood, would you like us to change the design or only the wording?' },
+    ],
+  },
+  {
+    id: 'listening_01',
+    section: 'Listening reale',
+    eyebrow: 'Messaggio 1 di 3',
+    title: 'Ascolta l’aggiornamento e rispondi a entrambe le domande.',
+    description: 'La voce è reale e il testo non viene mostrato. Puoi riascoltare, ma prova prima con un solo ascolto.',
+    type: 'listening',
+    audioSrc: '/audio/assessment/assessment-listening-01.m4a.mp3',
+    replayKey: 'listening_01_replays',
+    audioPrompt: 'Un breve aggiornamento su una call e una scadenza.',
+    items: [
+      {
+        id: 'meeting',
+        prompt: 'Quando si terrà la call?',
+        correctAnswer: 'c',
+        options: [
+          { value: 'a', label: 'Martedì mattina' },
+          { value: 'b', label: 'Mercoledì a pranzo' },
+          { value: 'c', label: 'Giovedì alle 15:30' },
+          { value: 'd', label: 'Venerdì alle 15:00' },
+        ],
+      },
+      {
+        id: 'budget',
+        prompt: 'Entro quando deve essere inviato il budget aggiornato?',
+        correctAnswer: 'b',
+        options: [
+          { value: 'a', label: 'Martedì sera' },
+          { value: 'b', label: 'Mercoledì a ora di pranzo' },
+          { value: 'c', label: 'Giovedì mattina' },
+          { value: 'd', label: 'Dopo la call' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'listening_02',
+    section: 'Listening reale',
+    eyebrow: 'Messaggio 2 di 3',
+    title: 'Ascolta il ragionamento e individua il problema reale.',
+    description: 'Qui non basta riconoscere una parola. Devi capire la preoccupazione del cliente e la risposta proposta.',
+    type: 'listening',
+    audioSrc: '/audio/assessment/assessment-listening-02.m4a.mp3',
+    replayKey: 'listening_02_replays',
+    audioPrompt: 'Un commento informale su una proposta e sulle possibilità di convincere il cliente.',
+    items: [
+      {
+        id: 'concern',
+        prompt: 'Qual è la vera preoccupazione del cliente?',
+        correctAnswer: 'a',
+        options: [
+          { value: 'a', label: 'La durata dell’implementazione' },
+          { value: 'b', label: 'Il prezzo della proposta' },
+          { value: 'c', label: 'La qualità del prodotto' },
+          { value: 'd', label: 'La disponibilità del team' },
+        ],
+      },
+      {
+        id: 'action',
+        prompt: 'Cosa potrebbe aumentare le possibilità di successo?',
+        correctAnswer: 'd',
+        options: [
+          { value: 'a', label: 'Ridurre il prezzo senza cambiare altro' },
+          { value: 'b', label: 'Rimandare la presentazione' },
+          { value: 'c', label: 'Aggiungere più funzionalità alla proposta' },
+          { value: 'd', label: 'Accorciare i tempi o spiegare meglio la prima fase' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'listening_03',
+    section: 'Listening reale',
+    eyebrow: 'Messaggio 3 di 3',
+    title: 'Ascolta le informazioni pratiche.',
+    description: 'Concentrati sugli orari e sul servizio aggiuntivo offerto.',
+    type: 'listening',
+    audioSrc: '/audio/assessment/assessment-listening-03.m4a.mp3',
+    replayKey: 'listening_03_replays',
+    audioPrompt: 'Un messaggio di accoglienza con orari e assistenza per il giorno successivo.',
+    items: [
+      {
+        id: 'hours',
+        prompt: 'Quale combinazione di orari è corretta?',
+        correctAnswer: 'b',
+        options: [
+          { value: 'a', label: 'Colazione 7:30-10:00, ristorante fino alle 21:00' },
+          { value: 'b', label: 'Colazione 7:00-10:00, ristorante fino alle 21:30' },
+          { value: 'c', label: 'Colazione 7:00-9:30, ristorante fino alle 22:00' },
+          { value: 'd', label: 'Colazione 8:00-10:00, ristorante fino alle 21:30' },
+        ],
+      },
+      {
+        id: 'service',
+        prompt: 'Quale aiuto viene offerto?',
+        correctAnswer: 'c',
+        options: [
+          { value: 'a', label: 'Prenotare un tavolo per la sera' },
+          { value: 'b', label: 'Cambiare la camera' },
+          { value: 'c', label: 'Prenotare un taxi per la mattina successiva' },
+          { value: 'd', label: 'Portare la colazione in camera' },
+        ],
+      },
     ],
   },
   {
     id: 'urgency',
+    section: 'Il percorso',
     eyebrow: 'Le tempistiche',
     title: 'Hai una scadenza concreta?',
     description: 'L’urgenza cambia il tipo di percorso più utile.',
@@ -133,6 +368,7 @@ export const assessmentQuestions = [
   },
   {
     id: 'commitment',
+    section: 'Il percorso',
     eyebrow: 'Il ritmo sostenibile',
     title: 'Quanto tempo puoi dedicare ogni settimana?',
     description: 'Una risposta realistica vale più di una promessa ambiziosa che poi diventa impossibile mantenere.',
@@ -146,6 +382,7 @@ export const assessmentQuestions = [
   },
   {
     id: 'format',
+    section: 'Il percorso',
     eyebrow: 'Il formato',
     title: 'Come preferiresti lavorare?',
     description: 'Non è un impegno definitivo. Serve a capire quale proposta avrebbe più senso per te.',
@@ -218,21 +455,37 @@ const courseCatalog = {
   },
 };
 
+const structureKeys = ['present_question', 'past_update', 'future_intention', 'information_quantity'];
+const functionalKeys = ['meeting_naturalness', 'clarification', 'delay_update', 'vocabulary_context', 'scenario_delay', 'scenario_clarify'];
+const listeningQuestionIds = ['listening_01', 'listening_02', 'listening_03'];
+
 const clamp = (value) => Math.max(12, Math.min(94, Math.round(value)));
 
 function levelScore(value) {
-  return ({ beginner: 22, a1: 34, a2: 54, b1: 70, b2: 82, c1: 90, unsure: 50 }[value] || 50);
+  return ({ beginner: 22, a1: 34, a2: 50, b1: 68, b2: 82, c1: 91, unsure: 50 }[value] || 50);
+}
+
+function levelName(value) {
+  return ({
+    beginner: 'Principiante o quasi',
+    a1: 'A1 percepito',
+    a2: 'A2 percepito',
+    b1: 'B1 percepito',
+    b2: 'B2 percepito',
+    c1: 'C1 percepito',
+    unsure: 'Livello non indicato',
+  }[value] || 'Livello non indicato');
 }
 
 function foundationScore(value) {
-  return ({ fragile: 24, basic: 44, developing: 64, solid: 82 }[value] || 50);
+  return ({ fragile: 24, basic: 43, developing: 63, solid: 82 }[value] || 50);
 }
 
 function speakingScore(value) {
   return ({ freeze: 24, translate: 39, vocabulary: 46, grammar: 44, pronunciation: 55, comfortable: 82 }[value] || 50);
 }
 
-function listeningScore(value) {
+function listeningSelfScore(value) {
   return ({ lost: 25, speed: 42, details: 52, accents: 49, response: 45, comfortable: 82 }[value] || 50);
 }
 
@@ -247,43 +500,114 @@ function levelLabel(score) {
   return 'Solido';
 }
 
+function observedLabel(score) {
+  if (score < 35) return 'Fondamenta iniziali';
+  if (score < 55) return 'Comunicazione essenziale';
+  if (score < 72) return 'Autonomia in sviluppo';
+  if (score < 86) return 'Autonomia pratica';
+  return 'Uso solido e flessibile';
+}
+
+function performanceScore(percent) {
+  return 18 + (percent * 0.76);
+}
+
+function correctPercent(keys, answers) {
+  const questions = assessmentQuestions.filter((question) => keys.includes(question.id));
+  const correct = questions.filter((question) => answers[question.id] === question.correctAnswer).length;
+  return {
+    correct,
+    total: questions.length,
+    percent: questions.length ? (correct / questions.length) * 100 : 0,
+  };
+}
+
+function listeningPerformance(answers) {
+  let correct = 0;
+  let total = 0;
+  let totalReplays = 0;
+
+  listeningQuestionIds.forEach((questionId) => {
+    const question = assessmentQuestions.find((item) => item.id === questionId);
+    const selected = answers[questionId] || {};
+    question.items.forEach((item) => {
+      total += 1;
+      if (selected[item.id] === item.correctAnswer) correct += 1;
+    });
+    totalReplays += Number(answers[question.replayKey] || 0);
+  });
+
+  const percent = total ? (correct / total) * 100 : 0;
+  const replayPenalty = Math.min(12, Math.max(0, totalReplays - 3) * 2);
+  return {
+    correct,
+    total,
+    percent,
+    totalReplays,
+    score: Math.max(12, performanceScore(percent) - replayPenalty),
+  };
+}
+
 const blockerCopy = {
   foundations: {
     title: 'Le fondamenta non sono ancora abbastanza automatiche',
-    summary: 'Prima di chiederti di reagire più velocemente, conviene stabilizzare frasi, domande e tempi essenziali. Il problema non è la mancanza di volontà: stai ancora usando troppa energia per costruire la struttura di base.',
+    summary: 'Le risposte pratiche mostrano che frasi, domande e tempi essenziali richiedono ancora troppo controllo. La priorità è rendere affidabili le strutture che servono davvero, poi aumentare velocità e complessità.',
   },
   listening: {
     title: 'Il listening assorbe troppa energia',
-    summary: 'Riesci a cogliere parti del messaggio, ma velocità, dettagli o necessità di rispondere riducono la comprensione reale. Ti serve un ascolto guidato che porti sempre a un’azione o a una risposta.',
+    summary: 'Nei messaggi a velocità naturale perdi informazioni centrali o dettagli operativi. Ti serve un ascolto guidato che termini sempre con una decisione, una risposta o un’azione concreta.',
   },
   response: {
     title: 'Sai più inglese di quanto riesci a usare sotto pressione',
-    summary: 'Il limite principale appare nel passaggio tra ciò che conosci e ciò che riesci a dire quando qualcuno aspetta. Servono pratica realistica, tempi di risposta e strategie per continuare anche senza la frase perfetta.',
+    summary: 'Riconosci una parte importante della lingua, ma scegliere una risposta chiara mentre qualcuno aspetta resta difficile. Il lavoro deve allenare tempi di risposta, strategie di continuità e comunicazione funzionale.',
   },
   retrieval: {
     title: 'Il linguaggio non arriva abbastanza velocemente',
-    summary: 'Parole ed espressioni sono spesso riconoscibili, ma non ancora disponibili nel momento in cui devi usarle. Il lavoro deve collegare Trainer, roleplay e ripetizione dentro situazioni reali.',
+    summary: 'Parole ed espressioni sono spesso riconoscibili, ma non ancora disponibili quando devi usarle. Il lavoro deve collegare recupero attivo, Trainer e roleplay dentro situazioni reali.',
   },
 };
 
 export function buildAssessmentResult(answers = {}) {
-  const rawFoundation = (foundationScore(answers.foundations) * 0.62) + (levelScore(answers.level) * 0.28) + (answers.language_check === 'b' ? 10 : 0);
-  const rawListening = listeningScore(answers.listening_blocker) + (answers.listening_check === 'b' ? 10 : -6) - Math.max(0, Number(answers.listening_replays || 0) - 2) * 2;
-  const rawResponse = speakingScore(answers.speaking_blocker) + (answers.commitment === 'under_one' ? -5 : 3);
-  const rawRetrieval = retrievalScore(answers.speaking_blocker) + (answers.language_check === 'b' ? 7 : -4);
+  const structure = correctPercent(structureKeys, answers);
+  const functional = correctPercent(functionalKeys, answers);
+  const practicalCorrect = structure.correct + functional.correct;
+  const practicalTotal = structure.total + functional.total;
+  const practicalPercent = practicalTotal ? (practicalCorrect / practicalTotal) * 100 : 0;
+  const listening = listeningPerformance(answers);
+
+  const structurePerformance = performanceScore(structure.percent);
+  const functionalPerformance = performanceScore(functional.percent);
+  const rawFoundation = (structurePerformance * 0.72) + (foundationScore(answers.foundations) * 0.18) + (levelScore(answers.level) * 0.10);
+  const rawListening = (listening.score * 0.75) + (listeningSelfScore(answers.listening_blocker) * 0.25);
+  const rawResponse = (functionalPerformance * 0.62) + (speakingScore(answers.speaking_blocker) * 0.30) + (answers.commitment === 'under_one' ? 0 : 6);
+  const rawRetrieval = (functionalPerformance * 0.48) + (structurePerformance * 0.18) + (retrievalScore(answers.speaking_blocker) * 0.34);
 
   const dimensions = [
     { key: 'foundations', label: 'Strutture e fondamenta', score: clamp(rawFoundation) },
     { key: 'listening', label: 'Comprensione in tempo reale', score: clamp(rawListening) },
-    { key: 'response', label: 'Risposta sotto pressione', score: clamp(rawResponse) },
+    { key: 'response', label: 'Risposta funzionale', score: clamp(rawResponse) },
     { key: 'retrieval', label: 'Recupero di parole ed espressioni', score: clamp(rawRetrieval) },
   ].map((dimension) => ({ ...dimension, level: levelLabel(dimension.score) }));
+
+  const observedScore = clamp((performanceScore(practicalPercent) * 0.70) + (listening.score * 0.30));
+  const selfReportedScore = levelScore(answers.level);
+  const scoreGap = observedScore - selfReportedScore;
+
+  let alignmentTitle = 'Percezione e performance sono abbastanza allineate';
+  let alignmentSummary = 'Il livello che hai indicato è coerente con ciò che hai mostrato nelle domande pratiche e nei listening.';
+  if (scoreGap >= 13) {
+    alignmentTitle = 'Hai mostrato più risorse di quanto pensi';
+    alignmentSummary = 'Nelle risposte pratiche hai ottenuto un risultato superiore alla tua autovalutazione. La priorità potrebbe essere trasformare queste conoscenze in sicurezza e velocità.';
+  } else if (scoreGap <= -14) {
+    alignmentTitle = 'Alcune competenze vanno rese più affidabili';
+    alignmentSummary = 'La tua autovalutazione è più alta della performance osservata in questa prova breve. Non significa che tu non sappia l’inglese: indica quali strutture e situazioni cedono quando devi scegliere rapidamente.';
+  }
 
   const primary = [...dimensions].sort((a, b) => a.score - b.score)[0];
   const primaryCopy = blockerCopy[primary.key];
   const goal = answers.goal;
   const urgentInterview = goal === 'interview' && ['seven_days', 'one_month'].includes(answers.urgency);
-  const needsFoundations = dimensions.find((item) => item.key === 'foundations').score < 48;
+  const needsFoundations = dimensions.find((item) => item.key === 'foundations').score < 48 || structure.percent < 45;
   const listeningIsPrimary = primary.key === 'listening';
   const responseIsPrimary = ['response', 'retrieval'].includes(primary.key);
   const prefersPrivate = answers.format === 'private';
@@ -300,20 +624,30 @@ export function buildAssessmentResult(answers = {}) {
   else if (['business', 'hospitality'].includes(goal)) course = courseCatalog.business;
 
   const betaEligible = course.key === 'business-english-flow'
+    && observedScore >= 48
+    && dimensions.find((item) => item.key === 'foundations').score >= 48
     && !['beginner', 'a1'].includes(answers.level)
     && answers.commitment !== 'under_one'
     && answers.urgency !== 'seven_days';
 
   const situationLabels = {
-    meetings: 'riunioni e call', clients: 'clienti', updates: 'aggiornamenti e problemi', presentations: 'presentazioni',
-    interviews: 'colloqui', 'fast-listening': 'listening veloce', travel: 'viaggi', social: 'conversazioni spontanee',
+    meetings: 'riunioni e call',
+    clients: 'clienti',
+    updates: 'aggiornamenti e problemi',
+    presentations: 'presentazioni',
+    interviews: 'colloqui',
+    'fast-listening': 'listening veloce',
+    travel: 'viaggi',
+    social: 'conversazioni spontanee',
   };
-  const selectedSituations = Array.isArray(answers.situations) ? answers.situations.map((item) => situationLabels[item]).filter(Boolean) : [];
+  const selectedSituations = Array.isArray(answers.situations)
+    ? answers.situations.map((item) => situationLabels[item]).filter(Boolean)
+    : [];
 
   const recommendationReason = course.key === 'business-english-flow'
-    ? 'Il tuo profilo mostra abbastanza fondamenta per lavorare su interazioni professionali reali, ma ascolto, recupero del linguaggio o risposta sotto pressione limitano ancora quanto partecipi.'
+    ? 'La prova mostra fondamenta sufficienti per lavorare su interazioni professionali reali, ma ascolto, recupero del linguaggio o risposta funzionale limitano ancora quanto partecipi.'
     : course.key === 'english-foundations'
-      ? 'Prima di spingere sulla velocità, conviene rendere più affidabili le strutture essenziali. In questo modo la conversazione richiederà meno controllo mentale.'
+      ? 'Le risposte pratiche indicano che conviene rendere più affidabili le strutture essenziali prima di spingere sulla velocità. In questo modo la conversazione richiederà meno controllo mentale.'
       : course.key === 'interview-sprint'
         ? 'Hai un obiettivo definito e una scadenza che richiede lavoro mirato su risposte, esempi professionali e gestione delle domande successive.'
         : course.key === 'listening-response-lab'
@@ -327,15 +661,31 @@ export function buildAssessmentResult(answers = {}) {
                 : 'Il percorso più adatto deve trasformare l’inglese conosciuto in autonomia nelle situazioni quotidiane che hai indicato.';
 
   return {
-    version: 1,
+    version: 2,
     profileKey: primary.key,
     primaryTitle: primaryCopy.title,
     primarySummary: primaryCopy.summary,
     dimensions,
+    performance: {
+      observedScore,
+      observedLabel: observedLabel(observedScore),
+      selfReportedScore,
+      selfReportedLabel: levelName(answers.level),
+      practicalScore: clamp(performanceScore(practicalPercent)),
+      practicalCorrect,
+      practicalTotal,
+      listeningScore: clamp(listening.score),
+      listeningCorrect: listening.correct,
+      listeningTotal: listening.total,
+      listeningReplays: listening.totalReplays,
+      functionalScore: clamp(functionalPerformance),
+      alignmentTitle,
+      alignmentSummary,
+    },
     selectedSituations,
     recommendation: { ...course, reason: recommendationReason },
     betaEligible,
     qualification: betaEligible ? 'beta_priority' : course.key,
-    disclaimer: 'Questo profilo orienta il percorso e non sostituisce una certificazione ufficiale del livello CEFR.',
+    disclaimer: 'Lo Sblocco Check è una valutazione orientativa basata su una prova breve. Non sostituisce una certificazione ufficiale del livello CEFR.',
   };
 }

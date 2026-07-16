@@ -19,13 +19,13 @@ export default function AssessmentResult() {
       setError('');
       try {
         const data = await loadAssessmentResult(token);
-        if (!data) throw new Error('Profilo non trovato o link non valido.');
+        if (!data) throw new Error('Risultato non trovato o link non valido.');
         if (active) {
           setPayload(data);
           setFollowupRequested(Boolean(data.followup_requested));
         }
       } catch (loadError) {
-        if (active) setError(loadError.message || 'Non è stato possibile aprire il profilo.');
+        if (active) setError(loadError.message || 'Non è stato possibile aprire il risultato.');
       } finally {
         if (active) setLoading(false);
       }
@@ -41,13 +41,13 @@ export default function AssessmentResult() {
 
   return (
     <>
-      <SEO title="Il tuo Profilo Sblocco | Sblocco Inglese" description="Riapri il tuo profilo linguistico e il percorso consigliato." />
+      <SEO title="Il tuo Sblocco Check | Sblocco Inglese" description="Riapri il risultato dello Sblocco Check e il percorso consigliato." />
       <section className="min-h-[calc(100svh-68px)] bg-paper py-10 dark:bg-[#0f1715] sm:py-14">
         <div className="section-shell">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <Link to="/assessment" className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink dark:border-white/15 dark:bg-white/[0.05] dark:text-white">
               <ArrowLeft aria-hidden="true" className="h-4 w-4" />
-              Torna al profilo gratuito
+              Torna allo Sblocco Check
             </Link>
             <span className="inline-flex items-center gap-2 text-xs font-black text-ink/42 dark:text-white/42">
               <ShieldCheck aria-hidden="true" className="h-4 w-4" />
@@ -59,7 +59,7 @@ export default function AssessmentResult() {
             <div className="grid min-h-[55vh] place-items-center rounded-[2rem] border border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.04]">
               <div className="text-center">
                 <LoaderCircle aria-hidden="true" className="mx-auto h-9 w-9 animate-spin text-moss dark:text-mint" />
-                <p className="mt-4 text-sm font-black text-ink dark:text-white">Sto aprendo il tuo profilo...</p>
+                <p className="mt-4 text-sm font-black text-ink dark:text-white">Sto aprendo il tuo risultato...</p>
               </div>
             </div>
           ) : null}
@@ -69,7 +69,7 @@ export default function AssessmentResult() {
               <h1 className="text-2xl font-black">Il link non è disponibile</h1>
               <p className="mt-3 text-sm font-semibold leading-7">{error}</p>
               <Link to="/assessment" className="focus-ring mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white dark:bg-mint dark:text-ink">
-                Crea un nuovo profilo
+                Fai un nuovo Sblocco Check
               </Link>
             </div>
           ) : null}
