@@ -1,6 +1,7 @@
 import { srsCards } from '../src/data/srsCards.js';
 import { generalExpressionCards } from '../src/data/generalExpressionCards.js';
 import { hospitalityExpressionCards } from '../src/data/hospitalityExpressionCards.js';
+import { travelExpressionCards } from '../src/data/travelExpressionCards.js';
 import { trainerConfig } from '../src/data/trainerConfig.js';
 import { wordTrainerCards } from '../src/data/wordTrainerCards.js';
 import {
@@ -29,6 +30,14 @@ const datasets = [
     id: 'hospitality-expression',
     name: 'hospitalityExpressionCards',
     cards: hospitalityExpressionCards,
+    targetField: 'expression',
+    requiredFields: expressionRequiredSrsCardFields,
+    strictExamples: true,
+  },
+  {
+    id: 'travel-expression',
+    name: 'travelExpressionCards',
+    cards: travelExpressionCards,
     targetField: 'expression',
     requiredFields: expressionRequiredSrsCardFields,
     strictExamples: true,
