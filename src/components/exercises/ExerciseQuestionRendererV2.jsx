@@ -19,6 +19,7 @@ import {
   wordOrderDisplayToken,
   wordOrderTerminalPunctuation,
 } from '../../lib/wordOrderPresentation.js';
+import SafeTeachingContent from './SafeTeachingContent.jsx';
 
 const resultStyles = {
   correct: 'border-emerald-200 bg-emerald-50 text-emerald-950 dark:border-emerald-300/25 dark:bg-emerald-400/10 dark:text-emerald-100',
@@ -384,7 +385,7 @@ export default function ExerciseQuestionRendererV2({
     if (type === 'select_gap') return <GapFill question={question} answer={answer} onChange={onChange} disabled={disabled} select />;
     if (type === 'translation' || type === 'error_correction') return <TextAnswer multiline={type === 'error_correction'} value={answer || ''} onChange={onChange} disabled={disabled} />;
     if (type === 'word_order') return <WordOrder question={question} answer={answer} onChange={onChange} disabled={disabled} />;
-    if (type === 'content_block') return <article className="rounded-xl border border-cyan-200 bg-cyan-50 p-5 dark:border-cyan-300/20 dark:bg-cyan-300/[0.07]"><FileText className="h-5 w-5 text-cyan-800 dark:text-cyan-200" /><div className="mt-3 whitespace-pre-wrap text-base font-medium leading-8 text-ink/80 dark:text-white/80">{question.content?.body || question.prompt}</div></article>;
+    if (type === 'content_block') return <article className="rounded-xl border border-cyan-200 bg-cyan-50 p-5 dark:border-cyan-300/20 dark:bg-cyan-300/[0.07]"><FileText className="h-5 w-5 text-cyan-800 dark:text-cyan-200" /><div className="mt-3 whitespace-pre-wrap text-base font-medium leading-8 text-ink/80 dark:text-white/80"><SafeTeachingContent>{question.content?.body || question.prompt}</SafeTeachingContent></div></article>;
     if (type === 'written_response') return <div className="grid gap-4"><WrittenResponse question={question} answer={answer} onChange={onChange} disabled={disabled} /><RubricPreview rubric={question.content?.rubric} /></div>;
     if (type === 'dialogue_roleplay') return <DialogueRoleplay question={question} answer={answer} onChange={onChange} disabled={disabled} attemptId={attemptId} attemptQuestionId={item?.id} teacherTurnReviews={item?.teacher_turn_reviews} />;
     if (type === 'audio_response') return <AudioRecorder question={question} answer={answer} onChange={onChange} disabled={disabled} attemptId={attemptId} attemptQuestionId={item?.id} />;

@@ -48,7 +48,7 @@ function hasMeaningfulValue(value) {
 
 function answerIsEmpty(answer, question) {
   const type = question?.type;
-  if (type === 'content_block') return answer !== true;
+  if (type === 'content_block') return false;
   if (type === 'audio_response') return !answer?.file_id;
   if (type === 'dialogue_roleplay') {
     if (!answer?.role_key) return true;
@@ -210,7 +210,8 @@ export default function ExercisePlayerV2() {
       const item = section.questions[index];
       const timer = saveTimers.current.get(item.id);
       if (timer) { window.clearTimeout(timer); saveTimers.current.delete(item.id); }
-      await persistAnswer(item, normalizeExerciseAnswerForSave(item.answer ?? null, item.question), sectionIndex, index);
+      const answer = item.question.type === 'content_block' ? true : normalizeExerciseAnswerForSave(item.answer ?? null, item.question);
+      await persistAnswer(item, answer, sectionIndex, index);
     }
   }
 
