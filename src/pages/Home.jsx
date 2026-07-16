@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CTAButton from '../components/CTAButton';
+import AssessmentEntryStrip from '../components/AssessmentEntryStrip';
 import FAQAccordion from '../components/FAQAccordion';
 import PricingCard from '../components/PricingCard';
 import ProcessSteps from '../components/ProcessSteps';
@@ -191,7 +192,7 @@ function ProductFlow() {
         <div className="section-kicker">
           <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Un unico ecosistema</p>
           <h2 className="mt-3 text-3xl font-black leading-tight text-ink sm:text-4xl">
-            Corsi al centro. Simulazione per iniziare. Trainer per non perdere momentum.
+            Corsi al centro. Simulazione per iniziare. Trainer per consolidare.
           </h2>
           <p className="mt-4 text-base font-semibold leading-7 text-ink/70">
             Ogni cosa ha un ruolo preciso: non confonde il percorso, lo rende più facile da iniziare e più difficile da
@@ -316,8 +317,9 @@ export default function Home() {
         description={`Corsi di inglese pratico per italiani che si bloccano quando devono parlare. Inizia con una simulazione da ${primaryOffer.price}, poi continua con percorsi e trainer SRS.`}
       />
 
-      <EnergyRibbon />
       <Hero />
+      <AssessmentEntryStrip />
+      <EnergyRibbon />
 
       <SectionReveal className="py-0">
         <Section tone="soft">
@@ -327,7 +329,7 @@ export default function Home() {
                 eyebrow="Il problema reale"
                 icon={MessageSquareWarning}
                 title="Non ti manca solo l'inglese. Ti manca la rapidità nella risposta quando qualcuno ti parla."
-                copy="Molte persone hanno studiato, capiscono abbastanza, leggono email e seguono video. Poi arriva una domanda dal vivo e tutto diventa più lento, più rigido, e sconnesso."
+                copy="Molte persone hanno studiato, capiscono abbastanza, leggono email e seguono video. Poi arriva una domanda dal vivo e tutto diventa più lento, più rigido e meno naturale."
               />
               <FeatureList items={pressureSignals} className="mt-7 sm:grid-cols-2" />
             </div>
@@ -345,19 +347,19 @@ export default function Home() {
       <SectionReveal className="py-0">
         <Section>
           <div className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint">New grammar-output units</p>
+            <p className="text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint">Grammatica attiva</p>
             <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
-                <h2 className="text-3xl font-black leading-tight text-ink dark:text-white">A1 Learning Path</h2>
+                <h2 className="text-3xl font-black leading-tight text-ink dark:text-white">Percorso A1</h2>
                 <p className="mt-3 max-w-3xl text-base font-semibold leading-7 text-ink/70 dark:text-white/70">
-                  Learn the rule, use it actively, get diagnostic feedback. Trovi le nuove unità A1 dentro la grammatica, senza cambiare il resto del sito.
+                  Impara la regola, usala in modo attivo e ricevi un feedback diagnostico. Trovi le nuove unità nel percorso di grammatica A1.
                 </p>
               </div>
               <Link
                 to="/grammar/a1"
                 className="focus-ring inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-moss dark:bg-mint dark:text-ink"
               >
-                Vai all'A1 Learning Path
+                Vai al percorso A1
               </Link>
             </div>
           </div>
@@ -372,7 +374,7 @@ export default function Home() {
                 eyebrow="Corsi prima di tutto"
                 icon={GraduationCap}
                 title="Il cuore di Sblocco Inglese sta nei percorsi pratici, guidati e progressivi."
-                copy="La simulazione ti dà un primo accesso con una diagnosi chiara. Il corso è dove quella diagnosi trasformata in pratica costante: risposte migliori, più sicurezza e un inglese che regge nei momenti importanti."
+                copy="La simulazione ti offre una diagnosi chiara. Nel corso, quella diagnosi si trasforma in pratica costante: risposte migliori, più sicurezza e un inglese che regge nei momenti importanti."
               />
               <FeatureList items={coursePrinciples} className="mt-7" />
             </div>
@@ -437,7 +439,7 @@ export default function Home() {
                 eyebrow="Prodotto digitale"
                 icon={Brain}
                 title="Il Trainer è il prodotto che mantiene vivo il lavoro tra una sessione e l'altra."
-                copy="Frasi, parole e risposte tornano con ripetizione dilazionata: ciò che è difficile ricompare prima, ciò che è stabile torna più avanti. Non sostituisce i corsi: li rende più efficaci. Ogni lezione diventa una palestra in più dove utilizzare tutto ciò che si è imparato dentro e fuori."
+                copy="Frasi, parole e risposte tornano con ripetizione dilazionata: ciò che è difficile ricompare prima, ciò che è stabile torna più avanti. Il Trainer non sostituisce i corsi: consolida tra una lezione e l'altra ciò che hai imparato."
                 light
               />
               <Link

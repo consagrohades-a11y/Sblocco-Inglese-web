@@ -8,6 +8,7 @@ export default function StickyMobileCTA() {
   const location = useLocation();
   const navigate = useNavigate();
   const isLearner = profile?.role === 'learner' && profile?.status === 'active';
+  const isHomepage = location.pathname === '/';
   const isAssessment =
     location.pathname === '/assessment' ||
     location.pathname.startsWith('/profilo/');
@@ -27,7 +28,7 @@ export default function StickyMobileCTA() {
     else navigate('/assignments');
   }
 
-  if (isAssessment) return null;
+  if (isAssessment || isHomepage) return null;
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b1311]/95 px-4 py-3 text-white shadow-[0_-14px_38px_rgba(3,8,7,0.28)] backdrop-blur-xl xl:hidden">

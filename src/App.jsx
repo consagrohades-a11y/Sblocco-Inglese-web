@@ -5,7 +5,6 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import StickyMobileCTA from './components/StickyMobileCTA';
 import BackToTopButton from './components/BackToTopButton';
-import AssessmentEntryStrip from './components/AssessmentEntryStrip';
 import Home from './pages/Home';
 import Simulation from './pages/Simulation';
 import Percorsi from './pages/Percorsi';
@@ -108,13 +107,11 @@ function PageFallback() {
 export default function App() {
   const location = useLocation();
   const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
-  const showAssessmentStrip = location.pathname === '/';
 
   return (
     <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-[#0f1715] dark:text-white">
       <ScrollManager />
       {!isAdmin ? <Navbar /> : null}
-      {!isAdmin && showAssessmentStrip ? <AssessmentEntryStrip /> : null}
       <main className={isAdmin ? '' : 'pb-24 xl:pb-0'}>
         <Suspense fallback={<PageFallback />}>
           <Routes>
