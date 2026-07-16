@@ -5,12 +5,15 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import StickyMobileCTA from './components/StickyMobileCTA';
 import BackToTopButton from './components/BackToTopButton';
+import AssessmentEntryStrip from './components/AssessmentEntryStrip';
 import Home from './pages/Home';
 import Simulation from './pages/Simulation';
 import Percorsi from './pages/Percorsi';
 import BusinessEnglishFlow from './pages/BusinessEnglishFlow';
 import Method from './pages/Method';
 import Platform from './pages/Platform';
+import Assessment from './pages/Assessment';
+import AssessmentResult from './pages/AssessmentResult';
 import Reviews from './pages/Reviews';
 import CaseStudies from './pages/CaseStudies';
 import Contact from './pages/Contact';
@@ -33,7 +36,6 @@ const GrammarHub = lazy(() => import('./pages/GrammarHub'));
 const GrammarA1Hub = lazy(() => import('./pages/GrammarA1Hub'));
 const GrammarA1Topic = lazy(() => import('./pages/GrammarA1Test'));
 const EngineDemo = lazy(() => import('./pages/EngineDemo'));
-const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
 const A1UnitPage = lazy(() => import('./pages/A1UnitPage'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
@@ -46,6 +48,7 @@ const AdminLearners = lazy(() => import('./pages/AdminLearners'));
 const AdminLearnerDetail = lazy(() => import('./pages/AdminLearnerDetail'));
 const AdminGroups = lazy(() => import('./pages/AdminGroups'));
 const AdminGroupDetail = lazy(() => import('./pages/AdminGroupDetail'));
+const AdminAssessmentLeads = lazy(() => import('./pages/AdminAssessmentLeads'));
 const AdminCreateAssignment = lazy(() => import('./pages/AdminCreateAssignment'));
 const AdminAssignmentContent = lazy(() => import('./pages/AdminAssignmentContent'));
 const AdminTrainerContent = lazy(() => import('./pages/AdminTrainerContent'));
@@ -105,11 +108,13 @@ function PageFallback() {
 export default function App() {
   const location = useLocation();
   const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
+  const showAssessmentStrip = location.pathname === '/';
 
   return (
     <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-[#0f1715] dark:text-white">
       <ScrollManager />
       {!isAdmin ? <Navbar /> : null}
+      {!isAdmin && showAssessmentStrip ? <AssessmentEntryStrip /> : null}
       <main className={isAdmin ? '' : 'pb-24 xl:pb-0'}>
         <Suspense fallback={<PageFallback />}>
           <Routes>
@@ -119,6 +124,8 @@ export default function App() {
             <Route path="/corsi/business-english-flow" element={<BusinessEnglishFlow />} />
             <Route path="/metodo" element={<Method />} />
             <Route path="/piattaforma" element={<Platform />} />
+            <Route path="/assessment" element={<Assessment />} />
+            <Route path="/profilo/:token" element={<AssessmentResult />} />
             <Route path="/recensioni" element={<Reviews />} />
             <Route path="/casi-reali" element={<CaseStudies />} />
             <Route path="/case-studies" element={<CaseStudies />} />
@@ -137,7 +144,7 @@ export default function App() {
             <Route path="/grammar/a1" element={<GrammarA1Hub />} />
             <Route path="/grammar/a1/:topicId" element={<GrammarA1Topic />} />
             <Route path="/engine-demo" element={<EngineDemo />} />
-            <Route path="/diagnostic" element={<DiagnosticPage />} />
+            <Route path="/diagnostic" element={<Navigate to="/assessment" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -152,6 +159,7 @@ export default function App() {
               <Route path="learners/:learnerId" element={<AdminLearnerDetail />} />
               <Route path="groups" element={<AdminGroups />} />
               <Route path="groups/:groupId" element={<AdminGroupDetail />} />
+              <Route path="leads" element={<AdminAssessmentLeads />} />
               <Route path="learners/:learnerId/assignments/new" element={<AdminCreateAssignment />} />
               <Route path="learners/:learnerId/assignments/:assignmentId/content" element={<AdminAssignmentContent />} />
               <Route path="content" element={<AdminContentOverview />} />
