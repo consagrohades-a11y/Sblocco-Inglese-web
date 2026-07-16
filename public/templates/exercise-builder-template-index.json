@@ -13,6 +13,7 @@
     { "key": "reading_comprehension", "entity_type": "question" },
     { "key": "written_response", "entity_type": "question" },
     { "key": "dialogue_roleplay", "entity_type": "question" },
+    { "key": "dialogue_roleplay_audio_per_turn", "entity_type": "question" },
     { "key": "audio_response", "entity_type": "question" },
     { "key": "question_pool", "entity_type": "question_pool" },
     { "key": "exercise", "entity_type": "exercise" },

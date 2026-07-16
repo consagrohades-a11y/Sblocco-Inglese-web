@@ -61,7 +61,7 @@ const TEMPLATE_GROUPS = [
   },
   {
     label: 'Contenuti e produzioni',
-    keys: ['content_block', 'reading_comprehension', 'written_response', 'dialogue_roleplay', 'audio_response'],
+    keys: ['content_block', 'reading_comprehension', 'written_response', 'dialogue_roleplay', 'dialogue_roleplay_audio_per_turn', 'audio_response'],
   },
 ];
 

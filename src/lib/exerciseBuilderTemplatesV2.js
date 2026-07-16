@@ -131,6 +131,61 @@ const questions = {
   }),
 };
 
+const audioPerTurnRoleplay = q('dialogue_roleplay', {
+  client_key: 'question_dialogue_roleplay_audio_per_turn',
+  title: 'Recommend a wine',
+  prompt: 'Respond to the customer as the sommelier.',
+  instructions: 'Record one answer for each of your turns.',
+  instruction_language: 'en',
+  level: 'B1',
+  topic: 'wine_service',
+  primary_skill: 'interaction',
+  learning_objective: 'Recommend a wine and justify the choice in a realistic customer conversation.',
+  content: {
+    scenario: 'A customer needs a wine for a dinner with grilled fish.',
+    response_mode: 'audio_per_turn',
+    characters: [
+      { key: 'customer', name: 'Customer', description: 'Asks for a suitable wine.', selectable: false },
+      { key: 'sommelier', name: 'Sommelier', description: 'Recommends and explains the pairing.', selectable: true },
+    ],
+    turns: [
+      { key: 'turn_1', speaker: 'customer', text: "Good evening. I'm looking for a wine for a dinner party.", learner_response: false },
+      {
+        key: 'turn_2', speaker: 'sommelier', prompt: 'Open the interaction and ask what food will be served.', learner_response: true, required: true,
+        direction: 'Sound welcoming and professional.', objective: 'Greet the customer and ask about the food.', hint: 'Think about a natural opening question.', retry_hint: 'Try using: What will you be serving?',
+        constraints: {
+          min_seconds: 6, max_seconds: 25,
+          required_points: ['Greet the customer', 'Ask about the food'],
+          recommended_language: ["Good evening. How can I help?"],
+          required_language: ['What will you be serving?'],
+          avoid_language: [],
+        },
+      },
+      { key: 'turn_3', speaker: 'customer', text: "We're having grilled fish, but one guest doesn't like very dry wines.", learner_response: false },
+      {
+        key: 'turn_4', speaker: 'sommelier', prompt: 'Recommend one wine and explain the pairing.', learner_response: true, required: true,
+        direction: 'Give a clear recommendation without sounding overly technical.', context: 'The guest prefers a wine that is not extremely dry.', objective: 'Recommend a suitable wine and justify the pairing.', hint: 'Mention the style or origin of the wine.', retry_hint: 'Make the connection between the fish and your recommendation explicit.',
+        constraints: {
+          min_seconds: 10, max_seconds: 35,
+          required_points: ['Recommend one wine', 'Explain the pairing', 'Mention origin or style'],
+          recommended_language: ["I'd recommend", 'It pairs well with'],
+          required_language: [],
+          avoid_language: ['It is good', 'Very tasty'],
+        },
+      },
+    ],
+    rubric: rubric([
+      ['interaction', 'Interaction', 4, "Responds naturally to the customer's information."],
+      ['functional_language', 'Professional language', 3, 'Uses suitable recommendation and pairing language.'],
+      ['fluency', 'Fluency', 3, 'Speaks clearly with manageable hesitation.'],
+    ]),
+    model_responses: {},
+  },
+  grading: { mode: 'manual_review', weight: 10 },
+  diagnostics: diagnostics(['INTERACTION_RESPONSE'], 'INTERACTION_GENERAL'),
+  tags: ['sommelier', 'hospitality', 'audio-roleplay', 'manual-review'],
+});
+
 const order = [
   'multiple_choice', 'multiple_select', 'gap_fill', 'select_gap', 'translation', 'error_correction', 'word_order',
   'content_block', 'dialogue_choice', 'reading_comprehension', 'written_response', 'dialogue_roleplay', 'audio_response',
@@ -177,6 +232,7 @@ const bundleExercise = {
 export const exerciseBuilderTemplates = {
   question: { schema_version: 2, entity_type: 'question', question: clone(questions.multiple_choice) },
   ...Object.fromEntries(order.map((type) => [type, { schema_version: 2, entity_type: 'question', question: clone(questions[type]) }])),
+  dialogue_roleplay_audio_per_turn: { schema_version: 2, entity_type: 'question', question: clone(audioPerTurnRoleplay) },
   question_pool: { schema_version: 2, entity_type: 'question_pool', pool },
   exercise: { schema_version: 2, entity_type: 'exercise', exercise },
   bundle: {
@@ -188,6 +244,7 @@ export const exerciseBuilderTemplates = {
 export const exerciseBuilderTemplateManifest = [
   { key: 'question', entityType: 'question', label: 'Domanda base', fileName: 'exercise-builder-question-template.json' },
   ...order.map((type) => ({ key: type, entityType: 'question', label: type, fileName: `exercise-builder-question-${type}-template.json` })),
+  { key: 'dialogue_roleplay_audio_per_turn', entityType: 'question', label: 'dialogue_roleplay · audio per turn', fileName: 'exercise-builder-question-dialogue-roleplay-audio-per-turn-template.json' },
   { key: 'question_pool', entityType: 'question_pool', label: 'Pool con tutti i tipi', fileName: 'exercise-builder-question-pool-template.json' },
   { key: 'exercise', entityType: 'exercise', label: 'Esercizio completo', fileName: 'exercise-builder-exercise-template.json' },
   { key: 'bundle', entityType: 'bundle', label: 'Bundle completo', fileName: 'exercise-builder-bundle-template.json' },

@@ -49,7 +49,13 @@ function answerIsEmpty(answer, question) {
   const type = question?.type;
   if (type === 'content_block') return answer !== true;
   if (type === 'audio_response') return !answer?.file_id;
-  if (type === 'dialogue_roleplay') return !answer?.role_key || !hasMeaningfulValue(answer?.turns);
+  if (type === 'dialogue_roleplay') {
+    if (!answer?.role_key) return true;
+    if (question?.content?.response_mode !== 'audio_per_turn') return !hasMeaningfulValue(answer?.turns);
+    const learnerTurns = (question.content.turns || []).filter((turn) => turn.speaker === answer.role_key && turn.learner_response !== false);
+    if (!learnerTurns.length) return true;
+    return learnerTurns.some((turn) => turn.required !== false && !answer?.turns?.[turn.key]?.file_id);
+  }
   if (type === 'reading_comprehension') {
     const items = question?.content?.items || [];
     return !items.some((item) => hasMeaningfulValue(answer?.[item.key]));
@@ -192,7 +198,7 @@ export default function ExercisePlayerV2() {
     const timer = window.setTimeout(() => {
       persistAnswer(item, answer, sectionPosition, questionPosition).catch((saveError) => { setSaveStatus('Errore'); setError(saveError.message || 'Salvataggio non riuscito.'); });
       saveTimers.current.delete(item.id);
-    }, item.question.type === 'audio_response' ? 50 : 600);
+    }, item.question.type === 'audio_response' || item.question.content?.response_mode === 'audio_per_turn' ? 50 : 600);
     saveTimers.current.set(item.id, timer);
   }
 

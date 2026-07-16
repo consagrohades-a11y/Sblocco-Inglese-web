@@ -33,6 +33,20 @@ for (const item of exerciseBuilderTemplateManifest) {
   });
 }
 
+const audioPerTurnTemplate = exerciseBuilderTemplates.dialogue_roleplay_audio_per_turn;
+const audioPerTurnRoundTrip = validateExerciseBuilderJson(JSON.stringify(audioPerTurnTemplate));
+if (audioPerTurnRoundTrip.errors.length || audioPerTurnRoundTrip.items.some((item) => item.status === 'invalid')) {
+  failures.push(`dialogue_roleplay_audio_per_turn round trip failed: ${[
+    ...audioPerTurnRoundTrip.errors,
+    ...audioPerTurnRoundTrip.items.flatMap((item) => item.errors || []),
+  ].join(' | ')}`);
+}
+const importedAudioRoleplay = audioPerTurnRoundTrip.items[0]?.payload;
+if (importedAudioRoleplay?.content?.response_mode !== 'audio_per_turn') failures.push('audio_per_turn response mode was not preserved by import.');
+if ((importedAudioRoleplay?.content?.turns || []).filter((turn) => turn.learner_response).some((turn) => !turn.constraints?.max_seconds)) {
+  failures.push('audio_per_turn constraints were not preserved by import.');
+}
+
 const bundleTypes = new Set(
   (exerciseBuilderTemplates.bundle?.questions || []).map((question) => question.type),
 );

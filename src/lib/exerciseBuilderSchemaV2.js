@@ -275,26 +275,62 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
       selectable: character?.selectable !== false,
     }));
     const characterKeys = new Set(characters.map((character) => character.key));
+    const responseMode = text(source.response_mode || content.response_mode) || 'written';
+    if (!['written', 'audio', 'audio_per_turn'].includes(responseMode)) {
+      errors.push(pathMessage(path, 'response_mode deve essere "written", "audio" oppure "audio_per_turn".'));
+    }
     const rawTurns = Array.isArray(source.turns) ? source.turns : Array.isArray(content.turns) ? content.turns : [];
     const turns = rawTurns.map((turn, index) => {
       const speaker = text(turn?.speaker);
       if (!speaker || !characterKeys.has(speaker)) errors.push(pathMessage(`${path}.turns[${index}]`, 'speaker deve corrispondere a un personaggio.'));
+      const key = text(turn?.key) || `turn_${index + 1}`;
+      const learnerResponse = Boolean(turn?.learner_response);
+      const constraints = isObject(turn?.constraints) ? turn.constraints : {};
+      const minSeconds = integer(constraints.min_seconds, 0);
+      const maxSeconds = integer(constraints.max_seconds, 35);
+      if (responseMode === 'audio_per_turn' && !text(turn?.key)) {
+        errors.push(pathMessage(`${path}.turns[${index}]`, 'key è obbligatorio per ogni turno audio.'));
+      }
+      if (responseMode === 'audio_per_turn' && learnerResponse && maxSeconds < 5) {
+        errors.push(pathMessage(`${path}.turns[${index}]`, 'constraints.max_seconds deve essere almeno 5.'));
+      }
+      if (responseMode === 'audio_per_turn' && learnerResponse && (minSeconds < 0 || minSeconds > maxSeconds)) {
+        errors.push(pathMessage(`${path}.turns[${index}]`, 'constraints.min_seconds deve essere compreso tra 0 e max_seconds.'));
+      }
       return {
-        key: text(turn?.key) || `turn_${index + 1}`,
+        key,
         speaker,
         text: text(turn?.text) || null,
         prompt: text(turn?.prompt) || null,
-        learner_response: Boolean(turn?.learner_response),
+        learner_response: learnerResponse,
+        required: learnerResponse ? turn?.required !== false : false,
+        direction: text(turn?.direction) || null,
+        context: text(turn?.context) || null,
+        objective: text(turn?.objective) || null,
+        hint: text(turn?.hint) || null,
+        retry_hint: text(turn?.retry_hint) || null,
+        constraints: learnerResponse ? {
+          min_seconds: minSeconds,
+          max_seconds: maxSeconds,
+          required_points: stringArray(constraints.required_points),
+          recommended_language: stringArray(constraints.recommended_language),
+          required_language: stringArray(constraints.required_language),
+          avoid_language: stringArray(constraints.avoid_language),
+        } : {},
       };
     });
     if (characters.length < 2) errors.push(pathMessage(path, 'servono almeno due personaggi.'));
     if (!characters.some((character) => character.selectable)) errors.push(pathMessage(path, 'almeno un personaggio deve essere selezionabile.'));
     if (turns.length < 2) errors.push(pathMessage(path, 'servono almeno due turni.'));
     if (!turns.some((turn) => turn.learner_response)) warnings.push(pathMessage(path, 'nessun turno è marcato learner_response. Verranno usati i turni del personaggio scelto.'));
+    if (new Set(turns.map((turn) => turn.key)).size !== turns.length) errors.push(pathMessage(path, 'le chiavi dei turni devono essere univoche.'));
+    if (responseMode === 'audio_per_turn' && !turns.some((turn) => turn.learner_response)) {
+      errors.push(pathMessage(path, 'audio_per_turn richiede almeno un turno learner_response.'));
+    }
     content.scenario = text(source.scenario || content.scenario) || prompt;
     content.characters = characters;
     content.turns = turns;
-    content.response_mode = ['written', 'audio'].includes(source.response_mode || content.response_mode) ? (source.response_mode || content.response_mode) : 'written';
+    content.response_mode = ['written', 'audio', 'audio_per_turn'].includes(responseMode) ? responseMode : 'written';
     content.rubric = normalizeRubric(source.rubric || content.rubric, errors, `${path}.rubric`);
     content.model_responses = isObject(source.model_responses || content.model_responses) ? (source.model_responses || content.model_responses) : {};
     grading.mode = 'manual_review';

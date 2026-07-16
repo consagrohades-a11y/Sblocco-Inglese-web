@@ -45,12 +45,40 @@ function buildReviewState(detail) {
         status: pending ? '' : effective.status || 'unanswered',
         earnedPoints: pending ? '' : Number(effective.earned_points || 0),
         comment: question.teacher_comment || '',
+        turnReviews: question.teacher_turn_reviews || {},
         clearOverride: false,
         dirty: false,
       };
     });
   });
   return result;
+}
+
+function TurnReviewsEditor({ item, review, onChange }) {
+  const roleKey = item.answer?.role_key;
+  const turns = (item.question?.content?.turns || []).filter((turn) => turn.speaker === roleKey && turn.learner_response !== false);
+  if (!turns.length) return null;
+  function update(turnKey, patch) {
+    onChange({
+      turnReviews: {
+        ...(review.turnReviews || {}),
+        [turnKey]: { ...(review.turnReviews?.[turnKey] || {}), ...patch },
+      },
+      dirty: true,
+    });
+  }
+  return <div className="mt-5 grid gap-3 rounded-xl border border-cyan-200 bg-cyan-50/45 p-4 dark:border-cyan-300/20 dark:bg-cyan-400/[0.05]">
+    <p className="text-xs font-black uppercase tracking-wide text-cyan-800 dark:text-cyan-200">Feedback per singolo turno</p>
+    {turns.map((turn, index) => {
+      const value = review.turnReviews?.[turn.key] || {};
+      return <div key={turn.key} className="grid gap-3 rounded-lg border border-cyan-200 bg-white/80 p-3 dark:border-cyan-300/15 dark:bg-white/[0.04] lg:grid-cols-[9rem_7rem_7rem_minmax(0,1fr)]">
+        <label className="text-xs font-black">Turno {index + 1}<select value={value.status || ''} onChange={(event) => update(turn.key, { status: event.target.value })} className={`${fieldClass} mt-2`}><option value="">Non classificato</option><option value="correct">Efficace</option><option value="nearly_correct">Quasi efficace</option><option value="incorrect">Da rivedere</option></select></label>
+        <label className="text-xs font-black">Punti<input type="number" min="0" step="0.1" value={value.score ?? ''} onChange={(event) => update(turn.key, { score: event.target.value === '' ? null : Number(event.target.value) })} className={`${fieldClass} mt-2`} /></label>
+        <label className="text-xs font-black">Massimo<input type="number" min="0" step="0.1" value={value.max_score ?? ''} onChange={(event) => update(turn.key, { max_score: event.target.value === '' ? null : Number(event.target.value) })} className={`${fieldClass} mt-2`} /></label>
+        <label className="text-xs font-black">Commento<textarea rows={2} value={value.comment || ''} onChange={(event) => update(turn.key, { comment: event.target.value })} className={`${fieldClass} mt-2`} /></label>
+      </div>;
+    })}
+  </div>;
 }
 
 function ReviewCard({ item, review, onChange }) {
@@ -87,6 +115,8 @@ function ReviewCard({ item, review, onChange }) {
           attemptId={item.attempt_id}
         />
       </div>
+
+      {type === 'dialogue_roleplay' && item.question?.content?.response_mode === 'audio_per_turn' ? <TurnReviewsEditor item={item} review={review} onChange={onChange} /> : null}
 
       {manualType(type) && rubric.length ? (
         <div className="mt-5 rounded-xl border border-violet-200 bg-violet-50/55 p-4 dark:border-violet-300/20 dark:bg-violet-400/[0.06]">
