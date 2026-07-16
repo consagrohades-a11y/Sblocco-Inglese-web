@@ -20,10 +20,8 @@ export default function CTAButton({
   icon = true,
   onClick,
 }) {
-  const shouldUseSimulationPage = href === '/percorsi' && children === 'Scopri i corsi';
-  const finalHref = shouldUseSimulationPage ? '/simulazione-39' : href;
-  const finalChildren = shouldUseSimulationPage ? ctaLabels.primary : children;
-  const opensNewTab = /^https?:\/\//.test(finalHref);
+  const finalHref = href;
+  const opensNewTab = /^https?:\/\//.test(finalHref || '');
   const classNames =
     variant === 'quiet'
       ? `focus-ring inline-flex items-center gap-2 text-sm font-extrabold transition ${variants[variant]} ${className}`
@@ -32,15 +30,21 @@ export default function CTAButton({
   if (onClick && !finalHref) {
     return (
       <button type="button" onClick={onClick} className={classNames}>
-        {finalChildren}
+        {children}
         {icon ? <ArrowRight aria-hidden="true" className="h-4 w-4" /> : null}
       </button>
     );
   }
 
   return (
-    <a href={finalHref} onClick={onClick} className={classNames} target={opensNewTab ? '_blank' : undefined} rel={opensNewTab ? 'noreferrer' : undefined}>
-      {finalChildren}
+    <a
+      href={finalHref}
+      onClick={onClick}
+      className={classNames}
+      target={opensNewTab ? '_blank' : undefined}
+      rel={opensNewTab ? 'noreferrer' : undefined}
+    >
+      {children}
       {icon ? <ArrowRight aria-hidden="true" className="h-4 w-4" /> : null}
     </a>
   );
