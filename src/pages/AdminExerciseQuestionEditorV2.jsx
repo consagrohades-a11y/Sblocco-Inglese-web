@@ -9,6 +9,9 @@ import {
   saveExerciseQuestionVersion,
   setExerciseQuestionStatus,
 } from '../lib/exerciseQuestionEditorApi.js';
+import {
+  normalizeWordOrderAuthoringContent,
+} from '../lib/wordOrderPresentation.js';
 
 const TYPE_GROUPS = [
   ['Risposte automatiche', [
@@ -75,10 +78,10 @@ function defaultContent(type) {
     ],
     options: [{ key: uid('opt'), text: '', is_correct: true, error_code: null }, { key: uid('opt'), text: '', is_correct: false, error_code: null }],
   };
-  if (type === 'gap_fill') return { blanks: [{ key: 'blank_1', accepted_answers: [''], points: 1 }] };
-  if (type === 'select_gap') return { blanks: [{ key: 'blank_1', accepted_answers: [''], options: ['', ''], points: 1 }] };
+  if (type === 'gap_fill') return { text_template: '[[blank_1]]', blanks: [{ key: 'blank_1', accepted_answers: [''], points: 1 }] };
+  if (type === 'select_gap') return { text_template: '[[blank_1]]', blanks: [{ key: 'blank_1', accepted_answers: [''], options: ['', ''], points: 1 }] };
   if (type === 'translation' || type === 'error_correction') return { accepted_answers: [''] };
-  if (type === 'word_order') return { tokens: [{ key: uid('token'), text: '' }, { key: uid('token'), text: '' }], correct_order: ['', ''] };
+  if (type === 'word_order') return { tokens: [{ key: uid('token'), text: '' }, { key: uid('token'), text: '' }], correct_order: ['', ''], terminal_punctuation: null };
   if (type === 'content_block') return { body: '' };
   if (type === 'written_response') return { context: '', min_words: 60, max_words: 120, required_points: [], rubric: defaultRubric('writing'), model_answer: '' };
   if (type === 'dialogue_roleplay') return {
@@ -169,8 +172,38 @@ function DialogueChoiceEditor({ question, setQuestion, codes }) {
 
 function BlankEditor({ question, setQuestion }) {
   const blanks = question.content.blanks || [];
-  const update = (index, patch) => setQuestion({ ...question, content: { ...question.content, blanks: blanks.map((blank, current) => current === index ? { ...blank, ...patch } : blank) } });
-  return <div className="grid gap-3">{blanks.map((blank, index) => <div key={`${blank.key}-${index}`} className="rounded-xl border border-ink/10 p-4 dark:border-white/10"><div className="grid gap-3 sm:grid-cols-[10rem_minmax(0,1fr)_7rem_auto] sm:items-end"><label className="text-xs font-black">Chiave<input value={blank.key || ''} onChange={(event) => update(index, { key: event.target.value })} className={fieldClass} /></label><label className="text-xs font-black">Risposte accettate, separate da |<input value={(blank.accepted_answers || []).join(' | ')} onChange={(event) => update(index, { accepted_answers: event.target.value.split('|').map((item) => item.trim()) })} className={fieldClass} /></label><label className="text-xs font-black">Punti<input type="number" min="0.1" step="0.1" value={blank.points || 1} onChange={(event) => update(index, { points: Number(event.target.value) || 1 })} className={fieldClass} /></label><button type="button" disabled={blanks.length <= 1} onClick={() => setQuestion({ ...question, content: { ...question.content, blanks: blanks.filter((_, current) => current !== index) } })} className="pb-3 text-xs font-black text-red-700 underline disabled:opacity-30">Rimuovi</button></div>{question.questionType === 'select_gap' ? <label className="mt-3 block text-xs font-black">Opzioni, separate da |<input value={(blank.options || []).join(' | ')} onChange={(event) => update(index, { options: event.target.value.split('|').map((item) => item.trim()) })} className={fieldClass} /></label> : null}</div>)}<button type="button" onClick={() => setQuestion({ ...question, content: { ...question.content, blanks: [...blanks, { key: `blank_${blanks.length + 1}`, accepted_answers: [''], ...(question.questionType === 'select_gap' ? { options: ['', ''] } : {}), points: 1 }] } })} className="justify-self-start rounded-full border border-ink/15 px-4 py-2 text-xs font-black">Aggiungi spazio</button></div>;
+  const template = question.content.text_template || '';
+  const updateContent = (patch) => setQuestion({ ...question, content: { ...question.content, ...patch } });
+  const update = (index, patch) => {
+    const previousKey = blanks[index]?.key;
+    const nextBlanks = blanks.map((blank, current) => current === index ? { ...blank, ...patch } : blank);
+    const nextTemplate = patch.key && previousKey && patch.key !== previousKey
+      ? template.replaceAll(`[[${previousKey}]]`, `[[${patch.key}]]`)
+      : template;
+    updateContent({ blanks: nextBlanks, text_template: nextTemplate });
+  };
+  const remove = (index) => {
+    const removedKey = blanks[index]?.key;
+    updateContent({
+      blanks: blanks.filter((_, current) => current !== index),
+      text_template: removedKey ? template.replaceAll(`[[${removedKey}]]`, '') : template,
+    });
+  };
+  const add = () => {
+    const key = `blank_${blanks.length + 1}`;
+    updateContent({
+      blanks: [...blanks, { key, accepted_answers: [''], ...(question.questionType === 'select_gap' ? { options: ['', ''] } : {}), points: 1 }],
+      text_template: `${template}${template ? '\n' : ''}[[${key}]]`,
+    });
+  };
+  return <div className="grid gap-4">
+    <div className="rounded-xl border border-cyan-200 bg-cyan-50/45 p-4 dark:border-cyan-300/20 dark:bg-cyan-400/[0.05]">
+      <label className="text-xs font-black">Testo con spazi<textarea rows={8} value={template} onChange={(event) => updateContent({ text_template: event.target.value })} placeholder="Esempio: I [[blank_1]] this option because..." className={fieldClass} /></label>
+      <p className="mt-2 text-xs font-semibold leading-5 text-cyan-900/70 dark:text-cyan-100/70">Inserisci ogni chiave nel testo tra doppie parentesi quadre, per esempio <code>[[blank_1]]</code>. Sono supportati frasi lunghe, più paragrafi e più spazi.</p>
+    </div>
+    {blanks.map((blank, index) => <div key={`${blank.key}-${index}`} className="rounded-xl border border-ink/10 p-4 dark:border-white/10"><div className="grid gap-3 sm:grid-cols-[10rem_minmax(0,1fr)_7rem_auto] sm:items-end"><label className="text-xs font-black">Chiave<input value={blank.key || ''} onChange={(event) => update(index, { key: event.target.value })} className={fieldClass} /></label><label className="text-xs font-black">Risposte accettate, separate da |<input value={(blank.accepted_answers || []).join(' | ')} onChange={(event) => update(index, { accepted_answers: event.target.value.split('|').map((item) => item.trim()) })} className={fieldClass} /></label><label className="text-xs font-black">Punti<input type="number" min="0.1" step="0.1" value={blank.points || 1} onChange={(event) => update(index, { points: Number(event.target.value) || 1 })} className={fieldClass} /></label><button type="button" disabled={blanks.length <= 1} onClick={() => remove(index)} className="pb-3 text-xs font-black text-red-700 underline disabled:opacity-30">Rimuovi</button></div>{question.questionType === 'select_gap' ? <label className="mt-3 block text-xs font-black">Opzioni, separate da |<input value={(blank.options || []).join(' | ')} onChange={(event) => update(index, { options: event.target.value.split('|').map((item) => item.trim()) })} className={fieldClass} /></label> : null}</div>)}
+    <button type="button" onClick={add} className="justify-self-start rounded-full border border-ink/15 px-4 py-2 text-xs font-black">Aggiungi spazio</button>
+  </div>;
 }
 
 function RubricEditor({ rubric = [], onChange }) {
@@ -328,7 +361,10 @@ export default function AdminExerciseQuestionEditorV2() {
     setSaving(true); setError(''); setSuccess('');
     try {
       const manual = ['written_response', 'dialogue_roleplay', 'audio_response'].includes(question.questionType);
-      const normalized = manual ? { ...question, grading: { ...question.grading, mode: 'manual_review', weight: rubricTotal(question.content.rubric) } } : question;
+      const authoringQuestion = question.questionType === 'word_order'
+        ? { ...question, content: normalizeWordOrderAuthoringContent(question.content) }
+        : question;
+      const normalized = manual ? { ...authoringQuestion, grading: { ...authoringQuestion.grading, mode: 'manual_review', weight: rubricTotal(authoringQuestion.content.rubric) } } : authoringQuestion;
       const result = await saveExerciseQuestionVersion({ questionId: question.id, question: { ...normalized, tags: normalized.tagsText.split(',').map((item) => item.trim()).filter(Boolean) } });
       await loadBase(); await openQuestion(result.id, { preserveSuccess: true }); setSuccess(`${result.public_id}, versione ${result.version_number}, salvata.`);
     } catch (saveError) { setError(saveError.message || 'Non è stato possibile salvare la domanda.'); }

@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "entity_type": "question",
+  "question": {
+    "instruction_language": "it",
+    "difficulty": "standard",
+    "feedback": {},
+    "foundation_links": [],
+    "client_key": "question_select_gap",
+    "type": "select_gap",
+    "tags": [
+      "select_gap",
+      "automatic"
+    ],
+    "title": "Select gap",
+    "prompt": "Complete the sentence.",
+    "instructions": "Scegli dal menu.",
+    "level": "A1",
+    "topic": "present_simple",
+    "primary_skill": "grammar",
+    "learning_objective": "Choose the correct verb form.",
+    "content": {
+      "text_template": "I [[blank_1]] coffee every morning.",
+      "blanks": [
+        {
+          "key": "blank_1",
+          "accepted_answers": [
+            "drink"
+          ],
+          "options": [
+            "drink",
+            "drinks",
+            "drinking"
+          ],
+          "points": 1,
+          "feedback": {},
+          "answer_error_mappings": []
+        }
+      ]
+    },
+    "grading": {
+      "mode": "per_blank",
+      "weight": 1,
+      "nearly_correct_multiplier": 0.5
+    },
+    "diagnostics": {
+      "tested_codes": [
+        "PRESENT_SIMPLE_FORM"
+      ],
+      "fallback_error_code": "PRESENT_SIMPLE_GENERAL"
+    }
+  }
+}

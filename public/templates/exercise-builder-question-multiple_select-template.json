@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "entity_type": "question",
+  "question": {
+    "instruction_language": "it",
+    "difficulty": "standard",
+    "feedback": {},
+    "foundation_links": [],
+    "client_key": "question_multiple_select",
+    "type": "multiple_select",
+    "tags": [
+      "multiple_select",
+      "automatic"
+    ],
+    "title": "Multiple select",
+    "prompt": "Which sentences are correct?",
+    "instructions": "Seleziona tutte le risposte corrette.",
+    "level": "A2",
+    "topic": "present_perfect",
+    "primary_skill": "grammar",
+    "learning_objective": "Recognise correct present perfect forms.",
+    "content": {
+      "options": [
+        {
+          "key": "a",
+          "text": "I have already finished.",
+          "is_correct": true
+        },
+        {
+          "key": "b",
+          "text": "She has never visited Rome.",
+          "is_correct": true
+        },
+        {
+          "key": "c",
+          "text": "We have went home.",
+          "is_correct": false,
+          "error_code": "PAST_PARTICIPLE_FORM"
+        }
+      ]
+    },
+    "grading": {
+      "mode": "automatic",
+      "weight": 1,
+      "nearly_correct_multiplier": 0.5
+    },
+    "diagnostics": {
+      "tested_codes": [
+        "PRESENT_PERFECT_FORM"
+      ],
+      "fallback_error_code": "PRESENT_PERFECT_GENERAL"
+    }
+  }
+}

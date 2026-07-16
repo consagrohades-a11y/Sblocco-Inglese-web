@@ -84,6 +84,28 @@ function stringArray(value) {
   return [...new Set(value.map(text).filter(Boolean))];
 }
 
+function stringList(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map(text).filter(Boolean);
+}
+
+function sameWordOrderTokens(tokens, correctOrder) {
+  const comparable = (item) => item.toLocaleLowerCase().replace(/[.,!?;:]+/g, '').replace(/\s+/g, ' ').trim();
+  const counts = (items) => items.reduce((map, item) => {
+    const key = comparable(item);
+    return map.set(key, (map.get(key) || 0) + 1);
+  }, new Map());
+  const tokenCounts = counts(tokens);
+  const answerCounts = counts(correctOrder);
+  return tokenCounts.size === answerCounts.size
+    && [...tokenCounts].every(([token, count]) => answerCounts.get(token) === count);
+}
+
+function gapTemplateMarkers(value) {
+  if (typeof value !== 'string') return [];
+  return [...value.matchAll(/\[\[([^\[\]]+)\]\]/g)].map((match) => match[1].trim());
+}
+
 function validateLevel(value, errors, path) {
   if (!EXERCISE_BUILDER_LEVELS.includes(value)) {
     errors.push(pathMessage(path, `livello non valido. Usa ${EXERCISE_BUILDER_LEVELS.join(', ')}.`));
@@ -230,6 +252,23 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
       };
     });
     if (!content.blanks.length) errors.push(pathMessage(path, 'serve almeno uno spazio in blanks.'));
+    content.text_template = text(source.text_template ?? content.text_template) || null;
+    if (content.text_template) {
+      const blankKeys = new Set(content.blanks.map((blank) => blank.key));
+      const markers = gapTemplateMarkers(content.text_template);
+      const markerCounts = markers.reduce((counts, marker) => counts.set(marker, (counts.get(marker) || 0) + 1), new Map());
+      markers.forEach((marker) => {
+        if (!/^[A-Za-z0-9_-]+$/.test(marker)) errors.push(pathMessage(path, `segnaposto non valido: [[${marker}]].`));
+        else if (!blankKeys.has(marker)) errors.push(pathMessage(path, `segnaposto sconosciuto: [[${marker}]].`));
+      });
+      content.blanks.forEach((blank, index) => {
+        const count = markerCounts.get(blank.key) || 0;
+        if (!count) errors.push(pathMessage(`${path}.blanks[${index}]`, `manca [[${blank.key}]] in text_template.`));
+        if (count > 1) errors.push(pathMessage(`${path}.blanks[${index}]`, `[[${blank.key}]] deve comparire una sola volta in text_template.`));
+      });
+    } else {
+      warnings.push(pathMessage(path, 'aggiungi content.text_template con segnaposto [[blank_key]] per mostrare gli spazi nel testo.'));
+    }
     grading.mode = grading.mode || 'per_blank';
   }
 
@@ -239,10 +278,19 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
   }
 
   if (questionType === 'word_order') {
-    const tokens = stringArray(source.tokens || content.tokens?.map?.((item) => item?.text || item));
-    const correctOrder = stringArray(source.correct_order || content.correct_order);
+    const tokens = stringList(source.tokens || content.tokens?.map?.((item) => item?.text || item));
+    const correctOrder = stringList(source.correct_order || content.correct_order);
     if (tokens.length < 2) errors.push(pathMessage(path, 'word_order richiede almeno due tokens.'));
     if (correctOrder.length !== tokens.length) errors.push(pathMessage(path, 'correct_order deve contenere lo stesso numero di tokens.'));
+    else if (!sameWordOrderTokens(tokens, correctOrder)) errors.push(pathMessage(path, 'tokens e correct_order devono contenere le stesse parole, incluse le ripetizioni.'));
+    content.terminal_punctuation = text(source.terminal_punctuation ?? content.terminal_punctuation) || null;
+    if (content.terminal_punctuation && !/^[.!?]+$/.test(content.terminal_punctuation)) {
+      errors.push(pathMessage(path, 'terminal_punctuation accetta solo punto, punto interrogativo o punto esclamativo.'));
+    }
+    const punctuatedTokens = tokens.filter((token) => /[.!?]+$/.test(token));
+    if (punctuatedTokens.length) {
+      warnings.push(pathMessage(path, `sposta la punteggiatura finale da "${punctuatedTokens[0]}" in content.terminal_punctuation per non suggerire l'ultima parola.`));
+    }
     content.tokens = tokens.map((token, index) => ({ key: `token_${index + 1}`, text: token }));
     content.correct_order = correctOrder;
   }

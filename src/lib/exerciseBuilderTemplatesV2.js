@@ -39,15 +39,15 @@ const questions = {
     ] }, grading: automatic(), diagnostics: diagnostics(['PRESENT_PERFECT_FORM'], 'PRESENT_PERFECT_GENERAL'),
   }),
   gap_fill: q('gap_fill', {
-    title: 'Open gap fill', prompt: 'She _____ to work every day.', instructions: 'Scrivi la parola mancante.',
+    title: 'Open gap fill', prompt: 'Complete the sentence.', instructions: 'Scrivi la parola mancante.',
     level: 'A1', topic: 'present_simple', primary_skill: 'grammar', learning_objective: 'Use the third-person singular form.',
-    content: { blanks: [{ key: 'blank_1', accepted_answers: ['goes'], points: 1, feedback: {}, answer_error_mappings: [{ answer: 'go', error_code: 'PRESENT_SIMPLE_THIRD_PERSON' }] }] },
+    content: { text_template: 'She [[blank_1]] to work every day.', blanks: [{ key: 'blank_1', accepted_answers: ['goes'], points: 1, feedback: {}, answer_error_mappings: [{ answer: 'go', error_code: 'PRESENT_SIMPLE_THIRD_PERSON' }] }] },
     grading: { mode: 'per_blank', weight: 1, nearly_correct_multiplier: 0.5 }, diagnostics: diagnostics(['PRESENT_SIMPLE_THIRD_PERSON'], 'PRESENT_SIMPLE_GENERAL'),
   }),
   select_gap: q('select_gap', {
-    title: 'Select gap', prompt: 'I _____ coffee every morning.', instructions: 'Scegli dal menu.',
+    title: 'Select gap', prompt: 'Complete the sentence.', instructions: 'Scegli dal menu.',
     level: 'A1', topic: 'present_simple', primary_skill: 'grammar', learning_objective: 'Choose the correct verb form.',
-    content: { blanks: [{ key: 'blank_1', accepted_answers: ['drink'], options: ['drink', 'drinks', 'drinking'], points: 1, feedback: {}, answer_error_mappings: [] }] },
+    content: { text_template: 'I [[blank_1]] coffee every morning.', blanks: [{ key: 'blank_1', accepted_answers: ['drink'], options: ['drink', 'drinks', 'drinking'], points: 1, feedback: {}, answer_error_mappings: [] }] },
     grading: { mode: 'per_blank', weight: 1, nearly_correct_multiplier: 0.5 }, diagnostics: diagnostics(['PRESENT_SIMPLE_FORM'], 'PRESENT_SIMPLE_GENERAL'),
   }),
   translation: q('translation', {
@@ -65,7 +65,7 @@ const questions = {
   word_order: q('word_order', {
     title: 'Word order', prompt: 'Put the words in order.', instructions: 'Riordina tutte le parole.',
     level: 'A1', topic: 'questions', primary_skill: 'word_order', learning_objective: 'Build a present simple question.',
-    content: { tokens: ['do', 'you', 'where', 'live'], correct_order: ['where', 'do', 'you', 'live'] }, grading: automatic(),
+    content: { tokens: ['do', 'you', 'where', 'live'], correct_order: ['where', 'do', 'you', 'live'], terminal_punctuation: '?' }, grading: automatic(),
     diagnostics: diagnostics(['QUESTION_WORD_ORDER'], 'WORD_ORDER_GENERAL'),
   }),
   content_block: q('content_block', {

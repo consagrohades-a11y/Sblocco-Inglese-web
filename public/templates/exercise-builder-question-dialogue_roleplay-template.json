@@ -1,0 +1,98 @@
+{
+  "schema_version": 2,
+  "entity_type": "question",
+  "question": {
+    "instruction_language": "it",
+    "difficulty": "standard",
+    "feedback": {},
+    "foundation_links": [],
+    "client_key": "question_dialogue_roleplay",
+    "type": "dialogue_roleplay",
+    "tags": [
+      "dialogue_roleplay",
+      "manual-review"
+    ],
+    "title": "Dialogue production",
+    "prompt": "Complete the conversation as the character you choose.",
+    "instructions": "Scegli il personaggio e produci le sue battute.",
+    "level": "B1",
+    "topic": "hospitality_complaints",
+    "primary_skill": "interaction",
+    "learning_objective": "Respond to a complaint and negotiate a solution.",
+    "content": {
+      "scenario": "A guest reports a noisy room.",
+      "response_mode": "written",
+      "characters": [
+        {
+          "key": "guest",
+          "name": "Guest",
+          "description": "Explain the problem.",
+          "selectable": true
+        },
+        {
+          "key": "receptionist",
+          "name": "Receptionist",
+          "description": "Offer a solution.",
+          "selectable": true
+        }
+      ],
+      "turns": [
+        {
+          "key": "turn_1",
+          "speaker": "guest",
+          "prompt": "Explain the problem.",
+          "learner_response": true
+        },
+        {
+          "key": "turn_2",
+          "speaker": "receptionist",
+          "prompt": "Ask a question.",
+          "learner_response": true
+        },
+        {
+          "key": "turn_3",
+          "speaker": "guest",
+          "prompt": "Clarify your request.",
+          "learner_response": true
+        },
+        {
+          "key": "turn_4",
+          "speaker": "receptionist",
+          "prompt": "Offer a solution.",
+          "learner_response": true
+        }
+      ],
+      "model_responses": {},
+      "rubric": [
+        {
+          "key": "interaction",
+          "label": "Gestione del dialogo",
+          "description": "",
+          "max_points": 4
+        },
+        {
+          "key": "language",
+          "label": "Funzioni comunicative",
+          "description": "",
+          "max_points": 3
+        },
+        {
+          "key": "accuracy",
+          "label": "Accuratezza",
+          "description": "",
+          "max_points": 3
+        }
+      ]
+    },
+    "grading": {
+      "mode": "manual_review",
+      "weight": 10
+    },
+    "diagnostics": {
+      "tested_codes": [
+        "INTERACTION_RESPONSE"
+      ],
+      "fallback_error_code": "INTERACTION_GENERAL"
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "entity_type": "question",
+  "question": {
+    "instruction_language": "it",
+    "difficulty": "standard",
+    "feedback": {},
+    "foundation_links": [],
+    "client_key": "question_audio_response",
+    "type": "audio_response",
+    "tags": [
+      "audio_response",
+      "manual-review"
+    ],
+    "title": "Audio response",
+    "prompt": "Record a short answer about a memorable trip.",
+    "instructions": "Riascolta prima di consegnare.",
+    "level": "B1",
+    "topic": "past_experiences",
+    "primary_skill": "speaking",
+    "learning_objective": "Describe a past experience clearly.",
+    "content": {
+      "context": "Say where you went, what happened and why it was memorable.",
+      "min_seconds": 30,
+      "max_seconds": 90,
+      "allow_rerecord": true,
+      "model_transcript": "",
+      "rubric": [
+        {
+          "key": "task",
+          "label": "Contenuto",
+          "description": "",
+          "max_points": 3
+        },
+        {
+          "key": "fluency",
+          "label": "Fluidità",
+          "description": "",
+          "max_points": 3
+        },
+        {
+          "key": "accuracy",
+          "label": "Accuratezza",
+          "description": "",
+          "max_points": 2
+        },
+        {
+          "key": "pronunciation",
+          "label": "Pronuncia",
+          "description": "",
+          "max_points": 2
+        }
+      ]
+    },
+    "grading": {
+      "mode": "manual_review",
+      "weight": 10
+    },
+    "diagnostics": {
+      "tested_codes": [
+        "SPEAKING_PAST_EXPERIENCE"
+      ],
+      "fallback_error_code": "SPEAKING_GENERAL"
+    }
+  }
+}
