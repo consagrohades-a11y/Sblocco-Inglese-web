@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 
+export const THEME_CHANGE_EVENT = 'sblocco-theme-change';
+
 function getInitialTheme() {
   if (typeof window === 'undefined') return false;
 
@@ -17,7 +19,16 @@ export default function ThemeToggle({ mobile = false }) {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
     window.localStorage.setItem('sblocco_theme', darkMode ? 'dark' : 'light');
+    window.dispatchEvent(new CustomEvent(THEME_CHANGE_EVENT, { detail: { darkMode } }));
   }, [darkMode]);
+
+  useEffect(() => {
+    function syncTheme(event) {
+      if (typeof event.detail?.darkMode === 'boolean') setDarkMode(event.detail.darkMode);
+    }
+    window.addEventListener(THEME_CHANGE_EVENT, syncTheme);
+    return () => window.removeEventListener(THEME_CHANGE_EVENT, syncTheme);
+  }, []);
 
   return (
     <button

@@ -6,6 +6,7 @@ import DeckSelector from './DeckSelector';
 import ReviewStats from './ReviewStats';
 import SEO from './SEO';
 import SrsCard from './SrsCard';
+import { THEME_CHANGE_EVENT } from './ThemeToggle';
 import TrainerLayout from './TrainerLayout';
 import {
   buildReviewQueue,
@@ -129,10 +130,11 @@ export default function SrsTrainer({
   const [sessionRatings, setSessionRatings] = useState(emptyRatings);
   const [answerVisible, setAnswerVisible] = useState(false);
   const [sessionStep, setSessionStep] = useState(0);
-  const themeStorageKey = `${storageKey || 'srs-trainer'}:theme`;
+  const themeStorageKey = 'sblocco_theme';
   const [theme, setTheme] = useState(() => {
     if (typeof window === 'undefined') return 'dark';
-    return window.localStorage.getItem(themeStorageKey) || 'dark';
+    return window.localStorage.getItem(themeStorageKey)
+      || (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
   });
   const isDark = theme === 'dark';
 
@@ -231,8 +233,18 @@ export default function SrsTrainer({
   }, [persistLocalProgress, progress, storageKey]);
 
   useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark);
     window.localStorage.setItem(themeStorageKey, theme);
-  }, [theme, themeStorageKey]);
+    window.dispatchEvent(new CustomEvent(THEME_CHANGE_EVENT, { detail: { darkMode: isDark } }));
+  }, [isDark, theme, themeStorageKey]);
+
+  useEffect(() => {
+    function syncTheme(event) {
+      if (typeof event.detail?.darkMode === 'boolean') setTheme(event.detail.darkMode ? 'dark' : 'light');
+    }
+    window.addEventListener(THEME_CHANGE_EVENT, syncTheme);
+    return () => window.removeEventListener(THEME_CHANGE_EVENT, syncTheme);
+  }, []);
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 60 * 1000);

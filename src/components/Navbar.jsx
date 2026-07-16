@@ -16,6 +16,7 @@ import {
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import BrandLogo from './BrandLogo';
+import ThemeToggle from './ThemeToggle';
 
 const publicItems = [
   { label: 'Corsi', to: '/percorsi' },
@@ -188,6 +189,8 @@ export default function Navbar() {
             </Link>
           )}
 
+          <ThemeToggle />
+
           {!loading && user ? (
             <AccountMenu displayName={displayName} isAdmin={isAdmin} onSignOut={handleSignOut} />
           ) : !loading ? (
@@ -247,6 +250,7 @@ export default function Navbar() {
 
             {!loading && user ? (
               <>
+                <ThemeToggle mobile />
                 <Link to="/account" className="focus-ring mt-2 flex min-h-12 items-center gap-3 rounded-2xl border border-white/12 bg-white/[0.07] px-4 py-3 text-base font-extrabold text-white">
                   <span className="grid h-8 w-8 place-items-center rounded-full bg-mint text-sm font-black text-ink">{displayName.charAt(0).toUpperCase()}</span>
                   Account
