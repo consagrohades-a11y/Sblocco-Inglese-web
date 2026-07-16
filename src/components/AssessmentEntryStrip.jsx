@@ -15,12 +15,12 @@ export default function AssessmentEntryStrip() {
             <p className="text-sm font-black">Non sai quale percorso scegliere?</p>
             <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-white/55">
               <Clock3 aria-hidden="true" className="h-3.5 w-3.5" />
-              Completa il Profilo Sblocco gratuito in 6-8 minuti e ricevi il risultato via email.
+              Completa lo Sblocco Check in 10-12 minuti: inglese pratico, scenari e tre listening con voce reale.
             </p>
           </div>
         </div>
         <Link to="/assessment" className="focus-ring inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-butter px-5 py-2.5 text-sm font-black text-ink transition hover:-translate-y-0.5 hover:bg-white">
-          Scopri cosa ti blocca
+          Inizia lo Sblocco Check
           <ArrowRight aria-hidden="true" className="h-4 w-4" />
         </Link>
       </div>
