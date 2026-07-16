@@ -14,6 +14,7 @@ function extensionForMimeType(mimeType) {
 export async function uploadExerciseAudioSubmission({
   attemptId,
   attemptQuestionId,
+  turnKey = null,
   blob,
   durationSeconds,
   previousAnswer = null,
@@ -28,7 +29,8 @@ export async function uploadExerciseAudioSubmission({
 
   const mimeType = blob.type || 'audio/webm';
   const extension = extensionForMimeType(mimeType);
-  const path = `${userId}/${attemptId}/${attemptQuestionId}/${crypto.randomUUID()}.${extension}`;
+  const safeTurnKey = turnKey ? String(turnKey).replace(/[^a-zA-Z0-9_-]/g, '_') : null;
+  const path = `${userId}/${attemptId}/${attemptQuestionId}/${safeTurnKey ? `${safeTurnKey}/` : ''}${crypto.randomUUID()}.${extension}`;
 
   const { error: uploadError } = await supabase.storage
     .from(BUCKET)
@@ -46,6 +48,7 @@ export async function uploadExerciseAudioSubmission({
       p_mime_type: mimeType,
       p_size_bytes: blob.size,
       p_duration_seconds: durationSeconds || null,
+      p_turn_key: turnKey || null,
     });
     if (error) throw error;
 
