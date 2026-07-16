@@ -311,6 +311,22 @@ a {
   }
 }
 
+@keyframes assessmentCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.assessment-card-enter {
+  animation: assessmentCardEnter 260ms ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -333,6 +349,10 @@ a {
   .hero-image-motion,
   .energy-track,
   .hero-float-card {
+    animation: none;
+  }
+
+  .assessment-card-enter {
     animation: none;
   }
 }

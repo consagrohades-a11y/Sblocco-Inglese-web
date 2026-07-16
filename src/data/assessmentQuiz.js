@@ -430,7 +430,7 @@ export const assessmentQuestions = [
     eyebrow: 'Messaggio 1 di 3',
     title: 'Ascolta l’aggiornamento e rispondi a entrambe le domande.',
     description:
-      'La voce è reale e il testo non viene mostrato. Puoi riascoltare, ma prova prima con un solo ascolto.',
+      'Ascolterai una voce umana e non vedrai la trascrizione. Puoi riascoltare, ma prova prima con un solo ascolto.',
     type: 'listening',
     audioSrc: '/audio/assessment/assessment-listening-01.m4a.mp3',
     replayKey: 'listening_01_replays',
@@ -464,7 +464,7 @@ export const assessmentQuestions = [
     id: 'listening_02',
     section: 'Listening reale',
     eyebrow: 'Messaggio 2 di 3',
-    title: 'Ascolta il ragionamento e individua il problema reale.',
+    title: 'Ascolta il ragionamento e individua il vero problema.',
     description:
       'Qui non basta riconoscere una parola. Devi capire la preoccupazione del cliente e la risposta proposta.',
     type: 'listening',
@@ -504,7 +504,7 @@ export const assessmentQuestions = [
     id: 'listening_03',
     section: 'Listening reale',
     eyebrow: 'Messaggio 3 di 3',
-    title: 'Ascolta le informazioni pratiche.',
+    title: 'Ascolta e individua le informazioni pratiche.',
     description: 'Concentrati sugli orari e sul servizio aggiuntivo offerto.',
     type: 'listening',
     audioSrc: '/audio/assessment/assessment-listening-03.m4a.mp3',

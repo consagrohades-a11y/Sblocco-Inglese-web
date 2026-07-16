@@ -229,9 +229,9 @@ function Intro({ onStart }) {
           Scopri cosa ti blocca quando devi usare davvero l’inglese.
         </h1>
         <p className="mt-6 max-w-3xl text-lg font-semibold leading-8 text-white/72 sm:text-xl">
-          Non è soltanto un questionario su come ti senti. Risponderai a domande
-          di inglese pratico, scenari reali e tre listening con voce umana, poi
-          confronteremo performance e autovalutazione.
+          Non è soltanto un questionario su come ti senti. Affronterai domande
+          di inglese pratico, scenari realistici e tre brevi prove di ascolto.
+          Poi confronteremo la prova con la tua autovalutazione.
         </p>
 
         <button
@@ -244,14 +244,15 @@ function Intro({ onStart }) {
         </button>
         <p className="mt-3 max-w-2xl text-xs font-semibold leading-5 text-white/55">
           Gratuito. Vedrai subito una prima sintesi; per ricevere l’analisi
-          completa ti chiederemo nome ed email. Il marketing resta facoltativo.
+          completa ti chiederemo nome ed email. Il consenso marketing è
+          facoltativo.
         </p>
 
         <div className="mt-7 grid gap-3 sm:grid-cols-3">
           {[
             [Clock3, '10-12 minuti', '22 passaggi brevi'],
             [Target, 'Prova pratica', 'Strutture, comunicazione e scenari'],
-            [Headphones, '3 listening reali', 'Nessuna voce artificiale'],
+            [Headphones, '3 prove di ascolto', 'Voci umane, situazioni reali'],
           ].map(([Icon, title, text]) => (
             <div
               key={title}
@@ -282,17 +283,17 @@ function Intro({ onStart }) {
             [
               BarChart3,
               'Performance osservata',
-              'Quanto riesci a riconoscere e scegliere nelle domande pratiche.',
+              'Quanto riconosci strutture e risposte appropriate nelle domande pratiche.',
             ],
             [
               Headphones,
               'Comprensione reale',
-              'Informazioni principali, dettagli e significato implicito.',
+              'Quanto comprendi informazioni principali, dettagli e significati impliciti.',
             ],
             [
               Target,
               'Risposta funzionale',
-              'Come riconosci risposte chiare per chiarimenti, problemi e aggiornamenti.',
+              'Quanto sai scegliere risposte chiare per chiarimenti, problemi e aggiornamenti.',
             ],
             [
               Sparkles,
@@ -587,7 +588,10 @@ export default function Assessment() {
                 />
               </div>
 
-              <section className="rounded-[2rem] border border-white/12 bg-paper p-5 text-ink shadow-2xl dark:bg-[#121d1a] dark:text-white sm:p-7 lg:p-9">
+              <section
+                key={question.id}
+                className="assessment-card-enter rounded-[2rem] border border-white/12 bg-paper p-5 pb-24 text-ink shadow-2xl dark:bg-[#121d1a] dark:text-white sm:p-7 lg:p-9"
+              >
                 <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">
                   {question.eyebrow}
                 </p>
