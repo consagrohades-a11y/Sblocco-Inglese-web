@@ -8,6 +8,9 @@ import BackToTopButton from './components/BackToTopButton';
 import Home from './pages/Home';
 import Simulation from './pages/Simulation';
 import Percorsi from './pages/Percorsi';
+import BusinessEnglishFlow from './pages/BusinessEnglishFlow';
+import Method from './pages/Method';
+import Platform from './pages/Platform';
 import Reviews from './pages/Reviews';
 import CaseStudies from './pages/CaseStudies';
 import Contact from './pages/Contact';
@@ -92,6 +95,7 @@ function ScrollManager() {
 
   return null;
 }
+
 function PageFallback() {
   return <div className="section-shell py-16"><div className="mx-auto max-w-3xl rounded-lg border border-ink/10 bg-white p-6 text-center shadow-sm dark:border-white/10 dark:bg-white/[0.06]"><p className="text-sm font-black text-ink dark:text-white">Loading...</p></div></div>;
 }
@@ -110,6 +114,9 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/simulazione-39" element={<Simulation />} />
             <Route path="/percorsi" element={<Percorsi />} />
+            <Route path="/corsi/business-english-flow" element={<BusinessEnglishFlow />} />
+            <Route path="/metodo" element={<Method />} />
+            <Route path="/piattaforma" element={<Platform />} />
             <Route path="/recensioni" element={<Reviews />} />
             <Route path="/casi-reali" element={<CaseStudies />} />
             <Route path="/case-studies" element={<CaseStudies />} />
