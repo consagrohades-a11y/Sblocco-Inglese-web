@@ -14,6 +14,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import ExerciseDiagnosticSummary from '../components/exercises/ExerciseDiagnosticSummary.jsx';
 import ExerciseQuestionRenderer from '../components/exercises/ExerciseQuestionRenderer.jsx';
+import { normalizeExerciseAnswerForSave } from '../lib/exerciseAnswerNormalization.js';
 import {
   completeExerciseSection,
   openAssignedExercise,
@@ -184,19 +185,21 @@ export default function ExercisePlayerV2() {
   }, [payload, sectionIndex, questionIndex]);
 
   async function persistAnswer(item, answer, nextSectionIndex, nextQuestionIndex) {
+    const normalizedAnswer = normalizeExerciseAnswerForSave(answer, item.question);
     setSaveStatus('Salvataggio...');
-    const result = await saveExerciseAnswer({ attemptId: payload.attempt.id, attemptQuestionId: item.id, answer, currentSectionIndex: nextSectionIndex, currentQuestionIndex: nextQuestionIndex });
+    const result = await saveExerciseAnswer({ attemptId: payload.attempt.id, attemptQuestionId: item.id, answer: normalizedAnswer, currentSectionIndex: nextSectionIndex, currentQuestionIndex: nextQuestionIndex });
     setSaveStatus('Salvato');
     return result;
   }
 
   function changeAnswer(item, answer, sectionPosition, questionPosition) {
-    setPayload((current) => cloneWithAnswer(current, sectionPosition, questionPosition, answer));
+    const normalizedAnswer = normalizeExerciseAnswerForSave(answer, item.question);
+    setPayload((current) => cloneWithAnswer(current, sectionPosition, questionPosition, normalizedAnswer));
     setSaveStatus('Da salvare');
     const existing = saveTimers.current.get(item.id);
     if (existing) window.clearTimeout(existing);
     const timer = window.setTimeout(() => {
-      persistAnswer(item, answer, sectionPosition, questionPosition).catch((saveError) => { setSaveStatus('Errore'); setError(saveError.message || 'Salvataggio non riuscito.'); });
+      persistAnswer(item, normalizedAnswer, sectionPosition, questionPosition).catch((saveError) => { setSaveStatus('Errore'); setError(saveError.message || 'Salvataggio non riuscito.'); });
       saveTimers.current.delete(item.id);
     }, item.question.type === 'audio_response' || item.question.content?.response_mode === 'audio_per_turn' ? 50 : 600);
     saveTimers.current.set(item.id, timer);
@@ -207,7 +210,7 @@ export default function ExercisePlayerV2() {
       const item = section.questions[index];
       const timer = saveTimers.current.get(item.id);
       if (timer) { window.clearTimeout(timer); saveTimers.current.delete(item.id); }
-      await persistAnswer(item, item.answer ?? null, sectionIndex, index);
+      await persistAnswer(item, normalizeExerciseAnswerForSave(item.answer ?? null, item.question), sectionIndex, index);
     }
   }
 
@@ -231,7 +234,7 @@ export default function ExercisePlayerV2() {
   function moveToNextQuestion() {
     if (!currentQuestion) return;
     const nextIndex = questionIndex + 1;
-    const answer = currentQuestion.question.type === 'content_block' ? true : currentQuestion.answer;
+    const answer = currentQuestion.question.type === 'content_block' ? true : normalizeExerciseAnswerForSave(currentQuestion.answer, currentQuestion.question);
     setPayload((current) => cloneWithAnswer(current, sectionIndex, questionIndex, answer));
     persistAnswer(currentQuestion, answer, sectionIndex, Math.min(nextIndex, currentSection.questions.length - 1)).catch(() => {});
     if (nextIndex < currentSection.questions.length) setPayload((current) => ({ ...current, attempt: { ...current.attempt, current_question_index: nextIndex } }));

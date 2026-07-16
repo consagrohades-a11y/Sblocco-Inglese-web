@@ -4,9 +4,18 @@ import {
   exerciseBuilderTemplates,
   validateExerciseBuilderJson,
 } from '../src/lib/exerciseBuilderSchema.js';
+import { normalizeExerciseAnswerForSave } from '../src/lib/exerciseAnswerNormalization.js';
 
 const failures = [];
 const manifestKeys = new Set(exerciseBuilderTemplateManifest.map((item) => item.key));
+
+const normalizedLegacyWordOrder = normalizeExerciseAnswerForSave([
+  { text: 'could', instanceKey: 'token_1-0' },
+  { text: 'you', instanceKey: 'token_2-1' },
+], { type: 'word_order' });
+if (JSON.stringify(normalizedLegacyWordOrder) !== JSON.stringify(['could', 'you'])) {
+  failures.push('Legacy word-order token objects were not normalized to strings.');
+}
 
 for (const type of EXERCISE_BUILDER_QUESTION_TYPES) {
   if (!exerciseBuilderTemplates[type]) failures.push(`Missing question template: ${type}`);

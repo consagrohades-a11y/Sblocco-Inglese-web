@@ -101,12 +101,59 @@ function GapFill({ question, answer, onChange, disabled, select = false }) {
 }
 
 function WordOrder({ question, answer, onChange, disabled }) {
-  const tokens = question.content?.tokens || [];
-  const selected = Array.isArray(answer) ? answer : [];
-  const remaining = tokens.map((token, index) => ({ ...token, instanceKey: `${token.key || token.text}-${index}` })).filter((token) => !selected.some((selectedToken) => selectedToken.instanceKey === token.instanceKey));
-  function append(token) { onChange([...selected, token]); }
-  function remove(index) { onChange(selected.filter((_, current) => current !== index)); }
-  return <div className="grid gap-4"><div className="min-h-20 rounded-xl border border-dashed border-moss/35 bg-mint/20 p-3 dark:border-emerald-300/25 dark:bg-emerald-400/[0.06]"><div className="flex flex-wrap gap-2">{selected.map((token, index) => <button key={`${token.instanceKey}-${index}`} type="button" disabled={disabled} onClick={() => remove(index)} className="rounded-lg bg-ink px-3 py-2 text-sm font-black text-white dark:bg-emerald-300 dark:text-[#102019]">{token.text}</button>)}</div></div><div className="flex flex-wrap gap-2">{remaining.map((token) => <button key={token.instanceKey} type="button" disabled={disabled} onClick={() => append(token)} className="rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm font-black text-ink dark:border-white/20 dark:bg-white/[0.06] dark:text-white">{token.text}</button>)}</div></div>;
+  const tokenInstances = (question.content?.tokens || []).map((token, index) => {
+    const text = typeof token === 'string' ? token : token.text;
+    return { ...(typeof token === 'object' ? token : {}), text, instanceKey: `${token.key || text}-${index}` };
+  });
+  const selectedValues = Array.isArray(answer) ? answer.map((token) => typeof token === 'string' ? token : token?.text).filter(Boolean) : [];
+  const usedKeys = new Set();
+  const selected = selectedValues.map((value, index) => {
+    const match = tokenInstances.find((token) => token.text === value && !usedKeys.has(token.instanceKey));
+    if (match) { usedKeys.add(match.instanceKey); return match; }
+    return { text: value, instanceKey: `saved-${index}-${value}` };
+  });
+  const remaining = tokenInstances.filter((token) => !usedKeys.has(token.instanceKey));
+  const dragRef = useRef(null);
+  const [draggingKey, setDraggingKey] = useState(null);
+  function emit(next) { onChange(next.map((token) => token.text)); }
+  function append(token) { emit([...selected, token]); }
+  function remove(index) { emit(selected.filter((_, current) => current !== index)); }
+  function startDrag(event, payload) {
+    if (disabled) return;
+    dragRef.current = payload;
+    setDraggingKey(payload.token.instanceKey);
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', payload.token.instanceKey);
+  }
+  function endDrag() {
+    dragRef.current = null;
+    setDraggingKey(null);
+  }
+  function dropInAnswer(event, targetIndex = selected.length) {
+    event.preventDefault();
+    const dragged = dragRef.current;
+    if (!dragged || disabled) return;
+    const next = dragged.source === 'selected'
+      ? selected.filter((_, index) => index !== dragged.index)
+      : [...selected];
+    const adjustedIndex = dragged.source === 'selected' && dragged.index < targetIndex ? targetIndex - 1 : targetIndex;
+    next.splice(Math.max(0, Math.min(adjustedIndex, next.length)), 0, dragged.token);
+    emit(next);
+    endDrag();
+  }
+  function dropInBank(event) {
+    event.preventDefault();
+    const dragged = dragRef.current;
+    if (dragged?.source === 'selected' && !disabled) remove(dragged.index);
+    endDrag();
+  }
+  return <div className="grid gap-4">
+    <p className="text-xs font-semibold text-ink/50 dark:text-white/50">Fai clic sulle parole oppure trascinale. Puoi anche trascinare le parole già scelte per riordinarle.</p>
+    <div onDragOver={(event) => event.preventDefault()} onDrop={(event) => dropInAnswer(event)} className="min-h-20 rounded-xl border border-dashed border-moss/35 bg-mint/20 p-3 dark:border-emerald-300/25 dark:bg-emerald-400/[0.06]" aria-label="Frase costruita">
+      <div className="flex min-h-12 flex-wrap items-center gap-2">{selected.map((token, index) => <button key={`${token.instanceKey}-${index}`} type="button" disabled={disabled} draggable={!disabled} onDragStart={(event) => startDrag(event, { source: 'selected', token, index })} onDragEnd={endDrag} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.stopPropagation(); dropInAnswer(event, index); }} onClick={() => remove(index)} title="Trascina per riordinare o fai clic per rimuovere" className={`cursor-grab rounded-lg bg-ink px-3 py-2 text-sm font-black text-white transition active:cursor-grabbing dark:bg-emerald-300 dark:text-[#102019] ${draggingKey === token.instanceKey ? 'opacity-45' : ''}`}>{token.text}</button>)}</div>
+    </div>
+    <div onDragOver={(event) => event.preventDefault()} onDrop={dropInBank} className="flex min-h-14 flex-wrap items-center gap-2 rounded-xl border border-transparent p-2" aria-label="Parole disponibili">{remaining.map((token) => <button key={token.instanceKey} type="button" disabled={disabled} draggable={!disabled} onDragStart={(event) => startDrag(event, { source: 'remaining', token })} onDragEnd={endDrag} onClick={() => append(token)} title="Trascina nella frase o fai clic per aggiungere" className={`cursor-grab rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm font-black text-ink transition active:cursor-grabbing dark:border-white/20 dark:bg-white/[0.06] dark:text-white ${draggingKey === token.instanceKey ? 'opacity-45' : ''}`}>{token.text}</button>)}</div>
+  </div>;
 }
 
 function WrittenResponse({ question, answer, onChange, disabled }) {
