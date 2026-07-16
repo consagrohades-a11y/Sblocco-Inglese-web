@@ -183,7 +183,7 @@ export default function Navbar() {
           ) : (
             <Link to="/assessment" className="focus-ring inline-flex h-10 items-center gap-2 rounded-full bg-moss px-4 text-sm font-extrabold text-white transition hover:-translate-y-px hover:bg-[#19947b]">
               <Sparkles aria-hidden="true" className="h-4 w-4" />
-              Profilo gratuito
+              Sblocco Check
               <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </Link>
           )}
@@ -240,7 +240,7 @@ export default function Navbar() {
 
             {!isLearner ? (
               <Link to="/assessment" className="focus-ring mt-2 flex min-h-12 items-center justify-between rounded-2xl bg-moss px-4 py-3 text-base font-black text-white">
-                <span className="flex items-center gap-2"><Sparkles aria-hidden="true" className="h-5 w-5" />Profilo gratuito</span>
+                <span className="flex items-center gap-2"><Sparkles aria-hidden="true" className="h-5 w-5" />Sblocco Check</span>
                 <ArrowRight aria-hidden="true" className="h-5 w-5" />
               </Link>
             ) : null}
