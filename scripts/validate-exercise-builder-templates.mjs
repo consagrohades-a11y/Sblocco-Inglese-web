@@ -47,6 +47,39 @@ if ((importedAudioRoleplay?.content?.turns || []).filter((turn) => turn.learner_
   failures.push('audio_per_turn constraints were not preserved by import.');
 }
 
+const selectGapRoundTrip = validateExerciseBuilderJson(JSON.stringify(exerciseBuilderTemplates.select_gap));
+const importedSelectGap = selectGapRoundTrip.items[0]?.payload;
+if (selectGapRoundTrip.errors.length || selectGapRoundTrip.items.some((item) => item.status === 'invalid')) {
+  failures.push('select_gap text template round trip failed.');
+}
+if (importedSelectGap?.content?.text_template !== 'I [[blank_1]] coffee every morning.') {
+  failures.push('select_gap text_template was not preserved by import.');
+}
+const invalidGapTemplate = structuredClone(exerciseBuilderTemplates.select_gap);
+invalidGapTemplate.question.content.text_template = 'I [[unknown_blank]] coffee every morning.';
+const invalidGapResult = validateExerciseBuilderJson(invalidGapTemplate);
+if (!invalidGapResult.items.some((item) => item.status === 'invalid')) {
+  failures.push('select_gap accepted an unknown text_template marker.');
+}
+const multiParagraphGap = structuredClone(exerciseBuilderTemplates.select_gap);
+multiParagraphGap.question.content.text_template = 'First paragraph: I [[blank_1]] this option.\n\nSecond paragraph: We [[blank_2]] another test.';
+multiParagraphGap.question.content.blanks.push({
+  key: 'blank_2',
+  accepted_answers: ['recommend'],
+  options: ['recommend', 'recommends'],
+  points: 1,
+  feedback: {},
+  answer_error_mappings: [],
+});
+const multiParagraphResult = validateExerciseBuilderJson(JSON.stringify(multiParagraphGap));
+const importedMultiParagraph = multiParagraphResult.items[0]?.payload;
+if (multiParagraphResult.errors.length || multiParagraphResult.items.some((item) => item.status === 'invalid')) {
+  failures.push('multi-paragraph select_gap validation failed.');
+}
+if (importedMultiParagraph?.content?.text_template !== multiParagraphGap.question.content.text_template) {
+  failures.push('multi-paragraph select_gap text_template was not preserved by import.');
+}
+
 const bundleTypes = new Set(
   (exerciseBuilderTemplates.bundle?.questions || []).map((question) => question.type),
 );

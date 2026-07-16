@@ -84,6 +84,11 @@ function stringArray(value) {
   return [...new Set(value.map(text).filter(Boolean))];
 }
 
+function gapTemplateMarkers(value) {
+  if (typeof value !== 'string') return [];
+  return [...value.matchAll(/\[\[([^\[\]]+)\]\]/g)].map((match) => match[1].trim());
+}
+
 function validateLevel(value, errors, path) {
   if (!EXERCISE_BUILDER_LEVELS.includes(value)) {
     errors.push(pathMessage(path, `livello non valido. Usa ${EXERCISE_BUILDER_LEVELS.join(', ')}.`));
@@ -230,6 +235,23 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
       };
     });
     if (!content.blanks.length) errors.push(pathMessage(path, 'serve almeno uno spazio in blanks.'));
+    content.text_template = text(source.text_template ?? content.text_template) || null;
+    if (content.text_template) {
+      const blankKeys = new Set(content.blanks.map((blank) => blank.key));
+      const markers = gapTemplateMarkers(content.text_template);
+      const markerCounts = markers.reduce((counts, marker) => counts.set(marker, (counts.get(marker) || 0) + 1), new Map());
+      markers.forEach((marker) => {
+        if (!/^[A-Za-z0-9_-]+$/.test(marker)) errors.push(pathMessage(path, `segnaposto non valido: [[${marker}]].`));
+        else if (!blankKeys.has(marker)) errors.push(pathMessage(path, `segnaposto sconosciuto: [[${marker}]].`));
+      });
+      content.blanks.forEach((blank, index) => {
+        const count = markerCounts.get(blank.key) || 0;
+        if (!count) errors.push(pathMessage(`${path}.blanks[${index}]`, `manca [[${blank.key}]] in text_template.`));
+        if (count > 1) errors.push(pathMessage(`${path}.blanks[${index}]`, `[[${blank.key}]] deve comparire una sola volta in text_template.`));
+      });
+    } else {
+      warnings.push(pathMessage(path, 'aggiungi content.text_template con segnaposto [[blank_key]] per mostrare gli spazi nel testo.'));
+    }
     grading.mode = grading.mode || 'per_blank';
   }
 

@@ -75,7 +75,29 @@ function DialogueChoice({ question, answer, onChange, disabled }) {
 
 function GapFill({ question, answer, onChange, disabled, select = false }) {
   const values = answer && typeof answer === 'object' && !Array.isArray(answer) ? answer : {};
-  return <div className="grid gap-4">{(question.content?.blanks || []).map((blank, index) => <label key={blank.key} className="grid gap-2"><span className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Spazio {index + 1}</span>{select ? <select value={values[blank.key] || ''} onChange={(event) => onChange({ ...values, [blank.key]: event.target.value })} disabled={disabled} className="focus-ring rounded-xl border-2 border-ink/10 bg-white px-4 py-3 text-base font-bold text-ink dark:border-white/15 dark:bg-[#101a17] dark:text-white"><option value="">Scegli...</option>{(blank.options || []).map((option) => <option key={option}>{option}</option>)}</select> : <TextAnswer value={values[blank.key] || ''} onChange={(value) => onChange({ ...values, [blank.key]: value })} disabled={disabled} />}</label>)}</div>;
+  const blanks = question.content?.blanks || [];
+  const template = question.content?.text_template || '';
+  const blankByKey = new Map(blanks.map((blank, index) => [blank.key, { blank, index }]));
+
+  function control(blank, index) {
+    const value = values[blank.key] || '';
+    const shared = 'focus-ring mx-1 my-1 inline-block max-w-full rounded-lg border-2 border-moss/25 bg-white px-3 py-2 text-base font-bold text-ink align-baseline shadow-sm dark:border-emerald-300/25 dark:bg-[#101a17] dark:text-white';
+    return <label key={`${blank.key}-${index}`} className="inline max-w-full"><span className="sr-only">Spazio {index + 1}</span>{select
+      ? <select value={value} onChange={(event) => onChange({ ...values, [blank.key]: event.target.value })} disabled={disabled} className={`${shared} min-w-40`}><option value="">Scegli...</option>{(blank.options || []).map((option) => <option key={option}>{option}</option>)}</select>
+      : <input value={value} onChange={(event) => onChange({ ...values, [blank.key]: event.target.value })} disabled={disabled} className={`${shared} w-44`} />}</label>;
+  }
+
+  if (template) {
+    const parts = template.split(/(\[\[[A-Za-z0-9_-]+\]\])/g);
+    return <div className="whitespace-pre-wrap rounded-xl border border-ink/10 bg-linen/30 p-4 text-base font-semibold leading-9 text-ink/85 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/85">{parts.map((part, index) => {
+      const match = part.match(/^\[\[([A-Za-z0-9_-]+)\]\]$/);
+      if (!match) return <span key={`text-${index}`}>{part}</span>;
+      const entry = blankByKey.get(match[1]);
+      return entry ? control(entry.blank, entry.index) : <span key={`unknown-${index}`}>{part}</span>;
+    })}</div>;
+  }
+
+  return <div className="grid gap-4">{blanks.map((blank, index) => <label key={blank.key} className="grid gap-2"><span className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Spazio {index + 1}</span>{select ? <select value={values[blank.key] || ''} onChange={(event) => onChange({ ...values, [blank.key]: event.target.value })} disabled={disabled} className="focus-ring rounded-xl border-2 border-ink/10 bg-white px-4 py-3 text-base font-bold text-ink dark:border-white/15 dark:bg-[#101a17] dark:text-white"><option value="">Scegli...</option>{(blank.options || []).map((option) => <option key={option}>{option}</option>)}</select> : <TextAnswer value={values[blank.key] || ''} onChange={(value) => onChange({ ...values, [blank.key]: value })} disabled={disabled} />}</label>)}</div>;
 }
 
 function WordOrder({ question, answer, onChange, disabled }) {
