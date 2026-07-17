@@ -139,6 +139,16 @@ function Intro({ payload, assignmentId, onStart }) {
                     {manual} da valutare dall’insegnante
                   </span>
                 ) : null}
+                {payload.attempt?.completion?.rule === "passed" &&
+                payload.attempt.completion.required_score != null ? (
+                  <span className="rounded-full bg-mint/70 px-3 py-2 text-moss dark:bg-emerald-300/10 dark:text-emerald-200">
+                    Obiettivo:{" "}
+                    {Math.round(
+                      Number(payload.attempt.completion.required_score),
+                    )}
+                    %
+                  </span>
+                ) : null}
               </div>
               <div className="mt-7 rounded-2xl border border-coral/20 bg-blush/55 p-5 dark:bg-coral/[0.07]">
                 <p className="whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/75 dark:text-white/75">
@@ -198,6 +208,11 @@ function FinalResult({ payload, assignmentId, resourceId }) {
   const awaitingPublishedReview =
     pending > 0 || attempt.review_status === "reviewed";
   const hasAutoPoints = Number(attempt.max_points || 0) > 0;
+  const goalScore =
+    attempt.completion?.rule === "passed" &&
+    attempt.completion.required_score != null
+      ? Number(attempt.completion.required_score)
+      : null;
 
   return (
     <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
@@ -244,6 +259,14 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                   {Number(attempt.earned_points || 0).toFixed(1)} /{" "}
                   {Number(attempt.max_points || 0).toFixed(1)} punti
                 </p>
+                {goalScore !== null ? (
+                  <p className="mt-2 text-xs font-black uppercase tracking-wide opacity-80">
+                    Obiettivo: {Math.round(goalScore)}%
+                    {Number(attempt.score || 0) >= goalScore
+                      ? " · raggiunto"
+                      : ""}
+                  </p>
+                ) : null}
               </div>
               <ResultBreakdown summary={summary} />
               <p className="mt-3 text-xs font-semibold leading-5 text-ink/60 dark:text-white/60">

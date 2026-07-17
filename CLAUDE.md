@@ -101,23 +101,26 @@ Verificato con screenshot del dev server in dark. **Residuo**: possibile audit v
 
 **Riferimento formula (SQL)**: `score = round(earned/max × 100)`; pesi da `grading.weight`; `nearly_correct` = credito parziale; con produzioni manuali lo score resta provvisorio finché la review non è pubblicata (`approved`); soglia di completamento `required_score` default 70 in `assignment_resources.exercise_config`. Possibile evoluzione: mostrare la soglia allo studente (il payload oggi non la espone — servirebbe aggiungerla in `exercise_builder_attempt_payload`).
 
-## Analisi sommaria e proposte
+## Analisi sommaria e proposte (stato al 2026-07-17 sera)
 
-Il sito è due prodotti in uno: vetrina marketing curata (funnel simulazione → corsi) e una piattaforma didattica ambiziosa (trainer SRS, exercise builder versionato, assegnazioni, analytics) cresciuta molto in fretta via PR di agenti. La logica di dominio è solida (versioning, RLS, RPC transazionali); i punti deboli sono coerenza visiva, feedback all'utente admin e allineamento migrazioni remote/locali.
+Il sito è due prodotti in uno: vetrina marketing curata (funnel simulazione → corsi) e una piattaforma didattica ambiziosa (trainer SRS, exercise builder versionato, assegnazioni, analytics). La logica di dominio è solida; i punti deboli erano coerenza visiva, feedback all'utente admin e allineamento migrazioni remote/locali.
 
-**Estetiche**
-- Unificare la palette dark in token Tailwind (vedi bug 1d) e normalizzare i raggi (oggi convivono `rounded-lg/xl/2xl/3xl` senza criterio) e le ombre.
-- Gerarchia tipografica: quasi tutto è `font-black`; ridurre i pesi per far respirare titoli e badge.
-- Stati vuoti con CTA (es. composer vuoto → "Importa JSON" / "Vai alla revisione") invece di "Nessun esercizio."
-- Verificare l'admin su viewport medi: i layout a griglia fissa `max-w-[1500px]/[1600px]` con sidebar stringono male tra 1024 e 1440px (il CSS che doveva sistemarlo non viene caricato, vedi "File morti").
+**Fatte in questa sessione**
+- ✅ Contrasto testi light/dark: scala opacità minima /60-/65 su ~800 occorrenze (WCAG AA); sidebar admin alzata.
+- ✅ Navbar, strip Sblocco Check e barra sticky mobile ora theme-aware (prima erano scure fisse anche in light).
+- ✅ Palette dark unificata nei token `surface-800/900/950` (`tailwind.config.js`) al posto di 14 esadecimali sparsi.
+- ✅ Micro-label uppercase da `font-black` a `font-bold` (gerarchia tipografica, 361 occorrenze).
+- ✅ Breadcrumb 1.Importa → 2.Revisiona → 3.Libreria → 4.Composer sulle quattro pagine builder.
+- ✅ Composer: ricerca nel catalogo + modal "Anteprima studente" (domande fisse col renderer reale; pool indicati come estrazione).
+- ✅ File morti rimossi (`src/main.jsx`, `trainer-overrides.css`, `AdminExerciseResultsV2.jsx`, `public/assets/public/`).
+- ✅ Soglia visibile allo studente: migrazione `20260717120000_expose_completion_goal_to_learner.sql` aggiunge `attempt.completion` al payload; il player mostra "Obiettivo: NN%" in intro e risultato (degrada se la migrazione non è applicata).
 
-**Funzionali**
-- Pipeline builder più guidata: breadcrumb Import → Revisione → Libreria → Composer sulle 4 pagine, e dopo la promozione link diretti alle entità create (oggi solo chip con i `public_id`).
-- Ricerca/filtro nel catalogo del composer e nomi leggibili per i pool importati.
-- Anteprima esercizio lato admin ("vedi come lo studente") prima della pubblicazione.
-- Riepilogo sezione nel player (bug 3) e breakdown punteggio (bug 4).
-- Processo migrazioni: aggiungere uno script/nota per confrontare le migrazioni applicate al progetto Supabase remoto con la cartella locale — due dei quattro bug possono dipendere da migrazioni non applicate.
-- Notifiche studente già presenti (`LearnerNotificationsPanel`): usarle anche per "valutazione pubblicata".
+**Ancora aperte**
+- Normalizzare raggi (`rounded-lg/xl/2xl/3xl`) e ombre: rinviato di proposito — sweep massivo ad alto rischio visivo e basso valore; farlo per area con verifica visiva.
+- Audit visivo pagina-per-pagina in entrambi i temi (gli screenshot headless non funzionano su questa macchina: verificare a mano con il toggle).
+- Confronto migrazioni remote/locali dal pannello Supabase (sospetto residuo del bug Composer).
+- Notifiche studente per "valutazione pubblicata" (riusare `LearnerNotificationsPanel`, serve trigger/RPC lato DB).
+- L'anteprima studente non estrae dai pool e non corregge: evoluzione possibile = tentativo "sandbox" lato admin.
 
 ## File morti / gotcha
 
