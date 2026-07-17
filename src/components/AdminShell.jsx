@@ -205,7 +205,7 @@ function AdminNavigation({ onNavigate, collapsed = false, pathname }) {
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-black">{group.label}</span>
-                  <span className="mt-0.5 block truncate text-[0.68rem] font-semibold text-white/42">{group.description}</span>
+                  <span className="mt-0.5 block truncate text-[0.68rem] font-semibold text-white/60">{group.description}</span>
                 </span>
                 <ChevronDown aria-hidden="true" className={`h-4 w-4 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
               </button>
@@ -220,7 +220,7 @@ function AdminNavigation({ onNavigate, collapsed = false, pathname }) {
                         to={item.to}
                         end={item.end}
                         onClick={onNavigate}
-                        className={({ isActive }) => `focus-ring flex min-h-9 items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-black transition ${isActive ? 'bg-white text-ink shadow-sm' : 'text-white/62 hover:bg-white/10 hover:text-white'}`}
+                        className={({ isActive }) => `focus-ring flex min-h-9 items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-black transition ${isActive ? 'bg-white text-ink shadow-sm' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
                       >
                         <ItemIcon aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
                         <span>{item.label}</span>
