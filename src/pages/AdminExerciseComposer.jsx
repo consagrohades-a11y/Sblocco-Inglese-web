@@ -846,6 +846,13 @@ export default function AdminExerciseComposer() {
                         <option value="exercise_end">A fine esercizio</option>
                         <option value="hidden">Nascosto</option>
                       </select>
+                      <span className="mt-2 block text-[0.7rem] font-semibold leading-5 text-ink/45 dark:text-white/45">
+                        “Dopo ogni domanda”: correzione immediata, una domanda
+                        alla volta. “A fine sezione”: riepilogo con correzioni
+                        al termine della sezione. “A fine esercizio”: correzioni
+                        solo nel risultato finale. “Nascosto”: lo studente non
+                        vede mai le correzioni.
+                      </span>
                     </label>
                     <label className="text-xs font-black text-ink/60 dark:text-white/60 sm:col-span-2">
                       Istruzioni

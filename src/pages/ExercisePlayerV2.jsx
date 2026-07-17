@@ -252,44 +252,56 @@ function FinalResult({ payload, assignmentId, resourceId }) {
           </div>
         </article>
         <div className="mt-6 grid gap-5">
-          {payload.sections.map((section) => (
-            <section
-              key={section.id}
-              className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 dark:border-white/10 dark:bg-[#211b18] sm:p-7"
-            >
-              <h2 className="text-xl font-black text-ink dark:text-white">
-                {section.title}
-              </h2>
-              <div className="mt-5 grid gap-5">
-                {section.questions.map((item) => (
-                  <article
-                    key={item.id}
-                    className="rounded-xl border border-ink/10 p-4 dark:border-white/10"
-                  >
-                    <ExerciseQuestionRenderer
-                      item={item}
-                      answer={item.answer}
-                      onChange={() => {}}
-                      disabled
-                      showScore={
-                        !awaitingPublishedReview &&
-                        settings.show_score !== false
-                      }
-                      showCorrectAnswers={
-                        !awaitingPublishedReview &&
-                        settings.show_correct_answers !== false
-                      }
-                      showExplanations={
-                        !awaitingPublishedReview &&
-                        settings.show_explanations !== false
-                      }
-                      attemptId={attempt.id}
-                    />
-                  </article>
-                ))}
-              </div>
-            </section>
-          ))}
+          {payload.sections.map((section) => {
+            const feedbackHidden = section.feedback_timing === "hidden";
+            return (
+              <section
+                key={section.id}
+                className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 dark:border-white/10 dark:bg-[#211b18] sm:p-7"
+              >
+                <h2 className="text-xl font-black text-ink dark:text-white">
+                  {section.title}
+                </h2>
+                {feedbackHidden ? (
+                  <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
+                    Le correzioni di questa sezione non vengono mostrate:
+                    riceverai indicazioni direttamente dall’insegnante.
+                  </p>
+                ) : null}
+                <div className="mt-5 grid gap-5">
+                  {section.questions.map((item) => (
+                    <article
+                      key={item.id}
+                      className="rounded-xl border border-ink/10 p-4 dark:border-white/10"
+                    >
+                      <ExerciseQuestionRenderer
+                        item={item}
+                        answer={item.answer}
+                        onChange={() => {}}
+                        disabled
+                        showScore={
+                          !awaitingPublishedReview &&
+                          !feedbackHidden &&
+                          settings.show_score !== false
+                        }
+                        showCorrectAnswers={
+                          !awaitingPublishedReview &&
+                          !feedbackHidden &&
+                          settings.show_correct_answers !== false
+                        }
+                        showExplanations={
+                          !awaitingPublishedReview &&
+                          !feedbackHidden &&
+                          settings.show_explanations !== false
+                        }
+                        attemptId={attempt.id}
+                      />
+                    </article>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -633,6 +645,11 @@ export default function ExercisePlayerV2() {
     ? Math.round((completedBefore / totalQuestions) * 100)
     : 0;
   const sectionCompleted = currentSection?.status === "completed";
+  const exerciseSettings = payload?.exercise?.settings || {};
+  const sectionRecapVisible =
+    sectionCompleted &&
+    currentSection?.feedback_timing === "section_end" &&
+    (currentSection?.questions || []).some((item) => item.result);
   const currentQuestionAnswered =
     currentQuestion?.question.type === "content_block" ||
     !answerIsEmpty(currentQuestion?.answer, currentQuestion?.question) ||
@@ -693,22 +710,58 @@ export default function ExercisePlayerV2() {
             </div>
           </header>
           {sectionCompleted ? (
-            <section className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-6 dark:border-emerald-300/20 dark:bg-emerald-400/[0.07]">
-              <p className="text-xl font-black text-emerald-950 dark:text-emerald-100">
-                Sezione completata
-              </p>
-              <button
-                type="button"
-                disabled={busy}
-                onClick={continueAfterSection}
-                className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-3 text-sm font-black text-white"
-              >
-                {sectionIndex >= payload.sections.length - 1
-                  ? "Consegna esercizio"
-                  : "Sezione successiva"}
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </section>
+            <>
+              <section className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-6 dark:border-emerald-300/20 dark:bg-emerald-400/[0.07]">
+                <p className="text-xl font-black text-emerald-950 dark:text-emerald-100">
+                  Sezione completata
+                </p>
+                {sectionRecapVisible ? (
+                  <p className="mt-2 text-sm font-semibold leading-6 text-emerald-900/70 dark:text-emerald-100/70">
+                    Qui sotto trovi le tue risposte con le correzioni di questa
+                    sezione.
+                  </p>
+                ) : null}
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={continueAfterSection}
+                  className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-3 text-sm font-black text-white"
+                >
+                  {sectionIndex >= payload.sections.length - 1
+                    ? "Consegna esercizio"
+                    : "Sezione successiva"}
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </section>
+              {sectionRecapVisible ? (
+                <div className="mt-5 grid gap-5">
+                  {currentSection.questions.map((item, index) => (
+                    <article
+                      key={item.id}
+                      className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-[#211b18] sm:p-7"
+                    >
+                      <p className="mb-4 text-xs font-black uppercase tracking-wide text-coral dark:text-[#ff9678]">
+                        Attività {index + 1}
+                      </p>
+                      <ExerciseQuestionRenderer
+                        item={item}
+                        answer={item.answer}
+                        onChange={() => {}}
+                        disabled
+                        showScore={exerciseSettings.show_score !== false}
+                        showCorrectAnswers={
+                          exerciseSettings.show_correct_answers !== false
+                        }
+                        showExplanations={
+                          exerciseSettings.show_explanations !== false
+                        }
+                        attemptId={payload.attempt.id}
+                      />
+                    </article>
+                  ))}
+                </div>
+              ) : null}
+            </>
           ) : displayMode === "all_questions" ? (
             <section className="mt-5 grid gap-5">
               {currentSection.questions.map((item, index) => (
