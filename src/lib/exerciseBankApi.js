@@ -71,7 +71,7 @@ export async function loadExercisePools() {
   const { data: versions, error: versionError } = versionIds.length
     ? await supabase
       .from('exercise_builder_pool_versions')
-      .select('id, pool_id, version_number, title, description, level, topic, subtopic, primary_skill, tags, selection_defaults, foundation_links, review_status')
+      .select('id, pool_id, version_number, title, name, description, level, topic, subtopic, primary_skill, tags, selection_defaults, foundation_links, review_status')
       .in('id', versionIds)
     : { data: [], error: null };
   throwIfError(versionError);

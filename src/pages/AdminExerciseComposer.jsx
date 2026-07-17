@@ -147,24 +147,44 @@ export default function AdminExerciseComposer() {
   async function loadBase() {
     setLoading(true);
     setError("");
-    try {
-      const [exerciseData, questionData, poolData] = await Promise.all([
+    const [exerciseResult, questionResult, poolResult] =
+      await Promise.allSettled([
         loadExerciseComposerCatalog(),
         loadExerciseQuestionBank(),
         loadExercisePools(),
       ]);
-      setCatalog(exerciseData);
-      setQuestions(questionData.filter((item) => item.status !== "archived"));
-      setPools(poolData.filter((item) => item.status !== "archived"));
-      return exerciseData;
-    } catch (loadError) {
-      setError(
-        loadError.message || "Non è stato possibile caricare il Composer.",
+    const problems = [];
+    if (exerciseResult.status === "fulfilled") {
+      setCatalog(exerciseResult.value);
+    } else {
+      setCatalog([]);
+      problems.push(
+        `catalogo esercizi: ${exerciseResult.reason?.message || "errore sconosciuto"}`,
       );
-      return [];
-    } finally {
-      setLoading(false);
     }
+    if (questionResult.status === "fulfilled") {
+      setQuestions(
+        questionResult.value.filter((item) => item.status !== "archived"),
+      );
+    } else {
+      setQuestions([]);
+      problems.push(
+        `banca domande: ${questionResult.reason?.message || "errore sconosciuto"}`,
+      );
+    }
+    if (poolResult.status === "fulfilled") {
+      setPools(poolResult.value.filter((item) => item.status !== "archived"));
+    } else {
+      setPools([]);
+      problems.push(
+        `pool: ${poolResult.reason?.message || "errore sconosciuto"}`,
+      );
+    }
+    if (problems.length) {
+      setError(`Caricamento parziale del Composer — ${problems.join(" · ")}`);
+    }
+    setLoading(false);
+    return exerciseResult.status === "fulfilled" ? exerciseResult.value : [];
   }
 
   useEffect(() => {
@@ -490,9 +510,19 @@ export default function AdminExerciseComposer() {
                 <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">
                   Esercizi
                 </p>
-                <span className="text-xs font-black text-ink/45 dark:text-white/45">
-                  {catalog.length}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-black text-ink/45 dark:text-white/45">
+                    {catalog.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => loadBase()}
+                    disabled={loading}
+                    className="rounded-lg border border-ink/15 px-2.5 py-1 text-[0.65rem] font-black text-ink disabled:opacity-40 dark:border-white/20 dark:text-white"
+                  >
+                    {loading ? "..." : "Aggiorna"}
+                  </button>
+                </div>
               </div>
               <div className="mt-3 grid gap-2">
                 {catalog.map((item) => (
@@ -521,9 +551,29 @@ export default function AdminExerciseComposer() {
                   </button>
                 ))}
                 {!catalog.length && !loading ? (
-                  <p className="py-4 text-sm text-ink/55 dark:text-white/55">
-                    Nessun esercizio.
-                  </p>
+                  <div className="rounded-xl border border-dashed border-ink/15 p-4 text-sm leading-6 text-ink/60 dark:border-white/15 dark:text-white/60">
+                    <p className="font-black text-ink dark:text-white">
+                      Nessun esercizio in catalogo.
+                    </p>
+                    <p className="mt-2">
+                      Se hai appena promosso un import, premi Aggiorna qui
+                      sopra. Altrimenti parti da{" "}
+                      <Link
+                        to="/admin/content/exercises"
+                        className="font-black text-moss underline dark:text-emerald-300"
+                      >
+                        Importa JSON
+                      </Link>{" "}
+                      o dalla{" "}
+                      <Link
+                        to="/admin/content/exercises/review"
+                        className="font-black text-moss underline dark:text-emerald-300"
+                      >
+                        Coda di revisione
+                      </Link>
+                      .
+                    </p>
+                  </div>
                 ) : null}
               </div>
             </aside>
@@ -947,7 +997,7 @@ export default function AdminExerciseComposer() {
                             )
                             .map((item) => (
                               <option key={item.id} value={item.id}>
-                                {item.publicId} · {item.title} (
+                                {item.publicId} · {item.title || item.name} (
                                 {item.questionCount})
                               </option>
                             ))}
@@ -975,7 +1025,7 @@ export default function AdminExerciseComposer() {
                                     {poolItem?.publicId}
                                   </p>
                                   <p className="mt-1 text-sm font-black text-ink dark:text-white">
-                                    {poolItem?.title}
+                                    {poolItem?.title || poolItem?.name}
                                   </p>
                                   <p className="mt-1 text-xs font-bold text-ink/45 dark:text-white/45">
                                     Versione bloccata{" "}

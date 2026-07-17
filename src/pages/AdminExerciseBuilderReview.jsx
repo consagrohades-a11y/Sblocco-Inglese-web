@@ -208,9 +208,23 @@ export default function AdminExerciseBuilderReview() {
               <p className="font-black">{result.promoted_count} elementi promossi</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {(result.items || []).map((item) => (
-                  <span key={item.item_id} className="rounded-full bg-white px-3 py-1 text-xs font-black shadow-sm dark:bg-white/10">{item.public_id}</span>
+                  item.entity_type === 'exercise' ? (
+                    <Link
+                      key={item.item_id}
+                      to={`/admin/content/exercises/composer?exerciseId=${item.entity_id}`}
+                      className="focus-ring rounded-full bg-white px-3 py-1 text-xs font-black underline shadow-sm dark:bg-white/10"
+                    >
+                      {item.public_id} · apri nel Composer
+                    </Link>
+                  ) : (
+                    <span key={item.item_id} className="rounded-full bg-white px-3 py-1 text-xs font-black shadow-sm dark:bg-white/10">{item.public_id}</span>
+                  )
                 ))}
               </div>
+              <p className="mt-3 text-xs font-semibold opacity-80">
+                Gli elementi promossi partono in stato Bozza: per approvarli o pubblicarli usa la{' '}
+                <Link to="/admin/content/exercises/library" className="font-black underline">Libreria esercizi</Link>.
+              </p>
             </div>
           ) : null}
 
