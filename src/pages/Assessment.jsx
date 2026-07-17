@@ -209,7 +209,7 @@ function ListeningQuestion({
           completare lo Sblocco Check.
         </p>
       ) : !replayCount ? (
-        <p className="mt-3 text-xs font-bold leading-5 text-ink/50 dark:text-white/55">
+        <p className="mt-3 text-xs font-bold leading-5 text-ink/65 dark:text-white/65">
           Ascolta il messaggio almeno una volta per attivare le risposte.
         </p>
       ) : null}
@@ -242,7 +242,7 @@ function Intro({ onStart }) {
           Inizia lo Sblocco Check
           <ArrowRight aria-hidden="true" className="h-5 w-5" />
         </button>
-        <p className="mt-3 max-w-2xl text-xs font-semibold leading-5 text-white/55">
+        <p className="mt-3 max-w-2xl text-xs font-semibold leading-5 text-white/65">
           Gratuito. Vedrai subito una prima sintesi; per ricevere l’analisi
           completa ti chiederemo nome ed email. Il consenso marketing è
           facoltativo.
@@ -865,7 +865,7 @@ export default function Assessment() {
                   <button
                     type="button"
                     onClick={() => setPhase('quiz')}
-                    className="mt-3 inline-flex w-full items-center justify-center gap-2 py-2 text-xs font-black text-ink/45 dark:text-white/45"
+                    className="mt-3 inline-flex w-full items-center justify-center gap-2 py-2 text-xs font-black text-ink/60 dark:text-white/60"
                   >
                     <ArrowLeft aria-hidden="true" className="h-4 w-4" />
                     Rivedi le risposte

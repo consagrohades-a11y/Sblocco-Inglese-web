@@ -36,7 +36,7 @@ export default function ContactQuestionForm() {
         </div>
 
         <label className="mt-5 block text-sm font-black text-ink">
-          Whatsapp <span className="font-semibold text-ink/45">Opzionale</span>
+          Whatsapp <span className="font-semibold text-ink/60">Opzionale</span>
           <input className={inputClass} name="entry.1757011184" type="tel" placeholder="+39 ..." />
         </label>
 

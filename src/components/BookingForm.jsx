@@ -102,7 +102,7 @@ function OptionGroup({ field, value, otherValue, onChange, onOtherChange }) {
       {field.allowOther ? (
         <input className={`${inputClass} ${value === '__other_option__' ? '' : 'hidden'}`} name={otherName} value={otherValue} onChange={(event) => onOtherChange(event.target.value)} placeholder="Scrivi qui..." required={value === '__other_option__'} disabled={value !== '__other_option__'} />
       ) : null}
-      {!field.required ? <p className="mt-2 text-xs font-semibold leading-5 text-ink/50">Puoi lasciare vuoto se non sei sicuro/a.</p> : null}
+      {!field.required ? <p className="mt-2 text-xs font-semibold leading-5 text-ink/65">Puoi lasciare vuoto se non sei sicuro/a.</p> : null}
     </fieldset>
   );
 }

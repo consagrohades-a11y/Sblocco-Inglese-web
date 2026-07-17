@@ -69,14 +69,14 @@ function AccountMenu({ displayName, isAdmin, onSignOut }) {
         onClick={() => setOpen((value) => !value)}
       >
         <span className="grid h-8 w-8 place-items-center rounded-full bg-mint text-sm font-extrabold text-ink">{initial}</span>
-        <ChevronDown aria-hidden="true" className={`h-3.5 w-3.5 text-white/55 transition ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown aria-hidden="true" className={`h-3.5 w-3.5 text-white/65 transition ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open ? (
         <div role="menu" className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-white/15 bg-[#101a17] p-2 text-white shadow-[0_24px_70px_rgba(0,0,0,0.42)]">
           <div className="border-b border-white/10 px-3 py-3">
             <p className="truncate text-sm font-black">{displayName || 'Il tuo account'}</p>
-            <p className="mt-0.5 text-xs font-semibold text-white/55">Profilo e impostazioni</p>
+            <p className="mt-0.5 text-xs font-semibold text-white/65">Profilo e impostazioni</p>
           </div>
           <Link role="menuitem" to="/account" onClick={() => setOpen(false)} className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white">
             <Settings aria-hidden="true" className="h-4 w-4 text-mint" />

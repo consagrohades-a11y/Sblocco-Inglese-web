@@ -233,7 +233,7 @@ export default function AdminExerciseBuilderReview() {
               <div className="flex items-center justify-between gap-3 px-2 py-2">
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">Batch</p>
-                  <p className="mt-1 text-sm font-semibold text-ink/55 dark:text-white/55">{batches.length} importazioni recenti</p>
+                  <p className="mt-1 text-sm font-semibold text-ink/65 dark:text-white/65">{batches.length} importazioni recenti</p>
                 </div>
                 <Layers3 aria-hidden="true" className="h-5 w-5 text-moss dark:text-mint" />
               </div>
@@ -242,7 +242,7 @@ export default function AdminExerciseBuilderReview() {
                 {loading ? (
                   <div className="flex min-h-32 items-center justify-center"><Loader2 aria-hidden="true" className="h-6 w-6 animate-spin text-moss" /></div>
                 ) : batches.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/50 dark:border-white/15 dark:text-white/50">Nessun batch da revisionare.</div>
+                  <div className="rounded-xl border border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/65 dark:border-white/15 dark:text-white/65">Nessun batch da revisionare.</div>
                 ) : batches.map((batch) => {
                   const pending = batchPendingCount(batch);
                   const active = batch.id === activeBatchId;
@@ -258,7 +258,7 @@ export default function AdminExerciseBuilderReview() {
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-black text-ink dark:text-white">{batch.source_name}</span>
-                        <span className="mt-0.5 block text-xs font-semibold text-ink/45 dark:text-white/45">{formatDate(batch.created_at)}</span>
+                        <span className="mt-0.5 block text-xs font-semibold text-ink/60 dark:text-white/60">{formatDate(batch.created_at)}</span>
                       </span>
                       <span className="shrink-0 rounded-full bg-ink px-2 py-1 text-xs font-black text-white">{pending}</span>
                     </button>
@@ -281,7 +281,7 @@ export default function AdminExerciseBuilderReview() {
                     <div>
                       <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">{entityLabel(activeBatch.entity_type)}</p>
                       <h2 className="mt-1 text-2xl font-black text-ink dark:text-white">{activeBatch.source_name}</h2>
-                      <p className="mt-1 text-sm font-semibold text-ink/50 dark:text-white/50">{activeBatch.items.length} elementi totali</p>
+                      <p className="mt-1 text-sm font-semibold text-ink/65 dark:text-white/65">{activeBatch.items.length} elementi totali</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       <button

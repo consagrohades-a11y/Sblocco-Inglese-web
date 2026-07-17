@@ -34,9 +34,9 @@ export default function GrammarHub() {
             </Link>
           ) : (
             <div key={level} className="rounded-lg border border-ink/10 bg-white p-5 opacity-65 dark:border-white/10 dark:bg-white/[0.06]">
-              <Lock aria-hidden="true" className="h-6 w-6 text-ink/40 dark:text-white/40" />
+              <Lock aria-hidden="true" className="h-6 w-6 text-ink/60 dark:text-white/60" />
               <h2 className="mt-4 text-3xl font-black dark:text-white">{level}</h2>
-              <p className="mt-2 text-sm font-semibold text-ink/55 dark:text-white/55">In preparazione</p>
+              <p className="mt-2 text-sm font-semibold text-ink/65 dark:text-white/65">In preparazione</p>
             </div>
           ))}
         </div>

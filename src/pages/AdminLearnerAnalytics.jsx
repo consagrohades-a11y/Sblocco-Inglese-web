@@ -146,7 +146,7 @@ function ActivityChart({ rows }) {
               </div>
               {index % Math.max(1, Math.floor(visible.length / 7)) === 0 ||
               index === visible.length - 1 ? (
-                <span className="whitespace-nowrap text-[0.6rem] font-black text-ink/40 dark:text-white/40">
+                <span className="whitespace-nowrap text-[0.6rem] font-black text-ink/60 dark:text-white/60">
                   {label}
                 </span>
               ) : (
@@ -212,7 +212,7 @@ export default function AdminLearnerAnalytics() {
                 <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-4xl">
                   {pageTitle}
                 </h1>
-                <p className="mt-2 text-sm font-semibold text-ink/55 dark:text-white/55">
+                <p className="mt-2 text-sm font-semibold text-ink/65 dark:text-white/65">
                   {profile.learner_email || "Caricamento profilo..."}
                 </p>
               </div>
@@ -314,7 +314,7 @@ export default function AdminLearnerAnalytics() {
                       Attività giornaliera
                     </h2>
                   </div>
-                  <div className="flex gap-4 text-xs font-black text-ink/55 dark:text-white/55">
+                  <div className="flex gap-4 text-xs font-black text-ink/65 dark:text-white/65">
                     <span className="inline-flex items-center gap-2">
                       <i className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                       SRS
@@ -349,7 +349,7 @@ export default function AdminLearnerAnalytics() {
                           <h3 className="mt-1 font-black">
                             {card.display_target}
                           </h3>
-                          <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
+                          <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
                             {number(card.review_count)} ripassi ·{" "}
                             {number(card.incorrect_count)} errori ·{" "}
                             {number(card.nearly_correct_count)} quasi
@@ -362,7 +362,7 @@ export default function AdminLearnerAnalytics() {
                       </article>
                     ))}
                     {!(data.difficult_cards || []).length ? (
-                      <p className="py-6 text-sm font-bold text-ink/50 dark:text-white/50">
+                      <p className="py-6 text-sm font-bold text-ink/65 dark:text-white/65">
                         Nessun ripasso nel periodo.
                       </p>
                     ) : null}
@@ -389,7 +389,7 @@ export default function AdminLearnerAnalytics() {
                           <h3 className="mt-1 font-black">
                             {exercise.exercise_title || "Esercizio"}
                           </h3>
-                          <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
+                          <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
                             {number(exercise.attempt_count)} invii · media{" "}
                             {number(exercise.average_score, 1)}% ·{" "}
                             {number(exercise.pending_reviews)} revisioni
@@ -402,7 +402,7 @@ export default function AdminLearnerAnalytics() {
                       </article>
                     ))}
                     {!(data.exercises || []).length ? (
-                      <p className="py-6 text-sm font-bold text-ink/50 dark:text-white/50">
+                      <p className="py-6 text-sm font-bold text-ink/65 dark:text-white/65">
                         Nessun esercizio inviato nel periodo.
                       </p>
                     ) : null}
@@ -431,7 +431,7 @@ export default function AdminLearnerAnalytics() {
                           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                             <div>
                               <h3 className="font-black">{assignment.title}</h3>
-                              <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
+                              <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
                                 {assignment.deadline_at
                                   ? `Scadenza ${formatDate(assignment.deadline_at, true)}`
                                   : "Nessuna scadenza"}{" "}
@@ -451,7 +451,7 @@ export default function AdminLearnerAnalytics() {
                             </div>
                           </div>
                           <div className="mt-3 flex flex-wrap items-center gap-4">
-                            <span className="text-xs font-bold text-ink/55 dark:text-white/55">
+                            <span className="text-xs font-bold text-ink/65 dark:text-white/65">
                               Ultimo punteggio:{" "}
                               {assignment.latest_score === null
                                 ? "-"
@@ -476,7 +476,7 @@ export default function AdminLearnerAnalytics() {
                       );
                     })}
                     {!(data.assignments || []).length ? (
-                      <p className="p-7 text-sm font-bold text-ink/50 dark:text-white/50">
+                      <p className="p-7 text-sm font-bold text-ink/65 dark:text-white/65">
                         Nessuna assegnazione disponibile.
                       </p>
                     ) : null}
@@ -507,7 +507,7 @@ export default function AdminLearnerAnalytics() {
                               {item.diagnostic_code}
                             </p>
                             <h3 className="mt-1 font-black">{item.label}</h3>
-                            <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
+                            <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
                               {item.primary_skill} ·{" "}
                               {number(item.error_count, 1)} errori
                             </p>
@@ -519,7 +519,7 @@ export default function AdminLearnerAnalytics() {
                       </article>
                     ))}
                     {!(data.diagnostics || []).length ? (
-                      <p className="text-sm font-bold text-ink/50 dark:text-white/50">
+                      <p className="text-sm font-bold text-ink/65 dark:text-white/65">
                         Nessuna diagnostica nel periodo.
                       </p>
                     ) : null}
@@ -546,13 +546,13 @@ export default function AdminLearnerAnalytics() {
                       className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between"
                     >
                       <div>
-                        <p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">
+                        <p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">
                           {item.activity_type === "srs_review"
                             ? "Ripasso SRS"
                             : "Esercizio"}
                         </p>
                         <h3 className="mt-1 font-black">{item.title}</h3>
-                        <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
+                        <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
                           {formatDate(item.created_at, true)}
                         </p>
                       </div>
@@ -569,7 +569,7 @@ export default function AdminLearnerAnalytics() {
                     </article>
                   ))}
                   {!(data.recent_activity || []).length ? (
-                    <p className="py-6 text-sm font-bold text-ink/50 dark:text-white/50">
+                    <p className="py-6 text-sm font-bold text-ink/65 dark:text-white/65">
                       Nessuna attività nel periodo.
                     </p>
                   ) : null}

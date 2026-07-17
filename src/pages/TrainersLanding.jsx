@@ -45,11 +45,11 @@ function TrainerMeta({ trainer }) {
   return (
     <div className="grid gap-2">
       <div className="flex items-center justify-between gap-3 rounded-lg bg-paper px-3 py-2">
-        <span className="text-xs font-black uppercase tracking-[0.08em] text-ink/50">Card</span>
+        <span className="text-xs font-black uppercase tracking-[0.08em] text-ink/65">Card</span>
         <span className="text-sm font-black text-ink">{trainer.cardCount}</span>
       </div>
       <div className="flex items-center justify-between gap-3 rounded-lg bg-paper px-3 py-2">
-        <span className="text-xs font-black uppercase tracking-[0.08em] text-ink/50">Categorie</span>
+        <span className="text-xs font-black uppercase tracking-[0.08em] text-ink/65">Categorie</span>
         <span className="text-sm font-black text-ink">{trainer.categories.length}</span>
       </div>
     </div>
@@ -177,7 +177,7 @@ export default function TrainersLanding() {
                 {[[totalCards, 'card'], [liveTrainerConfig.length, 'trainer'], ['SRS', 'review']].map(([value, label]) => (
                   <div key={label} className="rounded-lg border border-white/10 bg-white/[0.08] p-3 text-center">
                     <p className="text-2xl font-black">{value}</p>
-                    <p className="mt-1 text-[0.65rem] font-black uppercase tracking-[0.08em] text-white/50">{label}</p>
+                    <p className="mt-1 text-[0.65rem] font-black uppercase tracking-[0.08em] text-white/65">{label}</p>
                   </div>
                 ))}
               </div>
@@ -219,7 +219,7 @@ export default function TrainersLanding() {
             <CTAButton href="/prenota#booking-form" variant="contrast">Prenota la simulazione</CTAButton>
             <CTAButton href="/percorsi" variant="secondary">Vedi i percorsi</CTAButton>
           </CtaBand>
-          <p className="mt-4 flex items-start gap-2 text-xs font-semibold leading-5 text-ink/55"><Lock aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-coral" />Accesso incluso per studenti attivi. Alcune funzioni premium verranno attivate progressivamente.</p>
+          <p className="mt-4 flex items-start gap-2 text-xs font-semibold leading-5 text-ink/65"><Lock aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-coral" />Accesso incluso per studenti attivi. Alcune funzioni premium verranno attivate progressivamente.</p>
         </div>
       </TrainerLayout>
     </>

@@ -281,7 +281,7 @@ export default function CardImportWorkspace({
               <Link to={editorPath} className={adminButton.secondary}>Editor e revisione</Link>
               {archivePath ? <Link to={archivePath} className={adminButton.secondary}>Archivio</Link> : null}
             </div>
-            {fileName ? <p className="mt-3 text-sm font-bold text-ink/60 dark:text-white/55">File selezionato: {fileName}</p> : null}
+            {fileName ? <p className="mt-3 text-sm font-bold text-ink/60 dark:text-white/65">File selezionato: {fileName}</p> : null}
             {error ? <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-400/25 dark:bg-red-400/10 dark:text-red-100">{error}</div> : null}
             {message ? <div className="mt-5 rounded-xl border border-moss/20 bg-mint/30 p-4 text-sm font-bold text-ink dark:border-emerald-300/25 dark:bg-emerald-400/10 dark:text-emerald-100">{message}</div> : null}
           </header>
@@ -293,7 +293,7 @@ export default function CardImportWorkspace({
                   <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Anteprima importazione</p>
                   <h2 className="mt-2 text-2xl font-black text-ink dark:text-white">{cards.length} {cards.length === 1 ? itemLabel : itemPlural}</h2>
                   <div className="mt-4 flex flex-wrap items-end gap-3">
-                    <label className="min-w-[15rem] flex-1"><span className="text-xs font-black uppercase text-ink/55 dark:text-white/55">Categoria per le selezionate</span><input value={bulkCategory} onChange={(event) => setBulkCategory(event.target.value)} placeholder="Es. People & identity" className="mt-1.5 w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white" /></label>
+                    <label className="min-w-[15rem] flex-1"><span className="text-xs font-black uppercase text-ink/65 dark:text-white/65">Categoria per le selezionate</span><input value={bulkCategory} onChange={(event) => setBulkCategory(event.target.value)} placeholder="Es. People & identity" className="mt-1.5 w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white" /></label>
                     <button type="button" onClick={applyBulkCategory} disabled={!bulkCategory.trim() || !selectedRows.size} className={adminButton.secondary}>Applica categoria</button>
                     <button type="button" onClick={selectImportable} className={adminButton.secondary}>Seleziona importabili</button>
                   </div>
@@ -359,15 +359,15 @@ export default function CardImportWorkspace({
               <aside className={`${adminSurface.panel} p-6 lg:sticky lg:top-24 lg:self-start`}>
                 <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Controllo importazione</p>
                 <dl className="mt-5 grid gap-4 text-sm">
-                  <div><dt className="font-black text-ink/45 dark:text-white/45">Card</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{cards.length}</dd></div>
-                  <div><dt className="font-black text-ink/45 dark:text-white/45">Selezionate</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{selectedRows.size}</dd></div>
-                  <div><dt className="font-black text-ink/45 dark:text-white/45">Nuove o da salvare</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{importPayload.length}</dd></div>
-                  <div><dt className="font-black text-ink/45 dark:text-white/45">Da sostituire</dt><dd className="mt-1 text-2xl font-black text-violet-700 dark:text-violet-200">{selectedReplacements.length}</dd></div>
-                  <div><dt className="font-black text-ink/45 dark:text-white/45">Da saltare</dt><dd className="mt-1 text-2xl font-black text-slate-600 dark:text-white/60">{selectedSkipped.length}</dd></div>
-                  <div><dt className="font-black text-ink/45 dark:text-white/45">Decisioni mancanti</dt><dd className="mt-1 text-2xl font-black text-amber-700 dark:text-amber-200">{unresolvedDuplicates.length}</dd></div>
-                  <div><dt className="font-black text-ink/45 dark:text-white/45">Non valide</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{invalidRows.length}</dd></div>
-                  <div><dt className="font-black text-ink/45 dark:text-white/45">ID generati</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{preflight.summary.generatedIds}</dd></div>
-                  <div><dt className="font-black text-ink/45 dark:text-white/45">Duplicati nel file</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{preflight.summary.batchDuplicates || 0}</dd></div>
+                  <div><dt className="font-black text-ink/60 dark:text-white/60">Card</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{cards.length}</dd></div>
+                  <div><dt className="font-black text-ink/60 dark:text-white/60">Selezionate</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{selectedRows.size}</dd></div>
+                  <div><dt className="font-black text-ink/60 dark:text-white/60">Nuove o da salvare</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{importPayload.length}</dd></div>
+                  <div><dt className="font-black text-ink/60 dark:text-white/60">Da sostituire</dt><dd className="mt-1 text-2xl font-black text-violet-700 dark:text-violet-200">{selectedReplacements.length}</dd></div>
+                  <div><dt className="font-black text-ink/60 dark:text-white/60">Da saltare</dt><dd className="mt-1 text-2xl font-black text-slate-600 dark:text-white/60">{selectedSkipped.length}</dd></div>
+                  <div><dt className="font-black text-ink/60 dark:text-white/60">Decisioni mancanti</dt><dd className="mt-1 text-2xl font-black text-amber-700 dark:text-amber-200">{unresolvedDuplicates.length}</dd></div>
+                  <div><dt className="font-black text-ink/60 dark:text-white/60">Non valide</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{invalidRows.length}</dd></div>
+                  <div><dt className="font-black text-ink/60 dark:text-white/60">ID generati</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{preflight.summary.generatedIds}</dd></div>
+                  <div><dt className="font-black text-ink/60 dark:text-white/60">Duplicati nel file</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{preflight.summary.batchDuplicates || 0}</dd></div>
                 </dl>
                 {duplicateIds.length ? <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-400/25 dark:bg-red-400/10 dark:text-red-100">ID ripetuti nel file: {duplicateIds.join(', ')}</div> : null}
                 {duplicateReplacementTargets.length ? <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-400/25 dark:bg-red-400/10 dark:text-red-100">Più righe tentano di sostituire la stessa card: {duplicateReplacementTargets.join(', ')}</div> : null}
@@ -375,7 +375,7 @@ export default function CardImportWorkspace({
                 {selectedInvalid.length ? <p className="mt-3 text-xs font-bold text-red-700 dark:text-red-300">{selectedInvalid.length} righe selezionate hanno errori reali. Correggile o deselezionale.</p> : null}
                 {unresolvedDuplicates.length ? <p className="mt-3 text-xs font-bold text-amber-700 dark:text-amber-200">Scegli Sostituisci o Salta per {unresolvedDuplicates.length} duplicati selezionati.</p> : null}
                 {selectedDuplicateIds.length ? <p className="mt-3 text-xs font-bold text-red-700 dark:text-red-300">Le righe da salvare contengono ancora ID ripetuti.</p> : null}
-                <p className="mt-3 text-xs font-semibold leading-5 text-ink/50 dark:text-white/45">L’operazione è transazionale. Le card nuove o sostituite vengono impostate come bozze da revisionare. Le card saltate non vengono modificate.</p>
+                <p className="mt-3 text-xs font-semibold leading-5 text-ink/65 dark:text-white/60">L’operazione è transazionale. Le card nuove o sostituite vengono impostate come bozze da revisionare. Le card saltate non vengono modificate.</p>
               </aside>
             </div>
           ) : null}

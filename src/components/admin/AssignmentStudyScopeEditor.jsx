@@ -189,14 +189,14 @@ export default function AssignmentStudyScopeEditor({
           <div className="rounded-2xl border border-ink/10 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5">
             <div className="flex items-end justify-between gap-3">
               <div><p className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-moss"><Layers3 className="h-4 w-4" />Deck pubblicati</p><p className="mt-1 text-sm font-semibold text-ink/60 dark:text-white/60">Un deck aggiunge tutte le sue card pubblicate.</p></div>
-              <span className="text-xs font-bold text-ink/50 dark:text-white/50">{selectedDeckIds.length} selezionati</span>
+              <span className="text-xs font-bold text-ink/65 dark:text-white/65">{selectedDeckIds.length} selezionati</span>
             </div>
             {visibleDecks.length ? (
               <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {visibleDecks.map((deck) => {
                   const selected = selectedDeckIds.includes(deck.id);
                   const unavailable = Math.max(0, deck.totalItemCount - deck.publishedItemCount);
-                  return <button key={deck.id} type="button" onClick={() => toggleDeck(deck.id)} className={`flex items-center gap-3 rounded-xl border p-3 text-left transition ${selected ? 'border-moss bg-mint/55 dark:border-emerald-300/40 dark:bg-emerald-400/15' : 'border-ink/10 bg-white hover:border-moss/40 dark:border-white/10 dark:bg-white/5'}`}><span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border ${selected ? 'border-moss bg-moss text-white' : 'border-ink/20 dark:border-white/25'}`}>{selected ? <Check className="h-4 w-4" /> : null}</span><span className="min-w-0"><span className="block truncate text-sm font-black text-ink dark:text-white">{deck.title}</span><span className="mt-0.5 block text-xs font-bold text-ink/50 dark:text-white/50">{deck.publishedItemCount} card{unavailable ? ` · ${unavailable} non pubblicate escluse` : ''}</span></span></button>;
+                  return <button key={deck.id} type="button" onClick={() => toggleDeck(deck.id)} className={`flex items-center gap-3 rounded-xl border p-3 text-left transition ${selected ? 'border-moss bg-mint/55 dark:border-emerald-300/40 dark:bg-emerald-400/15' : 'border-ink/10 bg-white hover:border-moss/40 dark:border-white/10 dark:bg-white/5'}`}><span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border ${selected ? 'border-moss bg-moss text-white' : 'border-ink/20 dark:border-white/25'}`}>{selected ? <Check className="h-4 w-4" /> : null}</span><span className="min-w-0"><span className="block truncate text-sm font-black text-ink dark:text-white">{deck.title}</span><span className="mt-0.5 block text-xs font-bold text-ink/65 dark:text-white/65">{deck.publishedItemCount} card{unavailable ? ` · ${unavailable} non pubblicate escluse` : ''}</span></span></button>;
                 })}
               </div>
             ) : <p className="mt-3 rounded-xl border border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/60 dark:border-white/15 dark:text-white/60">Nessun deck pubblicato per questo Trainer. Pubblica prima il deck dalla relativa pagina Deck.</p>}
@@ -212,7 +212,7 @@ export default function AssignmentStudyScopeEditor({
                   const allDirect = batch.itemIds.every((id) => directSet.has(id));
                   const allResolved = batch.itemIds.every((id) => resolvedSet.has(id));
                   const inheritedOnly = allResolved && !allDirect;
-                  return <button key={batch.key} type="button" onClick={() => toggleBatch(batch)} disabled={inheritedOnly} className={`rounded-xl border p-3 text-left transition ${allResolved ? 'border-violet-400 bg-white dark:border-violet-300/40 dark:bg-violet-400/10' : 'border-violet-200 bg-white/70 hover:border-violet-400 dark:border-violet-300/15 dark:bg-white/5'} disabled:cursor-default`}><span className="block text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">{PRACTICE_TRAINERS[batch.trainerId]?.label}</span><span className="mt-1 block text-sm font-black text-ink dark:text-white">{batch.name}</span><span className="mt-1 block text-xs font-semibold text-ink/55 dark:text-white/55">{batch.itemIds.length} card · {inheritedOnly ? 'incluso da un deck' : allDirect ? 'selezionato' : 'clicca per aggiungere'}</span></button>;
+                  return <button key={batch.key} type="button" onClick={() => toggleBatch(batch)} disabled={inheritedOnly} className={`rounded-xl border p-3 text-left transition ${allResolved ? 'border-violet-400 bg-white dark:border-violet-300/40 dark:bg-violet-400/10' : 'border-violet-200 bg-white/70 hover:border-violet-400 dark:border-violet-300/15 dark:bg-white/5'} disabled:cursor-default`}><span className="block text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">{PRACTICE_TRAINERS[batch.trainerId]?.label}</span><span className="mt-1 block text-sm font-black text-ink dark:text-white">{batch.name}</span><span className="mt-1 block text-xs font-semibold text-ink/65 dark:text-white/65">{batch.itemIds.length} card · {inheritedOnly ? 'incluso da un deck' : allDirect ? 'selezionato' : 'clicca per aggiungere'}</span></button>;
                 })}
               </div>
             ) : <p className="mt-3 text-sm font-semibold text-ink/60 dark:text-white/60">Nessun batch disponibile per questo filtro.</p>}
@@ -225,7 +225,7 @@ export default function AssignmentStudyScopeEditor({
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-ink/10 bg-white/70 p-3 dark:border-white/10 dark:bg-white/5">
-            <p className="text-sm font-black text-ink dark:text-white">{resolvedIds.length} card nel percorso <span className="font-semibold text-ink/55 dark:text-white/55">({selectedItemIds.length} selezionate direttamente, le altre dai deck)</span></p>
+            <p className="text-sm font-black text-ink dark:text-white">{resolvedIds.length} card nel percorso <span className="font-semibold text-ink/65 dark:text-white/65">({selectedItemIds.length} selezionate direttamente, le altre dai deck)</span></p>
             <div className="flex gap-2"><button type="button" onClick={() => onItemIdsChange(unique([...selectedItemIds, ...filteredCards.map((card) => card.id)]))} className="rounded-full border border-ink/15 px-3 py-1.5 text-xs font-black dark:border-white/15">Seleziona risultati</button><button type="button" onClick={() => onItemIdsChange(selectedItemIds.filter((id) => !filteredCards.some((card) => card.id === id)))} className="rounded-full px-3 py-1.5 text-xs font-black text-red-700 dark:text-red-300">Rimuovi risultati</button></div>
           </div>
 
@@ -239,8 +239,8 @@ export default function AssignmentStudyScopeEditor({
               return (
                 <button key={card.id} type="button" onClick={() => toggleItem(card.id)} className="flex w-full items-center gap-3 border-b border-ink/10 px-4 py-3 text-left last:border-0 hover:bg-linen/40 dark:border-white/10 dark:hover:bg-white/5">
                   <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-md border ${selected ? 'border-moss bg-moss text-white' : 'border-ink/20 dark:border-white/25'}`}>{selected ? <Check className="h-4 w-4" /> : null}</span>
-                  <span className="min-w-0 flex-1"><span className="block truncate text-sm font-black text-ink dark:text-white">{card.english}</span><span className="mt-0.5 block truncate text-xs font-semibold text-ink/55 dark:text-white/55">{card.italian}{card.batch ? ` · batch ${card.batch}` : ''}</span></span>
-                  <span className="shrink-0 text-right text-[0.68rem] font-black uppercase text-ink/45 dark:text-white/45">{card.level}<br />{inherited && !direct ? 'nel deck' : PRACTICE_TRAINERS[card.trainerId]?.label}</span>
+                  <span className="min-w-0 flex-1"><span className="block truncate text-sm font-black text-ink dark:text-white">{card.english}</span><span className="mt-0.5 block truncate text-xs font-semibold text-ink/65 dark:text-white/65">{card.italian}{card.batch ? ` · batch ${card.batch}` : ''}</span></span>
+                  <span className="shrink-0 text-right text-[0.68rem] font-black uppercase text-ink/60 dark:text-white/60">{card.level}<br />{inherited && !direct ? 'nel deck' : PRACTICE_TRAINERS[card.trainerId]?.label}</span>
                 </button>
               );
             })}

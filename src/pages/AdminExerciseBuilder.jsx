@@ -145,9 +145,9 @@ function SummaryCard({ icon: Icon, label, value, note }) {
     <article className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.06]">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.12em] text-ink/45 dark:text-white/45">{label}</p>
+          <p className="text-xs font-black uppercase tracking-[0.12em] text-ink/60 dark:text-white/60">{label}</p>
           <p className="mt-2 text-3xl font-black text-ink dark:text-white">{value}</p>
-          <p className="mt-1 text-xs font-semibold text-ink/50 dark:text-white/50">{note}</p>
+          <p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">{note}</p>
         </div>
         <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-mint text-moss dark:bg-emerald-300/10 dark:text-emerald-200">
           <Icon aria-hidden="true" className="h-5 w-5" />
@@ -286,7 +286,7 @@ export default function AdminExerciseBuilder() {
                 <div className="absolute right-0 top-12 z-30 max-h-[36rem] w-[min(24rem,calc(100vw-2rem))] overflow-y-auto rounded-2xl border border-ink/10 bg-white p-2 shadow-xl dark:border-white/10 dark:bg-[#18231f]">
                   {TEMPLATE_GROUPS.map((group) => (
                     <div key={group.label} className="border-b border-ink/10 py-2 last:border-b-0 dark:border-white/10">
-                      <p className="px-3 pb-1 text-[0.65rem] font-black uppercase tracking-[0.12em] text-ink/40 dark:text-white/40">{group.label}</p>
+                      <p className="px-3 pb-1 text-[0.65rem] font-black uppercase tracking-[0.12em] text-ink/60 dark:text-white/60">{group.label}</p>
                       {group.keys.map((key) => {
                         const option = templateMeta(key);
                         return (
@@ -328,7 +328,7 @@ export default function AdminExerciseBuilder() {
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">1. Sorgente</p>
                   <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Incolla o modifica il JSON</h2>
-                  <p className="mt-1 text-xs font-semibold text-ink/50 dark:text-white/50">{sourceName}</p>
+                  <p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">{sourceName}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {QUICK_TEMPLATE_OPTIONS.map((option) => (
@@ -340,7 +340,7 @@ export default function AdminExerciseBuilder() {
               </div>
               <textarea value={jsonText} onChange={(event) => replaceJson(event.target.value, sourceName)} spellCheck="false" className="mt-4 min-h-[34rem] w-full resize-y rounded-xl border border-ink/15 bg-[#101915] p-4 font-mono text-xs leading-6 text-emerald-50 outline-none transition focus:border-emerald-400 sm:text-sm" aria-label="JSON Exercise Builder" />
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                <p className="flex items-center gap-2 text-xs font-semibold text-ink/55 dark:text-white/55"><CircleHelp aria-hidden="true" className="h-4 w-4" /> Gli ID tecnici presenti nel JSON vengono ignorati.</p>
+                <p className="flex items-center gap-2 text-xs font-semibold text-ink/65 dark:text-white/65"><CircleHelp aria-hidden="true" className="h-4 w-4" /> Gli ID tecnici presenti nel JSON vengono ignorati.</p>
                 <button type="button" onClick={validateCurrentJson} className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-xl bg-moss px-5 py-2.5 text-sm font-black text-white transition hover:bg-ink"><ClipboardCheck aria-hidden="true" className="h-4 w-4" /> Valida JSON</button>
               </div>
             </article>
@@ -390,8 +390,8 @@ export default function AdminExerciseBuilder() {
               <article className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.06] sm:p-5">
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">Importazioni recenti</p>
                 <div className="mt-3 space-y-2">
-                  {overview.recentBatches.length === 0 ? <p className="rounded-xl border border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/50 dark:border-white/15 dark:text-white/50">Nessun batch salvato.</p> : overview.recentBatches.map((batch) => (
-                    <div key={batch.id} className="flex items-center justify-between gap-3 rounded-xl border border-ink/10 px-3 py-3 dark:border-white/10"><div className="min-w-0"><p className="truncate text-sm font-black text-ink dark:text-white">{batch.source_name}</p><p className="mt-0.5 text-xs font-semibold text-ink/45 dark:text-white/45">{entityLabel(batch.entity_type)} · {formatDate(batch.created_at)}</p></div><span className="shrink-0 rounded-full bg-linen px-2.5 py-1 text-xs font-black text-ink dark:bg-white/10 dark:text-white">{batch.valid_count + batch.warning_count}</span></div>
+                  {overview.recentBatches.length === 0 ? <p className="rounded-xl border border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/65 dark:border-white/15 dark:text-white/65">Nessun batch salvato.</p> : overview.recentBatches.map((batch) => (
+                    <div key={batch.id} className="flex items-center justify-between gap-3 rounded-xl border border-ink/10 px-3 py-3 dark:border-white/10"><div className="min-w-0"><p className="truncate text-sm font-black text-ink dark:text-white">{batch.source_name}</p><p className="mt-0.5 text-xs font-semibold text-ink/60 dark:text-white/60">{entityLabel(batch.entity_type)} · {formatDate(batch.created_at)}</p></div><span className="shrink-0 rounded-full bg-linen px-2.5 py-1 text-xs font-black text-ink dark:bg-white/10 dark:text-white">{batch.valid_count + batch.warning_count}</span></div>
                   ))}
                 </div>
               </article>

@@ -48,7 +48,7 @@ export default function ContentAreaNav({ type, onNewCard }) {
     <nav className="mb-4 rounded-xl border border-white/10 bg-ink p-2.5 shadow-sm dark:bg-[#16211e]" aria-label={`Strumenti ${area.label}`}>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
-          <p className="px-2 pb-1.5 text-[0.65rem] font-black uppercase tracking-[0.14em] text-white/45">{area.label}</p>
+          <p className="px-2 pb-1.5 text-[0.65rem] font-black uppercase tracking-[0.14em] text-white/60">{area.label}</p>
           <div className="flex flex-wrap gap-1.5">
             {area.routes.map((route) => {
               const Icon = route.icon;

@@ -59,7 +59,7 @@ function MetricCard({ icon: Icon, eyebrow, value, detail, tone = 'emerald' }) {
       <div className={`relative grid h-11 w-11 place-items-center rounded-xl ring-1 ${toneClasses}`}>
         <Icon aria-hidden="true" className="h-5 w-5" />
       </div>
-      <p className="relative mt-5 text-xs font-black uppercase tracking-[0.12em] text-white/55">{eyebrow}</p>
+      <p className="relative mt-5 text-xs font-black uppercase tracking-[0.12em] text-white/65">{eyebrow}</p>
       <p className="relative mt-2 text-3xl font-black tracking-[-0.04em] text-white">{value}</p>
       <p className="relative mt-1 text-sm font-semibold leading-6 text-white/58">{detail}</p>
       <div aria-hidden="true" className={`absolute inset-x-0 bottom-0 h-0.5 ${tone === 'coral' ? 'bg-gradient-to-r from-transparent via-[#e86f51]/70 to-[#ffc457]/30' : 'bg-gradient-to-r from-transparent via-[#53d6b3]/70 to-transparent'}`} />
@@ -288,7 +288,7 @@ export default function LearnerProgress() {
                     </div>
                     <div className="rounded-2xl border border-white/10 bg-black/15 px-4 py-3 text-right">
                       <p className="text-2xl font-black text-white">{stats.progressPercentage}%</p>
-                      <p className="text-xs font-bold text-white/50">già incontrate</p>
+                      <p className="text-xs font-bold text-white/65">già incontrate</p>
                     </div>
                   </div>
 
@@ -305,7 +305,7 @@ export default function LearnerProgress() {
                   ) : (
                     <div className="mt-7 rounded-2xl border border-dashed border-white/15 bg-black/10 p-5">
                       <p className="font-black text-white">Nessuna card assegnata</p>
-                      <p className="mt-1 text-sm leading-6 text-white/55">Quando riceverai nuove card, il loro avanzamento apparirà qui.</p>
+                      <p className="mt-1 text-sm leading-6 text-white/65">Quando riceverai nuove card, il loro avanzamento apparirà qui.</p>
                     </div>
                   )}
                 </article>
@@ -331,12 +331,12 @@ export default function LearnerProgress() {
                           <div className="flex h-36 w-full items-end overflow-hidden rounded-xl bg-white/[0.05]">
                             <div className={`w-full rounded-xl transition-all duration-500 ${isToday ? 'bg-gradient-to-t from-[#14846d] to-[#66d7b9]' : 'bg-gradient-to-t from-[#c76545] to-[#ffc457]'}`} style={{ height: `${height}%` }} />
                           </div>
-                          <span className={`text-[0.68rem] font-black uppercase ${isToday ? 'text-[#9ce8d3]' : 'text-white/45'}`}>{day.label}</span>
+                          <span className={`text-[0.68rem] font-black uppercase ${isToday ? 'text-[#9ce8d3]' : 'text-white/60'}`}>{day.label}</span>
                         </div>
                       );
                     })}
                   </div>
-                  <p className="mt-5 text-sm font-semibold text-white/55">Oggi hai registrato <strong className="text-white">{stats.reviewedToday}</strong> ripassi.</p>
+                  <p className="mt-5 text-sm font-semibold text-white/65">Oggi hai registrato <strong className="text-white">{stats.reviewedToday}</strong> ripassi.</p>
                 </article>
               </div>
 
@@ -368,7 +368,7 @@ export default function LearnerProgress() {
                   <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-[#e86f51]/15 bg-gradient-to-r from-[#e86f51]/[0.07] to-[#ffc457]/[0.035] p-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <p className="flex items-center gap-2 font-black text-white"><BookOpenCheck aria-hidden="true" className="h-5 w-5 text-[#ffc7b0]" />Hai completato le attività disponibili</p>
-                      <p className="mt-1 text-sm leading-6 text-white/55">Puoi continuare con il ripasso oppure scegliere un Trainer.</p>
+                      <p className="mt-1 text-sm leading-6 text-white/65">Puoi continuare con il ripasso oppure scegliere un Trainer.</p>
                     </div>
                     <Link to="/trainers" className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.08] px-5 py-2.5 text-sm font-black text-white transition hover:bg-white/[0.13]">
                       Scegli un Trainer

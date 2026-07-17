@@ -23,7 +23,7 @@ export default function ReviewCarousel() {
           <p className="mt-4 text-lg font-black leading-7 text-ink">{review.name}</p>
           <p className="mt-1 text-sm font-bold text-moss">
             {review.role}
-            {review.date ? <span className="text-ink/50"> · {review.date}</span> : null}
+            {review.date ? <span className="text-ink/65"> · {review.date}</span> : null}
           </p>
         </div>
         <div className="flex gap-2">

@@ -146,7 +146,7 @@ export default function AdminCreateAssignment() {
 
                 <label className="mt-5 block">
                   <span className="text-sm font-black text-ink dark:text-white">Messaggio per lo studente</span>
-                  <span className="mt-1 block text-xs font-semibold leading-5 text-ink/50 dark:text-white/50">Visibile allo studente nella pagina dell’attività.</span>
+                  <span className="mt-1 block text-xs font-semibold leading-5 text-ink/65 dark:text-white/65">Visibile allo studente nella pagina dell’attività.</span>
                   <textarea
                     value={learnerMessage}
                     onChange={(event) => setLearnerMessage(event.target.value)}
@@ -176,7 +176,7 @@ export default function AdminCreateAssignment() {
 
                 <label className="mt-6 flex items-start gap-3 rounded-xl border border-ink/10 bg-linen p-4 dark:border-white/10 dark:bg-white/[0.05]">
                   <input type="checkbox" checked={required} onChange={(event) => setRequired(event.target.checked)} className="mt-1 h-4 w-4" />
-                  <span><span className="block text-sm font-black text-ink dark:text-white">Attività obbligatoria</span><span className="mt-1 block text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">Disattiva questa opzione per un’attività facoltativa.</span></span>
+                  <span><span className="block text-sm font-black text-ink dark:text-white">Attività obbligatoria</span><span className="mt-1 block text-xs font-semibold leading-5 text-ink/65 dark:text-white/65">Disattiva questa opzione per un’attività facoltativa.</span></span>
                 </label>
 
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">

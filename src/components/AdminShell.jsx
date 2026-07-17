@@ -293,7 +293,7 @@ export default function AdminShell() {
           ) : (
             <div className="mt-2">
               <p className="text-xs font-bold uppercase tracking-[0.15em] text-emerald-200/75">Pannello admin</p>
-              <p className="mt-1 text-[0.68rem] font-semibold text-white/40">Scegli un’area e poi lo strumento.</p>
+              <p className="mt-1 text-[0.68rem] font-semibold text-white/60">Scegli un’area e poi lo strumento.</p>
             </div>
           )}
         </div>
@@ -318,7 +318,7 @@ export default function AdminShell() {
               <div className="flex items-center gap-3 rounded-xl bg-white/[0.07] p-2.5">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-black text-white">{displayName}</p>
-                  {email ? <p className="mt-0.5 truncate text-xs font-semibold text-white/50">{email}</p> : null}
+                  {email ? <p className="mt-0.5 truncate text-xs font-semibold text-white/65">{email}</p> : null}
                 </div>
                 <ThemeToggle />
               </div>

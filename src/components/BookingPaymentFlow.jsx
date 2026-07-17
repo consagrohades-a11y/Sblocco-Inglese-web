@@ -53,7 +53,7 @@ export default function BookingPaymentFlow() {
           </p>
         </div>
         <div className="rounded-lg border border-moss/20 bg-white px-4 py-3 shadow-sm">
-          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/55">Da confermare</p>
+          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65">Da confermare</p>
           <p className="mt-1 text-2xl font-black text-moss">{primaryOffer.price}</p>
         </div>
       </div>
@@ -142,7 +142,7 @@ export default function BookingPaymentFlow() {
                   Apri Calendly in una nuova scheda
                   <ExternalLink aria-hidden="true" className="h-4 w-4" />
                 </a>
-                <p className="text-xs font-bold leading-5 text-ink/55">
+                <p className="text-xs font-bold leading-5 text-ink/65">
                   Lo slot viene confermato dopo il pagamento con PayPal.
                 </p>
               </div>
@@ -158,7 +158,7 @@ export default function BookingPaymentFlow() {
                 </p>
               </div>
               <PayPalHostedButton />
-              <div className="flex items-start gap-3 rounded-lg bg-paper px-4 py-3 text-xs font-bold leading-5 text-ink/55">
+              <div className="flex items-start gap-3 rounded-lg bg-paper px-4 py-3 text-xs font-bold leading-5 text-ink/65">
                 <ShieldCheck aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-moss" />
                 <p>
                   Il pagamento conferma il posto e ti permette di procedere con la sessione online.

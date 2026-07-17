@@ -20,7 +20,7 @@ function PillButton({ active, children, count, onClick, dark = false }) {
       {typeof count === 'number' ? (
         <span
           className={`shrink-0 rounded-full px-2 py-0.5 text-[0.65rem] font-black leading-none ${
-            active ? 'bg-white/20 text-white' : dark ? 'bg-white/10 text-white/60' : 'bg-ink/5 text-ink/50'
+            active ? 'bg-white/20 text-white' : dark ? 'bg-white/10 text-white/60' : 'bg-ink/5 text-ink/65'
           }`}
         >
           {count}
@@ -58,7 +58,7 @@ export default function DeckSelector({
           </span>
           <div className="min-w-0">
             <h2 className={`text-sm font-black ${dark ? 'text-white' : 'text-ink'}`}>Filtri</h2>
-            <p className={`text-xs font-semibold ${dark ? 'text-white/60' : 'text-ink/55'}`}>{filterSummary}</p>
+            <p className={`text-xs font-semibold ${dark ? 'text-white/60' : 'text-ink/65'}`}>{filterSummary}</p>
           </div>
         </div>
         <button
@@ -78,7 +78,7 @@ export default function DeckSelector({
 
       <div className="mt-4 grid min-w-0 gap-3">
         <div className="min-w-0">
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Categorie</p>
+          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>Categorie</p>
           <div className="mt-2 flex min-w-0 max-w-full flex-wrap gap-2" aria-label="Filtra per categoria">
             {categories.map((category) => (
               <PillButton
@@ -95,7 +95,7 @@ export default function DeckSelector({
         </div>
 
         <div className={`min-w-0 border-t pt-3 ${dark ? 'border-white/10' : 'border-ink/10'}`}>
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Livelli</p>
+          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>Livelli</p>
           <div className="mt-2 flex min-w-0 max-w-full flex-wrap gap-2" aria-label="Filtra per livello">
             {levels.map((level) => (
               <PillButton key={level} active={selectedLevels.includes(level)} onClick={() => onToggleLevel(level)} dark={dark}>

@@ -107,7 +107,7 @@ function CourseMetric({ icon: Icon, label, value }) {
   return (
     <div className="rounded-2xl border border-white/12 bg-white/[0.07] p-4 backdrop-blur">
       <Icon aria-hidden="true" className="h-5 w-5 text-mint" />
-      <p className="mt-3 text-[0.68rem] font-black uppercase tracking-[0.1em] text-white/45">{label}</p>
+      <p className="mt-3 text-[0.68rem] font-black uppercase tracking-[0.1em] text-white/60">{label}</p>
       <p className="mt-1 text-base font-black text-white">{value}</p>
     </div>
   );
@@ -194,7 +194,7 @@ export default function BusinessEnglishFlow() {
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">Prezzo cohort fondatrice</p>
                   <p className="mt-2 text-4xl font-black">{course.price}</p>
-                  <p className="mt-1 text-xs font-semibold text-white/45">{course.standardPrice}</p>
+                  <p className="mt-1 text-xs font-semibold text-white/60">{course.standardPrice}</p>
                 </div>
                 <span className="rounded-full bg-coral px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-white">
                   settembre 2026
@@ -343,7 +343,7 @@ export default function BusinessEnglishFlow() {
                       {week.number}
                     </span>
                     <div>
-                      <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/40 dark:text-white/40">Settimana {Number(week.number)}</p>
+                      <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/60 dark:text-white/60">Settimana {Number(week.number)}</p>
                       <h3 className="mt-1 text-xl font-black text-ink dark:text-white">{week.title}</h3>
                       <p className="mt-3 text-sm font-semibold leading-7 text-ink/70 dark:text-white/70">{week.result}</p>
                     </div>

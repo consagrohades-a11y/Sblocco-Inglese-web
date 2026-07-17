@@ -192,15 +192,15 @@ export default function LearnerAssignmentDetail() {
               <div className="grid gap-3 border-t border-clay/10 bg-linen/35 p-5 dark:border-white/10 dark:bg-white/[0.035] sm:grid-cols-3 sm:px-8 lg:px-10">
                 <div className="flex items-center gap-3 rounded-2xl border border-coral/15 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blush text-coral dark:bg-coral/10 dark:text-[#ff9678]"><ListChecks className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Da completare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{totalActivities || 1} attività</p></div>
+                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Da completare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{totalActivities || 1} attività</p></div>
                 </div>
                 <div className="flex items-center gap-3 rounded-2xl border border-clay/15 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-butter text-clay dark:bg-butter/10 dark:text-[#ffd98a]"><NotebookPen className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Tempo stimato</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{assignment.estimated_minutes ? `${assignment.estimated_minutes} minuti` : 'Segui il tuo ritmo'}</p></div>
+                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Tempo stimato</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{assignment.estimated_minutes ? `${assignment.estimated_minutes} minuti` : 'Segui il tuo ritmo'}</p></div>
                 </div>
                 <div className="flex items-center gap-3 rounded-2xl border border-coral/15 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#fde9dc] text-coral dark:bg-coral/10 dark:text-[#ff9678]"><CalendarDays className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Quando</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{assignment.deadline_at ? formatDate(assignment.deadline_at) : 'Prima della prossima lezione'}</p></div>
+                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Quando</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{assignment.deadline_at ? formatDate(assignment.deadline_at) : 'Prima della prossima lezione'}</p></div>
                 </div>
               </div>
             ) : null}

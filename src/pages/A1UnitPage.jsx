@@ -155,7 +155,7 @@ export default function A1UnitPage({ unitId }) {
               <p className="text-sm font-black text-moss">{card.grammarPoint}</p>
               <p className="mt-3 text-sm leading-7 text-ink/75">{card.explanation}</p>
               <div className="mt-4 rounded-xl bg-mint/35 p-4">
-                <p className="text-xs font-black uppercase tracking-wide text-ink/55">Uso attivo nel parlato</p>
+                <p className="text-xs font-black uppercase tracking-wide text-ink/65">Uso attivo nel parlato</p>
                 <p className="mt-2 text-sm leading-6 text-ink/70">{card.activeUse}</p>
               </div>
               <ul className="mt-4 grid gap-1 text-sm font-black text-ink">

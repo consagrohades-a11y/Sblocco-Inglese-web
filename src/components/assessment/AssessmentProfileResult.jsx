@@ -186,7 +186,7 @@ export default function AssessmentProfileResult({
               <p className="mt-3 text-2xl font-black">
                 {performance.selfReportedLabel}
               </p>
-              <p className="mt-2 text-sm font-semibold text-white/55">
+              <p className="mt-2 text-sm font-semibold text-white/65">
                 Indice di autovalutazione: {performance.selfReportedScore}
               </p>
             </article>
@@ -320,7 +320,7 @@ export default function AssessmentProfileResult({
         </section>
       ) : null}
 
-      <p className="text-center text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
+      <p className="text-center text-xs font-semibold leading-5 text-ink/60 dark:text-white/60">
         {result.disclaimer}
       </p>
     </div>

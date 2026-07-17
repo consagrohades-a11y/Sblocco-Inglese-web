@@ -363,7 +363,7 @@ export default function AdminGroupDetail() {
                         <span className="block font-black">
                           {learner.display_name || "Nome non impostato"}
                         </span>
-                        <span className="text-xs font-semibold text-ink/45 dark:text-white/45">
+                        <span className="text-xs font-semibold text-ink/60 dark:text-white/60">
                           {learner.email}
                         </span>
                       </span>
@@ -477,12 +477,12 @@ export default function AdminGroupDetail() {
                         <span className="rounded-full bg-linen px-2 py-1 text-xs font-black dark:bg-white/10">
                           {statuses[item.status] || item.status}
                         </span>
-                        <span className="text-xs font-bold text-ink/45 dark:text-white/45">
+                        <span className="text-xs font-bold text-ink/60 dark:text-white/60">
                           {item.completed_count}/{item.assignment_count}
                         </span>
                       </div>
                       <h3 className="mt-3 font-black">{item.title}</h3>
-                      <p className="mt-2 text-xs font-semibold text-ink/50 dark:text-white/50">
+                      <p className="mt-2 text-xs font-semibold text-ink/65 dark:text-white/65">
                         {item.deadline_at
                           ? `Scadenza ${new Date(item.deadline_at).toLocaleString("it-IT")}`
                           : "Nessuna scadenza"}
@@ -490,7 +490,7 @@ export default function AdminGroupDetail() {
                     </article>
                   ))}
                   {!(detail.batches || []).length ? (
-                    <p className="text-sm font-bold text-ink/50 dark:text-white/50">
+                    <p className="text-sm font-bold text-ink/65 dark:text-white/65">
                       Nessun batch creato.
                     </p>
                   ) : null}

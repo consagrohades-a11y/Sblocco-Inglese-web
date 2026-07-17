@@ -2080,7 +2080,7 @@ export default function AdminExerciseQuestionEditorV2() {
                 <p className="text-xs font-black uppercase tracking-wide text-moss">
                   Coda
                 </p>
-                <span className="text-xs font-black text-ink/40 dark:text-white/40">
+                <span className="text-xs font-black text-ink/60 dark:text-white/60">
                   {filteredCatalog.length}
                 </span>
               </div>
@@ -2144,7 +2144,7 @@ export default function AdminExerciseQuestionEditorV2() {
                   setCatalogType("all");
                   setCatalogTopic("all");
                 }}
-                className="mt-3 text-xs font-black text-ink/45 underline dark:text-white/45"
+                className="mt-3 text-xs font-black text-ink/60 underline dark:text-white/60"
               >
                 Azzera filtri
               </button>
@@ -2169,7 +2169,7 @@ export default function AdminExerciseQuestionEditorV2() {
                     <p className="mt-2 line-clamp-2 text-sm font-black">
                       {item.title || item.prompt}
                     </p>
-                    <p className="mt-1 text-xs font-bold text-ink/45 dark:text-white/45">
+                    <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">
                       {item.level} · {item.question_type}
                     </p>
                   </button>
@@ -2547,7 +2547,7 @@ export default function AdminExerciseQuestionEditorV2() {
                   <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">
                     Diagnostica
                   </p>
-                  <p className="mt-2 text-sm font-semibold text-ink/55 dark:text-white/55">
+                  <p className="mt-2 text-sm font-semibold text-ink/65 dark:text-white/65">
                     Seleziona ciò che la domanda misura. Per le produzioni,
                     questi codici verranno registrati dopo la valutazione
                     docente.
@@ -2568,7 +2568,7 @@ export default function AdminExerciseQuestionEditorV2() {
                           <span className="block text-xs font-black">
                             {code.code}
                           </span>
-                          <span className="text-xs font-semibold text-ink/45 dark:text-white/45">
+                          <span className="text-xs font-semibold text-ink/60 dark:text-white/60">
                             {code.label} · {code.topic}
                           </span>
                         </span>
@@ -2615,7 +2615,7 @@ export default function AdminExerciseQuestionEditorV2() {
                   Anteprima studente
                 </p>
                 {currentIndex >= 0 ? (
-                  <span className="text-xs font-black text-ink/40 dark:text-white/40">
+                  <span className="text-xs font-black text-ink/60 dark:text-white/60">
                     {currentIndex + 1}/{filteredCatalog.length}
                   </span>
                 ) : null}

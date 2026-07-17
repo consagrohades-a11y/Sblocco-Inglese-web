@@ -105,7 +105,7 @@ export function ListeningPreview({ className = '' }) {
             <p className="text-base font-black">Client call, bisogni e priorità</p>
           </div>
         </div>
-        <span className="text-xs font-black text-white/45">01:12</span>
+        <span className="text-xs font-black text-white/60">01:12</span>
       </div>
 
       <div className="relative mt-5 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4">
@@ -124,7 +124,7 @@ export function ListeningPreview({ className = '' }) {
           ['Risposta', 'Reazione vocale'],
         ].map(([label, value], index) => (
           <div key={label} className="rounded-xl border border-white/10 bg-white/[0.05] p-3">
-            <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-white/45">0{index + 1}</p>
+            <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-white/60">0{index + 1}</p>
             <p className="mt-2 text-xs font-black text-cyan-200">{label}</p>
             <p className="mt-1 text-sm font-bold text-white/75">{value}</p>
           </div>
@@ -202,7 +202,7 @@ export function MethodLoopVisual({ className = '' }) {
             </span>
             <div>
               <p className="text-sm font-black text-white">{title}</p>
-              <p className="mt-0.5 text-xs font-semibold text-white/55">{text}</p>
+              <p className="mt-0.5 text-xs font-semibold text-white/65">{text}</p>
             </div>
             <span className="text-xs font-black text-white/25">0{index + 1}</span>
           </div>
@@ -235,12 +235,12 @@ export function CourseMapPreview({ className = '' }) {
               <span className={`grid h-10 w-10 place-items-center rounded-xl ${accent}`}>
                 <Icon aria-hidden="true" className="h-4.5 w-4.5" />
               </span>
-              <span className="rounded-full border border-white/10 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.08em] text-white/55">
+              <span className="rounded-full border border-white/10 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.08em] text-white/65">
                 Percorso 0{index + 1}
               </span>
             </div>
             <h3 className="mt-4 text-lg font-black text-white">{title}</h3>
-            <p className="mt-1 text-xs font-semibold text-white/50">{meta}</p>
+            <p className="mt-1 text-xs font-semibold text-white/65">{meta}</p>
             <div className="mt-4 flex items-center gap-2">
               <span className="h-1.5 flex-1 rounded-full bg-white/10">
                 <span className="block h-full rounded-full bg-gradient-to-r from-mint via-butter to-coral" style={{ width: `${72 - index * 13}%` }} />

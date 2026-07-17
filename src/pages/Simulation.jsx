@@ -110,7 +110,7 @@ function AuditCard() {
       <CTAButton className="mt-6 w-full" icon={false}>
         {auditCta}
       </CTAButton>
-      <p className="mt-3 text-center text-xs font-bold leading-5 text-ink/50">
+      <p className="mt-3 text-center text-xs font-bold leading-5 text-ink/65">
         Pagamento esterno sicuro. Nessuna promessa magica: solo diagnosi concreta.
       </p>
     </aside>
@@ -124,7 +124,7 @@ function ProofStrip() {
         {proofStats.map((item) => (
           <div key={item.label} className="rounded-lg border border-ink/10 bg-linen/60 px-4 py-3 text-center shadow-sm">
             <p className="text-2xl font-black text-moss">{item.value}</p>
-            <p className="mt-1 text-xs font-black uppercase tracking-[0.08em] text-ink/50">{item.label}</p>
+            <p className="mt-1 text-xs font-black uppercase tracking-[0.08em] text-ink/65">{item.label}</p>
           </div>
         ))}
       </div>

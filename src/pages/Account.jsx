@@ -57,7 +57,7 @@ function DetailRow({ icon: Icon, label, value, tone = 'coral' }) {
         <Icon className="h-5 w-5" />
       </span>
       <div className="min-w-0">
-        <p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">{label}</p>
+        <p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">{label}</p>
         <p className="mt-1 break-words text-sm font-black text-ink dark:text-white">{value || '-'}</p>
       </div>
     </div>
@@ -97,14 +97,14 @@ function AssignmentCard({ assignment, index }) {
                 {assignment.status === 'completed' ? 'Completata' : 'Da fare'}
               </span>
               {assignment.estimated_minutes ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/8 bg-white/70 px-2.5 py-1 text-[11px] font-black text-ink/55 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/55">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/8 bg-white/70 px-2.5 py-1 text-[11px] font-black text-ink/65 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/65">
                   <Clock3 className="h-3.5 w-3.5" />{assignment.estimated_minutes} min
                 </span>
               ) : null}
             </div>
             <h3 className="mt-3 text-lg font-black text-ink dark:text-white">{assignment.title}</h3>
             {assignment.learner_note ? <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink/65 dark:text-white/65">{assignment.learner_note}</p> : null}
-            {assignment.deadline_at ? <p className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-ink/50 dark:text-white/50"><CalendarDays className="h-4 w-4" />Entro {formatDate(assignment.deadline_at)}</p> : null}
+            {assignment.deadline_at ? <p className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-ink/65 dark:text-white/65"><CalendarDays className="h-4 w-4" />Entro {formatDate(assignment.deadline_at)}</p> : null}
           </div>
         </div>
         <Link to={`/assignments/${assignment.id}`} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-coral px-5 py-2.5 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-clay dark:bg-[#ff9678] dark:text-[#21140f]">
@@ -204,15 +204,15 @@ export default function Account() {
               <div className="relative grid gap-3 border-t border-clay/10 bg-linen/30 p-5 dark:border-white/10 dark:bg-white/[0.035] sm:grid-cols-3 sm:px-9 lg:px-11">
                 <div className="flex items-center gap-3 rounded-2xl border border-coral/15 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 place-items-center rounded-xl bg-blush text-coral dark:bg-coral/10 dark:text-[#ff9678]"><ListChecks className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Da fare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{activeAssignments} attività</p></div>
+                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Da fare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{activeAssignments} attività</p></div>
                 </div>
                 <div className="flex items-center gap-3 rounded-2xl border border-[#a9bda9]/35 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#e7efe7] text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]"><Leaf className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Il tuo ritmo</p><p className="mt-1 text-sm font-black text-ink dark:text-white">Un passo alla volta</p></div>
+                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Il tuo ritmo</p><p className="mt-1 text-sm font-black text-ink dark:text-white">Un passo alla volta</p></div>
                 </div>
                 <div className="flex items-center gap-3 rounded-2xl border border-[#c9b8dc]/40 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]"><CalendarDays className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Prossima scadenza</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{nearestDeadline ? formatDate(nearestDeadline) : 'Nessuna urgenza'}</p></div>
+                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Prossima scadenza</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{nearestDeadline ? formatDate(nearestDeadline) : 'Nessuna urgenza'}</p></div>
                 </div>
               </div>
             ) : null}
@@ -267,7 +267,7 @@ export default function Account() {
               <details className="group overflow-hidden rounded-3xl border border-[#c9b8dc]/45 bg-[#fffdf9] shadow-soft dark:border-[#9d83bd]/20 dark:bg-[#211b18]" open>
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-6 text-sm font-black text-ink dark:text-white [&::-webkit-details-marker]:hidden">
                   <span className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]"><UserRound className="h-5 w-5" /></span><span>Il tuo account</span></span>
-                  <ChevronDown className="h-5 w-5 text-ink/45 transition group-open:rotate-180 dark:text-white/45" />
+                  <ChevronDown className="h-5 w-5 text-ink/60 transition group-open:rotate-180 dark:text-white/60" />
                 </summary>
                 <div className="border-t border-ink/8 px-6 pb-2 dark:border-white/8">
                   <DetailRow icon={UserRound} label="Nome" value={displayName} tone="coral" />

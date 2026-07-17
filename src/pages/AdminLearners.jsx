@@ -106,7 +106,7 @@ export default function AdminLearners() {
 
           <div className="mt-6 grid gap-4 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-5 shadow-sm md:grid-cols-[1fr_auto_auto]">
             <label className="block">
-              <span className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Cerca</span>
+              <span className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">Cerca</span>
               <input
                 type="search"
                 value={query}
@@ -117,7 +117,7 @@ export default function AdminLearners() {
             </label>
 
             <label className="block md:min-w-48">
-              <span className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Stato</span>
+              <span className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">Stato</span>
               <select
                 value={status}
                 onChange={(event) => setStatus(event.target.value)}
@@ -130,7 +130,7 @@ export default function AdminLearners() {
               </select>
             </label>
             <label className="block md:min-w-56">
-              <span className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Gruppo</span>
+              <span className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">Gruppo</span>
               <select value={groupId} onChange={(event) => setGroupId(event.target.value)} className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white">
                 <option value="all">Tutti i gruppi</option>
                 {groups.map((group) => <option key={group.id} value={group.id}>{group.name}</option>)}
@@ -167,7 +167,7 @@ export default function AdminLearners() {
                   >
                     <div>
                       <p className="text-base font-black text-ink dark:text-white">{learner.display_name || 'Nome non impostato'}</p>
-                      <p className="mt-1 text-xs font-bold text-ink/45 dark:text-white/45">Registrato il {formatDate(learner.created_at)}</p>
+                      <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">Registrato il {formatDate(learner.created_at)}</p>
                     </div>
                     <p className="break-all text-sm font-semibold text-ink/70 dark:text-white/65">{learner.email || '-'}</p>
                     <p className="text-sm font-bold text-ink/65 dark:text-white/60">

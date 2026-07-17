@@ -52,7 +52,7 @@ const joinLines = (value) => (Array.isArray(value) ? value.join('\n') : '');
 function Field({ label, required = false, children }) {
   return (
     <label className="block">
-      <span className="text-xs font-black uppercase tracking-wide text-ink/55 dark:text-white/65">
+      <span className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">
         {label}{required ? ' *' : ''}
       </span>
       <div className="mt-1.5">{children}</div>
@@ -426,14 +426,14 @@ export default function AdminTravelTrainer() {
                 </div>
                 <label className="relative mt-4 block"><Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-ink/35 dark:text-white/35" /><input className={`${inputClass} pl-9`} value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cerca ID, frase, funzione o categoria" /></label>
                 <div className="mt-4 max-h-[38rem] space-y-2 overflow-y-auto pr-1">
-                  {loading ? <p className="text-sm font-semibold text-ink/55 dark:text-white/55">Caricamento...</p> : filteredCards.length ? filteredCards.map((card) => (
+                  {loading ? <p className="text-sm font-semibold text-ink/65 dark:text-white/65">Caricamento...</p> : filteredCards.length ? filteredCards.map((card) => (
                     <button key={card.id} type="button" onClick={() => selectCard(card)} className={`w-full rounded-lg border p-3 text-left transition ${selected.id === card.id ? 'border-moss bg-mint/40 dark:border-emerald-300 dark:bg-emerald-400/10' : 'border-ink/10 bg-white hover:border-moss/30 dark:border-white/10 dark:bg-white/[0.04]'}`}>
-                      <div className="flex items-start justify-between gap-3"><span className="text-xs font-black text-moss dark:text-emerald-300">{card.public_id}</span><span className="text-[0.65rem] font-black uppercase text-ink/40 dark:text-white/40">{card.status}</span></div>
+                      <div className="flex items-start justify-between gap-3"><span className="text-xs font-black text-moss dark:text-emerald-300">{card.public_id}</span><span className="text-[0.65rem] font-black uppercase text-ink/60 dark:text-white/60">{card.status}</span></div>
                       <p className="mt-1 text-sm font-black text-ink dark:text-white">{card.canonical_text}</p>
-                      <p className="mt-1 text-xs font-semibold text-ink/50 dark:text-white/50">{card.topic || card.primary_context}</p>
-                      <p className="mt-1 line-clamp-1 text-xs text-ink/45 dark:text-white/45">{card.pronunciation_learner_us || 'Pronuncia mancante'}</p>
+                      <p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">{card.topic || card.primary_context}</p>
+                      <p className="mt-1 line-clamp-1 text-xs text-ink/60 dark:text-white/60">{card.pronunciation_learner_us || 'Pronuncia mancante'}</p>
                     </button>
-                  )) : <p className="rounded-lg border border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/55 dark:border-white/15 dark:text-white/55">Nessuna card nel database. Usa “Sincronizza 100 card” oppure crea la prima card personalizzata.</p>}
+                  )) : <p className="rounded-lg border border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/65 dark:border-white/15 dark:text-white/65">Nessuna card nel database. Usa “Sincronizza 100 card” oppure crea la prima card personalizzata.</p>}
                 </div>
               </div>
             </aside>

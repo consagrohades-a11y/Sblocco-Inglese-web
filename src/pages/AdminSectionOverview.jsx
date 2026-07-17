@@ -49,7 +49,7 @@ export default function AdminSectionOverview({ section }) {
                 <ThemeToggle />
                 <div>
                   <p className="text-sm font-black text-ink dark:text-white">Cambia tema</p>
-                  <p className="mt-1 text-xs font-semibold text-ink/55 dark:text-white/50">La preferenza attuale viene salvata nel browser.</p>
+                  <p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">La preferenza attuale viene salvata nel browser.</p>
                 </div>
               </div>
             ) : null}
@@ -68,7 +68,7 @@ export default function AdminSectionOverview({ section }) {
             {config.items.map((item) => (
               <article key={item} className={`${adminSurface.muted} p-5`}>
                 <p className="text-sm font-black text-ink dark:text-white">{item}</p>
-                <p className="mt-2 text-xs font-semibold leading-5 text-ink/50 dark:text-white/45">Struttura predisposta, dati disponibili nella fase dedicata.</p>
+                <p className="mt-2 text-xs font-semibold leading-5 text-ink/65 dark:text-white/60">Struttura predisposta, dati disponibili nella fase dedicata.</p>
               </article>
             ))}
           </div>

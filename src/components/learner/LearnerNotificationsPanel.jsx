@@ -124,7 +124,7 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
       </header>
 
       {loading ? (
-        <p className="p-6 text-sm font-bold text-ink/55 dark:text-white/55">
+        <p className="p-6 text-sm font-bold text-ink/65 dark:text-white/65">
           Caricamento aggiornamenti...
         </p>
       ) : null}
@@ -143,7 +143,7 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
               className={`flex w-full items-start gap-4 p-5 text-left transition hover:bg-white/70 dark:hover:bg-white/[0.05] sm:px-7 ${notification.read_at ? "opacity-70" : "bg-white/55 dark:bg-[#9d83bd]/[0.06]"}`}
             >
               <span
-                className={`mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl ${notification.read_at ? "bg-white text-ink/40 dark:bg-white/10 dark:text-white/40" : "bg-coral text-white"}`}
+                className={`mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl ${notification.read_at ? "bg-white text-ink/60 dark:bg-white/10 dark:text-white/60" : "bg-coral text-white"}`}
               >
                 <MessageCircleHeart className="h-4 w-4" />
               </span>

@@ -145,7 +145,7 @@ function Intro({ payload, assignmentId, onStart }) {
                   {payload.exercise.instructions ||
                     "Completa tutte le sezioni. Le risposte vengono salvate automaticamente."}
                 </p>
-                <p className="mt-3 inline-flex items-center gap-2 text-xs font-black text-ink/50 dark:text-white/50">
+                <p className="mt-3 inline-flex items-center gap-2 text-xs font-black text-ink/65 dark:text-white/65">
                   <Save className="h-4 w-4" />
                   Autosave attivo
                 </p>
@@ -246,7 +246,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                 </p>
               </div>
               <ResultBreakdown summary={summary} />
-              <p className="mt-3 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
+              <p className="mt-3 text-xs font-semibold leading-5 text-ink/60 dark:text-white/60">
                 Il punteggio è la percentuale di punti ottenuti sul totale: ogni
                 attività può valere più punti e le risposte quasi corrette
                 valgono un punteggio parziale.
@@ -318,7 +318,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                   ) : null}
                 </div>
                 {feedbackHidden ? (
-                  <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
+                  <p className="mt-2 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">
                     Le correzioni di questa sezione non vengono mostrate:
                     riceverai indicazioni direttamente dall’insegnante.
                   </p>
@@ -726,7 +726,7 @@ export default function ExercisePlayerV2() {
               <ArrowLeft className="h-4 w-4" />
               Panoramica
             </button>
-            <p className="inline-flex items-center gap-2 text-xs font-black text-ink/50 dark:text-white/50">
+            <p className="inline-flex items-center gap-2 text-xs font-black text-ink/65 dark:text-white/65">
               <Save className="h-4 w-4" />
               {saveStatus || "Autosave attivo"}
             </p>
@@ -853,7 +853,7 @@ export default function ExercisePlayerV2() {
                   Attività {questionIndex + 1} di{" "}
                   {currentSection.questions.length}
                 </p>
-                <span className="text-xs font-bold text-ink/40 dark:text-white/40">
+                <span className="text-xs font-bold text-ink/60 dark:text-white/60">
                   {currentQuestion.question.type}
                 </span>
               </div>
@@ -884,7 +884,7 @@ export default function ExercisePlayerV2() {
               </div>
               <div className="mt-7 flex flex-col gap-3">
                 {!currentQuestionAnswered ? (
-                  <p className="text-right text-xs font-bold text-ink/50 dark:text-white/55">
+                  <p className="text-right text-xs font-bold text-ink/65 dark:text-white/65">
                     Seleziona o inserisci una risposta per continuare.
                   </p>
                 ) : null}

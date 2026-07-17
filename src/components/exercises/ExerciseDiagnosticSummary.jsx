@@ -32,7 +32,7 @@ export default function ExerciseDiagnosticSummary({ summary, admin = false }) {
           <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">{admin ? 'Diagnosi principale' : 'Cosa rivedere'}</p>
           <h2 className="mt-3 text-xl font-black leading-7 text-ink dark:text-white">{main.message || 'È emersa una difficoltà da rivedere.'}</h2>
           {admin ? (
-            <p className="mt-2 text-xs font-bold text-ink/45 dark:text-white/45">
+            <p className="mt-2 text-xs font-bold text-ink/60 dark:text-white/60">
               {main.code || main.rule_key || main.topic}
               {rateLabel(main.error_rate) ? ` · errore ${rateLabel(main.error_rate)}` : ''}
               {` · ${Number(main.errors || 0)} su ${Number(main.opportunities || 0)} opportunità`}

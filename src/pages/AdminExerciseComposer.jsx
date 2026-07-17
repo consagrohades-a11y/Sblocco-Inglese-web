@@ -511,7 +511,7 @@ export default function AdminExerciseComposer() {
                   Esercizi
                 </p>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-black text-ink/45 dark:text-white/45">
+                  <span className="text-xs font-black text-ink/60 dark:text-white/60">
                     {catalog.length}
                   </span>
                   <button
@@ -545,7 +545,7 @@ export default function AdminExerciseComposer() {
                     <p className="mt-2 line-clamp-2 text-sm font-black text-ink dark:text-white">
                       {item.title}
                     </p>
-                    <p className="mt-1 text-xs font-bold text-ink/45 dark:text-white/45">
+                    <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">
                       v{item.version_number} · {item.level} · {item.topic}
                     </p>
                   </button>
@@ -735,7 +735,7 @@ export default function AdminExerciseComposer() {
                     </label>
                   ))}
                 </div>
-                <p className="mt-3 text-[0.7rem] font-semibold leading-5 text-ink/45 dark:text-white/45">
+                <p className="mt-3 text-[0.7rem] font-semibold leading-5 text-ink/60 dark:text-white/60">
                   Punteggio = percentuale di punti ottenuti sul totale (le
                   attività corrette a mano entrano nel punteggio dopo la
                   valutazione dell’insegnante). Soluzioni e Spiegazioni
@@ -782,13 +782,13 @@ export default function AdminExerciseComposer() {
                             <p className="mt-1 text-base font-black text-ink dark:text-white">
                               {section.title || `Sezione ${index + 1}`}
                             </p>
-                            <p className="mt-1 text-xs font-bold text-ink/45 dark:text-white/45">
+                            <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">
                               {section.selectionMode} ·{" "}
                               {sectionQuestionCount(section, poolMap)} domande ·
                               feedback {section.feedbackTiming}
                             </p>
                           </div>
-                          <span className="text-xs font-black text-ink/40 dark:text-white/40">
+                          <span className="text-xs font-black text-ink/60 dark:text-white/60">
                             Apri
                           </span>
                         </div>
@@ -854,7 +854,7 @@ export default function AdminExerciseComposer() {
                         <option value="exercise_end">A fine esercizio</option>
                         <option value="hidden">Nascosto</option>
                       </select>
-                      <span className="mt-2 block text-[0.7rem] font-semibold leading-5 text-ink/45 dark:text-white/45">
+                      <span className="mt-2 block text-[0.7rem] font-semibold leading-5 text-ink/60 dark:text-white/60">
                         “Dopo ogni domanda”: correzione immediata, una domanda
                         alla volta. “A fine sezione”: riepilogo con correzioni
                         al termine della sezione. “A fine esercizio”: correzioni
@@ -1042,7 +1042,7 @@ export default function AdminExerciseComposer() {
                                   <p className="mt-1 text-sm font-black text-ink dark:text-white">
                                     {poolItem?.title || poolItem?.name}
                                   </p>
-                                  <p className="mt-1 text-xs font-bold text-ink/45 dark:text-white/45">
+                                  <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">
                                     Versione bloccata{" "}
                                     {String(rule.poolVersionId).slice(0, 8)} ·{" "}
                                     {poolItem?.questionCount || 0} disponibili
@@ -1101,7 +1101,7 @@ export default function AdminExerciseComposer() {
                           );
                         })}
                         {!selectedSection.poolRules.length ? (
-                          <p className="rounded-xl border border-dashed border-ink/15 p-4 text-sm text-ink/55 dark:border-white/15 dark:text-white/55">
+                          <p className="rounded-xl border border-dashed border-ink/15 p-4 text-sm text-ink/65 dark:border-white/15 dark:text-white/65">
                             Nessuna pool collegata.
                           </p>
                         ) : null}
@@ -1119,7 +1119,7 @@ export default function AdminExerciseComposer() {
               <h2 className="mt-1 text-xl font-black text-ink dark:text-white">
                 {exercise.title || "Esercizio senza titolo"}
               </h2>
-              <p className="mt-2 text-sm leading-6 text-ink/55 dark:text-white/55">
+              <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">
                 {exercise.description ||
                   "Aggiungi una descrizione per riconoscerlo nella libreria."}
               </p>
@@ -1128,7 +1128,7 @@ export default function AdminExerciseComposer() {
                   <p className="text-2xl font-black text-ink dark:text-white">
                     {sections.length}
                   </p>
-                  <p className="text-xs font-bold text-ink/45 dark:text-white/45">
+                  <p className="text-xs font-bold text-ink/60 dark:text-white/60">
                     sezioni
                   </p>
                 </div>
@@ -1136,7 +1136,7 @@ export default function AdminExerciseComposer() {
                   <p className="text-2xl font-black text-ink dark:text-white">
                     {totalQuestions}
                   </p>
-                  <p className="text-xs font-bold text-ink/45 dark:text-white/45">
+                  <p className="text-xs font-bold text-ink/60 dark:text-white/60">
                     domande stimate
                   </p>
                 </div>
@@ -1148,11 +1148,11 @@ export default function AdminExerciseComposer() {
                       <p className="text-sm font-black text-ink dark:text-white">
                         {index + 1}. {section.title}
                       </p>
-                      <span className="rounded-full bg-linen px-2 py-1 text-[0.65rem] font-black text-ink/50 dark:bg-white/10 dark:text-white/50">
+                      <span className="rounded-full bg-linen px-2 py-1 text-[0.65rem] font-black text-ink/65 dark:bg-white/10 dark:text-white/65">
                         {sectionQuestionCount(section, poolMap)}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
+                    <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
                       {section.fixedQuestions.length} fisse ·{" "}
                       {section.poolRules.length} pool · {section.feedbackTiming}
                     </p>

@@ -129,7 +129,7 @@ function ActivityChart({ rows }) {
               </div>
               {index % Math.max(1, Math.floor(visible.length / 7)) === 0 ||
               index === visible.length - 1 ? (
-                <span className="whitespace-nowrap text-[0.6rem] font-black text-ink/40 dark:text-white/40">
+                <span className="whitespace-nowrap text-[0.6rem] font-black text-ink/60 dark:text-white/60">
                   {label}
                 </span>
               ) : (
@@ -357,7 +357,7 @@ export default function AdminAnalytics() {
                       Ripassi ed esercizi
                     </h2>
                   </div>
-                  <div className="flex gap-4 text-xs font-black text-ink/55 dark:text-white/55">
+                  <div className="flex gap-4 text-xs font-black text-ink/65 dark:text-white/65">
                     <span className="inline-flex items-center gap-2">
                       <i className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                       SRS
@@ -381,7 +381,7 @@ export default function AdminAnalytics() {
                       <h2 className="mt-1 text-2xl font-black text-ink dark:text-white">
                         Segnali operativi
                       </h2>
-                      <p className="mt-2 text-sm text-ink/55 dark:text-white/55">
+                      <p className="mt-2 text-sm text-ink/65 dark:text-white/65">
                         Ordine prioritario: scadenze, revisioni, ultima
                         attività.
                       </p>
@@ -432,7 +432,7 @@ export default function AdminAnalytics() {
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[1100px] text-left text-sm">
-                    <thead className="bg-linen/60 text-xs font-black uppercase tracking-wide text-ink/45 dark:bg-white/[0.035] dark:text-white/45">
+                    <thead className="bg-linen/60 text-xs font-black uppercase tracking-wide text-ink/60 dark:bg-white/[0.035] dark:text-white/60">
                       <tr>
                         <th className="px-5 py-3">Studente</th>
                         <th className="px-4 py-3">SRS</th>
@@ -456,7 +456,7 @@ export default function AdminAnalytics() {
                             >
                               {learner.learner_name}
                             </Link>
-                            <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
+                            <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
                               {learner.learner_email}
                             </p>
                             <span className="mt-2 inline-flex rounded-full bg-linen px-2 py-1 text-[0.65rem] font-black dark:bg-white/10">
@@ -476,7 +476,7 @@ export default function AdminAnalytics() {
                               {number(learner.introduced_cards)} viste
                             </p>
                             <p
-                              className={`mt-1 text-xs font-bold ${Number(learner.struggling_cards) ? "text-amber-700 dark:text-amber-300" : "text-ink/45 dark:text-white/45"}`}
+                              className={`mt-1 text-xs font-bold ${Number(learner.struggling_cards) ? "text-amber-700 dark:text-amber-300" : "text-ink/60 dark:text-white/60"}`}
                             >
                               {number(learner.due_cards)} dovute ·{" "}
                               {number(learner.struggling_cards)} difficili
@@ -487,7 +487,7 @@ export default function AdminAnalytics() {
                               {number(learner.open_assignments)} aperte
                             </p>
                             <p
-                              className={`mt-1 text-xs font-bold ${Number(learner.overdue_assignments) ? "text-red-700 dark:text-red-300" : "text-ink/45 dark:text-white/45"}`}
+                              className={`mt-1 text-xs font-bold ${Number(learner.overdue_assignments) ? "text-red-700 dark:text-red-300" : "text-ink/60 dark:text-white/60"}`}
                             >
                               {number(learner.overdue_assignments)} scadute ·{" "}
                               {number(learner.completed_assignments)} completate
@@ -498,7 +498,7 @@ export default function AdminAnalytics() {
                               {number(learner.exercise_attempts)} invii
                             </p>
                             <p
-                              className={`mt-1 text-xs font-bold ${Number(learner.pending_reviews) ? "text-violet-700 dark:text-violet-300" : "text-ink/45 dark:text-white/45"}`}
+                              className={`mt-1 text-xs font-bold ${Number(learner.pending_reviews) ? "text-violet-700 dark:text-violet-300" : "text-ink/60 dark:text-white/60"}`}
                             >
                               {learner.average_score === null
                                 ? "Nessun punteggio"
@@ -526,7 +526,7 @@ export default function AdminAnalytics() {
                         <tr>
                           <td
                             colSpan={7}
-                            className="px-5 py-8 text-center font-bold text-ink/50 dark:text-white/50"
+                            className="px-5 py-8 text-center font-bold text-ink/65 dark:text-white/65"
                           >
                             Nessuno studente corrisponde ai filtri.
                           </td>
@@ -563,7 +563,7 @@ export default function AdminAnalytics() {
                           <h3 className="mt-1 font-black text-ink dark:text-white">
                             {card.display_target}
                           </h3>
-                          <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
+                          <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
                             {number(card.review_count)} ripassi ·{" "}
                             {number(card.learner_count)} studenti ·{" "}
                             {number(card.incorrect_count)} errori
@@ -576,7 +576,7 @@ export default function AdminAnalytics() {
                       </article>
                     ))}
                     {!(data.difficult_cards || []).length ? (
-                      <p className="py-6 text-sm font-bold text-ink/50 dark:text-white/50">
+                      <p className="py-6 text-sm font-bold text-ink/65 dark:text-white/65">
                         Servono almeno due ripassi per individuare una card
                         difficile.
                       </p>
@@ -614,7 +614,7 @@ export default function AdminAnalytics() {
                           <h3 className="mt-1 font-black text-ink dark:text-white">
                             {exercise.exercise_title || "Esercizio"}
                           </h3>
-                          <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
+                          <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
                             {number(exercise.attempt_count)} invii ·{" "}
                             {number(exercise.learner_count)} studenti · media{" "}
                             {number(exercise.average_score, 1)}% ·{" "}
@@ -628,7 +628,7 @@ export default function AdminAnalytics() {
                       </article>
                     ))}
                     {!(data.exercises || []).length ? (
-                      <p className="py-6 text-sm font-bold text-ink/50 dark:text-white/50">
+                      <p className="py-6 text-sm font-bold text-ink/65 dark:text-white/65">
                         Nessun esercizio inviato nel periodo.
                       </p>
                     ) : null}
@@ -662,7 +662,7 @@ export default function AdminAnalytics() {
                           <h3 className="mt-1 font-black text-ink dark:text-white">
                             {item.label}
                           </h3>
-                          <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
+                          <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
                             {item.primary_skill} · {number(item.learner_count)}{" "}
                             studenti · {number(item.error_count, 1)} errori
                           </p>
@@ -674,7 +674,7 @@ export default function AdminAnalytics() {
                     </article>
                   ))}
                   {!(data.diagnostics || []).length ? (
-                    <p className="text-sm font-bold text-ink/50 dark:text-white/50">
+                    <p className="text-sm font-bold text-ink/65 dark:text-white/65">
                       Nessuna diagnostica disponibile nel periodo.
                     </p>
                   ) : null}

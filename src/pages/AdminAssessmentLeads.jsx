@@ -53,7 +53,7 @@ function LeadDiagnosticDetails({ lead }) {
               <div className="grid gap-2 sm:grid-cols-2">
                 {dimensions.map((dimension) => (
                   <div key={dimension.key || dimension.label} className="rounded-xl border border-violet-200/70 bg-white/80 p-3 dark:border-white/10 dark:bg-white/[0.05]">
-                    <p className="text-[0.65rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">{dimension.label}</p>
+                    <p className="text-[0.65rem] font-black uppercase tracking-wide text-ink/60 dark:text-white/60">{dimension.label}</p>
                     <div className="mt-2 flex items-end justify-between gap-2">
                       <p className="text-xl font-black text-ink dark:text-white">{Math.round(Number(dimension.score || 0))}</p>
                       {dimension.level ? <p className="text-[0.65rem] font-black text-violet-700 dark:text-violet-300">{dimension.level}</p> : null}
@@ -209,7 +209,7 @@ export default function AdminAssessmentLeads() {
           <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.08fr)_minmax(22rem,0.92fr)]">
             <div className="grid content-start gap-3">
               {loading ? <p className="rounded-2xl border border-dashed border-ink/15 p-6 text-sm font-bold dark:border-white/15">Caricamento lead...</p> : null}
-              {!loading && !filtered.length ? <p className="rounded-2xl border border-dashed border-ink/15 p-6 text-sm font-bold text-ink/50 dark:border-white/15 dark:text-white/50">Nessun profilo corrisponde ai filtri.</p> : null}
+              {!loading && !filtered.length ? <p className="rounded-2xl border border-dashed border-ink/15 p-6 text-sm font-bold text-ink/65 dark:border-white/15 dark:text-white/65">Nessun profilo corrisponde ai filtri.</p> : null}
               {filtered.map((lead) => (
                 <button key={lead.id} type="button" onClick={() => setSelectedId(lead.id)} className={`focus-ring w-full rounded-2xl border p-5 text-left transition ${selectedId === lead.id ? 'border-moss bg-mint/35 shadow-soft dark:border-mint/35 dark:bg-mint/[0.08]' : 'border-ink/10 bg-white hover:border-moss/30 dark:border-white/10 dark:bg-[#16211e]'}`}>
                   <div className="flex flex-wrap items-start justify-between gap-3">
@@ -219,13 +219,13 @@ export default function AdminAssessmentLeads() {
                         {lead.beta_eligible ? <span className="rounded-full bg-coral px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-wide text-white">Beta</span> : null}
                         {lead.followup_requested ? <span className="rounded-full bg-moss px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-wide text-white">Ricontatto</span> : null}
                       </div>
-                      <p className="mt-1 text-sm font-semibold text-ink/50 dark:text-white/50">{lead.email}</p>
+                      <p className="mt-1 text-sm font-semibold text-ink/65 dark:text-white/65">{lead.email}</p>
                     </div>
                     <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black dark:bg-white/10">{statusLabels[lead.status]}</span>
                   </div>
                   <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                    <div className="rounded-xl bg-linen/60 p-3 dark:bg-white/[0.05]"><p className="text-[0.65rem] font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Percorso</p><p className="mt-1 text-sm font-black">{courseLabels[lead.recommended_course] || lead.recommended_course}</p></div>
-                    <div className="rounded-xl bg-linen/60 p-3 dark:bg-white/[0.05]"><p className="text-[0.65rem] font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Arrivato</p><p className="mt-1 text-sm font-black">{new Date(lead.created_at).toLocaleDateString('it-IT')}</p></div>
+                    <div className="rounded-xl bg-linen/60 p-3 dark:bg-white/[0.05]"><p className="text-[0.65rem] font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Percorso</p><p className="mt-1 text-sm font-black">{courseLabels[lead.recommended_course] || lead.recommended_course}</p></div>
+                    <div className="rounded-xl bg-linen/60 p-3 dark:bg-white/[0.05]"><p className="text-[0.65rem] font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Arrivato</p><p className="mt-1 text-sm font-black">{new Date(lead.created_at).toLocaleDateString('it-IT')}</p></div>
                   </div>
                 </button>
               ))}
@@ -235,7 +235,7 @@ export default function AdminAssessmentLeads() {
               {selected ? (
                 <div className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e]">
                   <div className="flex items-start justify-between gap-4">
-                    <div><p className="text-xs font-black uppercase tracking-[0.1em] text-coral">Dettaglio profilo</p><h2 className="mt-2 text-2xl font-black">{selected.full_name}</h2><p className="mt-1 text-sm font-semibold text-ink/50 dark:text-white/50">{selected.profession || 'Professione non indicata'}</p></div>
+                    <div><p className="text-xs font-black uppercase tracking-[0.1em] text-coral">Dettaglio profilo</p><h2 className="mt-2 text-2xl font-black">{selected.full_name}</h2><p className="mt-1 text-sm font-semibold text-ink/65 dark:text-white/65">{selected.profession || 'Professione non indicata'}</p></div>
                     <Filter aria-hidden="true" className="h-5 w-5 text-moss dark:text-mint" />
                   </div>
                   <div className="mt-5 grid gap-3">
@@ -245,8 +245,8 @@ export default function AdminAssessmentLeads() {
                   <div className="mt-5 rounded-2xl bg-linen/65 p-4 dark:bg-white/[0.05]"><p className="text-xs font-black uppercase tracking-wide text-coral">Blocco principale</p><p className="mt-2 text-sm font-bold leading-6">{selected.primary_blocker}</p></div>
                   <LeadDiagnosticDetails lead={selected} />
                   <div className="mt-5 grid grid-cols-2 gap-3 text-xs font-bold">
-                    <div className="rounded-xl border border-ink/10 p-3 dark:border-white/10"><p className="text-ink/40 dark:text-white/40">Email risultato</p><p className="mt-1 font-black">{selected.email_status}</p></div>
-                    <div className="rounded-xl border border-ink/10 p-3 dark:border-white/10"><p className="text-ink/40 dark:text-white/40">Marketing</p><p className="mt-1 font-black">{selected.marketing_consent ? 'Consenso sì' : 'Solo risultato'}</p></div>
+                    <div className="rounded-xl border border-ink/10 p-3 dark:border-white/10"><p className="text-ink/60 dark:text-white/60">Email risultato</p><p className="mt-1 font-black">{selected.email_status}</p></div>
+                    <div className="rounded-xl border border-ink/10 p-3 dark:border-white/10"><p className="text-ink/60 dark:text-white/60">Marketing</p><p className="mt-1 font-black">{selected.marketing_consent ? 'Consenso sì' : 'Solo risultato'}</p></div>
                   </div>
                   <label className="mt-5 block text-xs font-black">Stato
                     <select value={selected.status} onChange={(event) => saveLead(selected.id, { status: event.target.value, notes: selected.notes })} disabled={savingId === selected.id} className={`${inputClass} mt-2`}>
@@ -258,7 +258,7 @@ export default function AdminAssessmentLeads() {
                   </label>
                   <button type="button" onClick={() => saveLead(selected.id, { status: selected.status, notes: selected.notes })} disabled={savingId === selected.id} className="mt-4 w-full rounded-full bg-ink px-5 py-3 text-sm font-black text-white disabled:opacity-50 dark:bg-mint dark:text-ink">{savingId === selected.id ? 'Salvataggio...' : 'Salva note e stato'}</button>
                 </div>
-              ) : <div className="rounded-2xl border border-dashed border-ink/15 p-6 text-sm font-bold text-ink/50 dark:border-white/15 dark:text-white/50">Seleziona un lead per vedere il dettaglio.</div>}
+              ) : <div className="rounded-2xl border border-dashed border-ink/15 p-6 text-sm font-bold text-ink/65 dark:border-white/15 dark:text-white/65">Seleziona un lead per vedere il dettaglio.</div>}
             </aside>
           </div>
         </div>

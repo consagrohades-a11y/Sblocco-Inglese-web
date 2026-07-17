@@ -185,19 +185,19 @@ export default function LearnerAssignments() {
             <div className="relative grid gap-3 border-t border-clay/10 bg-linen/30 p-5 dark:border-white/10 dark:bg-white/[0.035] sm:grid-cols-4 sm:px-9 lg:px-10">
               <div className="flex items-center gap-3 rounded-2xl border border-coral/15 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-blush text-coral dark:bg-coral/10 dark:text-[#ff9678]"><ListChecks className="h-5 w-5" /></span>
-                <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Da fare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{activeCount}</p></div>
+                <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Da fare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{activeCount}</p></div>
               </div>
               <div className="flex items-center gap-3 rounded-2xl border border-[#a9bda9]/35 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#e7efe7] text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]"><CheckCircle2 className="h-5 w-5" /></span>
-                <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Completate</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{completedCount}</p></div>
+                <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Completate</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{completedCount}</p></div>
               </div>
               <div className="flex items-center gap-3 rounded-2xl border border-[#c9b8dc]/40 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]"><NotebookPen className="h-5 w-5" /></span>
-                <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Tempo totale</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{estimatedMinutes ? `${estimatedMinutes} min` : 'Libero'}</p></div>
+                <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Tempo totale</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{estimatedMinutes ? `${estimatedMinutes} min` : 'Libero'}</p></div>
               </div>
               <div className="flex items-center gap-3 rounded-2xl border border-[#ddb8c5]/40 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#f8e7ed] text-[#9c5870] dark:bg-[#c57b93]/15 dark:text-[#e4aec0]"><CalendarClock className="h-5 w-5" /></span>
-                <div><p className="text-xs font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Prossima scadenza</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{nearestDeadline ? formatDate(nearestDeadline) : 'Nessuna'}</p></div>
+                <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Prossima scadenza</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{nearestDeadline ? formatDate(nearestDeadline) : 'Nessuna'}</p></div>
               </div>
             </div>
           </header>

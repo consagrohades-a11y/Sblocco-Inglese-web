@@ -205,7 +205,7 @@ function ProductFlow() {
               <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black uppercase tracking-[0.08em] ${item.accent}`}>
                 {item.label}
               </span>
-              <p className="mt-5 text-xs font-black text-ink/50">0{index + 1}</p>
+              <p className="mt-5 text-xs font-black text-ink/65">0{index + 1}</p>
               <h3 className="mt-2 text-2xl font-black leading-tight text-ink">{item.title}</h3>
               <p className="mt-3 text-sm font-semibold leading-6 text-ink/70">{item.text}</p>
             </article>

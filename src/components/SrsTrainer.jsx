@@ -82,7 +82,7 @@ function CompletionStats({ ratings, reviewed, dark = false }) {
             dark ? 'border-white/10 bg-white/[0.08]' : 'border-ink/10 bg-paper'
           }`}
         >
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/55' : 'text-ink/50'}`}>{label}</p>
+          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>{label}</p>
           <p className={`mt-1 text-2xl font-black ${dark ? 'text-white' : 'text-ink'}`}>{value}</p>
         </div>
       ))}

@@ -51,7 +51,7 @@ export default function Footer() {
           <Link className="text-white/70 hover:text-white" to="/privacy-policy">Privacy Policy</Link>
           <Link className="text-white/70 hover:text-white" to="/cookie-policy">Cookie Policy</Link>
           <Link className="text-white/70 hover:text-white" to="/termini-e-condizioni">Termini e Condizioni</Link>
-          <p className="mt-1 text-xs leading-5 text-white/45">Sblocco Inglese è un progetto di formazione linguistica online.</p>
+          <p className="mt-1 text-xs leading-5 text-white/60">Sblocco Inglese è un progetto di formazione linguistica online.</p>
         </div>
       </div>
     </footer>

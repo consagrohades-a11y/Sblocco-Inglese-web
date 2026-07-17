@@ -19,7 +19,7 @@ export default function AssessmentEntryStrip() {
             <p className="text-sm font-black">
               Non sai quale percorso scegliere?
             </p>
-            <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-white/55">
+            <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-white/65">
               <Clock3 aria-hidden="true" className="h-3.5 w-3.5" />
               Gratuito, 10-12 minuti: prova pratica e tre brevi prove di
               ascolto. Analisi completa via email; consenso marketing

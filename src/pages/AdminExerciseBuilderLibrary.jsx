@@ -74,7 +74,7 @@ export default function AdminExerciseBuilderLibrary() {
 
           {!loading ? (
             <div className="mt-6 overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm dark:border-white/10 dark:bg-[#16211e]">
-              <div className="hidden grid-cols-[7rem_minmax(0,1.4fr)_8rem_9rem_minmax(18rem,1fr)] gap-4 border-b border-ink/10 bg-linen/45 px-5 py-3 text-xs font-black uppercase tracking-wide text-ink/50 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/50 lg:grid">
+              <div className="hidden grid-cols-[7rem_minmax(0,1.4fr)_8rem_9rem_minmax(18rem,1fr)] gap-4 border-b border-ink/10 bg-linen/45 px-5 py-3 text-xs font-black uppercase tracking-wide text-ink/65 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/65 lg:grid">
                 <span>ID</span><span>Esercizio</span><span>Livello</span><span>Stato</span><span>Azioni</span>
               </div>
               {items.length === 0 ? <p className="p-7 text-sm leading-6 text-ink/60 dark:text-white/60">La libreria è vuota. Importa e promuovi un esercizio dalla coda di revisione.</p> : null}
@@ -82,7 +82,7 @@ export default function AdminExerciseBuilderLibrary() {
                 {items.map((item) => (
                   <article key={item.id} className="grid gap-4 px-5 py-5 lg:grid-cols-[7rem_minmax(0,1.4fr)_8rem_9rem_minmax(18rem,1fr)] lg:items-center">
                     <p className="text-sm font-black text-moss dark:text-emerald-300">{item.publicId}</p>
-                    <div><h2 className="text-base font-black text-ink dark:text-white">{item.title}</h2><p className="mt-1 text-sm leading-5 text-ink/55 dark:text-white/55">{item.description || item.topic}</p><p className="mt-1 text-xs font-bold text-ink/40 dark:text-white/40">Versione {String(item.versionId || '').slice(0, 8)} · {item.estimated_minutes ? `${item.estimated_minutes} min` : 'durata non indicata'}</p></div>
+                    <div><h2 className="text-base font-black text-ink dark:text-white">{item.title}</h2><p className="mt-1 text-sm leading-5 text-ink/65 dark:text-white/65">{item.description || item.topic}</p><p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">Versione {String(item.versionId || '').slice(0, 8)} · {item.estimated_minutes ? `${item.estimated_minutes} min` : 'durata non indicata'}</p></div>
                     <p className="text-sm font-black text-ink/70 dark:text-white/70">{item.level}</p>
                     <span className={`w-fit rounded-full px-3 py-1.5 text-xs font-black ${statusClass(item.status)}`}>{statusLabels[item.status] || item.status}</span>
                     <div className="flex flex-wrap gap-2">

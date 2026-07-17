@@ -46,7 +46,7 @@ function CourseCard({ course, index }) {
             {course.featured ? <Sparkles aria-hidden="true" className="h-5 w-5" /> : <Target aria-hidden="true" className="h-5 w-5" />}
           </span>
           <div>
-            <p className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-ink/40 dark:text-white/40">Percorso 0{index + 1}</p>
+            <p className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-ink/60 dark:text-white/60">Percorso 0{index + 1}</p>
             <p className="mt-1 text-xs font-black text-moss dark:text-mint">{course.status}</p>
           </div>
         </div>
@@ -63,12 +63,12 @@ function CourseCard({ course, index }) {
       <div className="relative mt-6 grid grid-cols-2 gap-3">
         <div className="rounded-2xl border border-ink/10 bg-white/75 p-4 backdrop-blur dark:border-white/10 dark:bg-white/[0.04]">
           <Clock3 aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />
-          <p className="mt-2 text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/40 dark:text-white/40">Durata</p>
+          <p className="mt-2 text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/60 dark:text-white/60">Durata</p>
           <p className="mt-1 text-sm font-black text-ink dark:text-white">{course.duration}</p>
         </div>
         <div className="rounded-2xl border border-ink/10 bg-white/75 p-4 backdrop-blur dark:border-white/10 dark:bg-white/[0.04]">
           <Users aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />
-          <p className="mt-2 text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/40 dark:text-white/40">Formato</p>
+          <p className="mt-2 text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/60 dark:text-white/60">Formato</p>
           <p className="mt-1 text-sm font-black text-ink dark:text-white">{course.groupSize}</p>
         </div>
       </div>
@@ -91,7 +91,7 @@ function CourseCard({ course, index }) {
         <div className="flex flex-wrap items-end justify-between gap-4 border-t border-ink/10 pt-5 dark:border-white/10">
           <div>
             <p className="text-3xl font-black text-ink dark:text-white">{course.price}</p>
-            <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">{course.standardPrice}</p>
+            <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">{course.standardPrice}</p>
           </div>
           {course.route.startsWith('/corsi/') ? (
             <Link
@@ -113,7 +113,7 @@ function CourseCard({ course, index }) {
             </a>
           )}
         </div>
-        <p className="mt-4 text-xs font-bold leading-5 text-ink/45 dark:text-white/45">{course.availability}</p>
+        <p className="mt-4 text-xs font-bold leading-5 text-ink/60 dark:text-white/60">{course.availability}</p>
       </div>
     </article>
   );
@@ -163,7 +163,7 @@ export default function Percorsi() {
                 Come funziona il metodo
               </Link>
             </div>
-            <div className="mt-8 flex flex-wrap gap-2 text-xs font-black uppercase tracking-[0.08em] text-white/55">
+            <div className="mt-8 flex flex-wrap gap-2 text-xs font-black uppercase tracking-[0.08em] text-white/65">
               <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-2">gruppi piccoli</span>
               <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-2">pratica vocale</span>
               <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-2">listening</span>
@@ -238,7 +238,7 @@ export default function Percorsi() {
                     </span>
                   </div>
                   <p className="relative mt-4 text-sm font-semibold leading-7 text-ink/65 dark:text-white/65">{course.summary}</p>
-                  <div className="relative mt-5 flex flex-wrap gap-2 text-xs font-black text-ink/55 dark:text-white/55">
+                  <div className="relative mt-5 flex flex-wrap gap-2 text-xs font-black text-ink/65 dark:text-white/65">
                     <span className="rounded-full border border-ink/10 px-3 py-1.5 dark:border-white/10">{course.duration}</span>
                     <span className="rounded-full border border-ink/10 px-3 py-1.5 dark:border-white/10">{course.price}</span>
                   </div>

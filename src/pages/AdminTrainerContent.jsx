@@ -76,7 +76,7 @@ const joinLines = (value) => (Array.isArray(value) ? value.join('\n') : '');
 function Field({ label, required = false, children }) {
   return (
     <label className="block">
-      <span className="text-xs font-black uppercase tracking-wide text-ink/55 dark:text-white/65">
+      <span className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">
         {label}{required ? ' *' : ''}
       </span>
       <div className="mt-1.5">{children}</div>
@@ -363,7 +363,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                       {decks.length ? decks.map((deck) => {
                         const active = (selected.deck_ids || []).includes(deck.id);
                         return <label key={deck.id} className={`flex cursor-pointer items-center gap-2 rounded-full border px-3 py-2 text-xs font-black transition ${active ? 'border-moss bg-mint/60 text-ink dark:border-emerald-300 dark:bg-emerald-400/15 dark:text-white' : 'border-ink/15 text-ink/65 dark:border-white/15 dark:text-white/65'}`}><input type="checkbox" checked={active} onChange={() => updateField('deck_ids', active ? selected.deck_ids.filter((id) => id !== deck.id) : [...(selected.deck_ids || []), deck.id])} className="h-4 w-4 accent-moss" />{deck.title}</label>;
-                      }) : <span className="text-sm font-semibold text-ink/50 dark:text-white/50">Nessun deck creato per questo Trainer.</span>}
+                      }) : <span className="text-sm font-semibold text-ink/65 dark:text-white/65">Nessun deck creato per questo Trainer.</span>}
                     </div>
                   </Field>
                 </div>
@@ -455,20 +455,20 @@ export default function AdminTrainerContent({ domain = 'general' }) {
 
               <div className="fixed bottom-2 left-1/2 z-[70] max-h-[45vh] w-[calc(100vw-1rem)] max-w-6xl -translate-x-1/2 overflow-y-auto rounded-xl border border-ink/15 bg-white/95 p-2.5 shadow-[0_14px_40px_rgba(24,34,31,0.2)] backdrop-blur-xl dark:border-white/15 dark:bg-[#16211e]/95 dark:shadow-[0_14px_40px_rgba(0,0,0,0.42)] sm:p-3 lg:left-[calc(var(--admin-sidebar-width)+0.5rem)] lg:right-2 lg:w-auto lg:max-w-none lg:translate-x-0 lg:flex lg:items-center lg:justify-between lg:gap-4 xl:right-[34%]">
                 <div className="mb-2 flex shrink-0 items-center justify-between gap-3 lg:mb-0">
-                  <p className="text-xs font-black uppercase tracking-wide text-ink/55 dark:text-white/65">Coda di revisione · {queueLabel}</p>
+                  <p className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">Coda di revisione · {queueLabel}</p>
                   {saving ? <span className="text-xs font-black text-moss dark:text-emerald-300">Salvataggio...</span> : null}
                 </div>
                 <div className="flex flex-wrap gap-2 lg:flex-nowrap">
-                  <button disabled={saving} type="submit" className="focus-ring min-h-11 rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white transition hover:bg-moss disabled:cursor-not-allowed disabled:bg-ink/45 disabled:text-white/75 dark:bg-white dark:text-ink dark:hover:bg-emerald-200 dark:disabled:bg-white/20 dark:disabled:text-white/45 sm:px-5">Salva</button>
+                  <button disabled={saving} type="submit" className="focus-ring min-h-11 rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white transition hover:bg-moss disabled:cursor-not-allowed disabled:bg-ink/45 disabled:text-white/75 dark:bg-white dark:text-ink dark:hover:bg-emerald-200 dark:disabled:bg-white/20 dark:disabled:text-white/60 sm:px-5">Salva</button>
                   <button disabled={saving} type="button" onClick={() => saveCard('approved', 'approved', true)} className="focus-ring min-h-11 rounded-full border border-moss/40 bg-mint/60 px-4 py-2.5 text-sm font-black text-ink transition hover:bg-mint disabled:cursor-not-allowed disabled:border-ink/10 disabled:bg-ink/5 disabled:text-ink/35 dark:border-emerald-300/45 dark:bg-emerald-400/15 dark:text-emerald-100 dark:hover:bg-emerald-400/25 dark:disabled:border-white/10 dark:disabled:bg-white/5 dark:disabled:text-white/30 sm:px-5">Approva e prossima</button>
-                  <button disabled={saving || !canPublish} type="button" onClick={() => saveCard('published', 'approved', true)} className="focus-ring min-h-11 rounded-full bg-moss px-4 py-2.5 text-sm font-black text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/20 disabled:text-ink/55 disabled:ring-1 disabled:ring-inset disabled:ring-moss/20 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-white/10 dark:disabled:text-white/55 sm:px-5">Pubblica e prossima</button>
-                  <button disabled={saving || !nextCard} type="button" onClick={() => openCard(nextCard, { feedback: 'Prossima carta caricata.' })} className="focus-ring min-h-11 rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink transition hover:bg-linen disabled:cursor-not-allowed disabled:border-ink/5 disabled:bg-ink/5 disabled:text-ink/30 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:disabled:border-white/15 dark:disabled:bg-white/[0.07] dark:disabled:text-white/50 sm:px-5">Prossima</button>
+                  <button disabled={saving || !canPublish} type="button" onClick={() => saveCard('published', 'approved', true)} className="focus-ring min-h-11 rounded-full bg-moss px-4 py-2.5 text-sm font-black text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/20 disabled:text-ink/65 disabled:ring-1 disabled:ring-inset disabled:ring-moss/20 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-white/10 dark:disabled:text-white/65 sm:px-5">Pubblica e prossima</button>
+                  <button disabled={saving || !nextCard} type="button" onClick={() => openCard(nextCard, { feedback: 'Prossima carta caricata.' })} className="focus-ring min-h-11 rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink transition hover:bg-linen disabled:cursor-not-allowed disabled:border-ink/5 disabled:bg-ink/5 disabled:text-ink/30 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:disabled:border-white/15 dark:disabled:bg-white/[0.07] dark:disabled:text-white/65 sm:px-5">Prossima</button>
                 </div>
               </div>
               <div aria-hidden="true" className="h-36 sm:h-24 lg:h-20" />
 
               {!canPublish ? (
-                <p className="mt-3 text-xs font-bold leading-5 text-ink/55 dark:text-white/55">
+                <p className="mt-3 text-xs font-bold leading-5 text-ink/65 dark:text-white/65">
                   Per pubblicare servono approvazione, almeno una risposta accettata, IPA americana, due esempi e una nota d'uso.
                 </p>
               ) : null}
@@ -492,7 +492,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                   ) : null}
                 </div>
 
-                <p className="mt-1 text-xs font-semibold leading-5 text-ink/60 dark:text-white/55">
+                <p className="mt-1 text-xs font-semibold leading-5 text-ink/60 dark:text-white/65">
                   Si aggiorna mentre modifichi la carta e usa lo stesso componente del Trainer.
                 </p>
 
@@ -523,7 +523,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                   />
 
                   <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-ink/45">Filtro revisione</p>
+                    <p className="text-xs font-black uppercase tracking-wide text-ink/60">Filtro revisione</p>
                     <div className="mt-2 grid grid-cols-2 gap-2">
                       {reviewFilterOptions.map((option) => {
                         const active = reviewFilter === option.value;
@@ -560,7 +560,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                     <button type="button" disabled={publishableCards.length === 0 || publishingBatch} onClick={toggleAllPublishable} className="focus-ring min-h-10 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink hover:bg-linen disabled:cursor-not-allowed disabled:bg-ink/5 disabled:text-ink/30 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:disabled:bg-white/5 dark:disabled:text-white/25">
                       {allPublishableSelected ? 'Deseleziona tutte visibili' : 'Seleziona tutte approvate'}
                     </button>
-                    <button type="button" disabled={selectedForPublish.length === 0 || publishingBatch} onClick={publishSelectedCards} className="focus-ring min-h-10 rounded-full bg-moss px-4 py-2 text-xs font-black text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/20 disabled:text-ink/55 disabled:ring-1 disabled:ring-inset disabled:ring-moss/20 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-white/10 dark:disabled:text-white/55">
+                    <button type="button" disabled={selectedForPublish.length === 0 || publishingBatch} onClick={publishSelectedCards} className="focus-ring min-h-10 rounded-full bg-moss px-4 py-2 text-xs font-black text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/20 disabled:text-ink/65 disabled:ring-1 disabled:ring-inset disabled:ring-moss/20 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-white/10 dark:disabled:text-white/65">
                       {publishingBatch ? 'Pubblicazione...' : `Pubblica selezionate (${selectedForPublish.length})`}
                     </button>
                   </div>
@@ -587,7 +587,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                         <button type="button" onClick={() => openCard(card)} className="focus-ring block min-w-0 flex-1 p-4 text-left">
                           <p className="font-black text-ink dark:text-white">{card.canonical_text}</p>
                           <p className="mt-1 text-sm font-semibold text-ink/60 dark:text-white/60">{card.italian_meaning}</p>
-                          <div className="mt-2 flex flex-wrap gap-2 text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">
+                          <div className="mt-2 flex flex-wrap gap-2 text-[0.68rem] font-black uppercase tracking-wide text-ink/60 dark:text-white/60">
                             <span>{card.level}</span><span>{card.status}</span><span>{card.review_status}</span>
                           </div>
                         </button>

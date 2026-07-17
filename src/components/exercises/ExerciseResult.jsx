@@ -107,7 +107,7 @@ function EvidenceSummary({ profile, exercise, attempt }) {
     <div className="rounded-xl border border-ink/10 bg-linen/70 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-black uppercase tracking-wide text-ink/50">Errori ricorrenti</p>
+          <p className="text-xs font-black uppercase tracking-wide text-ink/65">Errori ricorrenti</p>
           <h4 className="mt-1 text-lg font-black text-ink">Cosa controllare nel prossimo tentativo</h4>
         </div>
         <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-ink/65 shadow-sm">
@@ -138,16 +138,16 @@ function EvidenceSummary({ profile, exercise, attempt }) {
           return (
             <article key={`${entry.dimension}-${entry.tag}`} className="grid gap-2 rounded-lg bg-white p-3 shadow-sm md:grid-cols-[0.8fr_1fr_2fr] md:items-start">
               <div>
-                <p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45">Area</p>
+                <p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/60">Area</p>
                 <p className="mt-1 text-xs font-black uppercase tracking-wide text-moss">{dimensionLabels[entry.dimension] || entry.dimension}</p>
               </div>
               <div>
-                <p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45">Controlla</p>
+                <p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/60">Controlla</p>
                 <p className="mt-1 text-sm font-black text-ink">{info.label}</p>
                 <p className="mt-1 text-[0.68rem] font-black uppercase tracking-wide text-coral">{severityLabels[entry.severity] || entry.severity}</p>
               </div>
               <div>
-                <p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45">Significato</p>
+                <p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/60">Significato</p>
                 <p className="mt-1 text-xs leading-5 text-ink/65">{info.description}</p>
               </div>
             </article>

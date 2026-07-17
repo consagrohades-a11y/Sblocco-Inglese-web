@@ -88,11 +88,11 @@ export default function SrsCard({
           <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/70' : 'border-ink/10 bg-paper text-ink/70'}`}>
             {safeCard.level}
           </span>
-          <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/60' : 'border-ink/10 bg-white text-ink/55'}`}>
+          <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/60' : 'border-ink/10 bg-white text-ink/65'}`}>
             {safeCard.type}
           </span>
           {safeCard.partOfSpeech ? (
-            <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/60' : 'border-ink/10 bg-white text-ink/55'}`}>
+            <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/60' : 'border-ink/10 bg-white text-ink/65'}`}>
               {safeCard.partOfSpeech}
             </span>
           ) : null}
@@ -100,7 +100,7 @@ export default function SrsCard({
             {dueLabel}
           </span>
         </div>
-        <div className={`mt-2 flex flex-wrap items-center justify-between gap-2 text-[0.65rem] font-black uppercase tracking-[0.08em] sm:text-xs ${dark ? 'text-white/40' : 'text-ink/40'}`}>
+        <div className={`mt-2 flex flex-wrap items-center justify-between gap-2 text-[0.65rem] font-black uppercase tracking-[0.08em] sm:text-xs ${dark ? 'text-white/60' : 'text-ink/60'}`}>
           <span>{sessionLabel}</span>
           <span className="hidden sm:inline">Shortcuts: Space, 1, 2, 3, 4</span>
         </div>
@@ -108,7 +108,7 @@ export default function SrsCard({
 
       <div className="px-3 py-4 sm:px-5 sm:py-5">
         <div className="text-center">
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>{displayTargetLabel}</p>
+          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>{displayTargetLabel}</p>
           <h2 className={`mx-auto mt-2 max-w-4xl break-words text-2xl font-black leading-tight sm:text-3xl lg:text-4xl ${dark ? 'text-white' : 'text-ink'}`}>
             {safeCard.expression}
           </h2>
@@ -154,7 +154,7 @@ export default function SrsCard({
               <div className="grid gap-3 lg:grid-cols-2">
                 {safeCard.collocations ? (
                   <div className={`rounded-lg border p-3 ${dark ? 'border-white/10 bg-white/[0.06]' : 'border-ink/10 bg-paper'}`}>
-                    <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>Collocations</p>
+                    <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>Collocations</p>
                     <p className={`mt-1.5 break-words text-sm font-semibold leading-5 ${dark ? 'text-white/70' : 'text-ink/75'}`}>
                       {safeCard.collocations}
                     </p>
@@ -182,9 +182,9 @@ export default function SrsCard({
                     <span className="flex items-center gap-2 text-sm font-black sm:text-base">
                       <Icon aria-hidden="true" className="h-4 w-4" />
                       {rating.label}
-                      <span className={`ml-auto text-xs ${dark ? 'text-white/50' : 'text-ink/50'}`}>{index + 1}</span>
+                      <span className={`ml-auto text-xs ${dark ? 'text-white/65' : 'text-ink/65'}`}>{index + 1}</span>
                     </span>
-                    <span className={`mt-0.5 block text-xs font-bold ${dark ? 'text-white/60' : 'text-ink/55'}`}>{rating.helper}</span>
+                    <span className={`mt-0.5 block text-xs font-bold ${dark ? 'text-white/60' : 'text-ink/65'}`}>{rating.helper}</span>
                   </button>
                 );
               })}

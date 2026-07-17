@@ -92,7 +92,7 @@ function AssignmentCard({ assignment, busy, onStatusChange }) {
           >
             <UserRound className="h-4 w-4" />
             {assignment.learner_name}
-            {assignment.learner_email ? <span className="font-semibold text-ink/45 no-underline dark:text-white/45">{assignment.learner_email}</span> : null}
+            {assignment.learner_email ? <span className="font-semibold text-ink/60 no-underline dark:text-white/60">{assignment.learner_email}</span> : null}
           </Link>
 
           <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold text-ink/60 dark:text-white/60">
@@ -117,7 +117,7 @@ function AssignmentCard({ assignment, busy, onStatusChange }) {
           {resources.length ? (
             <div className="mt-4 flex flex-wrap gap-2">
               {resources.map((resource) => (
-                <span key={resource} className="rounded-full border border-ink/10 px-2.5 py-1 text-[0.7rem] font-black text-ink/55 dark:border-white/10 dark:text-white/55">
+                <span key={resource} className="rounded-full border border-ink/10 px-2.5 py-1 text-[0.7rem] font-black text-ink/65 dark:border-white/10 dark:text-white/65">
                   {resource}
                 </span>
               ))}
@@ -283,7 +283,7 @@ export default function AdminAssignments() {
             ].map(([value, label, count]) => (
               <button key={value} type="button" onClick={() => setStatusFilter(value)} className={`rounded-xl border p-4 text-left transition ${statusFilter === value ? 'border-moss bg-mint/45 dark:border-emerald-300/35 dark:bg-emerald-300/10' : 'border-ink/10 bg-white hover:border-moss/30 dark:border-white/10 dark:bg-[#16211e]'}`}>
                 <p className="text-2xl font-black text-ink dark:text-white">{count}</p>
-                <p className="mt-1 text-xs font-black uppercase tracking-wide text-ink/45 dark:text-white/45">{label}</p>
+                <p className="mt-1 text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">{label}</p>
               </button>
             ))}
           </div>
