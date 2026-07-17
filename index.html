@@ -25,6 +25,21 @@
     <meta name="twitter:description" content="Simulazioni pratiche, feedback scritto e trainer SRS per parlare inglese quando conta davvero." />
     <meta name="twitter:image" content="https://sbloccoinglese.com/assets/og/sblocco-site-preview.png" />
     <title>Sblocco Inglese | Speaking, colloqui e lavoro senza blocco</title>
+    <script>
+      (function () {
+        try {
+          var saved = window.localStorage.getItem('sblocco_theme');
+          var dark =
+            saved === 'dark' ||
+            (saved !== 'light' &&
+              window.matchMedia &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (error) {
+          /* tema di default chiaro se localStorage non è accessibile */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

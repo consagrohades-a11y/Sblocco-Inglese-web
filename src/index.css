@@ -11,6 +11,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root.dark {
+  color: #f2f6f4;
+  background: #0f1715;
+  color-scheme: dark;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -27,6 +33,14 @@ body {
   background-size: 72px 72px, 72px 72px, auto;
 }
 
+.dark body {
+  background-color: #0f1715;
+  background-image:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(180deg, #0f1715 0%, #121c19 48%, #0b1311 100%);
+}
+
 button,
 a {
   -webkit-tap-highlight-color: transparent;
@@ -35,6 +49,11 @@ a {
 ::selection {
   background: #dcefe8;
   color: #18221f;
+}
+
+.dark ::selection {
+  background: #0e7c66;
+  color: #eafff7;
 }
 
 .section-shell {
@@ -65,7 +84,7 @@ a {
 }
 
 .energy-strip {
-  @apply relative overflow-hidden border-y border-ink/10 bg-ink text-white;
+  @apply relative overflow-hidden border-y border-ink/10 bg-ink text-white dark:border-white/10;
 }
 
 .energy-strip::before {
@@ -96,7 +115,13 @@ a {
 }
 
 .flow-panel {
-  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft;
+  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-[#16211e];
+}
+
+.dark .flow-panel::before {
+  background:
+    linear-gradient(115deg, rgba(220, 239, 232, 0.07) 0 24%, transparent 24% 48%, rgba(255, 242, 199, 0.06) 48% 72%, rgba(248, 228, 223, 0.07) 72% 100%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 46px);
 }
 
 .flow-panel::before {
@@ -114,7 +139,7 @@ a {
 }
 
 .flow-node {
-  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white/90 p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-soft;
+  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white/90 p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-soft dark:border-white/10 dark:bg-white/[0.06];
 }
 
 .flow-node::after {
@@ -147,27 +172,27 @@ a {
 }
 
 .eyebrow {
-  @apply inline-flex items-center gap-2 rounded-full border border-moss/20 bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-moss shadow-sm;
+  @apply inline-flex items-center gap-2 rounded-full border border-moss/20 bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-moss shadow-sm dark:border-mint/20 dark:bg-white/10 dark:text-mint;
 }
 
 .section-title {
-  @apply mt-4 max-w-3xl text-3xl font-black leading-tight text-ink sm:text-4xl lg:text-5xl;
+  @apply mt-4 max-w-3xl text-3xl font-black leading-tight text-ink dark:text-white sm:text-4xl lg:text-5xl;
 }
 
 .section-copy {
-  @apply mt-4 max-w-3xl text-base leading-7 text-ink/70 sm:text-lg;
+  @apply mt-4 max-w-3xl text-base leading-7 text-ink/70 dark:text-white/70 sm:text-lg;
 }
 
 .focus-ring {
-  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-moss focus-visible:ring-offset-2 focus-visible:ring-offset-paper;
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-moss focus-visible:ring-offset-2 focus-visible:ring-offset-paper dark:focus-visible:ring-mint dark:focus-visible:ring-offset-[#0f1715];
 }
 
 .brand-section {
-  @apply relative overflow-hidden border-y border-ink/10;
+  @apply relative overflow-hidden border-y border-ink/10 dark:border-white/10;
 }
 
 .brand-section-soft {
-  @apply bg-[#edf8f2] backdrop-blur;
+  @apply bg-[#edf8f2] backdrop-blur dark:bg-white/[0.04];
 }
 
 .brand-section-ink {
@@ -175,7 +200,7 @@ a {
 }
 
 .brand-panel {
-  @apply rounded-lg border border-ink/10 bg-white shadow-soft;
+  @apply rounded-lg border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-[#16211e];
 }
 
 .brand-panel-dark {
@@ -183,7 +208,7 @@ a {
 }
 
 .brand-card {
-  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-moss/25 hover:shadow-soft;
+  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-moss/25 hover:shadow-soft dark:border-white/10 dark:bg-[#16211e] dark:hover:border-mint/25;
 }
 
 .brand-card::before {
@@ -196,7 +221,13 @@ a {
 }
 
 .dynamic-rail {
-  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft;
+  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-[#16211e];
+}
+
+.dark .dynamic-rail::before {
+  background:
+    linear-gradient(90deg, rgba(14, 124, 102, 0.16), transparent 30%, rgba(232, 111, 81, 0.14) 62%, transparent),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 54px);
 }
 
 .dynamic-rail::before {
@@ -227,15 +258,15 @@ a {
 }
 
 .brand-measure {
-  @apply max-w-3xl text-base leading-7 text-ink/70 sm:text-lg;
+  @apply max-w-3xl text-base leading-7 text-ink/70 dark:text-white/70 sm:text-lg;
 }
 
 .hero-title {
-  @apply max-w-5xl text-5xl font-black leading-[0.98] tracking-normal text-ink sm:text-6xl lg:text-7xl;
+  @apply max-w-5xl text-5xl font-black leading-[0.98] tracking-normal text-ink dark:text-white sm:text-6xl lg:text-7xl;
 }
 
 .soft-divider {
-  @apply h-px w-full bg-gradient-to-r from-transparent via-ink/15 to-transparent;
+  @apply h-px w-full bg-gradient-to-r from-transparent via-ink/15 to-transparent dark:via-white/15;
 }
 
 .scanline {

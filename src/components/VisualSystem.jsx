@@ -11,11 +11,11 @@ export function Section({
   as: Tag = 'section',
 }) {
   const toneClass = {
-    plain: 'brand-shell bg-[#fffdfa]',
+    plain: 'brand-shell bg-[#fffdfa] dark:bg-transparent',
     soft: 'brand-section brand-shell brand-section-soft',
     ink: 'brand-section brand-section-ink',
-    mint: 'brand-section brand-shell bg-[#e0f4ed]',
-    linen: 'brand-section brand-shell bg-[#fff1df]',
+    mint: 'brand-section brand-shell bg-[#e0f4ed] dark:bg-emerald-300/[0.05]',
+    linen: 'brand-section brand-shell bg-[#fff1df] dark:bg-amber-200/[0.04]',
   }[tone] || '';
 
   return (
@@ -74,7 +74,7 @@ export function PageHero({
             </span>
           ) : null}
           <h1 className="hero-title mt-5">{title}</h1>
-          {copy ? <p className="mt-6 max-w-3xl text-lg leading-8 text-ink/70 sm:text-xl">{copy}</p> : null}
+          {copy ? <p className="mt-6 max-w-3xl text-lg leading-8 text-ink/70 dark:text-white/70 sm:text-xl">{copy}</p> : null}
           {actions ? <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">{actions}</div> : null}
           {stats ? <div className="mt-8">{stats}</div> : null}
         </div>
@@ -87,7 +87,7 @@ export function PageHero({
 
 export function MediaStage({ children, caption, className = '' }) {
   return (
-    <div className={`relative overflow-hidden rounded-lg border border-ink/10 bg-ink shadow-soft ${className}`}>
+    <div className={`relative overflow-hidden rounded-lg border border-ink/10 bg-ink shadow-soft dark:border-white/10 ${className}`}>
       <div className="absolute inset-x-0 top-0 h-1 scanline" />
       {children}
       {caption ? (
@@ -106,7 +106,9 @@ export function FeatureList({ items, className = '', light = false }) {
         <div
           key={typeof item === 'string' ? item : item.title}
           className={`flex items-start gap-3 rounded-lg border px-4 py-3 ${
-            light ? 'border-white/10 bg-white/[0.08] text-white/80' : 'border-ink/10 bg-white/90 text-ink/75'
+            light
+              ? 'border-white/10 bg-white/[0.08] text-white/80'
+              : 'border-ink/10 bg-white/90 text-ink/75 dark:border-white/10 dark:bg-white/[0.06] dark:text-white/75'
           }`}
         >
           <CheckCircle2 aria-hidden="true" className={`mt-0.5 h-4 w-4 shrink-0 ${light ? 'text-mint' : 'text-moss'}`} />
@@ -115,7 +117,7 @@ export function FeatureList({ items, className = '', light = false }) {
               <p className="text-sm font-bold leading-6">{item}</p>
             ) : (
               <>
-                <p className={`text-sm font-black leading-6 ${light ? 'text-white' : 'text-ink'}`}>{item.title}</p>
+                <p className={`text-sm font-black leading-6 ${light ? 'text-white' : 'text-ink dark:text-white'}`}>{item.title}</p>
                 {item.text ? <p className="mt-1 text-sm leading-6 opacity-80">{item.text}</p> : null}
               </>
             )}
