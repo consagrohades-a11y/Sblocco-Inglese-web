@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import ExerciseBuilderBreadcrumb from '../components/admin/ExerciseBuilderBreadcrumb.jsx';
 import { loadExerciseBuilderCatalogForAdmin, setExerciseBuilderCatalogStatus } from '../lib/exercisePlayerApi.js';
 
 const statusLabels = {
@@ -61,6 +62,7 @@ export default function AdminExerciseBuilderLibrary() {
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-7xl">
           <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
+            <ExerciseBuilderBreadcrumb current="library" className="mb-4" />
             <span className="eyebrow">Exercise Builder</span>
             <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div><h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">Libreria esercizi</h1><p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">Gli esercizi importati entrano come bozze. Pubblicandone uno vengono approvate anche le versioni di domande e pool che utilizza, senza creare legami con English Foundations.</p></div>

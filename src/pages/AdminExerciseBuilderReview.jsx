@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import ExerciseBuilderBreadcrumb from '../components/admin/ExerciseBuilderBreadcrumb.jsx';
 import {
   loadExerciseBuilderReviewQueue,
   promoteExerciseBuilderImportItems,
@@ -182,7 +183,8 @@ export default function AdminExerciseBuilderReview() {
                 <ArrowLeft aria-hidden="true" className="h-4 w-4" />
                 Torna all’importazione
               </Link>
-              <p className="mt-5 text-xs font-bold uppercase tracking-[0.16em] text-moss dark:text-mint">Exercise Builder</p>
+              <ExerciseBuilderBreadcrumb current="review" className="mt-5" />
+              <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-moss dark:text-mint">Exercise Builder</p>
               <h1 className="mt-2 text-3xl font-black tracking-tight text-ink dark:text-white sm:text-4xl">Coda di revisione</h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
                 Seleziona le bozze corrette e promuovile nella Question Bank, nelle Pool e negli Esercizi. Gli ID pubblici vengono creati soltanto in questo passaggio.

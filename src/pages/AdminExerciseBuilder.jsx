@@ -15,6 +15,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import SEO from '../components/SEO';
+import ExerciseBuilderBreadcrumb from '../components/admin/ExerciseBuilderBreadcrumb.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 import {
   exerciseBuilderTemplateManifest,
@@ -268,7 +269,8 @@ export default function AdminExerciseBuilder() {
         <div className="mx-auto max-w-[1500px]">
           <header className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-moss dark:text-mint">Contenuti</p>
+              <ExerciseBuilderBreadcrumb current="import" />
+              <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-moss dark:text-mint">Contenuti</p>
               <h1 className="mt-2 text-3xl font-black tracking-tight text-ink dark:text-white sm:text-4xl">Exercise Builder</h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
                 Importa JSON schema v1 o v2. I modelli aggiornati coprono tutti i tipi automatici, le produzioni manuali, audio, dialoghi e reading.

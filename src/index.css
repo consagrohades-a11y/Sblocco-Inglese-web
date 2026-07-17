@@ -115,7 +115,7 @@ a {
 }
 
 .flow-panel {
-  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-[#16211e];
+  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-surface-900;
 }
 
 .dark .flow-panel::before {
@@ -200,7 +200,7 @@ a {
 }
 
 .brand-panel {
-  @apply rounded-lg border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-[#16211e];
+  @apply rounded-lg border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-surface-900;
 }
 
 .brand-panel-dark {
@@ -208,7 +208,7 @@ a {
 }
 
 .brand-card {
-  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-moss/25 hover:shadow-soft dark:border-white/10 dark:bg-[#16211e] dark:hover:border-mint/25;
+  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-moss/25 hover:shadow-soft dark:border-white/10 dark:bg-surface-900 dark:hover:border-mint/25;
 }
 
 .brand-card::before {
@@ -221,7 +221,7 @@ a {
 }
 
 .dynamic-rail {
-  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-[#16211e];
+  @apply relative overflow-hidden rounded-lg border border-ink/10 bg-white shadow-soft dark:border-white/10 dark:bg-surface-900;
 }
 
 .dark .dynamic-rail::before {

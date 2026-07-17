@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import SEO from "../components/SEO";
+import ExerciseBuilderBreadcrumb from "../components/admin/ExerciseBuilderBreadcrumb.jsx";
+import ExerciseQuestionRenderer from "../components/exercises/ExerciseQuestionRenderer.jsx";
 import {
   loadExercisePools,
   loadExerciseQuestionBank,
@@ -143,6 +145,9 @@ export default function AdminExerciseComposer() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [catalogSearch, setCatalogSearch] = useState("");
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewAnswers, setPreviewAnswers] = useState({});
 
   async function loadBase() {
     setLoading(true);
@@ -294,6 +299,15 @@ export default function AdminExerciseComposer() {
         .some((value) => String(value).toLowerCase().includes(term));
     });
   }, [questions, questionSearch, questionType, questionLevel]);
+  const filteredCatalog = useMemo(() => {
+    const term = catalogSearch.trim().toLowerCase();
+    if (!term) return catalog;
+    return catalog.filter((item) =>
+      [item.publicId, item.title, item.topic, item.level, statusLabels[item.status]]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(term)),
+    );
+  }, [catalog, catalogSearch]);
   const totalQuestions = sections.reduce(
     (sum, section) => sum + sectionQuestionCount(section, poolMap),
     0,
@@ -459,6 +473,7 @@ export default function AdminExerciseComposer() {
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-[1600px]">
           <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
+            <ExerciseBuilderBreadcrumb current="composer" className="mb-4" />
             <span className="eyebrow">Exercise Builder</span>
             <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -524,8 +539,15 @@ export default function AdminExerciseComposer() {
                   </button>
                 </div>
               </div>
+              <input
+                value={catalogSearch}
+                onChange={(event) => setCatalogSearch(event.target.value)}
+                placeholder="Cerca per ID, titolo, topic..."
+                aria-label="Cerca nel catalogo esercizi"
+                className="mt-3 w-full rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm font-semibold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white"
+              />
               <div className="mt-3 grid gap-2">
-                {catalog.map((item) => (
+                {filteredCatalog.map((item) => (
                   <button
                     key={item.id}
                     type="button"
@@ -574,6 +596,11 @@ export default function AdminExerciseComposer() {
                       .
                     </p>
                   </div>
+                ) : null}
+                {catalog.length && !filteredCatalog.length ? (
+                  <p className="py-4 text-sm font-semibold text-ink/60 dark:text-white/60">
+                    Nessun esercizio corrisponde alla ricerca.
+                  </p>
                 ) : null}
               </div>
             </aside>
@@ -1162,6 +1189,16 @@ export default function AdminExerciseComposer() {
               <div className="mt-5 grid gap-2">
                 <button
                   type="button"
+                  onClick={() => {
+                    setPreviewAnswers({});
+                    setPreviewOpen(true);
+                  }}
+                  className="rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"
+                >
+                  Anteprima studente
+                </button>
+                <button
+                  type="button"
                   disabled={saving}
                   onClick={save}
                   className="rounded-full bg-ink px-5 py-3 text-sm font-black text-white disabled:opacity-40 dark:bg-emerald-300 dark:text-surface-950"
@@ -1208,6 +1245,124 @@ export default function AdminExerciseComposer() {
           </div>
         </div>
       </section>
+      {previewOpen ? (
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto bg-ink/70 p-4 backdrop-blur-sm sm:p-8"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Anteprima studente"
+        >
+          <div className="mx-auto max-w-3xl rounded-2xl border border-ink/10 bg-paper shadow-xl dark:border-white/10 dark:bg-surface-950">
+            <div className="flex items-start justify-between gap-3 border-b border-ink/10 p-5 dark:border-white/10">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">
+                  Anteprima studente
+                </p>
+                <h2 className="mt-1 text-xl font-black text-ink dark:text-white">
+                  {exercise.title || "Esercizio senza titolo"}
+                </h2>
+                <p className="mt-1 text-xs font-semibold leading-5 text-ink/60 dark:text-white/60">
+                  Anteprima interattiva senza correzione. Mostra le domande
+                  fisse così come le vede lo studente; le domande dei pool
+                  vengono estratte solo durante il tentativo reale.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewOpen(false)}
+                className="focus-ring shrink-0 rounded-full border border-ink/15 px-3 py-1.5 text-xs font-black text-ink dark:border-white/20 dark:text-white"
+              >
+                Chiudi
+              </button>
+            </div>
+            <div className="grid gap-5 p-5">
+              {sections.map((section, index) => (
+                <section
+                  key={section.clientId}
+                  className="rounded-xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-surface-900 sm:p-5"
+                >
+                  <p className="text-xs font-bold uppercase tracking-wide text-coral">
+                    Sezione {index + 1}
+                  </p>
+                  <h3 className="mt-1 text-lg font-black text-ink dark:text-white">
+                    {section.title}
+                  </h3>
+                  {section.instructions ? (
+                    <p className="mt-1 text-sm leading-6 text-ink/65 dark:text-white/65">
+                      {section.instructions}
+                    </p>
+                  ) : null}
+                  <div className="mt-4 grid gap-4">
+                    {section.fixedQuestions.map((fixedItem, questionIndex) => {
+                      const bankQuestion = questionMap.get(fixedItem.questionId);
+                      if (!bankQuestion) {
+                        return (
+                          <p
+                            key={fixedItem.questionId}
+                            className="rounded-lg border border-dashed border-ink/15 p-3 text-xs font-semibold text-ink/60 dark:border-white/15 dark:text-white/60"
+                          >
+                            Domanda non trovata nella banca (forse archiviata).
+                          </p>
+                        );
+                      }
+                      const previewItem = {
+                        id: fixedItem.questionId,
+                        question: {
+                          type: bankQuestion.question_type,
+                          title: bankQuestion.title,
+                          prompt: bankQuestion.prompt,
+                          instructions: bankQuestion.instructions,
+                          content: bankQuestion.content || {},
+                          feedback: bankQuestion.feedback || {},
+                        },
+                      };
+                      return (
+                        <article
+                          key={fixedItem.questionId}
+                          className="rounded-lg border border-ink/10 p-4 dark:border-white/10"
+                        >
+                          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">
+                            Attività {questionIndex + 1}
+                          </p>
+                          <ExerciseQuestionRenderer
+                            item={previewItem}
+                            answer={previewAnswers[fixedItem.questionId]}
+                            onChange={(value) =>
+                              setPreviewAnswers((current) => ({
+                                ...current,
+                                [fixedItem.questionId]: value,
+                              }))
+                            }
+                            attemptId={null}
+                          />
+                        </article>
+                      );
+                    })}
+                    {section.poolRules.map((rule) => {
+                      const poolItem = poolMap.get(rule.poolId);
+                      return (
+                        <p
+                          key={rule.poolId}
+                          className="rounded-lg border border-dashed border-violet-300/60 bg-violet-50/50 p-3 text-xs font-semibold text-violet-900 dark:border-violet-300/25 dark:bg-violet-400/[0.06] dark:text-violet-200"
+                        >
+                          + {rule.questionCount} domande estratte dal pool{" "}
+                          {poolItem?.publicId} · {poolItem?.title || poolItem?.name}
+                        </p>
+                      );
+                    })}
+                    {!section.fixedQuestions.length &&
+                    !section.poolRules.length ? (
+                      <p className="text-sm font-semibold text-ink/60 dark:text-white/60">
+                        Sezione vuota.
+                      </p>
+                    ) : null}
+                  </div>
+                </section>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }
