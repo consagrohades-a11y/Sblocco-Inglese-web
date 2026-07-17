@@ -7,6 +7,11 @@ export default {
       colors: {
         ink: '#18221f',
         paper: '#fbf7f1',
+        surface: {
+          800: '#101a17',
+          900: '#16211e',
+          950: '#0f1715',
+        },
         linen: '#f3eadf',
         clay: '#c76545',
         coral: '#e86f51',

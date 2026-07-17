@@ -24,7 +24,7 @@ export default function ProtectedRoute({ children }) {
     const removed = profile.status === 'deleted';
     return (
       <section className="section-shell py-16">
-        <div className="mx-auto max-w-2xl rounded-2xl border border-ink/10 bg-white p-7 text-center shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-9">
+        <div className="mx-auto max-w-2xl rounded-2xl border border-ink/10 bg-white p-7 text-center shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-9">
           <span className="eyebrow">Accesso account</span>
           <h1 className="mt-4 text-3xl font-black text-ink dark:text-white">{removed ? 'Account rimosso' : 'Account sospeso'}</h1>
           <p className="mt-4 text-base leading-7 text-ink/65 dark:text-white/60">

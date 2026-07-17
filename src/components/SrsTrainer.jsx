@@ -82,7 +82,7 @@ function CompletionStats({ ratings, reviewed, dark = false }) {
             dark ? 'border-white/10 bg-white/[0.08]' : 'border-ink/10 bg-paper'
           }`}
         >
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>{label}</p>
+          <p className={`text-[0.68rem] font-bold uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>{label}</p>
           <p className={`mt-1 text-2xl font-black ${dark ? 'text-white' : 'text-ink'}`}>{value}</p>
         </div>
       ))}
@@ -432,7 +432,7 @@ export default function SrsTrainer({
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <span
-                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.08em] shadow-sm ${
+                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] shadow-sm ${
                   isDark ? 'border-white/15 bg-white text-ink' : 'border-moss/20 bg-white/90 text-moss'
                 }`}
               >

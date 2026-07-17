@@ -46,12 +46,12 @@ function CourseCard({ course, index }) {
             {course.featured ? <Sparkles aria-hidden="true" className="h-5 w-5" /> : <Target aria-hidden="true" className="h-5 w-5" />}
           </span>
           <div>
-            <p className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-ink/60 dark:text-white/60">Percorso 0{index + 1}</p>
+            <p className="text-[0.68rem] font-bold uppercase tracking-[0.1em] text-ink/60 dark:text-white/60">Percorso 0{index + 1}</p>
             <p className="mt-1 text-xs font-black text-moss dark:text-mint">{course.status}</p>
           </div>
         </div>
         {course.featured ? (
-          <span className="rounded-full bg-coral px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-white">
+          <span className="rounded-full bg-coral px-3 py-1.5 text-xs font-bold uppercase tracking-[0.08em] text-white">
             Percorso principale
           </span>
         ) : null}
@@ -63,18 +63,18 @@ function CourseCard({ course, index }) {
       <div className="relative mt-6 grid grid-cols-2 gap-3">
         <div className="rounded-2xl border border-ink/10 bg-white/75 p-4 backdrop-blur dark:border-white/10 dark:bg-white/[0.04]">
           <Clock3 aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />
-          <p className="mt-2 text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/60 dark:text-white/60">Durata</p>
+          <p className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.08em] text-ink/60 dark:text-white/60">Durata</p>
           <p className="mt-1 text-sm font-black text-ink dark:text-white">{course.duration}</p>
         </div>
         <div className="rounded-2xl border border-ink/10 bg-white/75 p-4 backdrop-blur dark:border-white/10 dark:bg-white/[0.04]">
           <Users aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />
-          <p className="mt-2 text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/60 dark:text-white/60">Formato</p>
+          <p className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.08em] text-ink/60 dark:text-white/60">Formato</p>
           <p className="mt-1 text-sm font-black text-ink dark:text-white">{course.groupSize}</p>
         </div>
       </div>
 
       <div className="relative mt-6 rounded-[1.4rem] border border-white/55 bg-white/65 p-5 shadow-sm backdrop-blur dark:border-white/10 dark:bg-black/10">
-        <p className="text-xs font-black uppercase tracking-[0.08em] text-coral">Che cosa dovrebbe cambiare</p>
+        <p className="text-xs font-bold uppercase tracking-[0.08em] text-coral">Che cosa dovrebbe cambiare</p>
         <p className="mt-3 text-sm font-bold leading-7 text-ink/75 dark:text-white/75">{course.outcome}</p>
       </div>
 
@@ -137,7 +137,7 @@ export default function Percorsi() {
 
         <div className="section-shell relative grid gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-24">
           <div>
-            <span className="inline-flex rounded-full border border-mint/30 bg-mint/10 px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-mint">
+            <span className="inline-flex rounded-full border border-mint/30 bg-mint/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-mint">
               Corsi e percorsi
             </span>
             <h1 className="mt-6 max-w-5xl text-5xl font-black leading-[0.96] sm:text-6xl lg:text-7xl">
@@ -163,7 +163,7 @@ export default function Percorsi() {
                 Come funziona il metodo
               </Link>
             </div>
-            <div className="mt-8 flex flex-wrap gap-2 text-xs font-black uppercase tracking-[0.08em] text-white/65">
+            <div className="mt-8 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-[0.08em] text-white/65">
               <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-2">gruppi piccoli</span>
               <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-2">pratica vocale</span>
               <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-2">listening</span>
@@ -179,7 +179,7 @@ export default function Percorsi() {
           <div className="absolute left-[-5rem] top-20 h-52 w-52 rounded-full bg-mint/25 blur-3xl dark:bg-mint/[0.04]" />
           <div className="section-shell relative">
             <div className="max-w-3xl">
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Percorsi disponibili o in apertura</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">Percorsi disponibili o in apertura</p>
               <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
                 Puoi entrare direttamente nel percorso che corrisponde al tuo obiettivo.
               </h2>
@@ -203,7 +203,7 @@ export default function Percorsi() {
           <div className="section-shell relative">
             <div className="grid gap-8 lg:grid-cols-[0.74fr_1.26fr] lg:items-end">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint">In preparazione</p>
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-moss dark:text-mint">In preparazione</p>
                 <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
                   Altri percorsi apriranno quando struttura e materiali saranno pronti.
                 </h2>
@@ -213,7 +213,7 @@ export default function Percorsi() {
                 </p>
               </div>
               <div className="rounded-[1.6rem] border border-moss/15 bg-mint/45 p-5 dark:border-mint/15 dark:bg-mint/[0.06]">
-                <p className="text-xs font-black uppercase tracking-[0.08em] text-moss dark:text-mint">Perché una lista d’interesse</p>
+                <p className="text-xs font-bold uppercase tracking-[0.08em] text-moss dark:text-mint">Perché una lista d’interesse</p>
                 <p className="mt-2 text-sm font-bold leading-7 text-ink/75 dark:text-white/75">
                   Non voglio aprire corsi generici solo per riempire una pagina. Prima definisco l’obiettivo, le ore, le prove e il risultato finale.
                 </p>
@@ -230,7 +230,7 @@ export default function Percorsi() {
                   <span className="absolute right-5 top-3 text-5xl font-black text-ink/[0.035] dark:text-white/[0.04]">0{index + 1}</span>
                   <div className="relative flex flex-wrap items-start justify-between gap-3 pt-1">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-[0.08em] text-coral">{course.level}</p>
+                      <p className="text-xs font-bold uppercase tracking-[0.08em] text-coral">{course.level}</p>
                       <h3 className="mt-2 text-2xl font-black text-ink dark:text-white">{course.name}</h3>
                     </div>
                     <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black text-ink dark:bg-white/10 dark:text-white">
@@ -267,7 +267,7 @@ export default function Percorsi() {
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-mint text-moss">
                   <MessageCircle aria-hidden="true" className="h-5 w-5" />
                 </span>
-                <p className="mt-5 text-xs font-black uppercase tracking-[0.12em] text-coral">Non sai quale scegliere?</p>
+                <p className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-coral">Non sai quale scegliere?</p>
                 <h2 className="mt-4 text-3xl font-black leading-tight text-ink dark:text-white">
                   Puoi descrivermi la situazione senza acquistare nulla prima.
                 </h2>
@@ -293,7 +293,7 @@ export default function Percorsi() {
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-butter text-ink">
                   <Target aria-hidden="true" className="h-5 w-5" />
                 </span>
-                <p className="mt-5 text-xs font-black uppercase tracking-[0.12em] text-mint">Diagnosi individuale</p>
+                <p className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-mint">Diagnosi individuale</p>
                 <h2 className="mt-4 text-2xl font-black leading-tight">Hai una scadenza o vuoi un’analisi più precisa?</h2>
                 <p className="mt-4 text-sm font-semibold leading-7 text-white/65">
                   La simulazione da €39 include 30 minuti online, correzione e feedback scritto. È utile soprattutto per

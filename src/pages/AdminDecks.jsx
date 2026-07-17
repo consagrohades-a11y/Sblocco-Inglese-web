@@ -15,7 +15,7 @@ const emptyDeck = {
   card_ids: [],
 };
 
-const fieldClass = 'w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm font-semibold text-ink outline-none transition focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/15 dark:bg-[#101a17] dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
+const fieldClass = 'w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm font-semibold text-ink outline-none transition focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/15 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
 
 const statusLabels = {
   draft: 'Bozza',
@@ -50,7 +50,7 @@ function batchOf(card) {
 }
 
 function Field({ label, children }) {
-  return <label className="block"><span className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">{label}</span><div className="mt-1.5">{children}</div></label>;
+  return <label className="block"><span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">{label}</span><div className="mt-1.5">{children}</div></label>;
 }
 
 const domainConfig = {
@@ -268,9 +268,9 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
         <div className="mx-auto max-w-[96rem]">
           <ContentAreaNav type={area.navType} />
           <div className="grid gap-4 xl:grid-cols-[18rem_minmax(0,0.8fr)_minmax(24rem,1.2fr)]">
-            <aside className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:sticky xl:top-4 xl:h-[calc(100vh-6rem)] xl:overflow-y-auto">
+            <aside className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-surface-900 xl:sticky xl:top-4 xl:h-[calc(100vh-6rem)] xl:overflow-y-auto">
               <div className="flex items-center justify-between gap-3">
-                <div><p className="text-xs font-black uppercase tracking-wide text-moss">{area.label}</p><h1 className="mt-1 text-xl font-black text-ink dark:text-white">Deck</h1></div>
+                <div><p className="text-xs font-bold uppercase tracking-wide text-moss">{area.label}</p><h1 className="mt-1 text-xl font-black text-ink dark:text-white">Deck</h1></div>
                 <button type="button" onClick={newDeck} className="focus-ring grid h-10 w-10 place-items-center rounded-full bg-ink text-white dark:bg-mint dark:text-ink" aria-label="Nuovo deck"><Plus className="h-4 w-4" /></button>
               </div>
               <p className="mt-2 text-xs font-semibold leading-5 text-ink/65 dark:text-white/65">Crea gruppi riutilizzabili di card. Solo i deck pubblicati compaiono nelle assegnazioni.</p>
@@ -281,8 +281,8 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
               </div>
             </aside>
 
-            <section className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:sticky xl:top-4 xl:self-start">
-              <p className="text-xs font-black uppercase tracking-wide text-moss">{selected.id ? 'Modifica deck' : 'Nuovo deck'}</p>
+            <section className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 xl:sticky xl:top-4 xl:self-start">
+              <p className="text-xs font-bold uppercase tracking-wide text-moss">{selected.id ? 'Modifica deck' : 'Nuovo deck'}</p>
               <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Dati e pubblicazione</h2>
               <div className="mt-5 grid gap-4">
                 <Field label="ID pubblico"><input value={selected.public_id} onChange={(event) => updateField('public_id', normaliseIdInput(event.target.value))} onBlur={(event) => updateField('public_id', slugify(event.target.value))} placeholder="travel-english" className={fieldClass} /></Field>
@@ -293,7 +293,7 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
               </div>
 
               <div className="mt-5 rounded-xl border border-ink/10 bg-linen/45 p-4 dark:border-white/10 dark:bg-white/[0.05]">
-                <div className="flex items-center justify-between gap-3"><div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Stato attuale</p><p className="mt-1 text-base font-black text-ink dark:text-white">{statusLabels[selected.status] || selected.status}</p></div><span className={`rounded-full px-3 py-1.5 text-xs font-black ${selected.status === 'published' ? 'bg-mint text-moss dark:bg-emerald-400/15 dark:text-emerald-200' : selected.status === 'archived' ? 'bg-slate-200 text-slate-700 dark:bg-white/10 dark:text-white/65' : 'bg-white text-ink dark:bg-white/10 dark:text-white'}`}>{selectedCardIds.length} card</span></div>
+                <div className="flex items-center justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Stato attuale</p><p className="mt-1 text-base font-black text-ink dark:text-white">{statusLabels[selected.status] || selected.status}</p></div><span className={`rounded-full px-3 py-1.5 text-xs font-black ${selected.status === 'published' ? 'bg-mint text-moss dark:bg-emerald-400/15 dark:text-emerald-200' : selected.status === 'archived' ? 'bg-slate-200 text-slate-700 dark:bg-white/10 dark:text-white/65' : 'bg-white text-ink dark:bg-white/10 dark:text-white'}`}>{selectedCardIds.length} card</span></div>
                 <p className="mt-2 text-xs font-semibold leading-5 text-ink/65 dark:text-white/65">Pubblica il deck per renderlo selezionabile nelle assegnazioni. Le singole card devono essere pubblicate per essere incluse nello SRS.</p>
               </div>
 
@@ -305,9 +305,9 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
               {message ? <p className="mt-4 rounded-lg border border-moss/25 bg-mint/40 p-3 text-sm font-bold text-ink dark:border-emerald-300/25 dark:bg-emerald-400/10 dark:text-emerald-100">{message}</p> : null}
             </section>
 
-            <section className="min-h-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:sticky xl:top-4 xl:flex xl:h-[calc(100vh-6rem)] xl:flex-col xl:overflow-hidden">
+            <section className="min-h-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-surface-900 xl:sticky xl:top-4 xl:flex xl:h-[calc(100vh-6rem)] xl:flex-col xl:overflow-hidden">
               <div className="shrink-0">
-                <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-black uppercase tracking-wide text-moss">Composizione</p><h2 className="mt-1 text-xl font-black text-ink dark:text-white">{selectedCardIds.length} card nel deck</h2></div><button type="button" onClick={toggleVisible} disabled={!visibleIds.length} className="focus-ring rounded-full border border-ink/15 px-4 py-2 text-xs font-black text-ink disabled:opacity-40 dark:border-white/20 dark:text-white">{allVisibleSelected ? 'Rimuovi visibili' : 'Aggiungi visibili'}</button></div>
+                <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-wide text-moss">Composizione</p><h2 className="mt-1 text-xl font-black text-ink dark:text-white">{selectedCardIds.length} card nel deck</h2></div><button type="button" onClick={toggleVisible} disabled={!visibleIds.length} className="focus-ring rounded-full border border-ink/15 px-4 py-2 text-xs font-black text-ink disabled:opacity-40 dark:border-white/20 dark:text-white">{allVisibleSelected ? 'Rimuovi visibili' : 'Aggiungi visibili'}</button></div>
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">
                   <label className="relative sm:col-span-2"><Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-ink/60 dark:text-white/60" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={`Cerca ${isWord ? 'parola' : selected.content_type === 'mixed' ? 'parola o espressione' : 'espressione'}, italiano, categoria o ID`} className={`${fieldClass} pl-9`} /></label>
                   <select value={level} onChange={(event) => setLevel(event.target.value)} className={fieldClass}><option value="all">Tutti i livelli</option>{levels.map((value) => <option key={value}>{value}</option>)}</select>
@@ -316,7 +316,7 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
                 </div>
               </div>
               <div className="mt-4 min-h-0 flex-1 divide-y divide-ink/10 overflow-y-auto overscroll-contain rounded-xl border border-ink/10 dark:divide-white/10 dark:border-white/10">
-                {filteredCards.map((card) => { const active = selectedCardIds.includes(card.id); return <button key={card.id} type="button" onClick={() => toggleCard(card.id)} className={`focus-ring flex w-full items-center gap-3 p-3 text-left transition ${active ? 'bg-mint/45 dark:bg-emerald-400/10' : 'hover:bg-linen/50 dark:hover:bg-white/5'}`}><span className={`grid h-6 w-6 shrink-0 place-items-center rounded-md border ${active ? 'border-moss bg-moss text-white' : 'border-ink/20 dark:border-white/20'}`}>{active ? <Check className="h-4 w-4" /> : null}</span><span className="min-w-0 flex-1"><span className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate text-sm font-black text-ink dark:text-white">{card.lemma || card.canonical_text}</span>{!isWord && selected.content_type === 'mixed' ? <span className="shrink-0 rounded-full border border-ink/10 px-2 py-0.5 text-[10px] font-black uppercase text-ink/65 dark:border-white/15 dark:text-white/65">{card.item_type === 'word' ? 'Word' : 'Expression'}</span> : null}</span><span className="block truncate text-xs font-semibold text-ink/65 dark:text-white/65">{card.italian_meaning} · {card.level} · {card.topic}{batchOf(card) ? ` · batch ${batchOf(card)}` : ''}</span></span></button>; })}
+                {filteredCards.map((card) => { const active = selectedCardIds.includes(card.id); return <button key={card.id} type="button" onClick={() => toggleCard(card.id)} className={`focus-ring flex w-full items-center gap-3 p-3 text-left transition ${active ? 'bg-mint/45 dark:bg-emerald-400/10' : 'hover:bg-linen/50 dark:hover:bg-white/5'}`}><span className={`grid h-6 w-6 shrink-0 place-items-center rounded-md border ${active ? 'border-moss bg-moss text-white' : 'border-ink/20 dark:border-white/20'}`}>{active ? <Check className="h-4 w-4" /> : null}</span><span className="min-w-0 flex-1"><span className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate text-sm font-black text-ink dark:text-white">{card.lemma || card.canonical_text}</span>{!isWord && selected.content_type === 'mixed' ? <span className="shrink-0 rounded-full border border-ink/10 px-2 py-0.5 text-[10px] font-bold uppercase text-ink/65 dark:border-white/15 dark:text-white/65">{card.item_type === 'word' ? 'Word' : 'Expression'}</span> : null}</span><span className="block truncate text-xs font-semibold text-ink/65 dark:text-white/65">{card.italian_meaning} · {card.level} · {card.topic}{batchOf(card) ? ` · batch ${batchOf(card)}` : ''}</span></span></button>; })}
                 {!loading && filteredCards.length === 0 ? <p className="p-4 text-sm font-bold text-ink/65 dark:text-white/65">Nessuna card corrisponde ai filtri.</p> : null}
               </div>
             </section>

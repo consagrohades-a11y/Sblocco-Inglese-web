@@ -45,14 +45,14 @@ const emptyCard = {
   review_notes: '',
 };
 
-const inputClass = 'w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm font-semibold text-ink outline-none transition placeholder:text-ink/35 focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/15 dark:bg-[#101a17] dark:text-white dark:placeholder:text-white/35 dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
+const inputClass = 'w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm font-semibold text-ink outline-none transition placeholder:text-ink/35 focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/15 dark:bg-surface-800 dark:text-white dark:placeholder:text-white/35 dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
 const splitLines = (value) => String(value || '').split('\n').map((item) => item.trim()).filter(Boolean);
 const joinLines = (value) => (Array.isArray(value) ? value.join('\n') : '');
 
 function Field({ label, required = false, children }) {
   return (
     <label className="block">
-      <span className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">
+      <span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">
         {label}{required ? ' *' : ''}
       </span>
       <div className="mt-1.5">{children}</div>
@@ -369,7 +369,7 @@ export default function AdminTravelTrainer() {
             <form onSubmit={(event) => { event.preventDefault(); saveCard(); }} className={`${adminSurface.panel} p-5 sm:p-6`}>
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink/10 pb-4 dark:border-white/10">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">{selected.id ? 'Modifica card' : 'Nuova card'}</p>
+                  <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">{selected.id ? 'Modifica card' : 'Nuova card'}</p>
                   <h2 className="mt-1 text-xl font-black text-ink dark:text-white">{selected.canonical_text || 'Travel expression'}</h2>
                 </div>
                 <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black dark:bg-white/10">{selected.status} · {selected.review_status}</span>
@@ -413,7 +413,7 @@ export default function AdminTravelTrainer() {
 
             <aside className="grid content-start gap-5">
               <div className={`${adminSurface.panel} p-5`}>
-                <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Anteprima completa</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Anteprima completa</p>
                 <div className="mt-4">
                   <SrsCard card={previewCard} revealed onReveal={() => {}} onRate={() => {}} sessionLabel="Anteprima admin" targetLabel="Travel expression" />
                 </div>
@@ -421,14 +421,14 @@ export default function AdminTravelTrainer() {
 
               <div className={`${adminSurface.panel} p-5`}>
                 <div className="flex items-center justify-between gap-3">
-                  <div><p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Database Travel</p><h2 className="mt-1 text-xl font-black">{cards.length} card modificabili</h2></div>
+                  <div><p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Database Travel</p><h2 className="mt-1 text-xl font-black">{cards.length} card modificabili</h2></div>
                   <span className="rounded-full bg-mint px-3 py-1 text-xs font-black text-moss dark:bg-emerald-400/15 dark:text-emerald-300">100 base + custom</span>
                 </div>
                 <label className="relative mt-4 block"><Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-ink/35 dark:text-white/35" /><input className={`${inputClass} pl-9`} value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cerca ID, frase, funzione o categoria" /></label>
                 <div className="mt-4 max-h-[38rem] space-y-2 overflow-y-auto pr-1">
                   {loading ? <p className="text-sm font-semibold text-ink/65 dark:text-white/65">Caricamento...</p> : filteredCards.length ? filteredCards.map((card) => (
                     <button key={card.id} type="button" onClick={() => selectCard(card)} className={`w-full rounded-lg border p-3 text-left transition ${selected.id === card.id ? 'border-moss bg-mint/40 dark:border-emerald-300 dark:bg-emerald-400/10' : 'border-ink/10 bg-white hover:border-moss/30 dark:border-white/10 dark:bg-white/[0.04]'}`}>
-                      <div className="flex items-start justify-between gap-3"><span className="text-xs font-black text-moss dark:text-emerald-300">{card.public_id}</span><span className="text-[0.65rem] font-black uppercase text-ink/60 dark:text-white/60">{card.status}</span></div>
+                      <div className="flex items-start justify-between gap-3"><span className="text-xs font-black text-moss dark:text-emerald-300">{card.public_id}</span><span className="text-[0.65rem] font-bold uppercase text-ink/60 dark:text-white/60">{card.status}</span></div>
                       <p className="mt-1 text-sm font-black text-ink dark:text-white">{card.canonical_text}</p>
                       <p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">{card.topic || card.primary_context}</p>
                       <p className="mt-1 line-clamp-1 text-xs text-ink/60 dark:text-white/60">{card.pronunciation_learner_us || 'Pronuncia mancante'}</p>

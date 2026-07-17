@@ -44,7 +44,7 @@ export default function LegalPage({ page }) {
         <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight text-ink sm:text-5xl">
           {page.title}
         </h1>
-        <p className="mt-4 text-sm font-black uppercase tracking-[0.08em] text-moss">
+        <p className="mt-4 text-sm font-bold uppercase tracking-[0.08em] text-moss">
           Ultimo aggiornamento: {page.updated}
         </p>
         <div className="mt-6 max-w-4xl rounded-lg border border-coral/20 bg-blush p-5 shadow-sm">

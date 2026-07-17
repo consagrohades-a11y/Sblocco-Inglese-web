@@ -88,7 +88,7 @@ function AuditCard() {
       <div className="absolute inset-x-0 top-0 h-1 scanline" />
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.12em] text-moss">Audit iniziale</p>
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-moss">Audit iniziale</p>
           <p className="mt-2 text-5xl font-black leading-none text-ink">{primaryOffer.price}</p>
         </div>
         <span className="rounded-full bg-mint px-3 py-1 text-xs font-black text-moss">{primaryOffer.duration}</span>
@@ -124,7 +124,7 @@ function ProofStrip() {
         {proofStats.map((item) => (
           <div key={item.label} className="rounded-lg border border-ink/10 bg-linen/60 px-4 py-3 text-center shadow-sm">
             <p className="text-2xl font-black text-moss">{item.value}</p>
-            <p className="mt-1 text-xs font-black uppercase tracking-[0.08em] text-ink/65">{item.label}</p>
+            <p className="mt-1 text-xs font-bold uppercase tracking-[0.08em] text-ink/65">{item.label}</p>
           </div>
         ))}
       </div>
@@ -159,7 +159,7 @@ export default function Simulation() {
         <div className="h-1 scanline" />
         <div className="section-shell grid gap-9 py-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.44fr)] lg:items-center lg:py-16">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-butter/50 bg-butter px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-ink shadow-soft">
+            <span className="inline-flex items-center gap-2 rounded-full border border-butter/50 bg-butter px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-ink shadow-soft">
               <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
               Audit inglese online - {primaryOffer.price}
             </span>
@@ -298,14 +298,14 @@ export default function Simulation() {
           <div className="mt-8 grid gap-4 lg:grid-cols-2">
             {proofExamples.map((item) => (
               <article key={item.label} className="brand-card p-5">
-                <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">{item.label}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.08em] text-moss">{item.label}</p>
                 <div className="mt-4 grid gap-3">
                   <div className="rounded-lg bg-blush p-4">
-                    <p className="text-xs font-black uppercase tracking-[0.08em] text-coral">Prima</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.08em] text-coral">Prima</p>
                     <p className="mt-2 text-sm font-semibold leading-6 text-ink/70">{item.before}</p>
                   </div>
                   <div className="rounded-lg bg-mint p-4">
-                    <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Dopo</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.08em] text-moss">Dopo</p>
                     <p className="mt-2 text-sm font-black leading-6 text-ink">{item.after}</p>
                   </div>
                 </div>
@@ -332,7 +332,7 @@ export default function Simulation() {
         <div className="section-shell">
           <div className="rounded-lg border border-ink/10 bg-ink p-6 text-white shadow-soft sm:p-8 lg:grid lg:grid-cols-[1fr_0.72fr] lg:items-center lg:gap-8">
             <div>
-              <span className="inline-flex rounded-full bg-butter px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-ink">
+              <span className="inline-flex rounded-full bg-butter px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-ink">
                 Primo passo - {primaryOffer.price}
               </span>
               <h2 className="mt-5 max-w-3xl text-3xl font-black leading-tight sm:text-4xl">

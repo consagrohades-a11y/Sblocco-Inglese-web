@@ -111,18 +111,18 @@ export default function A1UnitPage({ unitId }) {
       <SEO title={`${unit.displayTitle} | Sblocco Inglese`} description={unit.outcome} />
 
       <div className="rounded-[2rem] bg-ink p-7 text-white shadow-soft sm:p-9">
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-mint">Unità A1 English Foundations</p>
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-mint">Unità A1 English Foundations</p>
         <h1 className="mt-4 max-w-5xl text-4xl font-black leading-tight sm:text-5xl">{unit.displayTitle}</h1>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-white/75">{unit.subtitle}</p>
         <div className="mt-6 rounded-2xl bg-white/10 p-5">
-          <p className="text-xs font-black uppercase tracking-wide text-mint">Obiettivo</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-mint">Obiettivo</p>
           <p className="mt-2 max-w-4xl leading-7 text-white/85">{unit.outcome}</p>
         </div>
       </div>
 
       <div id="unit-active-section" className="mt-8 grid scroll-mt-24 gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
-          <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-moss">
+          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-moss">
             <BookOpen className="h-4 w-4" /> Mappa grammaticale
           </p>
           <h2 className="mt-3 text-2xl font-black text-ink">Regole grammaticali in questa unità</h2>
@@ -132,7 +132,7 @@ export default function A1UnitPage({ unitId }) {
         </section>
 
         <section className="rounded-2xl border border-ink/10 bg-linen/70 p-6">
-          <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-moss">
+          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-moss">
             <Target className="h-4 w-4" /> Uso attivo
           </p>
           <h2 className="mt-3 text-2xl font-black text-ink">Cosa renderai attivo</h2>
@@ -147,7 +147,7 @@ export default function A1UnitPage({ unitId }) {
       </div>
 
       <section className="mt-8">
-        <p className="text-xs font-black uppercase tracking-wide text-moss">Spiegazione grammaticale</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-moss">Spiegazione grammaticale</p>
         <h2 className="mt-2 text-3xl font-black text-ink">Come funziona la grammatica</h2>
         <div className="mt-5 grid gap-4 lg:grid-cols-2">
           {unit.ruleCards.map((card) => (
@@ -155,7 +155,7 @@ export default function A1UnitPage({ unitId }) {
               <p className="text-sm font-black text-moss">{card.grammarPoint}</p>
               <p className="mt-3 text-sm leading-7 text-ink/75">{card.explanation}</p>
               <div className="mt-4 rounded-xl bg-mint/35 p-4">
-                <p className="text-xs font-black uppercase tracking-wide text-ink/65">Uso attivo nel parlato</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-ink/65">Uso attivo nel parlato</p>
                 <p className="mt-2 text-sm leading-6 text-ink/70">{card.activeUse}</p>
               </div>
               <ul className="mt-4 grid gap-1 text-sm font-black text-ink">
@@ -167,7 +167,7 @@ export default function A1UnitPage({ unitId }) {
       </section>
 
       <section className="mt-8 rounded-[2rem] border border-coral/20 bg-blush/70 p-6 sm:p-7">
-        <p className="text-xs font-black uppercase tracking-wide text-coral">Interferenze italiano → inglese</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-coral">Interferenze italiano → inglese</p>
         <h2 className="mt-2 text-2xl font-black text-ink">Dove l’italiano può interferire</h2>
         <div className="mt-4 grid gap-3 lg:grid-cols-3">
           {unit.italianTransferNotes.map((note) => (
@@ -181,7 +181,7 @@ export default function A1UnitPage({ unitId }) {
 
       {unit.comparison ? (
         <section className="mt-8 rounded-[2rem] bg-ink p-6 text-white sm:p-7">
-          <p className="text-xs font-black uppercase tracking-wide text-mint">Distinzione grammaticale</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-mint">Distinzione grammaticale</p>
           <h2 className="mt-2 text-2xl font-black">{unit.comparison.title}</h2>
           <p className="mt-3 max-w-4xl leading-7 text-white/70">{unit.comparison.introduction}</p>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
@@ -199,7 +199,7 @@ export default function A1UnitPage({ unitId }) {
       ) : null}
 
       <section className="mt-8 rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
-        <p className="text-xs font-black uppercase tracking-wide text-moss">Espressioni utili</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-moss">Espressioni utili</p>
         <h2 className="mt-2 text-2xl font-black text-ink">Frasi da rendere automatiche</h2>
         <div className="mt-4 flex flex-wrap gap-2">
           {unit.usefulChunks.map((chunk) => (

@@ -154,7 +154,7 @@ export default function CardArchiveWorkspace({
                 return (
                   <article key={card.id} className="grid gap-4 p-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
                     <div className="min-w-0">
-                      <p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">{card.public_id} · {card.status} · {card.review_status}</p>
+                      <p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">{card.public_id} · {card.status} · {card.review_status}</p>
                       <h2 className="mt-2 truncate text-lg font-black text-ink dark:text-white">{card[titleField]}</h2>
                       <p className="mt-1 text-sm font-semibold text-ink/60 dark:text-white/65">{card[meaningField]}</p>
                     </div>

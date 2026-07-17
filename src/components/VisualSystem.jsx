@@ -130,10 +130,10 @@ export function FeatureList({ items, className = '', light = false }) {
 
 export function ProductCard({ label, title, text, meta, to, action = 'Apri', icon: Icon }) {
   return (
-    <article className="brand-card kinetic-card flex h-full flex-col p-5 pt-6 dark:border-white/10 dark:bg-[#16211e] sm:p-6 sm:pt-7">
+    <article className="brand-card kinetic-card flex h-full flex-col p-5 pt-6 dark:border-white/10 dark:bg-surface-900 sm:p-6 sm:pt-7">
       <div className="flex items-start justify-between gap-3">
         {label ? (
-          <span className="rounded-full bg-mint px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-moss dark:bg-emerald-300/15 dark:text-mint">
+          <span className="rounded-full bg-mint px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-moss dark:bg-emerald-300/15 dark:text-mint">
             {label}
           </span>
         ) : null}
@@ -167,7 +167,7 @@ export function CtaBand({ eyebrow, title, copy, children, className = '' }) {
       <div className="relative grid gap-7 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
         <div>
           {eyebrow ? (
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-mint/90">{eyebrow}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint/90">{eyebrow}</p>
           ) : null}
           <h2 className="mt-3 max-w-3xl text-3xl font-black leading-tight sm:text-4xl">{title}</h2>
           {copy ? <p className="mt-4 max-w-3xl text-base leading-7 text-white/70">{copy}</p> : null}

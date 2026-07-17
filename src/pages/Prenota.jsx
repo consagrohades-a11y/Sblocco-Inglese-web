@@ -41,7 +41,7 @@ export default function Prenota() {
         </div>
 
         <div className="rounded-lg border border-moss/20 bg-white p-5 shadow-soft sm:p-7">
-          <span className="rounded-full bg-butter px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-ink">
+          <span className="rounded-full bg-butter px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-ink">
             {primaryOffer.priceLabel}
           </span>
           <p className="mt-4 text-5xl font-black text-moss">{primaryOffer.price}</p>

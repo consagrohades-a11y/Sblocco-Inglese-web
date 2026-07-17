@@ -65,7 +65,7 @@ function AssignmentCard({ assignment, busy, onStatusChange }) {
   if (Number(assignment.study_item_count || 0) > 0) resources.push(`${assignment.study_item_count} card SRS`);
 
   return (
-    <article className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-6">
+    <article className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-6">
       <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -128,7 +128,7 @@ function AssignmentCard({ assignment, busy, onStatusChange }) {
         <div className="grid shrink-0 gap-2 sm:grid-cols-2 xl:w-64 xl:grid-cols-1">
           <Link
             to={`/admin/learners/${assignment.learner_id}/assignments/${assignment.id}/content`}
-            className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white transition hover:bg-moss dark:bg-emerald-300 dark:text-[#102019]"
+            className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white transition hover:bg-moss dark:bg-emerald-300 dark:text-surface-950"
           >
             <FilePenLine className="h-4 w-4" />Apri e modifica
           </Link>
@@ -258,7 +258,7 @@ export default function AdminAssignments() {
       <SEO title="Assegnazioni | Admin | Sblocco Inglese" description="Gestisci tutte le assegnazioni da una sola pagina." />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-7xl">
-          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
             <span className="eyebrow">Studenti</span>
             <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -267,7 +267,7 @@ export default function AdminAssignments() {
                   Controlla tutte le attività, apri direttamente l’editor e modifica lo stato senza passare dal profilo di ogni studente.
                 </p>
               </div>
-              <Link to="/admin/learners" className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white hover:bg-moss dark:bg-emerald-300 dark:text-[#102019]">
+              <Link to="/admin/learners" className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white hover:bg-moss dark:bg-emerald-300 dark:text-surface-950">
                 Scegli uno studente<ChevronRight className="h-4 w-4" />
               </Link>
             </div>
@@ -281,20 +281,20 @@ export default function AdminAssignments() {
               ['completed', 'Completate', counts.completed],
               ['archived', 'Archiviate', counts.archived],
             ].map(([value, label, count]) => (
-              <button key={value} type="button" onClick={() => setStatusFilter(value)} className={`rounded-xl border p-4 text-left transition ${statusFilter === value ? 'border-moss bg-mint/45 dark:border-emerald-300/35 dark:bg-emerald-300/10' : 'border-ink/10 bg-white hover:border-moss/30 dark:border-white/10 dark:bg-[#16211e]'}`}>
+              <button key={value} type="button" onClick={() => setStatusFilter(value)} className={`rounded-xl border p-4 text-left transition ${statusFilter === value ? 'border-moss bg-mint/45 dark:border-emerald-300/35 dark:bg-emerald-300/10' : 'border-ink/10 bg-white hover:border-moss/30 dark:border-white/10 dark:bg-surface-900'}`}>
                 <p className="text-2xl font-black text-ink dark:text-white">{count}</p>
-                <p className="mt-1 text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">{label}</p>
+                <p className="mt-1 text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">{label}</p>
               </button>
             ))}
           </div>
 
-          <section className="mt-5 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-5">
+          <section className="mt-5 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-5">
             <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_13rem_15rem_14rem_auto]">
               <label className="relative">
                 <Search className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-ink/35 dark:text-white/35" />
-                <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cerca studente, email o assegnazione" className="w-full rounded-xl border border-ink/15 bg-white py-3 pl-10 pr-4 text-sm font-semibold outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white" />
+                <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cerca studente, email o assegnazione" className="w-full rounded-xl border border-ink/15 bg-white py-3 pl-10 pr-4 text-sm font-semibold outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white" />
               </label>
-              <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white">
+              <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white">
                 <option value="all">Tutti gli stati</option>
                 <option value="active">Attive e bozze</option>
                 <option value="published">Attive</option>
@@ -303,14 +303,14 @@ export default function AdminAssignments() {
                 <option value="completed">Completate</option>
                 <option value="archived">Archiviate</option>
               </select>
-              <select value={contentFilter} onChange={(event) => setContentFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white">
+              <select value={contentFilter} onChange={(event) => setContentFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white">
                 <option value="all">Tutti i contenuti</option>
                 <option value="with_content">Con contenuti</option>
                 <option value="without_content">Senza contenuti</option>
                 <option value="exercise">Con esercizio</option>
                 <option value="practice">Con pratica mirata</option>
               </select>
-              <select value={groupFilter} onChange={(event) => setGroupFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white"><option value="all">Tutti i gruppi</option>{groups.map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select>
+              <select value={groupFilter} onChange={(event) => setGroupFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white"><option value="all">Tutti i gruppi</option>{groups.map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select>
               <button type="button" onClick={() => { setSearch(''); setStatusFilter('active'); setContentFilter('all'); setGroupFilter('all'); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-ink/15 px-4 text-sm font-black text-ink dark:border-white/20 dark:text-white">
                 <Filter className="h-4 w-4" />Azzera
               </button>
@@ -321,12 +321,12 @@ export default function AdminAssignments() {
           {success ? <div className="mt-5 border-l-4 border-moss bg-mint/30 p-4 text-sm font-bold text-ink dark:bg-emerald-400/10 dark:text-emerald-100">{success}</div> : null}
 
           <div className="mt-5 grid gap-4">
-            {loading ? <div className="rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/60 dark:border-white/10 dark:bg-[#16211e] dark:text-white/60">Caricamento assegnazioni...</div> : null}
+            {loading ? <div className="rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/60 dark:border-white/10 dark:bg-surface-900 dark:text-white/60">Caricamento assegnazioni...</div> : null}
             {!loading && filteredAssignments.map((assignment) => (
               <AssignmentCard key={assignment.id} assignment={assignment} busy={busyId === assignment.id} onStatusChange={changeStatus} />
             ))}
             {!loading && filteredAssignments.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-ink/15 bg-white p-8 text-center dark:border-white/15 dark:bg-[#16211e]">
+              <div className="rounded-2xl border border-dashed border-ink/15 bg-white p-8 text-center dark:border-white/15 dark:bg-surface-900">
                 <ClipboardList className="mx-auto h-10 w-10 text-ink/30 dark:text-white/30" />
                 <p className="mt-3 text-sm font-black text-ink dark:text-white">Nessuna assegnazione corrisponde ai filtri.</p>
               </div>

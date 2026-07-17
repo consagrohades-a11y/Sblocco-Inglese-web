@@ -55,7 +55,7 @@ const statusLabels = {
   archived: "Archiviato",
 };
 const fieldClass =
-  "mt-2 min-w-0 w-full rounded-xl border border-ink/15 bg-white px-3.5 py-2.5 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/20 dark:bg-[#101a17] dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15";
+  "mt-2 min-w-0 w-full rounded-xl border border-ink/15 bg-white px-3.5 py-2.5 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15";
 
 function statusClass(status) {
   if (status === "published")
@@ -458,7 +458,7 @@ export default function AdminExerciseComposer() {
       />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-[1600px]">
-          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
             <span className="eyebrow">Exercise Builder</span>
             <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -486,7 +486,7 @@ export default function AdminExerciseComposer() {
                 <button
                   type="button"
                   onClick={createNew}
-                  className="rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white dark:bg-emerald-300 dark:text-[#102019]"
+                  className="rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white dark:bg-emerald-300 dark:text-surface-950"
                 >
                   Nuovo esercizio
                 </button>
@@ -505,9 +505,9 @@ export default function AdminExerciseComposer() {
           ) : null}
 
           <div className="mt-6 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[17rem_minmax(0,1fr)_24rem]">
-            <aside className="order-2 min-w-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:order-1 xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
+            <aside className="order-2 min-w-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-surface-900 xl:order-1 xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">
+                <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">
                   Esercizi
                 </p>
                 <div className="flex items-center gap-2">
@@ -579,10 +579,10 @@ export default function AdminExerciseComposer() {
             </aside>
 
             <main className="order-1 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 xl:order-2">
-              <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
+              <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">
+                    <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">
                       {exercise.publicId || "Nuovo esercizio"}
                     </p>
                     <h2 className="mt-1 text-2xl font-black text-ink dark:text-white">
@@ -745,10 +745,10 @@ export default function AdminExerciseComposer() {
                 </p>
               </section>
 
-              <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
+              <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
                 <div className="flex items-end justify-between gap-3">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">
+                    <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                       Struttura
                     </p>
                     <h2 className="mt-1 text-2xl font-black text-ink dark:text-white">
@@ -825,8 +825,8 @@ export default function AdminExerciseComposer() {
               </section>
 
               {selectedSection ? (
-                <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
-                  <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">
+                <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
+                  <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">
                     Configura sezione {selectedSectionIndex + 1}
                   </p>
                   <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -880,7 +880,7 @@ export default function AdminExerciseComposer() {
                     <div>
                       <div className="flex items-end justify-between gap-3">
                         <div>
-                          <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">
+                          <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">
                             Domande fisse
                           </p>
                           <h3 className="mt-1 text-lg font-black text-ink dark:text-white">
@@ -988,7 +988,7 @@ export default function AdminExerciseComposer() {
                     </div>
 
                     <div>
-                      <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">
+                      <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                         Estrazione da pool
                       </p>
                       <h3 className="mt-1 text-lg font-black text-ink dark:text-white">
@@ -1112,8 +1112,8 @@ export default function AdminExerciseComposer() {
               ) : null}
             </main>
 
-            <aside className="order-3 min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
-              <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">
+            <aside className="order-3 min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
+              <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">
                 Anteprima struttura
               </p>
               <h2 className="mt-1 text-xl font-black text-ink dark:text-white">
@@ -1164,7 +1164,7 @@ export default function AdminExerciseComposer() {
                   type="button"
                   disabled={saving}
                   onClick={save}
-                  className="rounded-full bg-ink px-5 py-3 text-sm font-black text-white disabled:opacity-40 dark:bg-emerald-300 dark:text-[#102019]"
+                  className="rounded-full bg-ink px-5 py-3 text-sm font-black text-white disabled:opacity-40 dark:bg-emerald-300 dark:text-surface-950"
                 >
                   {saving
                     ? "Salvataggio..."

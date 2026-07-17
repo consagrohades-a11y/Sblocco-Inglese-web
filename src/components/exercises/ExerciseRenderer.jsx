@@ -77,15 +77,15 @@ export default function ExerciseRenderer({
 
       <dl className={`${showHeader ? 'mt-4' : ''} grid gap-2 rounded-xl bg-linen/70 p-4 text-sm sm:grid-cols-3`}>
         <div>
-          <dt className="text-xs font-black uppercase tracking-wide text-ink/65">Focus grammaticale</dt>
+          <dt className="text-xs font-bold uppercase tracking-wide text-ink/65">Focus grammaticale</dt>
           <dd className="mt-1 font-black text-ink">{activeExercise.grammarFocus || '—'}</dd>
         </div>
         <div>
-          <dt className="text-xs font-black uppercase tracking-wide text-ink/65">Skill focus</dt>
+          <dt className="text-xs font-bold uppercase tracking-wide text-ink/65">Skill focus</dt>
           <dd className="mt-1 font-black text-ink">{activeExercise.skillFocus || '—'}</dd>
         </div>
         <div>
-          <dt className="text-xs font-black uppercase tracking-wide text-ink/65">Tipo di produzione</dt>
+          <dt className="text-xs font-bold uppercase tracking-wide text-ink/65">Tipo di produzione</dt>
           <dd className="mt-1 font-black text-ink">{activeExercise.productionMode || activeExercise.purpose || '—'}</dd>
         </div>
       </dl>

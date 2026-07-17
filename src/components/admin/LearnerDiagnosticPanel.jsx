@@ -37,12 +37,12 @@ export default function LearnerDiagnosticPanel({ learnerId }) {
   const weaknesses = items.filter((item) => ['weakness', 'emerging_weakness'].includes(item.status)).length;
 
   return (
-    <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#16211e]">
+    <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div><p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">Diagnostica Exercise Builder</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">{weaknesses} aree da monitorare</h2></div>
+        <div><p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">Diagnostica Exercise Builder</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">{weaknesses} aree da monitorare</h2></div>
         <div className="flex rounded-full border border-ink/10 bg-linen/40 p-1 dark:border-white/10 dark:bg-white/[0.04]">
-          <button type="button" onClick={() => setFilter('learning')} className={`rounded-full px-3 py-1.5 text-xs font-black ${filter === 'learning' ? 'bg-ink text-white dark:bg-emerald-300 dark:text-[#102019]' : 'text-ink/65 dark:text-white/65'}`}>Apprendimento</button>
-          <button type="button" onClick={() => setFilter('precision')} className={`rounded-full px-3 py-1.5 text-xs font-black ${filter === 'precision' ? 'bg-ink text-white dark:bg-emerald-300 dark:text-[#102019]' : 'text-ink/65 dark:text-white/65'}`}>Precisione</button>
+          <button type="button" onClick={() => setFilter('learning')} className={`rounded-full px-3 py-1.5 text-xs font-black ${filter === 'learning' ? 'bg-ink text-white dark:bg-emerald-300 dark:text-surface-950' : 'text-ink/65 dark:text-white/65'}`}>Apprendimento</button>
+          <button type="button" onClick={() => setFilter('precision')} className={`rounded-full px-3 py-1.5 text-xs font-black ${filter === 'precision' ? 'bg-ink text-white dark:bg-emerald-300 dark:text-surface-950' : 'text-ink/65 dark:text-white/65'}`}>Precisione</button>
         </div>
       </div>
 

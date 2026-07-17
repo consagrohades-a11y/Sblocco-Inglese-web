@@ -159,13 +159,13 @@ export default function LearnerAssignmentDetail() {
   return (
     <>
       <SEO title={`${title} | Sblocco Inglese`} description="Dettaglio della tua attività Sblocco Inglese." />
-      <section className="section-shell py-10 dark:bg-[#171310] lg:py-14">
+      <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
         <div className="mx-auto max-w-4xl">
           <Link to="/assignments" className="inline-flex items-center gap-2 text-sm font-black text-clay underline dark:text-[#f7a98d]">
             <ArrowLeft className="h-4 w-4" />Torna alle attività
           </Link>
 
-          <header className="mt-5 overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-[#211b18]">
+          <header className="mt-5 overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-surface-900">
             <div className="relative overflow-hidden p-6 sm:p-8 lg:p-10">
               <div className="pointer-events-none absolute -right-14 -top-16 h-52 w-52 rounded-full bg-blush blur-3xl dark:bg-coral/10" />
               <div className="pointer-events-none absolute -bottom-20 left-8 h-48 w-48 rounded-full bg-butter/80 blur-3xl dark:bg-butter/5" />
@@ -174,7 +174,7 @@ export default function LearnerAssignmentDetail() {
               <Sparkles className="pointer-events-none absolute bottom-9 right-12 h-7 w-7 text-clay/45 dark:text-[#f7a98d]/55" />
 
               <div className="relative">
-                <span className="inline-flex items-center gap-2 rounded-full border border-coral/25 bg-blush px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-clay dark:border-coral/25 dark:bg-coral/10 dark:text-[#f7a98d]">
+                <span className="inline-flex items-center gap-2 rounded-full border border-coral/25 bg-blush px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-clay dark:border-coral/25 dark:bg-coral/10 dark:text-[#f7a98d]">
                   <Coffee className="h-3.5 w-3.5" />Benvenuto nel tuo spazio
                 </span>
                 <h1 className="mt-5 text-3xl font-black leading-tight text-ink dark:text-white sm:text-5xl">
@@ -192,34 +192,34 @@ export default function LearnerAssignmentDetail() {
               <div className="grid gap-3 border-t border-clay/10 bg-linen/35 p-5 dark:border-white/10 dark:bg-white/[0.035] sm:grid-cols-3 sm:px-8 lg:px-10">
                 <div className="flex items-center gap-3 rounded-2xl border border-coral/15 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blush text-coral dark:bg-coral/10 dark:text-[#ff9678]"><ListChecks className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Da completare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{totalActivities || 1} attività</p></div>
+                  <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Da completare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{totalActivities || 1} attività</p></div>
                 </div>
                 <div className="flex items-center gap-3 rounded-2xl border border-clay/15 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-butter text-clay dark:bg-butter/10 dark:text-[#ffd98a]"><NotebookPen className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Tempo stimato</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{assignment.estimated_minutes ? `${assignment.estimated_minutes} minuti` : 'Segui il tuo ritmo'}</p></div>
+                  <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Tempo stimato</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{assignment.estimated_minutes ? `${assignment.estimated_minutes} minuti` : 'Segui il tuo ritmo'}</p></div>
                 </div>
                 <div className="flex items-center gap-3 rounded-2xl border border-coral/15 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#fde9dc] text-coral dark:bg-coral/10 dark:text-[#ff9678]"><CalendarDays className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Quando</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{assignment.deadline_at ? formatDate(assignment.deadline_at) : 'Prima della prossima lezione'}</p></div>
+                  <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Quando</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{assignment.deadline_at ? formatDate(assignment.deadline_at) : 'Prima della prossima lezione'}</p></div>
                 </div>
               </div>
             ) : null}
           </header>
 
-          {loading ? <div className="mt-5 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 dark:border-white/10 dark:bg-[#211b18] dark:text-white/65">Caricamento attività...</div> : null}
+          {loading ? <div className="mt-5 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 dark:border-white/10 dark:bg-surface-900 dark:text-white/65">Caricamento attività...</div> : null}
           {error ? <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-5 text-sm font-bold text-red-900 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100">{error}</div> : null}
 
           {!loading && !error && !assignment ? (
-            <div className="mt-5 rounded-2xl border border-ink/10 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-[#211b18]">
+            <div className="mt-5 rounded-2xl border border-ink/10 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-surface-900">
               <h2 className="text-2xl font-black text-ink dark:text-white">Attività non disponibile</h2>
               <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">L’attività potrebbe non appartenere al tuo account, non essere ancora pubblicata oppure non essere più accessibile.</p>
             </div>
           ) : null}
 
           {!loading && !error && assignment ? (
-            <article className="mt-6 overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-[#211b18]">
+            <article className="mt-6 overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-surface-900">
               <div className="p-6 sm:p-8">
-                <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-clay dark:text-[#f7a98d]"><NotebookPen className="h-4 w-4" />Il tuo piano</span>
+                <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-clay dark:text-[#f7a98d]"><NotebookPen className="h-4 w-4" />Il tuo piano</span>
                 <h2 className="mt-4 text-3xl font-black leading-tight text-ink dark:text-white sm:text-4xl">{assignment.title}</h2>
 
                 <div className="mt-6 flex flex-wrap gap-3 text-xs font-black text-ink/60 dark:text-white/70">
@@ -229,20 +229,20 @@ export default function LearnerAssignmentDetail() {
                 </div>
 
                 <section className="mt-8 rounded-2xl border border-coral/20 bg-blush/65 p-5 dark:border-coral/20 dark:bg-coral/[0.08] sm:p-6">
-                  <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-clay dark:text-[#f7a98d]"><Coffee className="h-4 w-4" />Messaggio per te</p>
+                  <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-clay dark:text-[#f7a98d]"><Coffee className="h-4 w-4" />Messaggio per te</p>
                   <p className="mt-3 whitespace-pre-wrap text-base leading-7 text-ink/75 dark:text-white/75">
                     {assignment.learner_note || 'Completa le attività qui sotto con calma. Tutto ciò che salvi resterà disponibile fino alla prossima lezione.'}
                   </p>
                 </section>
 
                 <section className="mt-8">
-                  <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-coral dark:text-[#ff9678]"><Sun className="h-4 w-4" />Oggi</p>
+                  <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]"><Sun className="h-4 w-4" />Oggi</p>
                   <h3 className="mt-2 text-2xl font-black text-ink dark:text-white">Completa queste attività</h3>
 
                   {studyScope?.include_in_srs ? (
                     <div className="mt-5 rounded-2xl border border-clay/20 bg-butter/30 p-5 dark:border-butter/10 dark:bg-butter/[0.05]">
                       <div>
-                        <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-clay dark:text-[#ffd98a]"><BookOpen className="h-4 w-4" />Card assegnate nei Trainer SRS</p>
+                        <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-clay dark:text-[#ffd98a]"><BookOpen className="h-4 w-4" />Card assegnate nei Trainer SRS</p>
                         <h4 className="mt-2 text-lg font-black text-ink dark:text-white">{studyScope.snapshot_item_count} card totali</h4>
                         <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Apri direttamente il Trainer che contiene le card assegnate per questa attività.</p>
                       </div>
@@ -268,14 +268,14 @@ export default function LearnerAssignmentDetail() {
                         <article key={resource.id} className="rounded-2xl border border-clay/15 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-coral/35 hover:shadow-md dark:border-white/10 dark:bg-white/[0.06]">
                           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div>
-                              <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-coral dark:text-[#ff9678]"><Star className="h-3.5 w-3.5 fill-butter text-clay" />{index + 1}. {resourceTypeLabel(resource)}</p>
+                              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]"><Star className="h-3.5 w-3.5 fill-butter text-clay" />{index + 1}. {resourceTypeLabel(resource)}</p>
                               {['completed', 'review'].includes(resourceProgress.get(resource.id)?.state) ? <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-black text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200"><CheckCircle2 className="h-3.5 w-3.5" />{resourceProgress.get(resource.id)?.state === 'review' ? 'Consegnata · in valutazione' : 'Completata'}</p> : null}
                               <h4 className="mt-2 text-lg font-black text-ink dark:text-white">{resource.title}</h4>
                               {resource.description ? <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">{resource.description}</p> : null}
                               {resource.resource_type === 'custom_exercise' ? <p className="mt-2 text-xs font-bold text-clay dark:text-[#f7a98d]">Autosave attivo · nuove domande a ogni tentativo quando usa una pool</p> : null}
                               {resource.resource_type === 'exercise_collection' ? <p className="mt-2 text-xs font-bold text-clay dark:text-[#f7a98d]">Versione {resource.collection_config?.version_number} · {resource.collection_snapshot?.items?.length || 0} tappe in ordine · avanzamento salvato</p> : null}
                             </div>
-                            <Link to={resourceDestination(resource, assignment.id)} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-coral px-5 py-2.5 text-sm font-black text-white transition hover:bg-clay dark:bg-[#ff8b6c] dark:text-[#21140f] dark:hover:bg-[#f7a98d]">
+                            <Link to={resourceDestination(resource, assignment.id)} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-coral px-5 py-2.5 text-sm font-black text-white transition hover:bg-clay dark:bg-[#ff8b6c] dark:text-surface-950 dark:hover:bg-[#f7a98d]">
                               {['completed', 'review'].includes(resourceProgress.get(resource.id)?.state) ? 'Vedi risultato' : resourceProgress.get(resource.id)?.state === 'in_progress' ? 'Continua' : 'Inizia'}
                             </Link>
                           </div>

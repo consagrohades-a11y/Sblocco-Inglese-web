@@ -62,9 +62,9 @@ const statusLabels = {
   archived: "Archiviata",
 };
 const fieldClass =
-  "mt-2 min-w-0 w-full rounded-xl border border-ink/15 bg-white px-3.5 py-2.5 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/20 dark:bg-[#101a17] dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15";
+  "mt-2 min-w-0 w-full rounded-xl border border-ink/15 bg-white px-3.5 py-2.5 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15";
 const compactFieldClass =
-  "min-w-0 w-full rounded-xl border border-ink/15 bg-white px-3 py-2 text-xs font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white";
+  "min-w-0 w-full rounded-xl border border-ink/15 bg-white px-3 py-2 text-xs font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white";
 
 function uid(prefix) {
   return `${prefix}_${crypto.randomUUID().slice(0, 8)}`;
@@ -484,7 +484,7 @@ function DialogueChoiceEditor({ question, setQuestion, codes }) {
         />
       </label>
       <div className="grid gap-3">
-        <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">
+        <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">
           Turni visibili
         </p>
         {turns.map((turn, index) => (
@@ -714,7 +714,7 @@ function RubricEditor({ rubric = [], onChange }) {
   return (
     <div className="grid gap-3">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">
+        <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">
           Rubric di valutazione
         </p>
         <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-black text-violet-800 dark:bg-violet-300/10 dark:text-violet-200">
@@ -910,7 +910,7 @@ function DialogueEditor({ question, setQuestion }) {
       </label>
       <section>
         <div className="flex items-center justify-between">
-          <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">
+          <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">
             Personaggi
           </p>
           <button
@@ -999,7 +999,7 @@ function DialogueEditor({ question, setQuestion }) {
       </section>
       <section>
         <div className="flex items-center justify-between">
-          <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">
+          <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">
             Turni
           </p>
           <button
@@ -1558,7 +1558,7 @@ function ReadingEditor({ question, setQuestion }) {
       </label>
       <section>
         <div className="flex items-center justify-between">
-          <p className="text-xs font-black uppercase tracking-wide text-cyan-800 dark:text-cyan-200">
+          <p className="text-xs font-bold uppercase tracking-wide text-cyan-800 dark:text-cyan-200">
             Domande di comprensione
           </p>
           <button
@@ -2029,7 +2029,7 @@ export default function AdminExerciseQuestionEditorV2() {
       />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-[1700px]">
-          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
             <span className="eyebrow">Exercise Builder v2</span>
             <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -2057,7 +2057,7 @@ export default function AdminExerciseQuestionEditorV2() {
                 <button
                   type="button"
                   onClick={createNew}
-                  className="rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white dark:bg-emerald-300 dark:text-[#102019]"
+                  className="rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white dark:bg-emerald-300 dark:text-surface-950"
                 >
                   Nuova domanda
                 </button>
@@ -2075,9 +2075,9 @@ export default function AdminExerciseQuestionEditorV2() {
             </div>
           ) : null}
           <div className="mt-6 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[20rem_minmax(0,1fr)] 2xl:grid-cols-[20rem_minmax(0,1fr)_28rem]">
-            <aside className="order-2 min-w-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:order-1 xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
+            <aside className="order-2 min-w-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-surface-900 xl:order-1 xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-black uppercase tracking-wide text-moss">
+                <p className="text-xs font-bold uppercase tracking-wide text-moss">
                   Coda
                 </p>
                 <span className="text-xs font-black text-ink/60 dark:text-white/60">
@@ -2177,10 +2177,10 @@ export default function AdminExerciseQuestionEditorV2() {
               </div>
             </aside>
             <main className="order-1 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 xl:order-2">
-              <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
+              <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
                 <div className="flex items-end justify-between">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-moss">
+                    <p className="text-xs font-bold uppercase tracking-wide text-moss">
                       {question.publicId || "Nuova domanda"}
                     </p>
                     <h2 className="mt-1 text-2xl font-black">
@@ -2359,8 +2359,8 @@ export default function AdminExerciseQuestionEditorV2() {
                   </label>
                 </div>
               </section>
-              <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
-                <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">
+              <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
+                <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                   Contenuto e risposta
                 </p>
                 <div className="mt-5">
@@ -2543,8 +2543,8 @@ export default function AdminExerciseQuestionEditorV2() {
                 ) : null}
               </section>
               {question.questionType !== "content_block" ? (
-                <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
-                  <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">
+                <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
+                  <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                     Diagnostica
                   </p>
                   <p className="mt-2 text-sm font-semibold text-ink/65 dark:text-white/65">
@@ -2609,9 +2609,9 @@ export default function AdminExerciseQuestionEditorV2() {
                 </section>
               ) : null}
             </main>
-            <aside className="order-3 min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:col-start-2 2xl:col-start-3 2xl:row-start-1 2xl:sticky 2xl:top-24 2xl:max-h-[calc(100vh-7rem)] 2xl:overflow-y-auto">
+            <aside className="order-3 min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 xl:col-start-2 2xl:col-start-3 2xl:row-start-1 2xl:sticky 2xl:top-24 2xl:max-h-[calc(100vh-7rem)] 2xl:overflow-y-auto">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-black uppercase tracking-wide text-moss">
+                <p className="text-xs font-bold uppercase tracking-wide text-moss">
                   Anteprima studente
                 </p>
                 {currentIndex >= 0 ? (
@@ -2632,7 +2632,7 @@ export default function AdminExerciseQuestionEditorV2() {
                   type="button"
                   disabled={saving}
                   onClick={save}
-                  className="rounded-full bg-ink px-5 py-3 text-sm font-black text-white dark:bg-emerald-300 dark:text-[#102019]"
+                  className="rounded-full bg-ink px-5 py-3 text-sm font-black text-white dark:bg-emerald-300 dark:text-surface-950"
                 >
                   {saving
                     ? "Salvataggio..."

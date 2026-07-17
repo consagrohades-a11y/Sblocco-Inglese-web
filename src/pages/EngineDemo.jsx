@@ -9,7 +9,7 @@ export default function EngineDemo() {
     <section className="section-shell py-12">
       <SEO title="Shared Exercise Engine Demo | Sblocco Inglese" description="A small A1 present simple proof-of-concept using the shared exercise, diagnostic, recommendation, and progress engines." />
       <div className="rounded-[2rem] bg-ink p-7 text-white shadow-soft">
-        <p className="text-xs font-black uppercase tracking-wider text-mint">Phase 1 proof-of-concept</p>
+        <p className="text-xs font-bold uppercase tracking-wider text-mint">Phase 1 proof-of-concept</p>
         <h1 className="mt-3 text-4xl font-black sm:text-5xl">Shared exercise engine</h1>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-white/70">
           Three data-driven A1 exercises share the same scoring, feedback, diagnostic, recommendation, and local progress foundation.

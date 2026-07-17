@@ -93,7 +93,7 @@ function DiagnosticPanel({ items, answers, title = 'Diagnosi errori' }) {
 
   return (
     <div className="rounded-2xl border border-ink/10 bg-linen/80 p-4 dark:border-white/10 dark:bg-white/[0.06]">
-      <p className="text-sm font-black uppercase tracking-wide text-ink/65 dark:text-white/65">{title}</p>
+      <p className="text-sm font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">{title}</p>
       {diagnostics.length ? (
         <div className="mt-3 grid gap-3">
           {diagnostics.map((item) => (
@@ -120,7 +120,7 @@ function DiagnosticPanel({ items, answers, title = 'Diagnosi errori' }) {
 function CorrectionList({ items, answers }) {
   return (
     <div className="mt-5 rounded-lg border border-ink/10 bg-linen/70 p-4 dark:border-white/10 dark:bg-white/[0.06]">
-      <p className="text-sm font-black uppercase tracking-wide text-ink/70 dark:text-white/70">Correzioni del dialogo</p>
+      <p className="text-sm font-bold uppercase tracking-wide text-ink/70 dark:text-white/70">Correzioni del dialogo</p>
       <div className="mt-3 grid gap-3">
         {items.map((item) => {
           const checked = isCorrect(item, answers[item.id]);
@@ -148,7 +148,7 @@ function ChoiceSet({ exercise, answers, setAnswer, submitted }) {
         const checked = submitted ? isCorrect(item, answers[item.id]) : null;
         return (
           <fieldset key={item.id} className={'rounded-lg border p-4 ' + (submitted ? checked ? 'border-moss/30 bg-mint/40 dark:bg-mint/10' : 'border-coral/35 bg-blush/60 dark:bg-coral/10' : 'border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.04]')}>
-            <legend className="px-2 text-xs font-black uppercase tracking-wide text-moss dark:text-mint">Domanda {index + 1}</legend>
+            <legend className="px-2 text-xs font-bold uppercase tracking-wide text-moss dark:text-mint">Domanda {index + 1}</legend>
             <p className="mt-2 text-sm font-black leading-6 text-ink dark:text-white">{item.prompt}</p>
             <BaseFormHint item={item} />
             <div className="mt-3 grid gap-2">
@@ -337,7 +337,7 @@ export default function GrammarA1Test() {
   return (
     <div className={grammarDark ? 'dark' : ''}>
       <SEO title={`${checkpoint.title} | A1 Grammar`} description={`${checkpoint.title}: checkpoint A1 con esercizi, dialoghi e correzioni in italiano.`} />
-      <section className="section-shell py-12 transition-colors dark:bg-[#0f1715]">
+      <section className="section-shell py-12 transition-colors dark:bg-surface-950">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link to="/grammar/a1" className="focus-ring inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-ink shadow-sm dark:bg-white/10 dark:text-white">
             <ArrowLeft className="h-4 w-4" />Torna agli argomenti A1
@@ -359,7 +359,7 @@ export default function GrammarA1Test() {
             <p className="mt-4 max-w-3xl text-lg leading-8 text-ink/70 dark:text-white/70">{checkpoint.description}</p>
           </div>
           <div className="rounded-2xl border border-ink/10 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
-            <p className="text-sm font-black uppercase tracking-wide text-ink/65 dark:text-white/65">Cosa controlla</p>
+            <p className="text-sm font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Cosa controlla</p>
             <ul className="mt-3 grid gap-2 text-sm font-semibold leading-6 text-ink/75 dark:text-white/75">
               {checkpoint.checks.map((item) => <li key={item}>• {item}</li>)}
             </ul>
@@ -367,7 +367,7 @@ export default function GrammarA1Test() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-ink/10 bg-linen/80 p-5 dark:border-white/10 dark:bg-white/[0.05]">
-          <p className="text-sm font-black uppercase tracking-wide text-moss dark:text-mint">Test disponibili</p>
+          <p className="text-sm font-bold uppercase tracking-wide text-moss dark:text-mint">Test disponibili</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {checkpoint.exercises.map((exercise) => (
               <a key={exercise.id} href={`#${exercise.id}`} className="focus-ring rounded-full bg-white px-4 py-2 text-sm font-black text-ink shadow-sm transition hover:-translate-y-0.5 dark:bg-white/10 dark:text-white">
@@ -393,7 +393,7 @@ export default function GrammarA1Test() {
           {score ? (
             <div className="grid gap-5 rounded-2xl bg-ink p-5 text-white dark:bg-mint dark:text-ink">
               <div>
-                <p className="text-sm font-black uppercase tracking-wider opacity-75">Risultato argomento</p>
+                <p className="text-sm font-bold uppercase tracking-wider opacity-75">Risultato argomento</p>
                 <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
                   <h2 className="text-3xl font-black">{score.correct}/{score.total} · {status}</h2>
                   <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-black dark:bg-ink/10">{score.percent}%</span>

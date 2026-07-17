@@ -6,7 +6,7 @@ export default function MultipleChoice({ exercise, answers, setAnswer, disabled 
     <div className="grid gap-4">
       {(exercise.items || []).map((item, index) => (
         <fieldset key={item.id} className="rounded-xl border border-ink/10 bg-white p-4 shadow-sm">
-          <legend className="px-2 text-xs font-black uppercase tracking-wide text-moss">
+          <legend className="px-2 text-xs font-bold uppercase tracking-wide text-moss">
             Domanda {index + 1}
           </legend>
           <p className="mt-2 text-sm font-black leading-6 text-ink">{item.prompt}</p>

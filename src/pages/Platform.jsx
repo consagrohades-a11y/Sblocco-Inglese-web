@@ -67,7 +67,7 @@ export default function Platform() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(78,201,168,0.17),transparent_30%),radial-gradient(circle_at_85%_80%,rgba(232,111,81,0.14),transparent_32%)]" />
         <div className="section-shell relative grid gap-10 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-24">
           <div>
-            <span className="inline-flex rounded-full border border-mint/30 bg-mint/10 px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-mint">
+            <span className="inline-flex rounded-full border border-mint/30 bg-mint/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-mint">
               La piattaforma
             </span>
             <h1 className="mt-6 max-w-4xl text-5xl font-black leading-[0.97] sm:text-6xl">
@@ -97,7 +97,7 @@ export default function Platform() {
           <div className="rounded-[2rem] border border-white/15 bg-white/[0.07] p-5 shadow-2xl sm:p-7">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">La tua settimana</p>
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint">La tua settimana</p>
                 <h2 className="mt-2 text-2xl font-black">Gestire una richiesta del cliente</h2>
               </div>
               <span className="rounded-full bg-coral px-3 py-1.5 text-xs font-black text-white">In corso</span>
@@ -125,7 +125,7 @@ export default function Platform() {
       <SectionReveal>
         <section className="section-shell py-16 lg:py-20">
           <div className="max-w-3xl">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Cosa trovi dentro</p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">Cosa trovi dentro</p>
             <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
               Ogni funzione serve a rendere la pratica più chiara e più vicina alle situazioni reali.
             </h2>
@@ -148,7 +148,7 @@ export default function Platform() {
         <section className="bg-linen/70 py-16 dark:bg-white/[0.03] lg:py-20">
           <div className="section-shell grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint">Un’esperienza ordinata</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-moss dark:text-mint">Un’esperienza ordinata</p>
               <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
                 Dalla consegna al feedback, ogni passaggio resta collegato.
               </h2>
@@ -178,7 +178,7 @@ export default function Platform() {
         <section className="section-shell py-16 lg:py-20">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Feedback e privacy</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">Feedback e privacy</p>
               <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
                 Le registrazioni servono per imparare, non per diventare contenuti pubblici.
               </h2>
@@ -189,7 +189,7 @@ export default function Platform() {
             </div>
             <div className="rounded-[2rem] bg-ink p-7 text-white sm:p-9">
               <BellRing aria-hidden="true" className="h-7 w-7 text-mint" />
-              <p className="mt-5 text-xs font-black uppercase tracking-[0.12em] text-mint">Nuova revisione</p>
+              <p className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-mint">Nuova revisione</p>
               <h3 className="mt-3 text-2xl font-black">Ho visto i tuoi esercizi.</h3>
               <p className="mt-4 text-sm font-semibold leading-7 text-white/65">
                 Apri il roleplay per ascoltare di nuovo le tue risposte, leggere i commenti sui singoli turni e vedere quali
@@ -209,7 +209,7 @@ export default function Platform() {
       <section className="bg-ink py-16 text-white">
         <div className="section-shell flex flex-col gap-7 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">La piattaforma dentro i corsi</p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint">La piattaforma dentro i corsi</p>
             <h2 className="mt-4 text-3xl font-black leading-tight sm:text-4xl">
               Non devi acquistare una serie di strumenti separati. La pratica digitale fa parte del percorso.
             </h2>

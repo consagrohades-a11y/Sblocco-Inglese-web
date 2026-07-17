@@ -250,14 +250,14 @@ export default function AdminAssignmentContent() {
     setSuccess((nextStatus === 'published' ? 'Assegnazione pubblicata.' : nextStatus === 'archived' ? 'Assegnazione archiviata.' : nextStatus === 'draft' ? 'Assegnazione riportata in bozza.' : 'Modifiche salvate.') + groupSuffix);
   }
 
-  const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-[#101a17] dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
+  const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
 
   return (
     <>
       <SEO title="Gestisci assegnazione | Sblocco Inglese" description="Modifica, completa e pubblica un’assegnazione." />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-6xl">
-          <div className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-soft sm:p-8">
+          <div className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 shadow-soft sm:p-8">
             <span className="eyebrow">Assegnazione</span>
             <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -271,14 +271,14 @@ export default function AdminAssignmentContent() {
             </div>
           </div>
 
-          {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 text-sm font-bold text-ink/65 dark:text-white/60">Caricamento...</div> : null}
+          {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 text-sm font-bold text-ink/65 dark:text-white/60">Caricamento...</div> : null}
           {error ? <div className="mt-6 border-l-4 border-red-400 bg-red-50 p-5 text-sm font-bold text-red-900">{error}</div> : null}
           {success ? <div className="mt-6 border-l-4 border-moss bg-mint/30 p-5 text-sm font-bold text-ink dark:bg-emerald-400/10 dark:text-emerald-100">{success}</div> : null}
 
           {!loading && assignment ? (
             <div className="mt-6 grid gap-6">
-              <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm sm:p-8">
-                <p className="text-xs font-black uppercase tracking-wide text-moss">Dati e messaggi</p>
+              <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 shadow-sm sm:p-8">
+                <p className="text-xs font-bold uppercase tracking-wide text-moss">Dati e messaggi</p>
                 <div className="mt-5 grid gap-5">
                   <label><span className="text-sm font-black">Titolo</span><input value={title} onChange={(e) => setTitle(e.target.value)} className={fieldClass} /></label>
                   <label><span className="text-sm font-black">Messaggio visibile allo studente</span><textarea rows={5} value={learnerMessage} onChange={(e) => setLearnerMessage(e.target.value)} className={fieldClass} /></label>
@@ -314,20 +314,20 @@ export default function AdminAssignmentContent() {
               <AssignmentCollectionPicker value={selectedCollectionResources} onChange={setSelectedCollectionResources} />
 
               <div className="grid gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.65fr)]">
-                <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm">
-                  <p className="text-xs font-black uppercase tracking-wide text-moss">Contenuti</p>
+                <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 shadow-sm">
+                  <p className="text-xs font-bold uppercase tracking-wide text-moss">Contenuti</p>
                   <h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Attività disponibili</h2>
                   <div className="mt-6 grid gap-4 sm:grid-cols-2">
                     {assignmentActivityCatalog.map((activity) => {
                       const selected = selectedKeys.includes(activity.key);
-                      return <button key={activity.key} type="button" onClick={() => toggleActivity(activity.key)} className={`focus-ring rounded-xl border p-4 text-left transition ${selected ? 'border-moss bg-mint/30 dark:border-emerald-300/40 dark:bg-emerald-400/15' : 'border-ink/10 bg-white hover:bg-linen/45 dark:border-white/10 dark:bg-white/[0.05] dark:hover:bg-white/10'}`}><span className="text-xs font-black uppercase tracking-wide text-moss">{activity.type === 'trainer' ? 'Trainer' : 'Unità grammaticale'}</span><h3 className="mt-2 text-base font-black text-ink dark:text-white">{activity.title}</h3><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">{activity.description}</p><span className="mt-4 inline-flex text-sm font-black text-moss">{selected ? 'Selezionata' : 'Aggiungi'}</span></button>;
+                      return <button key={activity.key} type="button" onClick={() => toggleActivity(activity.key)} className={`focus-ring rounded-xl border p-4 text-left transition ${selected ? 'border-moss bg-mint/30 dark:border-emerald-300/40 dark:bg-emerald-400/15' : 'border-ink/10 bg-white hover:bg-linen/45 dark:border-white/10 dark:bg-white/[0.05] dark:hover:bg-white/10'}`}><span className="text-xs font-bold uppercase tracking-wide text-moss">{activity.type === 'trainer' ? 'Trainer' : 'Unità grammaticale'}</span><h3 className="mt-2 text-base font-black text-ink dark:text-white">{activity.title}</h3><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">{activity.description}</p><span className="mt-4 inline-flex text-sm font-black text-moss">{selected ? 'Selezionata' : 'Aggiungi'}</span></button>;
                     })}
                   </div>
                 </section>
 
-                <aside className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] lg:sticky lg:top-24 lg:self-start">
+                <aside className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 lg:sticky lg:top-24 lg:self-start">
                   <div className="flex items-end justify-between gap-3">
-                    <div><p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Anteprima struttura</p><h2 className="mt-1 text-lg font-black text-ink dark:text-white">Contenuti selezionati</h2></div>
+                    <div><p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Anteprima struttura</p><h2 className="mt-1 text-lg font-black text-ink dark:text-white">Contenuti selezionati</h2></div>
                     <span className="rounded-full bg-linen px-2.5 py-1 text-xs font-black text-ink/65 dark:bg-white/10 dark:text-white/65">{selectedStructureCount}</span>
                   </div>
                   {selectedStructureCount === 0 ? <p className="mt-4 text-sm leading-6 text-ink/60 dark:text-white/60">Nessun contenuto selezionato.</p> : (
@@ -354,8 +354,8 @@ export default function AdminAssignmentContent() {
                 </aside>
               </div>
 
-              <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-sm">
-                <p className="text-xs font-black uppercase tracking-wide text-moss">Azioni</p>
+              <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 shadow-sm">
+                <p className="text-xs font-bold uppercase tracking-wide text-moss">Azioni</p>
                 <div className="mt-4 flex flex-wrap gap-3">
                   <button type="button" disabled={saving} onClick={() => save(null)} className="rounded-full border border-ink/15 bg-white dark:border-white/20 dark:bg-white/10 dark:text-white px-5 py-3 text-sm font-black">{saving ? 'Salvataggio...' : 'Salva modifiche'}</button>
                   {assignment.status !== 'published' ? <button type="button" disabled={saving} onClick={() => save('published')} className="rounded-full bg-ink px-5 py-3 text-sm font-black text-white">Pubblica</button> : <button type="button" disabled={saving} onClick={() => save('draft')} className="rounded-full border border-ink/15 bg-white dark:border-white/20 dark:bg-white/10 dark:text-white px-5 py-3 text-sm font-black">Riporta in bozza</button>}

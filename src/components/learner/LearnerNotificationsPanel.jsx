@@ -91,7 +91,7 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
   if (!loading && !error && notifications.length === 0) return null;
 
   return (
-    <section className="mt-6 overflow-hidden rounded-3xl border border-[#c9b8dc]/45 bg-gradient-to-br from-white to-[#f2edf8] shadow-sm dark:border-[#9d83bd]/25 dark:from-[#211b18] dark:to-[#9d83bd]/[0.08]">
+    <section className="mt-6 overflow-hidden rounded-3xl border border-[#c9b8dc]/45 bg-gradient-to-br from-white to-[#f2edf8] shadow-sm dark:border-[#9d83bd]/25 dark:from-surface-900 dark:to-[#9d83bd]/[0.08]">
       <header className="flex flex-col gap-3 border-b border-[#c9b8dc]/35 p-5 dark:border-white/10 sm:flex-row sm:items-center sm:justify-between sm:px-7">
         <div className="flex items-center gap-3">
           <span className="relative grid h-11 w-11 place-items-center rounded-2xl bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]">
@@ -103,7 +103,7 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
             ) : null}
           </span>
           <div>
-            <p className="text-xs font-black uppercase tracking-wide text-[#745b91] dark:text-[#cbb9df]">
+            <p className="text-xs font-bold uppercase tracking-wide text-[#745b91] dark:text-[#cbb9df]">
               Aggiornamenti dall’insegnante
             </p>
             <h2 className="mt-1 text-xl font-black text-ink dark:text-white">
@@ -153,7 +153,7 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
                     {notification.title}
                   </strong>
                   {!notification.read_at ? (
-                    <span className="rounded-full bg-coral/10 px-2 py-1 text-[0.62rem] font-black uppercase text-coral dark:text-[#ff9678]">
+                    <span className="rounded-full bg-coral/10 px-2 py-1 text-[0.62rem] font-bold uppercase text-coral dark:text-[#ff9678]">
                       Nuovo
                     </span>
                   ) : null}

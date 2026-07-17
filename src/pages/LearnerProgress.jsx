@@ -59,7 +59,7 @@ function MetricCard({ icon: Icon, eyebrow, value, detail, tone = 'emerald' }) {
       <div className={`relative grid h-11 w-11 place-items-center rounded-xl ring-1 ${toneClasses}`}>
         <Icon aria-hidden="true" className="h-5 w-5" />
       </div>
-      <p className="relative mt-5 text-xs font-black uppercase tracking-[0.12em] text-white/65">{eyebrow}</p>
+      <p className="relative mt-5 text-xs font-bold uppercase tracking-[0.12em] text-white/65">{eyebrow}</p>
       <p className="relative mt-2 text-3xl font-black tracking-[-0.04em] text-white">{value}</p>
       <p className="relative mt-1 text-sm font-semibold leading-6 text-white/58">{detail}</p>
       <div aria-hidden="true" className={`absolute inset-x-0 bottom-0 h-0.5 ${tone === 'coral' ? 'bg-gradient-to-r from-transparent via-[#e86f51]/70 to-[#ffc457]/30' : 'bg-gradient-to-r from-transparent via-[#53d6b3]/70 to-transparent'}`} />
@@ -228,7 +228,7 @@ export default function LearnerProgress() {
   return (
     <>
       <SEO title="I miei progressi | Sblocco Inglese" description="Assegnazioni, ripasso SRS e attività completate nel tuo percorso." />
-      <section className="relative overflow-hidden bg-[#0b1311] text-white">
+      <section className="relative overflow-hidden bg-surface-950 text-white">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           <div className="absolute -right-24 top-4 h-80 w-80 rounded-full bg-[#e86f51]/[0.10] blur-3xl" />
           <div className="absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-[#0e7c66]/[0.15] blur-3xl" />
@@ -238,7 +238,7 @@ export default function LearnerProgress() {
         <div className="section-shell relative py-10 sm:py-14 lg:py-16">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#8de1c9]/20 bg-[#19a684]/10 px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-[#a6ead7]">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#8de1c9]/20 bg-[#19a684]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-[#a6ead7]">
                 <BarChart3 aria-hidden="true" className="h-4 w-4" />
                 Il tuo percorso
               </span>
@@ -283,7 +283,7 @@ export default function LearnerProgress() {
                 <article className="rounded-3xl border border-[#65d6b8]/15 bg-gradient-to-br from-[#19a684]/[0.07] via-white/[0.05] to-transparent p-6 shadow-[0_22px_70px_rgba(0,0,0,0.18)] sm:p-7">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-[0.12em] text-[#8edfc8]">Ripasso SRS</p>
+                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#8edfc8]">Ripasso SRS</p>
                       <h2 className="mt-2 text-2xl font-black tracking-[-0.03em] text-white">Stato delle tue card</h2>
                     </div>
                     <div className="rounded-2xl border border-white/10 bg-black/15 px-4 py-3 text-right">
@@ -313,7 +313,7 @@ export default function LearnerProgress() {
                 <article className="rounded-3xl border border-[#e86f51]/15 bg-gradient-to-br from-[#e86f51]/[0.07] via-white/[0.05] to-[#ffc457]/[0.025] p-6 shadow-[0_22px_70px_rgba(0,0,0,0.18)] sm:p-7">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-[0.12em] text-[#ffc7b0]">Ultimi 7 giorni</p>
+                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#ffc7b0]">Ultimi 7 giorni</p>
                       <h2 className="mt-2 text-2xl font-black tracking-[-0.03em] text-white">Ritmo di ripasso</h2>
                     </div>
                     <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#e86f51]/12 text-[#ffd3c2] ring-1 ring-[#e86f51]/20">
@@ -331,7 +331,7 @@ export default function LearnerProgress() {
                           <div className="flex h-36 w-full items-end overflow-hidden rounded-xl bg-white/[0.05]">
                             <div className={`w-full rounded-xl transition-all duration-500 ${isToday ? 'bg-gradient-to-t from-[#14846d] to-[#66d7b9]' : 'bg-gradient-to-t from-[#c76545] to-[#ffc457]'}`} style={{ height: `${height}%` }} />
                           </div>
-                          <span className={`text-[0.68rem] font-black uppercase ${isToday ? 'text-[#9ce8d3]' : 'text-white/60'}`}>{day.label}</span>
+                          <span className={`text-[0.68rem] font-bold uppercase ${isToday ? 'text-[#9ce8d3]' : 'text-white/60'}`}>{day.label}</span>
                         </div>
                       );
                     })}
@@ -343,7 +343,7 @@ export default function LearnerProgress() {
               <article className="mt-5 rounded-3xl border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_55px_rgba(0,0,0,0.16)] sm:p-6">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-[0.12em] text-[#8edfc8]">Assegnazioni</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#8edfc8]">Assegnazioni</p>
                     <h2 className="mt-1.5 text-xl font-black tracking-[-0.03em] text-white sm:text-2xl">Il prossimo passo</h2>
                   </div>
                   <Link to="/assignments" className="text-sm font-black text-[#9ce8d3] underline decoration-[#9ce8d3]/35 underline-offset-4 hover:text-white">Vedi tutte le attività</Link>

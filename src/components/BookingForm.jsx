@@ -139,7 +139,7 @@ export default function BookingForm() {
           <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-ink/70">Le risposte vengono inviate e ti mostrano subito se ha senso procedere con slot e pagamento.</p>
         </div>
         <div className="rounded-lg bg-butter px-4 py-3 text-left sm:text-right">
-          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/60">Prezzo beta</p>
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-ink/60">Prezzo beta</p>
           <p className="text-2xl font-black text-moss">{primaryOffer.price}</p>
         </div>
       </div>
@@ -168,7 +168,7 @@ export default function BookingForm() {
 
         {submittedResult ? (
           <div ref={resultRef} role="status" tabIndex={-1} className={`rounded-lg border p-4 text-sm font-bold leading-6 text-ink outline-none ${submittedResult.tone}`}>
-            <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black uppercase tracking-[0.08em] ${submittedResult.badge}`}>{submittedResult.label}</span>
+            <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] ${submittedResult.badge}`}>{submittedResult.label}</span>
             <p className="mt-3 text-base font-black leading-6 text-ink">{submittedResult.title}</p>
             <p className="mt-2 text-sm font-semibold leading-6 text-ink/70">{submittedResult.text}</p>
             <ul className="mt-4 grid gap-2 rounded-lg bg-white/75 p-4">

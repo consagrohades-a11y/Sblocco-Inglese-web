@@ -34,7 +34,7 @@ export default function DiagnosticRenderer({ diagnostic }) {
   return (
     <div className="grid gap-6">
       <header className="rounded-[2rem] border border-ink/10 bg-white/85 p-6 shadow-soft">
-        <p className="text-xs font-black uppercase tracking-wider text-moss">Diagnostic skeleton</p>
+        <p className="text-xs font-bold uppercase tracking-wider text-moss">Diagnostic skeleton</p>
         <h1 className="mt-3 text-4xl font-black text-ink">{diagnostic.title}</h1>
         <p className="mt-3 max-w-3xl text-lg leading-8 text-ink/70">{diagnostic.description}</p>
       </header>

@@ -73,7 +73,7 @@ function AccountMenu({ displayName, isAdmin, onSignOut }) {
       </button>
 
       {open ? (
-        <div role="menu" className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-ink/10 bg-white p-2 text-ink shadow-[0_24px_70px_rgba(24,34,31,0.18)] dark:border-white/15 dark:bg-[#101a17] dark:text-white dark:shadow-[0_24px_70px_rgba(0,0,0,0.42)]">
+        <div role="menu" className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-ink/10 bg-white p-2 text-ink shadow-[0_24px_70px_rgba(24,34,31,0.18)] dark:border-white/15 dark:bg-surface-800 dark:text-white dark:shadow-[0_24px_70px_rgba(0,0,0,0.42)]">
           <div className="border-b border-ink/10 px-3 py-3 dark:border-white/10">
             <p className="truncate text-sm font-black">{displayName || 'Il tuo account'}</p>
             <p className="mt-0.5 text-xs font-semibold text-ink/60 dark:text-white/65">Profilo e impostazioni</p>
@@ -147,7 +147,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-ink/10 bg-paper/[0.96] text-ink shadow-[0_10px_32px_rgba(24,34,31,0.08)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-[#0a1210]/[0.97] dark:text-white dark:shadow-[0_10px_32px_rgba(3,8,7,0.20)]">
+    <header className="sticky top-0 z-50 border-b border-ink/10 bg-paper/[0.96] text-ink shadow-[0_10px_32px_rgba(24,34,31,0.08)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-surface-950/[0.97] dark:text-white dark:shadow-[0_10px_32px_rgba(3,8,7,0.20)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -right-20 -top-24 h-44 w-44 rounded-full bg-coral/[0.055] blur-3xl" />
         <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-moss/10 via-mint/40 to-coral/25" />
@@ -214,7 +214,7 @@ export default function Navbar() {
       </div>
 
       {mobileOpen ? (
-        <div className="relative border-t border-ink/10 bg-paper/[0.98] px-5 pb-6 pt-4 shadow-[0_24px_50px_rgba(24,34,31,0.14)] dark:border-white/10 dark:bg-[#0d1714]/98 dark:shadow-[0_24px_50px_rgba(0,0,0,0.38)] xl:hidden">
+        <div className="relative border-t border-ink/10 bg-paper/[0.98] px-5 pb-6 pt-4 shadow-[0_24px_50px_rgba(24,34,31,0.14)] dark:border-white/10 dark:bg-surface-950/98 dark:shadow-[0_24px_50px_rgba(0,0,0,0.38)] xl:hidden">
           <nav className="mx-auto grid max-w-lg gap-2" aria-label={isLearner ? 'Navigazione studente mobile' : 'Navigazione mobile'}>
             {isLearner ? (
               learnerAction.to ? (

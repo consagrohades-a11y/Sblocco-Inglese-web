@@ -62,7 +62,7 @@ export default function AssignmentPracticeEditor({ enabled, onEnabledChange, con
   const questionOptions = useMemo(() => Array.from(new Set([5, 10, 15, 20, availableQuestions]
     .filter((value) => value > 0 && value <= availableQuestions))).sort((a, b) => a - b), [availableQuestions]);
 
-  const fieldClass = 'w-full rounded-xl border border-ink/15 bg-white px-3 py-2.5 text-sm font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white';
+  const fieldClass = 'w-full rounded-xl border border-ink/15 bg-white px-3 py-2.5 text-sm font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white';
   const update = (key, value) => onChange({ ...config, [key]: value });
 
   useEffect(() => {
@@ -92,15 +92,15 @@ export default function AssignmentPracticeEditor({ enabled, onEnabledChange, con
 
       {enabled ? (
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Trainer</span><select value={config.trainer_id} onChange={(event) => onChange({ ...DEFAULT_ASSIGNMENT_PRACTICE, trainer_id: event.target.value })} className={fieldClass}>{Object.values(PRACTICE_TRAINERS).map((trainer) => <option key={trainer.id} value={trainer.id}>{trainer.label}</option>)}</select></label>
-          <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Livello</span><select value={config.level || ''} onChange={(event) => onChange({ ...config, level: event.target.value || null, category: null })} className={fieldClass}><option value="">Tutti i livelli</option>{levels.map((value) => <option key={value}>{value}</option>)}</select></label>
-          <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Categoria</span><select value={config.category || ''} onChange={(event) => update('category', event.target.value || null)} className={fieldClass}><option value="">Tutte le categorie</option>{categories.map((value) => <option key={value}>{value}</option>)}</select></label>
-          <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Batch</span><select value={config.batch || ''} onChange={(event) => update('batch', event.target.value || null)} className={fieldClass}><option value="">Tutti i batch</option>{batches.map((value) => <option key={value}>{value}</option>)}</select></label>
-          <label><span className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Numero di domande</span><select value={config.question_count} onChange={(event) => update('question_count', Number(event.target.value))} className={fieldClass}>{questionOptions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
+          <label><span className="text-xs font-bold uppercase text-ink/60 dark:text-white/60">Trainer</span><select value={config.trainer_id} onChange={(event) => onChange({ ...DEFAULT_ASSIGNMENT_PRACTICE, trainer_id: event.target.value })} className={fieldClass}>{Object.values(PRACTICE_TRAINERS).map((trainer) => <option key={trainer.id} value={trainer.id}>{trainer.label}</option>)}</select></label>
+          <label><span className="text-xs font-bold uppercase text-ink/60 dark:text-white/60">Livello</span><select value={config.level || ''} onChange={(event) => onChange({ ...config, level: event.target.value || null, category: null })} className={fieldClass}><option value="">Tutti i livelli</option>{levels.map((value) => <option key={value}>{value}</option>)}</select></label>
+          <label><span className="text-xs font-bold uppercase text-ink/60 dark:text-white/60">Categoria</span><select value={config.category || ''} onChange={(event) => update('category', event.target.value || null)} className={fieldClass}><option value="">Tutte le categorie</option>{categories.map((value) => <option key={value}>{value}</option>)}</select></label>
+          <label><span className="text-xs font-bold uppercase text-ink/60 dark:text-white/60">Batch</span><select value={config.batch || ''} onChange={(event) => update('batch', event.target.value || null)} className={fieldClass}><option value="">Tutti i batch</option>{batches.map((value) => <option key={value}>{value}</option>)}</select></label>
+          <label><span className="text-xs font-bold uppercase text-ink/60 dark:text-white/60">Numero di domande</span><select value={config.question_count} onChange={(event) => update('question_count', Number(event.target.value))} className={fieldClass}>{questionOptions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
 
           <fieldset className="sm:col-span-2 lg:col-span-3 rounded-xl border border-ink/10 bg-white/55 p-4 dark:border-white/10 dark:bg-white/[0.04]">
             <div className="flex flex-wrap items-start justify-between gap-3">
-              <div><legend className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Deck inclusi</legend><p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">Nessuna selezione significa tutte le card compatibili.</p></div>
+              <div><legend className="text-xs font-bold uppercase text-ink/60 dark:text-white/60">Deck inclusi</legend><p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">Nessuna selezione significa tutte le card compatibili.</p></div>
               <div className="flex gap-2"><button type="button" onClick={() => setDecks(decks.map((deck) => deck.id))} className="rounded-full border border-moss/25 px-3 py-1.5 text-[0.7rem] font-black text-moss dark:text-mint">Tutti</button><button type="button" onClick={() => setDecks([])} className="rounded-full border border-ink/15 px-3 py-1.5 text-[0.7rem] font-black text-ink/65 dark:text-white/65">Azzera</button></div>
             </div>
             <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
@@ -109,7 +109,7 @@ export default function AssignmentPracticeEditor({ enabled, onEnabledChange, con
             </div>
           </fieldset>
 
-          <fieldset className="sm:col-span-2 lg:col-span-3"><legend className="text-xs font-black uppercase text-ink/60 dark:text-white/60">Tipi di esercizio</legend><div className="mt-2 grid gap-2 sm:grid-cols-2">{EXERCISE_MODES.map((mode) => <label key={mode.id} className={`flex cursor-pointer gap-2 rounded-lg border px-3 py-2.5 text-sm font-bold ${config.modes.includes(mode.id) ? 'border-moss bg-white/70 dark:border-emerald-300/40 dark:bg-white/10 dark:text-white' : 'border-ink/10 text-ink/60 dark:border-white/10 dark:text-white/60'}`}><input type="checkbox" checked={config.modes.includes(mode.id)} onChange={() => toggleMode(mode.id)} className="accent-moss" />{mode.label}</label>)}</div></fieldset>
+          <fieldset className="sm:col-span-2 lg:col-span-3"><legend className="text-xs font-bold uppercase text-ink/60 dark:text-white/60">Tipi di esercizio</legend><div className="mt-2 grid gap-2 sm:grid-cols-2">{EXERCISE_MODES.map((mode) => <label key={mode.id} className={`flex cursor-pointer gap-2 rounded-lg border px-3 py-2.5 text-sm font-bold ${config.modes.includes(mode.id) ? 'border-moss bg-white/70 dark:border-emerald-300/40 dark:bg-white/10 dark:text-white' : 'border-ink/10 text-ink/60 dark:border-white/10 dark:text-white/60'}`}><input type="checkbox" checked={config.modes.includes(mode.id)} onChange={() => toggleMode(mode.id)} className="accent-moss" />{mode.label}</label>)}</div></fieldset>
           <p className="sm:col-span-2 lg:col-span-3 text-sm font-bold text-ink/60 dark:text-white/60">{loading ? 'Caricamento card pubblicate...' : error || `${selectedIds.length || 'Tutti i'} deck · ${availableCards.length} card uniche · ${availableQuestions} domande disponibili.`}</p>
         </div>
       ) : null}

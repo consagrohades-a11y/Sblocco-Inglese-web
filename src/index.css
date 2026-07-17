@@ -184,7 +184,7 @@ a {
 }
 
 .focus-ring {
-  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-moss focus-visible:ring-offset-2 focus-visible:ring-offset-paper dark:focus-visible:ring-mint dark:focus-visible:ring-offset-[#0f1715];
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-moss focus-visible:ring-offset-2 focus-visible:ring-offset-paper dark:focus-visible:ring-mint dark:focus-visible:ring-offset-surface-950;
 }
 
 .brand-section {

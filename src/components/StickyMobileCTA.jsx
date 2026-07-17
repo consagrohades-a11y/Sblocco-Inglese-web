@@ -31,7 +31,7 @@ export default function StickyMobileCTA() {
   if (isAssessment || isHomepage) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-white/95 px-4 py-3 text-ink shadow-[0_-14px_38px_rgba(24,34,31,0.14)] backdrop-blur-xl dark:border-white/10 dark:bg-[#0b1311]/95 dark:text-white dark:shadow-[0_-14px_38px_rgba(3,8,7,0.28)] xl:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-white/95 px-4 py-3 text-ink shadow-[0_-14px_38px_rgba(24,34,31,0.14)] backdrop-blur-xl dark:border-white/10 dark:bg-surface-950/95 dark:text-white dark:shadow-[0_-14px_38px_rgba(3,8,7,0.28)] xl:hidden">
       <div className="mx-auto flex max-w-md items-center gap-3">
         <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-ink/10 bg-mint/60 text-moss dark:border-white/10 dark:bg-white/[0.07] dark:text-[#8edfc8]">
           {isLearner ? (
@@ -41,7 +41,7 @@ export default function StickyMobileCTA() {
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-moss dark:text-[#8edfc8]">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-moss dark:text-[#8edfc8]">
             {isLearner ? 'Il tuo percorso' : 'Sblocco Check'}
           </p>
           <p className="truncate text-sm font-black text-ink dark:text-white">

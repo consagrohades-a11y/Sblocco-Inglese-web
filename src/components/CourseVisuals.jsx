@@ -40,18 +40,18 @@ export function RoleplayPreview({ className = '' }) {
             <MessageCircle aria-hidden="true" className="h-5 w-5" />
           </span>
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.1em] text-mint/70">Roleplay della settimana</p>
+            <p className="text-xs font-bold uppercase tracking-[0.1em] text-mint/70">Roleplay della settimana</p>
             <p className="text-sm font-black text-white">Aggiornamento di progetto</p>
           </div>
         </div>
-        <span className="rounded-full bg-coral px-3 py-1 text-[0.68rem] font-black uppercase tracking-[0.08em] text-white">
+        <span className="rounded-full bg-coral px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.08em] text-white">
           In corso
         </span>
       </div>
 
       <div className="relative mt-4 grid gap-3">
         <div className="max-w-[88%] rounded-2xl rounded-tl-md bg-white p-4 text-ink shadow-lg">
-          <p className="text-xs font-black uppercase tracking-[0.08em] text-coral">Collega</p>
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-coral">Collega</p>
           <p className="mt-2 text-sm font-bold leading-6">
             We are still waiting for the final figures. Can you explain what is blocking the delivery?
           </p>
@@ -60,7 +60,7 @@ export function RoleplayPreview({ className = '' }) {
         <div className="ml-auto w-[92%] rounded-2xl rounded-tr-md border border-mint/25 bg-mint/[0.10] p-4 text-white">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.08em] text-mint">La tua risposta</p>
+              <p className="text-xs font-bold uppercase tracking-[0.08em] text-mint">La tua risposta</p>
               <p className="mt-2 text-xs font-semibold leading-5 text-white/60">
                 Spiega il problema, indica cosa manca e proponi il prossimo passo.
               </p>
@@ -80,7 +80,7 @@ export function RoleplayPreview({ className = '' }) {
             <Sparkles aria-hidden="true" className="h-4 w-4" />
           </span>
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.08em] text-butter">Feedback che puoi riusare</p>
+            <p className="text-xs font-bold uppercase tracking-[0.08em] text-butter">Feedback che puoi riusare</p>
             <p className="mt-1 text-sm font-semibold leading-5 text-white/72">
               Usa “The main issue is…” per introdurre il problema in modo più netto.
             </p>
@@ -101,7 +101,7 @@ export function ListeningPreview({ className = '' }) {
             <Headphones aria-hidden="true" className="h-5 w-5" />
           </span>
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.08em] text-cyan-200/70">Listening realistico</p>
+            <p className="text-xs font-bold uppercase tracking-[0.08em] text-cyan-200/70">Listening realistico</p>
             <p className="text-base font-black">Client call, bisogni e priorità</p>
           </div>
         </div>
@@ -124,7 +124,7 @@ export function ListeningPreview({ className = '' }) {
           ['Risposta', 'Reazione vocale'],
         ].map(([label, value], index) => (
           <div key={label} className="rounded-xl border border-white/10 bg-white/[0.05] p-3">
-            <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-white/60">0{index + 1}</p>
+            <p className="text-[0.68rem] font-bold uppercase tracking-[0.08em] text-white/60">0{index + 1}</p>
             <p className="mt-2 text-xs font-black text-cyan-200">{label}</p>
             <p className="mt-1 text-sm font-bold text-white/75">{value}</p>
           </div>
@@ -145,7 +145,7 @@ export function ProgressPreview({ className = '' }) {
     <div className={`rounded-[2rem] border border-white/12 bg-white/[0.07] p-5 text-white shadow-2xl sm:p-6 ${className}`}>
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.1em] text-mint">Report finale</p>
+          <p className="text-xs font-bold uppercase tracking-[0.1em] text-mint">Report finale</p>
           <h3 className="mt-2 text-2xl font-black">Il progresso diventa leggibile.</h3>
         </div>
         <span className="grid h-11 w-11 place-items-center rounded-xl bg-mint text-moss">
@@ -169,11 +169,11 @@ export function ProgressPreview({ className = '' }) {
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         <div className="rounded-xl border border-white/10 bg-black/10 p-4">
-          <p className="text-xs font-black uppercase tracking-[0.08em] text-coral">Prima</p>
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-coral">Prima</p>
           <p className="mt-2 text-sm font-semibold leading-6 text-white/62">Risposte brevi, molti replay, dettagli persi.</p>
         </div>
         <div className="rounded-xl border border-mint/20 bg-mint/[0.09] p-4">
-          <p className="text-xs font-black uppercase tracking-[0.08em] text-mint">Dopo</p>
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-mint">Dopo</p>
           <p className="mt-2 text-sm font-semibold leading-6 text-white/78">Messaggio completo, meno dipendenza dal testo, risposta più pronta.</p>
         </div>
       </div>
@@ -193,7 +193,7 @@ export function MethodLoopVisual({ className = '' }) {
   return (
     <div className={`relative overflow-hidden rounded-[2rem] border border-white/15 bg-white/[0.07] p-5 sm:p-6 ${className}`}>
       <div className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-butter/10 blur-3xl" />
-      <p className="relative text-xs font-black uppercase tracking-[0.12em] text-mint">Il ciclo Sblocco</p>
+      <p className="relative text-xs font-bold uppercase tracking-[0.12em] text-mint">Il ciclo Sblocco</p>
       <div className="relative mt-5 grid gap-3">
         {nodes.map(({ icon: Icon, title, text }, index) => (
           <div key={title} className="group grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl border border-white/10 bg-[#13211d]/80 p-3.5">
@@ -235,7 +235,7 @@ export function CourseMapPreview({ className = '' }) {
               <span className={`grid h-10 w-10 place-items-center rounded-xl ${accent}`}>
                 <Icon aria-hidden="true" className="h-4.5 w-4.5" />
               </span>
-              <span className="rounded-full border border-white/10 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.08em] text-white/65">
+              <span className="rounded-full border border-white/10 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.08em] text-white/65">
                 Percorso 0{index + 1}
               </span>
             </div>

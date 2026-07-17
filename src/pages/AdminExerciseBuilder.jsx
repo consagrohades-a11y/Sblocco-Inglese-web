@@ -145,7 +145,7 @@ function SummaryCard({ icon: Icon, label, value, note }) {
     <article className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.06]">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.12em] text-ink/60 dark:text-white/60">{label}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/60 dark:text-white/60">{label}</p>
           <p className="mt-2 text-3xl font-black text-ink dark:text-white">{value}</p>
           <p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">{note}</p>
         </div>
@@ -264,11 +264,11 @@ export default function AdminExerciseBuilder() {
   return (
     <>
       <SEO title="Exercise Builder | Admin Sblocco Inglese" description="Importa, valida e revisiona domande, pool ed esercizi." />
-      <div className="min-h-screen bg-paper px-4 py-7 dark:bg-[#0f1715] sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-paper px-4 py-7 dark:bg-surface-950 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-[1500px]">
           <header className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-moss dark:text-mint">Contenuti</p>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-moss dark:text-mint">Contenuti</p>
               <h1 className="mt-2 text-3xl font-black tracking-tight text-ink dark:text-white sm:text-4xl">Exercise Builder</h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
                 Importa JSON schema v1 o v2. I modelli aggiornati coprono tutti i tipi automatici, le produzioni manuali, audio, dialoghi e reading.
@@ -283,10 +283,10 @@ export default function AdminExerciseBuilder() {
                 <Download aria-hidden="true" className="h-4 w-4" /> Template JSON <ChevronDown aria-hidden="true" className="h-4 w-4" />
               </button>
               {templateMenuOpen ? (
-                <div className="absolute right-0 top-12 z-30 max-h-[36rem] w-[min(24rem,calc(100vw-2rem))] overflow-y-auto rounded-2xl border border-ink/10 bg-white p-2 shadow-xl dark:border-white/10 dark:bg-[#18231f]">
+                <div className="absolute right-0 top-12 z-30 max-h-[36rem] w-[min(24rem,calc(100vw-2rem))] overflow-y-auto rounded-2xl border border-ink/10 bg-white p-2 shadow-xl dark:border-white/10 dark:bg-surface-900">
                   {TEMPLATE_GROUPS.map((group) => (
                     <div key={group.label} className="border-b border-ink/10 py-2 last:border-b-0 dark:border-white/10">
-                      <p className="px-3 pb-1 text-[0.65rem] font-black uppercase tracking-[0.12em] text-ink/60 dark:text-white/60">{group.label}</p>
+                      <p className="px-3 pb-1 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-ink/60 dark:text-white/60">{group.label}</p>
                       {group.keys.map((key) => {
                         const option = templateMeta(key);
                         return (
@@ -326,7 +326,7 @@ export default function AdminExerciseBuilder() {
             <article className="min-w-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.06] sm:p-5">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">1. Sorgente</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-moss dark:text-mint">1. Sorgente</p>
                   <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Incolla o modifica il JSON</h2>
                   <p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">{sourceName}</p>
                 </div>
@@ -338,7 +338,7 @@ export default function AdminExerciseBuilder() {
                   ))}
                 </div>
               </div>
-              <textarea value={jsonText} onChange={(event) => replaceJson(event.target.value, sourceName)} spellCheck="false" className="mt-4 min-h-[34rem] w-full resize-y rounded-xl border border-ink/15 bg-[#101915] p-4 font-mono text-xs leading-6 text-emerald-50 outline-none transition focus:border-emerald-400 sm:text-sm" aria-label="JSON Exercise Builder" />
+              <textarea value={jsonText} onChange={(event) => replaceJson(event.target.value, sourceName)} spellCheck="false" className="mt-4 min-h-[34rem] w-full resize-y rounded-xl border border-ink/15 bg-surface-800 p-4 font-mono text-xs leading-6 text-emerald-50 outline-none transition focus:border-emerald-400 sm:text-sm" aria-label="JSON Exercise Builder" />
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                 <p className="flex items-center gap-2 text-xs font-semibold text-ink/65 dark:text-white/65"><CircleHelp aria-hidden="true" className="h-4 w-4" /> Gli ID tecnici presenti nel JSON vengono ignorati.</p>
                 <button type="button" onClick={validateCurrentJson} className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-xl bg-moss px-5 py-2.5 text-sm font-black text-white transition hover:bg-ink"><ClipboardCheck aria-hidden="true" className="h-4 w-4" /> Valida JSON</button>
@@ -348,7 +348,7 @@ export default function AdminExerciseBuilder() {
             <div className="min-w-0 space-y-5">
               <article className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.06] sm:p-5">
                 <div className="flex items-center justify-between gap-3">
-                  <div><p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">2. Validazione</p><h2 className="mt-1 text-xl font-black text-ink dark:text-white">Elementi trovati</h2></div>
+                  <div><p className="text-xs font-bold uppercase tracking-[0.14em] text-moss dark:text-mint">2. Validazione</p><h2 className="mt-1 text-xl font-black text-ink dark:text-white">Elementi trovati</h2></div>
                   {validation ? <div className="flex gap-2 text-xs font-black"><span className="rounded-full bg-emerald-100 px-2.5 py-1 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200">{counts.valid} validi</span><span className="rounded-full bg-amber-100 px-2.5 py-1 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100">{counts.warning} avvisi</span><span className="rounded-full bg-red-100 px-2.5 py-1 text-red-900 dark:bg-red-300/10 dark:text-red-100">{counts.invalid} errori</span></div> : null}
                 </div>
                 {!validation ? <div className="mt-4 rounded-xl border border-dashed border-ink/15 bg-linen/35 p-5 text-sm leading-6 text-ink/60 dark:border-white/15 dark:bg-white/[0.04] dark:text-white/60">Valida il JSON per vedere domande, pool ed esercizi separatamente.</div> : null}
@@ -365,7 +365,7 @@ export default function AdminExerciseBuilder() {
                             <div className="flex items-start gap-3">
                               <input type="checkbox" checked={selected} disabled={item.status === 'invalid'} onChange={() => toggleItem(item)} className="mt-1 h-4 w-4 accent-emerald-700" aria-label={`Seleziona ${itemTitle(item)}`} />
                               <div className="min-w-0 flex-1">
-                                <div className="flex flex-wrap items-center gap-2"><span className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-moss dark:text-mint">{entityLabel(item.entityType)}</span><span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.68rem] font-black ${meta.className}`}><meta.Icon aria-hidden="true" className="h-3 w-3" />{meta.label}</span></div>
+                                <div className="flex flex-wrap items-center gap-2"><span className="text-[0.68rem] font-bold uppercase tracking-[0.1em] text-moss dark:text-mint">{entityLabel(item.entityType)}</span><span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.68rem] font-black ${meta.className}`}><meta.Icon aria-hidden="true" className="h-3 w-3" />{meta.label}</span></div>
                                 <h3 className="mt-1 line-clamp-2 text-sm font-black text-ink dark:text-white">{itemTitle(item)}</h3>
                                 {item.errors.length > 0 ? <ul className="mt-2 space-y-1 text-xs font-semibold leading-5 text-red-800 dark:text-red-200">{item.errors.map((error) => <li key={error}>• {error}</li>)}</ul> : null}
                                 {item.warnings.length > 0 ? <ul className="mt-2 space-y-1 text-xs font-semibold leading-5 text-amber-800 dark:text-amber-100">{item.warnings.map((warning) => <li key={warning}>• {warning}</li>)}</ul> : null}
@@ -380,7 +380,7 @@ export default function AdminExerciseBuilder() {
               </article>
 
               <article className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.06] sm:p-5">
-                <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">3. Salvataggio</p><h2 className="mt-1 text-xl font-black text-ink dark:text-white">Crea batch di revisione</h2>
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-moss dark:text-mint">3. Salvataggio</p><h2 className="mt-1 text-xl font-black text-ink dark:text-white">Crea batch di revisione</h2>
                 <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">Il batch conserva il JSON originale e gli elementi normalizzati. Nessun ID pubblico viene ancora assegnato.</p>
                 {savedBatch ? <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950 dark:border-emerald-300/25 dark:bg-emerald-300/10 dark:text-emerald-100"><p className="font-black">Batch salvato</p><p className="mt-1 font-semibold opacity-80">{savedBatch.source_name} è pronto per la revisione.</p></div> : null}
                 {saveError ? <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-950 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100">{saveError}</div> : null}
@@ -388,7 +388,7 @@ export default function AdminExerciseBuilder() {
               </article>
 
               <article className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.06] sm:p-5">
-                <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">Importazioni recenti</p>
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-moss dark:text-mint">Importazioni recenti</p>
                 <div className="mt-3 space-y-2">
                   {overview.recentBatches.length === 0 ? <p className="rounded-xl border border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/65 dark:border-white/15 dark:text-white/65">Nessun batch salvato.</p> : overview.recentBatches.map((batch) => (
                     <div key={batch.id} className="flex items-center justify-between gap-3 rounded-xl border border-ink/10 px-3 py-3 dark:border-white/10"><div className="min-w-0"><p className="truncate text-sm font-black text-ink dark:text-white">{batch.source_name}</p><p className="mt-0.5 text-xs font-semibold text-ink/60 dark:text-white/60">{entityLabel(batch.entity_type)} · {formatDate(batch.created_at)}</p></div><span className="shrink-0 rounded-full bg-linen px-2.5 py-1 text-xs font-black text-ink dark:bg-white/10 dark:text-white">{batch.valid_count + batch.warning_count}</span></div>

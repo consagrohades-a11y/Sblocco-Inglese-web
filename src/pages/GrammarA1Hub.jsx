@@ -27,7 +27,7 @@ export default function GrammarA1Hub() {
         <section className="mt-10 rounded-[1.5rem] border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/[0.05]" aria-labelledby="a1-units-title">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-moss dark:bg-mint/15 dark:text-mint">
+              <span className="inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-moss dark:bg-mint/15 dark:text-mint">
                 <Sigma className="h-3.5 w-3.5" />
                 Percorso guidato
               </span>
@@ -46,7 +46,7 @@ export default function GrammarA1Hub() {
                   {...(unit.path ? { to: unit.path } : {})}
                   className={`focus-ring group rounded-2xl border border-ink/10 bg-paper p-5 transition dark:border-white/10 dark:bg-white/[0.04] ${unit.path ? 'hover:-translate-y-1 hover:border-moss/25 hover:shadow-soft dark:hover:border-mint/35' : 'opacity-65'}`}
                 >
-                  <p className="text-sm font-black uppercase tracking-wide text-moss dark:text-mint">{unit.status === 'planned' ? 'In preparazione' : 'Unità guidata'}</p>
+                  <p className="text-sm font-bold uppercase tracking-wide text-moss dark:text-mint">{unit.status === 'planned' ? 'In preparazione' : 'Unità guidata'}</p>
                   <h3 className="mt-3 text-xl font-black leading-tight text-ink dark:text-white">{unit.displayTitle}</h3>
                   {unit.subtitle ? <p className="mt-3 text-sm leading-6 text-ink/70 dark:text-white/70">{unit.subtitle}</p> : null}
                   {unit.path ? (
@@ -62,7 +62,7 @@ export default function GrammarA1Hub() {
 
         <section className="mt-12 border-t border-ink/10 pt-8 dark:border-white/10" aria-labelledby="a1-checkpoints-title">
           <div className="max-w-3xl">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint">Quick Checks</p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-moss dark:text-mint">Quick Checks</p>
             <h2 id="a1-checkpoints-title" className="mt-2 text-3xl font-black leading-tight text-ink dark:text-white">Quick Checks mirati</h2>
             <p className="mt-3 text-sm leading-6 text-ink/65 dark:text-white/65">
               Usa questi controlli per individuare i punti deboli in un argomento specifico. Non sostituiscono le unità guidate: ti mostrano dove concentrare la prossima pratica.
@@ -76,7 +76,7 @@ export default function GrammarA1Hub() {
                 to={`/grammar/a1/${checkpoint.id}`}
                 className="focus-ring group rounded-[1.5rem] border border-ink/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-moss/25 hover:shadow-soft dark:border-white/10 dark:bg-white/[0.05] dark:hover:border-mint/35"
               >
-                <p className="text-sm font-black uppercase tracking-wider text-moss dark:text-mint">{checkpoint.eyebrow}</p>
+                <p className="text-sm font-bold uppercase tracking-wider text-moss dark:text-mint">{checkpoint.eyebrow}</p>
                 <h3 className="mt-3 text-2xl font-black leading-tight text-ink dark:text-white">{checkpoint.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-ink/70 dark:text-white/70">{checkpoint.description}</p>
 

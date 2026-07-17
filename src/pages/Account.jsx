@@ -57,7 +57,7 @@ function DetailRow({ icon: Icon, label, value, tone = 'coral' }) {
         <Icon className="h-5 w-5" />
       </span>
       <div className="min-w-0">
-        <p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">{label}</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">{label}</p>
         <p className="mt-1 break-words text-sm font-black text-ink dark:text-white">{value || '-'}</p>
       </div>
     </div>
@@ -67,17 +67,17 @@ function DetailRow({ icon: Icon, label, value, tone = 'coral' }) {
 function AssignmentCard({ assignment, index }) {
   const accents = [
     {
-      shell: 'border-coral/20 bg-gradient-to-br from-white via-white to-blush/55 dark:border-coral/20 dark:from-[#211b18] dark:to-coral/[0.07]',
+      shell: 'border-coral/20 bg-gradient-to-br from-white via-white to-blush/55 dark:border-coral/20 dark:from-surface-900 dark:to-coral/[0.07]',
       icon: 'bg-blush text-coral dark:bg-coral/10 dark:text-[#ff9678]',
       pill: 'border-coral/20 bg-blush text-clay dark:border-coral/20 dark:bg-coral/10 dark:text-[#f7a98d]',
     },
     {
-      shell: 'border-[#a9bda9]/40 bg-gradient-to-br from-white via-white to-[#edf3ed] dark:border-[#8ba58b]/20 dark:from-[#211b18] dark:to-[#8ba58b]/[0.07]',
+      shell: 'border-[#a9bda9]/40 bg-gradient-to-br from-white via-white to-[#edf3ed] dark:border-[#8ba58b]/20 dark:from-surface-900 dark:to-[#8ba58b]/[0.07]',
       icon: 'bg-[#e7efe7] text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]',
       pill: 'border-[#a9bda9]/40 bg-[#e7efe7] text-[#617861] dark:border-[#8ba58b]/20 dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]',
     },
     {
-      shell: 'border-[#c9b8dc]/45 bg-gradient-to-br from-white via-white to-[#f2edf8] dark:border-[#9d83bd]/20 dark:from-[#211b18] dark:to-[#9d83bd]/[0.07]',
+      shell: 'border-[#c9b8dc]/45 bg-gradient-to-br from-white via-white to-[#f2edf8] dark:border-[#9d83bd]/20 dark:from-surface-900 dark:to-[#9d83bd]/[0.07]',
       icon: 'bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]',
       pill: 'border-[#c9b8dc]/45 bg-[#eee8f8] text-[#745b91] dark:border-[#9d83bd]/20 dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]',
     },
@@ -93,7 +93,7 @@ function AssignmentCard({ assignment, index }) {
           </span>
           <div className="min-w-0">
             <div className="flex flex-wrap gap-2">
-              <span className={`rounded-full border px-2.5 py-1 text-[11px] font-black uppercase tracking-wide ${accent.pill}`}>
+              <span className={`rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${accent.pill}`}>
                 {assignment.status === 'completed' ? 'Completata' : 'Da fare'}
               </span>
               {assignment.estimated_minutes ? (
@@ -107,7 +107,7 @@ function AssignmentCard({ assignment, index }) {
             {assignment.deadline_at ? <p className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-ink/65 dark:text-white/65"><CalendarDays className="h-4 w-4" />Entro {formatDate(assignment.deadline_at)}</p> : null}
           </div>
         </div>
-        <Link to={`/assignments/${assignment.id}`} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-coral px-5 py-2.5 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-clay dark:bg-[#ff9678] dark:text-[#21140f]">
+        <Link to={`/assignments/${assignment.id}`} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-coral px-5 py-2.5 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-clay dark:bg-[#ff9678] dark:text-surface-950">
           {assignment.status === 'completed' ? 'Rivedi' : 'Apri'}<ArrowRight className="h-4 w-4" />
         </Link>
       </div>
@@ -176,16 +176,16 @@ export default function Account() {
   return (
     <>
       <SEO title={`${isLearner ? `Ciao, ${firstName}` : 'Account'} | Sblocco Inglese`} description="Il tuo spazio personale Sblocco Inglese." />
-      <section className="section-shell py-10 dark:bg-[#171310] lg:py-14">
+      <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
         <div className="mx-auto max-w-6xl">
-          <header className="relative overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-[#211b18]">
+          <header className="relative overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-surface-900">
             <div className="pointer-events-none absolute -right-12 -top-16 h-56 w-56 rounded-full bg-[#eee8f8] blur-3xl dark:bg-[#9d83bd]/10" />
             <div className="pointer-events-none absolute -bottom-20 left-16 h-52 w-52 rounded-full bg-blush blur-3xl dark:bg-coral/10" />
             <Star className="pointer-events-none absolute right-10 top-8 h-8 w-8 rotate-12 fill-butter text-clay/55 dark:fill-clay/15 dark:text-[#f7a98d]/55" />
             <Leaf className="pointer-events-none absolute right-28 top-24 h-9 w-9 -rotate-12 text-[#789078]/55 dark:text-[#b7cdb7]/40" strokeWidth={1.6} />
 
             <div className="relative p-6 sm:p-9 lg:p-11">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#c9b8dc]/45 bg-[#eee8f8] px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-[#745b91] dark:border-[#9d83bd]/20 dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#c9b8dc]/45 bg-[#eee8f8] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-[#745b91] dark:border-[#9d83bd]/20 dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]">
                 <Sparkles className="h-3.5 w-3.5" />Il tuo spazio
               </span>
               <h1 className="mt-5 max-w-4xl text-3xl font-black leading-tight text-ink dark:text-white sm:text-5xl">
@@ -204,15 +204,15 @@ export default function Account() {
               <div className="relative grid gap-3 border-t border-clay/10 bg-linen/30 p-5 dark:border-white/10 dark:bg-white/[0.035] sm:grid-cols-3 sm:px-9 lg:px-11">
                 <div className="flex items-center gap-3 rounded-2xl border border-coral/15 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 place-items-center rounded-xl bg-blush text-coral dark:bg-coral/10 dark:text-[#ff9678]"><ListChecks className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Da fare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{activeAssignments} attività</p></div>
+                  <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Da fare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{activeAssignments} attività</p></div>
                 </div>
                 <div className="flex items-center gap-3 rounded-2xl border border-[#a9bda9]/35 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#e7efe7] text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]"><Leaf className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Il tuo ritmo</p><p className="mt-1 text-sm font-black text-ink dark:text-white">Un passo alla volta</p></div>
+                  <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Il tuo ritmo</p><p className="mt-1 text-sm font-black text-ink dark:text-white">Un passo alla volta</p></div>
                 </div>
                 <div className="flex items-center gap-3 rounded-2xl border border-[#c9b8dc]/40 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                   <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]"><CalendarDays className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Prossima scadenza</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{nearestDeadline ? formatDate(nearestDeadline) : 'Nessuna urgenza'}</p></div>
+                  <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Prossima scadenza</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{nearestDeadline ? formatDate(nearestDeadline) : 'Nessuna urgenza'}</p></div>
                 </div>
               </div>
             ) : null}
@@ -220,16 +220,16 @@ export default function Account() {
 
           {isLearner ? <LearnerNotificationsPanel limit={3} /> : null}
 
-          {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 dark:border-white/10 dark:bg-[#211b18] dark:text-white/65">Caricamento profilo...</div> : null}
+          {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 dark:border-white/10 dark:bg-surface-900 dark:text-white/65">Caricamento profilo...</div> : null}
           {error ? <div className="mt-6"><AuthNotice tone="error">{error}</AuthNotice></div> : null}
 
           <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(19rem,0.6fr)]">
             <main className="grid gap-6">
               {isLearner ? (
-                <section className="rounded-3xl border border-clay/15 bg-[#fffdf9] p-6 shadow-soft dark:border-white/10 dark:bg-[#211b18] sm:p-8">
+                <section className="rounded-3xl border border-clay/15 bg-[#fffdf9] p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
-                      <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-clay dark:text-[#f7a98d]"><Heart className="h-4 w-4" />Oggi</p>
+                      <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-clay dark:text-[#f7a98d]"><Heart className="h-4 w-4" />Oggi</p>
                       <h2 className="mt-2 text-2xl font-black text-ink dark:text-white sm:text-3xl">Cosa devi fare adesso</h2>
                       <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">Parti da qui e continua fino alla prossima lezione.</p>
                     </div>
@@ -254,8 +254,8 @@ export default function Account() {
               ) : null}
 
               {isAdmin ? (
-                <section className="rounded-3xl border border-[#a9bda9]/40 bg-gradient-to-br from-white to-[#edf3ed] p-7 shadow-soft dark:border-[#8ba58b]/20 dark:from-[#211b18] dark:to-[#8ba58b]/[0.08]">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#e7efe7] px-3 py-1.5 text-xs font-black uppercase tracking-wide text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]"><ShieldCheck className="h-4 w-4" />Accesso amministratore</span>
+                <section className="rounded-3xl border border-[#a9bda9]/40 bg-gradient-to-br from-white to-[#edf3ed] p-7 shadow-soft dark:border-[#8ba58b]/20 dark:from-surface-900 dark:to-[#8ba58b]/[0.08]">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#e7efe7] px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]"><ShieldCheck className="h-4 w-4" />Accesso amministratore</span>
                   <h2 className="mt-4 text-2xl font-black text-ink dark:text-white">Gestisci Sblocco Inglese</h2>
                   <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Il tuo profilo può accedere agli strumenti di gestione della piattaforma.</p>
                   <Link to="/admin" className="focus-ring mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#617861] px-5 py-2.5 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-[#506650]">Apri il pannello admin<ArrowRight className="h-4 w-4" /></Link>
@@ -264,7 +264,7 @@ export default function Account() {
             </main>
 
             <aside className="grid content-start gap-5">
-              <details className="group overflow-hidden rounded-3xl border border-[#c9b8dc]/45 bg-[#fffdf9] shadow-soft dark:border-[#9d83bd]/20 dark:bg-[#211b18]" open>
+              <details className="group overflow-hidden rounded-3xl border border-[#c9b8dc]/45 bg-[#fffdf9] shadow-soft dark:border-[#9d83bd]/20 dark:bg-surface-900" open>
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-6 text-sm font-black text-ink dark:text-white [&::-webkit-details-marker]:hidden">
                   <span className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]"><UserRound className="h-5 w-5" /></span><span>Il tuo account</span></span>
                   <ChevronDown className="h-5 w-5 text-ink/60 transition group-open:rotate-180 dark:text-white/60" />

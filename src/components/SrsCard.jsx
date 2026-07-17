@@ -82,7 +82,7 @@ export default function SrsCard({
     >
       <div className={`border-b px-3 py-2.5 sm:px-5 ${dark ? 'border-white/10 bg-white/[0.05]' : 'border-ink/10 bg-white'}`}>
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-          <span className="max-w-full break-words rounded-full bg-mint px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-[0.08em] text-moss sm:text-xs">
+          <span className="max-w-full break-words rounded-full bg-mint px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.08em] text-moss sm:text-xs">
             {safeCard.category}
           </span>
           <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black sm:text-xs ${dark ? 'border-white/10 bg-white/[0.08] text-white/70' : 'border-ink/10 bg-paper text-ink/70'}`}>
@@ -100,7 +100,7 @@ export default function SrsCard({
             {dueLabel}
           </span>
         </div>
-        <div className={`mt-2 flex flex-wrap items-center justify-between gap-2 text-[0.65rem] font-black uppercase tracking-[0.08em] sm:text-xs ${dark ? 'text-white/60' : 'text-ink/60'}`}>
+        <div className={`mt-2 flex flex-wrap items-center justify-between gap-2 text-[0.65rem] font-bold uppercase tracking-[0.08em] sm:text-xs ${dark ? 'text-white/60' : 'text-ink/60'}`}>
           <span>{sessionLabel}</span>
           <span className="hidden sm:inline">Shortcuts: Space, 1, 2, 3, 4</span>
         </div>
@@ -108,7 +108,7 @@ export default function SrsCard({
 
       <div className="px-3 py-4 sm:px-5 sm:py-5">
         <div className="text-center">
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>{displayTargetLabel}</p>
+          <p className={`text-[0.68rem] font-bold uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>{displayTargetLabel}</p>
           <h2 className={`mx-auto mt-2 max-w-4xl break-words text-2xl font-black leading-tight sm:text-3xl lg:text-4xl ${dark ? 'text-white' : 'text-ink'}`}>
             {safeCard.expression}
           </h2>
@@ -133,7 +133,7 @@ export default function SrsCard({
         {isRevealed ? (
           <div className={`mt-4 border-t pt-4 ${dark ? 'border-white/10' : 'border-ink/10'}`}>
             <div className={`mx-auto max-w-2xl rounded-lg p-4 text-center ${dark ? 'bg-mint/15' : 'bg-mint/60'}`}>
-              <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-mint' : 'text-moss'}`}>Italiano</p>
+              <p className={`text-[0.68rem] font-bold uppercase tracking-[0.08em] ${dark ? 'text-mint' : 'text-moss'}`}>Italiano</p>
               <p className={`mt-1.5 break-words text-lg font-black leading-7 ${dark ? 'text-white' : 'text-ink'}`}>{safeCard.italian}</p>
             </div>
 
@@ -154,7 +154,7 @@ export default function SrsCard({
               <div className="grid gap-3 lg:grid-cols-2">
                 {safeCard.collocations ? (
                   <div className={`rounded-lg border p-3 ${dark ? 'border-white/10 bg-white/[0.06]' : 'border-ink/10 bg-paper'}`}>
-                    <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>Collocations</p>
+                    <p className={`text-[0.68rem] font-bold uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>Collocations</p>
                     <p className={`mt-1.5 break-words text-sm font-semibold leading-5 ${dark ? 'text-white/70' : 'text-ink/75'}`}>
                       {safeCard.collocations}
                     </p>

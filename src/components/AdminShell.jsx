@@ -334,7 +334,7 @@ export default function AdminShell() {
 
   return (
     <div
-      className="min-h-screen bg-paper text-ink dark:bg-[#0f1715] dark:text-white"
+      className="min-h-screen bg-paper text-ink dark:bg-surface-950 dark:text-white"
       style={{ '--admin-sidebar-width': sidebarCollapsed ? '5rem' : '18rem' }}
     >
       <aside
@@ -344,7 +344,7 @@ export default function AdminShell() {
         {renderSidebarContent(sidebarCollapsed)}
       </aside>
 
-      <header className="sticky top-0 z-40 flex min-h-16 items-center justify-between border-b border-ink/10 bg-paper/95 px-4 backdrop-blur-xl dark:border-white/10 dark:bg-[#0f1715]/95 lg:hidden">
+      <header className="sticky top-0 z-40 flex min-h-16 items-center justify-between border-b border-ink/10 bg-paper/95 px-4 backdrop-blur-xl dark:border-white/10 dark:bg-surface-950/95 lg:hidden">
         <BrandLogo to="/admin" compact />
         <button
           type="button"

@@ -109,7 +109,7 @@ export default function App() {
   const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
 
   return (
-    <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-[#0f1715] dark:text-white">
+    <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-surface-950 dark:text-white">
       <ScrollManager />
       {!isAdmin ? <Navbar /> : null}
       <main className={isAdmin ? '' : 'pb-24 xl:pb-0'}>

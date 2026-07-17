@@ -78,7 +78,7 @@ export default function DeckSelector({
 
       <div className="mt-4 grid min-w-0 gap-3">
         <div className="min-w-0">
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>Categorie</p>
+          <p className={`text-[0.68rem] font-bold uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>Categorie</p>
           <div className="mt-2 flex min-w-0 max-w-full flex-wrap gap-2" aria-label="Filtra per categoria">
             {categories.map((category) => (
               <PillButton
@@ -95,7 +95,7 @@ export default function DeckSelector({
         </div>
 
         <div className={`min-w-0 border-t pt-3 ${dark ? 'border-white/10' : 'border-ink/10'}`}>
-          <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>Livelli</p>
+          <p className={`text-[0.68rem] font-bold uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>Livelli</p>
           <div className="mt-2 flex min-w-0 max-w-full flex-wrap gap-2" aria-label="Filtra per livello">
             {levels.map((level) => (
               <PillButton key={level} active={selectedLevels.includes(level)} onClick={() => onToggleLevel(level)} dark={dark}>

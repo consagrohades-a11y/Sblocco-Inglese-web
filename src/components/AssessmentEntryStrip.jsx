@@ -8,7 +8,7 @@ export default function AssessmentEntryStrip() {
   if (profile?.role === 'learner' && profile?.status === 'active') return null;
 
   return (
-    <section className="relative overflow-hidden border-b border-ink/10 bg-[#eaf6f0] text-ink dark:border-white/10 dark:bg-[#14231f] dark:text-white">
+    <section className="relative overflow-hidden border-b border-ink/10 bg-[#eaf6f0] text-ink dark:border-white/10 dark:bg-surface-900 dark:text-white">
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(78,201,168,0.10),transparent_35%,rgba(255,196,87,0.09))]" />
       <div className="section-shell relative flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3 sm:items-center">

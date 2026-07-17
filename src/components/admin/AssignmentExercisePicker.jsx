@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { loadPublishedExerciseCatalog } from '../../lib/exercisePlayerApi.js';
 
-const selectClass = 'rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white';
+const selectClass = 'rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white';
 
 function buildResource(exercise) {
   return {
@@ -66,9 +66,9 @@ export default function AssignmentExercisePicker({ value = [], onChange }) {
   }
 
   return (
-    <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+    <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-8">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div><p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Exercise Builder</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Esercizi personalizzati</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-ink/60 dark:text-white/60">Aggiungi esercizi approvati e pubblicati. La versione viene bloccata nell’assegnazione, quindi modifiche future non cambieranno il compito già dato.</p></div>
+        <div><p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Exercise Builder</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Esercizi personalizzati</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-ink/60 dark:text-white/60">Aggiungi esercizi approvati e pubblicati. La versione viene bloccata nell’assegnazione, quindi modifiche future non cambieranno il compito già dato.</p></div>
         <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black text-ink/60 dark:bg-white/10 dark:text-white/60">{value.length} selezionati</span>
       </div>
 
@@ -94,7 +94,7 @@ export default function AssignmentExercisePicker({ value = [], onChange }) {
 
       {value.length ? (
         <div className="mt-7 grid gap-4">
-          <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Configurazione assegnata</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Configurazione assegnata</p>
           {value.map((resource, index) => {
             const config = resource.exercise_config || {};
             return (

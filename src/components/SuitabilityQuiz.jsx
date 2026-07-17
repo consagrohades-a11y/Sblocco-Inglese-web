@@ -94,7 +94,7 @@ export default function SuitabilityQuiz() {
 
       {completed ? (
         <div className="mt-6 rounded-lg border border-ink/10 bg-paper p-5">
-          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black uppercase tracking-[0.08em] ${result.tone}`}>
+          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] ${result.tone}`}>
             {result.label}
           </span>
           <p className="mt-4 text-lg font-extrabold leading-7 text-ink">{result.text}</p>

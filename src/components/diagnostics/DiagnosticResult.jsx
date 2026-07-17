@@ -20,7 +20,7 @@ export default function DiagnosticResult({ result, level = 'a1', track = 'core' 
     <section className="rounded-[1.5rem] bg-ink p-4 text-white sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-[0.7rem] font-black uppercase tracking-wider text-white/65">Diagnostic signal</p>
+          <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/65">Diagnostic signal</p>
           <h2 className="mt-1 text-xl font-black sm:text-2xl">{result.estimatedLevel || 'More evidence needed'}</h2>
         </div>
         <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-black text-white/70">
@@ -39,7 +39,7 @@ export default function DiagnosticResult({ result, level = 'a1', track = 'core' 
             <article key={`${entry.dimension}-${entry.tag}`} className="rounded-xl bg-white/10 p-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-sm font-black">{info.label}</p>
-                <span className="rounded-full bg-white/10 px-2 py-1 text-[0.68rem] font-black uppercase tracking-wide text-white/65">
+                <span className="rounded-full bg-white/10 px-2 py-1 text-[0.68rem] font-bold uppercase tracking-wide text-white/65">
                   {entry.severity} · {entry.evidenceCount}
                 </span>
               </div>

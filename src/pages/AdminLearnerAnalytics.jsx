@@ -69,7 +69,7 @@ function Metric({ icon: Icon, label, value, detail, tone = "emerald" }) {
     <article className={`rounded-2xl border p-5 shadow-sm ${tones[tone]}`}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-wide opacity-60">
+          <p className="text-xs font-bold uppercase tracking-wide opacity-60">
             {label}
           </p>
           <p className="mt-2 text-3xl font-black">{value}</p>
@@ -198,7 +198,7 @@ export default function AdminLearnerAnalytics() {
       />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-[1400px]">
-          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
             <Link
               to="/admin/analytics"
               className="inline-flex items-center gap-2 text-xs font-black text-moss underline dark:text-emerald-300"
@@ -239,7 +239,7 @@ export default function AdminLearnerAnalytics() {
                   type="button"
                   disabled={loading}
                   onClick={load}
-                  className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white disabled:opacity-40 dark:bg-emerald-300 dark:text-[#102019]"
+                  className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white disabled:opacity-40 dark:bg-emerald-300 dark:text-surface-950"
                 >
                   <RefreshCw
                     className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
@@ -260,7 +260,7 @@ export default function AdminLearnerAnalytics() {
             </div>
           ) : null}
           {loading && !data ? (
-            <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/60 dark:border-white/10 dark:bg-[#16211e] dark:text-white/60">
+            <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/60 dark:border-white/10 dark:bg-surface-900 dark:text-white/60">
               Calcolo delle metriche in corso...
             </div>
           ) : null}
@@ -304,10 +304,10 @@ export default function AdminLearnerAnalytics() {
                 />
               </div>
 
-              <section className="mt-6 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
+              <section className="mt-6 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">
+                    <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">
                       Andamento
                     </p>
                     <h2 className="mt-1 text-2xl font-black">
@@ -329,8 +329,8 @@ export default function AdminLearnerAnalytics() {
               </section>
 
               <div className="mt-6 grid gap-6 xl:grid-cols-2">
-                <section className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
-                  <p className="text-xs font-black uppercase tracking-wide text-amber-700 dark:text-amber-300">
+                <section className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
+                  <p className="text-xs font-bold uppercase tracking-wide text-amber-700 dark:text-amber-300">
                     SRS
                   </p>
                   <h2 className="mt-1 text-xl font-black">
@@ -369,8 +369,8 @@ export default function AdminLearnerAnalytics() {
                   </div>
                 </section>
 
-                <section className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
-                  <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">
+                <section className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
+                  <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                     Exercise Builder
                   </p>
                   <h2 className="mt-1 text-xl font-black">
@@ -411,9 +411,9 @@ export default function AdminLearnerAnalytics() {
               </div>
 
               <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-                <section className="overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm dark:border-white/10 dark:bg-[#16211e]">
+                <section className="overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm dark:border-white/10 dark:bg-surface-900">
                   <div className="border-b border-ink/10 p-5 dark:border-white/10 sm:p-7">
-                    <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">
+                    <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">
                       Assegnazioni
                     </p>
                     <h2 className="mt-1 text-xl font-black">
@@ -483,10 +483,10 @@ export default function AdminLearnerAnalytics() {
                   </div>
                 </section>
 
-                <section className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
+                <section className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
                   <div className="flex items-end justify-between gap-3">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-wide text-cyan-700 dark:text-cyan-300">
+                      <p className="text-xs font-bold uppercase tracking-wide text-cyan-700 dark:text-cyan-300">
                         Diagnostica
                       </p>
                       <h2 className="mt-1 text-xl font-black">
@@ -527,10 +527,10 @@ export default function AdminLearnerAnalytics() {
                 </section>
               </div>
 
-              <section className="mt-6 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
+              <section className="mt-6 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
                 <div className="flex items-end justify-between gap-3">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">
+                    <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">
                       Cronologia
                     </p>
                     <h2 className="mt-1 text-xl font-black">
@@ -546,7 +546,7 @@ export default function AdminLearnerAnalytics() {
                       className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between"
                     >
                       <div>
-                        <p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">
+                        <p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">
                           {item.activity_type === "srs_review"
                             ? "Ripasso SRS"
                             : "Esercizio"}

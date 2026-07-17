@@ -5,7 +5,7 @@ function StatTile({ label, value, helper, dark = false }) {
     <div className={`rounded-lg border px-3 py-2.5 shadow-sm sm:px-4 sm:py-3 ${
       dark ? 'border-white/10 bg-white/[0.08]' : 'border-ink/10 bg-white/95'
     }`}>
-      <p className={`text-[0.68rem] font-black uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>{label}</p>
+      <p className={`text-[0.68rem] font-bold uppercase tracking-[0.08em] ${dark ? 'text-white/65' : 'text-ink/65'}`}>{label}</p>
       <p className={`mt-1 text-xl font-black leading-none sm:text-2xl ${dark ? 'text-white' : 'text-ink'}`}>{value}</p>
       <p className={`mt-1 text-xs font-bold ${dark ? 'text-white/65' : 'text-ink/65'}`}>{helper}</p>
     </div>

@@ -90,7 +90,7 @@ export default function AdminDashboard() {
                     <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-mint text-moss dark:bg-emerald-400/15 dark:text-emerald-300">
                       <Icon aria-hidden="true" className="h-5 w-5" />
                     </span>
-                    <span className="rounded-full bg-linen px-3 py-1.5 text-[0.68rem] font-black uppercase tracking-wide text-ink/65 dark:bg-white/10 dark:text-white/65">{section.status}</span>
+                    <span className="rounded-full bg-linen px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-wide text-ink/65 dark:bg-white/10 dark:text-white/65">{section.status}</span>
                   </div>
                   <h2 className="mt-5 text-xl font-black text-ink dark:text-white">{section.title}</h2>
                   <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">{section.description}</p>
@@ -101,7 +101,7 @@ export default function AdminDashboard() {
           </div>
 
           <section className="mt-6 rounded-2xl border border-moss/20 bg-mint/25 p-6 dark:border-emerald-300/20 dark:bg-emerald-400/10">
-            <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Flusso recruitment</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Flusso recruitment</p>
             <h2 className="mt-2 text-xl font-black text-ink dark:text-white">Profilo, qualifica, ricontatto, cohort</h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70 dark:text-white/60">
               Ogni assessment salva contesto, difficoltà, percorso consigliato, idoneità alla beta e consensi. Puoi quindi contattare le persone giuste con un messaggio pertinente.

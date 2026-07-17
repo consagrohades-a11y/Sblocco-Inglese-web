@@ -4,7 +4,7 @@ import SEO from '../components/SEO';
 import { loadExerciseQuestionBank, setExerciseBankEntityStatus } from '../lib/exerciseBankApi.js';
 
 const statusLabels = { draft: 'Bozza', in_review: 'Da revisionare', approved: 'Approvata', published: 'Pubblicata', archived: 'Archiviata' };
-const fieldClass = 'rounded-xl border border-ink/15 bg-white px-3.5 py-2.5 text-sm font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white';
+const fieldClass = 'rounded-xl border border-ink/15 bg-white px-3.5 py-2.5 text-sm font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white';
 
 function statusClass(status) {
   if (status === 'published') return 'bg-emerald-100 text-emerald-900 dark:bg-emerald-400/15 dark:text-emerald-200';
@@ -32,13 +32,13 @@ function nextReviewableId(list, currentId, excludedIds = []) {
 }
 
 function QuestionPreview({ question, busy, onApprove }) {
-  if (!question) return <div className="rounded-2xl border border-dashed border-ink/15 bg-white p-7 text-sm text-ink/65 dark:border-white/15 dark:bg-[#16211e] dark:text-white/65">Seleziona una domanda per vedere contenuto, correzione e diagnostica.</div>;
+  if (!question) return <div className="rounded-2xl border border-dashed border-ink/15 bg-white p-7 text-sm text-ink/65 dark:border-white/15 dark:bg-surface-900 dark:text-white/65">Seleziona una domanda per vedere contenuto, correzione e diagnostica.</div>;
   const options = question.content?.options || [];
   const blanks = question.content?.blanks || [];
   const testedCodes = question.diagnostics?.tested_codes || [];
 
   return (
-    <aside className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#16211e] lg:sticky lg:top-24 lg:self-start">
+    <aside className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900 lg:sticky lg:top-24 lg:self-start">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <span className="text-sm font-black text-moss dark:text-emerald-300">{question.publicId}</span>
         <span className={`rounded-full px-3 py-1.5 text-xs font-black ${statusClass(question.status)}`}>{statusLabels[question.status] || question.status}</span>
@@ -52,10 +52,10 @@ function QuestionPreview({ question, busy, onApprove }) {
       </div>
       {options.length ? <div className="mt-6 grid gap-2">{options.map((option) => <div key={option.key} className={`rounded-xl border px-4 py-3 text-sm font-bold ${option.is_correct ? 'border-emerald-300 bg-emerald-50 text-emerald-950 dark:border-emerald-300/30 dark:bg-emerald-400/10 dark:text-emerald-100' : 'border-ink/10 text-ink dark:border-white/10 dark:text-white'}`}>{option.text}{option.error_code ? <span className="ml-2 text-xs opacity-55">{option.error_code}</span> : null}</div>)}</div> : null}
       {blanks.length ? <div className="mt-6 grid gap-3">{blanks.map((blank, index) => <div key={blank.key} className="rounded-xl border border-ink/10 p-4 dark:border-white/10"><p className="text-xs font-black text-ink/60 dark:text-white/60">Spazio {index + 1} · {blank.key}</p><p className="mt-2 text-sm font-bold text-ink dark:text-white">{(blank.accepted_answers || []).join(' / ')}</p></div>)}</div> : null}
-      {question.content?.accepted_answers?.length ? <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-300/25 dark:bg-emerald-400/10"><p className="text-xs font-black uppercase tracking-wide text-emerald-800 dark:text-emerald-200">Risposte accettate</p><p className="mt-2 text-sm font-bold text-emerald-950 dark:text-emerald-100">{question.content.accepted_answers.join(' / ')}</p></div> : null}
-      <div className="mt-6 border-t border-ink/10 pt-5 dark:border-white/10"><p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">Diagnostica</p><p className="mt-2 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">{testedCodes.length ? testedCodes.join(', ') : 'Nessun codice diagnostico'}</p></div>
+      {question.content?.accepted_answers?.length ? <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-300/25 dark:bg-emerald-400/10"><p className="text-xs font-bold uppercase tracking-wide text-emerald-800 dark:text-emerald-200">Risposte accettate</p><p className="mt-2 text-sm font-bold text-emerald-950 dark:text-emerald-100">{question.content.accepted_answers.join(' / ')}</p></div> : null}
+      <div className="mt-6 border-t border-ink/10 pt-5 dark:border-white/10"><p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">Diagnostica</p><p className="mt-2 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">{testedCodes.length ? testedCodes.join(', ') : 'Nessun codice diagnostico'}</p></div>
       <div className="mt-5 grid grid-cols-2 gap-3 text-xs font-bold text-ink/65 dark:text-white/65"><span>Versione {question.version_number}</span><span>{question.poolCount} pool</span></div>
-      {canApprove(question) ? <button type="button" disabled={busy} onClick={onApprove} className="mt-6 w-full rounded-full bg-moss px-5 py-3 text-sm font-black text-white transition hover:brightness-110 disabled:opacity-40 dark:bg-emerald-300 dark:text-[#102019]">{busy ? 'Approvazione...' : 'Approva e prossima'}</button> : null}
+      {canApprove(question) ? <button type="button" disabled={busy} onClick={onApprove} className="mt-6 w-full rounded-full bg-moss px-5 py-3 text-sm font-black text-white transition hover:brightness-110 disabled:opacity-40 dark:bg-emerald-300 dark:text-surface-950">{busy ? 'Approvazione...' : 'Approva e prossima'}</button> : null}
     </aside>
   );
 }
@@ -188,18 +188,18 @@ export default function AdminExerciseQuestionBank() {
       <SEO title="Question Bank | Exercise Builder" description="Cataloga e riutilizza le domande degli esercizi." />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-7xl">
-          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
             <span className="eyebrow">Exercise Builder</span>
             <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div><h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">Question Bank</h1><p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">Seleziona le domande da approvare insieme, oppure usa “Approva e prossima” per revisionarle una alla volta senza tornare ogni volta alla lista.</p></div>
-              <div className="flex flex-wrap gap-2"><Link to="/admin/content/exercises" className="rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white">Importa JSON</Link><Link to="/admin/content/exercises/pools" className="rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white dark:bg-emerald-300 dark:text-[#102019]">Gestisci pool</Link></div>
+              <div className="flex flex-wrap gap-2"><Link to="/admin/content/exercises" className="rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white">Importa JSON</Link><Link to="/admin/content/exercises/pools" className="rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white dark:bg-emerald-300 dark:text-surface-950">Gestisci pool</Link></div>
             </div>
           </header>
 
           {error ? <div className="mt-5 border-l-4 border-red-400 bg-red-50 p-4 text-sm font-bold text-red-950 dark:bg-red-400/10 dark:text-red-100">{error}</div> : null}
           {success ? <div className="mt-5 border-l-4 border-moss bg-mint/30 p-4 text-sm font-bold text-ink dark:bg-emerald-400/10 dark:text-emerald-100">{success}</div> : null}
 
-          <section className="mt-6 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e]">
+          <section className="mt-6 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900">
             <div className="grid gap-3 md:grid-cols-[minmax(12rem,1fr)_10rem_8rem_12rem_auto]">
               <input value={search} onChange={(event) => setSearch(event.target.value)} className={fieldClass} placeholder="Cerca prompt, topic, tag o ID" />
               <select value={status} onChange={(event) => setStatus(event.target.value)} className={fieldClass}><option value="all">Tutti gli stati</option>{Object.entries(statusLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select>
@@ -211,14 +211,14 @@ export default function AdminExerciseQuestionBank() {
               <p className="font-bold text-ink/65 dark:text-white/65">{filtered.length} risultati · {selectedIds.length} selezionate · {approvableSelected.length} approvabili</p>
               <div className="flex flex-wrap gap-2">
                 <button type="button" onClick={() => setSelectedIds([])} disabled={!selectedIds.length || bulkBusy} className="text-xs font-black text-ink/65 underline disabled:opacity-30 dark:text-white/65">Azzera</button>
-                <button type="button" onClick={approveSelected} disabled={!approvableSelected.length || bulkBusy} className="rounded-full bg-moss px-4 py-2 text-xs font-black text-white disabled:opacity-35 dark:bg-emerald-300 dark:text-[#102019]">{bulkBusy ? `Approvazione ${bulkProgress}` : `Approva selezionate (${approvableSelected.length})`}</button>
+                <button type="button" onClick={approveSelected} disabled={!approvableSelected.length || bulkBusy} className="rounded-full bg-moss px-4 py-2 text-xs font-black text-white disabled:opacity-35 dark:bg-emerald-300 dark:text-surface-950">{bulkBusy ? `Approvazione ${bulkProgress}` : `Approva selezionate (${approvableSelected.length})`}</button>
                 <button type="button" onClick={createPool} disabled={!selectedIds.length || bulkBusy} className="rounded-full bg-violet-700 px-4 py-2 text-xs font-black text-white disabled:opacity-35">Crea pool con selezionate</button>
               </div>
             </div>
           </section>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(20rem,0.75fr)]">
-            <section className="overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm dark:border-white/10 dark:bg-[#16211e]">
+            <section className="overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm dark:border-white/10 dark:bg-surface-900">
               {loading ? <p className="p-6 text-sm font-bold text-ink/65 dark:text-white/65">Caricamento...</p> : (
                 <div className="divide-y divide-ink/10 dark:divide-white/10">
                   {filtered.map((item) => (

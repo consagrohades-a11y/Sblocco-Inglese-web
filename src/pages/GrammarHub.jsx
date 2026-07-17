@@ -16,7 +16,7 @@ export default function GrammarHub() {
         <div className="mt-8 rounded-2xl border border-moss/15 bg-mint/40 p-5 dark:border-mint/20 dark:bg-mint/10">
           <div className="flex items-center gap-2">
             <GraduationCap aria-hidden="true" className="h-5 w-5 text-moss dark:text-mint" />
-            <p className="text-sm font-black uppercase tracking-[0.08em] text-moss dark:text-mint">A1 English Foundations</p>
+            <p className="text-sm font-bold uppercase tracking-[0.08em] text-moss dark:text-mint">A1 English Foundations</p>
           </div>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/75 dark:text-white/75">
             Segui un percorso chiaro: livello CEFR, unità guidate, pratica, checkpoint e feedback specifico per capire cosa migliorare.

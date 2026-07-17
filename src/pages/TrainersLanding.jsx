@@ -45,11 +45,11 @@ function TrainerMeta({ trainer }) {
   return (
     <div className="grid gap-2">
       <div className="flex items-center justify-between gap-3 rounded-lg bg-paper px-3 py-2">
-        <span className="text-xs font-black uppercase tracking-[0.08em] text-ink/65">Card</span>
+        <span className="text-xs font-bold uppercase tracking-[0.08em] text-ink/65">Card</span>
         <span className="text-sm font-black text-ink">{trainer.cardCount}</span>
       </div>
       <div className="flex items-center justify-between gap-3 rounded-lg bg-paper px-3 py-2">
-        <span className="text-xs font-black uppercase tracking-[0.08em] text-ink/65">Categorie</span>
+        <span className="text-xs font-bold uppercase tracking-[0.08em] text-ink/65">Categorie</span>
         <span className="text-sm font-black text-ink">{trainer.categories.length}</span>
       </div>
     </div>
@@ -116,7 +116,7 @@ export default function TrainersLanding() {
       <>
         <SEO title="I tuoi Trainer | Sblocco Inglese" description="Le card assegnate nel tuo percorso guidato e il Travel Trainer." />
         <TrainerLayout>
-          <div className="rounded-xl border border-moss/20 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+          <div className="rounded-xl border border-moss/20 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
             <span className="eyebrow">Il tuo ripasso</span>
             <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-5xl">Scegli il Trainer da aprire</h1>
             <p className="mt-4 max-w-3xl text-base leading-7 text-ink/70 dark:text-white/70">Qui trovi i Trainer assegnati dalla tua insegnante e il Travel Trainer completo. Ogni sessione propone fino a 10 card alla volta.</p>
@@ -169,7 +169,7 @@ export default function TrainersLanding() {
 
             <div className="rounded-lg border border-white/10 bg-white/[0.07] p-5">
               <div className="rounded-lg border border-white/10 bg-white/[0.08] p-5">
-                <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">Review engine</p>
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint">Review engine</p>
                 <h2 className="mt-3 text-3xl font-black leading-tight">Ripassi le frasi giuste prima di dimenticarle.</h2>
                 <p className="mt-3 text-sm font-semibold leading-6 text-white/65">Il trainer reagisce a come rispondi e mantiene separati deck, categorie e progressi. Non è una lista: è un sistema di recupero.</p>
               </div>
@@ -177,7 +177,7 @@ export default function TrainersLanding() {
                 {[[totalCards, 'card'], [liveTrainerConfig.length, 'trainer'], ['SRS', 'review']].map(([value, label]) => (
                   <div key={label} className="rounded-lg border border-white/10 bg-white/[0.08] p-3 text-center">
                     <p className="text-2xl font-black">{value}</p>
-                    <p className="mt-1 text-[0.65rem] font-black uppercase tracking-[0.08em] text-white/65">{label}</p>
+                    <p className="mt-1 text-[0.65rem] font-bold uppercase tracking-[0.08em] text-white/65">{label}</p>
                   </div>
                 ))}
               </div>

@@ -26,8 +26,8 @@ export default function AssignmentCollectionPicker({ value, onChange }) {
   }
 
   return (
-    <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-8">
-      <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">Percorsi versionati</p>
+    <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-8">
+      <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">Percorsi versionati</p>
       <h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Collection pubblicate</h2>
       <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">Ogni selezione salva la versione e l’ordine correnti. Le modifiche future alla Collection non cambieranno questa assegnazione.</p>
       {error ? <p className="mt-4 rounded-xl bg-red-50 p-4 text-sm font-bold text-red-900 dark:bg-red-300/10 dark:text-red-100">{error}</p> : null}

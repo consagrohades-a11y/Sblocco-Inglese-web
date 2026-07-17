@@ -53,7 +53,7 @@ export default function BookingPaymentFlow() {
           </p>
         </div>
         <div className="rounded-lg border border-moss/20 bg-white px-4 py-3 shadow-sm">
-          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65">Da confermare</p>
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-ink/65">Da confermare</p>
           <p className="mt-1 text-2xl font-black text-moss">{primaryOffer.price}</p>
         </div>
       </div>
@@ -102,10 +102,10 @@ export default function BookingPaymentFlow() {
             </div>
           </div>
           <div className="mb-4 rounded-lg border border-moss/15 bg-mint/40 p-4">
-            <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Quando selezioni questo step</p>
+            <p className="text-xs font-bold uppercase tracking-[0.08em] text-moss">Quando selezioni questo step</p>
             <h4 className="mt-2 text-lg font-black leading-tight text-ink">{activeDetail.title}</h4>
             <p className="mt-2 text-sm font-semibold leading-6 text-ink/70">{activeDetail.text}</p>
-            <p className="mt-3 text-xs font-black uppercase tracking-[0.08em] text-coral">{activeDetail.note}</p>
+            <p className="mt-3 text-xs font-bold uppercase tracking-[0.08em] text-coral">{activeDetail.note}</p>
           </div>
 
           {activeStep === 0 ? (

@@ -103,7 +103,7 @@ function Hero() {
       <div className="section-shell grid min-h-[calc(94svh-88px)] content-center py-16 sm:py-20 lg:min-h-[calc(88svh-88px)]">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.94fr)_minmax(320px,0.44fr)] lg:items-end">
           <div className="max-w-5xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-mint backdrop-blur">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-mint backdrop-blur">
             <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
             Corsi di inglese pratico per lavoro, colloqui e speaking
           </span>
@@ -133,7 +133,7 @@ function Hero() {
                 style={{ animationDelay: `${index * 0.45}s` }}
               >
                 <p className="text-2xl font-black">{item.value}</p>
-                <p className="mt-1 text-xs font-black uppercase tracking-[0.08em] text-white/60">{item.label}</p>
+                <p className="mt-1 text-xs font-bold uppercase tracking-[0.08em] text-white/60">{item.label}</p>
               </div>
             ))}
           </div>
@@ -173,7 +173,7 @@ function EnergyRibbon() {
           {repeated.map((item, index) => (
             <span
               key={`${item}-${index}`}
-              className="inline-flex items-center gap-3 whitespace-nowrap rounded-full border border-white/10 bg-white/[0.08] px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-white/80"
+              className="inline-flex items-center gap-3 whitespace-nowrap rounded-full border border-white/10 bg-white/[0.08] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-white/80"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-butter" />
               {item}
@@ -190,7 +190,7 @@ function ProductFlow() {
     <div className="flow-panel p-5 sm:p-6 lg:p-8">
       <div className="grid gap-6 lg:grid-cols-[0.74fr_1.26fr] lg:items-center">
         <div className="section-kicker">
-          <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Un unico ecosistema</p>
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">Un unico ecosistema</p>
           <h2 className="mt-3 text-3xl font-black leading-tight text-ink sm:text-4xl">
             Corsi al centro. Simulazione per iniziare. Trainer per consolidare.
           </h2>
@@ -202,7 +202,7 @@ function ProductFlow() {
         <div className="grid gap-3 md:grid-cols-3">
           {productFlow.map((item, index) => (
             <article key={item.title} className="flow-node">
-              <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black uppercase tracking-[0.08em] ${item.accent}`}>
+              <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] ${item.accent}`}>
                 {item.label}
               </span>
               <p className="mt-5 text-xs font-black text-ink/65">0{index + 1}</p>
@@ -226,7 +226,7 @@ function PressureVisual() {
             <img src="/assets/question-and-answer-svgrepo-com.svg" alt="" className="mx-auto h-44 w-44 object-contain" />
           </div>
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-mint/80">Da blocco a risposta</p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint/80">Da blocco a risposta</p>
             <h3 className="mt-3 text-2xl font-black leading-tight">
               La pratica serve solo se assomiglia al momento in cui ti blocchi.
             </h3>
@@ -292,14 +292,14 @@ function FeedbackPreview() {
     <div className="grid gap-4 lg:grid-cols-3">
       {feedbackExamples.map((item) => (
         <article key={item.label} className="brand-card p-5">
-          <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">{item.label}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-moss">{item.label}</p>
           <div className="mt-4 grid gap-3">
             <div className="rounded-lg bg-blush p-4">
-              <p className="text-xs font-black uppercase tracking-[0.08em] text-coral">Prima</p>
+              <p className="text-xs font-bold uppercase tracking-[0.08em] text-coral">Prima</p>
               <p className="mt-2 text-sm font-semibold leading-6 text-ink/70">{item.before}</p>
             </div>
             <div className="rounded-lg bg-mint p-4">
-              <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Dopo</p>
+              <p className="text-xs font-bold uppercase tracking-[0.08em] text-moss">Dopo</p>
               <p className="mt-2 text-sm font-bold leading-6 text-ink">{item.after}</p>
             </div>
           </div>
@@ -347,7 +347,7 @@ export default function Home() {
       <SectionReveal className="py-0">
         <Section>
           <div className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint">Grammatica attiva</p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-moss dark:text-mint">Grammatica attiva</p>
             <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
                 <h2 className="text-3xl font-black leading-tight text-ink dark:text-white">Percorso A1</h2>

@@ -49,7 +49,7 @@ export default function AboutSection({ showReviews = false, className = '' }) {
             </div>
           </figure>
           <div className="rounded-lg border border-moss/20 bg-white p-5 shadow-soft sm:p-6">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-moss">Profilo tutor</p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-moss">Profilo tutor</p>
             <h3 className="mt-3 text-2xl font-black leading-tight text-ink">Esperienza reale, metodo pratico.</h3>
             <p className="mt-3 text-sm font-semibold leading-6 text-ink/70">
               L’esperienza su Preply documenta il lavoro svolto con studenti

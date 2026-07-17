@@ -102,7 +102,7 @@ export default function AssessmentProfileResult({
         <div className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-mint/12 blur-3xl" />
         <div className="relative grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-mint/25 bg-mint/10 px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-mint">
+            <span className="inline-flex items-center gap-2 rounded-full border border-mint/25 bg-mint/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-mint">
               <Sparkles aria-hidden="true" className="h-4 w-4" />
               Il tuo Sblocco Check
             </span>
@@ -139,7 +139,7 @@ export default function AssessmentProfileResult({
         <section className="rounded-[1.75rem] border border-ink/10 bg-paper p-6 shadow-soft dark:border-white/10 dark:bg-white/[0.035] sm:p-8">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">
                 Performance osservata
               </p>
               <h2 className="mt-2 text-3xl font-black text-ink dark:text-white">
@@ -180,7 +180,7 @@ export default function AssessmentProfileResult({
 
           <div className="mt-5 grid gap-4 lg:grid-cols-[0.72fr_1.28fr]">
             <article className="rounded-2xl bg-ink p-5 text-white">
-              <p className="text-xs font-black uppercase tracking-[0.1em] text-mint">
+              <p className="text-xs font-bold uppercase tracking-[0.1em] text-mint">
                 Come ti sei valutato/a
               </p>
               <p className="mt-3 text-2xl font-black">
@@ -191,7 +191,7 @@ export default function AssessmentProfileResult({
               </p>
             </article>
             <article className="rounded-2xl border border-moss/20 bg-mint/35 p-5 dark:border-mint/20 dark:bg-mint/[0.08]">
-              <p className="text-xs font-black uppercase tracking-[0.1em] text-moss dark:text-mint">
+              <p className="text-xs font-bold uppercase tracking-[0.1em] text-moss dark:text-mint">
                 Confronto
               </p>
               <h3 className="mt-3 text-xl font-black text-ink dark:text-white">
@@ -210,7 +210,7 @@ export default function AssessmentProfileResult({
           <span className="grid h-12 w-12 place-items-center rounded-2xl bg-mint text-moss dark:bg-mint/15 dark:text-mint">
             <Target aria-hidden="true" className="h-6 w-6" />
           </span>
-          <p className="mt-5 text-xs font-black uppercase tracking-[0.12em] text-coral">
+          <p className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-coral">
             La priorità
           </p>
           <h2 className="mt-3 text-2xl font-black leading-tight text-ink dark:text-white">
@@ -241,7 +241,7 @@ export default function AssessmentProfileResult({
           <div className="relative">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint">
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-moss dark:text-mint">
                   Percorso consigliato
                 </p>
                 <h2 className="mt-3 text-3xl font-black text-ink dark:text-white">
@@ -249,7 +249,7 @@ export default function AssessmentProfileResult({
                 </h2>
               </div>
               {result.betaEligible ? (
-                <span className="rounded-full bg-coral px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-white">
+                <span className="rounded-full bg-coral px-3 py-1.5 text-xs font-bold uppercase tracking-[0.08em] text-white">
                   Adatto/a alla beta
                 </span>
               ) : null}

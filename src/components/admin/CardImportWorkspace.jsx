@@ -290,10 +290,10 @@ export default function CardImportWorkspace({
             <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
               <section className={`${adminSurface.panel} overflow-hidden`}>
                 <div className="border-b border-ink/10 p-5 dark:border-white/10">
-                  <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Anteprima importazione</p>
+                  <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Anteprima importazione</p>
                   <h2 className="mt-2 text-2xl font-black text-ink dark:text-white">{cards.length} {cards.length === 1 ? itemLabel : itemPlural}</h2>
                   <div className="mt-4 flex flex-wrap items-end gap-3">
-                    <label className="min-w-[15rem] flex-1"><span className="text-xs font-black uppercase text-ink/65 dark:text-white/65">Categoria per le selezionate</span><input value={bulkCategory} onChange={(event) => setBulkCategory(event.target.value)} placeholder="Es. People & identity" className="mt-1.5 w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white" /></label>
+                    <label className="min-w-[15rem] flex-1"><span className="text-xs font-bold uppercase text-ink/65 dark:text-white/65">Categoria per le selezionate</span><input value={bulkCategory} onChange={(event) => setBulkCategory(event.target.value)} placeholder="Es. People & identity" className="mt-1.5 w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm font-bold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white" /></label>
                     <button type="button" onClick={applyBulkCategory} disabled={!bulkCategory.trim() || !selectedRows.size} className={adminButton.secondary}>Applica categoria</button>
                     <button type="button" onClick={selectImportable} className={adminButton.secondary}>Seleziona importabili</button>
                   </div>
@@ -357,7 +357,7 @@ export default function CardImportWorkspace({
               </section>
 
               <aside className={`${adminSurface.panel} p-6 lg:sticky lg:top-24 lg:self-start`}>
-                <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Controllo importazione</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Controllo importazione</p>
                 <dl className="mt-5 grid gap-4 text-sm">
                   <div><dt className="font-black text-ink/60 dark:text-white/60">Card</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{cards.length}</dd></div>
                   <div><dt className="font-black text-ink/60 dark:text-white/60">Selezionate</dt><dd className="mt-1 text-2xl font-black text-ink dark:text-white">{selectedRows.size}</dd></div>

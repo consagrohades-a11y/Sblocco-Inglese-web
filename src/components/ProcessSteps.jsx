@@ -43,7 +43,7 @@ export default function ProcessSteps({ steps, title = 'Processo' }) {
           <div className="h-1 scanline" />
           <div className="grid gap-4 p-5 sm:p-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-moss">Quando selezioni questo step</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-moss">Quando selezioni questo step</p>
               <h3 className="mt-3 text-2xl font-black leading-tight text-ink">
                 {activeStep.detailTitle || activeStep.title}
               </h3>
@@ -55,7 +55,7 @@ export default function ProcessSteps({ steps, title = 'Processo' }) {
             </div>
             {activeStep.focus ? (
               <div className="rounded-lg border border-ink/10 bg-mint/50 p-4">
-                <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Perché conta</p>
+                <p className="text-xs font-bold uppercase tracking-[0.08em] text-moss">Perché conta</p>
                 <p className="mt-2 text-sm font-black leading-6 text-ink">{activeStep.focus}</p>
               </div>
             ) : null}

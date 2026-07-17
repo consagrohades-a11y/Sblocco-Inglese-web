@@ -33,7 +33,7 @@ export default function SituationTabs() {
         ) : null}
         {current.detail ? (
           <div className="mt-4 rounded-lg border border-moss/15 bg-white p-4">
-            <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Quando scegli questa situazione</p>
+            <p className="text-xs font-bold uppercase tracking-[0.08em] text-moss">Quando scegli questa situazione</p>
             <p className="mt-2 text-sm font-bold leading-6 text-ink/75">{current.detail}</p>
           </div>
         ) : null}

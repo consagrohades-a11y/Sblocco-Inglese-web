@@ -76,7 +76,7 @@ const joinLines = (value) => (Array.isArray(value) ? value.join('\n') : '');
 function Field({ label, required = false, children }) {
   return (
     <label className="block">
-      <span className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">
+      <span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">
         {label}{required ? ' *' : ''}
       </span>
       <div className="mt-1.5">{children}</div>
@@ -84,7 +84,7 @@ function Field({ label, required = false, children }) {
   );
 }
 
-const inputClass = 'w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm font-semibold text-ink outline-none transition placeholder:text-ink/35 focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/15 dark:bg-[#101a17] dark:text-white dark:placeholder:text-white/35 dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
+const inputClass = 'w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm font-semibold text-ink outline-none transition placeholder:text-ink/35 focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/15 dark:bg-surface-800 dark:text-white dark:placeholder:text-white/35 dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
 
 export default function AdminTrainerContent({ domain = 'general' }) {
   const domainConfig = trainerDomains[domain] || trainerDomains.general;
@@ -314,11 +314,11 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                 event.preventDefault();
                 saveCard();
               }}
-              className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-5"
+              className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-5"
             >
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink/10 pb-3 dark:border-white/10">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-wide text-moss">
+                  <p className="text-xs font-bold uppercase tracking-wide text-moss">
                     {selected.id ? 'Modifica carta' : 'Nuova bozza'}
                   </p>
                   <h2 className="mt-1 text-xl font-black text-ink dark:text-white">
@@ -359,7 +359,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                 </Field>
                 <div className="md:col-span-2">
                   <Field label="Deck">
-                    <div className="flex flex-wrap gap-2 rounded-lg border border-ink/15 bg-white p-3 dark:border-white/15 dark:bg-[#101a17]">
+                    <div className="flex flex-wrap gap-2 rounded-lg border border-ink/15 bg-white p-3 dark:border-white/15 dark:bg-surface-800">
                       {decks.length ? decks.map((deck) => {
                         const active = (selected.deck_ids || []).includes(deck.id);
                         return <label key={deck.id} className={`flex cursor-pointer items-center gap-2 rounded-full border px-3 py-2 text-xs font-black transition ${active ? 'border-moss bg-mint/60 text-ink dark:border-emerald-300 dark:bg-emerald-400/15 dark:text-white' : 'border-ink/15 text-ink/65 dark:border-white/15 dark:text-white/65'}`}><input type="checkbox" checked={active} onChange={() => updateField('deck_ids', active ? selected.deck_ids.filter((id) => id !== deck.id) : [...(selected.deck_ids || []), deck.id])} className="h-4 w-4 accent-moss" />{deck.title}</label>;
@@ -453,9 +453,9 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                 </div>
               ) : null}
 
-              <div className="fixed bottom-2 left-1/2 z-[70] max-h-[45vh] w-[calc(100vw-1rem)] max-w-6xl -translate-x-1/2 overflow-y-auto rounded-xl border border-ink/15 bg-white/95 p-2.5 shadow-[0_14px_40px_rgba(24,34,31,0.2)] backdrop-blur-xl dark:border-white/15 dark:bg-[#16211e]/95 dark:shadow-[0_14px_40px_rgba(0,0,0,0.42)] sm:p-3 lg:left-[calc(var(--admin-sidebar-width)+0.5rem)] lg:right-2 lg:w-auto lg:max-w-none lg:translate-x-0 lg:flex lg:items-center lg:justify-between lg:gap-4 xl:right-[34%]">
+              <div className="fixed bottom-2 left-1/2 z-[70] max-h-[45vh] w-[calc(100vw-1rem)] max-w-6xl -translate-x-1/2 overflow-y-auto rounded-xl border border-ink/15 bg-white/95 p-2.5 shadow-[0_14px_40px_rgba(24,34,31,0.2)] backdrop-blur-xl dark:border-white/15 dark:bg-surface-900/95 dark:shadow-[0_14px_40px_rgba(0,0,0,0.42)] sm:p-3 lg:left-[calc(var(--admin-sidebar-width)+0.5rem)] lg:right-2 lg:w-auto lg:max-w-none lg:translate-x-0 lg:flex lg:items-center lg:justify-between lg:gap-4 xl:right-[34%]">
                 <div className="mb-2 flex shrink-0 items-center justify-between gap-3 lg:mb-0">
-                  <p className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">Coda di revisione · {queueLabel}</p>
+                  <p className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Coda di revisione · {queueLabel}</p>
                   {saving ? <span className="text-xs font-black text-moss dark:text-emerald-300">Salvataggio...</span> : null}
                 </div>
                 <div className="flex flex-wrap gap-2 lg:flex-nowrap">
@@ -475,10 +475,10 @@ export default function AdminTrainerContent({ domain = 'general' }) {
             </form>
 
             <div className="space-y-4 xl:sticky xl:top-4 xl:grid xl:h-[calc(100vh-6rem)] xl:grid-rows-[13rem_minmax(0,1fr)] xl:gap-4 xl:space-y-0">
-              <aside className="min-h-0 overflow-y-auto rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:[scrollbar-color:rgba(255,255,255,0.18)_transparent] xl:[scrollbar-width:thin]">
+              <aside className="min-h-0 overflow-y-auto rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-surface-900 xl:[scrollbar-color:rgba(255,255,255,0.18)_transparent] xl:[scrollbar-width:thin]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-moss">Anteprima dal vivo</p>
+                    <p className="text-xs font-bold uppercase tracking-wide text-moss">Anteprima dal vivo</p>
                     <h2 className="mt-1 text-lg font-black text-ink dark:text-white">Vista studente</h2>
                   </div>
                   {previewRevealed ? (
@@ -510,7 +510,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                 </div>
               </aside>
 
-              <aside className="min-h-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#16211e] xl:block xl:overflow-y-auto xl:overscroll-contain xl:[scrollbar-color:rgba(14,124,102,0.55)_transparent] xl:[scrollbar-width:thin]">
+              <aside className="min-h-0 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-surface-900 xl:block xl:overflow-y-auto xl:overscroll-contain xl:[scrollbar-color:rgba(14,124,102,0.55)_transparent] xl:[scrollbar-width:thin]">
                 <h2 className="shrink-0 text-lg font-black text-ink dark:text-white">Carte in Supabase</h2>
 
                 <div className="mt-4 grid gap-3">
@@ -523,7 +523,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                   />
 
                   <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-ink/60">Filtro revisione</p>
+                    <p className="text-xs font-bold uppercase tracking-wide text-ink/60">Filtro revisione</p>
                     <div className="mt-2 grid grid-cols-2 gap-2">
                       {reviewFilterOptions.map((option) => {
                         const active = reviewFilter === option.value;
@@ -551,7 +551,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                 <div className="mt-3 shrink-0 rounded-xl border border-moss/25 bg-mint/25 p-3 dark:border-emerald-300/25 dark:bg-emerald-400/10">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">Pubblicazione batch</p>
+                      <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Pubblicazione batch</p>
                       <p className="mt-1 text-sm font-bold text-ink/70 dark:text-white/70">{publishableCards.length} expression card approvate e complete nei filtri attivi</p>
                     </div>
                     <span className="rounded-full bg-white px-3 py-1.5 text-xs font-black text-ink shadow-sm dark:bg-white/10 dark:text-white">{selectedForPublish.length} selezionate</span>
@@ -587,7 +587,7 @@ export default function AdminTrainerContent({ domain = 'general' }) {
                         <button type="button" onClick={() => openCard(card)} className="focus-ring block min-w-0 flex-1 p-4 text-left">
                           <p className="font-black text-ink dark:text-white">{card.canonical_text}</p>
                           <p className="mt-1 text-sm font-semibold text-ink/60 dark:text-white/60">{card.italian_meaning}</p>
-                          <div className="mt-2 flex flex-wrap gap-2 text-[0.68rem] font-black uppercase tracking-wide text-ink/60 dark:text-white/60">
+                          <div className="mt-2 flex flex-wrap gap-2 text-[0.68rem] font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">
                             <span>{card.level}</span><span>{card.status}</span><span>{card.review_status}</span>
                           </div>
                         </button>

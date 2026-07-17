@@ -56,7 +56,7 @@ export default function Method() {
         </div>
         <div className="section-shell relative grid gap-12 py-16 lg:grid-cols-[1.04fr_0.96fr] lg:items-center lg:py-24">
           <div>
-            <span className="inline-flex rounded-full border border-mint/30 bg-mint/10 px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-mint">
+            <span className="inline-flex rounded-full border border-mint/30 bg-mint/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-mint">
               Il metodo Sblocco Inglese
             </span>
             <h1 className="mt-6 max-w-4xl text-5xl font-black leading-[0.96] sm:text-6xl lg:text-7xl">
@@ -82,7 +82,7 @@ export default function Method() {
               </Link>
             </div>
             <div className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.05] p-5 backdrop-blur">
-              <p className="text-xs font-black uppercase tracking-[0.1em] text-mint">La domanda che guida il lavoro</p>
+              <p className="text-xs font-bold uppercase tracking-[0.1em] text-mint">La domanda che guida il lavoro</p>
               <p className="mt-3 text-xl font-black leading-8 text-white">
                 Cosa devi riuscire a fare in inglese che oggi eviti, rimandi o gestisci peggio di quanto vorresti?
               </p>
@@ -97,7 +97,7 @@ export default function Method() {
           <div className="absolute left-[-5rem] top-20 h-52 w-52 rounded-full bg-mint/25 blur-3xl dark:bg-mint/[0.04]" />
           <div className="section-shell relative">
             <div className="max-w-3xl">
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Il ciclo completo</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">Il ciclo completo</p>
               <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
                 Ogni passaggio prepara quello successivo.
               </h2>
@@ -131,7 +131,7 @@ export default function Method() {
           <div className="absolute right-[-4rem] top-12 h-52 w-52 rounded-full border-[24px] border-butter/12" />
           <div className="section-shell relative grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint">Ascoltare per interagire</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-moss dark:text-mint">Ascoltare per interagire</p>
               <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
                 Capire meglio non significa soltanto fare più quiz con l’audio.
               </h2>
@@ -162,7 +162,7 @@ export default function Method() {
         <section className="section-shell py-16 lg:py-20">
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Cosa cambia rispetto a una lezione normale</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">Cosa cambia rispetto a una lezione normale</p>
               <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
                 La pratica ha una direzione e lascia una traccia.
               </h2>
@@ -196,7 +196,7 @@ export default function Method() {
         <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-butter/10 blur-3xl" />
         <div className="section-shell relative flex flex-col gap-7 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">Dal metodo al percorso</p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint">Dal metodo al percorso</p>
             <h2 className="mt-4 text-3xl font-black leading-tight sm:text-4xl">
               Ora puoi vedere quale corso usa questo metodo per il problema che vuoi risolvere.
             </h2>

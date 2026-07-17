@@ -42,7 +42,7 @@ export default function AssessmentResult() {
   return (
     <>
       <SEO title="Il tuo Sblocco Check | Sblocco Inglese" description="Riapri il risultato dello Sblocco Check e il percorso consigliato." />
-      <section className="min-h-[calc(100svh-68px)] bg-paper py-10 dark:bg-[#0f1715] sm:py-14">
+      <section className="min-h-[calc(100svh-68px)] bg-paper py-10 dark:bg-surface-950 sm:py-14">
         <div className="section-shell">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <Link to="/assessment" className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink dark:border-white/15 dark:bg-white/[0.05] dark:text-white">

@@ -14,7 +14,7 @@ export default function Reviews() {
         description={`Conosci Rhema e leggi le esperienze degli studenti con Sblocco Inglese: speaking, colloqui e situazioni pratiche per italiani.`}
       />
 
-      <section className="section-shell bg-paper pb-12 pt-12 dark:bg-[#0f1715] lg:pt-16">
+      <section className="section-shell bg-paper pb-12 pt-12 dark:bg-surface-950 lg:pt-16">
         <span className="eyebrow">
           <Award aria-hidden="true" className="h-3.5 w-3.5" />
           Esperienza e metodo

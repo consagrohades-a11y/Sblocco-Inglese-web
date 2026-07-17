@@ -174,7 +174,7 @@ export default function AdminExerciseBuilderReview() {
   return (
     <>
       <SEO title="Revisione Exercise Builder | Admin Sblocco Inglese" description="Revisiona e promuovi domande, pool ed esercizi importati." />
-      <div className="min-h-screen bg-paper px-4 py-7 dark:bg-[#0f1715] sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-paper px-4 py-7 dark:bg-surface-950 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-[1500px]">
           <header className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -182,7 +182,7 @@ export default function AdminExerciseBuilderReview() {
                 <ArrowLeft aria-hidden="true" className="h-4 w-4" />
                 Torna all’importazione
               </Link>
-              <p className="mt-5 text-xs font-black uppercase tracking-[0.16em] text-moss dark:text-mint">Exercise Builder</p>
+              <p className="mt-5 text-xs font-bold uppercase tracking-[0.16em] text-moss dark:text-mint">Exercise Builder</p>
               <h1 className="mt-2 text-3xl font-black tracking-tight text-ink dark:text-white sm:text-4xl">Coda di revisione</h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
                 Seleziona le bozze corrette e promuovile nella Question Bank, nelle Pool e negli Esercizi. Gli ID pubblici vengono creati soltanto in questo passaggio.
@@ -232,7 +232,7 @@ export default function AdminExerciseBuilderReview() {
             <aside className="min-w-0 rounded-2xl border border-ink/10 bg-white p-3 shadow-sm dark:border-white/10 dark:bg-white/[0.06]">
               <div className="flex items-center justify-between gap-3 px-2 py-2">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">Batch</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-moss dark:text-mint">Batch</p>
                   <p className="mt-1 text-sm font-semibold text-ink/65 dark:text-white/65">{batches.length} importazioni recenti</p>
                 </div>
                 <Layers3 aria-hidden="true" className="h-5 w-5 text-moss dark:text-mint" />
@@ -279,7 +279,7 @@ export default function AdminExerciseBuilderReview() {
                 <>
                   <div className="flex flex-col gap-4 border-b border-ink/10 pb-4 dark:border-white/10 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-[0.14em] text-moss dark:text-mint">{entityLabel(activeBatch.entity_type)}</p>
+                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-moss dark:text-mint">{entityLabel(activeBatch.entity_type)}</p>
                       <h2 className="mt-1 text-2xl font-black text-ink dark:text-white">{activeBatch.source_name}</h2>
                       <p className="mt-1 text-sm font-semibold text-ink/65 dark:text-white/65">{activeBatch.items.length} elementi totali</p>
                     </div>
@@ -319,7 +319,7 @@ export default function AdminExerciseBuilderReview() {
                             />
                             <div className="min-w-0 flex-1">
                               <div className="flex flex-wrap items-center gap-2">
-                                <span className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-moss dark:text-mint">{entityLabel(item.entity_type)}</span>
+                                <span className="text-[0.68rem] font-bold uppercase tracking-[0.1em] text-moss dark:text-mint">{entityLabel(item.entity_type)}</span>
                                 <ValidationBadge status={item.validation_status} />
                                 {promoted ? <span className="rounded-full bg-emerald-700 px-2 py-1 text-[0.68rem] font-black text-white">Promosso</span> : null}
                               </div>
@@ -345,14 +345,14 @@ export default function AdminExerciseBuilderReview() {
                             </button>
                           </div>
                           {expanded ? (
-                            <pre className="max-h-80 overflow-auto border-t border-ink/10 bg-[#101915] p-4 text-xs leading-5 text-emerald-50 dark:border-white/10">{JSON.stringify(item.payload, null, 2)}</pre>
+                            <pre className="max-h-80 overflow-auto border-t border-ink/10 bg-surface-800 p-4 text-xs leading-5 text-emerald-50 dark:border-white/10">{JSON.stringify(item.payload, null, 2)}</pre>
                           ) : null}
                         </article>
                       );
                     })}
                   </div>
 
-                  <div className="sticky bottom-3 mt-5 flex flex-col gap-3 rounded-xl border border-ink/10 bg-white/95 p-3 shadow-xl backdrop-blur dark:border-white/10 dark:bg-[#17211e]/95 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="sticky bottom-3 mt-5 flex flex-col gap-3 rounded-xl border border-ink/10 bg-white/95 p-3 shadow-xl backdrop-blur dark:border-white/10 dark:bg-surface-900/95 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm font-black text-ink dark:text-white">{selectedIds.length} elementi pronti</p>
                     <button
                       type="button"

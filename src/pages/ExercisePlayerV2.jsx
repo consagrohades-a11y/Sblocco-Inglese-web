@@ -96,7 +96,7 @@ function Intro({ payload, assignmentId, onStart }) {
     0,
   );
   return (
-    <section className="section-shell py-10 dark:bg-[#171310] lg:py-14">
+    <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
       <div className="mx-auto max-w-4xl">
         <Link
           to={`/assignments/${assignmentId}`}
@@ -105,11 +105,11 @@ function Intro({ payload, assignmentId, onStart }) {
           <ArrowLeft className="h-4 w-4" />
           Torna all’attività
         </Link>
-        <article className="mt-5 overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-[#211b18]">
+        <article className="mt-5 overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-surface-900">
           <div className="relative p-7 sm:p-10">
             <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-blush blur-3xl dark:bg-coral/10" />
             <div className="relative">
-              <span className="inline-flex items-center gap-2 rounded-full border border-coral/20 bg-blush px-3 py-1.5 text-xs font-black uppercase tracking-wide text-clay dark:bg-coral/10 dark:text-[#f7a98d]">
+              <span className="inline-flex items-center gap-2 rounded-full border border-coral/20 bg-blush px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-clay dark:bg-coral/10 dark:text-[#f7a98d]">
                 <Coffee className="h-4 w-4" />
                 Esercizio assegnato
               </span>
@@ -153,7 +153,7 @@ function Intro({ payload, assignmentId, onStart }) {
               <button
                 type="button"
                 onClick={onStart}
-                className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-coral px-6 py-3 text-sm font-black text-white hover:bg-clay dark:bg-[#ff8b6c] dark:text-[#21140f]"
+                className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-coral px-6 py-3 text-sm font-black text-white hover:bg-clay dark:bg-[#ff8b6c] dark:text-surface-950"
               >
                 <BookOpenCheck className="h-4 w-4" />
                 Inizia o riprendi
@@ -200,11 +200,11 @@ function FinalResult({ payload, assignmentId, resourceId }) {
   const hasAutoPoints = Number(attempt.max_points || 0) > 0;
 
   return (
-    <section className="section-shell py-10 dark:bg-[#171310] lg:py-14">
+    <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
       <div className="mx-auto max-w-4xl">
-        <article className="rounded-3xl border border-clay/15 bg-[#fffdf9] p-7 shadow-soft dark:border-white/10 dark:bg-[#211b18] sm:p-10">
+        <article className="rounded-3xl border border-clay/15 bg-[#fffdf9] p-7 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-10">
           <span
-            className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-wide ${awaitingPublishedReview ? "bg-violet-100 text-violet-800 dark:bg-violet-300/10 dark:text-violet-200" : "bg-blush text-clay dark:bg-coral/10 dark:text-[#f7a98d]"}`}
+            className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${awaitingPublishedReview ? "bg-violet-100 text-violet-800 dark:bg-violet-300/10 dark:text-violet-200" : "bg-blush text-clay dark:bg-coral/10 dark:text-[#f7a98d]"}`}
           >
             {awaitingPublishedReview ? (
               <Clock3 className="h-4 w-4" />
@@ -233,8 +233,8 @@ function FinalResult({ payload, assignmentId, resourceId }) {
             attempt.score !== null &&
             hasAutoPoints ? (
             <>
-              <div className="mt-7 rounded-2xl bg-coral p-6 text-white dark:bg-[#ff8b6c] dark:text-[#21140f]">
-                <p className="text-xs font-black uppercase tracking-wide opacity-70">
+              <div className="mt-7 rounded-2xl bg-coral p-6 text-white dark:bg-[#ff8b6c] dark:text-surface-950">
+                <p className="text-xs font-bold uppercase tracking-wide opacity-70">
                   Risultato finale
                 </p>
                 <p className="mt-2 text-5xl font-black">
@@ -264,7 +264,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
           ) : null}
           {reviewPublished && attempt.teacher_note ? (
             <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-300/20 dark:bg-emerald-400/[0.07]">
-              <p className="text-xs font-black uppercase tracking-wide text-emerald-800 dark:text-emerald-200">
+              <p className="text-xs font-bold uppercase tracking-wide text-emerald-800 dark:text-emerald-200">
                 Considerazioni dell’insegnante
               </p>
               <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-7 text-emerald-950 dark:text-emerald-100">
@@ -281,7 +281,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to={`/assignments/${assignmentId}`}
-              className="rounded-full bg-coral px-5 py-3 text-sm font-black text-white dark:bg-[#ff8b6c] dark:text-[#21140f]"
+              className="rounded-full bg-coral px-5 py-3 text-sm font-black text-white dark:bg-[#ff8b6c] dark:text-surface-950"
             >
               Torna all’attività
             </Link>
@@ -301,7 +301,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
             return (
               <section
                 key={section.id}
-                className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 dark:border-white/10 dark:bg-[#211b18] sm:p-7"
+                className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 dark:border-white/10 dark:bg-surface-900 sm:p-7"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <h2 className="text-xl font-black text-ink dark:text-white">
@@ -651,15 +651,15 @@ export default function ExercisePlayerV2() {
 
   if (loading)
     return (
-      <div className="section-shell py-16 dark:bg-[#171310]">
-        <div className="mx-auto max-w-3xl rounded-2xl border border-clay/15 bg-white p-8 text-center text-sm font-black dark:border-white/10 dark:bg-[#211b18]">
+      <div className="section-shell py-16 dark:bg-surface-950">
+        <div className="mx-auto max-w-3xl rounded-2xl border border-clay/15 bg-white p-8 text-center text-sm font-black dark:border-white/10 dark:bg-surface-900">
           Caricamento esercizio...
         </div>
       </div>
     );
   if (error && !payload)
     return (
-      <div className="section-shell py-16 dark:bg-[#171310]">
+      <div className="section-shell py-16 dark:bg-surface-950">
         <div className="mx-auto max-w-3xl rounded-2xl border border-red-200 bg-red-50 p-8 text-red-950">
           <h1 className="text-2xl font-black">Esercizio non disponibile</h1>
           <p className="mt-3 text-sm">{error}</p>
@@ -715,7 +715,7 @@ export default function ExercisePlayerV2() {
         title={`${payload.exercise.title} | Sblocco Inglese`}
         description="Completa esercizio"
       />
-      <section className="section-shell py-7 dark:bg-[#171310] lg:py-10">
+      <section className="section-shell py-7 dark:bg-surface-950 lg:py-10">
         <div className="mx-auto max-w-5xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <button
@@ -737,10 +737,10 @@ export default function ExercisePlayerV2() {
               {error}
             </div>
           ) : null}
-          <header className="mt-5 rounded-3xl border border-clay/15 bg-[#fffdf9] p-6 shadow-soft dark:border-white/10 dark:bg-[#211b18] sm:p-8">
+          <header className="mt-5 rounded-3xl border border-clay/15 bg-[#fffdf9] p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-coral dark:text-[#ff9678]">
+                <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]">
                   <Sparkles className="h-4 w-4" />
                   Sezione {sectionIndex + 1} di {payload.sections.length}
                 </span>
@@ -793,9 +793,9 @@ export default function ExercisePlayerV2() {
                   {currentSection.questions.map((item, index) => (
                     <article
                       key={item.id}
-                      className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-[#211b18] sm:p-7"
+                      className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7"
                     >
-                      <p className="mb-4 text-xs font-black uppercase tracking-wide text-coral dark:text-[#ff9678]">
+                      <p className="mb-4 text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]">
                         Attività {index + 1}
                       </p>
                       <ExerciseQuestionRenderer
@@ -822,9 +822,9 @@ export default function ExercisePlayerV2() {
               {currentSection.questions.map((item, index) => (
                 <article
                   key={item.id}
-                  className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-[#211b18] sm:p-7"
+                  className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7"
                 >
-                  <p className="mb-4 text-xs font-black uppercase tracking-wide text-coral dark:text-[#ff9678]">
+                  <p className="mb-4 text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]">
                     Attività {index + 1}
                   </p>
                   <ExerciseQuestionRenderer
@@ -841,15 +841,15 @@ export default function ExercisePlayerV2() {
                 type="button"
                 disabled={busy}
                 onClick={finishSection}
-                className="justify-self-end rounded-full bg-coral px-6 py-3 text-sm font-black text-white dark:bg-[#ff8b6c] dark:text-[#21140f]"
+                className="justify-self-end rounded-full bg-coral px-6 py-3 text-sm font-black text-white dark:bg-[#ff8b6c] dark:text-surface-950"
               >
                 {busy ? "Salvataggio..." : "Completa sezione"}
               </button>
             </section>
           ) : currentQuestion ? (
-            <section className="mt-5 rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-[#211b18] sm:p-8">
+            <section className="mt-5 rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-8">
               <div className="flex items-center justify-between gap-3">
-                <p className="text-xs font-black uppercase tracking-wide text-coral dark:text-[#ff9678]">
+                <p className="text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]">
                   Attività {questionIndex + 1} di{" "}
                   {currentSection.questions.length}
                 </p>
@@ -907,7 +907,7 @@ export default function ExercisePlayerV2() {
                     type="button"
                     disabled={busy || !currentQuestionAnswered}
                     onClick={moveToNextQuestion}
-                    className="inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#ff8b6c] dark:text-[#21140f]"
+                    className="inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#ff8b6c] dark:text-surface-950"
                   >
                     {busy
                       ? "Controllo..."

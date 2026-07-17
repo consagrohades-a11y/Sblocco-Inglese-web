@@ -107,7 +107,7 @@ function CourseMetric({ icon: Icon, label, value }) {
   return (
     <div className="rounded-2xl border border-white/12 bg-white/[0.07] p-4 backdrop-blur">
       <Icon aria-hidden="true" className="h-5 w-5 text-mint" />
-      <p className="mt-3 text-[0.68rem] font-black uppercase tracking-[0.1em] text-white/60">{label}</p>
+      <p className="mt-3 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-white/60">{label}</p>
       <p className="mt-1 text-base font-black text-white">{value}</p>
     </div>
   );
@@ -138,10 +138,10 @@ export default function BusinessEnglishFlow() {
         <div className="section-shell relative grid gap-12 py-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:py-24">
           <div>
             <div className="flex flex-wrap gap-2">
-              <span className="inline-flex rounded-full border border-mint/30 bg-mint/10 px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-mint">
+              <span className="inline-flex rounded-full border border-mint/30 bg-mint/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-mint">
                 {course.status}
               </span>
-              <span className="inline-flex rounded-full border border-white/12 bg-white/[0.06] px-4 py-2 text-xs font-black uppercase tracking-[0.1em] text-white/65">
+              <span className="inline-flex rounded-full border border-white/12 bg-white/[0.06] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-white/65">
                 Piccolo gruppo, molta pratica
               </span>
             </div>
@@ -192,11 +192,11 @@ export default function BusinessEnglishFlow() {
             <div className="relative mx-3 -mt-2 rounded-[1.6rem] border border-white/12 bg-[#0f1a17] p-5 shadow-2xl sm:mx-6">
               <div className="flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-4">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">Prezzo cohort fondatrice</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint">Prezzo cohort fondatrice</p>
                   <p className="mt-2 text-4xl font-black">{course.price}</p>
                   <p className="mt-1 text-xs font-semibold text-white/60">{course.standardPrice}</p>
                 </div>
-                <span className="rounded-full bg-coral px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-white">
+                <span className="rounded-full bg-coral px-3 py-1.5 text-xs font-bold uppercase tracking-[0.08em] text-white">
                   settembre 2026
                 </span>
               </div>
@@ -216,7 +216,7 @@ export default function BusinessEnglishFlow() {
           <div className="absolute left-0 top-0 h-40 w-40 rounded-full bg-blush/60 blur-3xl dark:bg-coral/[0.04]" />
           <div className="section-shell relative grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
             <div className="lg:sticky lg:top-28">
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">A chi serve davvero</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">A chi serve davvero</p>
               <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
                 Non devi sembrare più intelligente in inglese. Devi riuscire a far vedere la competenza che hai già.
               </h2>
@@ -225,7 +225,7 @@ export default function BusinessEnglishFlow() {
                 dettagli importanti o usa un inglese molto più semplice rispetto alle proprie capacità professionali.
               </p>
               <div className="mt-7 rounded-[1.5rem] border border-moss/15 bg-mint/45 p-5 dark:border-mint/15 dark:bg-mint/[0.07]">
-                <p className="text-xs font-black uppercase tracking-[0.08em] text-moss dark:text-mint">Il punto non è parlare perfettamente</p>
+                <p className="text-xs font-bold uppercase tracking-[0.08em] text-moss dark:text-mint">Il punto non è parlare perfettamente</p>
                 <p className="mt-2 text-sm font-bold leading-7 text-ink/75 dark:text-white/75">
                   Il punto è capire, rispondere e continuare la conversazione senza perdere completamente il controllo.
                 </p>
@@ -260,7 +260,7 @@ export default function BusinessEnglishFlow() {
           <div className="absolute right-[-5rem] top-12 h-52 w-52 rounded-full border-[24px] border-butter/10" />
           <div className="section-shell relative">
             <div className="max-w-3xl">
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-moss dark:text-mint">Il ritmo di ogni settimana</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-moss dark:text-mint">Il ritmo di ogni settimana</p>
               <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
                 La lezione non resta isolata. Quello che impari torna nell’ascolto, nella pratica e nel feedback.
               </h2>
@@ -293,7 +293,7 @@ export default function BusinessEnglishFlow() {
         <section className="section-shell py-16 lg:py-20">
           <div className="grid gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-center">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Listening che porta a una risposta</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">Listening che porta a una risposta</p>
               <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
                 Non ascolti solo per scegliere A, B o C. Ascolti per capire che cosa devi fare dopo.
               </h2>
@@ -325,7 +325,7 @@ export default function BusinessEnglishFlow() {
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-coral/30 to-transparent" />
           <div className="section-shell">
             <div className="max-w-3xl">
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Programma completo</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">Programma completo</p>
               <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">
                 Otto settimane costruite intorno a ciò che succede davvero nel lavoro.
               </h2>
@@ -343,7 +343,7 @@ export default function BusinessEnglishFlow() {
                       {week.number}
                     </span>
                     <div>
-                      <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/60 dark:text-white/60">Settimana {Number(week.number)}</p>
+                      <p className="text-[0.68rem] font-bold uppercase tracking-[0.08em] text-ink/60 dark:text-white/60">Settimana {Number(week.number)}</p>
                       <h3 className="mt-1 text-xl font-black text-ink dark:text-white">{week.title}</h3>
                       <p className="mt-3 text-sm font-semibold leading-7 text-ink/70 dark:text-white/70">{week.result}</p>
                     </div>
@@ -352,14 +352,14 @@ export default function BusinessEnglishFlow() {
                     <div className="rounded-2xl bg-cyan-50 p-4 dark:bg-cyan-300/[0.06]">
                       <div className="flex items-center gap-2">
                         <Headphones aria-hidden="true" className="h-4 w-4 text-cyan-800 dark:text-cyan-200" />
-                        <p className="text-xs font-black uppercase tracking-[0.08em] text-cyan-800 dark:text-cyan-200">Listening</p>
+                        <p className="text-xs font-bold uppercase tracking-[0.08em] text-cyan-800 dark:text-cyan-200">Listening</p>
                       </div>
                       <p className="mt-2 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">{week.listening}</p>
                     </div>
                     <div className="rounded-2xl bg-violet-50 p-4 dark:bg-violet-300/[0.06]">
                       <div className="flex items-center gap-2">
                         <Mic2 aria-hidden="true" className="h-4 w-4 text-violet-800 dark:text-violet-200" />
-                        <p className="text-xs font-black uppercase tracking-[0.08em] text-violet-800 dark:text-violet-200">Produzione</p>
+                        <p className="text-xs font-bold uppercase tracking-[0.08em] text-violet-800 dark:text-violet-200">Produzione</p>
                       </div>
                       <p className="mt-2 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">{week.production}</p>
                     </div>
@@ -377,7 +377,7 @@ export default function BusinessEnglishFlow() {
           <div className="absolute bottom-[-5rem] right-[-3rem] h-64 w-64 rounded-full bg-mint/10 blur-3xl" />
           <div className="section-shell relative grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">Un risultato che puoi vedere</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint">Un risultato che puoi vedere</p>
               <h2 className="mt-4 text-4xl font-black leading-tight">Alla fine non ricevi soltanto un attestato di partecipazione.</h2>
               <p className="mt-5 text-base font-semibold leading-8 text-white/68">
                 Ripeti una prova equivalente a quella iniziale e ricevi un report con ciò che ora riesci a fare, i progressi
@@ -406,7 +406,7 @@ export default function BusinessEnglishFlow() {
         <section className="section-shell py-16 lg:py-20">
           <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr]">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">Domande frequenti</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">Domande frequenti</p>
               <h2 className="mt-4 text-4xl font-black leading-tight text-ink dark:text-white">Prima di chiedere un posto</h2>
               <p className="mt-5 text-base font-semibold leading-8 text-ink/65 dark:text-white/65">
                 Il corso richiede partecipazione e pratica. Queste risposte servono a capire subito se il formato è adatto a te.
@@ -423,7 +423,7 @@ export default function BusinessEnglishFlow() {
                     <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-paper text-xs font-black text-moss transition group-open:rotate-45 dark:bg-white/10 dark:text-mint">+</span>
                   </summary>
                   <p className="mt-4 max-w-3xl text-sm font-semibold leading-7 text-ink/65 dark:text-white/65">{item.answer}</p>
-                  <span className="mt-3 block text-[0.65rem] font-black uppercase tracking-[0.08em] text-ink/25 dark:text-white/25">0{index + 1}</span>
+                  <span className="mt-3 block text-[0.65rem] font-bold uppercase tracking-[0.08em] text-ink/25 dark:text-white/25">0{index + 1}</span>
                 </details>
               ))}
             </div>
@@ -436,7 +436,7 @@ export default function BusinessEnglishFlow() {
         <div className="section-shell relative">
           <div className="overflow-hidden rounded-[2rem] bg-ink p-7 text-white shadow-soft sm:p-10 lg:grid lg:grid-cols-[1fr_auto] lg:items-center lg:gap-10">
             <div className="max-w-3xl">
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">Cohort fondatrice, settembre 2026</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint">Cohort fondatrice, settembre 2026</p>
               <h2 className="mt-4 text-3xl font-black leading-tight sm:text-4xl">
                 Ti interessa il percorso? Scrivimi cosa fai e in quali situazioni l’inglese ti limita di più.
               </h2>

@@ -145,7 +145,7 @@ function ListeningQuestion({
           </button>
 
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-cyan-200/70">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-cyan-200/70">
               Voce reale
             </p>
             <p className="mt-2 text-lg font-black">{question.audioPrompt}</p>
@@ -221,7 +221,7 @@ function Intro({ onStart }) {
   return (
     <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
       <div>
-        <span className="inline-flex items-center gap-2 rounded-full border border-mint/25 bg-mint/10 px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-mint">
+        <span className="inline-flex items-center gap-2 rounded-full border border-mint/25 bg-mint/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-mint">
           <Sparkles aria-hidden="true" className="h-4 w-4" />
           Sblocco Check
         </span>
@@ -275,7 +275,7 @@ function Intro({ onStart }) {
 
       <div className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-white/[0.07] p-5 shadow-2xl backdrop-blur sm:p-7">
         <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-butter/12 blur-3xl" />
-        <p className="relative text-xs font-black uppercase tracking-[0.12em] text-mint">
+        <p className="relative text-xs font-bold uppercase tracking-[0.12em] text-mint">
           Cosa analizzeremo
         </p>
         <div className="relative mt-5 grid gap-4">
@@ -318,7 +318,7 @@ function Intro({ onStart }) {
           ))}
         </div>
         <div className="relative mt-5 rounded-2xl bg-mint p-5 text-ink">
-          <p className="text-xs font-black uppercase tracking-[0.1em] text-moss">
+          <p className="text-xs font-bold uppercase tracking-[0.1em] text-moss">
             Non solo un livello
           </p>
           <p className="mt-2 text-lg font-black leading-6">
@@ -569,7 +569,7 @@ export default function Assessment() {
             <div className="mx-auto max-w-4xl">
               <div className="mb-4 flex items-end justify-between gap-4">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.12em] text-mint">
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint">
                     {question.section}
                   </p>
                   <p className="mt-1 text-xs font-bold text-white/42">
@@ -592,7 +592,7 @@ export default function Assessment() {
                 key={question.id}
                 className="assessment-card-enter rounded-[2rem] border border-white/12 bg-paper p-5 pb-24 text-ink shadow-2xl dark:bg-[#121d1a] dark:text-white sm:p-7 lg:p-9"
               >
-                <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">
                   {question.eyebrow}
                 </p>
                 <h1 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">
@@ -678,7 +678,7 @@ export default function Assessment() {
               <div className="grid gap-6 lg:grid-cols-[1fr_0.88fr] lg:items-start">
                 <section className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-white/[0.07] p-6 shadow-2xl sm:p-8">
                   <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-butter/12 blur-3xl" />
-                  <span className="relative inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-moss">
+                  <span className="relative inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1.5 text-xs font-bold uppercase tracking-[0.1em] text-moss">
                     <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
                     Sblocco Check completato
                   </span>
@@ -724,7 +724,7 @@ export default function Assessment() {
                   onSubmit={submitContact}
                   className="rounded-[2rem] border border-ink/10 bg-paper p-6 text-ink shadow-2xl dark:border-white/10 dark:bg-[#121d1a] dark:text-white sm:p-8"
                 >
-                  <p className="text-xs font-black uppercase tracking-[0.12em] text-coral">
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-coral">
                     Ricevi il risultato
                   </p>
                   <h2 className="mt-3 text-3xl font-black leading-tight">

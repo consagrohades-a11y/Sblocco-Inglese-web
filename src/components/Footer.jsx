@@ -5,7 +5,7 @@ import BrandLogo from './BrandLogo';
 
 function LearnerFooter() {
   return (
-    <footer className="border-t border-white/[0.08] bg-[#0d1714] text-white">
+    <footer className="border-t border-white/[0.08] bg-surface-950 text-white">
       <div className="section-shell flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
         <BrandLogo to="/assignments" compact light />
         <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-white/65" aria-label="Collegamenti studente a piè di pagina">
@@ -38,7 +38,7 @@ export default function Footer() {
         </div>
 
         <div className="grid content-start gap-2.5 text-sm">
-          <p className="text-xs font-black uppercase tracking-[0.12em] text-mint/90">Pagine</p>
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint/90">Pagine</p>
           <Link className="text-white/70 hover:text-white" to="/percorsi">Corsi</Link>
           <Link className="text-white/70 hover:text-white" to="/trainers">Trainer</Link>
           <Link className="text-white/70 hover:text-white" to="/grammar">English Foundations</Link>
@@ -46,7 +46,7 @@ export default function Footer() {
         </div>
 
         <div className="grid content-start gap-2.5 text-sm">
-          <p className="text-xs font-black uppercase tracking-[0.12em] text-mint/90">Legal e contatti</p>
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-mint/90">Legal e contatti</p>
           <Link className="text-white/70 hover:text-white" to="/contatti">Contatti e FAQ</Link>
           <Link className="text-white/70 hover:text-white" to="/privacy-policy">Privacy Policy</Link>
           <Link className="text-white/70 hover:text-white" to="/cookie-policy">Cookie Policy</Link>

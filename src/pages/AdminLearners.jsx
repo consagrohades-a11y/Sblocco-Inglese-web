@@ -88,7 +88,7 @@ export default function AdminLearners() {
       />
       <section className="section-shell py-12 lg:py-16">
         <div className="mx-auto max-w-6xl">
-          <div className="flex flex-col gap-5 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-6 shadow-soft sm:p-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-5 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 shadow-soft sm:p-8 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <span className="eyebrow">Amministrazione</span>
               <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-4xl">Studenti</h1>
@@ -104,24 +104,24 @@ export default function AdminLearners() {
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-4 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] p-5 shadow-sm md:grid-cols-[1fr_auto_auto]">
+          <div className="mt-6 grid gap-4 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-5 shadow-sm md:grid-cols-[1fr_auto_auto]">
             <label className="block">
-              <span className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">Cerca</span>
+              <span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Cerca</span>
               <input
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Nome o email"
-                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-[#101a17] dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15"
+                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15"
               />
             </label>
 
             <label className="block md:min-w-48">
-              <span className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">Stato</span>
+              <span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Stato</span>
               <select
                 value={status}
                 onChange={(event) => setStatus(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-[#101a17] dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15"
+                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15"
               >
                 <option value="all">Tutti</option>
                 <option value="active">Attivi</option>
@@ -130,15 +130,15 @@ export default function AdminLearners() {
               </select>
             </label>
             <label className="block md:min-w-56">
-              <span className="text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">Gruppo</span>
-              <select value={groupId} onChange={(event) => setGroupId(event.target.value)} className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-[#101a17] dark:text-white">
+              <span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Gruppo</span>
+              <select value={groupId} onChange={(event) => setGroupId(event.target.value)} className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white">
                 <option value="all">Tutti i gruppi</option>
                 {groups.map((group) => <option key={group.id} value={group.id}>{group.name}</option>)}
               </select>
             </label>
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-[#16211e] shadow-sm">
+          <div className="mt-6 overflow-hidden rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 shadow-sm">
             {loading ? (
               <p className="p-6 text-sm font-bold text-ink/65 dark:text-white/60">Caricamento studenti...</p>
             ) : null}

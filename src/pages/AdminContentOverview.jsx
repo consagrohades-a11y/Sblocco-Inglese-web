@@ -72,7 +72,7 @@ export default function AdminContentOverview() {
           <div className="mt-6 grid gap-6 xl:grid-cols-2">
             {areas.map((area) => (
               <article key={area.title} className={`${adminSurface.panel} p-6 sm:p-7`}>
-                <p className="text-xs font-black uppercase tracking-wide text-moss dark:text-emerald-300">{area.status}</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">{area.status}</p>
                 <h2 className="mt-3 text-2xl font-black text-ink dark:text-white">{area.title}</h2>
                 <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">{area.description}</p>
                 <div className="mt-6 flex flex-wrap gap-3">

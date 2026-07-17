@@ -88,7 +88,7 @@ export default function AdminCreateAssignment() {
     });
   }
 
-  const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-[#101a17] dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
+  const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
 
   return (
     <>
@@ -98,7 +98,7 @@ export default function AdminCreateAssignment() {
       />
       <section className="section-shell py-12 lg:py-16">
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+          <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
             <span className="eyebrow">Nuova assegnazione</span>
             <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -128,7 +128,7 @@ export default function AdminCreateAssignment() {
 
           {!loadingLearner && learner ? (
             <form className="mt-6 grid gap-6" onSubmit={(event) => event.preventDefault()}>
-              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-8">
                 <h2 className="text-xl font-black text-ink dark:text-white">Titolo e messaggi</h2>
 
                 <label className="mt-6 block">
@@ -171,7 +171,7 @@ export default function AdminCreateAssignment() {
                 </label>
               </section>
 
-              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-8">
                 <h2 className="text-xl font-black text-ink dark:text-white">Impostazioni</h2>
 
                 <label className="mt-6 flex items-start gap-3 rounded-xl border border-ink/10 bg-linen p-4 dark:border-white/10 dark:bg-white/[0.05]">

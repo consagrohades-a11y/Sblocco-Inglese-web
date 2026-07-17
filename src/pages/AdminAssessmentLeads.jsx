@@ -44,7 +44,7 @@ function LeadDiagnosticDetails({ lead }) {
         ) : (
           <div className="grid gap-4">
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">Profilo principale</p>
+              <p className="text-[0.65rem] font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">Profilo principale</p>
               <p className="mt-2 text-base font-black leading-6 text-ink dark:text-white">{result.primaryTitle || lead.primary_blocker}</p>
               {result.primarySummary ? <p className="mt-2 text-xs font-semibold leading-6 text-ink/60 dark:text-white/60">{result.primarySummary}</p> : null}
             </div>
@@ -53,7 +53,7 @@ function LeadDiagnosticDetails({ lead }) {
               <div className="grid gap-2 sm:grid-cols-2">
                 {dimensions.map((dimension) => (
                   <div key={dimension.key || dimension.label} className="rounded-xl border border-violet-200/70 bg-white/80 p-3 dark:border-white/10 dark:bg-white/[0.05]">
-                    <p className="text-[0.65rem] font-black uppercase tracking-wide text-ink/60 dark:text-white/60">{dimension.label}</p>
+                    <p className="text-[0.65rem] font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">{dimension.label}</p>
                     <div className="mt-2 flex items-end justify-between gap-2">
                       <p className="text-xl font-black text-ink dark:text-white">{Math.round(Number(dimension.score || 0))}</p>
                       {dimension.level ? <p className="text-[0.65rem] font-black text-violet-700 dark:text-violet-300">{dimension.level}</p> : null}
@@ -65,7 +65,7 @@ function LeadDiagnosticDetails({ lead }) {
 
             {performance ? (
               <div className="rounded-xl bg-ink p-4 text-white dark:bg-black/25">
-                <p className="text-[0.65rem] font-black uppercase tracking-wide text-mint">Performance osservata</p>
+                <p className="text-[0.65rem] font-bold uppercase tracking-wide text-mint">Performance osservata</p>
                 <div className="mt-2 flex items-end justify-between gap-3">
                   <p className="text-sm font-black">{performance.observedLabel || 'Risultato disponibile'}</p>
                   {Number.isFinite(Number(performance.observedScore)) ? <p className="text-2xl font-black">{Math.round(Number(performance.observedScore))}</p> : null}
@@ -76,7 +76,7 @@ function LeadDiagnosticDetails({ lead }) {
 
             {recommendation ? (
               <div className="rounded-xl border border-moss/20 bg-mint/45 p-4 dark:border-mint/20 dark:bg-mint/[0.08]">
-                <p className="text-[0.65rem] font-black uppercase tracking-wide text-moss dark:text-mint">Percorso consigliato</p>
+                <p className="text-[0.65rem] font-bold uppercase tracking-wide text-moss dark:text-mint">Percorso consigliato</p>
                 <p className="mt-2 text-sm font-black text-ink dark:text-white">{recommendation.name || courseLabels[lead.recommended_course] || lead.recommended_course}</p>
                 {recommendation.reason ? <p className="mt-2 text-xs font-semibold leading-6 text-ink/60 dark:text-white/60">{recommendation.reason}</p> : null}
               </div>
@@ -157,7 +157,7 @@ export default function AdminAssessmentLeads() {
       <SEO title="Lead assessment | Admin | Sblocco Inglese" description="Profili, beta cohort e richieste di ricontatto." />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-7xl">
-          <header className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e] sm:p-8">
+          <header className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <span className="eyebrow"><Sparkles aria-hidden="true" className="h-4 w-4" />Recruitment</span>
@@ -179,7 +179,7 @@ export default function AdminAssessmentLeads() {
                 <div key={label} className="rounded-2xl bg-linen/70 p-4 dark:bg-white/[0.05]">
                   <Icon aria-hidden="true" className="h-5 w-5 text-moss dark:text-mint" />
                   <p className="mt-3 text-2xl font-black">{value}</p>
-                  <p className="mt-1 text-xs font-black uppercase tracking-[0.08em] text-ink/42 dark:text-white/42">{label}</p>
+                  <p className="mt-1 text-xs font-bold uppercase tracking-[0.08em] text-ink/42 dark:text-white/42">{label}</p>
                 </div>
               ))}
             </div>
@@ -187,7 +187,7 @@ export default function AdminAssessmentLeads() {
 
           {error ? <div className="mt-5 border-l-4 border-red-400 bg-red-50 p-4 text-sm font-bold text-red-950 dark:bg-red-400/10 dark:text-red-100">{error}</div> : null}
 
-          <div className="mt-6 grid gap-4 rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-[#16211e] lg:grid-cols-[minmax(0,1fr)_12rem_15rem_auto]">
+          <div className="mt-6 grid gap-4 rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-surface-900 lg:grid-cols-[minmax(0,1fr)_12rem_15rem_auto]">
             <label className="relative">
               <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-ink/35 dark:text-white/35" />
               <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cerca nome, email, professione o blocco" className={`${inputClass} pl-10`} />
@@ -211,21 +211,21 @@ export default function AdminAssessmentLeads() {
               {loading ? <p className="rounded-2xl border border-dashed border-ink/15 p-6 text-sm font-bold dark:border-white/15">Caricamento lead...</p> : null}
               {!loading && !filtered.length ? <p className="rounded-2xl border border-dashed border-ink/15 p-6 text-sm font-bold text-ink/65 dark:border-white/15 dark:text-white/65">Nessun profilo corrisponde ai filtri.</p> : null}
               {filtered.map((lead) => (
-                <button key={lead.id} type="button" onClick={() => setSelectedId(lead.id)} className={`focus-ring w-full rounded-2xl border p-5 text-left transition ${selectedId === lead.id ? 'border-moss bg-mint/35 shadow-soft dark:border-mint/35 dark:bg-mint/[0.08]' : 'border-ink/10 bg-white hover:border-moss/30 dark:border-white/10 dark:bg-[#16211e]'}`}>
+                <button key={lead.id} type="button" onClick={() => setSelectedId(lead.id)} className={`focus-ring w-full rounded-2xl border p-5 text-left transition ${selectedId === lead.id ? 'border-moss bg-mint/35 shadow-soft dark:border-mint/35 dark:bg-mint/[0.08]' : 'border-ink/10 bg-white hover:border-moss/30 dark:border-white/10 dark:bg-surface-900'}`}>
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
                         <h2 className="text-lg font-black">{lead.full_name}</h2>
-                        {lead.beta_eligible ? <span className="rounded-full bg-coral px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-wide text-white">Beta</span> : null}
-                        {lead.followup_requested ? <span className="rounded-full bg-moss px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-wide text-white">Ricontatto</span> : null}
+                        {lead.beta_eligible ? <span className="rounded-full bg-coral px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-white">Beta</span> : null}
+                        {lead.followup_requested ? <span className="rounded-full bg-moss px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-white">Ricontatto</span> : null}
                       </div>
                       <p className="mt-1 text-sm font-semibold text-ink/65 dark:text-white/65">{lead.email}</p>
                     </div>
                     <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black dark:bg-white/10">{statusLabels[lead.status]}</span>
                   </div>
                   <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                    <div className="rounded-xl bg-linen/60 p-3 dark:bg-white/[0.05]"><p className="text-[0.65rem] font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Percorso</p><p className="mt-1 text-sm font-black">{courseLabels[lead.recommended_course] || lead.recommended_course}</p></div>
-                    <div className="rounded-xl bg-linen/60 p-3 dark:bg-white/[0.05]"><p className="text-[0.65rem] font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Arrivato</p><p className="mt-1 text-sm font-black">{new Date(lead.created_at).toLocaleDateString('it-IT')}</p></div>
+                    <div className="rounded-xl bg-linen/60 p-3 dark:bg-white/[0.05]"><p className="text-[0.65rem] font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Percorso</p><p className="mt-1 text-sm font-black">{courseLabels[lead.recommended_course] || lead.recommended_course}</p></div>
+                    <div className="rounded-xl bg-linen/60 p-3 dark:bg-white/[0.05]"><p className="text-[0.65rem] font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Arrivato</p><p className="mt-1 text-sm font-black">{new Date(lead.created_at).toLocaleDateString('it-IT')}</p></div>
                   </div>
                 </button>
               ))}
@@ -233,16 +233,16 @@ export default function AdminAssessmentLeads() {
 
             <aside className="xl:sticky xl:top-6 xl:self-start">
               {selected ? (
-                <div className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-[#16211e]">
+                <div className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900">
                   <div className="flex items-start justify-between gap-4">
-                    <div><p className="text-xs font-black uppercase tracking-[0.1em] text-coral">Dettaglio profilo</p><h2 className="mt-2 text-2xl font-black">{selected.full_name}</h2><p className="mt-1 text-sm font-semibold text-ink/65 dark:text-white/65">{selected.profession || 'Professione non indicata'}</p></div>
+                    <div><p className="text-xs font-bold uppercase tracking-[0.1em] text-coral">Dettaglio profilo</p><h2 className="mt-2 text-2xl font-black">{selected.full_name}</h2><p className="mt-1 text-sm font-semibold text-ink/65 dark:text-white/65">{selected.profession || 'Professione non indicata'}</p></div>
                     <Filter aria-hidden="true" className="h-5 w-5 text-moss dark:text-mint" />
                   </div>
                   <div className="mt-5 grid gap-3">
                     <a href={`mailto:${selected.email}`} className="focus-ring flex items-center gap-3 rounded-xl border border-ink/10 p-3 text-sm font-black dark:border-white/10"><Mail aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />{selected.email}</a>
                     {selected.whatsapp ? <a href={`https://wa.me/${selected.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="focus-ring flex items-center gap-3 rounded-xl border border-ink/10 p-3 text-sm font-black dark:border-white/10"><MessageCircle aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />{selected.whatsapp}</a> : null}
                   </div>
-                  <div className="mt-5 rounded-2xl bg-linen/65 p-4 dark:bg-white/[0.05]"><p className="text-xs font-black uppercase tracking-wide text-coral">Blocco principale</p><p className="mt-2 text-sm font-bold leading-6">{selected.primary_blocker}</p></div>
+                  <div className="mt-5 rounded-2xl bg-linen/65 p-4 dark:bg-white/[0.05]"><p className="text-xs font-bold uppercase tracking-wide text-coral">Blocco principale</p><p className="mt-2 text-sm font-bold leading-6">{selected.primary_blocker}</p></div>
                   <LeadDiagnosticDetails lead={selected} />
                   <div className="mt-5 grid grid-cols-2 gap-3 text-xs font-bold">
                     <div className="rounded-xl border border-ink/10 p-3 dark:border-white/10"><p className="text-ink/60 dark:text-white/60">Email risultato</p><p className="mt-1 font-black">{selected.email_status}</p></div>

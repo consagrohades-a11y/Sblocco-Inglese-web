@@ -29,7 +29,7 @@ export default function ExerciseDiagnosticSummary({ summary, admin = false }) {
     <div className="grid gap-4">
       {main ? (
         <section className="rounded-2xl border border-violet-200 bg-violet-50/70 p-5 dark:border-violet-300/20 dark:bg-violet-400/[0.08] sm:p-6">
-          <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">{admin ? 'Diagnosi principale' : 'Cosa rivedere'}</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">{admin ? 'Diagnosi principale' : 'Cosa rivedere'}</p>
           <h2 className="mt-3 text-xl font-black leading-7 text-ink dark:text-white">{main.message || 'È emersa una difficoltà da rivedere.'}</h2>
           {admin ? (
             <p className="mt-2 text-xs font-bold text-ink/60 dark:text-white/60">
@@ -42,20 +42,20 @@ export default function ExerciseDiagnosticSummary({ summary, admin = false }) {
       ) : null}
 
       {hasExtra ? (
-        <section className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-[#211b18] sm:p-6">
-          <p className="text-xs font-black uppercase tracking-wide text-clay dark:text-[#f7a98d]">Extra</p>
+        <section className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-6">
+          <p className="text-xs font-bold uppercase tracking-wide text-clay dark:text-[#f7a98d]">Extra</p>
           <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">Osservazioni secondarie utili per rendere le risposte più precise.</p>
 
           {secondary.length ? (
             <div className="mt-5 rounded-xl border border-violet-200/70 bg-violet-50/45 p-4 dark:border-violet-300/15 dark:bg-violet-400/[0.05]">
-              <p className="text-xs font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">Altri aspetti da tenere d’occhio</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">Altri aspetti da tenere d’occhio</p>
               <DiagnosticList items={secondary} admin={admin} />
             </div>
           ) : null}
 
           {precision.length ? (
             <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50/60 p-4 dark:border-emerald-300/20 dark:bg-emerald-400/[0.06]">
-              <p className="text-xs font-black uppercase tracking-wide text-emerald-700 dark:text-emerald-300">Precisione</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">Precisione</p>
               <DiagnosticList items={precision} admin={admin} />
             </div>
           ) : null}

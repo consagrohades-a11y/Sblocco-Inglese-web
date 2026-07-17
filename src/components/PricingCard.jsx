@@ -9,7 +9,7 @@ export default function PricingCard({ compact = false }) {
     <div className="rounded-lg border border-moss/20 bg-white p-5 shadow-soft sm:p-7">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <span className="inline-flex rounded-full bg-butter px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-ink">
+          <span className="inline-flex rounded-full bg-butter px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-ink">
             {primaryOffer.priceLabel}
           </span>
           <h3 className="mt-4 text-2xl font-black leading-tight text-ink">

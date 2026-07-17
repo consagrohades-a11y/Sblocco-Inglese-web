@@ -10,7 +10,7 @@ function CaseStudyCard({ study, index }) {
     <article className="rounded-lg border border-ink/10 bg-white p-5 shadow-soft sm:p-7">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <span className="inline-flex rounded-full bg-mint px-3 py-1 text-xs font-black uppercase tracking-[0.08em] text-moss">
+          <span className="inline-flex rounded-full bg-mint px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-moss">
             {study.label}
           </span>
           <h2 className="mt-4 max-w-3xl text-2xl font-black leading-tight text-ink sm:text-3xl">
@@ -30,13 +30,13 @@ function CaseStudyCard({ study, index }) {
 
       {study.result ? (
         <div className="mt-6 rounded-lg border border-moss/20 bg-mint/60 p-4">
-          <p className="text-xs font-black uppercase tracking-[0.08em] text-moss">Risultato</p>
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-moss">Risultato</p>
           <p className="mt-2 text-sm font-bold leading-6 text-ink/75">{study.result}</p>
         </div>
       ) : null}
 
       <div className="mt-6">
-        <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/60">Focus del lavoro</p>
+        <p className="text-xs font-bold uppercase tracking-[0.08em] text-ink/60">Focus del lavoro</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {study.focus.map((item) => (
             <span key={item} className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-paper px-3 py-2 text-xs font-bold text-ink/70">

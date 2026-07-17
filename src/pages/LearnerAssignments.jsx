@@ -42,19 +42,19 @@ const statusLabels = {
 
 const activeAccents = [
   {
-    shell: 'border-coral/20 bg-gradient-to-br from-white via-white to-blush/55 dark:border-coral/20 dark:from-[#211b18] dark:to-coral/[0.07]',
+    shell: 'border-coral/20 bg-gradient-to-br from-white via-white to-blush/55 dark:border-coral/20 dark:from-surface-900 dark:to-coral/[0.07]',
     rail: 'bg-gradient-to-b from-coral to-[#f2a067]',
     badge: 'border-coral/20 bg-blush text-clay dark:border-coral/20 dark:bg-coral/10 dark:text-[#f7a98d]',
     icon: 'bg-blush text-coral dark:bg-coral/10 dark:text-[#ff9678]',
   },
   {
-    shell: 'border-[#c9b8dc]/45 bg-gradient-to-br from-white via-white to-[#f2edf8] dark:border-[#9d83bd]/20 dark:from-[#211b18] dark:to-[#9d83bd]/[0.07]',
+    shell: 'border-[#c9b8dc]/45 bg-gradient-to-br from-white via-white to-[#f2edf8] dark:border-[#9d83bd]/20 dark:from-surface-900 dark:to-[#9d83bd]/[0.07]',
     rail: 'bg-gradient-to-b from-[#9d83bd] to-[#c57b93]',
     badge: 'border-[#c9b8dc]/45 bg-[#eee8f8] text-[#745b91] dark:border-[#9d83bd]/20 dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]',
     icon: 'bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]',
   },
   {
-    shell: 'border-[#ddb8c5]/45 bg-gradient-to-br from-white via-white to-[#f9edf1] dark:border-[#c57b93]/20 dark:from-[#211b18] dark:to-[#c57b93]/[0.07]',
+    shell: 'border-[#ddb8c5]/45 bg-gradient-to-br from-white via-white to-[#f9edf1] dark:border-[#c57b93]/20 dark:from-surface-900 dark:to-[#c57b93]/[0.07]',
     rail: 'bg-gradient-to-b from-[#c57b93] to-coral',
     badge: 'border-[#ddb8c5]/45 bg-[#f8e7ed] text-[#9c5870] dark:border-[#c57b93]/20 dark:bg-[#c57b93]/15 dark:text-[#e4aec0]',
     icon: 'bg-[#f8e7ed] text-[#9c5870] dark:bg-[#c57b93]/15 dark:text-[#e4aec0]',
@@ -65,7 +65,7 @@ function AssignmentCard({ assignment, activeIndex }) {
   const completed = assignment.status === 'completed';
   const accent = completed
     ? {
-        shell: 'border-[#a9bda9]/40 bg-gradient-to-br from-white via-white to-[#edf3ed] dark:border-[#8ba58b]/20 dark:from-[#211b18] dark:to-[#8ba58b]/[0.07]',
+        shell: 'border-[#a9bda9]/40 bg-gradient-to-br from-white via-white to-[#edf3ed] dark:border-[#8ba58b]/20 dark:from-surface-900 dark:to-[#8ba58b]/[0.07]',
         rail: 'bg-[#789078]',
         badge: 'border-[#a9bda9]/40 bg-[#e7efe7] text-[#617861] dark:border-[#8ba58b]/20 dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]',
         icon: 'bg-[#e7efe7] text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]',
@@ -90,7 +90,7 @@ function AssignmentCard({ assignment, activeIndex }) {
           </div>
         </div>
 
-        <Link to={`/assignments/${assignment.id}`} className={`focus-ring inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-black transition hover:-translate-y-0.5 ${completed ? 'border border-[#a9bda9]/45 bg-white text-[#617861] hover:bg-[#edf3ed] dark:border-[#8ba58b]/20 dark:bg-white/[0.06] dark:text-[#b7cdb7] dark:hover:bg-[#8ba58b]/10' : 'bg-coral text-white shadow-sm hover:bg-clay dark:bg-[#ff9678] dark:text-[#21140f]'}`}>
+        <Link to={`/assignments/${assignment.id}`} className={`focus-ring inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-black transition hover:-translate-y-0.5 ${completed ? 'border border-[#a9bda9]/45 bg-white text-[#617861] hover:bg-[#edf3ed] dark:border-[#8ba58b]/20 dark:bg-white/[0.06] dark:text-[#b7cdb7] dark:hover:bg-[#8ba58b]/10' : 'bg-coral text-white shadow-sm hover:bg-clay dark:bg-[#ff9678] dark:text-surface-950'}`}>
           {completed ? 'Rivedi attività' : 'Continua attività'}<ArrowRight className="h-4 w-4" />
         </Link>
       </div>
@@ -162,16 +162,16 @@ export default function LearnerAssignments() {
   return (
     <>
       <SEO title="Le mie attività | Sblocco Inglese" description="Attività assegnate nel tuo percorso Sblocco Inglese." />
-      <section className="section-shell py-10 dark:bg-[#171310] lg:py-14">
+      <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
         <div className="mx-auto max-w-5xl">
-          <header className="relative overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-[#211b18]">
+          <header className="relative overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-surface-900">
             <div className="pointer-events-none absolute -right-14 -top-16 h-56 w-56 rounded-full bg-[#eee8f8] blur-3xl dark:bg-[#9d83bd]/10" />
             <div className="pointer-events-none absolute -bottom-20 left-12 h-52 w-52 rounded-full bg-blush blur-3xl dark:bg-coral/10" />
             <Sun className="pointer-events-none absolute right-10 top-8 h-12 w-12 rotate-12 text-coral/45 dark:text-coral/25" strokeWidth={1.6} />
             <Star className="pointer-events-none absolute right-28 top-24 h-7 w-7 -rotate-12 fill-butter text-clay/55 dark:fill-clay/15 dark:text-[#f7a98d]/50" />
 
             <div className="relative p-6 sm:p-9 lg:p-10">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#ddb8c5]/45 bg-[#f8e7ed] px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-[#9c5870] dark:border-[#c57b93]/20 dark:bg-[#c57b93]/15 dark:text-[#e4aec0]">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#ddb8c5]/45 bg-[#f8e7ed] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-[#9c5870] dark:border-[#c57b93]/20 dark:bg-[#c57b93]/15 dark:text-[#e4aec0]">
                 <Heart className="h-3.5 w-3.5" />Il tuo percorso
               </span>
               <h1 className="mt-5 text-3xl font-black leading-tight text-ink dark:text-white sm:text-5xl">
@@ -185,30 +185,30 @@ export default function LearnerAssignments() {
             <div className="relative grid gap-3 border-t border-clay/10 bg-linen/30 p-5 dark:border-white/10 dark:bg-white/[0.035] sm:grid-cols-4 sm:px-9 lg:px-10">
               <div className="flex items-center gap-3 rounded-2xl border border-coral/15 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-blush text-coral dark:bg-coral/10 dark:text-[#ff9678]"><ListChecks className="h-5 w-5" /></span>
-                <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Da fare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{activeCount}</p></div>
+                <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Da fare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{activeCount}</p></div>
               </div>
               <div className="flex items-center gap-3 rounded-2xl border border-[#a9bda9]/35 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#e7efe7] text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]"><CheckCircle2 className="h-5 w-5" /></span>
-                <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Completate</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{completedCount}</p></div>
+                <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Completate</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{completedCount}</p></div>
               </div>
               <div className="flex items-center gap-3 rounded-2xl border border-[#c9b8dc]/40 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]"><NotebookPen className="h-5 w-5" /></span>
-                <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Tempo totale</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{estimatedMinutes ? `${estimatedMinutes} min` : 'Libero'}</p></div>
+                <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Tempo totale</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{estimatedMinutes ? `${estimatedMinutes} min` : 'Libero'}</p></div>
               </div>
               <div className="flex items-center gap-3 rounded-2xl border border-[#ddb8c5]/40 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#f8e7ed] text-[#9c5870] dark:bg-[#c57b93]/15 dark:text-[#e4aec0]"><CalendarClock className="h-5 w-5" /></span>
-                <div><p className="text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Prossima scadenza</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{nearestDeadline ? formatDate(nearestDeadline) : 'Nessuna'}</p></div>
+                <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Prossima scadenza</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{nearestDeadline ? formatDate(nearestDeadline) : 'Nessuna'}</p></div>
               </div>
             </div>
           </header>
 
           <LearnerNotificationsPanel />
 
-          {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 dark:border-white/10 dark:bg-[#211b18] dark:text-white/65">Caricamento attività...</div> : null}
+          {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 dark:border-white/10 dark:bg-surface-900 dark:text-white/65">Caricamento attività...</div> : null}
           {error ? <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-sm font-bold text-red-900 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100">{error}</div> : null}
 
           {!loading && !error && assignments.length === 0 ? (
-            <div className="mt-6 rounded-3xl border border-dashed border-[#a9bda9]/45 bg-gradient-to-br from-white to-[#edf3ed] p-8 text-center shadow-sm dark:border-[#8ba58b]/25 dark:from-[#211b18] dark:to-[#8ba58b]/[0.08]">
+            <div className="mt-6 rounded-3xl border border-dashed border-[#a9bda9]/45 bg-gradient-to-br from-white to-[#edf3ed] p-8 text-center shadow-sm dark:border-[#8ba58b]/25 dark:from-surface-900 dark:to-[#8ba58b]/[0.08]">
               <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#e7efe7] text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]"><Leaf className="h-7 w-7" /></span>
               <h2 className="mt-4 text-xl font-black text-ink dark:text-white">Sei in pari</h2>
               <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Quando verrà pubblicata una nuova attività, la troverai qui.</p>
