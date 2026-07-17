@@ -60,62 +60,46 @@ React 18 + Vite 5 + Tailwind 3 (`darkMode: 'class'`) + React Router 6 + Supabase
 - Completamento assignment: `exercise_config.completion_rule` = `passed` (default, soglia `required_score` default **70**) | `submitted` | `attempts`.
 - Lato studente il risultato è la card in `ExercisePlayerV2.jsx:207-219` (percentuale + punti): nessuna spiegazione di pesi, soglia o domande in attesa → vedi bug 4.
 
-## Bug aperti
+## Bug aperti e stato dei fix (aggiornato 2026-07-17)
 
-### 1. Dark/light mode: contrasto incoerente tra testo e sfondo
+### 1. Dark/light mode: contrasto incoerente — ✅ RISOLTO (lato framework)
 
-**Sintomo**: in dark mode alcune sezioni restano con testo scuro su fondo scuro (o card chiare "accecanti"), l'esperienza cambia da pagina a pagina.
+**Fix applicati** (commit `3d088ba`):
+- Script anti-FOUC inline in `index.html`: applica la classe `dark` da `localStorage['sblocco_theme']` / `prefers-color-scheme` prima del primo paint.
+- `src/index.css`: override `.dark` per `:root`, `body`, `::selection` + varianti `dark:` per tutte le classi brand (`.eyebrow`, `.section-title/copy`, `.brand-panel/card/section*`, `.flow-panel/node`, `.dynamic-rail`, `.energy-strip`, `.focus-ring`, `.soft-divider`, `.hero-title`, `.brand-measure`).
+- `VisualSystem.jsx`: toni `Section` (plain/mint/linen), `FeatureList`, `PageHero`, `MediaStage` coerenti in dark.
 
-**Cause individuate**:
-- Classi custom in `src/index.css` senza variante dark: `.eyebrow` (149), `.section-title` (153, `text-ink`), `.section-copy` (157), `.brand-section-soft` (169, `bg-[#edf8f2]`), `.brand-panel` (177, `bg-white`), `.brand-card` (185), `.flow-panel` (98), `.flow-node` (117), `.dynamic-rail` (198), `.brand-measure` (229), `.hero-title` (233), `.soft-divider` (237), `.focus-ring` (161, `ring-offset-paper` fisso), `::selection` (35). Le pagine che le usano (56 file, es. `Home.jsx`, `Percorsi.jsx`, `GrammarHub.jsx`) ereditano il problema.
-- `:root` e `body` (`index.css:5-28`) hanno colore/sfondo chiari senza override `.dark` → overscroll e primo paint chiari anche in dark.
-- Nessuno script anti-FOUC in `index.html`; il tema parte solo al mount di React (`ThemeToggle.jsx:19-23`).
-- Palette dark frammentata: `#0f1715` (App), `#16211e` (admin card), `#211b18`/`#171310` (player), `#101a17` (input), `#101915` (textarea JSON) — scelte ad hoc per pagina.
+Verificato con screenshot del dev server in dark. **Residuo**: possibile audit visivo pagina-per-pagina per singole classi `text-ink`/`bg-white` hardcoded fuori dai primitivi; la palette dark resta da unificare in token Tailwind (vedi proposte).
 
-**Direzione di fix**: (a) aggiungere le varianti `dark:` alle classi in `index.css` e l'override `.dark` per `:root/body/::selection`; (b) script inline in `index.html` che applica `dark` da localStorage/`prefers-color-scheme` prima del paint; (c) definire 3-4 token di superficie dark in `tailwind.config.js` (es. `surface`, `surface-raised`) e sostituire gli esadecimali sparsi; (d) audit con soglia WCAG AA (4.5:1). Partire dalle pagine pubbliche, poi admin, poi player.
+### 2. Admin: esercizi importati e promossi non compaiono nel Composer — ✅ MITIGATO lato frontend, ⚠️ verificare migrazioni remote
 
-### 2. Admin: esercizi importati e promossi non compaiono nel Composer
+**Fix applicati** (commit `cd0dd70`):
+- `loadBase()` ora usa `Promise.allSettled`: un errore su domande o pool **non nasconde più il catalogo** e il banner dice quale sorgente è fallita (prima un errore qualsiasi svuotava tutto con "Nessun esercizio").
+- Bottone "Aggiorna" nel pannello Esercizi + empty state con link a Import e Coda di revisione.
+- Fallback `title || name` per i pool importati (menu e regole).
+- Dopo "Promuovi e genera ID", gli esercizi hanno il link diretto "apri nel Composer" (`?exerciseId=...`) e il rimando alla Libreria.
 
-**Sintomo**: dopo import JSON → promozione ("Promuovi e genera ID" assegna il `public_id`), gli esercizi non si vedono nel pannello Composer. La visualizzazione della sezione è comunque poco chiara (vedi proposte UX).
+**Se il problema si ripresenta**, ora il banner d'errore indica la query esatta. Checklist rimanente (richiede accesso a Supabase):
+1. Verificare che TUTTE le migrazioni locali siano applicate al progetto remoto (soprattutto `20260714215000`, `20260714270100-270400`, `20260716130000`, `20260716183000`). È il sospetto principale.
+2. SQL: `select public_id, status, current_version_id, generated_from_collection from exercise_builder_exercises order by created_at desc limit 20;`
 
-**Fatti verificati nel codice**:
-- La promozione imposta correttamente `current_version_id` e `generated_from_collection=false`, quindi il filtro del catalogo (`exerciseComposerApi.js:8-13`) in teoria li include.
-- `loadBase()` (`AdminExerciseComposer.jsx:147-168`) fa `Promise.all` di catalogo+questions+pools: **se una qualsiasi delle tre query fallisce, il catalogo resta vuoto** e compare solo "Nessun esercizio" con banner d'errore → un errore su pools/questions maschera esercizi esistenti.
-- Mismatch storico `name`/`title`: la promozione scrive `pool_versions.name` (`20260714170000`:283-285) ma la UI legge `title` (`exerciseBankApi.js:74`); la colonna `title` esiste solo dalla migrazione compat `20260714215000`. Se il progetto Supabase remoto **non ha tutte le migrazioni applicate**, la query pools fallisce → composer vuoto (candidato principale). I pool importati hanno comunque `title` NULL → nomi vuoti nei menu.
-- Le sezioni promosse da import non hanno `question_version_id`/`pool_version_id` (insert in `20260714170000`:510-522 e 578-597): le migrazioni compat `20260714270100/270200/270400` esistono apposta; verificare che siano applicate, altrimenti apertura/salvataggio dal composer falliscono.
-- Il composer carica il catalogo **solo al mount**: non c'è refresh; dopo una promozione bisogna rientrare nella pagina.
+### 3. Correzioni "dopo ogni domanda" / "a fine sezione" — ✅ RISOLTO
 
-**Checklist diagnostica** (prima di scrivere codice):
-1. DevTools → Network sulla pagina composer: quale delle query REST fallisce e con che errore.
-2. In Supabase SQL editor: `select public_id, status, current_version_id, generated_from_collection, created_at from exercise_builder_exercises order by created_at desc limit 20;` — gli esercizi promossi ci sono?
-3. Verificare l'elenco migrazioni applicate al progetto remoto contro `supabase/migrations/` (soprattutto `215000`, `270100-270400`, `20260716183000`).
+**Fix applicati** (commit `8a99bec`):
+- Player: con `feedback_timing='section_end'`, al completamento della sezione ora appare il **riepilogo con risposte, esiti e correzioni** (il payload SQL li espone già dalla migrazione `20260716130000`, riga 83; se il DB remoto non la ha, il player degrada al vecchio box senza rompersi).
+- `hidden` ora è rispettato anche nel riepilogo finale: le sezioni nascoste non mostrano punteggio/soluzioni/spiegazioni, con nota per lo studente.
+- Composer: le 4 opzioni di feedback sono spiegate sotto il campo.
+- `question_end` era già stato riparato dal commit `2d2e85c` + migrazione `20260716183000` — funziona solo se la migrazione è applicata al DB remoto.
 
-**Direzione di fix**: caricare le tre sorgenti in modo indipendente (un errore sui pool non deve svuotare il catalogo); dopo la promozione mostrare un link "Apri nel composer" (`?exerciseId=...`); bottone "Aggiorna" nel composer; backfill `title` dei pool importati (`update ... set title = name where title is null`) o far leggere `coalesce(title, name)`.
+### 4. Punteggio poco chiaro — ✅ RISOLTO (lato UI)
 
-### 3. Builder: la visualizzazione dei risultati corretti "dopo ogni domanda" o "a fine sezione" non funziona come atteso
+**Fix applicati** (commit `fde86d9`):
+- Riepilogo finale: chip di breakdown (corrette / quasi corrette / da rivedere / senza risposta / in attesa di valutazione), punti per sezione e frase che spiega la formula (percentuale di punti, pesi, credito parziale).
+- Edge case `max_points=0`: niente più "100%" fittizio — mostra "non prevede punteggio automatico".
+- Box "valutazione in arrivo": indica quante attività attendono la correzione dell'insegnante.
+- Composer: testo di aiuto sui toggle Punteggio/Soluzioni/Spiegazioni/Diagnosi/Nuovi tentativi.
 
-**Sintomo**: nel composer non si riesce a ottenere che lo studente veda le correzioni dopo ogni domanda o alla fine della sezione.
-
-**Fatti verificati**:
-- Il composer espone `feedback_timing` per sezione (`AdminExerciseComposer.jsx:786-798`): `question_end` / `section_end` / `exercise_end` / `hidden`; scegliendo `question_end` forza `display_mode='one_at_a_time'` (`:289-303`).
-- Player: con `question_end` la risposta viene controllata subito (`checkExerciseQuestion`) e la correzione appare (`ExercisePlayerV2.jsx:741-775`). Un bug di persistenza è stato fixato di recente (commit `2d2e85c` + migrazione `20260716183000_question_end_feedback_compatibility.sql`) — **se il DB remoto non ha quella migrazione il problema persiste**.
-- **Con `section_end` le correzioni non vengono mai mostrate a fine sezione**: al completamento appare solo il box verde "Sezione completata" con il bottone avanti (`ExercisePlayerV2.jsx:695-711`). Le correzioni arrivano solo nel riepilogo finale. Quindi l'opzione oggi è indistinguibile da `exercise_end` → è il gap principale da colmare.
-- Incoerenza: con `hidden` il riepilogo finale mostra comunque le correzioni se `show_correct_answers` è attivo (il `FinalResult` usa solo i settings esercizio, mai il `feedback_timing` di sezione).
-
-**Direzione di fix**: implementare nel player una schermata di riepilogo sezione (domande + esito + correzioni, riusando `ExerciseQuestionRenderer` in modalità disabled come nel `FinalResult`) quando `feedback_timing='section_end'`; rispettare `hidden` anche nel riepilogo finale; nel composer spiegare le 4 opzioni con testo di aiuto.
-
-### 4. Punteggio calcolato/comunicato in modo poco chiaro
-
-**Sintomo**: lo studente (e l'admin) non capiscono come nasce il numero finale.
-
-**Cause**: la formula (pesi, credito parziale `nearly_correct`, `max=0 → 100%`, domande manuali escluse finché non corrette, score nascosto durante la review, soglia 70 per il completamento) vive tutta nelle RPC SQL e la UI mostra solo "NN%" (`ExercisePlayerV2.jsx:207-219`).
-
-**Direzione di fix** (UI prima, poi eventuale SQL):
-- Nel `FinalResult` mostrare il breakdown già disponibile in `result_summary`: corrette / quasi corrette / errate / senza risposta / in attesa di valutazione, e punti per sezione (`attempt_sections.earned_points/max_points`).
-- Esplicitare "X attività verranno valutate dall'insegnante: il punteggio è provvisorio" quando `pending_review > 0`.
-- Mostrare la soglia di superamento quando `completion_rule='passed'` ("Obiettivo: 70%").
-- Correggere l'edge case `max=0`: non mostrare "100%" ma "In attesa di valutazione" / "Completato".
-- Nel composer, tooltip su "Punteggio" che spiega pesi (`grading.weight`) e credito parziale.
+**Riferimento formula (SQL)**: `score = round(earned/max × 100)`; pesi da `grading.weight`; `nearly_correct` = credito parziale; con produzioni manuali lo score resta provvisorio finché la review non è pubblicata (`approved`); soglia di completamento `required_score` default 70 in `assignment_resources.exercise_config`. Possibile evoluzione: mostrare la soglia allo studente (il payload oggi non la espone — servirebbe aggiungerla in `exercise_builder_attempt_payload`).
 
 ## Analisi sommaria e proposte
 
@@ -138,7 +122,7 @@ Il sito è due prodotti in uno: vetrina marketing curata (funnel simulazione →
 ## File morti / gotcha
 
 - `src/main.jsx`: entry duplicato e obsoleto (senza `AuthProvider`), l'app usa `src/main.js`. Non modificarlo pensando di toccare l'avvio; da eliminare.
-- `src/styles/question-editor-layout.css`: importato **solo** dal morto `main.jsx` → non viene mai caricato; il layout dell'editor domande su schermi 1280-1800px ne risente. Importarlo in `main.js` (o eliminare se si ridisegna l'editor).
+- `src/styles/question-editor-layout.css`: ora importato da `src/main.js` (fix 2026-07-17) — il layout dell'editor domande su schermi 1280-1800px torna attivo.
 - `src/trainer-overrides.css`: non importato da nessuno; selettori strutturali fragili. Da eliminare o reintegrare consapevolmente.
 - `src/pages/AdminExerciseResultsV2.jsx`: non instradato (la route usa `AdminExerciseResults.jsx`). Decidere se completare la migrazione a V2 o rimuoverlo.
 - `ExercisePlayer.jsx` e `AdminExerciseQuestionEditor.jsx` sono re-export dei rispettivi V2: modificare sempre i file V2.

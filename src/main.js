@@ -7,6 +7,7 @@ import { installDownloadCompatibility } from './lib/downloadCompatibility.js';
 import { validateSupabaseConfig } from './lib/supabaseConfig.js';
 import './index.css';
 import './styles/downloadCompatibility.css';
+import './styles/question-editor-layout.css';
 
 installDownloadCompatibility();
 validateSupabaseConfig(import.meta.env);
