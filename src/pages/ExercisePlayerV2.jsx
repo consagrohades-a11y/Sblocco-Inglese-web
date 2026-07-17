@@ -166,6 +166,29 @@ function Intro({ payload, assignmentId, onStart }) {
   );
 }
 
+function ResultBreakdown({ summary }) {
+  const chips = [
+    ["correct", "corrette", "bg-emerald-100 text-emerald-900 dark:bg-emerald-300/10 dark:text-emerald-200"],
+    ["nearly_correct", "quasi corrette", "bg-amber-100 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100"],
+    ["incorrect", "da rivedere", "bg-red-100 text-red-900 dark:bg-red-300/10 dark:text-red-100"],
+    ["unanswered", "senza risposta", "bg-slate-200 text-slate-800 dark:bg-white/10 dark:text-white/70"],
+    ["pending_review", "in attesa di valutazione", "bg-violet-100 text-violet-900 dark:bg-violet-300/10 dark:text-violet-200"],
+  ].filter(([key]) => key === "correct" || Number(summary?.[key] || 0) > 0);
+  if (!chips.length) return null;
+  return (
+    <div className="mt-4 flex flex-wrap gap-2">
+      {chips.map(([key, label, className]) => (
+        <span
+          key={key}
+          className={`rounded-full px-3 py-1.5 text-xs font-black ${className}`}
+        >
+          {Number(summary?.[key] || 0)} {label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function FinalResult({ payload, assignmentId, resourceId }) {
   const attempt = payload.attempt;
   const settings = payload.exercise.settings || {};
@@ -174,6 +197,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
   const reviewPublished = attempt.review_status === "approved";
   const awaitingPublishedReview =
     pending > 0 || attempt.review_status === "reviewed";
+  const hasAutoPoints = Number(attempt.max_points || 0) > 0;
 
   return (
     <section className="section-shell py-10 dark:bg-[#171310] lg:py-14">
@@ -200,21 +224,41 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                 La valutazione dell’insegnante non è ancora stata pubblicata
               </p>
               <p className="mt-2 text-sm font-semibold leading-6 text-violet-900/70 dark:text-violet-100/70">
-                Riceverai una notifica nella tua area studente quando punteggio
-                e considerazioni saranno pronti.
+                {pending > 0
+                  ? `${pending} ${pending === 1 ? "attività verrà valutata" : "attività verranno valutate"} dall’insegnante: il punteggio finale comprenderà anche ${pending === 1 ? "quella valutazione" : "quelle valutazioni"}.`
+                  : "Riceverai una notifica nella tua area studente quando punteggio e considerazioni saranno pronti."}
               </p>
             </div>
+          ) : settings.show_score !== false &&
+            attempt.score !== null &&
+            hasAutoPoints ? (
+            <>
+              <div className="mt-7 rounded-2xl bg-coral p-6 text-white dark:bg-[#ff8b6c] dark:text-[#21140f]">
+                <p className="text-xs font-black uppercase tracking-wide opacity-70">
+                  Risultato finale
+                </p>
+                <p className="mt-2 text-5xl font-black">
+                  {Math.round(Number(attempt.score || 0))}%
+                </p>
+                <p className="mt-2 text-sm font-bold opacity-80">
+                  {Number(attempt.earned_points || 0).toFixed(1)} /{" "}
+                  {Number(attempt.max_points || 0).toFixed(1)} punti
+                </p>
+              </div>
+              <ResultBreakdown summary={summary} />
+              <p className="mt-3 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
+                Il punteggio è la percentuale di punti ottenuti sul totale: ogni
+                attività può valere più punti e le risposte quasi corrette
+                valgono un punteggio parziale.
+              </p>
+            </>
           ) : settings.show_score !== false && attempt.score !== null ? (
-            <div className="mt-7 rounded-2xl bg-coral p-6 text-white dark:bg-[#ff8b6c] dark:text-[#21140f]">
-              <p className="text-xs font-black uppercase tracking-wide opacity-70">
-                Risultato finale
+            <div className="mt-7 rounded-2xl border border-clay/15 bg-blush/40 p-5 dark:border-white/10 dark:bg-coral/[0.07]">
+              <p className="text-sm font-black text-ink dark:text-white">
+                Questo esercizio non prevede un punteggio automatico.
               </p>
-              <p className="mt-2 text-5xl font-black">
-                {Math.round(Number(attempt.score || 0))}%
-              </p>
-              <p className="mt-2 text-sm font-bold opacity-80">
-                {Number(attempt.earned_points || 0).toFixed(1)} /{" "}
-                {Number(attempt.max_points || 0).toFixed(1)} punti
+              <p className="mt-1 text-sm font-semibold leading-6 text-ink/60 dark:text-white/60">
+                Trovi comunque qui sotto il riepilogo delle tue risposte.
               </p>
             </div>
           ) : null}
@@ -259,9 +303,20 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                 key={section.id}
                 className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 dark:border-white/10 dark:bg-[#211b18] sm:p-7"
               >
-                <h2 className="text-xl font-black text-ink dark:text-white">
-                  {section.title}
-                </h2>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-xl font-black text-ink dark:text-white">
+                    {section.title}
+                  </h2>
+                  {!awaitingPublishedReview &&
+                  !feedbackHidden &&
+                  settings.show_score !== false &&
+                  Number(section.max_points || 0) > 0 ? (
+                    <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black text-ink/70 dark:bg-white/10 dark:text-white/70">
+                      {Number(section.earned_points || 0).toFixed(1)} /{" "}
+                      {Number(section.max_points || 0).toFixed(1)} punti
+                    </span>
+                  ) : null}
+                </div>
                 {feedbackHidden ? (
                   <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
                     Le correzioni di questa sezione non vengono mostrate:

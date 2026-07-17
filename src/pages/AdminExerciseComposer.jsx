@@ -735,6 +735,14 @@ export default function AdminExerciseComposer() {
                     </label>
                   ))}
                 </div>
+                <p className="mt-3 text-[0.7rem] font-semibold leading-5 text-ink/45 dark:text-white/45">
+                  Punteggio = percentuale di punti ottenuti sul totale (le
+                  attività corrette a mano entrano nel punteggio dopo la
+                  valutazione dell’insegnante). Soluzioni e Spiegazioni
+                  controllano cosa vede lo studente nelle correzioni; Diagnosi
+                  mostra il riepilogo degli errori; Nuovi tentativi permette di
+                  ripetere l’esercizio.
+                </p>
               </section>
 
               <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#16211e] sm:p-7">
