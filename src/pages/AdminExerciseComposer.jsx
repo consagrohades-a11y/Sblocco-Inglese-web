@@ -9,6 +9,7 @@ import {
 } from "../lib/exerciseBankApi.js";
 import {
   loadExerciseComposerCatalog,
+  loadExerciseComposerContentPreviews,
   loadExerciseComposerDetail,
   saveExerciseComposerVersion,
   setExerciseComposerStatus,
@@ -59,6 +60,22 @@ const statusLabels = {
 const fieldClass =
   "mt-2 min-w-0 w-full rounded-xl border border-ink/15 bg-white px-3.5 py-2.5 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/30 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15";
 
+const questionTypeLabels = {
+  multiple_choice: "Scelta multipla",
+  multiple_select: "Scelta multipla con più risposte",
+  dialogue_choice: "Scelta nel dialogo",
+  gap_fill: "Testo con spazi",
+  select_gap: "Spazi con opzioni",
+  translation: "Traduzione",
+  error_correction: "Correzione",
+  word_order: "Ordine delle parole",
+  content_block: "Spiegazione",
+  written_response: "Risposta scritta",
+  dialogue_roleplay: "Role-play",
+  audio_response: "Risposta audio",
+  reading_comprehension: "Lettura e comprensione",
+};
+
 function statusClass(status) {
   if (status === "published")
     return "bg-emerald-100 text-emerald-900 dark:bg-emerald-400/15 dark:text-emerald-200";
@@ -69,6 +86,165 @@ function statusClass(status) {
   if (status === "in_review")
     return "bg-amber-100 text-amber-900 dark:bg-amber-400/15 dark:text-amber-200";
   return "bg-violet-100 text-violet-900 dark:bg-violet-400/15 dark:text-violet-200";
+}
+
+function readableQuestionText(question, fallback) {
+  const candidates = [
+    question?.title,
+    question?.prompt,
+    question?.content?.passage_title,
+    question?.content?.title,
+    question?.content?.body,
+    question?.instructions,
+  ];
+  const value = candidates.find(
+    (item) => typeof item === "string" && /[\p{L}\p{N}]/u.test(item),
+  );
+  if (!value) return fallback;
+  const compact = value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return compact.length > 170 ? `${compact.slice(0, 167)}…` : compact;
+}
+
+function visualEditorHref(questionId, returnTo) {
+  const params = new URLSearchParams({ questionId });
+  if (returnTo) params.set("returnTo", returnTo);
+  return `/admin/content/exercises/questions/edit?${params.toString()}`;
+}
+
+function QuestionComposerCard({
+  question,
+  fallbackLabel,
+  returnTo,
+  index,
+  pinned = false,
+  currentQuestion = null,
+  onUseCurrent = null,
+  onMoveUp = null,
+  onMoveDown = null,
+  onRemove = null,
+}) {
+  const title = readableQuestionText(question, fallbackLabel);
+  const questionId = question?.questionId || question?.id;
+  const usedVersionId = question?.questionVersionId || question?.versionId;
+  const currentVersionId = currentQuestion?.versionId || question?.currentVersionId;
+  const hasNewerVersion = Boolean(
+    currentVersionId && usedVersionId && currentVersionId !== usedVersionId,
+  );
+  const previewItem = question
+    ? {
+        id: `composer-preview-${usedVersionId || questionId}`,
+        question: {
+          type: question.question_type,
+          prompt: question.prompt,
+          instructions: question.instructions,
+          content: question.content || {},
+        },
+        result: null,
+      }
+    : null;
+
+  return (
+    <article className="rounded-xl border border-ink/10 bg-white p-3.5 shadow-sm dark:border-white/10 dark:bg-white/[0.035]">
+      <div className="flex items-start gap-3">
+        {Number.isFinite(index) ? (
+          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mint text-xs font-black text-moss dark:bg-emerald-300/15 dark:text-emerald-200">
+            {index + 1}
+          </span>
+        ) : null}
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-1.5 text-[0.65rem] font-black">
+            <span className="text-moss dark:text-emerald-300">
+              {question?.publicId || fallbackLabel}
+            </span>
+            <span className="text-ink/30 dark:text-white/30">·</span>
+            <span className="text-ink/55 dark:text-white/55">
+              {questionTypeLabels[question?.question_type] ||
+                question?.question_type ||
+                "Tipologia non disponibile"}
+            </span>
+            {question?.version_number ? (
+              <span className="rounded-full bg-linen px-2 py-0.5 text-ink/55 dark:bg-white/10 dark:text-white/55">
+                v{question.version_number}
+              </span>
+            ) : null}
+            {pinned ? (
+              <span className="rounded-full bg-violet-100 px-2 py-0.5 text-violet-800 dark:bg-violet-300/15 dark:text-violet-200">
+                Sempre presente
+              </span>
+            ) : null}
+          </div>
+          <p className="mt-1.5 text-sm font-bold leading-5 text-ink dark:text-white">
+            {title}
+          </p>
+          {hasNewerVersion ? (
+            <p className="mt-2 text-xs font-semibold leading-5 text-amber-800 dark:text-amber-200">
+              Questa composizione usa una versione precedente della domanda.
+            </p>
+          ) : null}
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {previewItem ? (
+              <details className="group w-full rounded-lg border border-ink/10 bg-linen/20 dark:border-white/10 dark:bg-black/10">
+                <summary className="cursor-pointer list-none px-3 py-2 text-xs font-black text-ink marker:hidden dark:text-white">
+                  <span className="group-open:hidden">Mostra anteprima studente</span>
+                  <span className="hidden group-open:inline">Nascondi anteprima</span>
+                </summary>
+                <div className="border-t border-ink/10 p-3 dark:border-white/10">
+                  <ExerciseQuestionRenderer
+                    item={previewItem}
+                    answer={null}
+                    onChange={() => {}}
+                    disabled
+                  />
+                </div>
+              </details>
+            ) : (
+              <p className="w-full rounded-lg border border-dashed border-amber-300 bg-amber-50 p-3 text-xs font-bold text-amber-900 dark:border-amber-300/25 dark:bg-amber-300/10 dark:text-amber-100">
+                Anteprima non disponibile. L’identificativo salvato resta invariato.
+              </p>
+            )}
+            {questionId ? (
+              <Link
+                to={visualEditorHref(questionId, returnTo)}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full bg-ink px-3 py-1.5 text-[0.7rem] font-black text-white dark:bg-emerald-300 dark:text-[#102019]"
+              >
+                Modifica visivamente ↗
+              </Link>
+            ) : null}
+            {hasNewerVersion && onUseCurrent ? (
+              <button
+                type="button"
+                onClick={onUseCurrent}
+                className="rounded-full bg-amber-100 px-3 py-1.5 text-[0.7rem] font-black text-amber-950 dark:bg-amber-300/15 dark:text-amber-100"
+              >
+                Usa la versione più recente
+              </button>
+            ) : null}
+            {onMoveUp ? (
+              <button type="button" onClick={onMoveUp} className="text-[0.7rem] font-black underline">
+                Su
+              </button>
+            ) : null}
+            {onMoveDown ? (
+              <button type="button" onClick={onMoveDown} className="text-[0.7rem] font-black underline">
+                Giù
+              </button>
+            ) : null}
+            {onRemove ? (
+              <button
+                type="button"
+                onClick={onRemove}
+                className="ml-auto text-[0.7rem] font-black text-red-700 underline dark:text-red-300"
+              >
+                Rimuovi
+              </button>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
 }
 
 function mapDetail(detail) {
@@ -148,6 +324,10 @@ export default function AdminExerciseComposer() {
   const [catalogSearch, setCatalogSearch] = useState("");
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewAnswers, setPreviewAnswers] = useState({});
+  const [contentPreviews, setContentPreviews] = useState({ questions: [], pools: [] });
+  const [contentPreviewError, setContentPreviewError] = useState("");
+  const [previewRefreshToken, setPreviewRefreshToken] = useState(0);
+  const [refreshingContent, setRefreshingContent] = useState(false);
 
   async function loadBase() {
     setLoading(true);
@@ -265,6 +445,74 @@ export default function AdminExerciseComposer() {
     () => new Map(questions.map((question) => [question.id, question])),
     [questions],
   );
+  const referencedQuestionVersionIds = useMemo(
+    () => [
+      ...new Set(
+        sections.flatMap((section) =>
+          section.fixedQuestions.map((item) => item.questionVersionId),
+        ),
+      ),
+    ].filter(Boolean),
+    [sections],
+  );
+  const referencedPoolVersionIds = useMemo(
+    () => [
+      ...new Set(
+        sections.flatMap((section) =>
+          section.poolRules.map((rule) => rule.poolVersionId),
+        ),
+      ),
+    ].filter(Boolean),
+    [sections],
+  );
+  const contentReferenceKey = `${referencedQuestionVersionIds.slice().sort().join(",")}|${referencedPoolVersionIds.slice().sort().join(",")}`;
+  useEffect(() => {
+    let active = true;
+    if (!referencedQuestionVersionIds.length && !referencedPoolVersionIds.length) {
+      setContentPreviews({ questions: [], pools: [] });
+      setContentPreviewError("");
+      return () => {
+        active = false;
+      };
+    }
+    setContentPreviewError("");
+    loadExerciseComposerContentPreviews({
+      questionVersionIds: referencedQuestionVersionIds,
+      poolVersionIds: referencedPoolVersionIds,
+    })
+      .then((result) => {
+        if (active) setContentPreviews(result);
+      })
+      .catch((previewError) => {
+        if (active) {
+          setContentPreviewError(
+            previewError.message || "Non è stato possibile caricare le anteprime.",
+          );
+        }
+      });
+    return () => {
+      active = false;
+    };
+    // The serialized key avoids reloading previews when only section copy changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contentReferenceKey, previewRefreshToken]);
+  const questionPreviewMap = useMemo(
+    () =>
+      new Map(
+        contentPreviews.questions.map((question) => [
+          question.questionVersionId,
+          question,
+        ]),
+      ),
+    [contentPreviews.questions],
+  );
+  const poolPreviewMap = useMemo(
+    () =>
+      new Map(
+        contentPreviews.pools.map((pool) => [pool.poolVersionId, pool]),
+      ),
+    [contentPreviews.pools],
+  );
   const questionTypes = useMemo(
     () =>
       [
@@ -312,6 +560,9 @@ export default function AdminExerciseComposer() {
     (sum, section) => sum + sectionQuestionCount(section, poolMap),
     0,
   );
+  const composerReturnTo = exercise.id
+    ? `/admin/content/exercises/composer?exerciseId=${exercise.id}`
+    : "/admin/content/exercises/composer?new=1";
 
   function updateSelectedSection(patch) {
     setSections((current) =>
@@ -379,6 +630,20 @@ export default function AdminExerciseComposer() {
     [current[index], current[target]] = [current[target], current[index]];
     updateSelectedSection({ fixedQuestions: current });
   }
+  function useCurrentFixedQuestion(questionId) {
+    const currentQuestion = questionMap.get(questionId);
+    if (!currentQuestion?.versionId) return;
+    updateSelectedSection({
+      fixedQuestions: selectedSection.fixedQuestions.map((item) =>
+        item.questionId === questionId
+          ? { ...item, questionVersionId: currentQuestion.versionId }
+          : item,
+      ),
+    });
+    setSuccess(
+      `${currentQuestion.publicId}: verrà usata la versione più recente al prossimo salvataggio dell’esercizio.`,
+    );
+  }
   function addPoolRule() {
     const pool = poolMap.get(selectedPoolId);
     if (
@@ -420,6 +685,38 @@ export default function AdminExerciseComposer() {
           : "pool"
         : "fixed",
     });
+  }
+  function useCurrentPoolVersion(index) {
+    const rule = selectedSection.poolRules[index];
+    const currentPool = poolMap.get(rule?.poolId);
+    if (!currentPool?.versionId) return;
+    updatePoolRule(index, {
+      poolVersionId: currentPool.versionId,
+      questionCount: Math.max(
+        1,
+        Math.min(
+          Number(rule.questionCount) || 1,
+          Number(currentPool.questionCount) || 1,
+        ),
+      ),
+    });
+    setSuccess(
+      `${currentPool.publicId}: la versione corrente del pool verrà usata al prossimo salvataggio dell’esercizio.`,
+    );
+  }
+
+  async function refreshVisualContent() {
+    setRefreshingContent(true);
+    setError("");
+    try {
+      await loadBase();
+      setPreviewRefreshToken((value) => value + 1);
+      setSuccess(
+        "Domande e pool aggiornati. Le versioni già usate restano bloccate finché non scegli di sostituirle.",
+      );
+    } finally {
+      setRefreshingContent(false);
+    }
   }
 
   async function save() {
@@ -481,8 +778,9 @@ export default function AdminExerciseComposer() {
                   Exercise Composer
                 </h1>
                 <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
-                  Costruisci l’esercizio per sezioni. Ogni salvataggio crea una
-                  nuova versione e lascia intatte le assegnazioni precedenti.
+                  Costruisci struttura e contenuti visivamente, senza modificare
+                  JSON. Ogni salvataggio crea una nuova versione e lascia intatte
+                  le assegnazioni precedenti.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -903,7 +1201,12 @@ export default function AdminExerciseComposer() {
                       />
                     </label>
                   </div>
-                  <div className="mt-6 grid gap-6 lg:grid-cols-2">
+                  {contentPreviewError ? (
+                    <div className="mt-5 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm font-bold text-amber-950 dark:border-amber-300/25 dark:bg-amber-300/10 dark:text-amber-100">
+                      Le associazioni restano modificabili, ma alcune anteprime non sono disponibili: {contentPreviewError}
+                    </div>
+                  ) : null}
+                  <div className="mt-6 grid gap-8">
                     <div>
                       <div className="flex items-end justify-between gap-3">
                         <div>
@@ -914,6 +1217,14 @@ export default function AdminExerciseComposer() {
                             {selectedSection.fixedQuestions.length}
                           </h3>
                         </div>
+                        <button
+                          type="button"
+                          disabled={refreshingContent}
+                          onClick={refreshVisualContent}
+                          className="rounded-full border border-ink/15 px-3 py-1.5 text-[0.7rem] font-black text-ink disabled:opacity-40 dark:border-white/20 dark:text-white"
+                        >
+                          {refreshingContent ? "Aggiornamento…" : "Aggiorna contenuti"}
+                        </button>
                       </div>
                       <div className="mt-3 grid gap-2 md:grid-cols-[minmax(8rem,1fr)_7rem_10rem]">
                         <input
@@ -951,63 +1262,80 @@ export default function AdminExerciseComposer() {
                       </div>
                       <div className="mt-3 max-h-80 divide-y divide-ink/10 overflow-y-auto border-y border-ink/10 dark:divide-white/10 dark:border-white/10">
                         {filteredQuestions.map((question) => (
-                          <label
+                          <div
                             key={question.id}
-                            className={`flex cursor-pointer items-start gap-3 py-3 ${fixedSet.has(question.id) ? "bg-mint/20 dark:bg-emerald-400/[0.06]" : ""}`}
+                            className={`flex items-start gap-3 py-3 ${fixedSet.has(question.id) ? "bg-mint/20 dark:bg-emerald-400/[0.06]" : ""}`}
                           >
                             <input
                               type="checkbox"
+                              aria-label={`${fixedSet.has(question.id) ? "Rimuovi" : "Aggiungi"} ${question.publicId}`}
                               checked={fixedSet.has(question.id)}
                               onChange={() => toggleFixedQuestion(question)}
                               className="mt-1"
                             />
-                            <div>
+                            <div className="min-w-0 flex-1">
                               <p className="text-xs font-black text-moss dark:text-emerald-300">
                                 {question.publicId} · {question.question_type}
                               </p>
                               <p className="mt-1 line-clamp-2 text-sm font-bold leading-5 text-ink dark:text-white">
-                                {question.title || question.prompt}
+                                {readableQuestionText(
+                                  question,
+                                  `${question.publicId}: contenuto da verificare`,
+                                )}
                               </p>
                             </div>
-                          </label>
+                            <Link
+                              to={visualEditorHref(question.id, composerReturnTo)}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="shrink-0 text-[0.65rem] font-black text-violet-700 underline dark:text-violet-300"
+                            >
+                              Modifica ↗
+                            </Link>
+                          </div>
                         ))}
                       </div>
                       {selectedSection.fixedQuestions.length ? (
                         <div className="mt-4 grid gap-2">
                           {selectedSection.fixedQuestions.map((item, index) => {
-                            const question = questionMap.get(item.questionId);
-                            return (
-                              <div
-                                key={item.questionId}
-                                className="flex items-center gap-2 rounded-lg border border-ink/10 p-2 dark:border-white/10"
-                              >
-                                <span className="grid h-6 w-6 place-items-center rounded-full bg-mint text-[0.65rem] font-black text-moss">
-                                  {index + 1}
-                                </span>
-                                <p className="min-w-0 flex-1 truncate text-xs font-black text-ink dark:text-white">
-                                  {question?.publicId} ·{" "}
-                                  {question?.title || question?.prompt}
-                                </p>
-                                <button
-                                  type="button"
-                                  disabled={index === 0}
-                                  onClick={() => moveFixed(item.questionId, -1)}
-                                  className="text-[0.65rem] font-black disabled:opacity-30"
-                                >
-                                  Su
-                                </button>
-                                <button
-                                  type="button"
-                                  disabled={
-                                    index ===
-                                    selectedSection.fixedQuestions.length - 1
+                            const currentQuestion = questionMap.get(item.questionId);
+                            const exactQuestion = questionPreviewMap.get(
+                              item.questionVersionId,
+                            );
+                            const question = exactQuestion ||
+                              (currentQuestion
+                                ? {
+                                    ...currentQuestion,
+                                    questionId: currentQuestion.id,
+                                    questionVersionId: currentQuestion.versionId,
                                   }
-                                  onClick={() => moveFixed(item.questionId, 1)}
-                                  className="text-[0.65rem] font-black disabled:opacity-30"
-                                >
-                                  Giù
-                                </button>
-                              </div>
+                                : null);
+                            return (
+                              <QuestionComposerCard
+                                key={item.questionId}
+                                question={question}
+                                currentQuestion={currentQuestion}
+                                fallbackLabel={`Domanda ${index + 1}`}
+                                returnTo={composerReturnTo}
+                                index={index}
+                                onUseCurrent={
+                                  currentQuestion?.versionId &&
+                                  currentQuestion.versionId !== item.questionVersionId
+                                    ? () => useCurrentFixedQuestion(item.questionId)
+                                    : null
+                                }
+                                onMoveUp={
+                                  index > 0
+                                    ? () => moveFixed(item.questionId, -1)
+                                    : null
+                                }
+                                onMoveDown={
+                                  index < selectedSection.fixedQuestions.length - 1
+                                    ? () => moveFixed(item.questionId, 1)
+                                    : null
+                                }
+                                onRemove={() => toggleFixedQuestion({ id: item.questionId })}
+                              />
                             );
                           })}
                         </div>
@@ -1056,40 +1384,78 @@ export default function AdminExerciseComposer() {
                       <div className="mt-4 grid gap-3">
                         {selectedSection.poolRules.map((rule, index) => {
                           const poolItem = poolMap.get(rule.poolId);
+                          const lockedPool = poolPreviewMap.get(
+                            rule.poolVersionId,
+                          );
+                          const poolQuestionCount =
+                            lockedPool?.questions?.length ??
+                            poolItem?.questionCount ??
+                            0;
+                          const hasNewerPoolVersion = Boolean(
+                            poolItem?.versionId &&
+                              poolItem.versionId !== rule.poolVersionId,
+                          );
                           return (
                             <article
                               key={`${rule.poolId}-${index}`}
                               className="rounded-xl border border-violet-200 bg-violet-50/50 p-4 dark:border-violet-300/20 dark:bg-violet-400/[0.06]"
                             >
                               <div className="flex items-start justify-between gap-3">
-                                <div>
+                                <div className="min-w-0">
                                   <p className="text-xs font-black text-violet-700 dark:text-violet-300">
-                                    {poolItem?.publicId}
+                                    {lockedPool?.publicId || poolItem?.publicId || `Pool ${index + 1}`}
                                   </p>
                                   <p className="mt-1 text-sm font-black text-ink dark:text-white">
-                                    {poolItem?.title || poolItem?.name}
+                                    {lockedPool?.title ||
+                                      lockedPool?.name ||
+                                      poolItem?.title ||
+                                      poolItem?.name ||
+                                      "Pool senza titolo"}
                                   </p>
                                   <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">
-                                    Versione bloccata{" "}
-                                    {String(rule.poolVersionId).slice(0, 8)} ·{" "}
-                                    {poolItem?.questionCount || 0} disponibili
+                                    Versione usata v{lockedPool?.version_number || "?"} ·{" "}
+                                    {poolQuestionCount} domande disponibili
                                   </p>
+                                  {hasNewerPoolVersion ? (
+                                    <p className="mt-2 text-xs font-semibold leading-5 text-amber-800 dark:text-amber-200">
+                                      Il pool ha una versione più recente. L’esercizio resta sulla versione usata finché non la sostituisci.
+                                    </p>
+                                  ) : null}
                                 </div>
+                                <div className="flex shrink-0 flex-col items-end gap-2">
+                                  <Link
+                                    to={`/admin/content/exercises/pools?poolId=${encodeURIComponent(rule.poolId)}&returnTo=${encodeURIComponent(composerReturnTo)}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-xs font-black text-violet-700 underline dark:text-violet-300"
+                                  >
+                                    Gestisci pool ↗
+                                  </Link>
+                                  <button
+                                    type="button"
+                                    onClick={() => removePoolRule(index)}
+                                    className="text-xs font-black text-red-700 underline dark:text-red-300"
+                                  >
+                                    Rimuovi
+                                  </button>
+                                </div>
+                              </div>
+                              {hasNewerPoolVersion ? (
                                 <button
                                   type="button"
-                                  onClick={() => removePoolRule(index)}
-                                  className="text-xs font-black text-red-700 underline dark:text-red-300"
+                                  onClick={() => useCurrentPoolVersion(index)}
+                                  className="mt-3 rounded-full bg-amber-100 px-3 py-1.5 text-[0.7rem] font-black text-amber-950 dark:bg-amber-300/15 dark:text-amber-100"
                                 >
-                                  Rimuovi
+                                  Usa la versione corrente v{poolItem?.version_number}
                                 </button>
-                              </div>
+                              ) : null}
                               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                                 <label className="text-xs font-black text-ink/60 dark:text-white/60">
                                   Quante domande
                                   <input
                                     type="number"
                                     min="1"
-                                    max={poolItem?.questionCount || 1}
+                                    max={poolQuestionCount || 1}
                                     value={rule.questionCount}
                                     onChange={(event) =>
                                       updatePoolRule(index, {
@@ -1124,6 +1490,42 @@ export default function AdminExerciseComposer() {
                                   </select>
                                 </label>
                               </div>
+                              <details className="group mt-4 rounded-xl border border-violet-200 bg-white/70 dark:border-violet-300/15 dark:bg-black/10">
+                                <summary className="cursor-pointer list-none px-4 py-3 text-xs font-black text-violet-800 marker:hidden dark:text-violet-200">
+                                  <span className="group-open:hidden">
+                                    Visualizza e correggi le {poolQuestionCount} domande del pool
+                                  </span>
+                                  <span className="hidden group-open:inline">
+                                    Nascondi le domande del pool
+                                  </span>
+                                </summary>
+                                <div className="max-h-[34rem] space-y-3 overflow-y-auto border-t border-violet-200 p-3 dark:border-violet-300/15">
+                                  {lockedPool?.questions?.map((membership, questionIndex) => {
+                                    const currentQuestion = questionMap.get(
+                                      membership.question_id,
+                                    );
+                                    return (
+                                      <QuestionComposerCard
+                                        key={`${membership.question_id}-${membership.question_version_id || questionIndex}`}
+                                        question={membership.question}
+                                        currentQuestion={currentQuestion}
+                                        fallbackLabel={`Domanda pool ${questionIndex + 1}`}
+                                        returnTo={composerReturnTo}
+                                        index={questionIndex}
+                                        pinned={Boolean(membership.pinned)}
+                                      />
+                                    );
+                                  })}
+                                  {!lockedPool?.questions?.length ? (
+                                    <p className="rounded-lg border border-dashed border-ink/15 p-3 text-sm font-semibold text-ink/55 dark:border-white/15 dark:text-white/55">
+                                      Nessuna anteprima disponibile per questa versione. La regola salvata non viene modificata.
+                                    </p>
+                                  ) : null}
+                                  <p className="rounded-lg bg-violet-50 p-3 text-xs font-semibold leading-5 text-violet-950 dark:bg-violet-300/10 dark:text-violet-100">
+                                    Modificare una domanda crea una nuova versione. Per usarla qui, salva una nuova versione nel Pool Builder, torna al Composer, premi “Aggiorna contenuti” e scegli “Usa la versione corrente”.
+                                  </p>
+                                </div>
+                              </details>
                             </article>
                           );
                         })}

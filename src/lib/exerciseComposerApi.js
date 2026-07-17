@@ -48,6 +48,127 @@ export async function loadExerciseComposerDetail(exerciseId) {
   return data || null;
 }
 
+function uniqueIds(values = []) {
+  return [...new Set(values.filter(Boolean))];
+}
+
+export async function loadExerciseComposerContentPreviews({
+  questionVersionIds = [],
+  poolVersionIds = [],
+} = {}) {
+  const requestedQuestionVersionIds = uniqueIds(questionVersionIds);
+  const requestedPoolVersionIds = uniqueIds(poolVersionIds);
+
+  const [{ data: poolVersions, error: poolVersionError }, { data: memberships, error: membershipError }] = await Promise.all([
+    requestedPoolVersionIds.length
+      ? supabase
+        .from('exercise_builder_pool_versions')
+        .select('id, pool_id, version_number, title, name, description, level, topic, review_status')
+        .in('id', requestedPoolVersionIds)
+      : Promise.resolve({ data: [], error: null }),
+    requestedPoolVersionIds.length
+      ? supabase
+        .from('exercise_builder_pool_questions')
+        .select('pool_version_id, question_id, question_version_id, pinned, sequence_index')
+        .in('pool_version_id', requestedPoolVersionIds)
+        .order('sequence_index', { ascending: true })
+      : Promise.resolve({ data: [], error: null }),
+  ]);
+  throwIfError(poolVersionError);
+  throwIfError(membershipError);
+
+  const referencedQuestionVersionIds = uniqueIds([
+    ...requestedQuestionVersionIds,
+    ...(memberships || []).map((item) => item.question_version_id),
+  ]);
+  const { data: referencedVersions, error: referencedVersionError } = referencedQuestionVersionIds.length
+    ? await supabase
+      .from('exercise_builder_question_versions')
+      .select('id, question_id, version_number, question_type, title, prompt, instructions, level, topic, subtopic, primary_skill, review_status, content, grading, feedback, diagnostics')
+      .in('id', referencedQuestionVersionIds)
+    : { data: [], error: null };
+  throwIfError(referencedVersionError);
+
+  const questionIds = uniqueIds([
+    ...(memberships || []).map((item) => item.question_id),
+    ...(referencedVersions || []).map((item) => item.question_id),
+  ]);
+  const { data: questionEntities, error: questionEntityError } = questionIds.length
+    ? await supabase
+      .from('exercise_builder_questions')
+      .select('id, public_id, status, current_version_id')
+      .in('id', questionIds)
+    : { data: [], error: null };
+  throwIfError(questionEntityError);
+
+  const loadedVersionIds = new Set((referencedVersions || []).map((item) => item.id));
+  const missingCurrentVersionIds = uniqueIds(
+    (questionEntities || [])
+      .map((item) => item.current_version_id)
+      .filter((id) => !loadedVersionIds.has(id)),
+  );
+  const { data: currentVersions, error: currentVersionError } = missingCurrentVersionIds.length
+    ? await supabase
+      .from('exercise_builder_question_versions')
+      .select('id, question_id, version_number, question_type, title, prompt, instructions, level, topic, subtopic, primary_skill, review_status, content, grading, feedback, diagnostics')
+      .in('id', missingCurrentVersionIds)
+    : { data: [], error: null };
+  throwIfError(currentVersionError);
+
+  const entityMap = new Map((questionEntities || []).map((item) => [item.id, item]));
+  const questionPreviews = [...(referencedVersions || []), ...(currentVersions || [])].map((version) => {
+    const entity = entityMap.get(version.question_id) || {};
+    return {
+      ...version,
+      questionId: version.question_id,
+      questionVersionId: version.id,
+      publicId: entity.public_id || null,
+      status: entity.status || null,
+      currentVersionId: entity.current_version_id || null,
+      isCurrent: entity.current_version_id === version.id,
+    };
+  });
+  const versionMap = new Map(questionPreviews.map((item) => [item.questionVersionId, item]));
+  const currentByQuestion = new Map(
+    questionPreviews.filter((item) => item.isCurrent).map((item) => [item.questionId, item]),
+  );
+
+  const resolvedPoolIds = uniqueIds((poolVersions || []).map((item) => item.pool_id));
+  const { data: poolEntities, error: poolEntityError } = resolvedPoolIds.length
+    ? await supabase
+      .from('exercise_builder_pools')
+      .select('id, public_id, status, current_version_id')
+      .in('id', resolvedPoolIds)
+    : { data: [], error: null };
+  throwIfError(poolEntityError);
+  const poolEntityMap = new Map((poolEntities || []).map((item) => [item.id, item]));
+
+  return {
+    questions: questionPreviews,
+    pools: (poolVersions || []).map((version) => {
+      const entity = poolEntityMap.get(version.pool_id) || {};
+      return {
+        ...version,
+        poolId: version.pool_id,
+        poolVersionId: version.id,
+        publicId: entity.public_id || null,
+        status: entity.status || null,
+        currentVersionId: entity.current_version_id || null,
+        isCurrent: entity.current_version_id === version.id,
+        questions: (memberships || [])
+          .filter((item) => item.pool_version_id === version.id)
+          .map((membership) => ({
+            ...membership,
+            question:
+              versionMap.get(membership.question_version_id) ||
+              currentByQuestion.get(membership.question_id) ||
+              null,
+          })),
+      };
+    }),
+  };
+}
+
 export async function saveExerciseComposerVersion({ exerciseId = null, exercise, sections }) {
   const { data, error } = await supabase.rpc('admin_save_exercise_builder_exercise_version', {
     p_exercise_id: exerciseId,

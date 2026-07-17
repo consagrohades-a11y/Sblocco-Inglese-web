@@ -60,6 +60,8 @@ function statusClass(status) {
 
 export default function AdminExercisePools() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const requestedReturnTo = searchParams.get('returnTo') || '';
+  const returnTo = requestedReturnTo.startsWith('/admin/content/exercises/') ? requestedReturnTo : '';
   const [pools, setPools] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [pool, setPool] = useState({ ...EMPTY_POOL });
@@ -133,7 +135,7 @@ export default function AdminExercisePools() {
         questionVersionId: item.question_version_id,
         pinned: Boolean(item.pinned),
       })));
-      setSearchParams({ poolId });
+      setSearchParams({ poolId, ...(returnTo ? { returnTo } : {}) });
     } catch (loadError) { setError(loadError.message || 'Non è stato possibile aprire la pool.'); }
     finally { setLoading(false); }
   }
@@ -141,7 +143,7 @@ export default function AdminExercisePools() {
   function newPool() {
     setPool({ ...EMPTY_POOL });
     setMemberships([]);
-    setSearchParams({ new: '1' });
+    setSearchParams({ new: '1', ...(returnTo ? { returnTo } : {}) });
     setSuccess('Nuova pool pronta. Seleziona le domande e salva.');
     setError('');
   }
@@ -216,7 +218,7 @@ export default function AdminExercisePools() {
 
   return (
     <><SEO title="Pool Builder | Exercise Builder" description="Componi e versiona pool di domande riutilizzabili." /><section className="section-shell py-8 lg:py-10"><div className="mx-auto max-w-[1500px]">
-      <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8"><span className="eyebrow">Exercise Builder</span><div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"><div><h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">Pool Builder</h1><p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">Modificare una pool crea sempre una nuova versione. Gli esercizi già pubblicati continuano a usare la versione precedente.</p></div><div className="flex flex-wrap gap-2"><Link to="/admin/content/exercises/questions" className="rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white">Question Bank</Link><button type="button" onClick={newPool} className="rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white dark:bg-emerald-300 dark:text-surface-950">Nuova pool</button></div></div></header>
+      <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8"><span className="eyebrow">Exercise Builder</span><div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"><div><h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">Pool Builder</h1><p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">Modificare una pool crea sempre una nuova versione. Gli esercizi già pubblicati continuano a usare la versione precedente.</p></div><div className="flex flex-wrap gap-2">{returnTo ? <Link to={returnTo} className="rounded-full border border-violet-300 bg-violet-50 px-4 py-2.5 text-sm font-black text-violet-900 dark:border-violet-300/25 dark:bg-violet-300/10 dark:text-violet-100">Torna all’esercizio</Link> : null}<Link to="/admin/content/exercises/questions" className="rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white">Question Bank</Link><button type="button" onClick={newPool} className="rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white dark:bg-emerald-300 dark:text-surface-950">Nuova pool</button></div></div></header>
       {error ? <div className="mt-5 border-l-4 border-red-400 bg-red-50 p-4 text-sm font-bold text-red-950">{error}</div> : null}{success ? <div className="mt-5 border-l-4 border-moss bg-mint/30 p-4 text-sm font-bold text-ink dark:bg-emerald-400/10 dark:text-emerald-100">{success}</div> : null}
 
       <div className="mt-6 grid items-start gap-6 xl:grid-cols-[17rem_minmax(0,1fr)] 2xl:grid-cols-[17rem_minmax(0,1fr)_22rem]">

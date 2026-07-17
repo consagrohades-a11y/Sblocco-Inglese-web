@@ -1716,6 +1716,10 @@ function DiagnosticPatterns({ question, setQuestion, codes }) {
 
 export default function AdminExerciseQuestionEditorV2() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const requestedReturnTo = searchParams.get("returnTo") || "";
+  const returnTo = requestedReturnTo.startsWith("/admin/content/exercises/")
+    ? requestedReturnTo
+    : "";
   const [catalog, setCatalog] = useState([]);
   const [codes, setCodes] = useState([]);
   const [question, setQuestion] = useState(emptyQuestion());
@@ -1808,7 +1812,7 @@ export default function AdminExerciseQuestionEditorV2() {
       if (!detail) throw new Error("Domanda non trovata.");
       setQuestion(fromDetail(detail));
       setPreviewAnswer(null);
-      setSearchParams({ questionId });
+      setSearchParams({ questionId, ...(returnTo ? { returnTo } : {}) });
       return detail;
     } catch (loadError) {
       setError(loadError.message || "Non è stato possibile aprire la domanda.");
@@ -1830,6 +1834,7 @@ export default function AdminExerciseQuestionEditorV2() {
     setSearchParams({
       new: "1",
       ...(type !== "multiple_choice" ? { type } : {}),
+      ...(returnTo ? { returnTo } : {}),
     });
     setSuccess(
       type === "content_block"
@@ -2042,6 +2047,14 @@ export default function AdminExerciseQuestionEditorV2() {
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
+                {returnTo ? (
+                  <Link
+                    to={returnTo}
+                    className="rounded-full border border-violet-300 bg-violet-50 px-4 py-2.5 text-sm font-black text-violet-900 dark:border-violet-300/25 dark:bg-violet-300/10 dark:text-violet-100"
+                  >
+                    Torna all’esercizio
+                  </Link>
+                ) : null}
                 <Link
                   to="/admin/content/exercises/questions"
                   className="rounded-full border border-ink/15 px-4 py-2.5 text-sm font-black text-ink dark:border-white/20 dark:text-white"
