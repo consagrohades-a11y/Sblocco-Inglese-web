@@ -101,6 +101,15 @@ Verificato con screenshot del dev server in dark. **Residuo**: possibile audit v
 
 **Riferimento formula (SQL)**: `score = round(earned/max × 100)`; pesi da `grading.weight`; `nearly_correct` = credito parziale; con produzioni manuali lo score resta provvisorio finché la review non è pubblicata (`approved`); soglia di completamento `required_score` default 70 in `assignment_resources.exercise_config`. Possibile evoluzione: mostrare la soglia allo studente (il payload oggi non la espone — servirebbe aggiungerla in `exercise_builder_attempt_payload`).
 
+### 5. Composer: domande ridotte a puntini e pool non ispezionabili — ✅ RISOLTO
+
+**Fix applicati**:
+- Il Composer carica le versioni esatte delle domande fisse e delle domande contenute nelle versioni dei pool usate dall’esercizio, anche quando non coincidono più con la versione corrente.
+- Le righe minimali sono sostituite da card leggibili con ID, tipo, versione, titolo/prompt, anteprima studente e accesso all’editor visuale.
+- Ogni pool collegato espone le domande della versione bloccata, distingue quelle sempre presenti e segnala quando esiste una versione più recente.
+- L’admin può adottare esplicitamente la versione corrente di una domanda fissa o di un pool; gli esercizi già salvati non cambiano automaticamente.
+- Question Editor e Pool Builder conservano un ritorno sicuro al Composer. I formati JSON, le RPC di salvataggio e il versioning esistenti restano invariati.
+
 ## Analisi sommaria e proposte (stato al 2026-07-17 sera)
 
 Il sito è due prodotti in uno: vetrina marketing curata (funnel simulazione → corsi) e una piattaforma didattica ambiziosa (trainer SRS, exercise builder versionato, assegnazioni, analytics). La logica di dominio è solida; i punti deboli erano coerenza visiva, feedback all'utente admin e allineamento migrazioni remote/locali.
