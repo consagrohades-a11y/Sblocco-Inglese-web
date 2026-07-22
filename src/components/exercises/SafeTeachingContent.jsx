@@ -96,11 +96,13 @@ export function parseSafeTeachingContent(value) {
   const append = (child) => stack.at(-1).children.push(child);
   const appendText = (text) => {
     String(text)
-      .split(/(\*\*[^*]+\*\*)/g)
+      .split(/(\*\*[^*]+\*\*|\*[^*\n]+\*)/g)
       .filter(Boolean)
       .forEach((part) => {
         if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
           append(<strong key={`rich-${key++}`}>{part.slice(2, -2)}</strong>);
+        } else if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
+          append(<em key={`rich-${key++}`}>{part.slice(1, -1)}</em>);
         } else {
           append(part);
         }
