@@ -17,6 +17,18 @@ export function parseSafeTeachingContent(value) {
   let key = 0;
 
   const append = (child) => stack.at(-1).children.push(child);
+  const appendText = (text) => {
+    String(text)
+      .split(/(\*\*[^*]+\*\*)/g)
+      .filter(Boolean)
+      .forEach((part) => {
+        if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+          append(<strong key={`rich-${key++}`}>{part.slice(2, -2)}</strong>);
+        } else {
+          append(part);
+        }
+      });
+  };
   const closeTop = () => {
     if (stack.length <= 1) return;
     const frame = stack.pop();
@@ -26,7 +38,7 @@ export function parseSafeTeachingContent(value) {
   tokens.forEach((token) => {
     const match = token.match(TAG_NAME);
     if (!match) {
-      append(token);
+      appendText(token);
       return;
     }
     const tag = match[1].toLowerCase();
