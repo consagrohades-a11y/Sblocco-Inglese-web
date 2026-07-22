@@ -1,7 +1,8 @@
 import { supabase } from './supabaseClient.js';
+import { fetchRowsInChunks, throwSupabaseError } from './supabaseBatching.js';
 
-function throwIfError(error) {
-  if (error) throw error;
+function throwIfError(error, context = 'Caricamento banca esercizi') {
+  throwSupabaseError(error, context);
 }
 
 function currentVersionMap(rows = []) {
@@ -17,22 +18,24 @@ export async function loadExerciseQuestionBank() {
   throwIfError(questionError);
 
   const versionIds = (questions || []).map((item) => item.current_version_id).filter(Boolean);
-  const { data: versions, error: versionError } = versionIds.length
-    ? await supabase
+  const versions = await fetchRowsInChunks(
+    versionIds,
+    (ids) => supabase
       .from('exercise_builder_question_versions')
       .select('id, question_id, version_number, question_type, title, prompt, instructions, level, topic, subtopic, primary_skill, learning_objective, difficulty, tags, review_status, content, grading, feedback, diagnostics')
-      .in('id', versionIds)
-    : { data: [], error: null };
-  throwIfError(versionError);
+      .in('id', ids),
+    { context: 'Caricamento versioni delle domande' },
+  );
 
   const questionIds = (questions || []).map((item) => item.id);
-  const { data: memberships, error: membershipError } = questionIds.length
-    ? await supabase
+  const memberships = await fetchRowsInChunks(
+    questionIds,
+    (ids) => supabase
       .from('exercise_builder_pool_questions')
       .select('question_id, pool_version_id')
-      .in('question_id', questionIds)
-    : { data: [], error: null };
-  throwIfError(membershipError);
+      .in('question_id', ids),
+    { context: 'Caricamento appartenenze ai pool' },
+  );
 
   const poolCounts = new Map();
   (memberships || []).forEach((membership) => {
@@ -68,21 +71,23 @@ export async function loadExercisePools() {
   throwIfError(poolError);
 
   const versionIds = (pools || []).map((item) => item.current_version_id).filter(Boolean);
-  const { data: versions, error: versionError } = versionIds.length
-    ? await supabase
+  const versions = await fetchRowsInChunks(
+    versionIds,
+    (ids) => supabase
       .from('exercise_builder_pool_versions')
       .select('id, pool_id, version_number, title, name, description, level, topic, subtopic, primary_skill, tags, selection_defaults, foundation_links, review_status')
-      .in('id', versionIds)
-    : { data: [], error: null };
-  throwIfError(versionError);
+      .in('id', ids),
+    { context: 'Caricamento versioni dei pool' },
+  );
 
-  const { data: memberships, error: membershipError } = versionIds.length
-    ? await supabase
+  const memberships = await fetchRowsInChunks(
+    versionIds,
+    (ids) => supabase
       .from('exercise_builder_pool_questions')
       .select('pool_version_id, question_id, pinned')
-      .in('pool_version_id', versionIds)
-    : { data: [], error: null };
-  throwIfError(membershipError);
+      .in('pool_version_id', ids),
+    { context: 'Caricamento domande dei pool' },
+  );
 
   const stats = new Map();
   (memberships || []).forEach((membership) => {

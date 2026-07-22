@@ -1,7 +1,8 @@
 import { supabase } from './supabaseClient.js';
+import { fetchRowsInChunks, throwSupabaseError } from './supabaseBatching.js';
 
-function throwIfError(error) {
-  if (error) throw error;
+function throwIfError(error, context = 'Caricamento Composer') {
+  throwSupabaseError(error, context);
 }
 
 export async function loadExerciseComposerCatalog() {
@@ -14,13 +15,14 @@ export async function loadExerciseComposerCatalog() {
   throwIfError(exerciseError);
 
   const versionIds = (exercises || []).map((item) => item.current_version_id).filter(Boolean);
-  const { data: versions, error: versionError } = versionIds.length
-    ? await supabase
+  const versions = await fetchRowsInChunks(
+    versionIds,
+    (ids) => supabase
       .from('exercise_builder_exercise_versions')
       .select('id, exercise_id, version_number, title, description, instructions, level, topic, estimated_minutes, review_status, settings')
-      .in('id', versionIds)
-    : { data: [], error: null };
-  throwIfError(versionError);
+      .in('id', ids),
+    { context: 'Caricamento versioni degli esercizi composti' },
+  );
   const versionMap = new Map((versions || []).map((version) => [version.id, version]));
 
   return (exercises || []).map((exercise) => {
@@ -59,47 +61,51 @@ export async function loadExerciseComposerContentPreviews({
   const requestedQuestionVersionIds = uniqueIds(questionVersionIds);
   const requestedPoolVersionIds = uniqueIds(poolVersionIds);
 
-  const [{ data: poolVersions, error: poolVersionError }, { data: memberships, error: membershipError }] = await Promise.all([
-    requestedPoolVersionIds.length
-      ? supabase
+  const [poolVersions, memberships] = await Promise.all([
+    fetchRowsInChunks(
+      requestedPoolVersionIds,
+      (ids) => supabase
         .from('exercise_builder_pool_versions')
         .select('id, pool_id, version_number, title, name, description, level, topic, review_status')
-        .in('id', requestedPoolVersionIds)
-      : Promise.resolve({ data: [], error: null }),
-    requestedPoolVersionIds.length
-      ? supabase
+        .in('id', ids),
+      { context: 'Caricamento anteprime dei pool' },
+    ),
+    fetchRowsInChunks(
+      requestedPoolVersionIds,
+      (ids) => supabase
         .from('exercise_builder_pool_questions')
         .select('pool_version_id, question_id, question_version_id, pinned, sequence_index')
-        .in('pool_version_id', requestedPoolVersionIds)
-        .order('sequence_index', { ascending: true })
-      : Promise.resolve({ data: [], error: null }),
+        .in('pool_version_id', ids)
+        .order('sequence_index', { ascending: true }),
+      { context: 'Caricamento domande nelle anteprime dei pool' },
+    ),
   ]);
-  throwIfError(poolVersionError);
-  throwIfError(membershipError);
 
   const referencedQuestionVersionIds = uniqueIds([
     ...requestedQuestionVersionIds,
     ...(memberships || []).map((item) => item.question_version_id),
   ]);
-  const { data: referencedVersions, error: referencedVersionError } = referencedQuestionVersionIds.length
-    ? await supabase
+  const referencedVersions = await fetchRowsInChunks(
+    referencedQuestionVersionIds,
+    (ids) => supabase
       .from('exercise_builder_question_versions')
       .select('id, question_id, version_number, question_type, title, prompt, instructions, level, topic, subtopic, primary_skill, review_status, content, grading, feedback, diagnostics')
-      .in('id', referencedQuestionVersionIds)
-    : { data: [], error: null };
-  throwIfError(referencedVersionError);
+      .in('id', ids),
+    { context: 'Caricamento versioni delle domande in anteprima' },
+  );
 
   const questionIds = uniqueIds([
     ...(memberships || []).map((item) => item.question_id),
     ...(referencedVersions || []).map((item) => item.question_id),
   ]);
-  const { data: questionEntities, error: questionEntityError } = questionIds.length
-    ? await supabase
+  const questionEntities = await fetchRowsInChunks(
+    questionIds,
+    (ids) => supabase
       .from('exercise_builder_questions')
       .select('id, public_id, status, current_version_id')
-      .in('id', questionIds)
-    : { data: [], error: null };
-  throwIfError(questionEntityError);
+      .in('id', ids),
+    { context: 'Caricamento identità delle domande in anteprima' },
+  );
 
   const loadedVersionIds = new Set((referencedVersions || []).map((item) => item.id));
   const missingCurrentVersionIds = uniqueIds(
@@ -107,13 +113,14 @@ export async function loadExerciseComposerContentPreviews({
       .map((item) => item.current_version_id)
       .filter((id) => !loadedVersionIds.has(id)),
   );
-  const { data: currentVersions, error: currentVersionError } = missingCurrentVersionIds.length
-    ? await supabase
+  const currentVersions = await fetchRowsInChunks(
+    missingCurrentVersionIds,
+    (ids) => supabase
       .from('exercise_builder_question_versions')
       .select('id, question_id, version_number, question_type, title, prompt, instructions, level, topic, subtopic, primary_skill, review_status, content, grading, feedback, diagnostics')
-      .in('id', missingCurrentVersionIds)
-    : { data: [], error: null };
-  throwIfError(currentVersionError);
+      .in('id', ids),
+    { context: 'Caricamento versioni correnti delle domande' },
+  );
 
   const entityMap = new Map((questionEntities || []).map((item) => [item.id, item]));
   const questionPreviews = [...(referencedVersions || []), ...(currentVersions || [])].map((version) => {
@@ -134,13 +141,14 @@ export async function loadExerciseComposerContentPreviews({
   );
 
   const resolvedPoolIds = uniqueIds((poolVersions || []).map((item) => item.pool_id));
-  const { data: poolEntities, error: poolEntityError } = resolvedPoolIds.length
-    ? await supabase
+  const poolEntities = await fetchRowsInChunks(
+    resolvedPoolIds,
+    (ids) => supabase
       .from('exercise_builder_pools')
       .select('id, public_id, status, current_version_id')
-      .in('id', resolvedPoolIds)
-    : { data: [], error: null };
-  throwIfError(poolEntityError);
+      .in('id', ids),
+    { context: 'Caricamento identità dei pool' },
+  );
   const poolEntityMap = new Map((poolEntities || []).map((item) => [item.id, item]));
 
   return {
