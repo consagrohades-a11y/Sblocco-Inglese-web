@@ -3,6 +3,7 @@ import { ShieldOff, Trash2, UserCheck } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import LearnerDiagnosticPanel from '../components/admin/LearnerDiagnosticPanel.jsx';
+import LearnerNotesPanel from '../components/admin/LearnerNotesPanel.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 
 const languageLabels = { it: 'Italiano', en: 'English' };
@@ -123,6 +124,10 @@ export default function AdminLearnerDetail() {
 
             <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900"><div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-wide text-moss">Assegnazioni</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Attività dello studente</h2></div><p className="text-sm font-bold text-ink/65 dark:text-white/65">Totale: {assignments.length}</p></div>{assignments.length === 0 ? <div className="mt-6 rounded-xl border border-dashed border-ink/15 bg-linen/40 p-5 dark:bg-white/[0.05]"><p className="text-sm font-black text-ink dark:text-white">Nessuna assegnazione</p><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">Crea la prima attività e aggiungi subito i contenuti nel passaggio successivo.</p></div> : <div className="mt-6 divide-y divide-ink/10 dark:divide-white/10">{assignments.map((assignment) => { const overdue = assignment.deadline_at && new Date(assignment.deadline_at) < new Date() && assignment.status !== 'completed'; return <article key={assignment.id} className="py-5 first:pt-0 last:pb-0"><div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div><h3 className="text-base font-black text-ink dark:text-white">{assignment.title}</h3><p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">Creata il {formatDate(assignment.created_at)}</p></div><div className="flex flex-wrap gap-2"><span className="w-fit rounded-full border border-ink/10 bg-linen px-3 py-1.5 text-xs font-black text-ink dark:border-white/10 dark:bg-white/10 dark:text-white">{statusLabels[assignment.status] || assignment.status}</span>{overdue ? <span className="rounded-full bg-red-100 px-3 py-1.5 text-xs font-black text-red-800 dark:bg-red-400/15 dark:text-red-200">Scaduta</span> : null}</div></div><div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold text-ink/65 dark:text-white/65"><span>{assignment.required ? 'Obbligatoria' : 'Facoltativa'}</span>{assignment.estimated_minutes ? <span>{assignment.estimated_minutes} min stimati</span> : null}{assignment.deadline_at ? <span>Scadenza: {formatDate(assignment.deadline_at, true)}</span> : null}</div><Link to={`/admin/learners/${learnerId}/assignments/${assignment.id}/content`} className="focus-ring mt-4 inline-flex min-h-10 items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-black text-white transition hover:bg-moss">Apri e modifica</Link></article>; })}</div>}</section>
           </div>
+          <LearnerNotesPanel
+            learnerId={learnerId}
+            learnerName={learner.display_name || learner.email}
+          />
           <LearnerDiagnosticPanel learnerId={learnerId} />
         </div> : null}
       </div></section>
