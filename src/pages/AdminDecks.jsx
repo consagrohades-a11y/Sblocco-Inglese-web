@@ -182,8 +182,10 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
       return;
     }
     if (nextStatus === 'published' && selectedCardIds.length === 0) {
-      setError('Aggiungi almeno una card prima di pubblicare il deck.');
-      return;
+      const confirmed = window.confirm(
+        'Pubblicare questo deck senza card? Il deck sarà selezionabile nelle assegnazioni, ma non conterrà attività finché non aggiungerai almeno una card.',
+      );
+      if (!confirmed) return;
     }
 
     setSaving(true);
@@ -239,7 +241,11 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
         : nextStatus === 'draft'
           ? 'salvato come bozza'
           : 'salvato';
-    setMessage(`Deck ${actionLabel} con ${selectedCardIds.length} card.`);
+    setMessage(
+      nextStatus === 'published' && selectedCardIds.length === 0
+        ? 'Deck vuoto pubblicato. Potrai aggiungere le card in seguito.'
+        : `Deck ${actionLabel} con ${selectedCardIds.length} card.`,
+    );
     await loadData(deckId);
     setSaving(false);
   }
@@ -297,8 +303,10 @@ export default function AdminDecks({ itemType = 'word', domain = 'general' }) {
                 <p className="mt-2 text-xs font-semibold leading-5 text-ink/65 dark:text-white/65">Pubblica il deck per renderlo selezionabile nelle assegnazioni. Le singole card devono essere pubblicate per essere incluse nello SRS.</p>
               </div>
 
+              {selectedCardIds.length === 0 ? <div className="mt-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-amber-100"><p className="text-sm font-black">Deck vuoto</p><p className="mt-1 text-xs font-semibold leading-5">Puoi pubblicarlo subito e aggiungere le card in seguito. Prima della pubblicazione ti verrà chiesta una conferma.</p></div> : null}
+
               <button type="button" disabled={saving} onClick={() => saveDeck(selected.status || 'draft')} className="focus-ring mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-black text-ink transition hover:bg-linen disabled:opacity-50 dark:border-white/20 dark:bg-white/10 dark:text-white"><Save className="h-4 w-4" />{saving ? 'Salvataggio...' : 'Salva modifiche'}</button>
-              {selected.status !== 'published' ? <button type="button" disabled={saving} onClick={() => saveDeck('published')} className="focus-ring mt-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-black text-white transition hover:bg-moss disabled:opacity-50 dark:bg-mint dark:text-ink"><Send className="h-4 w-4" />Pubblica deck</button> : <button type="button" disabled={saving} onClick={() => saveDeck('draft')} className="focus-ring mt-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-ink/15 px-5 py-3 text-sm font-black text-ink transition hover:bg-linen disabled:opacity-50 dark:border-white/20 dark:text-white"><Undo2 className="h-4 w-4" />Riporta in bozza</button>}
+              {selected.status !== 'published' ? <button type="button" disabled={saving} onClick={() => saveDeck('published')} className="focus-ring mt-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-black text-white transition hover:bg-moss disabled:opacity-50 dark:bg-mint dark:text-ink"><Send className="h-4 w-4" />{selectedCardIds.length === 0 ? 'Pubblica deck vuoto' : 'Pubblica deck'}</button> : <button type="button" disabled={saving} onClick={() => saveDeck('draft')} className="focus-ring mt-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-ink/15 px-5 py-3 text-sm font-black text-ink transition hover:bg-linen disabled:opacity-50 dark:border-white/20 dark:text-white"><Undo2 className="h-4 w-4" />Riporta in bozza</button>}
               {selected.id && selected.status !== 'archived' ? <button type="button" disabled={saving} onClick={() => saveDeck('archived')} className="focus-ring mt-2 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-black text-slate-700 transition hover:bg-slate-50 disabled:opacity-50 dark:border-white/20 dark:text-white/70 dark:hover:bg-white/5"><Archive className="h-4 w-4" />Archivia deck</button> : null}
               {selected.id && selected.status !== 'published' ? <button type="button" disabled={saving} onClick={deleteDeck} className="focus-ring mt-2 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full border border-red-300 px-4 py-2 text-sm font-black text-red-800 transition hover:bg-red-50 disabled:opacity-50 dark:border-red-300/30 dark:text-red-200 dark:hover:bg-red-300/10"><Trash2 className="h-4 w-4" />Elimina definitivamente</button> : null}
               {error ? <p className="mt-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-bold text-red-900 dark:border-red-300/30 dark:bg-red-300/10 dark:text-red-200">{error}</p> : null}
