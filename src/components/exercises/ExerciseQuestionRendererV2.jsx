@@ -15,6 +15,7 @@ import {
   createExerciseAudioSignedUrl,
   uploadExerciseAudioSubmission,
 } from '../../lib/exerciseSubmissionApi.js';
+import { formatExerciseCorrectAnswer } from '../../lib/exerciseAnswerDisplay.js';
 import {
   wordOrderDisplayToken,
   wordOrderTerminalPunctuation,
@@ -358,10 +359,11 @@ function AudioRecorder({ question, answer, onChange, disabled, attemptId, attemp
   </div>;
 }
 
-function ResultPanel({ result, teacherComment, showScore, showCorrectAnswers, showExplanations }) {
+function ResultPanel({ question, result, teacherComment, showScore, showCorrectAnswers, showExplanations }) {
   if (!result) return null;
   const status = result.status || 'unanswered';
-  return <div className={`mt-5 rounded-xl border p-4 ${resultStyles[status] || resultStyles.unanswered}`}><p className="text-lg font-black">{resultLabels[status] || status}</p>{status === 'pending_review' ? <p className="mt-1 text-sm font-semibold">La risposta è stata consegnata. Riceverai la valutazione dell’insegnante nella tua area studente.</p> : null}{showScore && result.max_points !== undefined && status !== 'pending_review' ? <p className="mt-1 text-sm font-semibold">Punti: <strong>{Number(result.earned_points || 0).toFixed(1)} / {Number(result.max_points || 0).toFixed(1)}</strong></p> : null}{showCorrectAnswers && result.correct_answer ? <p className="mt-2 text-sm font-semibold">Risposta giusta: <strong>{Array.isArray(result.correct_answer) ? result.correct_answer.join(' · ') : String(result.correct_answer)}</strong></p> : null}{showExplanations && result.explanation ? <p className="mt-2 text-sm leading-6">{typeof result.explanation === 'string' ? result.explanation : JSON.stringify(result.explanation)}</p> : null}{teacherComment ? <div className="mt-4 rounded-lg border border-current/15 bg-white/55 p-3 dark:bg-white/[0.06]"><p className="text-xs font-bold uppercase tracking-wide opacity-60">Commento dell’insegnante</p><p className="mt-1 whitespace-pre-wrap text-sm font-semibold leading-6">{teacherComment}</p></div> : null}</div>;
+  const correctAnswer = formatExerciseCorrectAnswer(question, result.correct_answer);
+  return <div className={`mt-5 rounded-xl border p-4 ${resultStyles[status] || resultStyles.unanswered}`}><p className="text-lg font-black">{resultLabels[status] || status}</p>{status === 'pending_review' ? <p className="mt-1 text-sm font-semibold">La risposta è stata consegnata. Riceverai la valutazione dell’insegnante nella tua area studente.</p> : null}{showScore && result.max_points !== undefined && status !== 'pending_review' ? <p className="mt-1 text-sm font-semibold">Punti: <strong>{Number(result.earned_points || 0).toFixed(1)} / {Number(result.max_points || 0).toFixed(1)}</strong></p> : null}{showCorrectAnswers && correctAnswer ? <p className="mt-2 text-sm font-semibold">Risposta giusta: <strong>{correctAnswer}</strong></p> : null}{showExplanations && result.explanation ? <p className="mt-2 text-sm leading-6">{typeof result.explanation === 'string' ? result.explanation : JSON.stringify(result.explanation)}</p> : null}{teacherComment ? <div className="mt-4 rounded-lg border border-current/15 bg-white/55 p-3 dark:bg-white/[0.06]"><p className="text-xs font-bold uppercase tracking-wide opacity-60">Commento dell’insegnante</p><p className="mt-1 whitespace-pre-wrap text-sm font-semibold leading-6">{teacherComment}</p></div> : null}</div>;
 }
 
 export default function ExerciseQuestionRendererV2({
@@ -393,5 +395,5 @@ export default function ExerciseQuestionRendererV2({
     return <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">Tipologia non supportata: {type || 'sconosciuta'}.</p>;
   }, [type, question, answer, onChange, disabled, attemptId, item?.id, item?.teacher_turn_reviews]);
 
-  return <div><div className="mb-4 flex items-start gap-3">{['dialogue_choice', 'dialogue_roleplay'].includes(type) ? <MessageCircleMore className="mt-0.5 h-5 w-5 shrink-0 text-violet-700 dark:text-violet-200" /> : type === 'audio_response' ? <Mic className="mt-0.5 h-5 w-5 shrink-0 text-violet-700 dark:text-violet-200" /> : type === 'reading_comprehension' ? <BookOpen className="mt-0.5 h-5 w-5 shrink-0 text-cyan-700 dark:text-cyan-200" /> : null}<div>{question.prompt ? <p className="text-lg font-black leading-7 text-ink dark:text-white">{question.prompt}</p> : null}{question.instructions ? <p className="mt-1 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">{question.instructions}</p> : null}</div></div>{input}<ResultPanel result={result} teacherComment={item?.teacher_comment} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} /></div>;
+  return <div><div className="mb-4 flex items-start gap-3">{['dialogue_choice', 'dialogue_roleplay'].includes(type) ? <MessageCircleMore className="mt-0.5 h-5 w-5 shrink-0 text-violet-700 dark:text-violet-200" /> : type === 'audio_response' ? <Mic className="mt-0.5 h-5 w-5 shrink-0 text-violet-700 dark:text-violet-200" /> : type === 'reading_comprehension' ? <BookOpen className="mt-0.5 h-5 w-5 shrink-0 text-cyan-700 dark:text-cyan-200" /> : null}<div>{question.prompt ? <p className="text-lg font-black leading-7 text-ink dark:text-white">{question.prompt}</p> : null}{question.instructions ? <p className="mt-1 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">{question.instructions}</p> : null}</div></div>{input}<ResultPanel question={question} result={result} teacherComment={item?.teacher_comment} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} /></div>;
 }
