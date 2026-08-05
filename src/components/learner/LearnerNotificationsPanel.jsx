@@ -3,10 +3,14 @@ import {
   Bell,
   CheckCheck,
   ChevronRight,
+  Layers3,
   MessageCircleHeart,
+  Target,
+  Trophy,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
+  loadLearnerMilestoneProgress,
   loadLearnerNotifications,
   markAllLearnerNotificationsRead,
   markLearnerNotificationRead,
@@ -21,20 +25,39 @@ function formatDate(value) {
   }).format(new Date(value));
 }
 
+function notificationPresentation(type, read) {
+  const muted = "bg-white text-ink/60 dark:bg-white/10 dark:text-white/60";
+  if (type === "milestone_srs") return {
+    Icon: Layers3,
+    iconClass: read ? muted : "bg-emerald-600 text-white dark:bg-emerald-300 dark:text-surface-950",
+  };
+  if (type === "milestone_exercise") return {
+    Icon: Trophy,
+    iconClass: read ? muted : "bg-amber-500 text-white dark:bg-amber-300 dark:text-surface-950",
+  };
+  if (type === "milestone_practice") return {
+    Icon: Target,
+    iconClass: read ? muted : "bg-coral text-white",
+  };
+  return { Icon: MessageCircleHeart, iconClass: read ? muted : "bg-[#745b91] text-white" };
+}
+
 export default function LearnerNotificationsPanel({ limit = 6 }) {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [progress, setProgress] = useState(null);
 
   useEffect(() => {
     let active = true;
-    loadLearnerNotifications(limit)
-      .then((result) => {
+    Promise.all([loadLearnerNotifications(limit), loadLearnerMilestoneProgress()])
+      .then(([result, milestoneProgress]) => {
         if (active) {
           setNotifications(result.notifications);
           setUnreadCount(result.unreadCount);
+          setProgress(milestoneProgress);
         }
       })
       .catch((loadError) => {
@@ -88,8 +111,6 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
     }
   }
 
-  if (!loading && !error && notifications.length === 0) return null;
-
   return (
     <section className="mt-6 overflow-hidden rounded-3xl border border-[#c9b8dc]/45 bg-gradient-to-br from-white to-[#f2edf8] shadow-sm dark:border-[#9d83bd]/25 dark:from-surface-900 dark:to-[#9d83bd]/[0.08]">
       <header className="flex flex-col gap-3 border-b border-[#c9b8dc]/35 p-5 dark:border-white/10 sm:flex-row sm:items-center sm:justify-between sm:px-7">
@@ -104,10 +125,10 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
           </span>
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-[#745b91] dark:text-[#cbb9df]">
-              Aggiornamenti dall’insegnante
+              I tuoi progressi
             </p>
             <h2 className="mt-1 text-xl font-black text-ink dark:text-white">
-              {unreadCount ? "Ho visto i tuoi esercizi!" : "Le tue revisioni"}
+              {unreadCount ? "Nuovi traguardi e revisioni" : "Il tuo percorso"}
             </h2>
           </div>
         </div>
@@ -133,19 +154,28 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
           {error}
         </p>
       ) : null}
+      {!loading && !error && progress ? (
+        <div className="border-b border-[#c9b8dc]/30 bg-white/45 px-5 py-4 dark:border-white/10 dark:bg-white/[0.025] sm:px-7">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-black text-ink/65 dark:text-white/65"><span>{progress.srs_reviews} ripassi SRS · {progress.mastered_cards} card consolidate</span>{progress.next_srs_milestone ? <span>{progress.reviews_to_next_milestone} al prossimo traguardo</span> : <span>Traguardi SRS completati</span>}</div>
+          {progress.next_srs_milestone ? <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#c9b8dc]/25 dark:bg-white/10"><div className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-coral to-amber-400" style={{ width: `${Math.min(100, (Number(progress.srs_reviews || 0) / Number(progress.next_srs_milestone || 1)) * 100)}%` }} /></div> : null}
+        </div>
+      ) : null}
       {!loading && !error ? (
         <div className="divide-y divide-[#c9b8dc]/30 dark:divide-white/10">
-          {notifications.map((notification) => (
-            <button
+          {!notifications.length ? <p className="p-6 text-sm font-semibold text-ink/60 dark:text-white/60">I tuoi prossimi traguardi appariranno qui. Anche una piccola sessione conta.</p> : null}
+          {notifications.map((notification) => {
+            const presentation = notificationPresentation(notification.notification_type, Boolean(notification.read_at));
+            const NotificationIcon = presentation.Icon;
+            return <button
               key={notification.id}
               type="button"
               onClick={() => openNotification(notification)}
               className={`flex w-full items-start gap-4 p-5 text-left transition hover:bg-white/70 dark:hover:bg-white/[0.05] sm:px-7 ${notification.read_at ? "opacity-70" : "bg-white/55 dark:bg-[#9d83bd]/[0.06]"}`}
             >
               <span
-                className={`mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl ${notification.read_at ? "bg-white text-ink/60 dark:bg-white/10 dark:text-white/60" : "bg-coral text-white"}`}
+                className={`mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl ${presentation.iconClass}`}
               >
-                <MessageCircleHeart className="h-4 w-4" />
+                <NotificationIcon className="h-4 w-4" />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="flex flex-wrap items-center gap-2">
@@ -168,8 +198,8 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
                 </span>
               </span>
               <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-[#745b91] dark:text-[#cbb9df]" />
-            </button>
-          ))}
+            </button>;
+          })}
         </div>
       ) : null}
     </section>

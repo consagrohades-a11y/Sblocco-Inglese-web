@@ -6,6 +6,7 @@ import {
   ChevronDown,
   CircleHelp,
   ClipboardList,
+  Dumbbell,
   FileCheck2,
   Languages,
   LayoutDashboard,
@@ -15,6 +16,7 @@ import {
   PanelLeftOpen,
   Plane,
   Settings,
+  Target,
   UserRound,
   Users,
   X,
@@ -43,6 +45,17 @@ const navigationGroups = [
       { label: 'Elenco studenti', to: '/admin/learners', icon: Users },
       { label: 'Gruppi e cohort', to: '/admin/groups', icon: Users },
       { label: 'Assegnazioni', to: '/admin/assignments', icon: ClipboardList },
+    ],
+  },
+  {
+    id: 'learning-areas',
+    label: 'Attività didattiche',
+    description: 'Esercizi, SRS e pratica mirata',
+    icon: Dumbbell,
+    items: [
+      { label: 'Esercizi assegnati', to: '/admin/activities/exercises', icon: ClipboardList },
+      { label: 'Ripasso SRS', to: '/admin/activities/srs', icon: Dumbbell },
+      { label: 'Pratica mirata', to: '/admin/activities/practice', icon: Target },
     ],
   },
   {

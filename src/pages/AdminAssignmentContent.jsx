@@ -291,27 +291,35 @@ export default function AdminAssignmentContent() {
                 </div>
               </section>
 
-              <AssignmentStudyScopeEditor
-                enabled={studyEnabled}
-                onEnabledChange={setStudyEnabled}
-                selectedDeckIds={selectedDeckIds}
-                onDeckIdsChange={setSelectedDeckIds}
-                selectedItemIds={selectedItemIds}
-                onItemIdsChange={setSelectedItemIds}
-                onResolvedItemIdsChange={setResolvedItemIds}
-              />
+              <section className="grid gap-4 rounded-3xl border border-emerald-200 bg-emerald-50/35 p-4 dark:border-emerald-300/20 dark:bg-emerald-300/[0.04] sm:p-6">
+                <div><p className="text-xs font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">Ripasso SRS</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Card programmate nel tempo</h2><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Il sistema decide quando ripresentare le card selezionate.</p></div>
+                <AssignmentStudyScopeEditor
+                  enabled={studyEnabled}
+                  onEnabledChange={setStudyEnabled}
+                  selectedDeckIds={selectedDeckIds}
+                  onDeckIdsChange={setSelectedDeckIds}
+                  selectedItemIds={selectedItemIds}
+                  onItemIdsChange={setSelectedItemIds}
+                  onResolvedItemIdsChange={setResolvedItemIds}
+                />
+              </section>
 
-              <AssignmentPracticeEditor
-                enabled={practiceEnabled}
-                onEnabledChange={setPracticeEnabled}
-                config={practiceConfig}
-                onChange={setPracticeConfig}
-                onAvailabilityChange={setPracticeAvailability}
-              />
+              <section className="grid gap-4 rounded-3xl border border-coral/25 bg-blush/35 p-4 dark:border-coral/20 dark:bg-coral/[0.04] sm:p-6">
+                <div><p className="text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9b7d]">Pratica mirata</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Quiz sulle parole scelte da te</h2><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Seleziona deck, filtri e modalità. Questa attività non modifica la programmazione SRS.</p></div>
+                <AssignmentPracticeEditor
+                  enabled={practiceEnabled}
+                  onEnabledChange={setPracticeEnabled}
+                  config={practiceConfig}
+                  onChange={setPracticeConfig}
+                  onAvailabilityChange={setPracticeAvailability}
+                />
+              </section>
 
-              <AssignmentExercisePicker value={selectedExerciseResources} onChange={setSelectedExerciseResources} />
-
-              <AssignmentCollectionPicker value={selectedCollectionResources} onChange={setSelectedCollectionResources} />
+              <section className="grid gap-4 rounded-3xl border border-violet-200 bg-violet-50/35 p-4 dark:border-violet-300/20 dark:bg-violet-300/[0.04] sm:p-6">
+                <div><p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">Esercizi</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Exercise Builder e raccolte</h2><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Attività strutturate con punteggio, correzioni e feedback.</p></div>
+                <AssignmentExercisePicker value={selectedExerciseResources} onChange={setSelectedExerciseResources} />
+                <AssignmentCollectionPicker value={selectedCollectionResources} onChange={setSelectedCollectionResources} />
+              </section>
 
               <div className="grid gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.65fr)]">
                 <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 shadow-sm">

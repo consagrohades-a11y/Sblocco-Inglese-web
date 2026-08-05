@@ -75,7 +75,7 @@ export default function PracticeHub() {
   const [category, setCategory] = useState('all');
   const [batch, setBatch] = useState('all');
   const [questionCount, setQuestionCount] = useState(10);
-  const [modes, setModes] = useState(['italian_to_english', 'english_to_italian', 'multiple_choice']);
+  const [modes, setModes] = useState(['italian_to_english', 'english_to_italian', 'multiple_choice', 'italian_to_english_multiple_choice']);
   const [session, setSession] = useState(null);
   const [index, setIndex] = useState(0);
   const [response, setResponse] = useState('');

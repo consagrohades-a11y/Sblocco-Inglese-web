@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Clock3, NotebookPen, Save } from 'lucide-react';
-import { createLearnerNote, loadLearnerNotes } from '../../lib/learnerNotesApi.js';
+import { Clock3, NotebookPen, Pencil, Save, Trash2, X } from 'lucide-react';
+import {
+  createLearnerNote,
+  deleteLearnerNote,
+  loadLearnerNotes,
+  updateLearnerNote,
+} from '../../lib/learnerNotesApi.js';
 import { adminButton } from '../../styles/adminUi.js';
 
 const ROME_TIME_ZONE = 'Europe/Rome';
@@ -31,6 +36,9 @@ export default function LearnerNotesPanel({ learnerId, learnerName }) {
   const [now, setNow] = useState(() => new Date());
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [editingDraft, setEditingDraft] = useState('');
+  const [busyNoteId, setBusyNoteId] = useState(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
@@ -87,6 +95,54 @@ export default function LearnerNotesPanel({ learnerId, learnerName }) {
       setError(saveError.message || 'Non è stato possibile salvare la nota.');
     } finally {
       setSaving(false);
+    }
+  }
+
+  function beginEdit(note) {
+    setEditingId(note.id);
+    setEditingDraft(note.note);
+    setError('');
+    setMessage('');
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setEditingDraft('');
+  }
+
+  async function saveEdit(noteId) {
+    if (!editingDraft.trim() || busyNoteId) return;
+    setBusyNoteId(noteId);
+    setError('');
+    setMessage('');
+    try {
+      const updatedNote = await updateLearnerNote(noteId, editingDraft);
+      setNotes((current) => current.map((note) => note.id === noteId ? updatedNote : note));
+      cancelEdit();
+      setMessage('Nota aggiornata.');
+    } catch (updateError) {
+      setError(updateError.message || 'Non è stato possibile aggiornare la nota.');
+    } finally {
+      setBusyNoteId(null);
+    }
+  }
+
+  async function removeNote(note) {
+    if (busyNoteId) return;
+    const preview = note.note.length > 90 ? `${note.note.slice(0, 90)}…` : note.note;
+    if (!window.confirm(`Eliminare definitivamente questa nota?\n\n${preview}`)) return;
+    setBusyNoteId(note.id);
+    setError('');
+    setMessage('');
+    try {
+      await deleteLearnerNote(note.id);
+      setNotes((current) => current.filter((item) => item.id !== note.id));
+      if (editingId === note.id) cancelEdit();
+      setMessage('Nota eliminata.');
+    } catch (deleteError) {
+      setError(deleteError.message || 'Non è stato possibile eliminare la nota.');
+    } finally {
+      setBusyNoteId(null);
     }
   }
 
@@ -182,16 +238,31 @@ export default function LearnerNotesPanel({ learnerId, learnerName }) {
           <div className="mt-4 divide-y divide-ink/10 dark:divide-white/10">
             {notes.map((note) => (
               <article key={note.id} className="py-5 first:pt-0 last:pb-0">
-                <time
-                  dateTime={note.created_at}
-                  className="inline-flex items-center gap-2 text-xs font-black text-moss dark:text-emerald-300"
-                >
-                  <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
-                  {formatRomeDateTime(note.created_at)}
-                </time>
-                <p className="mt-3 whitespace-pre-wrap break-words text-sm font-semibold leading-7 text-ink/80 dark:text-white/75">
-                  {note.note}
-                </p>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <time dateTime={note.created_at} className="inline-flex items-center gap-2 text-xs font-black text-moss dark:text-emerald-300">
+                      <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
+                      {formatRomeDateTime(note.created_at)}
+                    </time>
+                    {note.updated_at ? <p className="mt-1 text-xs font-bold text-ink/45 dark:text-white/45">Modificata: {formatRomeDateTime(note.updated_at)}</p> : null}
+                  </div>
+                  <div className="flex shrink-0 gap-2">
+                    <button type="button" disabled={Boolean(busyNoteId)} onClick={() => beginEdit(note)} className="focus-ring inline-flex min-h-9 items-center gap-2 rounded-full border border-ink/15 px-3 py-1.5 text-xs font-black text-ink transition hover:bg-linen disabled:opacity-40 dark:border-white/15 dark:text-white dark:hover:bg-white/10"><Pencil className="h-3.5 w-3.5" />Modifica</button>
+                    <button type="button" disabled={Boolean(busyNoteId)} onClick={() => removeNote(note)} className="focus-ring inline-flex min-h-9 items-center gap-2 rounded-full border border-red-300 px-3 py-1.5 text-xs font-black text-red-700 transition hover:bg-red-50 disabled:opacity-40 dark:border-red-300/30 dark:text-red-200 dark:hover:bg-red-300/10"><Trash2 className="h-3.5 w-3.5" />Elimina</button>
+                  </div>
+                </div>
+                {editingId === note.id ? (
+                  <div className="mt-4 rounded-xl border border-moss/20 bg-mint/20 p-4 dark:border-emerald-300/20 dark:bg-emerald-300/[0.06]">
+                    <textarea value={editingDraft} onChange={(event) => setEditingDraft(event.target.value)} maxLength={MAX_NOTE_LENGTH} rows={5} autoFocus className="focus-ring w-full resize-y rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold leading-6 text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white" />
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                      <p className="text-xs font-bold text-ink/55 dark:text-white/50">{MAX_NOTE_LENGTH - editingDraft.length} caratteri disponibili</p>
+                      <div className="flex gap-2">
+                        <button type="button" disabled={busyNoteId === note.id} onClick={cancelEdit} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 px-4 py-2 text-xs font-black dark:border-white/15"><X className="h-3.5 w-3.5" />Annulla</button>
+                        <button type="button" disabled={busyNoteId === note.id || !editingDraft.trim()} onClick={() => saveEdit(note.id)} className={adminButton.primary}><Save className="h-4 w-4" />{busyNoteId === note.id ? 'Salvataggio...' : 'Salva modifiche'}</button>
+                      </div>
+                    </div>
+                  </div>
+                ) : <p className="mt-3 whitespace-pre-wrap break-words text-sm font-semibold leading-7 text-ink/80 dark:text-white/75">{note.note}</p>}
               </article>
             ))}
           </div>

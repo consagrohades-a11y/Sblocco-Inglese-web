@@ -1,7 +1,8 @@
 export const EXERCISE_MODES = [
   { id: 'italian_to_english', label: 'Italiano → inglese' },
   { id: 'english_to_italian', label: 'Inglese → italiano' },
-  { id: 'multiple_choice', label: 'Scelta multipla' },
+  { id: 'multiple_choice', label: 'Scelta multipla: inglese → italiano' },
+  { id: 'italian_to_english_multiple_choice', label: 'Scelta multipla: italiano → inglese' },
   { id: 'sentence_completion', label: 'Completa la frase' },
 ];
 
@@ -115,6 +116,23 @@ function makeMultipleChoice(item, pool) {
   });
 }
 
+function makeItalianToEnglishMultipleChoice(item, pool) {
+  const distractors = shuffle(pool.filter((candidate) => candidate.id !== item.id))
+    .map((candidate) => candidate.english)
+    .filter((value, index, values) => value && value !== item.english && values.indexOf(value) === index)
+    .slice(0, 3);
+
+  if (!distractors.length) return null;
+  return baseQuestion(item, 'italian_to_english_multiple_choice', {
+    direction: 'italian_to_english',
+    instruction: 'Scegli la parola inglese corretta',
+    prompt: item.italian,
+    acceptedAnswers: item.acceptedEnglish,
+    correctAnswer: item.english,
+    options: shuffle([item.english, ...distractors]),
+  });
+}
+
 function stripInlineFormatting(value) {
   return String(value || '')
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
@@ -157,6 +175,7 @@ export function createPracticeSession(items, modes, count) {
     italian_to_english: (item) => makeItalianToEnglish(item),
     english_to_italian: (item) => makeEnglishToItalian(item),
     multiple_choice: (item) => makeMultipleChoice(item, items),
+    italian_to_english_multiple_choice: (item) => makeItalianToEnglishMultipleChoice(item, items),
     sentence_completion: (item) => makeSentenceCompletion(item),
   };
 

@@ -6,11 +6,13 @@ import {
   BookOpen,
   ChevronDown,
   ClipboardList,
+  Dumbbell,
   GraduationCap,
   LogOut,
   Menu,
   Settings,
   Sparkles,
+  Target,
   X,
 } from 'lucide-react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
@@ -27,8 +29,9 @@ const publicItems = [
 ];
 
 const learnerItems = [
-  { label: 'Attività', to: '/assignments', icon: ClipboardList },
-  { label: 'Trainer', to: '/trainers', icon: Sparkles },
+  { label: 'Esercizi', to: '/attivita/esercizi', icon: ClipboardList },
+  { label: 'Ripasso SRS', to: '/attivita/srs', icon: Dumbbell },
+  { label: 'Pratica mirata', to: '/attivita/pratica-mirata', icon: Target },
   { label: 'Corsi', to: '/percorsi', icon: BookOpen },
   { label: 'Progressi', to: '/progressi', icon: BarChart3 },
 ];

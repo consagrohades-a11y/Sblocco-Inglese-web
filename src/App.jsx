@@ -75,6 +75,7 @@ const AdminExerciseQuestionEditor = lazy(() => import('./pages/AdminExerciseQues
 const AdminExerciseCollections = lazy(() => import('./pages/AdminExerciseCollections'));
 const AdminExerciseResults = lazy(() => import('./pages/AdminExerciseResults'));
 const AdminExerciseMaintenance = lazy(() => import('./pages/AdminExerciseMaintenance'));
+const AdminAssignments = lazy(() => import('./pages/AdminAssignments'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
 const LearnerCollectionPath = lazy(() => import('./pages/LearnerCollectionPath'));
@@ -148,6 +149,9 @@ export default function App() {
             <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
             <Route path="/assignments" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
+            <Route path="/attivita/esercizi" element={<ProtectedRoute><LearnerAssignments initialArea="exercises" /></ProtectedRoute>} />
+            <Route path="/attivita/srs" element={<ProtectedRoute><LearnerAssignments initialArea="srs" /></ProtectedRoute>} />
+            <Route path="/attivita/pratica-mirata" element={<ProtectedRoute><LearnerAssignments initialArea="practice" /></ProtectedRoute>} />
             <Route path="/assignments/:assignmentId" element={<ProtectedRoute><LearnerAssignmentDetail /></ProtectedRoute>} />
             <Route path="/progressi" element={<ProtectedRoute><LearnerProgress /></ProtectedRoute>} />
             <Route path="/admin" element={<AdminRoute><AdminShell /></AdminRoute>}>
@@ -190,6 +194,9 @@ export default function App() {
               <Route path="content/hospitality-expressions/archive" element={<AdminTrainerCardDelete domain="hospitality" />} />
               <Route path="content/travel-expressions" element={<AdminTravelTrainer />} />
               <Route path="assignments" element={<AdminSectionOverview section="assignments" />} />
+              <Route path="activities/exercises" element={<AdminAssignments initialContentFilter="exercise" />} />
+              <Route path="activities/srs" element={<AdminAssignments initialContentFilter="srs" />} />
+              <Route path="activities/practice" element={<AdminAssignments initialContentFilter="practice" />} />
               <Route path="analytics" element={<AdminAnalytics />} />
               <Route path="analytics/learners/:learnerId" element={<AdminLearnerAnalytics />} />
               <Route path="settings" element={<AdminSectionOverview section="settings" />} />

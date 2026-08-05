@@ -9,7 +9,7 @@ export async function loadLearnerNotifications(limit = 20) {
     supabase
       .from("learner_notifications")
       .select(
-        "id, notification_type, title, message, route, related_attempt_id, created_at, read_at",
+        "id, notification_type, milestone_key, title, message, route, related_attempt_id, created_at, read_at",
       )
       .order("created_at", { ascending: false })
       .limit(limit),
@@ -23,6 +23,12 @@ export async function loadLearnerNotifications(limit = 20) {
     notifications: listResult.data || [],
     unreadCount: unreadResult.count || 0,
   };
+}
+
+export async function loadLearnerMilestoneProgress() {
+  const { data, error } = await supabase.rpc("get_learner_milestone_progress");
+  throwIfError(error);
+  return data || { srs_reviews: 0, mastered_cards: 0, next_srs_milestone: 10, reviews_to_next_milestone: 10 };
 }
 
 export async function markLearnerNotificationRead(notificationId) {
