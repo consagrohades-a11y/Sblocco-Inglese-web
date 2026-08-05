@@ -8,6 +8,7 @@ import {
   validateExerciseBuilderJson,
 } from '../src/lib/exerciseBuilderSchema.js';
 import { normalizeExerciseAnswerForSave } from '../src/lib/exerciseAnswerNormalization.js';
+import { formatExerciseCorrectAnswer } from '../src/lib/exerciseAnswerDisplay.js';
 import {
   normalizeWordOrderAuthoringContent,
   wordOrderDisplayToken,
@@ -17,6 +18,52 @@ import {
 const failures = [];
 const manifestKeys = new Set(exerciseBuilderTemplateManifest.map((item) => item.key));
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+const pooledChoice = {
+  type: 'multiple_choice',
+  content: {
+    options: [
+      { key: 'option_1', text: 'eat', is_correct: true },
+      { key: 'option_2', text: 'eats', is_correct: false },
+    ],
+  },
+};
+if (formatExerciseCorrectAnswer(pooledChoice, 'option_1') !== 'eat') {
+  failures.push('Pooled multiple-choice answer keys were not resolved to option text.');
+}
+if (formatExerciseCorrectAnswer(pooledChoice, { key: 'option_1', text: 'eat' }) !== 'eat') {
+  failures.push('Pooled multiple-choice answer objects were not resolved to option text.');
+}
+
+const pooledMultiSelect = {
+  type: 'multiple_select',
+  content: {
+    options: [
+      { key: 'option_1', text: 'eat', is_correct: true },
+      { key: 'option_2', text: 'eats', is_correct: false },
+      { key: 'option_3', text: 'eating', is_correct: true },
+    ],
+  },
+};
+if (formatExerciseCorrectAnswer(pooledMultiSelect, ['option_1', 'option_3']) !== 'eat · eating') {
+  failures.push('Pooled multiple-select answer keys were not resolved to option text.');
+}
+
+const pooledGapFill = {
+  type: 'gap_fill',
+  content: {
+    blanks: [
+      { key: 'blank_1', accepted_answers: ['goes', 'is going'] },
+      { key: 'blank_2', accepted_answers: ['works'] },
+    ],
+  },
+};
+if (formatExerciseCorrectAnswer(pooledGapFill, [
+  { key: 'blank_1', correct_answer: ['goes', 'is going'] },
+  { key: 'blank_2', correct_answer: ['works'] },
+]) !== 'goes · works') {
+  failures.push('Structured gap-fill answers were not reduced to readable text.');
+}
 
 const normalizedLegacyWordOrder = normalizeExerciseAnswerForSave([
   { text: 'could', instanceKey: 'token_1-0' },
