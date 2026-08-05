@@ -180,12 +180,27 @@ function AssignmentCard({ assignment, busy, onStatusChange }) {
   );
 }
 
-export default function AdminAssignments() {
+const areaHeadings = {
+  exercise: ['Esercizi assegnati', 'Exercise Builder e raccolte di esercizi, separati dal ripasso e dalla pratica sulle parole.'],
+  srs: ['Ripasso SRS', 'Percorsi di memoria con card programmate dal sistema in base alla data di ripasso.'],
+  practice: ['Pratica mirata', 'Quiz sulle parole e sui deck scelti direttamente dall’insegnante.'],
+};
+
+function matchesContentFilter(assignment, filter) {
+  if (filter === 'with_content') return Boolean(assignment.has_content);
+  if (filter === 'without_content') return !assignment.has_content;
+  if (filter === 'exercise') return (assignment.resource_types || []).some((type) => ['custom_exercise', 'exercise_collection', 'grammar_unit'].includes(type));
+  if (filter === 'srs') return Number(assignment.study_item_count || 0) > 0;
+  if (filter === 'practice') return (assignment.resource_types || []).includes('practice_session');
+  return true;
+}
+
+export default function AdminAssignments({ initialContentFilter = 'all' }) {
   const [searchParams] = useSearchParams();
   const [assignments, setAssignments] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('active');
-  const [contentFilter, setContentFilter] = useState('all');
+  const [contentFilter, setContentFilter] = useState(initialContentFilter);
   const [groupFilter, setGroupFilter] = useState(searchParams.get('group') || 'all');
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
@@ -210,12 +225,14 @@ export default function AdminAssignments() {
   }
 
   useEffect(() => { loadAssignments(); }, []);
+  useEffect(() => { setContentFilter(initialContentFilter); }, [initialContentFilter]);
 
-  const counts = useMemo(() => assignments.reduce((result, assignment) => ({
+  const countScope = useMemo(() => assignments.filter((assignment) => matchesContentFilter(assignment, initialContentFilter)), [assignments, initialContentFilter]);
+  const counts = useMemo(() => countScope.reduce((result, assignment) => ({
     ...result,
     [assignment.status]: (result[assignment.status] || 0) + 1,
     overdue: result.overdue + (isOverdue(assignment) ? 1 : 0),
-  }), { draft: 0, published: 0, completed: 0, archived: 0, overdue: 0 }), [assignments]);
+  }), { draft: 0, published: 0, completed: 0, archived: 0, overdue: 0 }), [countScope]);
   const groups = useMemo(() => Array.from(new Map(assignments.filter((assignment) => assignment.group_id).map((assignment) => [assignment.group_id, assignment.group_name])).entries()), [assignments]);
 
   const filteredAssignments = useMemo(() => {
@@ -224,10 +241,7 @@ export default function AdminAssignments() {
       if (statusFilter === 'active' && !['published', 'draft'].includes(assignment.status)) return false;
       if (statusFilter === 'overdue' && !isOverdue(assignment)) return false;
       if (!['all', 'active', 'overdue'].includes(statusFilter) && assignment.status !== statusFilter) return false;
-      if (contentFilter === 'with_content' && !assignment.has_content) return false;
-      if (contentFilter === 'without_content' && assignment.has_content) return false;
-      if (contentFilter === 'exercise' && !(assignment.resource_types || []).includes('custom_exercise')) return false;
-      if (contentFilter === 'practice' && !(assignment.resource_types || []).includes('practice_session')) return false;
+      if (!matchesContentFilter(assignment, contentFilter)) return false;
       if (groupFilter !== 'all' && assignment.group_id !== groupFilter) return false;
       if (!term) return true;
       return [assignment.title, assignment.learner_name, assignment.learner_email]
@@ -253,6 +267,8 @@ export default function AdminAssignments() {
     setBusyId(null);
   }
 
+  const areaHeading = areaHeadings[initialContentFilter];
+
   return (
     <>
       <SEO title="Assegnazioni | Admin | Sblocco Inglese" description="Gestisci tutte le assegnazioni da una sola pagina." />
@@ -262,9 +278,9 @@ export default function AdminAssignments() {
             <span className="eyebrow">Studenti</span>
             <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">Assegnazioni</h1>
+                <h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">{areaHeading?.[0] || 'Assegnazioni'}</h1>
                 <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
-                  Controlla tutte le attività, apri direttamente l’editor e modifica lo stato senza passare dal profilo di ogni studente.
+                  {areaHeading?.[1] || 'Controlla tutte le attività, apri direttamente l’editor e modifica lo stato senza passare dal profilo di ogni studente.'}
                 </p>
               </div>
               <Link to="/admin/learners" className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white hover:bg-moss dark:bg-emerald-300 dark:text-surface-950">
@@ -308,10 +324,11 @@ export default function AdminAssignments() {
                 <option value="with_content">Con contenuti</option>
                 <option value="without_content">Senza contenuti</option>
                 <option value="exercise">Con esercizio</option>
+                <option value="srs">Con ripasso SRS</option>
                 <option value="practice">Con pratica mirata</option>
               </select>
               <select value={groupFilter} onChange={(event) => setGroupFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white"><option value="all">Tutti i gruppi</option>{groups.map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select>
-              <button type="button" onClick={() => { setSearch(''); setStatusFilter('active'); setContentFilter('all'); setGroupFilter('all'); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-ink/15 px-4 text-sm font-black text-ink dark:border-white/20 dark:text-white">
+              <button type="button" onClick={() => { setSearch(''); setStatusFilter('active'); setContentFilter(initialContentFilter); setGroupFilter('all'); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-ink/15 px-4 text-sm font-black text-ink dark:border-white/20 dark:text-white">
                 <Filter className="h-4 w-4" />Azzera
               </button>
             </div>

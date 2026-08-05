@@ -10,6 +10,7 @@ import {
   Sparkles,
   Star,
   Sun,
+  Target,
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
@@ -59,6 +60,26 @@ function resourceDestination(resource, assignmentId) {
 function firstNameFromProfile(profile, user) {
   const displayName = profile?.display_name || user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'studente';
   return String(displayName).trim().split(/\s+/)[0] || 'studente';
+}
+
+function ResourceCard({ resource, assignmentId, progress }) {
+  const completed = ['completed', 'review'].includes(progress?.state);
+  return <article className="rounded-2xl border border-clay/15 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-coral/35 hover:shadow-md dark:border-white/10 dark:bg-white/[0.06]">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]"><Star className="h-3.5 w-3.5 fill-butter text-clay" />{resourceTypeLabel(resource)}</p>
+        {completed ? <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-black text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200"><CheckCircle2 className="h-3.5 w-3.5" />{progress?.state === 'review' ? 'Consegnata · in valutazione' : 'Completata'}</p> : null}
+        <h4 className="mt-2 text-lg font-black text-ink dark:text-white">{resource.title}</h4>
+        {resource.description ? <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">{resource.description}</p> : null}
+        {resource.resource_type === 'custom_exercise' ? <p className="mt-2 text-xs font-bold text-clay dark:text-[#f7a98d]">Autosave attivo · nuove domande a ogni tentativo quando usa una pool</p> : null}
+        {resource.resource_type === 'exercise_collection' ? <p className="mt-2 text-xs font-bold text-clay dark:text-[#f7a98d]">Versione {resource.collection_config?.version_number} · {resource.collection_snapshot?.items?.length || 0} tappe in ordine · avanzamento salvato</p> : null}
+        {resource.resource_type === 'practice_session' ? <p className="mt-2 text-xs font-bold text-clay dark:text-[#f7a98d]">Parole e modalità del quiz selezionate dall’insegnante</p> : null}
+      </div>
+      <Link to={resourceDestination(resource, assignmentId)} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-coral px-5 py-2.5 text-sm font-black text-white transition hover:bg-clay dark:bg-[#ff8b6c] dark:text-surface-950 dark:hover:bg-[#f7a98d]">
+        {completed ? 'Vedi risultato' : progress?.state === 'in_progress' ? 'Continua' : 'Inizia'}
+      </Link>
+    </div>
+  </article>;
 }
 
 export default function LearnerAssignmentDetail() {
@@ -152,6 +173,9 @@ export default function LearnerAssignmentDetail() {
   const firstName = useMemo(() => firstNameFromProfile(profile, user), [profile, user]);
   const fallbackActivities = resources.length + (studyScope?.include_in_srs ? trainerBreakdown.length : 0);
   const resourceProgress = useMemo(() => new Map((progress?.resources || []).map((item) => [item.resource_id, item])), [progress]);
+  const exerciseResources = useMemo(() => resources.filter((resource) => ['custom_exercise', 'exercise_collection', 'grammar_unit'].includes(resource.resource_type)), [resources]);
+  const practiceResources = useMemo(() => resources.filter((resource) => resource.resource_type === 'practice_session'), [resources]);
+  const supportingResources = useMemo(() => resources.filter((resource) => !['custom_exercise', 'exercise_collection', 'grammar_unit', 'practice_session'].includes(resource.resource_type)), [resources]);
   const totalActivities = String(progress
     ? Number(progress.remaining_activities || 0) + (studyScope?.include_in_srs ? trainerBreakdown.length : 0)
     : fallbackActivities);
@@ -263,24 +287,10 @@ export default function LearnerAssignmentDetail() {
                       <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Segui le istruzioni scritte sopra. Non è stato collegato un trainer o un’unità specifica.</p>
                     </div>
                   ) : (
-                    <div className="mt-5 grid gap-4">
-                      {resources.map((resource, index) => (
-                        <article key={resource.id} className="rounded-2xl border border-clay/15 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-coral/35 hover:shadow-md dark:border-white/10 dark:bg-white/[0.06]">
-                          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]"><Star className="h-3.5 w-3.5 fill-butter text-clay" />{index + 1}. {resourceTypeLabel(resource)}</p>
-                              {['completed', 'review'].includes(resourceProgress.get(resource.id)?.state) ? <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-black text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200"><CheckCircle2 className="h-3.5 w-3.5" />{resourceProgress.get(resource.id)?.state === 'review' ? 'Consegnata · in valutazione' : 'Completata'}</p> : null}
-                              <h4 className="mt-2 text-lg font-black text-ink dark:text-white">{resource.title}</h4>
-                              {resource.description ? <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">{resource.description}</p> : null}
-                              {resource.resource_type === 'custom_exercise' ? <p className="mt-2 text-xs font-bold text-clay dark:text-[#f7a98d]">Autosave attivo · nuove domande a ogni tentativo quando usa una pool</p> : null}
-                              {resource.resource_type === 'exercise_collection' ? <p className="mt-2 text-xs font-bold text-clay dark:text-[#f7a98d]">Versione {resource.collection_config?.version_number} · {resource.collection_snapshot?.items?.length || 0} tappe in ordine · avanzamento salvato</p> : null}
-                            </div>
-                            <Link to={resourceDestination(resource, assignment.id)} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-coral px-5 py-2.5 text-sm font-black text-white transition hover:bg-clay dark:bg-[#ff8b6c] dark:text-surface-950 dark:hover:bg-[#f7a98d]">
-                              {['completed', 'review'].includes(resourceProgress.get(resource.id)?.state) ? 'Vedi risultato' : resourceProgress.get(resource.id)?.state === 'in_progress' ? 'Continua' : 'Inizia'}
-                            </Link>
-                          </div>
-                        </article>
-                      ))}
+                    <div className="mt-5 grid gap-6">
+                      {exerciseResources.length ? <section className="rounded-2xl border border-violet-200 bg-violet-50/55 p-4 dark:border-violet-300/20 dark:bg-violet-300/[0.06] sm:p-5"><div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-violet-100 text-violet-800 dark:bg-violet-300/15 dark:text-violet-200"><BookOpen className="h-5 w-5" /></span><div><p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-200">Esercizi</p><h4 className="mt-1 font-black text-ink dark:text-white">Attività con risultati e feedback</h4></div></div><div className="mt-4 grid gap-4">{exerciseResources.map((resource) => <ResourceCard key={resource.id} resource={resource} assignmentId={assignment.id} progress={resourceProgress.get(resource.id)} />)}</div></section> : null}
+                      {practiceResources.length ? <section className="rounded-2xl border border-coral/25 bg-blush/55 p-4 dark:border-coral/20 dark:bg-coral/[0.06] sm:p-5"><div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-coral/10 text-coral dark:text-[#ff9b7d]"><Target className="h-5 w-5" /></span><div><p className="text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9b7d]">Pratica mirata</p><h4 className="mt-1 font-black text-ink dark:text-white">Quiz sulle parole scelte dall’insegnante</h4></div></div><div className="mt-4 grid gap-4">{practiceResources.map((resource) => <ResourceCard key={resource.id} resource={resource} assignmentId={assignment.id} progress={resourceProgress.get(resource.id)} />)}</div></section> : null}
+                      {supportingResources.length ? <section className="rounded-2xl border border-ink/10 bg-linen/35 p-4 dark:border-white/10 dark:bg-white/[0.04] sm:p-5"><p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Materiali collegati</p><div className="mt-4 grid gap-4">{supportingResources.map((resource) => <ResourceCard key={resource.id} resource={resource} assignmentId={assignment.id} progress={resourceProgress.get(resource.id)} />)}</div></section> : null}
                     </div>
                   )}
                 </section>

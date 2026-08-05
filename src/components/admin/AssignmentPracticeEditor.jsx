@@ -10,7 +10,7 @@ export const DEFAULT_ASSIGNMENT_PRACTICE = {
   category: null,
   batch: null,
   question_count: 10,
-  modes: ['italian_to_english', 'english_to_italian', 'multiple_choice'],
+  modes: ['italian_to_english', 'english_to_italian', 'multiple_choice', 'italian_to_english_multiple_choice'],
 };
 
 function unique(values) {
