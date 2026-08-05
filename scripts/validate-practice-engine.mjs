@@ -1,3 +1,5 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { createPracticeSession } from '../src/lib/exerciseEngine.js';
 
 const cards = [
@@ -21,5 +23,17 @@ questions.forEach((question) => {
     throw new Error('Italian-to-English multiple-choice options are not English card values.');
   }
 });
+
+const compatibilityMigration = readFileSync(
+  'supabase/migrations/20260805170000_allow_italian_to_english_multiple_choice.sql',
+  'utf8',
+);
+assert.match(compatibilityMigration, /admin_replace_assignment_resources/);
+assert.match(compatibilityMigration, /admin_replace_assignment_study_scope/);
+assert.match(compatibilityMigration, /assignment_study_settings_exercise_modes_allowed_check/);
+assert.ok(
+  compatibilityMigration.match(/italian_to_english_multiple_choice/g)?.length >= 4,
+  'Database compatibility migration must allow the new mode in every validation layer.',
+);
 
 console.log('Targeted Practice engine validation passed.');
