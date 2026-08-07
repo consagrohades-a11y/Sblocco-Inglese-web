@@ -163,7 +163,7 @@ export default function Navbar() {
           {items.map((item) => {
             const active = isRouteActive(location.pathname, item.to);
             return (
-              <NavLink key={item.to} to={item.to} className={`focus-ring relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'text-ink dark:text-white' : 'text-ink/70 hover:bg-ink/[0.05] hover:text-ink dark:text-white/68 dark:hover:bg-white/[0.05] dark:hover:text-white'}`}>
+              <NavLink key={item.to} to={item.to} className={`focus-ring relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'text-ink dark:text-white' : 'text-ink/70 hover:bg-ink/[0.05] hover:text-ink dark:text-white/80 dark:hover:bg-white/[0.05] dark:hover:text-white'}`}>
                 {item.label}
                 {active ? <span aria-hidden="true" className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-mint via-coral to-butter" /> : null}
               </NavLink>
