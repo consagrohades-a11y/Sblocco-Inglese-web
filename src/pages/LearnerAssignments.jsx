@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import LearnerNextLessonCard from '../components/learner/LearnerNextLessonCard.jsx';
 import LearnerNotificationsPanel from '../components/learner/LearnerNotificationsPanel.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { supabase } from '../lib/supabaseClient.js';
@@ -266,6 +267,8 @@ export default function LearnerAssignments({ initialArea = null }) {
               </div>
             </div>
           </header>
+
+          <LearnerNextLessonCard />
 
           <nav className="mt-5 grid gap-3 sm:grid-cols-3" aria-label="Aree di apprendimento">
             {Object.entries(activityAreas).map(([key, area]) => {
