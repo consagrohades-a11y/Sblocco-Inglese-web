@@ -147,8 +147,9 @@ export default function LearnerProgress() {
       const [assignmentResponse, historyResponse, ...scopeResponses] = await Promise.all([
         supabase
           .from('assignments')
-          .select('id, title, status, required, deadline_at, updated_at, created_at')
+          .select('id, title, status, required, deadline_at, updated_at, created_at, display_order')
           .in('status', ['published', 'completed'])
+          .order('display_order', { ascending: true })
           .order('created_at', { ascending: false }),
         supabase
           .from('learner_review_history')

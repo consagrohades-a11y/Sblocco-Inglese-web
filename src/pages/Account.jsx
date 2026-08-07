@@ -134,14 +134,14 @@ export default function Account() {
       setAssignmentsLoading(true);
       const { data } = await supabase
         .from('assignments')
-        .select('id, title, learner_note, status, required, deadline_at, estimated_minutes, created_at')
+        .select('id, title, learner_note, status, required, deadline_at, estimated_minutes, created_at, display_order')
         .in('status', ['published', 'completed'])
+        .order('display_order', { ascending: true })
         .order('created_at', { ascending: false })
         .limit(3);
 
       if (active) {
-        const ordered = [...(data ?? [])].sort((a, b) => Number(a.status === 'completed') - Number(b.status === 'completed'));
-        setAssignments(ordered);
+        setAssignments(data ?? []);
         setAssignmentsLoading(false);
       }
     }

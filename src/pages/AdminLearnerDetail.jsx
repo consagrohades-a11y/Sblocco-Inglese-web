@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ShieldOff, Trash2, UserCheck } from 'lucide-react';
+import { ArrowDown, ArrowUp, ShieldOff, Trash2, UserCheck } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import LearnerDiagnosticPanel from '../components/admin/LearnerDiagnosticPanel.jsx';
@@ -36,6 +36,9 @@ export default function AdminLearnerDetail() {
   const [error, setError] = useState('');
   const [accountMessage, setAccountMessage] = useState('');
   const [accountSaving, setAccountSaving] = useState(false);
+  const [assignmentOrderError, setAssignmentOrderError] = useState('');
+  const [assignmentOrderMessage, setAssignmentOrderMessage] = useState('');
+  const [assignmentOrderSaving, setAssignmentOrderSaving] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -87,9 +90,47 @@ export default function AdminLearnerDetail() {
     setAccountSaving(false);
   }
 
-  const assignments = Array.isArray(learner?.assignments) ? learner.assignments : [];
+  const assignments = Array.isArray(learner?.assignments)
+    ? learner.assignments.filter((assignment) => assignment.status !== 'archived')
+    : [];
   const relationships = Array.isArray(learner?.relationships) ? learner.relationships : [];
   const pageTitle = learner?.display_name || 'Dettaglio studente';
+
+  async function moveAssignment(index, direction) {
+    const targetIndex = index + direction;
+    if (assignmentOrderSaving || targetIndex < 0 || targetIndex >= assignments.length) return;
+
+    const reordered = [...assignments];
+    [reordered[index], reordered[targetIndex]] = [reordered[targetIndex], reordered[index]];
+
+    setAssignmentOrderSaving(true);
+    setAssignmentOrderError('');
+    setAssignmentOrderMessage('');
+
+    const { error: reorderError } = await supabase.rpc('admin_reorder_learner_assignments', {
+      p_learner_id: learnerId,
+      p_assignment_ids: reordered.map((assignment) => assignment.id),
+    });
+
+    if (reorderError) {
+      setAssignmentOrderError(reorderError.message || 'Non è stato possibile aggiornare l’ordine delle assegnazioni.');
+    } else {
+      const reorderedWithPositions = reordered.map((assignment, position) => ({
+        ...assignment,
+        display_order: position + 1,
+      }));
+      setLearner((current) => ({
+        ...current,
+        assignments: [
+          ...reorderedWithPositions,
+          ...(current.assignments || []).filter((assignment) => assignment.status === 'archived'),
+        ],
+      }));
+      setAssignmentOrderMessage('Ordine delle assegnazioni aggiornato.');
+    }
+
+    setAssignmentOrderSaving(false);
+  }
 
   return (
     <>
@@ -124,7 +165,74 @@ export default function AdminLearnerDetail() {
               <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900"><p className="text-xs font-bold uppercase tracking-wide text-moss">Relazioni didattiche</p><h2 className="mt-2 text-xl font-black text-ink dark:text-white">{relationships.length}</h2>{relationships.length === 0 ? <p className="mt-4 text-sm leading-6 text-ink/65 dark:text-white/60">Nessuna relazione didattica registrata.</p> : <div className="mt-4 divide-y divide-ink/10 dark:divide-white/10">{relationships.map((relationship) => <article key={relationship.id} className="py-4 first:pt-0 last:pb-0"><div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm font-black text-ink dark:text-white">{relationshipLabels[relationship.relationship_type] || relationship.relationship_type}</p><span className="rounded-full border border-ink/10 bg-linen px-3 py-1 text-xs font-black text-ink dark:border-white/10 dark:bg-white/10 dark:text-white">{statusLabels[relationship.status] || relationship.status}</span></div></article>)}</div>}</section>
             </div>
 
-            <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900"><div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-wide text-moss">Assegnazioni</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Attività dello studente</h2></div><p className="text-sm font-bold text-ink/65 dark:text-white/65">Totale: {assignments.length}</p></div>{assignments.length === 0 ? <div className="mt-6 rounded-xl border border-dashed border-ink/15 bg-linen/40 p-5 dark:bg-white/[0.05]"><p className="text-sm font-black text-ink dark:text-white">Nessuna assegnazione</p><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">Crea la prima attività e aggiungi subito i contenuti nel passaggio successivo.</p></div> : <div className="mt-6 divide-y divide-ink/10 dark:divide-white/10">{assignments.map((assignment) => { const overdue = assignment.deadline_at && new Date(assignment.deadline_at) < new Date() && assignment.status !== 'completed'; return <article key={assignment.id} className="py-5 first:pt-0 last:pb-0"><div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div><h3 className="text-base font-black text-ink dark:text-white">{assignment.title}</h3><p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">Creata il {formatDate(assignment.created_at)}</p></div><div className="flex flex-wrap gap-2"><span className="w-fit rounded-full border border-ink/10 bg-linen px-3 py-1.5 text-xs font-black text-ink dark:border-white/10 dark:bg-white/10 dark:text-white">{statusLabels[assignment.status] || assignment.status}</span>{overdue ? <span className="rounded-full bg-red-100 px-3 py-1.5 text-xs font-black text-red-800 dark:bg-red-400/15 dark:text-red-200">Scaduta</span> : null}</div></div><div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold text-ink/65 dark:text-white/65"><span>{assignment.required ? 'Obbligatoria' : 'Facoltativa'}</span>{assignment.estimated_minutes ? <span>{assignment.estimated_minutes} min stimati</span> : null}{assignment.deadline_at ? <span>Scadenza: {formatDate(assignment.deadline_at, true)}</span> : null}</div><Link to={`/admin/learners/${learnerId}/assignments/${assignment.id}/content`} className="focus-ring mt-4 inline-flex min-h-10 items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-black text-white transition hover:bg-moss">Apri e modifica</Link></article>; })}</div>}</section>
+            <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wide text-moss">Assegnazioni</p>
+                  <h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Attività dello studente</h2>
+                  <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">Usa le frecce per scegliere l’ordine mostrato allo studente.</p>
+                </div>
+                <p className="text-sm font-bold text-ink/65 dark:text-white/65">Totale: {assignments.length}</p>
+              </div>
+
+              {assignmentOrderError ? <div className="mt-5 border-l-4 border-red-400 bg-red-50 p-4 text-sm font-bold text-red-900 dark:bg-red-400/10 dark:text-red-100">{assignmentOrderError}</div> : null}
+              {assignmentOrderMessage ? <div className="mt-5 border-l-4 border-moss bg-mint/30 p-4 text-sm font-bold text-ink dark:bg-emerald-400/10 dark:text-emerald-100">{assignmentOrderMessage}</div> : null}
+
+              {assignments.length === 0 ? (
+                <div className="mt-6 rounded-xl border border-dashed border-ink/15 bg-linen/40 p-5 dark:bg-white/[0.05]">
+                  <p className="text-sm font-black text-ink dark:text-white">Nessuna assegnazione</p>
+                  <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">Crea la prima attività e aggiungi subito i contenuti nel passaggio successivo.</p>
+                </div>
+              ) : (
+                <div className="mt-6 divide-y divide-ink/10 dark:divide-white/10">
+                  {assignments.map((assignment, index) => {
+                    const overdue = assignment.deadline_at && new Date(assignment.deadline_at) < new Date() && assignment.status !== 'completed';
+                    return (
+                      <article key={assignment.id} className="py-5 first:pt-0 last:pb-0">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                          <div className="flex min-w-0 gap-3">
+                            <div className="grid shrink-0 content-start gap-1" aria-label={`Cambia ordine di ${assignment.title}`}>
+                              <button
+                                type="button"
+                                disabled={assignmentOrderSaving || index === 0}
+                                onClick={() => moveAssignment(index, -1)}
+                                className="focus-ring grid h-9 w-9 place-items-center rounded-lg border border-ink/15 text-ink transition hover:border-moss hover:bg-mint/35 disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:text-white dark:hover:bg-emerald-300/10"
+                                aria-label={`Sposta ${assignment.title} in alto`}
+                              >
+                                <ArrowUp className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                disabled={assignmentOrderSaving || index === assignments.length - 1}
+                                onClick={() => moveAssignment(index, 1)}
+                                className="focus-ring grid h-9 w-9 place-items-center rounded-lg border border-ink/15 text-ink transition hover:border-moss hover:bg-mint/35 disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:text-white dark:hover:bg-emerald-300/10"
+                                aria-label={`Sposta ${assignment.title} in basso`}
+                              >
+                                <ArrowDown className="h-4 w-4" />
+                              </button>
+                            </div>
+                            <div className="min-w-0">
+                              <h3 className="text-base font-black text-ink dark:text-white">{assignment.title}</h3>
+                              <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">Creata il {formatDate(assignment.created_at)}</p>
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            <span className="w-fit rounded-full border border-ink/10 bg-linen px-3 py-1.5 text-xs font-black text-ink dark:border-white/10 dark:bg-white/10 dark:text-white">{statusLabels[assignment.status] || assignment.status}</span>
+                            {overdue ? <span className="rounded-full bg-red-100 px-3 py-1.5 text-xs font-black text-red-800 dark:bg-red-400/15 dark:text-red-200">Scaduta</span> : null}
+                          </div>
+                        </div>
+                        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold text-ink/65 dark:text-white/65">
+                          <span>{assignment.required ? 'Obbligatoria' : 'Facoltativa'}</span>
+                          {assignment.estimated_minutes ? <span>{assignment.estimated_minutes} min stimati</span> : null}
+                          {assignment.deadline_at ? <span>Scadenza: {formatDate(assignment.deadline_at, true)}</span> : null}
+                        </div>
+                        <Link to={`/admin/learners/${learnerId}/assignments/${assignment.id}/content`} className="focus-ring mt-4 inline-flex min-h-10 items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-black text-white transition hover:bg-moss">Apri e modifica</Link>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
           </div>
           <LearnerNotesPanel
             learnerId={learnerId}

@@ -153,8 +153,9 @@ export default function LearnerAssignments({ initialArea = null }) {
 
       const { data, error: queryError } = await supabase
         .from('assignments')
-        .select('id, title, learner_note, status, required, deadline_at, estimated_minutes, published_at, created_at')
+        .select('id, title, learner_note, status, required, deadline_at, estimated_minutes, published_at, created_at, display_order')
         .in('status', ['published', 'completed'])
+        .order('display_order', { ascending: true })
         .order('created_at', { ascending: false });
 
       if (!active) return;
@@ -193,11 +194,10 @@ export default function LearnerAssignments({ initialArea = null }) {
           if (resourceTypes.includes('practice_session')) areas.push('practice');
           return { ...assignment, activityAreas: areas };
         });
-        const ordered = enriched.sort((a, b) => {
-          const statusDifference = Number(a.status === 'completed') - Number(b.status === 'completed');
-          if (statusDifference !== 0) return statusDifference;
-          return new Date(b.created_at || 0) - new Date(a.created_at || 0);
-        });
+        const ordered = enriched.sort((a, b) => (
+          Number(a.display_order || 0) - Number(b.display_order || 0)
+          || new Date(b.created_at || 0) - new Date(a.created_at || 0)
+        ));
         setAssignments(ordered);
       }
 
