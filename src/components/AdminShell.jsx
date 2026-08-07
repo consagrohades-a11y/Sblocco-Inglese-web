@@ -186,7 +186,7 @@ function AdminNavigation({ onNavigate, collapsed = false, pathname }) {
                 onClick={onNavigate}
                 title={`${group.label}: ${group.description}`}
                 aria-label={group.label}
-                className={`focus-ring flex h-11 items-center justify-center rounded-xl transition ${groupActive ? 'bg-white text-ink shadow-sm' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                className={`focus-ring flex h-11 items-center justify-center rounded-xl transition ${groupActive ? 'bg-white text-ink shadow-sm' : 'text-white/80 hover:bg-white/10 hover:text-white'}`}
               >
                 <GroupIcon aria-hidden="true" className="h-5 w-5" />
               </Link>
@@ -209,16 +209,16 @@ function AdminNavigation({ onNavigate, collapsed = false, pathname }) {
               <button
                 type="button"
                 onClick={() => toggleGroup(group.id)}
-                className={`focus-ring flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition ${groupActive ? 'text-white' : 'text-white/72 hover:bg-white/[0.07] hover:text-white'}`}
+                className={`focus-ring flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition ${groupActive ? 'text-white' : 'text-white/85 hover:bg-white/[0.07] hover:text-white'}`}
                 aria-expanded={open}
                 aria-controls={`admin-group-${group.id}`}
               >
-                <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${groupActive ? 'bg-white text-ink' : 'bg-white/[0.08] text-white/75'}`}>
+                <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${groupActive ? 'bg-white text-ink' : 'bg-white/[0.08] text-white/80'}`}>
                   <GroupIcon aria-hidden="true" className="h-4 w-4" />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-black">{group.label}</span>
-                  <span className="mt-0.5 block truncate text-[0.68rem] font-semibold text-white/60">{group.description}</span>
+                  <span className="mt-0.5 block truncate text-[0.68rem] font-semibold text-white/70">{group.description}</span>
                 </span>
                 <ChevronDown aria-hidden="true" className={`h-4 w-4 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
               </button>
@@ -233,7 +233,7 @@ function AdminNavigation({ onNavigate, collapsed = false, pathname }) {
                         to={item.to}
                         end={item.end}
                         onClick={onNavigate}
-                        className={({ isActive }) => `focus-ring flex min-h-9 items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-black transition ${isActive ? 'bg-white text-ink shadow-sm' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                        className={({ isActive }) => `focus-ring flex min-h-9 items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-black transition ${isActive ? 'bg-white text-ink shadow-sm' : 'text-white/80 hover:bg-white/10 hover:text-white'}`}
                       >
                         <ItemIcon aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
                         <span>{item.label}</span>
@@ -306,7 +306,7 @@ export default function AdminShell() {
           ) : (
             <div className="mt-2">
               <p className="text-xs font-bold uppercase tracking-[0.15em] text-emerald-200/75">Pannello admin</p>
-              <p className="mt-1 text-[0.68rem] font-semibold text-white/60">Scegli un’area e poi lo strumento.</p>
+              <p className="mt-1 text-[0.68rem] font-semibold text-white/70">Scegli un’area e poi lo strumento.</p>
             </div>
           )}
         </div>
@@ -335,7 +335,7 @@ export default function AdminShell() {
                 </div>
                 <ThemeToggle />
               </div>
-              <Link to="/account" className="focus-ring mt-3 flex min-h-10 items-center justify-center rounded-xl border border-white/15 px-3 py-2 text-xs font-black text-white/75 transition hover:bg-white/10 hover:text-white">
+              <Link to="/account" className="focus-ring mt-3 flex min-h-10 items-center justify-center rounded-xl border border-white/15 px-3 py-2 text-xs font-black text-white/85 transition hover:bg-white/10 hover:text-white">
                 Account personale
               </Link>
             </>
