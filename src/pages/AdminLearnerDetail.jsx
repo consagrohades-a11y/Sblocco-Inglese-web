@@ -87,7 +87,9 @@ export default function AdminLearnerDetail() {
     setAccountSaving(false);
   }
 
-  const assignments = Array.isArray(learner?.assignments) ? learner.assignments : [];
+  const assignments = Array.isArray(learner?.assignments)
+    ? learner.assignments.filter((assignment) => assignment.status !== 'archived')
+    : [];
   const relationships = Array.isArray(learner?.relationships) ? learner.relationships : [];
   const pageTitle = learner?.display_name || 'Dettaglio studente';
 
