@@ -21,6 +21,7 @@ import {
   wordOrderTerminalPunctuation,
 } from '../../lib/wordOrderPresentation.js';
 import SafeTeachingContent from './SafeTeachingContent.jsx';
+import SbloccoSelect from './SbloccoSelect.jsx';
 
 const resultStyles = {
   correct: 'border-emerald-200 bg-emerald-50 text-emerald-950 dark:border-emerald-300/25 dark:bg-emerald-400/10 dark:text-emerald-100',
@@ -88,9 +89,9 @@ function GapFill({ question, answer, onChange, disabled, select = false }) {
   function control(blank, index) {
     const value = values[blank.key] || '';
     const shared = 'focus-ring mx-1 my-1 inline-block max-w-full rounded-lg border-2 border-moss/25 bg-white px-3 py-2 text-base font-bold text-ink align-baseline shadow-sm dark:border-emerald-300/25 dark:bg-surface-800 dark:text-white';
-    return <label key={`${blank.key}-${index}`} className="inline max-w-full"><span className="sr-only">Spazio {index + 1}</span>{select
-      ? <select value={value} onChange={(event) => onChange({ ...values, [blank.key]: event.target.value })} disabled={disabled} className={`${shared} min-w-40`}><option value="">Scegli...</option>{(blank.options || []).map((option) => <option key={option}>{option}</option>)}</select>
-      : <input value={value} onChange={(event) => onChange({ ...values, [blank.key]: event.target.value })} disabled={disabled} className={`${shared} w-44`} />}</label>;
+    return <span key={`${blank.key}-${index}`} className="inline max-w-full"><span className="sr-only">Spazio {index + 1}</span>{select
+      ? <SbloccoSelect compact value={value} options={blank.options || []} onChange={(nextValue) => onChange({ ...values, [blank.key]: nextValue })} disabled={disabled} ariaLabel={`Spazio ${index + 1}`} />
+      : <input value={value} onChange={(event) => onChange({ ...values, [blank.key]: event.target.value })} disabled={disabled} aria-label={`Spazio ${index + 1}`} className={`${shared} w-44`} />}</span>;
   }
 
   if (template) {
@@ -103,7 +104,7 @@ function GapFill({ question, answer, onChange, disabled, select = false }) {
     })}</div>;
   }
 
-  return <div className="grid gap-4">{blanks.map((blank, index) => <label key={blank.key} className="grid gap-2"><span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Spazio {index + 1}</span>{select ? <select value={values[blank.key] || ''} onChange={(event) => onChange({ ...values, [blank.key]: event.target.value })} disabled={disabled} className="focus-ring rounded-xl border-2 border-ink/10 bg-white px-4 py-3 text-base font-bold text-ink dark:border-white/15 dark:bg-surface-800 dark:text-white"><option value="">Scegli...</option>{(blank.options || []).map((option) => <option key={option}>{option}</option>)}</select> : <TextAnswer value={values[blank.key] || ''} onChange={(value) => onChange({ ...values, [blank.key]: value })} disabled={disabled} />}</label>)}</div>;
+  return <div className="grid gap-4">{blanks.map((blank, index) => <div key={blank.key} className="grid gap-2"><span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Spazio {index + 1}</span>{select ? <SbloccoSelect value={values[blank.key] || ''} options={blank.options || []} onChange={(nextValue) => onChange({ ...values, [blank.key]: nextValue })} disabled={disabled} ariaLabel={`Spazio ${index + 1}`} /> : <TextAnswer value={values[blank.key] || ''} onChange={(value) => onChange({ ...values, [blank.key]: value })} disabled={disabled} />}</div>)}</div>;
 }
 
 function WordOrder({ question, answer, onChange, disabled }) {
