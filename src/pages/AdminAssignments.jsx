@@ -238,6 +238,7 @@ export default function AdminAssignments({ initialContentFilter = 'all' }) {
   const filteredAssignments = useMemo(() => {
     const term = search.trim().toLowerCase();
     return assignments.filter((assignment) => {
+      if (assignment.status === 'archived' && statusFilter !== 'archived') return false;
       if (statusFilter === 'active' && !['published', 'draft'].includes(assignment.status)) return false;
       if (statusFilter === 'overdue' && !isOverdue(assignment)) return false;
       if (!['all', 'active', 'overdue'].includes(statusFilter) && assignment.status !== statusFilter) return false;
