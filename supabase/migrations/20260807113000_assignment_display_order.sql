@@ -10,6 +10,12 @@ alter table public.assignments
   add constraint assignments_display_order_check
   check (display_order >= 0);
 
+-- Build the index before the backfill update. The assignments updated_at trigger
+-- leaves pending trigger events, and PostgreSQL will reject CREATE INDEX on the
+-- same table until those events have been processed at transaction commit.
+create index if not exists assignments_learner_display_order_idx
+  on public.assignments (learner_id, display_order, created_at desc);
+
 with ranked_assignments as (
   select
     assignment.id,
@@ -24,9 +30,6 @@ set display_order = ranked.display_order
 from ranked_assignments ranked
 where ranked.id = assignment.id
   and assignment.display_order = 0;
-
-create index if not exists assignments_learner_display_order_idx
-  on public.assignments (learner_id, display_order, created_at desc);
 
 create or replace function public.admin_reorder_learner_assignments(
   p_learner_id uuid,
