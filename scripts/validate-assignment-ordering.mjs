@@ -12,6 +12,11 @@ assert.match(migration, /add column if not exists display_order integer not null
 assert.match(migration, /create or replace function public\.admin_reorder_learner_assignments/i);
 assert.match(migration, /assignment\.status <> 'archived'/i);
 assert.match(migration, /grant execute on function public\.admin_reorder_learner_assignments\(uuid, uuid\[\]\) to authenticated/i);
+assert.ok(
+  migration.indexOf('create index if not exists assignments_learner_display_order_idx')
+    < migration.indexOf('with ranked_assignments as'),
+  'The assignments index must be created before the trigger-firing backfill update.',
+);
 assert.match(adminAssignments, /assignment\.status === 'archived' && statusFilter !== 'archived'/);
 assert.match(adminDetail, /assignment\.status !== 'archived'/);
 assert.match(adminDetail, /supabase\.rpc\('admin_reorder_learner_assignments'/);
