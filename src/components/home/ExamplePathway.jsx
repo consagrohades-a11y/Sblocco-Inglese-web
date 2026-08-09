@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  ArrowRight,
   CircleCheck,
   Handshake,
   Languages,
@@ -35,6 +34,7 @@ const scenarios = [
     key: 'meeting',
     label: 'Riunione',
     compactTitle: true,
+    longTitle: true,
     title: <>Per esempio,<br />devi partecipare<br />a una <em>riunione.</em></>,
     stages: [
       { title: 'Entrare nella conversazione', description: 'Intervenire senza aspettare che qualcuno ti dia la parola.', icon: MessagesSquare },
@@ -48,6 +48,7 @@ const scenarios = [
     key: 'international-client',
     label: 'Cliente internazionale',
     compactTitle: true,
+    longTitle: true,
     title: <>Per esempio,<br />devi parlare con<br />un <em>cliente internazionale.</em></>,
     stages: [
       { title: 'Capire di cosa ha bisogno', description: 'Fare le domande giuste e verificare di aver capito.', icon: Search },
@@ -88,23 +89,22 @@ export default function ExamplePathway() {
           <div key={`${scenario.key}-intro`} className="home-example__intro home-example__swap">
             <h2
               id="home-example-title"
-              className={`home-display${scenario.compactTitle ? ' home-example__title--compact' : ''}${scenario.singleLineTitle ? ' home-example__title--single-line' : ''}`}
+              className={`home-display${scenario.compactTitle ? ' home-example__title--compact' : ''}${scenario.longTitle ? ' home-example__title--long' : ''}${scenario.singleLineTitle ? ' home-example__title--single-line' : ''}`}
             >
               {scenario.title}
             </h2>
-            <p>{scenarioSupport}</p>
-          </div>
-
-          <div className="home-example__journey">
             <div className="home-example__controls">
               <button
                 type="button"
                 onClick={showNextScenario}
                 aria-label={`Mostra il prossimo esempio: ${nextScenario.label}`}
               >
-                <RefreshCw aria-hidden="true" /> Cambia esempio <ArrowRight aria-hidden="true" />
+                <RefreshCw aria-hidden="true" /> Cambia esempio
               </button>
             </div>
+          </div>
+
+          <div className="home-example__journey">
             <ol
               key={`${scenario.key}-stages`}
               className="home-example__steps home-example__swap"
@@ -119,6 +119,9 @@ export default function ExamplePathway() {
                 </li>
               ))}
             </ol>
+            <p key={`${scenario.key}-support`} className="home-example__support home-example__swap">
+              {scenarioSupport}
+            </p>
           </div>
         </div>
       </div>
