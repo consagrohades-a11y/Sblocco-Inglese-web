@@ -21,7 +21,8 @@ const scenarios = [
   {
     key: 'interview',
     label: 'Colloquio',
-    title: <>Per esempio,<br />hai un<br /><em>colloquio.</em></>,
+    singleLineTitle: true,
+    title: <>Per esempio, hai un <em>colloquio.</em></>,
     stages: [
       { title: 'Presentarti', description: 'Parlare di te in modo chiaro, naturale e pertinente.', icon: UserRound },
       { title: 'Raccontare la tua esperienza', description: 'Spiegare cosa hai fatto, cosa sai fare e cosa hai imparato.', icon: Presentation },
@@ -87,7 +88,7 @@ export default function ExamplePathway() {
           <div key={`${scenario.key}-intro`} className="home-example__intro home-example__swap">
             <h2
               id="home-example-title"
-              className={`home-display${scenario.compactTitle ? ' home-example__title--compact' : ''}`}
+              className={`home-display${scenario.compactTitle ? ' home-example__title--compact' : ''}${scenario.singleLineTitle ? ' home-example__title--single-line' : ''}`}
             >
               {scenario.title}
             </h2>

@@ -567,9 +567,22 @@
 }
 
 .home-example {
+  --home-example-chapter-offset: 4rem;
   position: relative;
   z-index: 2;
-  padding: 4rem 0 2.25rem;
+  isolation: isolate;
+  padding: var(--home-example-chapter-offset) 0 2.25rem;
+}
+
+.home-example::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: var(--home-example-chapter-offset) 0 0;
+  background:
+    radial-gradient(circle at 82% 20%, rgba(117, 153, 169, 0.16), transparent 23rem),
+    repeating-radial-gradient(circle at 20% 30%, rgba(255,255,255,0.016) 0 1px, transparent 1px 4px),
+    var(--home-navy);
 }
 
 .home-example__panel {
@@ -577,15 +590,12 @@
   grid-template-columns: 1fr;
   gap: 0.85rem;
   min-height: 0;
-  overflow: hidden;
-  padding: 2.2rem 2.55rem 2rem;
-  border-radius: 1.4rem;
+  overflow: visible;
+  padding: 3rem 0 2.5rem;
+  border-radius: 0;
   color: #fff9f3;
-  background:
-    radial-gradient(circle at 82% 20%, rgba(117, 153, 169, 0.16), transparent 23rem),
-    repeating-radial-gradient(circle at 20% 30%, rgba(255,255,255,0.016) 0 1px, transparent 1px 4px),
-    var(--home-navy);
-  box-shadow: 0 1.2rem 3rem rgba(14, 48, 69, 0.1);
+  background: transparent;
+  box-shadow: none;
 }
 
 .home-example__intro {
@@ -599,7 +609,7 @@
 .home-example__intro h2 {
   width: 100%;
   max-width: 22ch;
-  min-height: 8.5rem;
+  min-height: 8.25rem;
   font-size: clamp(2.35rem, 3.65vw, 3.65rem);
   line-height: 0.92;
 }
@@ -617,6 +627,11 @@
 .home-example__intro .home-example__title--compact {
   font-size: clamp(2.15rem, 2.8vw, 2.8rem);
   line-height: 0.96;
+}
+
+.home-example__intro .home-example__title--single-line {
+  max-width: none;
+  white-space: nowrap;
 }
 
 .home-example__journey {
@@ -779,9 +794,9 @@
 
 @media (min-width: 80rem) {
   .home-hero__art img {
-    top: -1.5rem;
-    right: 1.5rem;
-    width: 41rem;
+    top: 0;
+    right: 1rem;
+    width: 34.5rem;
   }
 }
 
@@ -801,6 +816,7 @@
   }
 
   .home-example {
+    --home-example-chapter-offset: 2.75rem;
     padding-top: 2.75rem;
   }
 
@@ -808,7 +824,7 @@
     grid-template-columns: 1fr;
     gap: 0.85rem;
     min-height: 0;
-    padding-inline: 2.25rem;
+    padding-inline: 0;
   }
 
   .home-example__intro {
@@ -828,7 +844,7 @@
   }
 
   .home-example__intro h2 {
-    min-height: 8.5rem;
+    min-height: 8.25rem;
   }
 
   .home-example__intro p {
@@ -1005,6 +1021,7 @@
   }
 
   .home-example {
+    --home-example-chapter-offset: 2rem;
     padding-top: 2rem;
   }
 
@@ -1062,8 +1079,8 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
-    padding: 2.2rem 1.5rem 2.5rem;
-    border-radius: 1.15rem;
+    padding: 2.5rem 0 2.75rem;
+    border-radius: 0;
   }
 
   .home-example__intro {
@@ -1076,6 +1093,10 @@
   .home-example__intro h2 {
     min-height: 10.5rem;
     font-size: clamp(2.75rem, 12vw, 4.25rem);
+  }
+
+  .home-example__intro .home-example__title--single-line {
+    white-space: normal;
   }
 
   .home-example__intro .home-example__title--compact {
