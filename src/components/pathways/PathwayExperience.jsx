@@ -6,7 +6,6 @@ import {
   BriefcaseBusiness,
   Check,
   CheckCircle2,
-  CircleHelp,
   ClipboardCheck,
   Compass,
   Lightbulb,
@@ -396,9 +395,8 @@ function PathwayFAQ({ items }) {
       <div className="pathway-shell pathway-split">
         <div className="pathway-heading">
           <p className="pathway-kicker">DOMANDE FREQUENTI</p>
-          <h2>Prima di scegliere</h2>
+          <h2>Prima di scegliere<span className="pathway-faq__punctuation">?</span></h2>
           <p>Risposte concrete su livello, obiettivo e modo di lavorare. Nessuna promessa di risultato garantito.</p>
-          <CircleHelp aria-hidden="true" className="pathway-faq__icon" />
         </div>
         <FAQAccordion items={items} />
       </div>

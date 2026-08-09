@@ -504,7 +504,7 @@
 .pathway-form-message--error { border-color: #d98773; background: #fff0ec; color: #7d2d1e; }
 
 .pathway-faq { background: var(--path-cream); }
-.pathway-faq__icon { width: 6rem; height: 6rem; margin-top: 2rem; color: var(--path-orange); stroke-width: 0.8; opacity: 0.24; }
+.pathway-faq__punctuation { color: var(--path-orange); }
 .pathway-faq .divide-y { overflow: hidden; border-radius: 0; border-color: var(--path-line); background: transparent; box-shadow: none; }
 .pathway-faq .divide-y > div { border-color: var(--path-line); }
 .pathway-faq .divide-y button { color: var(--path-navy); }
@@ -590,4 +590,3 @@
   .pathway-support__cta,
   .pathway-choice-list button { transition: none; }
 }
-
