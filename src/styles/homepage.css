@@ -398,9 +398,15 @@
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(19rem, 1.45fr) 4fr;
+  grid-template-columns: 1fr;
   align-items: start;
-  gap: 3rem;
+  gap: 3.5rem;
+}
+
+.home-method__intro {
+  display: grid;
+  justify-items: center;
+  text-align: center;
 }
 
 .home-method__eyebrow {
@@ -411,6 +417,7 @@
 }
 
 .home-method__intro h2 {
+  max-width: 18ch;
   margin-top: 0.9rem;
   font-size: clamp(2.05rem, 3vw, 3rem);
   line-height: 0.98;
@@ -426,7 +433,7 @@
 }
 
 .home-method__support {
-  max-width: 20rem;
+  max-width: 42rem;
   margin-top: 1rem;
   font-size: 0.82rem;
   font-weight: 500;
