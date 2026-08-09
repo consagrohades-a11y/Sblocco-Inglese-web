@@ -792,6 +792,85 @@
   min-width: 8.8rem;
 }
 
+.home-public-footer {
+  border-top: 1px solid rgba(14, 48, 69, 0.16);
+  color: var(--home-navy);
+  background: var(--home-paper-deep);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.home-public-footer__inner {
+  display: grid;
+  grid-template-columns: 1.15fr 0.75fr 1fr;
+  gap: 4rem;
+  padding-top: 3.2rem;
+  padding-bottom: 3.4rem;
+}
+
+.home-public-footer__tagline {
+  max-width: 21rem;
+  margin-top: 1.1rem;
+  color: rgba(14, 48, 69, 0.72);
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  font-size: 1.08rem;
+  line-height: 1.45;
+}
+
+.home-public-footer__cta {
+  display: inline-flex;
+  min-height: 2.65rem;
+  margin-top: 1.35rem;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  border-radius: 0.2rem;
+  color: white;
+  background: var(--home-orange);
+  font-size: 0.78rem;
+  font-weight: 720;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.home-public-footer__cta:hover {
+  color: white;
+  background: #b83e13;
+  transform: translateY(-1px);
+}
+
+.home-public-footer__links {
+  display: grid;
+  align-content: start;
+  gap: 0.68rem;
+  font-size: 0.78rem;
+}
+
+.home-public-footer__heading {
+  margin-bottom: 0.2rem;
+  color: var(--home-orange);
+  font-size: 0.65rem;
+  font-weight: 820;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.home-public-footer__links a {
+  width: fit-content;
+  color: rgba(14, 48, 69, 0.72);
+  font-weight: 570;
+  transition: color 160ms ease;
+}
+
+.home-public-footer__links a:hover {
+  color: var(--home-orange);
+}
+
+.home-public-footer__note {
+  max-width: 18rem;
+  margin-top: 0.3rem;
+  color: rgba(14, 48, 69, 0.56);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+
 .home-editorial a:focus-visible,
 .home-editorial button:focus-visible,
 .home-site-header a:focus-visible,
@@ -1224,6 +1303,18 @@
 
   .home-final h2 {
     font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .home-public-footer__inner {
+    grid-template-columns: 1fr;
+    gap: 2.4rem;
+    padding-top: 2.8rem;
+    padding-bottom: 3rem;
+  }
+
+  .home-public-footer__links {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(14, 48, 69, 0.12);
   }
 }
 
