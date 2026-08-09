@@ -215,7 +215,7 @@
 .home-hero__title {
   display: grid;
   margin-top: 1.25rem;
-  font-size: clamp(3.65rem, 6.25vw, 5.8rem);
+  font-size: clamp(3.65rem, 6.25vw, 4.5rem);
   line-height: 0.91;
 }
 
@@ -268,12 +268,10 @@
 .home-hero__art img {
   position: absolute;
   z-index: 1;
-  top: -1.4rem;
-  right: -3rem;
-  width: min(34.5rem, 53vw);
-  height: 39rem;
-  object-fit: fill;
-  object-position: center;
+  top: -1.45rem;
+  right: -6.5rem;
+  width: min(36.4rem, 57vw);
+  height: auto;
   filter: saturate(0.92) contrast(0.99);
 }
 
@@ -659,11 +657,19 @@
 
 @media (min-width: 64rem) {
   .home-shell {
-    width: min(100% - 9.25rem, 90rem);
+    width: min(100% - 9.25rem, 81.75rem);
   }
 
   .home-site-header__inner {
     width: min(100% - 4.8rem, 90rem);
+  }
+}
+
+@media (min-width: 80rem) {
+  .home-hero__art img {
+    top: -1.5rem;
+    right: 1.5rem;
+    width: 41rem;
   }
 }
 
@@ -673,8 +679,8 @@
   }
 
   .home-hero__art img {
-    right: -2.1rem;
-    width: 31rem;
+    right: -5rem;
+    width: 34rem;
   }
 
   .home-method__grid {
@@ -770,15 +776,15 @@
   }
 
   .home-hero__art {
-    height: min(33rem, 116vw);
+    height: min(34rem, 114vw);
     margin-top: 1rem;
   }
 
   .home-hero__art img {
-    top: -1rem;
+    top: 0;
     right: 50%;
-    width: min(34rem, 110vw);
-    height: 100%;
+    width: min(34rem, 112vw);
+    height: auto;
     transform: translateX(50%);
   }
 
@@ -933,35 +939,6 @@
   .home-method__pillars {
     grid-template-columns: 1fr;
   }
-}
-
-.dark .home-editorial,
-.dark .home-site-header,
-.dark .home-site-header__mobile {
-  --home-navy: #f7eee6;
-  --home-orange: #ff8b5e;
-  --home-paper: #10231f;
-  color: #f7eee6;
-  background: #10231f;
-}
-
-.dark .home-editorial {
-  background:
-    radial-gradient(circle at 18% 5%, rgba(40, 78, 69, 0.45), transparent 30rem),
-    linear-gradient(180deg, #10231f 0%, #0b1b18 100%);
-}
-
-.dark .home-button--primary,
-.dark .home-site-header__cta {
-  color: #172522;
-}
-
-.dark .home-method__icon {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.dark .home-example__panel {
-  background: #071a27;
 }
 
 @media (prefers-reduced-motion: reduce) {

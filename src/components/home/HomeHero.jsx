@@ -32,10 +32,10 @@ export default function HomeHero() {
         <div className="home-hero__art" aria-hidden="true">
           <span className="home-hero__halo" />
           <img
-            src="/assets/brand/sblocco-editorial-conversation-v1.png"
+            src="/assets/brand/sblocco-editorial-conversation-v2.png"
             alt=""
-            width="1024"
-            height="1536"
+            width="1254"
+            height="1254"
           />
         </div>
       </div>

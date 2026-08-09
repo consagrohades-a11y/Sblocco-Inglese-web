@@ -34,7 +34,9 @@
             (saved !== 'light' &&
               window.matchMedia &&
               window.matchMedia('(prefers-color-scheme: dark)').matches);
-          if (dark) document.documentElement.classList.add('dark');
+          if (dark && window.location.pathname !== '/') {
+            document.documentElement.classList.add('dark');
+          }
         } catch (error) {
           /* tema di default chiaro se localStorage non è accessibile */
         }

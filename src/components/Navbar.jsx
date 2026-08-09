@@ -153,7 +153,6 @@ function EditorialHomeNavbar({ displayName, isAdmin, loading, mobileOpen, onSign
               <button type="button" onClick={onSignOut}>Esci</button>
             </>
           ) : !loading ? <Link to="/login">Accedi</Link> : null}
-          <ThemeToggle mobile />
           <Link to="/prenota" className="home-site-header__cta">Inizia ora</Link>
         </nav>
       ) : null}
