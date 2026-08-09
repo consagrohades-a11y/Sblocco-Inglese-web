@@ -14,7 +14,7 @@ export default function HomeHero() {
             <em>che vuoi farci.</em>
           </h1>
           <p className="home-hero__support">
-            Sblocco parte da ciò che vuoi riuscire a fare e costruisce da lì un percorso fatto della lingua che ti serve e della pratica per usarla.
+            Sblocco parte da ciò che vuoi riuscire a fare e costruisce da lì il percorso: l&apos;inglese che ti serve e la pratica per usarlo.
             <strong>Prima l&apos;obiettivo. Poi l&apos;inglese per arrivarci.</strong>
           </p>
           <div className="home-hero__actions">

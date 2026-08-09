@@ -15,7 +15,7 @@ import {
   UserRound,
 } from 'lucide-react';
 
-const scenarioSupport = 'Vediamo cosa devi riuscire a fare, poi costruiamo la lingua e la pratica intorno a quelle situazioni.';
+const scenarioSupport = 'Scomponiamo quello che devi riuscire a fare e alleniamo, passo dopo passo, l’inglese che ti serve.';
 
 const scenarios = [
   {

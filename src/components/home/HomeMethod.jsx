@@ -19,7 +19,7 @@ const pillars = [
   {
     key: 'practice',
     label: 'PRATICA',
-    title: 'Lo metti subito in uso.',
+    title: 'Metti subito in pratica ciò che impari.',
     text: 'Esercizi, variazioni, simulazioni e feedback per passare dal capire al fare.',
     icon: MessagesSquare,
   },
@@ -27,7 +27,7 @@ const pillars = [
     key: 'use',
     label: 'USO',
     title: 'Lo rendi sempre più tuo.',
-    text: 'Ripeti, adatti e riutilizzi ciò che hai imparato, finché riesci a usarlo con più autonomia.',
+    text: 'Ripeti, adatti e riutilizzi ciò che hai imparato per usarlo con sempre più autonomia.',
     icon: Repeat2,
   },
 ];
@@ -48,7 +48,7 @@ export default function HomeMethod() {
           <h2 id="home-method-title" className="home-display">Partiamo da ciò<br />che vuoi riuscire a fare.</h2>
           <p className="home-method__lead">Poi costruiamo l&apos;inglese per arrivarci.</p>
           <p className="home-method__support">
-            Grammatica, vocabolario ed espressioni restano fondamentali. Li scegliamo e li alleniamo in funzione di ciò che ti serve davvero.
+            Grammatica, vocabolario ed espressioni restano fondamentali. Li scegliamo e li alleniamo in base al tuo obiettivo.
           </p>
         </div>
         <div className="home-method__pillars" aria-label="Obiettivo, lingua utile, pratica e uso">

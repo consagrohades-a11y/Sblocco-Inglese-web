@@ -188,14 +188,14 @@
 
 .home-hero {
   position: relative;
-  min-height: 34.6rem;
+  min-height: 30.85rem;
 }
 
 .home-hero__grid {
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(25rem, 1.08fr);
   align-items: center;
-  min-height: 34.6rem;
+  min-height: 30.85rem;
 }
 
 .home-hero__copy {
@@ -390,7 +390,7 @@
 
 .home-method {
   position: relative;
-  padding: 3.5rem 0 4.5rem;
+  padding: 3.5rem 0 6rem;
   scroll-margin-top: 1.5rem;
 }
 
@@ -495,7 +495,7 @@
   inset: 0;
   overflow: hidden;
   color: var(--home-navy);
-  opacity: 0.045;
+  opacity: 0.03;
 }
 
 .home-method__arch {
@@ -803,18 +803,25 @@
   .home-hero__art img {
     top: 0;
     right: 1rem;
-    width: 34.5rem;
+    width: 30.75rem;
   }
 }
 
 @media (max-width: 64rem) {
+  .home-hero,
+  .home-hero__grid {
+    min-height: 32rem;
+  }
+
   .home-hero__grid {
     grid-template-columns: minmax(0, 0.94fr) minmax(23rem, 1.06fr);
   }
 
   .home-hero__art img {
+    top: 50%;
     right: -5rem;
     width: 34rem;
+    transform: translateY(-50%);
   }
 
   .home-method__grid {
@@ -866,6 +873,13 @@
 
   .home-example__journey {
     padding-left: 0;
+  }
+}
+
+@media (min-width: 56rem) and (max-width: 64rem) {
+  .home-hero,
+  .home-hero__grid {
+    min-height: 30.85rem;
   }
 }
 
