@@ -18,6 +18,7 @@ import {
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import BrandLogo from './BrandLogo';
+import HomeEditorialLogo from './home/HomeEditorialLogo';
 import ThemeToggle from './ThemeToggle';
 
 const publicItems = [
@@ -34,6 +35,13 @@ const learnerItems = [
   { label: 'Pratica mirata', to: '/attivita/pratica-mirata', icon: Target },
   { label: 'Corsi', to: '/percorsi', icon: BookOpen },
   { label: 'Progressi', to: '/progressi', icon: BarChart3 },
+];
+
+const editorialHomeItems = [
+  { label: 'Il metodo', to: '/metodo' },
+  { label: 'Percorsi', to: '/percorsi' },
+  { label: 'Risorse', to: '/trainers' },
+  { label: 'Storie', to: '/casi-reali' },
 ];
 
 function isRouteActive(pathname, to) {
@@ -101,6 +109,58 @@ function AccountMenu({ displayName, isAdmin, onSignOut }) {
   );
 }
 
+function EditorialHomeNavbar({ displayName, isAdmin, loading, mobileOpen, onSignOut, setMobileOpen, user }) {
+  return (
+    <header className="home-site-header">
+      <div className="home-site-header__inner">
+        <HomeEditorialLogo onClick={() => setMobileOpen(false)} />
+
+        <nav className="home-site-header__nav" aria-label="Navigazione principale">
+          {editorialHomeItems.map((item) => (
+            <Link key={item.to} to={item.to}>{item.label}</Link>
+          ))}
+        </nav>
+
+        <div className="home-site-header__actions">
+          {!loading && user ? (
+            <AccountMenu displayName={displayName} isAdmin={isAdmin} onSignOut={onSignOut} />
+          ) : !loading ? (
+            <Link to="/login" className="home-site-header__login">Accedi</Link>
+          ) : null}
+          <Link to="/prenota" className="home-site-header__cta">Inizia ora</Link>
+        </div>
+
+        <button
+          type="button"
+          className="home-site-header__menu-button"
+          aria-label={mobileOpen ? 'Chiudi menu' : 'Apri menu'}
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((value) => !value)}
+        >
+          {mobileOpen ? <X aria-hidden="true" className="h-5 w-5" /> : <Menu aria-hidden="true" className="h-5 w-5" />}
+        </button>
+      </div>
+
+      {mobileOpen ? (
+        <nav className="home-site-header__mobile" aria-label="Navigazione mobile">
+          {editorialHomeItems.map((item) => (
+            <Link key={item.to} to={item.to}>{item.label}</Link>
+          ))}
+          {!loading && user ? (
+            <>
+              <Link to="/account">Account</Link>
+              {isAdmin ? <Link to="/admin">Pannello admin</Link> : null}
+              <button type="button" onClick={onSignOut}>Esci</button>
+            </>
+          ) : !loading ? <Link to="/login">Accedi</Link> : null}
+          <ThemeToggle mobile />
+          <Link to="/prenota" className="home-site-header__cta">Inizia ora</Link>
+        </nav>
+      ) : null}
+    </header>
+  );
+}
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [compact, setCompact] = useState(false);
@@ -147,6 +207,20 @@ export default function Navbar() {
   function handleLearnerBack() {
     if (window.history.length > 1) navigate(-1);
     else navigate('/assignments');
+  }
+
+  if (!isLearner && location.pathname === '/') {
+    return (
+      <EditorialHomeNavbar
+        displayName={displayName}
+        isAdmin={isAdmin}
+        loading={loading}
+        mobileOpen={mobileOpen}
+        onSignOut={handleSignOut}
+        setMobileOpen={setMobileOpen}
+        user={user}
+      />
+    );
   }
 
   return (
