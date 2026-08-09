@@ -29,8 +29,8 @@ export default function Home() {
       />
       <HomeHero />
       <GoalQuickSelector />
-      <HomeMethod />
       <ExamplePathway />
+      <HomeMethod />
       <HomeFinalCTA />
     </div>
   );
