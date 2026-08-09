@@ -31,9 +31,9 @@ export default function Footer() {
       <div className="section-shell grid gap-7 py-9 md:grid-cols-[1.1fr_0.8fr_1fr] lg:py-10">
         <div>
           <BrandLogo to="/" compact light />
-          <p className="mt-4 max-w-sm text-sm leading-6 text-white/65">Inglese pratico per colloqui, call e lavoro.</p>
-          <Link className="mt-4 inline-flex rounded-full bg-mint px-4 py-2 text-sm font-black text-ink transition hover:bg-white" to="/prenota">
-            Inizia il tuo percorso
+          <p className="mt-4 max-w-sm text-sm leading-6 text-white/65">L’inglese costruito intorno a ciò che vuoi fare.</p>
+          <Link className="mt-4 inline-flex rounded-full bg-mint px-4 py-2 text-sm font-black text-ink transition hover:bg-white" to="/#percorsi">
+            Trova il tuo percorso
           </Link>
         </div>
 

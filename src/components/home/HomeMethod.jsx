@@ -1,36 +1,40 @@
 import React from 'react';
-import { ChartNoAxesCombined, MapPinned, MessagesSquare, Target } from 'lucide-react';
+import { BookOpenText, MessagesSquare, Repeat2, Target } from 'lucide-react';
 
 const pillars = [
   {
     key: 'objective',
-    title: <>Partiamo<br />dal tuo obiettivo</>,
-    text: <>Definiamo insieme<br />cosa vuoi riuscire<br />a fare e in quali<br />situazioni.</>,
+    label: 'OBIETTIVO',
+    title: 'Prima capiamo dove vuoi arrivare.',
+    text: 'Definiamo cosa devi riuscire a fare e in quali situazioni userai l’inglese.',
     icon: Target,
   },
   {
-    key: 'path',
-    title: <>Costruiamo<br />il percorso</>,
-    text: <>Solo ciò che ti serve,<br />nel giusto ordine,<br />al tuo ritmo.</>,
-    icon: MapPinned,
+    key: 'language',
+    label: 'LINGUA UTILE',
+    title: 'Costruiamo l’inglese che ti serve.',
+    text: 'Parole, strutture ed espressioni scelte in funzione di quell’obiettivo.',
+    icon: BookOpenText,
   },
   {
     key: 'practice',
-    title: <>Ti alleni<br />davvero</>,
-    text: <>Esercitazioni mirate,<br />feedback e pratica<br />guidata su casi reali.</>,
+    label: 'PRATICA',
+    title: 'Lo metti subito in uso.',
+    text: 'Esercizi, variazioni, simulazioni e feedback per passare dal capire al fare.',
     icon: MessagesSquare,
   },
   {
-    key: 'results',
-    title: <>Vedi risultati<br />che restano</>,
-    text: <>Più sicurezza, più<br />fluidità, più opportunità<br />nella vita reale.</>,
-    icon: ChartNoAxesCombined,
+    key: 'use',
+    label: 'USO',
+    title: 'Lo rendi sempre più tuo.',
+    text: 'Ripeti, adatti e riutilizzi ciò che hai imparato, finché riesci a usarlo con più autonomia.',
+    icon: Repeat2,
   },
 ];
 
 export default function HomeMethod() {
   return (
-    <section className="home-method" aria-labelledby="home-method-title">
+    <section id="metodo" className="home-method" aria-labelledby="home-method-title">
       <div className="home-method__scenery" aria-hidden="true">
         <span className="home-method__arch" />
         <span className="home-method__stairs" />
@@ -40,18 +44,18 @@ export default function HomeMethod() {
       </div>
       <div className="home-shell home-method__grid">
         <div className="home-method__intro">
-          <h2 id="home-method-title" className="home-display">Un metodo pratico,<br />fatto per funzionare.</h2>
-          <p>
-            Niente infinite regole da memorizzare.<br />
-            Impari l&apos;inglese nel modo più naturale:<br />
-            capendo, usando, sbagliando e riprovando.<br />
-            Sempre nel contesto giusto per te.
+          <p className="home-method__eyebrow">IL METODO SBLOCCO</p>
+          <h2 id="home-method-title" className="home-display">Partiamo da ciò<br />che vuoi riuscire a fare.</h2>
+          <p className="home-method__lead">Poi costruiamo l&apos;inglese per arrivarci.</p>
+          <p className="home-method__support">
+            Grammatica, vocabolario ed espressioni restano fondamentali. Li scegliamo e li alleniamo in funzione di ciò che ti serve davvero.
           </p>
         </div>
-        <div className="home-method__pillars">
-          {pillars.map(({ key, title, text, icon: Icon }) => (
+        <div className="home-method__pillars" aria-label="Obiettivo, lingua utile, pratica e uso">
+          {pillars.map(({ key, label, title, text, icon: Icon }) => (
             <article key={key} className="home-method__pillar">
               <span className="home-method__icon"><Icon aria-hidden="true" /></span>
+              <span className="home-method__label">{label}</span>
               <h3>{title}</h3>
               <p>{text}</p>
             </article>

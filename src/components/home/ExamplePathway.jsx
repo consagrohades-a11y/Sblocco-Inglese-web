@@ -4,7 +4,6 @@ import {
   CircleCheck,
   Handshake,
   Languages,
-  ListChecks,
   MapPinned,
   MessagesSquare,
   Plane,
@@ -16,53 +15,58 @@ import {
   UserRound,
 } from 'lucide-react';
 
+const scenarioSupport = 'Vediamo cosa devi riuscire a fare, poi costruiamo la lingua e la pratica intorno a quelle situazioni.';
+
 const scenarios = [
   {
     key: 'interview',
     label: 'Colloquio',
-    title: <>Per esempio<br />hai da fare<br />un <em>colloquio.</em></>,
-    subtitle: 'Un percorso pensato per aiutarti ad arrivare preparato e sicuro in ogni fase.',
+    title: <>Per esempio,<br />hai un<br /><em>colloquio.</em></>,
     stages: [
-      { title: "Capire l'azienda", description: 'Analizziamo il contesto e gli obiettivi del ruolo.', icon: Search },
-      { title: 'Preparare le risposte', description: 'Strutturiamo risposte chiave alle domande più frequenti.', icon: MessagesSquare },
-      { title: 'Allenarsi', description: 'Simulazioni guidate con feedback mirato per migliorare.', icon: UserRound },
-      { title: 'Affrontare il colloquio', description: 'Arrivi preparato e parli con sicurezza.', icon: CircleCheck },
+      { title: 'Presentarti', description: 'Parlare di te in modo chiaro, naturale e pertinente.', icon: UserRound },
+      { title: 'Raccontare la tua esperienza', description: 'Spiegare cosa hai fatto, cosa sai fare e cosa hai imparato.', icon: Presentation },
+      { title: 'Rispondere a domande impreviste', description: 'Costruire una risposta anche quando la domanda non è quella che avevi preparato.', icon: MessagesSquare },
+      { title: 'Affrontare una prova pratica', description: 'Capire la richiesta, fare domande se serve e ragionare ad alta voce.', icon: Target },
+      { title: 'Spiegare una scelta e concludere', description: 'Motivare le tue decisioni, riassumere e lasciare una buona impressione.', icon: CircleCheck },
     ],
   },
   {
     key: 'meeting',
     label: 'Riunione',
-    title: <>Per esempio<br />devi gestire<br />una <em>riunione.</em></>,
-    subtitle: 'Un percorso per organizzare il messaggio, intervenire con chiarezza e arrivare a decisioni precise.',
+    compactTitle: true,
+    title: <>Per esempio,<br />devi partecipare<br />a una <em>riunione.</em></>,
     stages: [
-      { title: "Definire l'obiettivo", description: 'Chiarisci il risultato che vuoi ottenere e i punti essenziali.', icon: Target },
-      { title: "Preparare l'agenda", description: 'Metti gli argomenti nel giusto ordine e anticipa le priorità.', icon: ListChecks },
-      { title: 'Intervenire', description: 'Esprimi idee, accordo e disaccordo con sicurezza.', icon: MessagesSquare },
-      { title: 'Chiudere con chiarezza', description: 'Riepiloghi decisioni, responsabilità e prossimi passi.', icon: CircleCheck },
+      { title: 'Entrare nella conversazione', description: 'Intervenire senza aspettare che qualcuno ti dia la parola.', icon: MessagesSquare },
+      { title: 'Dare la tua opinione', description: 'Spiegare cosa ne pensi e sviluppare il tuo punto di vista.', icon: UserRound },
+      { title: 'Chiedere chiarimenti', description: 'Fermare la conversazione quando qualcosa non è chiaro.', icon: Search },
+      { title: 'Essere d’accordo o dissentire', description: 'Rispondere alle idee degli altri senza risultare brusco.', icon: Handshake },
+      { title: 'Chiudere il tuo intervento', description: 'Riassumere il punto e lasciare spazio alla conversazione.', icon: CircleCheck },
     ],
   },
   {
     key: 'international-client',
     label: 'Cliente internazionale',
-    title: <>Per esempio<br />lavori con un<br /><em>cliente internazionale.</em></>,
-    subtitle: 'Un percorso per capire i bisogni, comunicare il tuo valore e costruire fiducia in inglese.',
+    compactTitle: true,
+    title: <>Per esempio,<br />devi parlare con<br />un <em>cliente internazionale.</em></>,
     stages: [
-      { title: 'Capire il cliente', description: 'Fai domande mirate e riconosci bisogni, priorità e vincoli.', icon: Search },
-      { title: 'Presentare il valore', description: 'Spieghi la proposta in modo concreto e rilevante.', icon: Presentation },
-      { title: 'Gestire le domande', description: 'Rispondi con calma e chiarisci dubbi o obiezioni.', icon: MessagesSquare },
-      { title: 'Concordare i prossimi passi', description: 'Chiudi la conversazione con accordi chiari e condivisi.', icon: Handshake },
+      { title: 'Capire di cosa ha bisogno', description: 'Fare le domande giuste e verificare di aver capito.', icon: Search },
+      { title: 'Spiegare una soluzione', description: 'Presentare informazioni in modo semplice e ordinato.', icon: Presentation },
+      { title: 'Gestire domande e dubbi', description: 'Rispondere senza perdere il filo della conversazione.', icon: MessagesSquare },
+      { title: 'Affrontare un problema', description: 'Spiegare cosa è successo e proporre cosa fare.', icon: ShieldCheck },
+      { title: 'Chiudere la conversazione', description: 'Confermare i prossimi passi e lasciare tutto chiaro.', icon: Handshake },
     ],
   },
   {
     key: 'abroad',
     label: 'Estero',
-    title: <>Per esempio<br />devi prepararti<br />per <em>l&apos;estero.</em></>,
-    subtitle: 'Un percorso per affrontare le situazioni pratiche e muoverti con sicurezza fin dal primo giorno.',
+    compactTitle: true,
+    title: <>Per esempio,<br />tra poco ti trasferisci<br /><em>all&apos;estero.</em></>,
     stages: [
-      { title: 'Preparare le situazioni', description: 'Individui i momenti reali in cui dovrai usare inglese.', icon: MapPinned },
-      { title: 'Usare frasi essenziali', description: 'Costruisci un repertorio semplice, utile e immediato.', icon: Languages },
-      { title: 'Affrontare gli imprevisti', description: 'Impari a chiedere aiuto, spiegare problemi e trovare soluzioni.', icon: ShieldCheck },
-      { title: 'Muoversi in autonomia', description: 'Parti con gli strumenti per comunicare nella vita quotidiana.', icon: Plane },
+      { title: 'Presentarti e conoscere persone', description: 'Parlare di te e fare domande senza fermarti alle frasi da manuale.', icon: UserRound },
+      { title: 'Cavartela nella vita quotidiana', description: 'Chiedere informazioni, prendere appuntamenti e risolvere piccoli problemi.', icon: MapPinned },
+      { title: 'Parlare al lavoro', description: 'Capire i colleghi, fare domande e spiegare cosa stai facendo.', icon: Languages },
+      { title: 'Gestire gli imprevisti', description: 'Spiegare un problema anche quando non conosci tutte le parole.', icon: ShieldCheck },
+      { title: 'Diventare più autonomo', description: 'Affrontare sempre più situazioni senza preparare ogni frase prima.', icon: Plane },
     ],
   },
 ];
@@ -81,10 +85,13 @@ export default function ExamplePathway() {
       <div className="home-shell">
         <div className="home-example__panel" aria-live="polite">
           <div key={`${scenario.key}-intro`} className="home-example__intro home-example__swap">
-            <h2 id="home-example-title" className="home-display">
+            <h2
+              id="home-example-title"
+              className={`home-display${scenario.compactTitle ? ' home-example__title--compact' : ''}`}
+            >
               {scenario.title}
             </h2>
-            <p>{scenario.subtitle}</p>
+            <p>{scenarioSupport}</p>
           </div>
 
           <div className="home-example__journey">

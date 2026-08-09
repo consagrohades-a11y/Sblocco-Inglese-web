@@ -24,8 +24,8 @@ export default function Home() {
   return (
     <div className="home-editorial">
       <SEO
-        title="Sblocco Inglese | L’inglese costruito intorno a ciò che vuoi fare"
-        description="Un percorso di inglese pratico costruito sui tuoi obiettivi, con metodo, pratica guidata e situazioni reali."
+        title="Sblocco Inglese | Impara l’inglese partendo da ciò che vuoi farci"
+        description="Sblocco parte da ciò che vuoi riuscire a fare e costruisce da lì la lingua e la pratica che ti servono per arrivarci."
       />
       <HomeHero />
       <GoalQuickSelector />
