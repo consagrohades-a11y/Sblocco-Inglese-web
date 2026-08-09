@@ -331,32 +331,38 @@
 }
 
 .pathway-choice-list button {
+  position: relative;
   display: grid;
   grid-template-columns: 2.6rem 1fr auto;
   gap: 1rem;
   width: 100%;
   align-items: center;
-  padding: 1.35rem 0.4rem;
+  padding: 1.35rem 1rem;
   border: 0;
+  border-left: 0.2rem solid transparent;
   border-bottom: 1px solid var(--path-line);
-  background: transparent;
+  background: var(--path-cream);
   color: inherit;
   text-align: left;
   cursor: pointer;
-  transition: color 170ms ease, padding 170ms ease, background 170ms ease;
+  transition: border-color 170ms ease, background 170ms ease;
 }
 
 .pathway-choice-list button:hover,
 .pathway-choice-list button.is-active {
-  padding-inline: 1rem;
   background: rgba(211, 76, 26, 0.08);
-  color: var(--path-orange);
+  border-left-color: var(--path-orange);
 }
 
-.pathway-choice-list button span { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; opacity: 0.66; }
+.pathway-choice-list button:focus-visible { z-index: 1; outline: 3px solid rgba(211, 76, 26, 0.3); outline-offset: 2px; }
+.pathway-choice-list button span { color: var(--path-navy); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; opacity: 0.56; transition: color 170ms ease, opacity 170ms ease; }
+.pathway-choice-list button:hover span,
+.pathway-choice-list button.is-active span { color: var(--path-orange); opacity: 1; }
 .pathway-choice-list button strong { font-size: 0.96rem; line-height: 1.5; }
-.pathway-choice-list button svg { width: 1.15rem; opacity: 0; transition: opacity 170ms ease; }
+.pathway-choice-list button svg { width: 1.15rem; color: var(--path-orange); opacity: 0; transition: opacity 170ms ease; }
 .pathway-choice-list button.is-active svg { opacity: 1; }
+.pathway-choice-response { margin-top: 1.25rem; padding: 1.3rem 1.4rem; border-left: 0.2rem solid var(--path-orange); background: rgba(211, 76, 26, 0.08); }
+.pathway-choice-response > p:last-child { margin: 0.65rem 0 0; font-size: 0.88rem; line-height: 1.65; opacity: 0.78; }
 
 .pathway-method {
   background:
@@ -428,6 +434,7 @@
 .pathway-try__steps li:last-child { border-right: 0; }
 .pathway-try__steps span { display: grid; width: 1.7rem; height: 1.7rem; place-items: center; border-radius: 50%; background: var(--path-orange); color: white; font-size: 0.68rem; font-weight: 800; }
 .pathway-try__steps strong { display: block; margin-top: 0.85rem; font-size: 0.76rem; letter-spacing: 0.05em; line-height: 1.4; }
+.pathway-try__attempt { max-width: 42rem; margin: 0 0 1.25rem; font-size: 0.88rem; font-weight: 700; line-height: 1.6; }
 
 .pathway-try__reveal {
   display: grid;
@@ -486,11 +493,11 @@
 .pathway-intake .pathway-heading > p:not(.pathway-kicker) { color: rgba(255,250,245,0.74); }
 .pathway-intake__promise { display: flex; gap: 0.8rem; margin-top: 2rem; padding-top: 1.3rem; border-top: 1px solid rgba(255,255,255,0.17); color: rgba(255,250,245,0.68); font-size: 0.78rem; line-height: 1.55; }
 .pathway-intake__promise svg { width: 1.2rem; min-width: 1.2rem; color: #f16935; }
-.pathway-intake__form { padding: 2rem; background: #fffaf5; color: #0e3045; }
+.pathway-intake__form { position: relative; padding: 2rem; background: #fffaf5; color: #0e3045; }
 .pathway-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.25rem; }
 .pathway-intake label, .pathway-intake legend { font-size: 0.79rem; font-weight: 800; }
 .pathway-intake label span { font-size: 0.68rem; font-weight: 600; opacity: 0.55; }
-.pathway-intake input[type="text"], .pathway-intake input[type="date"], .pathway-intake textarea { display: block; width: 100%; margin-top: 0.45rem; padding: 0.8rem 0.85rem; border: 1px solid rgba(14,48,69,0.19); border-radius: 0; background: #fff; color: #0e3045; font: inherit; font-size: 0.86rem; outline: none; }
+.pathway-intake input[type="text"], .pathway-intake input[type="email"], .pathway-intake input[type="date"], .pathway-intake textarea { display: block; width: 100%; margin-top: 0.45rem; padding: 0.8rem 0.85rem; border: 1px solid rgba(14,48,69,0.19); border-radius: 0; background: #fff; color: #0e3045; font: inherit; font-size: 0.86rem; outline: none; }
 .pathway-intake input:focus, .pathway-intake textarea:focus { border-color: var(--path-orange); box-shadow: 0 0 0 3px rgba(211,76,26,0.12); }
 .pathway-intake fieldset { display: flex; flex-wrap: wrap; gap: 0.65rem 1.25rem; margin: 1.3rem 0 0; padding: 1.1rem; border: 1px solid rgba(14,48,69,0.15); }
 .pathway-intake fieldset legend { padding-inline: 0.35rem; }
@@ -502,6 +509,11 @@
 .pathway-form-message { margin: 1rem 0 0; padding: 0.85rem 1rem; border: 1px solid transparent; font-size: 0.78rem; font-weight: 700; line-height: 1.5; }
 .pathway-form-message--success { border-color: #76a895; background: #e6f4ed; color: #174c3d; }
 .pathway-form-message--error { border-color: #d98773; background: #fff0ec; color: #7d2d1e; }
+.pathway-honeypot { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.pathway-intake__success { display: grid; min-height: 24rem; place-items: center; align-content: center; padding: 2.5rem; background: #fffaf5; color: #0e3045; text-align: center; }
+.pathway-intake__success > svg { width: 3.5rem; height: 3.5rem; margin-bottom: 1.4rem; color: var(--path-orange); stroke-width: 1.4; }
+.pathway-intake__success h3 { margin: 0.75rem 0 0; font-family: Georgia, serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 400; }
+.pathway-intake__success > p:last-child { margin: 0.8rem 0 0; opacity: 0.72; }
 
 .pathway-faq { background: var(--path-cream); }
 .pathway-faq__punctuation { color: var(--path-orange); }

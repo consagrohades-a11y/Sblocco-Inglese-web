@@ -103,12 +103,36 @@ export const pathways = {
     ],
     bottleneckIntro: 'Non tutti hanno bisogno di lavorare sulle stesse cose.',
     bottlenecks: [
-      { label: 'So cosa voglio dire, ma ci metto troppo a costruire la frase.', recommendation: 'essential' },
-      { label: 'Mi preparo le risposte, ma se la domanda cambia mi blocco.', recommendation: 'complete' },
-      { label: 'Faccio fatica a raccontare bene la mia esperienza.', recommendation: 'guided' },
-      { label: 'Mi preoccupano le domande tecniche o le prove pratiche.', recommendation: 'individual' },
-      { label: 'Il mio inglese è ancora troppo debole per affrontare il colloquio con sicurezza.', recommendation: 'guided' },
-      { label: 'Non so da dove partire.', recommendation: 'individual' },
+      {
+        label: 'So cosa voglio dire, ma ci metto troppo a costruire la frase.',
+        recommendation: 'essential',
+        response: 'Qui il problema non è solo sapere cosa dire: è riuscire a costruire la risposta abbastanza velocemente. Nel percorso lavoreresti soprattutto su costruzione della risposta, variazioni e follow-up.',
+      },
+      {
+        label: 'Mi preparo le risposte, ma se la domanda cambia mi blocco.',
+        recommendation: 'complete',
+        response: 'Qui serve rendere la preparazione più flessibile. Lavoreresti su variazioni della stessa domanda, follow-up e modi diversi di costruire una risposta senza impararla a memoria.',
+      },
+      {
+        label: 'Faccio fatica a raccontare bene la mia esperienza.',
+        recommendation: 'guided',
+        response: 'Qui lavoreresti soprattutto su struttura, selezione delle informazioni e linguaggio per spiegare progetti, responsabilità, risultati e decisioni.',
+      },
+      {
+        label: 'Mi preoccupano le domande tecniche o le prove pratiche.',
+        recommendation: 'individual',
+        response: 'Qui la preparazione deve includere anche come capire la consegna, fare domande, ragionare ad alta voce e spiegare le tue scelte mentre lavori.',
+      },
+      {
+        label: 'Il mio inglese è ancora troppo debole per affrontare il colloquio con sicurezza.',
+        recommendation: 'guided',
+        response: 'Qui il percorso deve includere anche le basi linguistiche che ti mancano, ma sempre partendo dalle cose che dovrai riuscire a dire e capire durante il colloquio.',
+      },
+      {
+        label: 'Non so da dove partire.',
+        recommendation: 'individual',
+        response: 'Partiremmo dal tipo di colloquio, dal ruolo e dal tempo che hai a disposizione per capire quali situazioni e quali blocchi hanno la priorità.',
+      },
     ],
     methodHeading: 'Come lo prepariamo',
     method: [
@@ -120,6 +144,7 @@ export const pathways = {
     tryIt: {
       prompt: 'Tell me about a project you’re particularly proud of.',
       instruction: 'Non cercare la risposta perfetta. Prova a costruirla in quattro passaggi.',
+      attemptPrompt: 'Prova a rispondere ad alta voce prima di vedere l’esempio. Non serve che sia perfetta.',
       steps: ['CONTESTO', 'COSA DOVEVI FARE', 'COSA HAI FATTO', 'RISULTATO'],
       modelAnswer: 'One project I’m particularly proud of was the launch of a new customer support system at my previous company. My task was to organise the information and help the team move to the new platform without interrupting the service. I created a simple migration plan, tested the most important processes and ran short training sessions for my colleagues. We completed the change on time, and the team was able to answer customer requests more quickly after the launch.',
       explanation: 'La risposta presenta prima il contesto, chiarisce la responsabilità, descrive azioni concrete e conclude con un risultato. Non elenca tutto: sceglie dettagli che aiutano l’intervistatore a seguire il racconto.',
@@ -130,6 +155,7 @@ export const pathways = {
         cta: 'Lavora sul mio colloquio',
       },
     }),
+    supportIntro: 'Scegli quanto vuoi lavorare in autonomia e quanto supporto vuoi avere lungo il percorso.',
     intake: true,
     faqs: [
       { question: 'Il mio livello è basso. Posso comunque prepararmi?', answer: 'Sì, ma il percorso deve partire anche dalle basi linguistiche che ti mancano. Preparare un colloquio non significa ignorare grammatica o vocabolario: significa lavorarci in funzione di quello che dovrai riuscire a dire e capire.' },
@@ -316,4 +342,3 @@ export const pathwaySlugs = Object.keys(pathways);
 export function getPathway(slug) {
   return pathways[slug] || null;
 }
-

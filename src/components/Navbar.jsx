@@ -20,6 +20,7 @@ import { useAuth } from '../auth/AuthContext.jsx';
 import BrandLogo from './BrandLogo';
 import HomeEditorialLogo from './home/HomeEditorialLogo';
 import ThemeToggle from './ThemeToggle';
+import '../styles/homepage.css';
 
 const publicItems = [
   { label: 'Corsi', to: '/percorsi' },
@@ -109,9 +110,9 @@ function AccountMenu({ displayName, isAdmin, onSignOut }) {
   );
 }
 
-function EditorialHomeNavbar({ displayName, isAdmin, loading, mobileOpen, onSignOut, setMobileOpen, user }) {
+function EditorialHomeNavbar({ displayName, isAdmin, loading, mobileOpen, onSignOut, setMobileOpen, showThemeToggle = false, user }) {
   return (
-    <header className="home-site-header">
+    <header className={`home-site-header ${showThemeToggle ? 'home-site-header--pathway' : ''}`}>
       <div className="home-site-header__inner">
         <HomeEditorialLogo onClick={() => setMobileOpen(false)} />
 
@@ -122,6 +123,7 @@ function EditorialHomeNavbar({ displayName, isAdmin, loading, mobileOpen, onSign
         </nav>
 
         <div className="home-site-header__actions">
+          {showThemeToggle ? <ThemeToggle /> : null}
           {!loading && user ? (
             <AccountMenu displayName={displayName} isAdmin={isAdmin} onSignOut={onSignOut} />
           ) : !loading ? (
@@ -153,6 +155,7 @@ function EditorialHomeNavbar({ displayName, isAdmin, loading, mobileOpen, onSign
               <button type="button" onClick={onSignOut}>Esci</button>
             </>
           ) : !loading ? <Link to="/login">Accedi</Link> : null}
+          {showThemeToggle ? <ThemeToggle mobile /> : null}
           <Link to="/prenota" className="home-site-header__cta">Inizia ora</Link>
         </nav>
       ) : null}
@@ -170,6 +173,7 @@ export default function Navbar() {
   const isLearner = profile?.role === 'learner' && profile?.status === 'active';
   const isAdmin = profile?.role === 'admin' && profile?.status === 'active';
   const displayName = profile?.display_name || user?.user_metadata?.display_name || 'Account';
+  const isEditorialPublicPage = location.pathname === '/' || location.pathname === '/percorsi/colloquio';
   const items = useMemo(() => (isLearner ? learnerItems : publicItems), [isLearner]);
   const routeParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const requestedReturnTo = routeParams.get('returnTo') || '';
@@ -208,7 +212,7 @@ export default function Navbar() {
     else navigate('/assignments');
   }
 
-  if (!isLearner && location.pathname === '/') {
+  if (!isLearner && isEditorialPublicPage) {
     return (
       <EditorialHomeNavbar
         displayName={displayName}
@@ -217,6 +221,7 @@ export default function Navbar() {
         mobileOpen={mobileOpen}
         onSignOut={handleSignOut}
         setMobileOpen={setMobileOpen}
+        showThemeToggle={location.pathname === '/percorsi/colloquio'}
         user={user}
       />
     );

@@ -112,12 +112,13 @@ export default function App() {
   const location = useLocation();
   const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
   const isHomepage = location.pathname === '/';
+  const isColloquioPathway = location.pathname === '/percorsi/colloquio';
 
   return (
     <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-surface-950 dark:text-white">
       <ScrollManager />
       {!isAdmin ? <Navbar /> : null}
-      <main className={isAdmin || isHomepage ? '' : 'pb-24 xl:pb-0'}>
+      <main className={isAdmin || isHomepage || isColloquioPathway ? '' : 'pb-24 xl:pb-0'}>
         <Suspense fallback={<PageFallback />}>
           <Routes>
             <Route path="/" element={<Home />} />

@@ -65,7 +65,7 @@ function PathwayHero({ pathway }) {
           </div>
           <div className="pathway-hero__statement pathway-hero__statement--middle">
             <span>02</span>
-            <strong>Lingua</strong>
+            <strong>{pathway.slug === 'colloquio' ? 'Lingua utile' : 'Lingua'}</strong>
             <small>Che cosa ti serve per farlo?</small>
           </div>
           <div className="pathway-hero__statement pathway-hero__statement--last">
@@ -108,6 +108,21 @@ function GoalBreakdown({ goals }) {
 }
 
 function BottleneckSelector({ pathway, selected, onSelect }) {
+  function handleChoiceKeyDown(event, index) {
+    if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const lastIndex = pathway.bottlenecks.length - 1;
+    const nextIndex = event.key === 'Home'
+      ? 0
+      : event.key === 'End'
+        ? lastIndex
+        : event.key === 'ArrowDown' || event.key === 'ArrowRight'
+          ? (index + 1) % pathway.bottlenecks.length
+          : (index - 1 + pathway.bottlenecks.length) % pathway.bottlenecks.length;
+    onSelect(nextIndex);
+    event.currentTarget.parentElement?.querySelectorAll('[role="radio"]')[nextIndex]?.focus();
+  }
+
   return (
     <section className="pathway-section pathway-section--bottlenecks">
       <div className="pathway-shell pathway-split">
@@ -115,25 +130,36 @@ function BottleneckSelector({ pathway, selected, onSelect }) {
           <p className="pathway-kicker">IL PUNTO DI BLOCCO</p>
           <h2>Dove ti blocchi?</h2>
           <p>{pathway.bottleneckIntro}</p>
-          <p className="pathway-note">Questa scelta resta nel browser e serve solo a evidenziare il livello di supporto più pertinente.</p>
+          <p className="pathway-note">Scegli quello che ti somiglia di più.</p>
         </div>
-        <div className="pathway-choice-list" role="list" aria-label="Possibili punti di blocco">
-          {pathway.bottlenecks.map((item, index) => {
-            const active = selected === index;
-            return (
-              <button
-                key={item.label}
-                type="button"
-                className={active ? 'is-active' : ''}
-                aria-pressed={active}
-                onClick={() => onSelect(active ? null : index)}
-              >
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                <strong>{item.label}</strong>
-                <Check aria-hidden="true" />
-              </button>
-            );
-          })}
+        <div className="pathway-choice-panel">
+          <div className="pathway-choice-list" role="radiogroup" aria-label="Possibili punti di blocco">
+            {pathway.bottlenecks.map((item, index) => {
+              const active = selected === index;
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  role="radio"
+                  className={active ? 'is-active' : ''}
+                  aria-checked={active}
+                  tabIndex={selected === null ? (index === 0 ? 0 : -1) : (active ? 0 : -1)}
+                  onClick={() => onSelect(index)}
+                  onKeyDown={(event) => handleChoiceKeyDown(event, index)}
+                >
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <strong>{item.label}</strong>
+                  <Check aria-hidden="true" />
+                </button>
+              );
+            })}
+          </div>
+          {selected !== null && pathway.bottlenecks[selected]?.response ? (
+            <div className="pathway-choice-response" role="status" aria-live="polite">
+              <p className="pathway-kicker">SU COSA LAVORERESTI</p>
+              <p>{pathway.bottlenecks[selected].response}</p>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>
@@ -190,6 +216,7 @@ function TryItSection({ tryIt }) {
           <ol className="pathway-try__steps">
             {tryIt.steps.map((step, index) => <li key={step}><span>{index + 1}</span><strong>{step}</strong></li>)}
           </ol>
+          {tryIt.attemptPrompt ? <p className="pathway-try__attempt">{tryIt.attemptPrompt}</p> : null}
           <button type="button" className="pathway-button pathway-button--navy" aria-expanded={showExample} onClick={() => setShowExample((value) => !value)}>
             {showExample ? 'Nascondi l’esempio' : 'Mostra un esempio'}
             <Sparkles aria-hidden="true" />
@@ -257,7 +284,13 @@ function SupportOptions({ pathway, recommendation }) {
       if (!payload.url) throw new Error('Stripe Checkout non ha restituito un indirizzo valido.');
       window.location.assign(payload.url);
     } catch (checkoutError) {
-      setError(checkoutError.message || 'Non è stato possibile aprire il pagamento.');
+      setError(
+        checkoutError.code === 'already_owned'
+          ? 'Possiedi già questo percorso.'
+          : checkoutError.code === 'offer_not_configured' || checkoutError.code === 'configuration_required'
+            ? 'Questo percorso sarà disponibile prossimamente.'
+            : 'Non è stato possibile aprire il pagamento. Riprova tra poco.',
+      );
       setCheckoutOffer('');
     }
   }
@@ -268,7 +301,7 @@ function SupportOptions({ pathway, recommendation }) {
         <div className="pathway-heading pathway-heading--center">
           <p className="pathway-kicker">LIVELLO DI SUPPORTO</p>
           <h2>Come vuoi prepararti?</h2>
-          <p>Non è un negozio generico. Scegli quanta struttura, pratica e presenza umana ti servono per questo obiettivo.</p>
+          <p>{pathway.supportIntro || 'Scegli quanta struttura, pratica e presenza umana ti servono per questo obiettivo.'}</p>
         </div>
         {recommendation ? <p className="pathway-support__recommendation"><Sparkles aria-hidden="true" />In base al blocco selezionato, abbiamo evidenziato il supporto più pertinente. Non è un risultato diagnostico.</p> : null}
         <div className="pathway-support__grid">
@@ -288,7 +321,7 @@ function SupportOptions({ pathway, recommendation }) {
                 <div className="pathway-support__footer">
                   {option.kind === 'checkout' ? (
                     <>
-                      <p className="pathway-support__price-note">{state?.configured ? 'Pagamento unico tramite Stripe Checkout. Il prezzo viene mostrato da Stripe.' : 'Nessun prezzo o prodotto è ancora configurato.'}</p>
+                      <p className="pathway-support__price-note">{state?.configured ? 'Pagamento unico tramite Stripe Checkout. Il prezzo viene mostrato da Stripe.' : 'Prossimamente'}</p>
                       <CheckoutAction option={option} state={state} loading={checkoutOffer === option.offerId} onCheckout={handleCheckout} />
                     </>
                   ) : (
@@ -305,7 +338,7 @@ function SupportOptions({ pathway, recommendation }) {
           })}
         </div>
         {error ? <p className="pathway-form-message pathway-form-message--error" role="alert">{error}</p> : null}
-        <p className="pathway-support__security"><LockKeyhole aria-hidden="true" />Gli acquisti digitali richiedono un account. Importo, Price ID e accesso vengono sempre determinati dal server, mai dal browser.</p>
+        <p className="pathway-support__security"><LockKeyhole aria-hidden="true" />Gli acquisti digitali richiedono un account e vengono completati in modo sicuro tramite Stripe Checkout.</p>
       </div>
     </section>
   );
@@ -313,31 +346,28 @@ function SupportOptions({ pathway, recommendation }) {
 
 function InterviewIntake({ pathway }) {
   const { user } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState(null);
+  const defaultName = user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.user_metadata?.name || '';
+  const defaultEmail = user?.email || '';
 
   async function handleSubmit(event) {
     event.preventDefault();
     setMessage(null);
-    if (!user) {
-      const returnTo = `${location.pathname}#colloquio-intake`;
-      navigate(authPath('/login', returnTo), { state: { from: returnTo, message: 'Accedi o crea un account per inviare i dettagli del colloquio.' } });
-      return;
-    }
-
     const data = new FormData(event.currentTarget);
+    const name = String(data.get('name') || '').trim();
+    const email = String(data.get('email') || '').trim();
     const role = String(data.get('role') || '').trim();
-    if (!role) {
-      setMessage({ tone: 'error', text: 'Indica almeno il ruolo per aiutarci a capire la situazione.' });
+    if (name.length < 2 || !email || !role) {
+      setMessage({ tone: 'error', text: 'Inserisci nome, email e ruolo per inviare la richiesta.' });
       return;
     }
 
     setSubmitting(true);
     try {
       await createPathwayIntake({
-        userId: user.id,
+        name,
+        email,
         pathway: pathway.slug,
         interviewDate: data.get('interviewDate'),
         role,
@@ -345,9 +375,9 @@ function InterviewIntake({ pathway }) {
         interviewType: data.get('interviewType'),
         practicalTest: data.get('practicalTest'),
         note: data.get('note'),
+        website: data.get('website'),
       });
-      event.currentTarget.reset();
-      setMessage({ tone: 'success', text: 'Richiesta ricevuta. I dettagli sono stati salvati e verranno usati solo per valutare la preparazione più adatta.' });
+      setMessage({ tone: 'success' });
     } catch (error) {
       setMessage({ tone: 'error', text: error.message || 'Non è stato possibile inviare la richiesta.' });
     } finally {
@@ -362,28 +392,39 @@ function InterviewIntake({ pathway }) {
           <p className="pathway-kicker">PREPARAZIONE MIRATA</p>
           <h2>Hai già un colloquio?</h2>
           <p>Se hai già una data, un ruolo o un’azienda, possiamo partire direttamente dalla situazione che dovrai affrontare.</p>
-          <div className="pathway-intake__promise"><ClipboardCheck aria-hidden="true" /><span>Questa è una richiesta di preparazione, non un pagamento e non una prenotazione automatica.</span></div>
+          <div className="pathway-intake__promise"><ClipboardCheck aria-hidden="true" /><span>Inviare la richiesta non comporta alcun pagamento o prenotazione automatica.</span></div>
         </div>
-        <form onSubmit={handleSubmit} className="pathway-intake__form">
-          <div className="pathway-form-grid">
-            <label>Data del colloquio <span>opzionale</span><input name="interviewDate" type="date" /></label>
-            <label>Ruolo<input name="role" type="text" maxLength="180" required placeholder="Es. Product Manager" /></label>
-            <label>Azienda <span>opzionale</span><input name="company" type="text" maxLength="180" placeholder="Nome dell’azienda" /></label>
-            <label>Tipo di colloquio <span>opzionale</span><input name="interviewType" type="text" maxLength="180" placeholder="Es. primo colloquio, tecnico, panel" /></label>
+        {message?.tone === 'success' ? (
+          <div className="pathway-intake__success" role="status" aria-live="polite">
+            <CheckCircle2 aria-hidden="true" />
+            <p className="pathway-kicker">RICHIESTA INVIATA</p>
+            <h3>Richiesta inviata.</h3>
+            <p>Abbiamo ricevuto le informazioni sul tuo colloquio.</p>
           </div>
-          <fieldset>
-            <legend>È prevista una prova tecnica o pratica?</legend>
-            <label><input name="practicalTest" type="radio" value="yes" /> Sì</label>
-            <label><input name="practicalTest" type="radio" value="no" /> No</label>
-            <label><input name="practicalTest" type="radio" value="unknown" defaultChecked /> Non lo so</label>
-          </fieldset>
-          <label className="pathway-form-note">Nota <span>opzionale</span><textarea name="note" maxLength="1500" rows="4" placeholder="Aggiungi ciò che può aiutarci a capire la situazione." /></label>
-          <button type="submit" className="pathway-button pathway-button--primary" disabled={submitting}>
-            {submitting ? <><LoaderCircle className="animate-spin" aria-hidden="true" />Invio in corso...</> : <>Prepara il mio colloquio <Send aria-hidden="true" /></>}
-          </button>
-          {!user ? <p className="pathway-form-login">Per proteggere la richiesta, ti verrà chiesto di accedere o creare un account prima dell’invio.</p> : null}
-          {message ? <p className={`pathway-form-message pathway-form-message--${message.tone}`} role="status">{message.text}</p> : null}
-        </form>
+        ) : (
+          <form onSubmit={handleSubmit} className="pathway-intake__form">
+            <label className="pathway-honeypot" aria-hidden="true">Non compilare questo campo<input name="website" type="text" tabIndex="-1" autoComplete="off" /></label>
+            <div className="pathway-form-grid">
+              <label>Nome<input key={`name-${user?.id || 'guest'}`} name="name" type="text" minLength="2" maxLength="120" required autoComplete="name" defaultValue={defaultName} placeholder="Il tuo nome" /></label>
+              <label>Email<input key={`email-${user?.id || 'guest'}`} name="email" type="email" maxLength="254" required autoComplete="email" defaultValue={defaultEmail} placeholder="nome@email.it" /></label>
+              <label>Data del colloquio <span>opzionale</span><input name="interviewDate" type="date" /></label>
+              <label>Ruolo<input name="role" type="text" maxLength="180" required autoComplete="organization-title" placeholder="Es. Product Manager" /></label>
+              <label>Azienda <span>opzionale</span><input name="company" type="text" maxLength="180" autoComplete="organization" placeholder="Nome dell’azienda" /></label>
+              <label>Tipo di colloquio <span>opzionale</span><input name="interviewType" type="text" maxLength="180" placeholder="Es. primo colloquio, tecnico, panel" /></label>
+            </div>
+            <fieldset>
+              <legend>È prevista una prova tecnica o pratica?</legend>
+              <label><input name="practicalTest" type="radio" value="yes" /> Sì</label>
+              <label><input name="practicalTest" type="radio" value="no" /> No</label>
+              <label><input name="practicalTest" type="radio" value="unknown" defaultChecked /> Non lo so</label>
+            </fieldset>
+            <label className="pathway-form-note">Nota <span>opzionale</span><textarea name="note" maxLength="1500" rows="4" placeholder="Aggiungi ciò che può aiutarci a capire la situazione." /></label>
+            <button type="submit" className="pathway-button pathway-button--primary" disabled={submitting}>
+              {submitting ? <><LoaderCircle className="animate-spin" aria-hidden="true" />Invio in corso...</> : <>Prepara il mio colloquio <Send aria-hidden="true" /></>}
+            </button>
+            {message ? <p className={`pathway-form-message pathway-form-message--${message.tone}`} role="alert">{message.text}</p> : null}
+          </form>
+        )}
       </div>
     </section>
   );
