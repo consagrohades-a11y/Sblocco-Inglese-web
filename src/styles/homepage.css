@@ -618,13 +618,18 @@
 
 .home-example__intro h2 {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
-  max-width: 22ch;
+  max-width: none;
   min-height: 8.25rem;
-  align-items: flex-end;
+  align-content: flex-end;
+  align-items: baseline;
   justify-content: center;
+  column-gap: 0.16em;
   font-size: clamp(2.35rem, 3.65vw, 3.65rem);
   line-height: 0.92;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .home-example__support {
@@ -637,18 +642,23 @@
   text-align: center;
 }
 
-.home-example__intro .home-example__title--compact {
-  font-size: clamp(2.15rem, 2.8vw, 2.8rem);
-  line-height: 0.96;
+.home-example__intro h2 span,
+.home-example__intro h2 em {
+  min-width: 0;
 }
 
-.home-example__intro .home-example__title--single-line {
-  max-width: none;
+.home-example__intro h2 em {
   white-space: nowrap;
 }
 
+.home-example__intro .home-example__title--medium {
+  font-size: clamp(2.2rem, 3.05vw, 3rem);
+  line-height: 0.95;
+}
+
 .home-example__intro .home-example__title--long {
-  max-width: none;
+  font-size: clamp(1.95rem, 2.55vw, 2.65rem);
+  line-height: 0.96;
 }
 
 .home-example__journey {
@@ -956,10 +966,6 @@
     text-align: center;
   }
 
-  .home-example__intro .home-example__title--compact {
-    font-size: clamp(2.1rem, 4vw, 2.6rem);
-  }
-
   .home-example__journey {
     padding-left: 0;
   }
@@ -1205,16 +1211,12 @@
     font-size: clamp(2.75rem, 12vw, 4.25rem);
   }
 
-  .home-example__intro .home-example__title--single-line {
-    white-space: normal;
-  }
-
-  .home-example__intro .home-example__title--compact {
-    font-size: clamp(2.45rem, 10.7vw, 3.75rem);
+  .home-example__intro .home-example__title--medium {
+    font-size: clamp(2.25rem, 9.5vw, 3.25rem);
   }
 
   .home-example__intro .home-example__title--long {
-    font-size: clamp(2rem, 8vw, 2.25rem);
+    font-size: clamp(1.95rem, 8vw, 2.4rem);
   }
 
   .home-example__support {
@@ -1321,10 +1323,6 @@
 @media (max-width: 390px) {
   .home-hero__title {
     font-size: 2.75rem;
-  }
-
-  .home-example__intro .home-example__title--compact {
-    font-size: 2.4rem;
   }
 }
 
