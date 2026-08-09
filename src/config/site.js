@@ -11,6 +11,7 @@ export const siteConfig = {
     bookingFlow: '/prenota#booking-flow',
     googleForm: 'https://forms.gle/D95Y9hafyP9k3DEcA',
     calendly: 'https://calendly.com/consagrohades/30min',
+    // Legacy simulation payment destination. New pathway purchases use authenticated Stripe Checkout.
     payment: '/prenota#paypal-container-YRB8MRH7FYKKA',
     whatsapp: 'https://wa.link/a8lf7c',
     email: 'mailto:consagrohades@gmail.com',
@@ -78,7 +79,8 @@ export const siteConfig = {
     },
   },
 
-  // Edit the quiz/booking/payment journey here. Calendly stays external, but it is displayed inside the booking page.
+  // Legacy simulation booking journey. Keep until that historical offer is explicitly retired.
+  // New digital pathway purchases are configured server-side in server/stripe/offers.js.
   bookingFlow: {
     title: 'Quiz, slot e pagamento',
     intro:
@@ -105,7 +107,7 @@ export const siteConfig = {
     ],
   },
 
-  // Edit PayPal hosted button settings here if you create a new button in PayPal.
+  // Legacy/deprecated for new purchases. Retained only for the existing simulation booking page.
   paypalPayment: {
     sdkUrl:
       'https://www.paypal.com/sdk/js?client-id=BAAJKHpKbOWKX0bP-6zAwGzDGpLoLDZGwJq-C24ydY2_lQ3TM2-QnZyxqIek_zM_O_9WP9bEIBtfJal1SQ&components=hosted-buttons&disable-funding=venmo&currency=EUR&locale=it_IT',

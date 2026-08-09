@@ -6,31 +6,31 @@ const goals = [
   {
     label: 'Lavorare',
     description: 'Riunioni, clienti, presentazioni e team internazionali.',
-    to: '/corsi/business-english-flow',
+    to: '/percorsi/lavorare',
     icon: BriefcaseBusiness,
   },
   {
     label: 'Colloquio',
     description: 'Presentarti, raccontare la tua esperienza, rispondere alle domande e affrontare prove pratiche.',
-    to: '/percorsi',
+    to: '/percorsi/colloquio',
     icon: UsersRound,
   },
   {
     label: 'Parlare',
     description: 'Costruire risposte, continuare una conversazione e reagire senza preparare tutto prima.',
-    to: '/metodo',
+    to: '/percorsi/parlare',
     icon: MessageCircle,
   },
   {
     label: 'Estero',
     description: 'Vivere, lavorare e gestire le situazioni di ogni giorno con più autonomia.',
-    to: '/casi-reali',
+    to: '/percorsi/estero',
     icon: Globe2,
   },
   {
     label: 'Basi',
     description: 'Partire dalle fondamenta e costruire l’inglese che ti serve per iniziare a comunicare.',
-    to: '/grammar',
+    to: '/percorsi/basi',
     icon: BookOpen,
   },
 ];

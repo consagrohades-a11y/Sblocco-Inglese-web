@@ -80,6 +80,9 @@ const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
 const LearnerCollectionPath = lazy(() => import('./pages/LearnerCollectionPath'));
 const LearnerProgress = lazy(() => import('./pages/LearnerProgress'));
+const PathwayPage = lazy(() => import('./pages/PathwayPage'));
+const CheckoutSuccess = lazy(() => import('./pages/CheckoutSuccess'));
+const CheckoutCancel = lazy(() => import('./pages/CheckoutCancel'));
 
 function ScrollManager() {
   const location = useLocation();
@@ -120,6 +123,11 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/simulazione-39" element={<Simulation />} />
             <Route path="/percorsi" element={<Percorsi />} />
+            <Route path="/percorsi/colloquio" element={<PathwayPage pathwayId="colloquio" />} />
+            <Route path="/percorsi/lavorare" element={<PathwayPage pathwayId="lavorare" />} />
+            <Route path="/percorsi/parlare" element={<PathwayPage pathwayId="parlare" />} />
+            <Route path="/percorsi/estero" element={<PathwayPage pathwayId="estero" />} />
+            <Route path="/percorsi/basi" element={<PathwayPage pathwayId="basi" />} />
             <Route path="/corsi/business-english-flow" element={<BusinessEnglishFlow />} />
             <Route path="/metodo" element={<Method />} />
             <Route path="/piattaforma" element={<Platform />} />
@@ -149,6 +157,8 @@ export default function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+            <Route path="/checkout/success" element={<ProtectedRoute><CheckoutSuccess /></ProtectedRoute>} />
+            <Route path="/checkout/cancel" element={<CheckoutCancel />} />
             <Route path="/assignments" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
             <Route path="/attivita/esercizi" element={<ProtectedRoute><LearnerAssignments initialArea="exercises" /></ProtectedRoute>} />
             <Route path="/attivita/srs" element={<ProtectedRoute><LearnerAssignments initialArea="srs" /></ProtectedRoute>} />

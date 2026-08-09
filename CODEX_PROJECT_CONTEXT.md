@@ -74,9 +74,11 @@ Current course cards in the site:
 4. **Team English for Work** — from €800
    - Custom team training for small businesses, hospitality, customer service, beauty/wellness, events, and services with international clients.
 
-## 5. Funnel and booking flow
+## 5. Payments and the legacy booking flow
 
-The current booking flow is frontend-only and should stay simple unless explicitly changed.
+Stripe Checkout is the intended payment system for all new Sblocco digital pathway purchases. It uses one-time payments, requires a Supabase-authenticated account, and grants access only after a signed Stripe webhook is processed. See `docs/stripe-payments.md`.
+
+The older `/prenota` simulation flow is retained as a legacy flow while that offer is still in use.
 
 Flow:
 
@@ -84,17 +86,18 @@ Flow:
 2. Quiz submits to a connected Google Form.
 3. User sees an outcome/eligibility direction on-site.
 4. User chooses a slot through Calendly embed/link.
-5. User pays with PayPal hosted button.
+5. User pays with the legacy PayPal hosted button.
 6. Payment confirms the session.
 7. Rhema runs the simulation online and sends written feedback.
 
 Important constraints:
 
 - The site does **not** collect card/payment data.
-- PayPal handles payment.
+- Stripe-hosted Checkout handles new digital pathway payments.
+- PayPal is legacy/deprecated for new purchases and remains only in the historical simulation flow.
 - Calendly handles scheduling.
 - Google Forms handles quiz submission.
-- There is no backend/database/auth system currently.
+- Supabase provides authentication, purchase records, intake requests and access ownership.
 
 Main configurable funnel files:
 

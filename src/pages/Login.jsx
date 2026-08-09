@@ -5,6 +5,7 @@ import AuthNotice from '../components/auth/AuthNotice';
 import AuthPageShell from '../components/auth/AuthPageShell';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { getAuthErrorMessage } from '../auth/authMessages';
+import { authPath, safeReturnTo } from '../lib/safeReturnTo.js';
 
 export default function Login() {
   const { loading, signIn, user } = useAuth();
@@ -14,12 +15,13 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const requestedReturnTo = new URLSearchParams(location.search).get('returnTo') || location.state?.from;
+  const from = safeReturnTo(requestedReturnTo, '/account');
 
   if (!loading && user) {
-    return <Navigate to="/account" replace />;
+    return <Navigate to={from} replace />;
   }
 
-  const from = location.state?.from || '/account';
   const notice = location.state?.message;
 
   async function handleSubmit(event) {
@@ -49,7 +51,7 @@ export default function Login() {
       description="Entra con email e password per vedere il tuo account Sblocco Inglese."
       footer={(
         <>
-          Non hai un account? <Link className="text-moss underline" to="/register">Registrati</Link>
+          Non hai un account? <Link className="text-moss underline" to={authPath('/register', from)}>Registrati</Link>
           <span className="mx-2 text-ink/30">/</span>
           <Link className="text-moss underline" to="/forgot-password">Password dimenticata?</Link>
         </>

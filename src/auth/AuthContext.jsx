@@ -87,7 +87,7 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const signUp = useCallback(({ displayName, email, password }) =>
+  const signUp = useCallback(({ displayName, email, password, emailRedirectTo }) =>
     supabase.auth.signUp({
       email,
       password,
@@ -95,6 +95,7 @@ export function AuthProvider({ children }) {
         data: {
           display_name: displayName.trim(),
         },
+        ...(emailRedirectTo ? { emailRedirectTo } : {}),
       },
     }), []);
 
