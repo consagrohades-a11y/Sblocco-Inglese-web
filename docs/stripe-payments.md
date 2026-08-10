@@ -13,7 +13,7 @@ Stripe Checkout is the intended payment integration for new Sblocco Inglese digi
 - Refunds do not automatically revoke access in v1 because that business policy is not final.
 - With zero configured offers, every purchase button remains disabled and the API refuses Checkout safely.
 
-## Required migration
+## Required migrations
 
 Apply `supabase/migrations/20260809140000_stripe_pathway_commerce.sql` before configuring any purchasable offer. It creates:
 
@@ -22,6 +22,8 @@ Apply `supabase/migrations/20260809140000_stripe_pathway_commerce.sql` before co
 - `pathway_intake_requests`
 - service-role-only fulfillment functions
 - owner-only RLS reads and admin policies
+
+For Recupero Debito Inglese also apply the additive `2026081101xxxx_recovery_debt_*.sql` migrations. They extend the allowed purchase pathway and add recovery enrolment/plan state without replacing the commerce tables.
 
 Do not paste the service role key into browser variables or any `VITE_` variable.
 
@@ -44,6 +46,16 @@ STRIPE_PRICE_COLLOQUIO_ESSENTIAL=
 STRIPE_ACCESS_COLLOQUIO_ESSENTIAL=
 STRIPE_ACCESS_URL_COLLOQUIO_ESSENTIAL=
 ```
+
+Recupero Debito uses:
+
+```text
+STRIPE_PRICE_RECUPERO_DEBITO=price_...
+STRIPE_ACCESS_RECUPERO_DEBITO=recupero-debito
+STRIPE_ACCESS_URL_RECUPERO_DEBITO=/recupero-debito/onboarding
+```
+
+`STRIPE_PRICE_RECUPERO_DEBITO` should point to the real one-time Stripe Price chosen for launch (for example the planned ~€39 offer); the application does not hardcode the amount. The stable entitlement target is `recupero-debito`, and the success route should enter onboarding so the learner can attach or complete the diagnostic, set the exam date, class and school programme.
 
 The `PRICE` value must be a real Stripe Price ID created manually in the appropriate Stripe account and mode. `ACCESS` must point to a real existing internal resource identifier. `ACCESS_URL` must be a same-origin route that can open that resource. The offer becomes purchasable only when both `PRICE` and `ACCESS` are present. An omitted or invalid `ACCESS_URL` safely falls back to `/account`.
 
@@ -79,17 +91,18 @@ Copy the temporary `whsec_...` value printed by `stripe listen` into `STRIPE_WEB
 6. Confirm one `purchases` row and one `user_entitlements` row were created.
 7. Resend the same event from Stripe CLI and confirm no duplicate row or entitlement appears.
 8. Confirm another authenticated user cannot read those rows or self-grant access.
+9. For `recupero-debito`, confirm the success CTA opens `/recupero-debito/onboarding` and `has_active_recovery_entitlement()` returns true only for the purchasing user.
 
 The success page performs a small number of delayed rechecks and also provides a manual refresh button. A success URL alone never grants access.
 
 ## Production checklist
 
-- Apply the migration.
+- Apply the migrations.
 - Configure server-only Supabase and Stripe secrets in Vercel.
 - Set `PUBLIC_SITE_URL` to the canonical HTTPS origin.
 - Add the production webhook endpoint `/api/stripe/webhook` in Stripe.
 - Subscribe to `checkout.session.completed`, `checkout.session.async_payment_succeeded` and `checkout.session.async_payment_failed`.
 - Store the production webhook signing secret.
 - Configure only offers whose content and access route already exist.
+- For Recupero Debito, map the required approved Exercise Builder versions in `/admin/content/recovery` before opening sales.
 - Run a low-risk live verification and inspect the purchase and entitlement rows.
-
