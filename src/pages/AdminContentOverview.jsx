@@ -6,6 +6,15 @@ import { adminButton, adminSurface } from '../styles/adminUi.js';
 
 const areas = [
   {
+    title: 'Recupero Debito Inglese',
+    description: 'Collega gli exercise già pubblicati alle fasi Recupera, Allenati, Modalità scuola, checkpoint e simulazioni senza duplicare la libreria.',
+    status: 'Riusa Exercise Builder',
+    actions: [
+      { label: 'Mappa contenuti recupero', to: '/admin/content/recovery', icon: BookOpen, variant: 'primary' },
+      { label: 'Apri Exercise Builder', to: '/admin/content/exercises', icon: BookOpen, variant: 'secondary' },
+    ],
+  },
+  {
     title: 'Word Trainer',
     description: 'Gestisci word card A0-C1 con revisione, pubblicazione e importazione batch.',
     status: 'Supabase attivo',
@@ -58,14 +67,14 @@ const areas = [
 export default function AdminContentOverview() {
   return (
     <>
-      <SEO title="Contenuti | Admin | Sblocco Inglese" description="Gestione centralizzata dei contenuti Trainer." />
+      <SEO title="Contenuti | Admin | Sblocco Inglese" description="Gestione centralizzata dei contenuti Trainer e dei collegamenti ai percorsi." />
       <section className="section-shell py-10 lg:py-14">
         <div className="mx-auto max-w-6xl">
           <header className={`${adminSurface.panel} p-6 sm:p-8`}>
             <span className="eyebrow">Contenuti</span>
-            <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-4xl">Gestione Trainer</h1>
+            <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-4xl">Gestione contenuti</h1>
             <p className="mt-3 max-w-3xl text-base leading-7 text-ink/70 dark:text-white/65">
-              Ogni famiglia di contenuti raccoglie editor, importazioni, revisione, pubblicazione, archivio ed eliminazione consentita.
+              Gestisci le famiglie di contenuti e i collegamenti ai percorsi mantenendo una sola fonte per esercizi e Trainer.
             </p>
           </header>
 
@@ -89,7 +98,6 @@ export default function AdminContentOverview() {
               </article>
             ))}
           </div>
-
         </div>
       </section>
     </>
