@@ -5,7 +5,7 @@ import { listResolvedOffers, resolveOffer } from '../server/stripe/offers.js';
 import { safeReturnTo } from '../src/lib/safeReturnTo.js';
 
 assert.equal(resolveOffer('not-a-real-offer', {}), null);
-assert.equal(listResolvedOffers({}).length, 10);
+assert.equal(listResolvedOffers({}).length, 11);
 assert.ok(listResolvedOffers({}).every((offer) => !offer.configured));
 
 const configured = resolveOffer('colloquio-essential', {
@@ -16,8 +16,16 @@ const configured = resolveOffer('colloquio-essential', {
 assert.equal(configured.configured, true);
 assert.equal(configured.stripePriceId, 'price_testConfigured123');
 assert.equal(configured.accessTarget, 'real-resource-public-id');
+assert.equal(configured.fulfillable, true);
 
 assert.equal(resolveOffer('colloquio-essential', { STRIPE_PRICE_COLLOQUIO_ESSENTIAL: 'price_testOnly' }).configured, false);
+assert.equal(resolveOffer('colloquio-complete-plus', {
+  STRIPE_PRICE_COLLOQUIO_COMPLETE_PLUS: 'price_completePlus123',
+  STRIPE_ACCESS_COLLOQUIO_COMPLETE_PLUS: 'complete-plus-resource',
+}).configured, true);
+assert.equal(resolveOffer('colloquio-complete-plus', {
+  STRIPE_ACCESS_COLLOQUIO_COMPLETE_PLUS: 'payment-link-resource',
+}).fulfillable, true);
 assert.equal(resolveOffer('colloquio-essential', {
   STRIPE_PRICE_COLLOQUIO_ESSENTIAL: 'arbitrary-client-value',
   STRIPE_ACCESS_COLLOQUIO_ESSENTIAL: 'resource',
@@ -46,6 +54,8 @@ assert.match(webhook, /checkout\.session\.completed/);
 assert.match(webhook, /checkout\.session\.async_payment_succeeded/);
 assert.match(webhook, /checkout\.session\.async_payment_failed/);
 assert.match(webhook, /fulfill_stripe_checkout/);
+assert.match(webhook, /metadataUserId \|\| session\.client_reference_id/);
+assert.match(webhook, /offer\.fulfillable/);
 assert.doesNotMatch(webhook, /refund.*revoke|revoke.*refund/i);
 
 assert.match(migration, /stripe_checkout_session_id text not null unique/);
@@ -67,4 +77,3 @@ assert.equal(stripe.webhooks.constructEvent(payload, validHeader, secret).id, 'e
 assert.throws(() => stripe.webhooks.constructEvent(payload, validHeader, 'whsec_wrong'));
 
 console.log('Stripe commerce validation passed.');
-

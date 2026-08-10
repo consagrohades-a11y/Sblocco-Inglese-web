@@ -1,6 +1,7 @@
 const offerDefinitions = [
   ['colloquio-essential', 'colloquio', 'Essenziale', 'COLLOQUIO_ESSENTIAL'],
   ['colloquio-complete', 'colloquio', 'Percorso completo', 'COLLOQUIO_COMPLETE'],
+  ['colloquio-complete-plus', 'colloquio', 'Sblocco Colloquio Complete', 'COLLOQUIO_COMPLETE_PLUS'],
   ['lavorare-essential', 'lavorare', 'Essenziale', 'LAVORARE_ESSENTIAL'],
   ['lavorare-complete', 'lavorare', 'Percorso completo', 'LAVORARE_COMPLETE'],
   ['parlare-essential', 'parlare', 'Essenziale', 'PARLARE_ESSENTIAL'],
@@ -49,6 +50,7 @@ export function resolveOffer(offerId, env = process.env) {
     stripePriceId,
     accessTarget,
     accessUrl,
+    fulfillable: Boolean(definition.active && accessTarget),
     configured: Boolean(definition.active && priceLooksValid && accessTarget),
   };
 }
@@ -69,4 +71,3 @@ export function publicOfferState(offer, owned = false) {
 }
 
 export const knownPathways = new Set(['colloquio', 'lavorare', 'parlare', 'estero', 'basi']);
-
