@@ -46,14 +46,17 @@ export default function AssignmentStudyScopeEditor({
   useEffect(() => {
     if (!enabled) return undefined;
     let active = true;
-    setLoading(true);
-    setError('');
+    let refreshTimer;
 
-    Promise.all([
-      Promise.all(SOURCES.map((trainerId) => loadPublishedPracticeCards(trainerId))),
-      supabase.rpc('admin_list_assignment_decks'),
-    ])
-      .then(([groups, deckResult]) => {
+    async function load({ initial = false } = {}) {
+      if (initial) setLoading(true);
+      setError('');
+
+      try {
+        const [groups, deckResult] = await Promise.all([
+          Promise.all(SOURCES.map((trainerId) => loadPublishedPracticeCards(trainerId))),
+          supabase.rpc('admin_list_assignment_decks'),
+        ]);
         if (!active) return;
         const byId = new Map();
         groups.flat().forEach((card) => byId.set(card.id, card));
@@ -65,17 +68,31 @@ export default function AssignmentStudyScopeEditor({
         } else {
           setPublishedDecks((deckResult.data || []).map(normaliseDeck));
         }
-      })
-      .catch(() => {
-        if (active) {
-          setCards([]);
-          setPublishedDecks([]);
-          setError('Non è stato possibile caricare i contenuti pubblicati.');
-        }
-      })
-      .finally(() => { if (active) setLoading(false); });
+      } catch {
+        if (!active) return;
+        setCards([]);
+        setPublishedDecks([]);
+        setError('Non è stato possibile caricare i contenuti pubblicati.');
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
 
-    return () => { active = false; };
+    function refreshWhenVisible() {
+      if (document.visibilityState !== 'visible') return;
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => load(), 120);
+    }
+
+    load({ initial: true });
+    window.addEventListener('focus', refreshWhenVisible);
+    document.addEventListener('visibilitychange', refreshWhenVisible);
+    return () => {
+      active = false;
+      window.clearTimeout(refreshTimer);
+      window.removeEventListener('focus', refreshWhenVisible);
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
+    };
   }, [enabled]);
 
   const fallbackDecks = useMemo(() => {
