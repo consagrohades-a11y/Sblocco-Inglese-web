@@ -81,6 +81,7 @@ const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDeta
 const LearnerCollectionPath = lazy(() => import('./pages/LearnerCollectionPath'));
 const LearnerProgress = lazy(() => import('./pages/LearnerProgress'));
 const PathwayPage = lazy(() => import('./pages/PathwayPage'));
+const InterviewProductPage = lazy(() => import('./pages/InterviewProductPage'));
 const CheckoutSuccess = lazy(() => import('./pages/CheckoutSuccess'));
 const CheckoutCancel = lazy(() => import('./pages/CheckoutCancel'));
 
@@ -112,7 +113,7 @@ export default function App() {
   const location = useLocation();
   const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
   const isHomepage = location.pathname === '/';
-  const isColloquioPathway = location.pathname === '/percorsi/colloquio';
+  const isColloquioPathway = location.pathname.startsWith('/percorsi/colloquio');
 
   return (
     <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-surface-950 dark:text-white">
@@ -125,6 +126,7 @@ export default function App() {
             <Route path="/simulazione-39" element={<Simulation />} />
             <Route path="/percorsi" element={<Percorsi />} />
             <Route path="/percorsi/colloquio" element={<PathwayPage pathwayId="colloquio" />} />
+            <Route path="/percorsi/colloquio/sblocco-colloquio" element={<InterviewProductPage />} />
             <Route path="/percorsi/lavorare" element={<PathwayPage pathwayId="lavorare" />} />
             <Route path="/percorsi/parlare" element={<PathwayPage pathwayId="parlare" />} />
             <Route path="/percorsi/estero" element={<PathwayPage pathwayId="estero" />} />

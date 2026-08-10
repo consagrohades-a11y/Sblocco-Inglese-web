@@ -9,7 +9,7 @@ export default function StickyMobileCTA() {
   const navigate = useNavigate();
   const isLearner = profile?.role === 'learner' && profile?.status === 'active';
   const isHomepage = location.pathname === '/';
-  const isColloquioPathway = location.pathname === '/percorsi/colloquio';
+  const isColloquioPathway = location.pathname.startsWith('/percorsi/colloquio');
   const isAssessment =
     location.pathname === '/assessment' ||
     location.pathname.startsWith('/profilo/');

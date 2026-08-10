@@ -18,7 +18,7 @@ import {
   UsersRound,
   Wrench,
 } from 'lucide-react';
-import { interviewPrivateSimulation, formatInterviewPrice } from '../../config/interviewProducts.js';
+import { interviewOffers, interviewPrivateSimulation, formatInterviewPrice } from '../../config/interviewProducts.js';
 
 export function scrollInterviewTo(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -30,18 +30,26 @@ export function InterviewHero() {
       <div className="interview-shell interview-hero__layout">
         <div className="interview-hero__copy">
           <p className="interview-eyebrow">SBLOCCO COLLOQUIO</p>
-          <h1>Il colloquio in inglese non si prepara imparando risposte a memoria.</h1>
-          <p className="interview-hero__lead">Devi riuscire a spiegare cosa sai fare, rispondere alle domande che non avevi previsto e continuare a parlare anche quando ti manca una parola.</p>
-          <p className="interview-hero__promise">Sblocco Colloquio ti allena proprio a questo.</p>
+          <h1>Preparati al colloquio in inglese prima che inizi davvero.</h1>
+          <p className="interview-hero__lead">Costruisci risposte che sai adattare, allenati sulle domande impreviste e impara a continuare anche quando ti manca una parola.</p>
+          <div className="interview-hero__product-strip" aria-label="Opzioni di preparazione">
+            {interviewOffers.map((product, index) => (
+              <button key={product.id} type="button" className={product.recommended ? 'is-recommended' : ''} onClick={() => scrollInterviewTo('offerte-colloquio')}>
+                <span>{String(index + 1).padStart(2, '0')} · {product.badge}</span>
+                <strong>{product.name}</strong>
+                <em>{formatInterviewPrice(product)}</em>
+              </button>
+            ))}
+          </div>
           <div className="interview-actions">
             <button type="button" className="interview-button interview-button--primary" onClick={() => scrollInterviewTo('offerte-colloquio')}>
-              Inizia ad allenarti <ArrowDown aria-hidden="true" />
+              Confronta le opzioni <ArrowDown aria-hidden="true" />
             </button>
             <button type="button" className="interview-text-button" onClick={() => scrollInterviewTo('prova-colloquio')}>
               Prova una domanda <ArrowDown aria-hidden="true" />
             </button>
           </div>
-          <p className="interview-hero__trust"><ShieldCheck aria-hidden="true" />Pensato per italiani che conoscono l’inglese, ma non vogliono bloccarsi proprio quando conta.</p>
+          <p className="interview-hero__trust"><ShieldCheck aria-hidden="true" />Tre livelli di preparazione, pagamento unico e nessun rinnovo automatico.</p>
         </div>
 
         <div className="interview-hero__prompts" aria-label="Esempi di domande e strategie da colloquio">
@@ -65,7 +73,6 @@ const painPoints = [
   ['Hai preparato le domande classiche. Poi arriva quella che non avevi previsto.', 'Lo script imparato a memoria smette improvvisamente di aiutarti.'],
   ['Il tuo lavoro è tecnico.', 'Potresti dover analizzare un caso, risolvere un problema o difendere una decisione in inglese.'],
   ['Ti manca una parola e perdi il filo.', 'Una sola espressione mancante non dovrebbe distruggere tutta la risposta.'],
-  ['La risposta è corretta, ma sembra imparata a memoria.', 'Una buona struttura deve darti sicurezza senza cancellare la tua voce.'],
 ];
 
 export function InterviewPainPoints() {

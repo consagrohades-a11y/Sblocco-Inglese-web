@@ -22,6 +22,8 @@ export const interviewOffers = [
     price: 19,
     currency: 'EUR',
     badge: 'Essenziale',
+    hubCta: 'Scopri il Kit',
+    detailPath: null,
     type: 'digital',
     active: true,
     featured: false,
@@ -43,7 +45,10 @@ export const interviewOffers = [
     name: 'Sblocco Colloquio',
     price: 49,
     currency: 'EUR',
-    badge: 'Più scelto',
+    badge: 'Percorso completo',
+    recommended: true,
+    hubCta: 'Scopri Sblocco Colloquio',
+    detailPath: '/percorsi/colloquio/sblocco-colloquio',
     type: 'digital',
     active: true,
     featured: true,
@@ -65,11 +70,13 @@ export const interviewOffers = [
     name: 'Sblocco Colloquio Complete',
     price: 79,
     currency: 'EUR',
-    badge: 'Miglior valore',
+    badge: 'Più completo',
+    hubCta: 'Scopri Complete',
+    detailPath: null,
     type: 'bundle',
     active: true,
     featured: true,
-    bestValue: true,
+    bestValue: false,
     paymentUrl: publicPaymentLink('VITE_STRIPE_INTERVIEW_COMPLETE_URL'),
     positioning: 'Percorso completo e materiali extra per prepararti in modo più specifico.',
     cta: 'Scegli Complete',
@@ -148,4 +155,3 @@ export function formatInterviewPrice(product) {
   }).format(product.price);
   return product.pricePrefix ? `${product.pricePrefix} ${price}` : price;
 }
-
