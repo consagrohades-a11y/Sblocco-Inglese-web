@@ -118,6 +118,9 @@ function objectFromRows(rows, key, value) {
 export async function recalculateRecoveryPlan({ enrollment, state, now = new Date() }) {
   if (!enrollment?.id || !enrollment.exam_date) return null;
   const repeatedErrors = objectFromRows(state.errorEvidence, 'topic_key', 'repeated_errors');
+  const preservedSequenceIndexes = state.sessions
+    .filter((session) => !['planned', 'available'].includes(session.status))
+    .map((session) => Number(session.sequence_index) || 0);
   const plan = buildRecoveryPlan({
     requiredTopicKeys: state.topics.map((topic) => topic.topic_key),
     examDate: enrollment.exam_date,
@@ -127,7 +130,7 @@ export async function recalculateRecoveryPlan({ enrollment, state, now = new Dat
     mockScores: objectFromRows(state.topics, 'topic_key', 'mock_score'),
     masteryScores: objectFromRows(state.topics, 'topic_key', 'mastery_score'),
     repeatedErrors,
-    startSequence: Math.max(0, ...state.sessions.filter((session) => session.status === 'completed').map((session) => session.sequence_index)) + 1,
+    startSequence: Math.max(0, ...preservedSequenceIndexes) + 1,
   });
   await replaceRecoveryPlan({ enrollmentId: enrollment.id, plan });
   return plan;
