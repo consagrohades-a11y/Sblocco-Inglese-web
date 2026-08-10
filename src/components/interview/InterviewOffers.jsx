@@ -37,7 +37,7 @@ function OfferCard({ product }) {
       </div>
       {statusLabel ? <p className="interview-offer__status">{statusLabel}</p> : null}
       <h3>{product.name}</h3>
-      <p className="interview-offer__price">{formatInterviewPrice(product)} <small>pagamento unico</small></p>
+      <p className="interview-offer__price">{formatInterviewPrice(product)} <small>{product.status === 'active' ? 'pagamento unico' : 'prezzo previsto'}</small></p>
       <p className="interview-offer__positioning">{product.positioning}</p>
       <ul>{product.includes.map((item) => <li key={item}><Check aria-hidden="true" />{item}</li>)}</ul>
       <div className="interview-offer__footer"><HubOfferAction product={product} /></div>
@@ -106,8 +106,8 @@ export function InterviewHubOffers() {
       <div className="interview-shell">
         <div className="interview-heading interview-heading--center">
           <p className="interview-eyebrow">TRE MODI PER PREPARARTI</p>
-          <h2 id="interview-offers-title">Scegli il livello di preparazione.</h2>
-          <p>Ogni opzione ha un prezzo unico. Apri i dettagli prima di decidere.</p>
+          <h2 id="interview-offers-title">Scegli come vuoi prepararti.</h2>
+          <p>Parti dalle risorse, allenati in modo attivo oppure aspetta il sistema completo. Ogni opzione risponde a un bisogno diverso.</p>
         </div>
         <div className="interview-offers__grid">
           {interviewOffers.map((product) => <OfferCard key={product.id} product={product} />)}

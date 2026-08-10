@@ -84,7 +84,7 @@ export function KitResourcesShowcase() {
   return (
     <section id="kit-resources" className="interview-product-section kit-resources" aria-labelledby="kit-resources-title">
       <div className="interview-shell">
-        <div className="interview-product-heading"><p className="interview-eyebrow">LE RISORSE, DAVVERO</p><h2 id="kit-resources-title">Guarda il materiale che userai per prepararti.</h2><p>Anteprime in HTML dei documenti previsti. Il prodotto finale resterà una raccolta di risorse digitali e workbook, non un corso video.</p></div>
+        <div className="interview-product-heading"><p className="interview-eyebrow">DENTRO IL KIT</p><h2 id="kit-resources-title">Sei strumenti per arrivare con le idee più chiare.</h2><p>Esplora le anteprime di domande, builder, espressioni e checklist che compongono il Kit.</p></div>
         <div className="kit-resources__list">
           {kitResources.map(([number, eyebrow, title, copy, Preview], index) => (
             <article key={number} className={index % 2 ? 'is-reversed' : ''}>
@@ -100,18 +100,18 @@ export function KitResourcesShowcase() {
 
 export function CompleteWorkspacePreview() {
   const rows = [
-    [Layers3, 'CORE TRAINING', '6 / 8'],
-    [FileText, 'KIT RESOURCES', 'PREVIEW'],
-    [MessageCircleQuestion, 'ROLE PACK', 'NON DISPONIBILE'],
-    [ClipboardCheck, 'MOCK INTERVIEWS', '3 CORE'],
-    [FileText, 'INTERVIEW FILE', '73%'],
+    [Layers3, 'PERCORSO', '8 MODULI'],
+    [FileText, 'KIT COLLOQUIO', '6 STRUMENTI'],
+    [MessageCircleQuestion, 'PREPARAZIONE PER RUOLO', 'IN PREPARAZIONE'],
+    [ClipboardCheck, 'SIMULAZIONI', '3 + ALTRE IN ARRIVO'],
+    [FileText, 'INTERVIEW FILE', 'INCLUSO'],
   ];
   return (
     <div className="complete-workspace-preview" aria-label="Anteprima concettuale di Sblocco Colloquio Complete">
-      <div className="complete-workspace-preview__head"><span>ANTEPRIMA CONCETTUALE</span><small>COMPLETE PREPARATION</small></div>
+      <div className="complete-workspace-preview__head"><span>ANTEPRIMA CONCETTUALE</span><small>IL SISTEMA COMPLETE</small></div>
       <h2>Tutta la preparazione in un solo workspace.</h2>
       <div>{rows.map(([Icon, label, value]) => <p key={label}><Icon aria-hidden="true" /><strong>{label}</strong><span>{value}</span></p>)}</div>
-      <small>La pagina rappresenta il bundle previsto. Role pack e pratica extra non sono ancora inclusi né acquistabili.</small>
+      <small>Percorso e Kit sono il nucleo del bundle. La preparazione per ruolo e la pratica aggiuntiva sono in lavorazione.</small>
     </div>
   );
 }

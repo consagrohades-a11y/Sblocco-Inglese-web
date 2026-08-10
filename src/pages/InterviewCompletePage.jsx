@@ -30,8 +30,8 @@ const completeInventory = [
   'recovery language e domande difficili',
   '3 mock interview self-guided',
   'Kit Colloquio con builder, espressioni e checklist',
-  'preparazione specialistica solo quando realmente pubblicata',
-  'pratica extra solo quando realmente pubblicata',
+  { label: 'preparazione specialistica, in preparazione', pending: true },
+  { label: 'pratica aggiuntiva, in preparazione', pending: true },
 ];
 
 const bundleParts = [
@@ -56,16 +56,16 @@ const bundleParts = [
     label: 'PREPARAZIONE PER RUOLO',
     title: 'Preparazione specialistica',
     price: null,
-    status: 'Da definire al lancio',
-    items: ['Sarà indicato solo il materiale realmente pubblicato', 'nessun role pack futuro viene venduto in anticipo'],
+    status: 'In preparazione',
+    items: ['scenari e lingua collegati a un tipo di ruolo', 'contenuti esatti confermati prima del lancio'],
   },
   {
     icon: MessageCircleQuestion,
     label: 'PRATICA AGGIUNTIVA',
     title: 'Scenari e simulazioni aggiuntive',
     price: null,
-    status: 'Da definire al lancio',
-    items: ['Verranno inclusi solo quando creati e verificati', 'non sono conteggiati nel valore attuale'],
+    status: 'In preparazione',
+    items: ['nuovi scenari per variare domande e follow-up', 'quantità e formato confermati prima del lancio'],
   },
 ];
 
@@ -74,25 +74,25 @@ const useCases = [
   'Vuoi sia risorse di preparazione sia pratica attiva di speaking.',
   'Prevedi più fasi, incluse domande HR e prove tecniche o pratiche.',
   'Non vuoi assemblare documenti, esercizi e simulazioni da fonti diverse.',
-  'Vuoi aggiungere una preparazione specifica per ruolo quando sarà disponibile.',
+  'Vuoi una preparazione più vicina al linguaggio e alle situazioni del tuo ruolo.',
 ];
 
 const journey = [
   ['01', 'PREPARA', ClipboardList, 'Usa il Kit.', 'Note sull’azienda, domande, framework e storie da sviluppare.'],
   ['02', 'ALLENATI', Mic2, 'Usa Sblocco Colloquio.', 'Speaking, follow-up, domande tecniche, difficili e recovery.'],
-  ['03', 'SPECIALIZZA', BriefcaseBusiness, 'Aggiungi gli scenari del tuo ruolo.', 'Questa fase entrerà nel bundle solo quando i materiali saranno pubblicati.'],
-  ['04', 'SIMULA', Target, 'Completa le simulazioni.', 'Le 3 mock core sono previste. Eventuali mock extra saranno aggiunte solo quando pronte.'],
+  ['03', 'SPECIALIZZA', BriefcaseBusiness, 'Aggiungi gli scenari del tuo ruolo.', 'Lavora con situazioni e lingua più vicine al tipo di ruolo che stai cercando.'],
+  ['04', 'SIMULA', Target, 'Completa le simulazioni.', 'Tre simulazioni guidate nel percorso, con pratica aggiuntiva in preparazione.'],
 ];
 
 const comparisonRows = [
-  ['Risorse di preparazione', 'Complete', 'Limitate', 'Kit completo previsto'],
+  ['Risorse di preparazione', 'Incluse', 'Essenziali', 'Kit incluso'],
   ['Allenamento speaking attivo', '—', 'Incluso', 'Incluso'],
   ['Interview File', '—', 'Incluso', 'Incluso'],
-  ['Story Bank', 'Workbook', 'Incluso', 'Incluso'],
-  ['Colloquio tecnico', 'Riferimenti', 'Pratica inclusa', 'Pratica inclusa'],
-  ['Mock interview', '—', '3', '3 core; extra non ancora disponibili'],
-  ['Pratica specifica per ruolo', '—', '—', 'Non ancora disponibile'],
-  ['Prezzo', '19 €', '49 €', '79 € quando completo'],
+  ['Story Bank', 'Story Builder', 'Incluso', 'Incluso'],
+  ['Colloquio tecnico', 'Framework', 'Pratica inclusa', 'Pratica inclusa'],
+  ['Simulazioni guidate', '—', '3', '3 incluse; extra in preparazione'],
+  ['Pratica specifica per ruolo', '—', '—', 'In preparazione'],
+  ['Prezzo', '19 €', '49 €', '79 € al lancio'],
 ];
 
 const completeFaqs = [
@@ -119,7 +119,7 @@ export default function InterviewCompletePage() {
         checkout={checkout}
         eyebrow="SBLOCCO COLLOQUIO COMPLETE"
         title="La preparazione completa, dal primo appunto all’ultima simulazione."
-        description="Il percorso Sblocco Colloquio, il Kit e materiali extra per prepararti in modo più completo e più vicino al tuo tipo di ruolo. Complete non sarà venduto finché ogni componente dichiarato non sarà realmente pronto."
+        description="Il percorso Sblocco Colloquio, il Kit e una preparazione più vicina al tuo tipo di ruolo, riuniti in un solo sistema."
         preview={<CompleteWorkspacePreview />}
         previewId="complete-bundle"
       />
@@ -128,20 +128,20 @@ export default function InterviewCompletePage() {
         <div className="interview-shell">
           <div className="interview-product-heading">
             <p className="interview-eyebrow">COSA INCLUDE COMPLETE</p>
-            <h2 id="complete-bundle-title">Un unico sistema per preparare e allenare il colloquio.</h2>
-            <p>Complete riunirà Sblocco Colloquio, il Kit e materiali aggiuntivi realmente disponibili. Le vendite apriranno solo quando ogni componente sarà pronto.</p>
+            <h2 id="complete-bundle-title">Preparazione, allenamento e pratica più specifica, in un unico sistema.</h2>
+            <p>Parti dai materiali, trasformali in risposte che sai usare e aggiungi pratica specifica per il tuo colloquio.</p>
           </div>
           <div className="complete-bundle__grid">
             {bundleParts.map(({ icon: Icon, label, title, price, status, items }) => (
-              <article key={title} className={status === 'Da definire al lancio' ? 'is-pending' : ''}>
+              <article key={title} className={!price ? 'is-pending' : ''}>
                 <div className="complete-bundle__top"><Icon aria-hidden="true" /><span>{label}</span>{price ? <strong>{price}</strong> : null}</div>
                 <h3>{title}</h3>
                 <p className="complete-bundle__status">{status}</p>
-                <ul>{items.map((item) => <li key={item}>{status === 'Da definire al lancio' ? <ShieldAlert aria-hidden="true" /> : <Check aria-hidden="true" />}{item}</li>)}</ul>
+                <ul>{items.map((item) => <li key={item}>{!price ? <ShieldAlert aria-hidden="true" /> : <Check aria-hidden="true" />}{item}</li>)}</ul>
               </article>
             ))}
           </div>
-          <div className="complete-bundle__result"><span>COMPLETE</span><strong>79 €</strong><p>PREPARA + ALLENATI + SPECIALIZZA</p><small>Checkout chiuso finché la composizione non è completa.</small></div>
+          <div className="complete-bundle__result"><span>COMPLETE</span><strong>79 €</strong><p>PREPARA + ALLENATI + SPECIALIZZA</p><small>Disponibile a breve. Le vendite apriranno quando ogni elemento sarà pronto.</small></div>
         </div>
       </section>
 
@@ -154,17 +154,17 @@ export default function InterviewCompletePage() {
 
       <section className="interview-product-section complete-journey" aria-labelledby="complete-journey-title">
         <div className="interview-shell">
-          <div className="interview-product-heading interview-product-heading--center"><p className="interview-eyebrow">UN SOLO FLUSSO</p><h2 id="complete-journey-title">Dal materiale alla prova completa.</h2><p>Le fasi future sono visibili, ma restano chiaramente separate da ciò che esiste già.</p></div>
+          <div className="interview-product-heading interview-product-heading--center"><p className="interview-eyebrow">UN SOLO FLUSSO</p><h2 id="complete-journey-title">Dal materiale alla prova completa.</h2><p>Quattro fasi collegate, così ogni appunto diventa qualcosa che sai dire e riutilizzare.</p></div>
           <ol>{journey.map(([number, label, Icon, title, copy], index) => <li key={number} className={index > 1 ? 'is-pending' : ''}><span>{number}</span><Icon aria-hidden="true" /><small>{label}{index > 1 ? ' · IN ARRIVO' : ''}</small><h3>{title}</h3><p>{copy}</p></li>)}</ol>
         </div>
       </section>
 
       <section className="interview-product-section complete-comparison" aria-labelledby="complete-comparison-title">
         <div className="interview-shell">
-          <div className="interview-product-heading"><p className="interview-eyebrow">CONFRONTO TRASPARENTE</p><h2 id="complete-comparison-title">Tre motivi diversi per scegliere.</h2><p>La colonna Complete descrive lo scope previsto, non un prodotto acquistabile oggi.</p></div>
+          <div className="interview-product-heading"><p className="interview-eyebrow">CONFRONTA LE OPZIONI</p><h2 id="complete-comparison-title">Scegli in base a come vuoi prepararti.</h2><p>Il Kit organizza il materiale. Sblocco ti fa allenare. Complete unirà entrambe le cose alla preparazione specialistica.</p></div>
           <div className="complete-comparison__scroll" tabIndex="0" aria-label="Confronto tra Kit, Sblocco Colloquio e Complete">
             <table>
-              <thead><tr><th>Include</th><th>Kit</th><th>Sblocco</th><th>Complete <small>scope previsto</small></th></tr></thead>
+              <thead><tr><th>Include</th><th>Kit</th><th>Sblocco</th><th>Complete <small>in preparazione</small></th></tr></thead>
               <tbody>{comparisonRows.map(([feature, kit, core, complete]) => <tr key={feature}><th>{feature}</th><td>{kit}</td><td>{core}</td><td>{complete}</td></tr>)}</tbody>
             </table>
           </div>
@@ -175,12 +175,12 @@ export default function InterviewCompletePage() {
         product={product}
         checkout={checkout}
         eyebrow="STATO DEL PRODOTTO"
-        title="Complete aprirà solo quando sarà davvero completo."
-        description="Puoi esplorare la struttura prevista, ma non puoi ancora acquistare il bundle."
+        title="Complete è in preparazione."
+        description="Puoi già esplorare il sistema e vedere quali componenti sono pronti o ancora in sviluppo."
         inventory={completeInventory}
       />
-      <InterviewProductNav currentId={product.id} />
       <InterviewProductFAQ id="complete-faq" title="Domande su Complete." items={completeFaqs} />
+      <InterviewProductNav currentId={product.id} />
     </div>
   );
 }

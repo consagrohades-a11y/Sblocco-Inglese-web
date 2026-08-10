@@ -91,15 +91,15 @@ export const interviewOffers = [
     featured: true,
     bestValue: false,
     paymentUrl: publicPaymentLink('VITE_STRIPE_INTERVIEW_COMPLETE_URL'),
-    positioning: 'Il percorso insieme alle risorse e alla preparazione specialistica disponibile al lancio.',
+    positioning: 'Il percorso, il Kit e la preparazione specialistica in un unico sistema.',
     cta: 'Scegli Complete — 79 €',
     shortDescription: 'Preparazione, allenamento e materiali specialistici in un solo sistema.',
     formatItems: ['Kit', 'Training', 'Interview File', 'Specialised practice', 'Mock interview'],
     includes: [
       'Tutto Sblocco Colloquio',
       'Kit Colloquio incluso',
-      'Preparazione specialistica solo quando pubblicata',
-      'Pratica extra solo quando pubblicata',
+      'Preparazione specifica per ruolo al lancio',
+      'Pratica aggiuntiva al lancio',
     ],
   },
 ];

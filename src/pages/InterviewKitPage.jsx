@@ -63,14 +63,14 @@ export default function InterviewKitPage() {
         checkout={checkout}
         eyebrow="COSA RICEVI"
         title="Il materiale per preparare il colloquio in autonomia."
-        description="Solo risorse previste per il prodotto finale. Nessuna lezione o funzionalità interattiva aggiunta artificialmente."
+        description="Domande, builder, espressioni e checklist raccolti in un unico kit digitale da usare al tuo ritmo."
         inventory={kitInventory}
       />
 
       <section className="interview-product-section kit-positioning" aria-labelledby="kit-positioning-title">
         <div className="interview-shell">
           <div className="interview-product-heading interview-product-heading--center">
-            <p className="interview-eyebrow">QUANDO LE RISORSE NON BASTANO</p>
+            <p className="interview-eyebrow">KIT O ALLENAMENTO?</p>
             <h2 id="kit-positioning-title">Ti serve anche allenarti?</h2>
             <p>Il Kit ti aiuta a preparare materiale e risposte. Sblocco Colloquio aggiunge speaking, esercizi attivi, variazioni, Interview File e mock interview.</p>
           </div>
@@ -82,8 +82,8 @@ export default function InterviewKitPage() {
         </div>
       </section>
 
-      <InterviewProductNav currentId={product.id} />
       <InterviewProductFAQ id="kit-faq" title="Domande sul Kit Colloquio." items={kitFaqs} />
+      <InterviewProductNav currentId={product.id} />
     </div>
   );
 }

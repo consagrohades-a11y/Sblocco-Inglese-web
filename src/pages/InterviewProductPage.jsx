@@ -89,15 +89,13 @@ const mockInterviews = [
   ['Mock 03', 'Ruolo e ragionamento', 'Situazione pratica, decisione, alternative e conclusione.'],
 ];
 
-const method = ['PROVA', 'COSTRUISCI', 'MIGLIORA', 'VARIA', 'RIPROVA'];
-
 const productFaqs = [
   { question: 'Che cosa acquisto esattamente?', answer: 'Un percorso digitale self-guided con otto moduli, domande, strutture, lingua utile, variazioni, mock interview e un Interview File personale. Il prezzo è una tantum e non c’è rinnovo automatico.' },
   { question: 'È già disponibile?', answer: 'Il pulsante di acquisto si attiva quando l’offerta Stripe è configurata. Se vedi “Disponibile a breve”, la pagina è consultabile ma il checkout non è ancora aperto.' },
   { question: 'Quanto tempo ho per completarlo?', answer: 'Puoi procedere al tuo ritmo. Il percorso può essere usato in modo intensivo prima di un colloquio oppure distribuito nel tempo.' },
   { question: 'Devo registrare la mia voce?', answer: 'No. Le attività ti chiedono di parlare e riprovare, ma non richiedono registrazioni o invii audio. Puoi usare le simulazioni con un insegnante separatamente.' },
   { question: 'Va bene per un colloquio tecnico?', answer: 'Sì, per la parte linguistica: impari a chiarire, spiegare processi, confrontare alternative e ragionare ad alta voce. Il prodotto non insegna la materia tecnica del tuo lavoro.' },
-  { question: 'Il Kit o Complete potrebbero essere più adatti?', answer: 'Il Kit è pensato come punto di partenza essenziale. Complete aggiunge materiali e role pack quando disponibili. Puoi confrontarli nella pagina principale del colloquio.' },
+  { question: 'Il Kit o Complete potrebbero essere più adatti?', answer: 'Il Kit serve a preparare materiale e risposte. Complete unirà Kit, percorso e preparazione specialistica in un solo sistema. Puoi confrontarli nella pagina principale del colloquio.' },
 ];
 
 export default function InterviewProductPage() {
@@ -124,7 +122,7 @@ export default function InterviewProductPage() {
           <Link className="interview-product-back" to="/percorsi/colloquio"><ArrowLeft aria-hidden="true" />Torna alle opzioni</Link>
           <div className="interview-product-hero__layout">
             <div className="interview-product-hero__copy">
-              <div className="interview-product-hero__eyebrow-row"><p className="interview-eyebrow">SBLOCCO COLLOQUIO · PERCORSO COMPLETO</p><InterviewProductStatus product={product} /></div>
+              <div className="interview-product-hero__eyebrow-row"><p className="interview-eyebrow">SBLOCCO COLLOQUIO · ALLENAMENTO SELF-GUIDED</p><InterviewProductStatus product={product} checkout={checkout} /></div>
               <h1>Costruisci risposte che sai usare anche quando la domanda cambia.</h1>
               <p>Un percorso self-guided per trasformare esperienza, esempi e idee in risposte chiare, personali e adattabili.</p>
               <div className="interview-product-hero__price"><strong>{formatInterviewPrice(product)}</strong><span>pagamento unico</span></div>
@@ -133,7 +131,7 @@ export default function InterviewProductPage() {
                 <button type="button" className="interview-text-button" onClick={() => scrollInterviewTo('come-funziona-il-prodotto')}>Guarda cosa c’è dentro</button>
               </div>
               {checkout.error ? <p className="interview-purchase-error" role="alert">{checkout.error}</p> : null}
-              <p className="interview-product-hero__trust"><ShieldCheck aria-hidden="true" />Account richiesto · Checkout Stripe · Nessun rinnovo automatico</p>
+              <p className="interview-product-hero__trust"><ShieldCheck aria-hidden="true" />Pagamento unico · Nessun rinnovo automatico</p>
             </div>
             <InterviewWorkspacePreview />
           </div>
@@ -155,30 +153,16 @@ export default function InterviewProductPage() {
 
       <InterviewProductShowcase />
 
-      <section className="interview-product-section interview-file" aria-labelledby="interview-file-title">
-        <div className="interview-shell interview-file__layout">
-          <div className="interview-product-heading">
-            <p className="interview-eyebrow">IL TUO INTERVIEW FILE</p>
-            <h2 id="interview-file-title">Alla fine non hai solo studiato. Hai costruito materiale pronto da usare.</h2>
-            <p>Ogni attività alimenta un archivio personale che collega esempi, risultati, lingua utile e domande finali.</p>
-          </div>
-          <div className="interview-file__sheet">
-            <div className="interview-file__sheet-head"><FileText aria-hidden="true" /><span>INTERVIEW FILE · RHEMA</span><small>4 storie pronte</small></div>
-            {fileOutputs.map(([title, copy], index) => <article key={title}><span>{String(index + 1).padStart(2, '0')}</span><div><h3>{title}</h3><p>{copy}</p></div></article>)}
-          </div>
-        </div>
-      </section>
-
       <section className="interview-product-section interview-curriculum" aria-labelledby="interview-curriculum-title">
         <div className="interview-shell">
-          <div className="interview-product-heading"><p className="interview-eyebrow">CURRICULUM 01–08</p><h2 id="interview-curriculum-title">Ogni modulo produce qualcosa di concreto.</h2></div>
+          <div className="interview-product-heading"><p className="interview-eyebrow">OTTO MODULI</p><h2 id="interview-curriculum-title">Ogni modulo produce qualcosa di concreto.</h2></div>
           <ol className="interview-curriculum__grid">{curriculum.map(([number, title, output]) => <li key={number}><span>{number}</span><h3>{title}</h3><p><ClipboardCheck aria-hidden="true" />Output: {output}</p></li>)}</ol>
         </div>
       </section>
 
       <section className="interview-product-section interview-coverage" aria-labelledby="interview-coverage-title">
         <div className="interview-shell">
-          <div className="interview-product-heading interview-product-heading--center"><p className="interview-eyebrow">QUESTION COVERAGE</p><h2 id="interview-coverage-title">Le domande che aprono, approfondiscono e mettono pressione.</h2></div>
+          <div className="interview-product-heading interview-product-heading--center"><p className="interview-eyebrow">LE DOMANDE CHE ALLENI</p><h2 id="interview-coverage-title">Dall’apertura ai follow-up che mettono pressione.</h2></div>
           <div className="interview-coverage__grid">{coverage.map(([title, questions]) => <article key={title}><h3>{title}</h3><ul>{questions.map((question) => <li key={question}>{question}</li>)}</ul></article>)}</div>
         </div>
       </section>
@@ -192,29 +176,36 @@ export default function InterviewProductPage() {
 
       <section className="interview-product-section interview-mocks" aria-labelledby="interview-mocks-title">
         <div className="interview-shell interview-mocks__layout">
-          <div className="interview-product-heading"><p className="interview-eyebrow">TRE MOCK SELF-GUIDED</p><h2 id="interview-mocks-title">Prova la sequenza completa, non solo domande isolate.</h2></div>
+          <div className="interview-product-heading"><p className="interview-eyebrow">TRE SIMULAZIONI GUIDATE</p><h2 id="interview-mocks-title">Prova la sequenza completa, non solo domande isolate.</h2></div>
           <div className="interview-mocks__list">{mockInterviews.map(([number, title, copy]) => <article key={number}><span>{number}</span><Presentation aria-hidden="true" /><div><h3>{title}</h3><p>{copy}</p></div></article>)}</div>
         </div>
       </section>
 
       <InteractiveMiniPreview />
 
-      <section className="interview-product-section interview-compact-method" aria-labelledby="interview-method-title">
-        <div className="interview-shell">
-          <div className="interview-product-heading interview-product-heading--center"><p className="interview-eyebrow">IL METODO IN CINQUE PASSAGGI</p><h2 id="interview-method-title">La risposta migliora perché la rimetti in movimento.</h2></div>
-          <ol>{method.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, '0')}</span><strong>{item}</strong></li>)}</ol>
+      <section className="interview-product-section interview-file" aria-labelledby="interview-file-title">
+        <div className="interview-shell interview-file__layout">
+          <div className="interview-product-heading">
+            <p className="interview-eyebrow">IL RISULTATO DEL PERCORSO</p>
+            <h2 id="interview-file-title">Non finisci con degli appunti sparsi. Costruisci il tuo Interview File.</h2>
+            <p>Le attività raccolgono storie, risultati, lingua utile e domande finali in un archivio personale da riprendere prima del colloquio.</p>
+          </div>
+          <div className="interview-file__sheet">
+            <div className="interview-file__sheet-head"><FileText aria-hidden="true" /><span>INTERVIEW FILE · RHEMA</span><small>4 storie pronte</small></div>
+            {fileOutputs.map(([title, copy], index) => <article key={title}><span>{String(index + 1).padStart(2, '0')}</span><div><h3>{title}</h3><p>{copy}</p></div></article>)}
+          </div>
         </div>
       </section>
 
-      <InterviewPurchasePanel product={product} checkout={checkout} eyebrow="INVENTARIO COMPLETO" description="Tutto ciò che serve per costruire, provare e adattare le tue risposte in autonomia." inventory={inventory} />
-
-      <InterviewProductNav currentId={product.id} />
+      <InterviewPurchasePanel product={product} checkout={checkout} eyebrow="COSA INCLUDE IL PERCORSO" title="Tutto l’allenamento, in un unico accesso." description="Otto moduli, speaking, variazioni, Interview File e tre simulazioni guidate da usare al tuo ritmo." inventory={inventory} />
 
       <InterviewProductFAQ id="interview-product-faq" title="Domande sul percorso da 49 €." items={productFaqs} />
 
       <section className="interview-product-final" aria-labelledby="interview-product-final-title">
         <div className="interview-shell"><Target aria-hidden="true" /><p className="interview-eyebrow">PRIMA CHE INIZI DAVVERO</p><h2 id="interview-product-final-title">Porta al colloquio risposte che hai già imparato a costruire.</h2><InterviewPurchaseButton checkout={checkout} product={product} /></div>
       </section>
+
+      <InterviewProductNav currentId={product.id} />
 
       {showSticky ? (
         <div className="interview-product-sticky is-visible">

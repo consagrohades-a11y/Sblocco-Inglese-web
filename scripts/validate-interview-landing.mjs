@@ -87,9 +87,9 @@ assert.match(product, /InterviewWorkspacePreview/);
 assert.match(product, /InterviewProductShowcase/);
 assert.match(product, /InteractiveMiniPreview/);
 assert.match(product, /InterviewProductStatus/);
-assert.match(product, /IL TUO INTERVIEW FILE/);
-assert.match(product, /CURRICULUM 01–08/);
-assert.match(product, /TRE MOCK SELF-GUIDED/);
+assert.match(product, /IL RISULTATO DEL PERCORSO/);
+assert.match(product, /OTTO MODULI/);
+assert.match(product, /TRE SIMULAZIONI GUIDATE/);
 assert.match(product, /<InterviewPurchasePanel product=\{product\}/);
 assert.match(previews, /NOW', 'BEFORE', 'VALUE', 'NEXT/);
 assert.match(previews, /aria-live="polite"/);
@@ -103,10 +103,10 @@ assert.match(cataloguePreviews, /Could you rephrase the question\?/);
 assert.match(cataloguePreviews, /ANTEPRIMA CONCETTUALE/);
 
 assert.match(complete, /CompleteWorkspacePreview/);
-assert.match(complete, /Un unico sistema per preparare e allenare il colloquio/);
+assert.match(complete, /Preparazione, allenamento e pratica più specifica/);
 assert.match(complete, /Per chi vuole preparare tutto in un unico posto/);
-assert.match(complete, /Da definire al lancio/);
-assert.match(complete, /scope previsto/);
+assert.match(complete, /In preparazione/);
+assert.match(complete, /prezzo previsto|79 € al lancio/);
 
 assert.match(shared, /InterviewProductStatus/);
 assert.match(shared, /isInterviewProductPurchasable/);

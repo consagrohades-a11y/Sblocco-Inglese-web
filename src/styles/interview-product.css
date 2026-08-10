@@ -180,6 +180,8 @@
 .interview-purchase__card ul { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem 1.3rem; margin: 2rem 0; padding: 1.6rem 0 0; border-top: 1px solid var(--iv-line); list-style: none; }
 .interview-purchase__card li { display: flex; align-items: flex-start; gap: 0.5rem; color: var(--iv-muted); font-size: 0.8rem; line-height: 1.45; }
 .interview-purchase__card li svg { width: 0.95rem; min-width: 0.95rem; color: var(--iv-orange); }
+.interview-purchase__card li.is-pending { color: var(--iv-muted); font-style: italic; }
+.interview-purchase__card li.is-pending svg { opacity: 0.65; }
 .interview-purchase__card .interview-button { width: 100%; }
 .interview-purchase__card > p:last-child { display: flex; justify-content: center; gap: 0.4rem; margin: 1rem 0 0; color: var(--iv-muted); font-size: 0.65rem; }
 .interview-purchase__card > p:last-child svg { width: 0.85rem; }
