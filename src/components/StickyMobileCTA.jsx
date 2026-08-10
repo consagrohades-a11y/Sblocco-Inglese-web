@@ -9,6 +9,7 @@ export default function StickyMobileCTA() {
   const navigate = useNavigate();
   const isLearner = profile?.role === 'learner' && profile?.status === 'active';
   const isHomepage = location.pathname === '/';
+  const isColloquioPathway = location.pathname === '/percorsi/colloquio';
   const isAssessment =
     location.pathname === '/assessment' ||
     location.pathname.startsWith('/profilo/');
@@ -28,7 +29,7 @@ export default function StickyMobileCTA() {
     else navigate('/assignments');
   }
 
-  if (isAssessment || isHomepage) return null;
+  if (isAssessment || isHomepage || isColloquioPathway) return null;
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-white/95 px-4 py-3 text-ink shadow-[0_-14px_38px_rgba(24,34,31,0.14)] backdrop-blur-xl dark:border-white/10 dark:bg-surface-950/95 dark:text-white dark:shadow-[0_-14px_38px_rgba(3,8,7,0.28)] xl:hidden">

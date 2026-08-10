@@ -80,6 +80,9 @@ const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
 const LearnerCollectionPath = lazy(() => import('./pages/LearnerCollectionPath'));
 const LearnerProgress = lazy(() => import('./pages/LearnerProgress'));
+const PathwayPage = lazy(() => import('./pages/PathwayPage'));
+const CheckoutSuccess = lazy(() => import('./pages/CheckoutSuccess'));
+const CheckoutCancel = lazy(() => import('./pages/CheckoutCancel'));
 
 function ScrollManager() {
   const location = useLocation();
@@ -109,17 +112,23 @@ export default function App() {
   const location = useLocation();
   const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
   const isHomepage = location.pathname === '/';
+  const isColloquioPathway = location.pathname === '/percorsi/colloquio';
 
   return (
     <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-surface-950 dark:text-white">
       <ScrollManager />
       {!isAdmin ? <Navbar /> : null}
-      <main className={isAdmin || isHomepage ? '' : 'pb-24 xl:pb-0'}>
+      <main className={isAdmin || isHomepage || isColloquioPathway ? '' : 'pb-24 xl:pb-0'}>
         <Suspense fallback={<PageFallback />}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/simulazione-39" element={<Simulation />} />
             <Route path="/percorsi" element={<Percorsi />} />
+            <Route path="/percorsi/colloquio" element={<PathwayPage pathwayId="colloquio" />} />
+            <Route path="/percorsi/lavorare" element={<PathwayPage pathwayId="lavorare" />} />
+            <Route path="/percorsi/parlare" element={<PathwayPage pathwayId="parlare" />} />
+            <Route path="/percorsi/estero" element={<PathwayPage pathwayId="estero" />} />
+            <Route path="/percorsi/basi" element={<PathwayPage pathwayId="basi" />} />
             <Route path="/corsi/business-english-flow" element={<BusinessEnglishFlow />} />
             <Route path="/metodo" element={<Method />} />
             <Route path="/piattaforma" element={<Platform />} />
@@ -149,6 +158,8 @@ export default function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+            <Route path="/checkout/success" element={<ProtectedRoute><CheckoutSuccess /></ProtectedRoute>} />
+            <Route path="/checkout/cancel" element={<CheckoutCancel />} />
             <Route path="/assignments" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
             <Route path="/attivita/esercizi" element={<ProtectedRoute><LearnerAssignments initialArea="exercises" /></ProtectedRoute>} />
             <Route path="/attivita/srs" element={<ProtectedRoute><LearnerAssignments initialArea="srs" /></ProtectedRoute>} />

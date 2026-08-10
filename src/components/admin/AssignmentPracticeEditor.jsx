@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createPracticeSession, EXERCISE_MODES } from '../../lib/exerciseEngine.js';
 import { loadPublishedPracticeCards, PRACTICE_TRAINERS } from '../../lib/practiceContent.js';
+import { supabase } from '../../lib/supabaseClient.js';
 
 export const DEFAULT_ASSIGNMENT_PRACTICE = {
   trainer_id: 'word',
@@ -22,31 +23,96 @@ function selectedDeckIds(config) {
   return Array.from(new Set(values.map((value) => String(value || '').trim()).filter(Boolean)));
 }
 
+function deckMatchesTrainer(deck, trainerId) {
+  if (trainerId === 'word') return deck.content_type === 'word';
+  if (trainerId === 'mixed') return deck.content_type === 'mixed';
+  return deck.content_type === 'expression' && deck.content_domain === PRACTICE_TRAINERS[trainerId]?.domain;
+}
+
+function normaliseDeck(deck) {
+  return {
+    id: deck.id,
+    publicId: deck.public_id,
+    title: deck.title,
+    publishedItemCount: Number(deck.published_item_count || 0),
+    totalItemCount: Number(deck.total_item_count || 0),
+  };
+}
+
 export default function AssignmentPracticeEditor({ enabled, onEnabledChange, config, onChange, onAvailabilityChange }) {
   const [cards, setCards] = useState([]);
+  const [publishedDecks, setPublishedDecks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (!enabled) return undefined;
     let active = true;
-    setLoading(true);
-    setError('');
-    loadPublishedPracticeCards(config.trainer_id)
-      .then((items) => { if (active) setCards(items); })
-      .catch(() => { if (active) setError('Non è stato possibile caricare i contenuti pubblicati.'); })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
+    let refreshTimer;
+
+    async function load({ initial = false } = {}) {
+      if (initial) {
+        setLoading(true);
+        setCards([]);
+        setPublishedDecks([]);
+      } else setRefreshing(true);
+      setError('');
+
+      try {
+        const [items, deckResult] = await Promise.all([
+          loadPublishedPracticeCards(config.trainer_id),
+          supabase.rpc('admin_list_assignment_decks'),
+        ]);
+        if (!active) return;
+        setCards(items);
+        setPublishedDecks(deckResult.error
+          ? []
+          : (deckResult.data || []).filter((deck) => deckMatchesTrainer(deck, config.trainer_id)).map(normaliseDeck));
+      } catch {
+        if (!active) return;
+        setCards([]);
+        setPublishedDecks([]);
+        setError('Non è stato possibile caricare i contenuti pubblicati.');
+      } finally {
+        if (active) {
+          setLoading(false);
+          setRefreshing(false);
+        }
+      }
+    }
+
+    function refreshWhenVisible() {
+      if (document.visibilityState !== 'visible') return;
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => load(), 120);
+    }
+
+    load({ initial: true });
+    window.addEventListener('focus', refreshWhenVisible);
+    document.addEventListener('visibilitychange', refreshWhenVisible);
+    return () => {
+      active = false;
+      window.clearTimeout(refreshTimer);
+      window.removeEventListener('focus', refreshWhenVisible);
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
+    };
   }, [enabled, config.trainer_id]);
 
   const selectedIds = useMemo(() => selectedDeckIds(config), [config.deck_id, config.deck_ids]);
   const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
-  const decks = useMemo(() => {
+  const fallbackDecks = useMemo(() => {
     const values = new Map();
-    cards.flatMap((card) => card.decks || []).forEach((deck) => values.set(deck.id, deck));
-    return Array.from(values.values()).sort((a, b) => a.title.localeCompare(b.title, 'it'));
+    cards.flatMap((card) => card.decks || []).forEach((deck) => {
+      const current = values.get(deck.id) || { ...deck, publishedItemCount: 0, totalItemCount: 0 };
+      current.publishedItemCount += 1;
+      current.totalItemCount += 1;
+      values.set(deck.id, current);
+    });
+    return Array.from(values.values());
   }, [cards]);
-  const deckCounts = useMemo(() => new Map(decks.map((deck) => [deck.id, cards.filter((card) => (card.decks || []).some((item) => item.id === deck.id)).length])), [cards, decks]);
+  const decks = useMemo(() => [...(publishedDecks.length ? publishedDecks : fallbackDecks)]
+    .sort((a, b) => a.title.localeCompare(b.title, 'it')), [publishedDecks, fallbackDecks]);
   const levels = useMemo(() => unique(cards.map((card) => card.level)), [cards]);
   const categories = useMemo(() => unique(cards
     .filter((card) => !config.level || card.level === config.level)
@@ -104,13 +170,20 @@ export default function AssignmentPracticeEditor({ enabled, onEnabledChange, con
               <div className="flex gap-2"><button type="button" onClick={() => setDecks(decks.map((deck) => deck.id))} className="rounded-full border border-moss/25 px-3 py-1.5 text-[0.7rem] font-black text-moss dark:text-mint">Tutti</button><button type="button" onClick={() => setDecks([])} className="rounded-full border border-ink/15 px-3 py-1.5 text-[0.7rem] font-black text-ink/65 dark:text-white/65">Azzera</button></div>
             </div>
             <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-              {decks.map((deck) => <label key={deck.id} className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 ${selectedSet.has(deck.id) ? 'border-moss bg-mint/55 dark:border-emerald-300/35 dark:bg-emerald-400/10' : 'border-ink/10 bg-white/70 dark:border-white/10 dark:bg-white/[0.04]'}`}><input type="checkbox" checked={selectedSet.has(deck.id)} onChange={() => toggleDeck(deck.id)} className="mt-1 h-4 w-4 accent-moss" /><span className="min-w-0"><span className="block truncate text-sm font-black text-ink dark:text-white">{deck.title}</span><span className="mt-1 block text-xs font-semibold text-ink/65 dark:text-white/65">{deckCounts.get(deck.id) || 0} card</span></span></label>)}
+              {decks.map((deck) => {
+                const publishedCount = deck.publishedItemCount || 0;
+                const totalCount = Math.max(publishedCount, deck.totalItemCount || 0);
+                const countLabel = totalCount === publishedCount
+                  ? `${totalCount} card`
+                  : `${publishedCount} pubblicate su ${totalCount} card`;
+                return <label key={deck.id} className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 ${selectedSet.has(deck.id) ? 'border-moss bg-mint/55 dark:border-emerald-300/35 dark:bg-emerald-400/10' : 'border-ink/10 bg-white/70 dark:border-white/10 dark:bg-white/[0.04]'}`}><input type="checkbox" checked={selectedSet.has(deck.id)} onChange={() => toggleDeck(deck.id)} className="mt-1 h-4 w-4 accent-moss" /><span className="min-w-0"><span className="block truncate text-sm font-black text-ink dark:text-white">{deck.title}</span><span className="mt-1 block text-xs font-semibold text-ink/65 dark:text-white/65">{countLabel}</span></span></label>;
+              })}
               {!decks.length && !loading ? <p className="text-sm font-semibold text-ink/65 dark:text-white/65">Nessun deck pubblicato disponibile.</p> : null}
             </div>
           </fieldset>
 
           <fieldset className="sm:col-span-2 lg:col-span-3"><legend className="text-xs font-bold uppercase text-ink/60 dark:text-white/60">Tipi di esercizio</legend><div className="mt-2 grid gap-2 sm:grid-cols-2">{EXERCISE_MODES.map((mode) => <label key={mode.id} className={`flex cursor-pointer gap-2 rounded-lg border px-3 py-2.5 text-sm font-bold ${config.modes.includes(mode.id) ? 'border-moss bg-white/70 dark:border-emerald-300/40 dark:bg-white/10 dark:text-white' : 'border-ink/10 text-ink/60 dark:border-white/10 dark:text-white/60'}`}><input type="checkbox" checked={config.modes.includes(mode.id)} onChange={() => toggleMode(mode.id)} className="accent-moss" />{mode.label}</label>)}</div></fieldset>
-          <p className="sm:col-span-2 lg:col-span-3 text-sm font-bold text-ink/60 dark:text-white/60">{loading ? 'Caricamento card pubblicate...' : error || `${selectedIds.length || 'Tutti i'} deck · ${availableCards.length} card uniche · ${availableQuestions} domande disponibili.`}</p>
+          <p className="sm:col-span-2 lg:col-span-3 text-sm font-bold text-ink/60 dark:text-white/60">{loading ? 'Caricamento card pubblicate...' : error || `${selectedIds.length || 'Tutti i'} deck · ${availableCards.length} card pubblicate uniche · ${availableQuestions} domande disponibili.${refreshing ? ' Aggiornamento conteggi...' : ''}`}</p>
         </div>
       ) : null}
     </section>

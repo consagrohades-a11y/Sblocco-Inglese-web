@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import AuthFormField from '../components/auth/AuthFormField';
 import AuthNotice from '../components/auth/AuthNotice';
 import AuthPageShell from '../components/auth/AuthPageShell';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { getAuthErrorMessage } from '../auth/authMessages';
+import { authPath, safeReturnTo } from '../lib/safeReturnTo.js';
 
 export default function Register() {
   const { loading, signUp, user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,9 +18,11 @@ export default function Register() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const requestedReturnTo = new URLSearchParams(location.search).get('returnTo') || location.state?.from;
+  const from = safeReturnTo(requestedReturnTo, '/account');
 
   if (!loading && user) {
-    return <Navigate to="/account" replace />;
+    return <Navigate to={from} replace />;
   }
 
   async function handleSubmit(event) {
@@ -41,6 +46,7 @@ export default function Register() {
       displayName,
       email: email.trim(),
       password,
+      emailRedirectTo: `${window.location.origin}${authPath('/login', from)}`,
     });
 
     setSubmitting(false);
@@ -51,7 +57,7 @@ export default function Register() {
     }
 
     if (data.session) {
-      setSuccess('Account creato. Puoi aprire la pagina account.');
+      navigate(from, { replace: true });
       return;
     }
 
@@ -65,7 +71,7 @@ export default function Register() {
       description="Crea un account learner. Il profilo viene inizializzato automaticamente come learner."
       footer={(
         <>
-          Hai gia un account? <Link className="text-moss underline" to="/login">Accedi</Link>
+          Hai gia un account? <Link className="text-moss underline" to={authPath('/login', from)}>Accedi</Link>
         </>
       )}
     >
