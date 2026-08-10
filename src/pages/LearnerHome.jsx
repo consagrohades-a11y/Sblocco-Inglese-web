@@ -14,10 +14,7 @@ import { Link, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import RecoveryNav from '../components/recovery/RecoveryNav.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
-import {
-  RECOVERY_MODE_LABELS,
-  recoveryTopicLabel,
-} from '../config/recovery.js';
+import { RECOVERY_MODE_LABELS, recoveryTopicLabel } from '../config/recovery.js';
 import {
   loadRecoveryAccessState,
   loadRecoveryEnrollment,
@@ -106,7 +103,9 @@ function GenericDashboard({ firstName }) {
   const open = assignments.filter((item) => item.status === 'published');
   const completed = assignments.filter((item) => item.status === 'completed');
   const next = open[0] || null;
-  const nearestDeadline = open.filter((item) => item.deadline_at).sort((a, b) => new Date(a.deadline_at) - new Date(b.deadline_at))[0]?.deadline_at;
+  const nearestDeadline = open
+    .filter((item) => item.deadline_at)
+    .sort((a, b) => new Date(a.deadline_at) - new Date(b.deadline_at))[0]?.deadline_at;
   const completion = assignments.length ? Math.round((completed.length / assignments.length) * 100) : 0;
   const week = Array.from({ length: 7 }, (_, offset) => {
     const date = new Date(Date.now() - (6 - offset) * 86_400_000);
@@ -125,10 +124,11 @@ function GenericDashboard({ firstName }) {
         <div className="learner-hero__art" aria-hidden="true"><img src="/assets/brand/sblocco-editorial-conversation-v2.png" alt="" /></div>
       </header>
 
-      <div className="learner-summary-grid" style={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
+      <div className="learner-summary-grid">
         <SummaryCard icon={Target} label="Il tuo obiettivo" value="Un passo alla volta" detail="Continua dal prossimo compito utile." />
-        <SummaryCard icon={ListChecks} label="Da fare oggi" value={`${open.length} ${open.length === 1 ? 'attività' : 'attività'}`} detail={dueCount ? `${dueCount} elementi SRS sono pronti da ripassare.` : 'Nessun ripasso urgente.'} />
+        <SummaryCard icon={ListChecks} label="Da fare oggi" value={`${open.length} attività`} detail="Le attività assegnate restano il percorso principale." />
         <SummaryCard icon={CalendarDays} label="Prossima scadenza" value={formatDate(nearestDeadline)} detail={nearestDeadline ? 'La scadenza più vicina tra le attività assegnate.' : 'Puoi seguire il tuo ritmo.'} />
+        <SummaryCard icon={Flame} label="Ripasso SRS" value={`${dueCount} da rivedere`} detail={dueCount ? 'Sono pronti nel trainer.' : 'Nessun ripasso urgente.'} />
       </div>
 
       <div className="learner-main-grid">
@@ -170,7 +170,7 @@ function GenericDashboard({ firstName }) {
   );
 }
 
-function RecoveryDashboard({ firstName, access, onReload }) {
+function RecoveryDashboard({ firstName, access }) {
   const location = useLocation();
   const enrollment = access.enrollment;
   const state = access.state || { topics: [], sessions: [], assessments: [], errorEvidence: [] };
@@ -257,6 +257,7 @@ function RecoveryDashboard({ firstName, access, onReload }) {
             })}
           </div>
           <p className="learner-empty" style={{ paddingBottom: 0 }}>Questa percentuale descrive i risultati raccolti nel percorso. Non predice il voto della scuola.</p>
+          <Link to="/recupero-debito/preparazione" className="learner-text-link">Vedi il report <ArrowRight size={14} /></Link>
         </aside>
       </div>
 
@@ -267,7 +268,6 @@ function RecoveryDashboard({ firstName, access, onReload }) {
       </div>
 
       <section className="learner-bottom-cta"><div><h2 className="learner-display">Il programma della scuola resta la priorità.</h2><p>Puoi modificare data o argomenti se la scuola ti consegna indicazioni diverse.</p></div><Link to="/recupero-debito/onboarding" className="learner-secondary-button">Modifica programma <ArrowRight size={16} /></Link></section>
-      {onReload ? null : null}
     </div>
   );
 }
