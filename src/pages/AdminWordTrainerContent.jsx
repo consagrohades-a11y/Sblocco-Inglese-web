@@ -9,7 +9,7 @@ import {
   getNextQueueCard,
   getQueueLabel,
   getQueuePosition,
-  isCardPublishable,
+  isCardReadyForApprovalAndPublishing,
   reviewFilterOptions,
 } from '../lib/cardWorkflow.js';
 
@@ -112,12 +112,12 @@ export default function AdminWordTrainerContent() {
   );
   const nextCard = getNextQueueCard(filteredCards, selectedQueueIndex);
   const queueLabel = getQueueLabel(filteredCards, selectedQueueIndex);
-  const publishableCards = useMemo(
-    () => filteredCards.filter((card) => isCardPublishable(card, 'word')),
+  const readyForBulkCards = useMemo(
+    () => filteredCards.filter((card) => isCardReadyForApprovalAndPublishing(card, 'word')),
     [filteredCards],
   );
-  const allPublishableSelected = publishableCards.length > 0
-    && publishableCards.every((card) => selectedForPublish.includes(card.id));
+  const allReadyForBulkSelected = readyForBulkCards.length > 0
+    && readyForBulkCards.every((card) => selectedForPublish.includes(card.id));
 
   const previewCard = useMemo(() => ({
     id: selected.public_id || 'word-preview',
@@ -180,6 +180,9 @@ export default function AdminWordTrainerContent() {
       id: selected.id || null,
       status: nextStatus,
       review_status: nextReviewStatus,
+      review_decision: nextReviewStatus === 'approved' && !['approve', 'approve_after_edit'].includes(selected.review_decision)
+        ? 'approve'
+        : selected.review_decision,
     };
 
     const { data, error: rpcError } = await supabase.rpc('admin_save_word_card', { p_card: payload });
@@ -200,7 +203,13 @@ export default function AdminWordTrainerContent() {
       if (nextCardBeforeSave) {
         openCard(nextCardBeforeSave, { feedback: `${successMessage} Prossima word card caricata.` });
       } else {
-        setSelected((current) => ({ ...current, id: data, status: nextStatus, review_status: nextReviewStatus }));
+        setSelected((current) => ({
+          ...current,
+          id: data,
+          status: nextStatus,
+          review_status: nextReviewStatus,
+          review_decision: payload.review_decision,
+        }));
         setMessage(advanceToNext ? `${successMessage} Hai completato l'ultima word card della coda.` : successMessage);
       }
     }
@@ -213,42 +222,42 @@ export default function AdminWordTrainerContent() {
       : [...current, cardId]);
   }
 
-  function toggleAllPublishable() {
-    const visibleIds = publishableCards.map((card) => card.id);
+  function toggleAllReadyForBulk() {
+    const visibleIds = readyForBulkCards.map((card) => card.id);
     setSelectedForPublish((current) => {
-      if (allPublishableSelected) {
+      if (allReadyForBulkSelected) {
         return current.filter((id) => !visibleIds.includes(id));
       }
       return Array.from(new Set([...current, ...visibleIds]));
     });
   }
 
-  async function publishSelectedCards() {
+  async function approveAndPublishSelectedCards() {
     if (selectedForPublish.length === 0) return;
-    if (!window.confirm(`Pubblicare ${selectedForPublish.length} word card approvate?`)) return;
+    if (!window.confirm(`Approvare e pubblicare ${selectedForPublish.length} word card complete?`)) return;
 
     setPublishingBatch(true);
     setError('');
     setMessage('');
     const idsToPublish = [...selectedForPublish];
-    const { data, error: rpcError } = await supabase.rpc('admin_publish_word_cards', {
+    const { data, error: rpcError } = await supabase.rpc('admin_approve_and_publish_word_cards', {
       p_card_ids: idsToPublish,
     });
 
     if (rpcError) {
-      setError(rpcError.message || 'Pubblicazione batch non riuscita.');
+      setError(rpcError.message || 'Approvazione e pubblicazione batch non riuscite.');
     } else {
       setSelectedForPublish([]);
       setSelected((current) => idsToPublish.includes(current.id)
-        ? { ...current, status: 'published' }
+        ? { ...current, status: 'published', review_status: 'approved', review_decision: 'approve' }
         : current);
-      setMessage(`${data || idsToPublish.length} word card pubblicate.`);
+      setMessage(`${data || idsToPublish.length} word card approvate e pubblicate.`);
       await loadCards();
     }
     setPublishingBatch(false);
   }
 
-  const canPublish = isCardPublishable(selected, 'word');
+  const canApproveAndPublish = isCardReadyForApprovalAndPublishing(selected, 'word');
 
   return (
     <>
@@ -322,13 +331,13 @@ export default function AdminWordTrainerContent() {
                 <div className="flex flex-wrap gap-2 lg:flex-nowrap">
                   <button disabled={saving} type="submit" className="focus-ring min-h-11 rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white transition hover:bg-moss disabled:cursor-not-allowed disabled:bg-ink/45 disabled:text-white/75 dark:bg-white dark:text-ink dark:hover:bg-emerald-200 dark:disabled:bg-white/20 dark:disabled:text-white/60 sm:px-5">Salva</button>
                   <button disabled={saving} type="button" onClick={() => saveCard('approved', 'approved', true)} className="focus-ring min-h-11 rounded-full border border-moss/40 bg-mint/60 px-4 py-2.5 text-sm font-black text-ink transition hover:bg-mint disabled:cursor-not-allowed disabled:border-ink/10 disabled:bg-ink/5 disabled:text-ink/35 dark:border-emerald-300/45 dark:bg-emerald-400/15 dark:text-emerald-100 dark:hover:bg-emerald-400/25 dark:disabled:border-white/10 dark:disabled:bg-white/5 dark:disabled:text-white/30 sm:px-5">Approva e prossima</button>
-                  <button disabled={saving || !canPublish} type="button" onClick={() => saveCard('published', 'approved', true)} className="focus-ring min-h-11 rounded-full bg-moss px-4 py-2.5 text-sm font-black text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/20 disabled:text-ink/65 disabled:ring-1 disabled:ring-inset disabled:ring-moss/20 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-white/10 dark:disabled:text-white/65 sm:px-5">Pubblica e prossima</button>
+                  <button disabled={saving || !canApproveAndPublish} type="button" onClick={() => saveCard('published', 'approved', true)} className="focus-ring min-h-11 rounded-full bg-moss px-4 py-2.5 text-sm font-black text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/20 disabled:text-ink/65 disabled:ring-1 disabled:ring-inset disabled:ring-moss/20 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-white/10 dark:disabled:text-white/65 sm:px-5">Approva, pubblica e prossima</button>
                   <button disabled={saving || !nextCard} type="button" onClick={() => openCard(nextCard, { feedback: 'Prossima word card caricata.' })} className="focus-ring min-h-11 rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink transition hover:bg-linen disabled:cursor-not-allowed disabled:border-ink/5 disabled:bg-ink/5 disabled:text-ink/30 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:disabled:border-white/15 dark:disabled:bg-white/[0.07] dark:disabled:text-white/65 sm:px-5">Prossima</button>
                 </div>
               </div>
               <div aria-hidden="true" className="h-36 sm:h-24 lg:h-20" />
 
-              {!canPublish ? <p className="mt-3 text-xs font-bold leading-5 text-ink/65 dark:text-white/65">Per pubblicare servono approvazione, risposta accettata, IPA americana, due esempi e nota d'uso.</p> : null}
+              {!canApproveAndPublish ? <p className="mt-3 text-xs font-bold leading-5 text-ink/65 dark:text-white/65">Per approvare e pubblicare servono risposta accettata, IPA americana, due esempi e nota d'uso.</p> : null}
             </form>
 
             <div className="space-y-4 xl:sticky xl:top-4 xl:grid xl:h-[calc(100vh-6rem)] xl:grid-rows-[13rem_minmax(0,1fr)] xl:gap-4 xl:space-y-0">
@@ -347,17 +356,17 @@ export default function AdminWordTrainerContent() {
                 <div className="mt-3 shrink-0 rounded-xl border border-moss/25 bg-mint/25 p-3 dark:border-emerald-300/25 dark:bg-emerald-400/10">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Pubblicazione batch</p>
-                      <p className="mt-1 text-sm font-bold text-ink/70 dark:text-white/70">{publishableCards.length} word card approvate e complete nei filtri attivi</p>
+                      <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Approvazione e pubblicazione batch</p>
+                      <p className="mt-1 text-sm font-bold text-ink/70 dark:text-white/70">{readyForBulkCards.length} word card complete nei filtri attivi</p>
                     </div>
                     <span className="rounded-full bg-white px-3 py-1.5 text-xs font-black text-ink shadow-sm dark:bg-white/10 dark:text-white">{selectedForPublish.length} selezionate</span>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    <button type="button" disabled={publishableCards.length === 0 || publishingBatch} onClick={toggleAllPublishable} className="focus-ring min-h-10 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink hover:bg-linen disabled:cursor-not-allowed disabled:bg-ink/5 disabled:text-ink/30 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:disabled:bg-white/5 dark:disabled:text-white/25">
-                      {allPublishableSelected ? 'Deseleziona tutte visibili' : 'Seleziona tutte approvate'}
+                    <button type="button" disabled={readyForBulkCards.length === 0 || publishingBatch} onClick={toggleAllReadyForBulk} className="focus-ring min-h-10 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink hover:bg-linen disabled:cursor-not-allowed disabled:bg-ink/5 disabled:text-ink/30 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:disabled:bg-white/5 dark:disabled:text-white/25">
+                      {allReadyForBulkSelected ? 'Deseleziona tutte visibili' : 'Seleziona tutte complete'}
                     </button>
-                    <button type="button" disabled={selectedForPublish.length === 0 || publishingBatch} onClick={publishSelectedCards} className="focus-ring min-h-10 rounded-full bg-moss px-4 py-2 text-xs font-black text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/25 disabled:text-ink/60 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-white/10 dark:disabled:text-white/65">
-                      {publishingBatch ? 'Pubblicazione...' : `Pubblica selezionate (${selectedForPublish.length})`}
+                    <button type="button" disabled={selectedForPublish.length === 0 || publishingBatch} onClick={approveAndPublishSelectedCards} className="focus-ring min-h-10 rounded-full bg-moss px-4 py-2 text-xs font-black text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-moss/25 disabled:text-ink/60 dark:bg-emerald-400 dark:text-[#07120f] dark:hover:bg-emerald-300 dark:disabled:bg-white/10 dark:disabled:text-white/65">
+                      {publishingBatch ? 'Approvazione e pubblicazione...' : `Approva e pubblica (${selectedForPublish.length})`}
                     </button>
                   </div>
                 </div>
@@ -366,11 +375,11 @@ export default function AdminWordTrainerContent() {
                   {loading ? <p className="p-4 text-sm font-bold text-ink/60">Caricamento...</p> : null}
                   {!loading && filteredCards.length === 0 ? <p className="p-4 text-sm font-bold text-ink/60">Nessuna word card trovata.</p> : null}
                   {filteredCards.map((card) => {
-                    const publishable = publishableCards.some((item) => item.id === card.id);
+                    const selectableForBulk = readyForBulkCards.some((item) => item.id === card.id);
                     return (
                       <div key={card.id} className="flex items-stretch transition hover:bg-linen/50 dark:hover:bg-white/5">
                         <label className="flex w-12 shrink-0 items-center justify-center border-r border-ink/10 dark:border-white/10">
-                          <input type="checkbox" disabled={!publishable || publishingBatch} checked={selectedForPublish.includes(card.id)} onChange={() => togglePublishSelection(card.id)} aria-label={`Seleziona ${card.lemma} per la pubblicazione`} className="h-4 w-4 accent-emerald-600 disabled:opacity-25" />
+                          <input type="checkbox" disabled={!selectableForBulk || publishingBatch} checked={selectedForPublish.includes(card.id)} onChange={() => togglePublishSelection(card.id)} aria-label={`Seleziona ${card.lemma} per approvarla e pubblicarla`} className="h-4 w-4 accent-emerald-600 disabled:opacity-25" />
                         </label>
                         <button type="button" onClick={() => openCard(card)} className="focus-ring block min-w-0 flex-1 p-4 text-left">
                           <p className="font-black text-ink dark:text-white">{card.lemma}</p>

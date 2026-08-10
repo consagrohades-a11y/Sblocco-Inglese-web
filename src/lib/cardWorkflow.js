@@ -17,8 +17,8 @@ export function filterAdminCards(cards, reviewFilter, query, searchFields) {
   });
 }
 
-export function isCardPublishable(card, type) {
-  if (!card || card.review_status !== 'approved' || card.status === 'published' || card.status === 'archived') return false;
+export function isCardReadyForApprovalAndPublishing(card, type) {
+  if (!card || card.status === 'published' || card.status === 'archived') return false;
 
   const answers = Array.isArray(card.accepted_answers) ? card.accepted_answers : [];
   const commonRequirements = answers.length > 0
@@ -30,6 +30,10 @@ export function isCardPublishable(card, type) {
   if (!commonRequirements) return false;
   if (type === 'word') return Boolean(String(card.lemma || '').trim());
   return Boolean(String(card.canonical_text || '').trim());
+}
+
+export function isCardPublishable(card, type) {
+  return card?.review_status === 'approved' && isCardReadyForApprovalAndPublishing(card, type);
 }
 
 export function getQueuePosition(cards, selectedId) {
