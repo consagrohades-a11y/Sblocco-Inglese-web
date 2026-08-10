@@ -20,10 +20,6 @@ import {
 import { createPathwayIntake } from '../../lib/pathwayIntakeApi.js';
 
 function HubOfferAction({ product }) {
-  if (!product.detailPath) {
-    return <span className="interview-offer__cta is-disabled" aria-disabled="true">Pagina dettagli in arrivo</span>;
-  }
-
   return (
     <Link className="interview-offer__cta interview-offer__cta--buy" to={product.detailPath}>
       {product.hubCta} <ArrowRight aria-hidden="true" />
@@ -32,12 +28,14 @@ function HubOfferAction({ product }) {
 }
 
 function OfferCard({ product }) {
+  const statusLabel = product.status === 'preview' ? 'ANTEPRIMA' : product.status === 'comingSoon' ? 'IN ARRIVO' : null;
   return (
-    <article className={`interview-offer ${product.recommended ? 'is-recommended' : ''}`}>
+    <article className={`interview-offer ${product.recommended ? 'is-recommended' : ''} is-${product.status}`}>
       <div className="interview-offer__topline">
-        <span>{product.badge}</span>
+        <span>{product.commercialRole}</span>
         {product.recommended ? <strong>CONSIGLIATO</strong> : null}
       </div>
+      {statusLabel ? <p className="interview-offer__status">{statusLabel}</p> : null}
       <h3>{product.name}</h3>
       <p className="interview-offer__price">{formatInterviewPrice(product)} <small>pagamento unico</small></p>
       <p className="interview-offer__positioning">{product.positioning}</p>

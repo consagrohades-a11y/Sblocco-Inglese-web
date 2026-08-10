@@ -298,6 +298,8 @@
 .interview-offer.is-recommended { border: 2px solid var(--iv-orange); background: var(--iv-paper); box-shadow: 0 1.8rem 4rem rgba(8,38,56,0.09); transform: translateY(-0.6rem); }
 .interview-offer__topline { display: flex; min-height: 1.8rem; align-items: center; justify-content: space-between; gap: 0.7rem; color: var(--iv-orange); font-size: 0.66rem; font-weight: 850; letter-spacing: 0.11em; }
 .interview-offer__topline strong { padding: 0.36rem 0.48rem; background: var(--iv-orange); color: #fffaf5; font-size: 0.58rem; letter-spacing: 0.08em; }
+.interview-offer__status { align-self: flex-start; margin: 1rem 0 0; padding: 0.28rem 0.5rem; border: 1px solid var(--iv-line); color: var(--iv-muted); font-size: 0.54rem; font-weight: 900; letter-spacing: 0.1em; }
+.interview-offer.is-preview .interview-offer__status { border-color: rgba(211, 76, 26, 0.28); color: var(--iv-orange); }
 .interview-offer h3 { margin: 1.2rem 0 0; font-family: Georgia, serif; font-size: clamp(1.85rem, 2.6vw, 2.55rem); font-weight: 400; line-height: 1.05; }
 .interview-offer__price { margin: 1.1rem 0 0; color: var(--iv-orange); font-family: Georgia, serif; font-size: 2rem; }
 .interview-offer__price small { display: block; margin-top: 0.25rem; color: var(--iv-muted); font-family: Inter, sans-serif; font-size: 0.66rem; font-weight: 700; }

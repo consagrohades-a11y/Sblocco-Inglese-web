@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import { authPath } from '../../lib/safeReturnTo.js';
 import { createCheckout, loadPathwayOffers } from '../../lib/pathwayCommerce.js';
+import { isInterviewProductPurchasable } from '../../config/interviewProducts.js';
 
 function paymentLinkForUser(paymentUrl, user) {
   if (!paymentUrl) return null;
@@ -51,6 +52,10 @@ export default function useInterviewPurchase(product, anchor = 'acquista-sblocco
 
   const purchase = useCallback(async () => {
     setError('');
+    if (!isInterviewProductPurchasable(product)) {
+      setError('Questo prodotto sarà disponibile a breve.');
+      return;
+    }
     if (!user || !session?.access_token) {
       const returnTo = purchaseReturnTo(location, product.id, anchor);
       navigate(authPath('/login', returnTo), {
@@ -97,7 +102,7 @@ export default function useInterviewPurchase(product, anchor = 'acquista-sblocco
     offersLoading,
     owned: Boolean(offerState?.owned),
     accessUrl: offerState?.accessUrl || '/account',
-    available: product.active && Boolean(product.paymentUrl || offerState?.configured),
+    available: isInterviewProductPurchasable(product) && Boolean(product.paymentUrl || offerState?.configured),
     purchase,
   };
 }

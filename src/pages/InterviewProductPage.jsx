@@ -1,35 +1,35 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   ArrowLeft,
-  ArrowRight,
   BrainCircuit,
-  BriefcaseBusiness,
-  Check,
   ClipboardCheck,
   FileText,
   Layers3,
-  LoaderCircle,
-  LockKeyhole,
   MessageCircleQuestion,
   Mic2,
   Presentation,
   RefreshCcw,
   Route,
   ShieldCheck,
-  Sparkles,
   Target,
   Wrench,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
-import FAQAccordion from '../components/FAQAccordion.jsx';
 import {
   InteractiveMiniPreview,
   InterviewProductShowcase,
   InterviewWorkspacePreview,
 } from '../components/interview/InterviewProductPreviews.jsx';
+import {
+  InterviewProductFAQ,
+  InterviewProductNav,
+  InterviewPurchaseButton,
+  InterviewPurchasePanel,
+  InterviewProductStatus,
+} from '../components/interview/InterviewProductShared.jsx';
 import useInterviewPurchase from '../components/interview/useInterviewPurchase.js';
-import { formatInterviewPrice, interviewOffers } from '../config/interviewProducts.js';
+import { formatInterviewPrice, getInterviewProductBySlug } from '../config/interviewProducts.js';
 import { scrollInterviewTo } from '../components/interview/InterviewEditorialSections.jsx';
 import '../styles/interview.css';
 import '../styles/interview-product.css';
@@ -100,21 +100,8 @@ const productFaqs = [
   { question: 'Il Kit o Complete potrebbero essere più adatti?', answer: 'Il Kit è pensato come punto di partenza essenziale. Complete aggiunge materiali e role pack quando disponibili. Puoi confrontarli nella pagina principale del colloquio.' },
 ];
 
-function PurchaseButton({ checkout, label = 'Acquista Sblocco Colloquio' }) {
-  if (checkout.owned) {
-    return <Link className="interview-button interview-button--primary" to={checkout.accessUrl}>Vai al percorso <ArrowRight aria-hidden="true" /></Link>;
-  }
-  if (checkout.offersLoading) {
-    return <button type="button" className="interview-button interview-button--primary" disabled><LoaderCircle className="animate-spin" aria-hidden="true" />Controllo disponibilità…</button>;
-  }
-  if (!checkout.available) {
-    return <button type="button" className="interview-button interview-button--primary" disabled aria-disabled="true">Disponibile a breve</button>;
-  }
-  return <button type="button" className="interview-button interview-button--primary" disabled={checkout.loading} onClick={checkout.purchase}>{checkout.loading ? <><LoaderCircle className="animate-spin" aria-hidden="true" />Apertura checkout…</> : <>{label} <ArrowRight aria-hidden="true" /></>}</button>;
-}
-
 export default function InterviewProductPage() {
-  const product = useMemo(() => interviewOffers.find((offer) => offer.id === 'interview-core'), []);
+  const product = useMemo(() => getInterviewProductBySlug('sblocco-colloquio'), []);
   const checkout = useInterviewPurchase(product);
   const [showSticky, setShowSticky] = useState(false);
 
@@ -128,8 +115,8 @@ export default function InterviewProductPage() {
   return (
     <div className="interview-page interview-product-page">
       <SEO
-        title="Sblocco Colloquio | Percorso completo in inglese"
-        description="Costruisci, migliora e allena le tue risposte per un colloquio in inglese con otto moduli, mock interview e il tuo Interview File."
+        title="Sblocco Colloquio | Allenamento per colloqui in inglese"
+        description="Allenati per colloqui HR, behavioral, tecnici e pratici con speaking, esercizi attivi e mock interview."
       />
 
       <header className="interview-product-hero">
@@ -137,12 +124,12 @@ export default function InterviewProductPage() {
           <Link className="interview-product-back" to="/percorsi/colloquio"><ArrowLeft aria-hidden="true" />Torna alle opzioni</Link>
           <div className="interview-product-hero__layout">
             <div className="interview-product-hero__copy">
-              <p className="interview-eyebrow">SBLOCCO COLLOQUIO · PERCORSO COMPLETO</p>
+              <div className="interview-product-hero__eyebrow-row"><p className="interview-eyebrow">SBLOCCO COLLOQUIO · PERCORSO COMPLETO</p><InterviewProductStatus product={product} /></div>
               <h1>Costruisci risposte che sai usare anche quando la domanda cambia.</h1>
               <p>Un percorso self-guided per trasformare esperienza, esempi e idee in risposte chiare, personali e adattabili.</p>
               <div className="interview-product-hero__price"><strong>{formatInterviewPrice(product)}</strong><span>pagamento unico</span></div>
               <div className="interview-actions">
-                <PurchaseButton checkout={checkout} />
+                <InterviewPurchaseButton checkout={checkout} product={product} />
                 <button type="button" className="interview-text-button" onClick={() => scrollInterviewTo('come-funziona-il-prodotto')}>Guarda cosa c’è dentro</button>
               </div>
               {checkout.error ? <p className="interview-purchase-error" role="alert">{checkout.error}</p> : null}
@@ -219,47 +206,19 @@ export default function InterviewProductPage() {
         </div>
       </section>
 
-      <section id="acquista-sblocco-colloquio" className="interview-product-section interview-purchase" aria-labelledby="interview-purchase-title">
-        <div className="interview-shell interview-purchase__layout">
-          <div className="interview-product-heading">
-            <p className="interview-eyebrow">INVENTARIO COMPLETO</p>
-            <h2 id="interview-purchase-title">Sblocco Colloquio</h2>
-            <p>Tutto ciò che serve per costruire, provare e adattare le tue risposte in autonomia.</p>
-          </div>
-          <div className="interview-purchase__card">
-            <div><span>PERCORSO COMPLETO</span><strong>{formatInterviewPrice(product)}</strong><small>pagamento unico</small></div>
-            <ul>{inventory.map((item) => <li key={item}><Check aria-hidden="true" />{item}</li>)}</ul>
-            <PurchaseButton checkout={checkout} />
-            {checkout.error ? <p className="interview-purchase-error" role="alert">{checkout.error}</p> : null}
-            <p><LockKeyhole aria-hidden="true" />Accesso tramite account. Pagamento sicuro con Stripe.</p>
-          </div>
-        </div>
-      </section>
+      <InterviewPurchasePanel product={product} checkout={checkout} eyebrow="INVENTARIO COMPLETO" description="Tutto ciò che serve per costruire, provare e adattare le tue risposte in autonomia." inventory={inventory} />
 
-      <section className="interview-product-section interview-alternatives" aria-labelledby="interview-alternatives-title">
-        <div className="interview-shell">
-          <div className="interview-product-heading interview-product-heading--center"><p className="interview-eyebrow">ALTRE OPZIONI</p><h2 id="interview-alternatives-title">Preferisci partire più leggero o avere più materiali?</h2></div>
-          <div className="interview-alternatives__grid">
-            <article><BriefcaseBusiness aria-hidden="true" /><span>ESSENZIALE</span><h3>Kit Colloquio · 19 €</h3><p>Strutture e risorse fondamentali per preparare le domande più comuni.</p><Link to="/percorsi/colloquio#offerte-colloquio">Confronta il Kit <ArrowRight aria-hidden="true" /></Link></article>
-            <article><Sparkles aria-hidden="true" /><span>PIÙ COMPLETO</span><h3>Complete · 79 €</h3><p>Percorso, Kit e materiali aggiuntivi quando saranno disponibili.</p><Link to="/percorsi/colloquio#offerte-colloquio">Confronta Complete <ArrowRight aria-hidden="true" /></Link></article>
-          </div>
-        </div>
-      </section>
+      <InterviewProductNav currentId={product.id} />
 
-      <section className="interview-product-section interview-product-faq" aria-labelledby="interview-product-faq-title">
-        <div className="interview-shell interview-product-faq__layout">
-          <div className="interview-product-heading"><p className="interview-eyebrow">PRIMA DELL’ACQUISTO</p><h2 id="interview-product-faq-title">Domande sul percorso da 49 €.</h2></div>
-          <FAQAccordion items={productFaqs} defaultOpen={-1} />
-        </div>
-      </section>
+      <InterviewProductFAQ id="interview-product-faq" title="Domande sul percorso da 49 €." items={productFaqs} />
 
       <section className="interview-product-final" aria-labelledby="interview-product-final-title">
-        <div className="interview-shell"><Target aria-hidden="true" /><p className="interview-eyebrow">PRIMA CHE INIZI DAVVERO</p><h2 id="interview-product-final-title">Porta al colloquio risposte che hai già imparato a costruire.</h2><PurchaseButton checkout={checkout} /></div>
+        <div className="interview-shell"><Target aria-hidden="true" /><p className="interview-eyebrow">PRIMA CHE INIZI DAVVERO</p><h2 id="interview-product-final-title">Porta al colloquio risposte che hai già imparato a costruire.</h2><InterviewPurchaseButton checkout={checkout} product={product} /></div>
       </section>
 
       {showSticky ? (
         <div className="interview-product-sticky is-visible">
-          <div className="interview-shell"><div><span>Sblocco Colloquio</span><strong>{formatInterviewPrice(product)} · una tantum</strong></div><PurchaseButton checkout={checkout} label="Acquista" /></div>
+          <div className="interview-shell"><div><span>Sblocco Colloquio</span><strong>{formatInterviewPrice(product)} · una tantum</strong></div><InterviewPurchaseButton checkout={checkout} product={product} label="Acquista" /></div>
         </div>
       ) : null}
     </div>
