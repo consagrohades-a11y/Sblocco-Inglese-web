@@ -12,9 +12,10 @@ function stripeId(value) {
 
 function trustedSessionData(session) {
   const offer = resolveOffer(session.metadata?.offer_id);
-  const userId = session.metadata?.user_id;
-  if (!offer || !offer.configured) throw new Error('Webhook references an unknown or unconfigured offer.');
-  if (!userId || userId !== session.client_reference_id) throw new Error('Webhook user metadata is inconsistent.');
+  const metadataUserId = session.metadata?.user_id || null;
+  const userId = metadataUserId || session.client_reference_id;
+  if (!offer || !offer.fulfillable) throw new Error('Webhook references an unknown or unfulfillable offer.');
+  if (!userId || (metadataUserId && metadataUserId !== session.client_reference_id)) throw new Error('Webhook user metadata is inconsistent.');
   return { offer, userId };
 }
 
@@ -89,4 +90,3 @@ export default async function handler(request, response) {
     });
   }
 }
-
