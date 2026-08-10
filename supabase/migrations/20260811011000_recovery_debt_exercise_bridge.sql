@@ -228,7 +228,6 @@ set search_path = ''
 as $$
 declare
   v_session public.recovery_plan_sessions%rowtype;
-  v_user_id uuid;
   v_resource_total integer;
   v_submitted_total integer;
   v_average_score numeric;
@@ -238,7 +237,7 @@ declare
 begin
   if auth.uid() is null then raise exception 'Authentication required.'; end if;
 
-  select session.*, enrollment.user_id into v_session, v_user_id
+  select session.* into v_session
   from public.recovery_plan_sessions session
   join public.recovery_enrollments enrollment on enrollment.id = session.enrollment_id
   where session.id = p_session_id and enrollment.user_id = auth.uid();
