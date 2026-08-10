@@ -92,8 +92,10 @@
 .interview-product-showcase__preview blockquote { margin: 0; font-family: Georgia, serif; font-size: clamp(1.75rem, 3vw, 2.7rem); line-height: 1.18; }
 .interview-product-showcase__preview blockquote small { display: block; margin-top: 1.5rem; color: var(--iv-muted); font-family: Inter, sans-serif; font-size: 0.75rem; line-height: 1.5; }
 .interview-showcase__framework { display: grid; grid-template-columns: repeat(4, 1fr); }
-.interview-showcase__framework span { display: grid; min-height: 8rem; place-items: center; border: 1px solid var(--iv-line); border-right: 0; color: var(--iv-orange); font-size: 0.65rem; font-weight: 900; letter-spacing: 0.1em; }
+.interview-showcase__framework span { display: grid; min-height: 8rem; align-content: center; gap: 0.65rem; padding: 1.15rem; border: 1px solid var(--iv-line); border-right: 0; }
 .interview-showcase__framework span:last-child { border-right: 1px solid var(--iv-line); }
+.interview-showcase__framework strong { color: var(--iv-orange); font-size: 0.65rem; font-weight: 900; letter-spacing: 0.1em; }
+.interview-showcase__framework small { color: var(--iv-muted); font-size: 0.7rem; line-height: 1.4; }
 .interview-product-showcase__preview > ul { display: grid; gap: 0; margin: 0; padding: 0; border-top: 1px solid var(--iv-line); list-style: none; }
 .interview-product-showcase__preview > ul li { padding: 1rem 0; border-bottom: 1px solid var(--iv-line); font-family: Georgia, serif; font-size: 1.35rem; font-style: italic; }
 .interview-showcase__followup > span { color: var(--iv-orange); font-size: 0.62rem; font-weight: 900; letter-spacing: 0.12em; }

@@ -96,9 +96,14 @@ const showcaseBlocks = [
   {
     icon: Sparkles,
     eyebrow: '02 · COSTRUISCI',
-    title: 'Dai una forma chiara a ciò che vuoi dire.',
-    copy: 'NOW, BEFORE, VALUE e NEXT ti aiutano a non perdere il filo senza trasformare la risposta in un copione.',
-    preview: <div className="interview-showcase__framework">{['NOW', 'BEFORE', 'VALUE', 'NEXT'].map((item) => <span key={item}>{item}</span>)}</div>,
+    title: 'Usa quattro punti di appoggio, non un copione.',
+    copy: 'Parti da dove sei, scegli il passato rilevante, mostra il valore che hai creato e collega tutto al ruolo che vuoi.',
+    preview: <div className="interview-showcase__framework">{[
+      ['NOW', 'Dove sei oggi'],
+      ['BEFORE', 'Il passato che conta'],
+      ['VALUE', 'Azione e risultato'],
+      ['NEXT', 'Il legame con il ruolo'],
+    ].map(([label, description]) => <span key={label}><strong>{label}</strong><small>{description}</small></span>)}</div>,
   },
   {
     icon: Lightbulb,
