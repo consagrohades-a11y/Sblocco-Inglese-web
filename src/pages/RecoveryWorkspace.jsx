@@ -1,16 +1,19 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, BookOpen, CheckCircle2, Clock3, LockKeyhole, RotateCcw } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Clock3, LockKeyhole, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import RecoveryNav from '../components/recovery/RecoveryNav.jsx';
 import { RECOVERY_MODE_LABELS, recoveryTopicLabel } from '../config/recovery.js';
-import { loadRecoveryAccessState } from '../lib/recoveryApi.js';
+import {
+  loadRecoveryAccessState,
+  syncMaterializedRecoverySessions,
+} from '../lib/recoveryApi.js';
 import { supabase } from '../lib/supabaseClient.js';
 import '../styles/learnerEditorial.css';
 
 const viewCopy = {
   percorso: ['Il mio percorso', 'Le sessioni restano ordinate per priorità, ma gli argomenti non sono bloccati in sequenza rigida.'],
-  argomenti: ['Argomenti', 'Il programma della scuola resta sempre visibile. Un buon risultato riduce il lavoro inutile, non elimina l’argomento.'],
+  argomenti: ['Argomenti', 'Il programma della scuola resta sempre visibile. Puoi aprire un argomento manualmente, mentre “Oggi” continua a indicare la priorità consigliata.'],
   errori: ['Ripassa gli errori', 'Qui compaiono i pattern già rilevati dal sistema di diagnostica degli esercizi Sblocco.'],
   simulazioni: ['Simulazioni', 'Le simulazioni sono separate dalla pratica normale: niente correzioni durante la prova, risultati dopo la consegna.'],
 };
@@ -41,7 +44,14 @@ export default function RecoveryWorkspace({ view }) {
       setLoading(true);
       setLoadError('');
       try {
-        const loaded = await loadRecoveryAccessState();
+        let loaded = await loadRecoveryAccessState();
+        if (!active) return;
+
+        if (loaded.enrollment?.id && loaded.state?.sessions?.length) {
+          const syncResults = await syncMaterializedRecoverySessions(loaded.state.sessions);
+          if (syncResults.some((result) => result?.completed)) loaded = await loadRecoveryAccessState();
+        }
+
         if (!active) return;
         setAccess(loaded);
         if (loaded.enrollment?.id && view === 'errori') {
@@ -62,7 +72,6 @@ export default function RecoveryWorkspace({ view }) {
   const assessmentsBySession = useMemo(() => new Map((access?.state?.assessments || []).map((attempt) => [attempt.session_id, attempt])), [access]);
 
   if (loading) return <div className="learner-editorial learner-workspace-page"><div className="learner-shell"><p className="learner-empty">Caricamento...</p></div></div>;
-
   if (loadError) return <div className="learner-editorial learner-workspace-page"><div className="learner-shell"><p className="learner-error">{loadError}</p><Link to="/dashboard" className="learner-secondary-button">Torna alla dashboard</Link></div></div>;
 
   if (!access?.entitled || !access.enrollment) {
@@ -94,7 +103,11 @@ export default function RecoveryWorkspace({ view }) {
                 <li className="learner-list__row" key={session.id}>
                   <span className="learner-list__index">{session.sequence_index}</span>
                   <div><strong>{session.title}</strong><p>{session.rationale || `${session.estimated_minutes} minuti circa.`}</p></div>
-                  {session.status === 'completed' ? <span className="learner-list__status"><CheckCircle2 size={14} style={{ display: 'inline' }} /> {sessionStatus(session)}</span> : session.status === 'available' || session.status === 'in_progress' ? <Link to={`/recupero-debito/sessione/${session.id}`} className="learner-text-link">{sessionStatus(session)} <ArrowRight size={14} /></Link> : <span className="learner-list__status">{sessionStatus(session)}</span>}
+                  {session.status === 'completed'
+                    ? <span className="learner-list__status"><CheckCircle2 size={14} style={{ display: 'inline' }} /> {sessionStatus(session)}</span>
+                    : session.status === 'available' || session.status === 'in_progress'
+                      ? <Link to={`/recupero-debito/sessione/${session.id}`} className="learner-text-link">{sessionStatus(session)} <ArrowRight size={14} /></Link>
+                      : <span className="learner-list__status">{sessionStatus(session)}</span>}
                 </li>
               ))}
             </ol>
@@ -107,7 +120,16 @@ export default function RecoveryWorkspace({ view }) {
             <ul className="learner-list">
               {topics.map((topic, index) => {
                 const score = Math.round(Number(topic.mastery_score ?? topic.diagnostic_score ?? 0));
-                return <li className="learner-list__row" key={topic.topic_key}><span className="learner-list__index">{index + 1}</span><div><strong>{recoveryTopicLabel(topic.topic_key)}</strong><p>{topic.verification_only ? 'Risulta già abbastanza solido: resta nel piano come ripasso e verifica.' : `${score}% sui dati attualmente disponibili.`}</p></div><span className={`learner-list__status ${topic.priority_band === 'high' ? 'learner-list__status--high' : ''}`}>{priorityLabel(topic)}</span></li>;
+                const topicSession = sessions.find((session) => session.topic_key === topic.topic_key && !['completed', 'skipped'].includes(session.status));
+                return (
+                  <li className="learner-list__row" key={topic.topic_key}>
+                    <span className="learner-list__index">{index + 1}</span>
+                    <div><strong>{recoveryTopicLabel(topic.topic_key)}</strong><p>{topic.verification_only ? 'Risulta già abbastanza solido: resta nel piano come ripasso e verifica.' : `${score}% sui dati attualmente disponibili.`}</p></div>
+                    {topicSession
+                      ? <Link to={`/recupero-debito/sessione/${topicSession.id}`} className="learner-text-link">Apri <ArrowRight size={14} /></Link>
+                      : <span className={`learner-list__status ${topic.priority_band === 'high' ? 'learner-list__status--high' : ''}`}>{priorityLabel(topic)}</span>}
+                  </li>
+                );
               })}
             </ul>
           </section>
@@ -116,7 +138,7 @@ export default function RecoveryWorkspace({ view }) {
         {view === 'errori' ? (
           <section className="learner-panel learner-panel--main">
             <div className="learner-panel__heading"><div><span className="learner-panel__eyebrow">Dati dagli esercizi</span><h2>{errors.length} pattern da rivedere</h2></div>{errorSession ? <Link to={`/recupero-debito/sessione/${errorSession.id}`} className="learner-text-link">Apri sessione errori <ArrowRight /></Link> : null}</div>
-            {errors.length ? <ul className="learner-list">{errors.map((item, index) => (
+            {errors.length ? <ul className="learner-list">{errors.map((item) => (
               <li className="learner-list__row" key={item.diagnostic_code}><span className="learner-list__index"><RotateCcw size={14} /></span><div><strong>{item.label}</strong><p>{item.message} · {recoveryTopicLabel(item.topic_key)}</p></div><span className="learner-list__status learner-list__status--high">{Math.round(Number(item.recent_errors || 0))} errori</span></li>
             ))}</ul> : <p className="learner-empty">Non ci sono ancora errori ricorrenti sufficienti da mostrare. La lista si popola usando la diagnostica degli esercizi, senza creare un archivio parallelo.</p>}
           </section>
@@ -132,8 +154,12 @@ export default function RecoveryWorkspace({ view }) {
                 return (
                   <li className="learner-list__row" key={session.id}>
                     <span className="learner-list__index">{index + 1}</span>
-                    <div><strong>{session.title}</strong><p><Clock3 size={13} style={{ display: 'inline' }} /> ~{session.estimated_minutes} min{attempt?.score != null ? ` · risultato ${Math.round(Number(attempt.score))}%` : ''}</p>{attempt?.topic_scores && Object.keys(attempt.topic_scores).length ? <p>{Object.entries(attempt.topic_scores).slice(0, 6).map(([topic, score]) => `${topic}: ${Math.round(Number(score))}%`).join(' · ')}</p> : null}</div>
-                    {attempt?.feedback_released ? <span className="learner-list__status">Risultato disponibile</span> : session.status === 'available' || session.status === 'in_progress' ? <Link to={`/recupero-debito/sessione/${session.id}`} className="learner-text-link">Inizia <ArrowRight /></Link> : <span className="learner-list__status">{sessionStatus(session)}</span>}
+                    <div><strong>{session.title}</strong><p><Clock3 size={13} style={{ display: 'inline' }} /> ~{session.estimated_minutes} min{attempt?.score != null ? ` · risultato ${Math.round(Number(attempt.score))}%` : ''}</p>{attempt?.topic_scores && Object.keys(attempt.topic_scores).length ? <p>{Object.entries(attempt.topic_scores).slice(0, 6).map(([topic, score]) => `${recoveryTopicLabel(topic)}: ${Math.round(Number(score))}%`).join(' · ')}</p> : null}</div>
+                    {attempt?.feedback_released
+                      ? <span className="learner-list__status">Risultato disponibile</span>
+                      : session.status === 'available' || session.status === 'in_progress'
+                        ? <Link to={`/recupero-debito/sessione/${session.id}`} className="learner-text-link">Inizia <ArrowRight /></Link>
+                        : <span className="learner-list__status">{sessionStatus(session)}</span>}
                   </li>
                 );
               })}
