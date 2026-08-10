@@ -10,6 +10,7 @@ const offerDefinitions = [
   ['estero-complete', 'estero', 'Percorso completo', 'ESTERO_COMPLETE'],
   ['basi-essential', 'basi', 'Essenziale', 'BASI_ESSENTIAL'],
   ['basi-complete', 'basi', 'Percorso completo', 'BASI_COMPLETE'],
+  ['recupero-debito', 'recupero-debito', 'Recupero Debito Inglese', 'RECUPERO_DEBITO'],
 ].map(([id, pathway, name, envKey]) => ({
   id,
   pathway,
@@ -70,4 +71,4 @@ export function publicOfferState(offer, owned = false) {
   };
 }
 
-export const knownPathways = new Set(['colloquio', 'lavorare', 'parlare', 'estero', 'basi']);
+export const knownPathways = new Set(['colloquio', 'lavorare', 'parlare', 'estero', 'basi', 'recupero-debito']);
