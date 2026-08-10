@@ -84,6 +84,7 @@ const LearnerHome = lazy(() => import('./pages/LearnerHome'));
 const RecoveryDiagnostic = lazy(() => import('./pages/RecoveryDiagnostic'));
 const RecoveryLandingPage = lazy(() => import('./pages/RecoveryLandingPage'));
 const RecoveryOnboarding = lazy(() => import('./pages/RecoveryOnboarding'));
+const RecoveryReadiness = lazy(() => import('./pages/RecoveryReadiness'));
 const RecoverySession = lazy(() => import('./pages/RecoverySession'));
 const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
 const PathwayPage = lazy(() => import('./pages/PathwayPage'));
@@ -123,7 +124,7 @@ export default function App() {
     || location.pathname.startsWith('/recupero-debito')
     || location.pathname === '/test-recupero-inglese'
     || location.pathname === '/percorsi/recupero-debito';
-  const suppressMarketingMobileCta = location.pathname === '/dashboard' || location.pathname.startsWith('/recupero-debito');
+  const suppressMarketingMobileCta = isRecoveryExperience;
 
   return (
     <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-surface-950 dark:text-white">
@@ -181,6 +182,7 @@ export default function App() {
             <Route path="/recupero-debito/argomenti" element={<ProtectedRoute><RecoveryWorkspace view="argomenti" /></ProtectedRoute>} />
             <Route path="/recupero-debito/errori" element={<ProtectedRoute><RecoveryWorkspace view="errori" /></ProtectedRoute>} />
             <Route path="/recupero-debito/simulazioni" element={<ProtectedRoute><RecoveryWorkspace view="simulazioni" /></ProtectedRoute>} />
+            <Route path="/recupero-debito/preparazione" element={<ProtectedRoute><RecoveryReadiness /></ProtectedRoute>} />
             <Route path="/assignments" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
             <Route path="/attivita/esercizi" element={<ProtectedRoute><LearnerAssignments initialArea="exercises" /></ProtectedRoute>} />
             <Route path="/attivita/srs" element={<ProtectedRoute><LearnerAssignments initialArea="srs" /></ProtectedRoute>} />
