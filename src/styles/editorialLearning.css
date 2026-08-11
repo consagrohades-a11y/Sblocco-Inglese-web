@@ -226,6 +226,15 @@
   line-height: 1;
 }
 
+.sblocco-teaching-block__instructions {
+  max-width: 42rem;
+  margin: 0.55rem 0 0;
+  color: var(--sblocco-brand-muted);
+  font-size: 0.76rem;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
 .sblocco-teaching-block__body {
   max-width: 48rem;
   margin: 1.3rem 0 0 3.35rem;
@@ -237,7 +246,8 @@
 }
 
 .sblocco-teaching-block--recap .sblocco-learning-eyebrow,
-.sblocco-teaching-block--recap .sblocco-teaching-block__body {
+.sblocco-teaching-block--recap .sblocco-teaching-block__body,
+.sblocco-teaching-block--recap .sblocco-teaching-block__instructions {
   color: rgba(255, 250, 245, 0.74);
 }
 
@@ -383,19 +393,33 @@
   justify-content: center;
   gap: 0.75rem;
   padding: 0.8rem 1.05rem;
+  border: 1px solid transparent;
   border-radius: 0.2rem;
   color: #fffaf5;
   background: var(--sblocco-brand-orange);
   box-shadow: 0 0.8rem 1.8rem rgba(211, 76, 26, 0.13);
   font-size: 0.8rem;
   font-weight: 720;
-  transition: transform 160ms ease, background-color 160ms ease;
+  transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
 }
 
 .sblocco-learning-action:hover {
   color: white;
   background: #b83e13;
   transform: translateY(-1px);
+}
+
+.sblocco-learning-action--secondary {
+  color: var(--sblocco-brand-navy);
+  border-color: var(--sblocco-brand-line);
+  background: color-mix(in srgb, var(--sblocco-brand-paper-raised) 74%, transparent);
+  box-shadow: none;
+}
+
+.sblocco-learning-action--secondary:hover {
+  color: var(--sblocco-brand-navy);
+  border-color: color-mix(in srgb, var(--sblocco-brand-orange) 30%, var(--sblocco-brand-line));
+  background: color-mix(in srgb, var(--sblocco-brand-orange) 5%, var(--sblocco-brand-paper-raised));
 }
 
 @media (max-width: 800px) {
