@@ -1,8 +1,14 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, BookOpen, Target } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import ExerciseRenderer from '../components/exercises/ExerciseRenderer';
+import {
+  EditorialContinuation,
+  EditorialLessonHero,
+  EditorialLearningShell,
+  EditorialTeachingBlock,
+} from '../components/learning/EditorialLearning.jsx';
 import DiagnosticResult from '../components/diagnostics/DiagnosticResult';
 import { buildDiagnosticProfile } from '../engines/diagnosticEngine';
 import { buildRecommendations } from '../engines/recommendationEngine';
@@ -21,16 +27,20 @@ function NavigationCard({ item, direction }) {
   return (
     <Link
       to={item.path}
-      className="focus-ring group rounded-2xl border border-ink/10 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lift"
+      className="focus-ring group border border-ink/10 bg-white/80 p-5 transition hover:-translate-y-0.5 hover:border-coral/25 dark:border-white/10 dark:bg-white/[0.05]"
     >
-      <p className="flex items-center gap-2 text-sm font-black text-moss">
+      <p className="flex items-center gap-2 text-sm font-black text-coral dark:text-[#ff8d61]">
         {direction === 'previous' ? <Icon className="h-4 w-4" /> : null}
         {item.label}
         {direction === 'next' ? <Icon className="h-4 w-4" /> : null}
       </p>
-      <p className="mt-2 text-sm leading-6 text-ink/65">{item.description}</p>
+      <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">{item.description}</p>
     </Link>
   );
+}
+
+function formatComparisonColumn(column) {
+  return [column.rule, ...(column.examples || [])].filter(Boolean).join('\n');
 }
 
 export default function A1UnitPage({ unitId }) {
@@ -83,6 +93,7 @@ export default function A1UnitPage({ unitId }) {
     setPracticeStarted(true);
     selectExercise(finalExercise.id);
   };
+
   const diagnosticResult = useMemo(() => {
     if (!unit || !attempts.length) return null;
     const profile = buildDiagnosticProfile(attempts);
@@ -95,193 +106,223 @@ export default function A1UnitPage({ unitId }) {
 
   if (!unit) {
     return (
-      <section className="section-shell py-12">
-        <div className="rounded-[2rem] border border-ink/10 bg-white p-7 shadow-soft">
-          <h1 className="text-3xl font-black text-ink">Unità A1 non trovata.</h1>
-          <Link to="/grammar/a1" className="focus-ring mt-5 inline-flex rounded-full bg-moss px-5 py-3 font-black text-white">
+      <EditorialLearningShell>
+        <section className="section-shell py-12">
+          <EditorialTeachingBlock
+            prompt="Unità A1 non trovata"
+            content={{
+              presentation: 'note',
+              body: 'Questa unità non è disponibile o il collegamento non è più valido.',
+            }}
+          />
+          <Link to="/grammar/a1" className="focus-ring mt-5 inline-flex rounded-sm bg-coral px-5 py-3 font-black text-white">
             Torna ad A1 English Foundations
           </Link>
-        </div>
-      </section>
+        </section>
+      </EditorialLearningShell>
     );
   }
 
   return (
-    <section className="section-shell py-12">
-      <SEO title={`${unit.displayTitle} | Sblocco Inglese`} description={unit.outcome} />
+    <EditorialLearningShell>
+      <section className="section-shell py-10 sm:py-12">
+        <SEO title={`${unit.displayTitle} | Sblocco Inglese`} description={unit.outcome} />
 
-      <div className="rounded-[2rem] bg-ink p-7 text-white shadow-soft sm:p-9">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-mint">Unità A1 English Foundations</p>
-        <h1 className="mt-4 max-w-5xl text-4xl font-black leading-tight sm:text-5xl">{unit.displayTitle}</h1>
-        <p className="mt-4 max-w-3xl text-lg leading-8 text-white/75">{unit.subtitle}</p>
-        <div className="mt-6 rounded-2xl bg-white/10 p-5">
-          <p className="text-xs font-bold uppercase tracking-wide text-mint">Obiettivo</p>
-          <p className="mt-2 max-w-4xl leading-7 text-white/85">{unit.outcome}</p>
+        <EditorialLessonHero
+          eyebrow="English Foundations · A1"
+          title={unit.displayTitle}
+          intro={unit.subtitle}
+          meta={[
+            { label: 'Grammatica essenziale', icon: 'topic' },
+            { label: `${unit.exercises?.length || 0} attività` },
+          ]}
+        />
+
+        <div id="unit-active-section" className="mt-8 grid scroll-mt-24 gap-5 lg:grid-cols-[0.92fr_1.08fr]">
+          <EditorialTeachingBlock
+            prompt="Regole grammaticali in questa unità"
+            content={{
+              presentation: 'note',
+              eyebrow: 'Mappa grammaticale',
+              body: (unit.grammarPoints || []).map((point) => `• ${point}`).join('\n'),
+            }}
+          />
+          <EditorialTeachingBlock
+            prompt="Cosa renderai attivo"
+            content={{
+              presentation: 'recap',
+              eyebrow: 'Uso attivo',
+              body: unit.outcome,
+              items: unit.activeLanguageOutcomes || [],
+            }}
+          />
         </div>
-      </div>
 
-      <div id="unit-active-section" className="mt-8 grid scroll-mt-24 gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
-          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-moss">
-            <BookOpen className="h-4 w-4" /> Mappa grammaticale
-          </p>
-          <h2 className="mt-3 text-2xl font-black text-ink">Regole grammaticali in questa unità</h2>
-          <ul className="mt-4 grid gap-2 text-sm font-semibold leading-6 text-ink/70">
-            {unit.grammarPoints.map((point) => <li key={point}>• {point}</li>)}
-          </ul>
-        </section>
+        <section className="mt-12">
+          <div className="max-w-3xl">
+            <p className="sblocco-learning-eyebrow">Spiegazione grammaticale</p>
+            <h2 className="sblocco-learning-display mt-2 text-[clamp(2.5rem,6vw,4.8rem)] leading-[0.96]">Capire prima di esercitarsi.</h2>
+            <p className="mt-4 text-sm font-semibold leading-7 text-ink/65 dark:text-white/65">
+              Qui trovi solo la teoria che serve per usare la struttura. Gli esempi vengono prima della pratica, non al posto della pratica.
+            </p>
+          </div>
 
-        <section className="rounded-2xl border border-ink/10 bg-linen/70 p-6">
-          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-moss">
-            <Target className="h-4 w-4" /> Uso attivo
-          </p>
-          <h2 className="mt-3 text-2xl font-black text-ink">Cosa renderai attivo</h2>
-          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-            {unit.activeLanguageOutcomes.map((outcome) => (
-              <li key={outcome} className="rounded-xl bg-white p-4 text-sm font-semibold leading-6 text-ink/70 shadow-sm">
-                {outcome}
-              </li>
-            ))}
-          </ul>
-        </section>
-      </div>
-
-      <section className="mt-8">
-        <p className="text-xs font-bold uppercase tracking-wide text-moss">Spiegazione grammaticale</p>
-        <h2 className="mt-2 text-3xl font-black text-ink">Come funziona la grammatica</h2>
-        <div className="mt-5 grid gap-4 lg:grid-cols-2">
-          {unit.ruleCards.map((card) => (
-            <article key={card.grammarPoint} className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
-              <p className="text-sm font-black text-moss">{card.grammarPoint}</p>
-              <p className="mt-3 text-sm leading-7 text-ink/75">{card.explanation}</p>
-              <div className="mt-4 rounded-xl bg-mint/35 p-4">
-                <p className="text-xs font-bold uppercase tracking-wide text-ink/65">Uso attivo nel parlato</p>
-                <p className="mt-2 text-sm leading-6 text-ink/70">{card.activeUse}</p>
-              </div>
-              <ul className="mt-4 grid gap-1 text-sm font-black text-ink">
-                {card.examples.map((example) => <li key={example}>{example}</li>)}
-              </ul>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-8 rounded-[2rem] border border-coral/20 bg-blush/70 p-6 sm:p-7">
-        <p className="text-xs font-bold uppercase tracking-wide text-coral">Interferenze italiano → inglese</p>
-        <h2 className="mt-2 text-2xl font-black text-ink">Dove l’italiano può interferire</h2>
-        <div className="mt-4 grid gap-3 lg:grid-cols-3">
-          {unit.italianTransferNotes.map((note) => (
-            <article key={note.title} className="rounded-xl bg-white p-4 shadow-sm">
-              <h3 className="font-black text-ink">{note.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-ink/70">{note.body}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {unit.comparison ? (
-        <section className="mt-8 rounded-[2rem] bg-ink p-6 text-white sm:p-7">
-          <p className="text-xs font-bold uppercase tracking-wide text-mint">Distinzione grammaticale</p>
-          <h2 className="mt-2 text-2xl font-black">{unit.comparison.title}</h2>
-          <p className="mt-3 max-w-4xl leading-7 text-white/70">{unit.comparison.introduction}</p>
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
-            {unit.comparison.columns.map((column) => (
-              <article key={column.label} className="rounded-2xl bg-white p-5 text-ink">
-                <h3 className="font-black">{column.label}</h3>
-                <p className="mt-2 rounded-lg bg-butter px-3 py-2 text-sm font-black">{column.rule}</p>
-                <ul className="mt-3 grid gap-1 text-sm font-semibold">
-                  {column.examples.map((example) => <li key={example}>{example}</li>)}
-                </ul>
-              </article>
+          <div className="mt-6 grid gap-5">
+            {(unit.ruleCards || []).map((card) => (
+              <EditorialTeachingBlock
+                key={card.grammarPoint}
+                prompt={card.grammarPoint}
+                content={{
+                  presentation: 'examples',
+                  eyebrow: 'La regola in uso',
+                  body: `${card.explanation}${card.activeUse ? `\n\nUso attivo: ${card.activeUse}` : ''}`,
+                  examples: card.examples || [],
+                }}
+              />
             ))}
           </div>
         </section>
-      ) : null}
 
-      <section className="mt-8 rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
-        <p className="text-xs font-bold uppercase tracking-wide text-moss">Espressioni utili</p>
-        <h2 className="mt-2 text-2xl font-black text-ink">Frasi da rendere automatiche</h2>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {unit.usefulChunks.map((chunk) => (
-            <span key={chunk} className="rounded-full bg-butter px-4 py-2 text-sm font-black text-ink">{chunk}</span>
-          ))}
-        </div>
-      </section>
+        {(unit.italianTransferNotes || []).length ? (
+          <section className="mt-10">
+            <div className="max-w-3xl">
+              <p className="sblocco-learning-eyebrow">Italiano → inglese</p>
+              <h2 className="sblocco-learning-display mt-2 text-[clamp(2.1rem,5vw,3.8rem)] leading-none">Dove l’italiano può portarti fuori strada.</h2>
+            </div>
+            <div className="mt-5 grid gap-4 lg:grid-cols-3">
+              {unit.italianTransferNotes.map((note) => (
+                <EditorialTeachingBlock
+                  key={note.title}
+                  prompt={note.title}
+                  content={{
+                    presentation: 'common_error',
+                    body: note.body,
+                  }}
+                />
+              ))}
+            </div>
+          </section>
+        ) : null}
 
-      <button
-        type="button"
-        onClick={startPractice}
-        aria-expanded={practiceStarted}
-        className="focus-ring mt-5 rounded-full bg-coral px-5 py-3 font-black text-white shadow-lift transition hover:brightness-105"
-      >
-        Esercizi per vedere se hai capito
-      </button>
+        {unit.comparison ? (
+          <section className="mt-10">
+            <EditorialTeachingBlock
+              prompt={unit.comparison.title}
+              content={{
+                presentation: 'contrast',
+                eyebrow: 'Distinzione grammaticale',
+                body: unit.comparison.introduction,
+                left_label: unit.comparison.columns?.[0]?.label,
+                left_body: formatComparisonColumn(unit.comparison.columns?.[0] || {}),
+                right_label: unit.comparison.columns?.[1]?.label,
+                right_body: formatComparisonColumn(unit.comparison.columns?.[1] || {}),
+              }}
+            />
+          </section>
+        ) : null}
 
-      {unit.id === 'a1-present-simple-normal-verbs' && finalExercise ? (
-        <button
-          type="button"
-          onClick={openFinalTest}
-          aria-pressed={isFinal}
-          className="focus-ring mt-3 block rounded-full bg-ink px-5 py-3 font-black text-white shadow-lift transition hover:brightness-110"
-        >
-          Test finale
-        </button>
-      ) : null}
+        {(unit.usefulChunks || []).length ? (
+          <section className="mt-10">
+            <EditorialTeachingBlock
+              prompt="Frasi da rendere automatiche"
+              content={{
+                presentation: 'examples',
+                eyebrow: 'Espressioni utili',
+                body: 'Non serve memorizzare una regola astratta se poi non riesci a produrre una frase. Queste sono buone unità da riutilizzare.',
+                examples: unit.usefulChunks,
+              }}
+            />
+          </section>
+        ) : null}
 
-      {practiceStarted ? (
-        <>
-      <nav id="unit-exercise-navigation" className="mt-5 scroll-mt-24 overflow-x-auto pb-2" aria-label="Esercizi dell’unità">
-        <div className="flex min-w-max gap-2">
-          {exerciseNavigation.map((step) => {
-            const active = step.id === activeExerciseId;
-            return (
+        {!practiceStarted ? (
+          <EditorialContinuation
+            eyebrow="Ora usalo"
+            title="La teoria finisce qui."
+            body="Passiamo agli esercizi per verificare se la struttura è davvero disponibile quando devi usarla."
+          >
+            <div className="flex flex-wrap gap-3">
               <button
-                key={step.id}
                 type="button"
-                onClick={() => selectExercise(step.id)}
-                aria-current={active ? 'step' : undefined}
-                className={`focus-ring rounded-full px-4 py-2 text-sm font-black transition ${
-                  active ? 'bg-ink text-white' : 'border border-ink/10 bg-white text-ink/70 hover:border-moss/30'
-                }`}
+                onClick={startPractice}
+                aria-expanded={practiceStarted}
+                className="sblocco-learning-action focus-ring"
               >
-                {step.title}
+                Esercizi per vedere se hai capito <ArrowRight className="h-4 w-4" />
               </button>
-            );
-          })}
-        </div>
-      </nav>
+              {unit.id === 'a1-present-simple-normal-verbs' && finalExercise ? (
+                <button
+                  type="button"
+                  onClick={openFinalTest}
+                  aria-pressed={isFinal}
+                  className="learner-secondary-button focus-ring"
+                >
+                  Vai al test finale
+                </button>
+              ) : null}
+            </div>
+          </EditorialContinuation>
+        ) : null}
 
-      {activeExercise ? (
-        <section id="unit-active-exercise" className="mt-8 scroll-mt-24">
-          <h2 className="mb-4 text-3xl font-black text-ink">{activeExercise.title}</h2>
-          <ExerciseRenderer
-            key={activeExercise.id}
-            exercise={activeExercise}
-            showHeader={false}
-            isFinal={isFinal}
-            continueLabel={continueLabel}
-            onContinue={() => nextExercise && selectExercise(nextExercise.id)}
-            onComplete={(attempt) => setAttemptsByExercise((current) => ({
-              ...current,
-              [activeExercise.id]: attempt,
-            }))}
-          />
-        </section>
-      ) : null}
-        </>
-      ) : null}
+        {practiceStarted ? (
+          <>
+            <nav id="unit-exercise-navigation" className="mt-8 scroll-mt-24 overflow-x-auto border-y border-ink/10 py-4 dark:border-white/10" aria-label="Esercizi dell’unità">
+              <div className="flex min-w-max gap-2">
+                {exerciseNavigation.map((step) => {
+                  const active = step.id === activeExerciseId;
+                  return (
+                    <button
+                      key={step.id}
+                      type="button"
+                      onClick={() => selectExercise(step.id)}
+                      aria-current={active ? 'step' : undefined}
+                      className={`focus-ring px-4 py-2 text-sm font-black transition ${
+                        active
+                          ? 'bg-coral text-white'
+                          : 'border border-ink/10 bg-white/70 text-ink/70 hover:border-coral/30 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/70'
+                      }`}
+                    >
+                      {step.title}
+                    </button>
+                  );
+                })}
+              </div>
+            </nav>
 
-      {diagnosticResult && !unit.exerciseNavigation ? (
-        <div className="mt-10">
-          <DiagnosticResult result={diagnosticResult} level={unit.level} track={unit.track} />
-        </div>
-      ) : null}
+            {activeExercise ? (
+              <section id="unit-active-exercise" className="mt-8 scroll-mt-24">
+                <div className="mb-5 max-w-3xl">
+                  <p className="sblocco-learning-eyebrow">Allenati</p>
+                  <h2 className="sblocco-learning-display mt-2 text-[clamp(2.2rem,5vw,4rem)] leading-none">{activeExercise.title}</h2>
+                </div>
+                <ExerciseRenderer
+                  key={activeExercise.id}
+                  exercise={activeExercise}
+                  showHeader={false}
+                  isFinal={isFinal}
+                  continueLabel={continueLabel}
+                  onContinue={() => nextExercise && selectExercise(nextExercise.id)}
+                  onComplete={(attempt) => setAttemptsByExercise((current) => ({
+                    ...current,
+                    [activeExercise.id]: attempt,
+                  }))}
+                />
+              </section>
+            ) : null}
+          </>
+        ) : null}
 
-      <nav className="mt-10 grid gap-4 sm:grid-cols-2" aria-label="Navigazione A1">
-        <NavigationCard item={unit.navigation?.previous} direction="previous" />
-        <NavigationCard item={unit.navigation?.next} direction="next" />
-      </nav>
-    </section>
+        {diagnosticResult && !unit.exerciseNavigation ? (
+          <div className="mt-10">
+            <DiagnosticResult result={diagnosticResult} level={unit.level} track={unit.track} />
+          </div>
+        ) : null}
+
+        <nav className="mt-12 grid gap-px overflow-hidden border border-ink/10 bg-ink/10 dark:border-white/10 dark:bg-white/10 sm:grid-cols-2" aria-label="Navigazione A1">
+          <NavigationCard item={unit.navigation?.previous} direction="previous" />
+          <NavigationCard item={unit.navigation?.next} direction="next" />
+        </nav>
+      </section>
+    </EditorialLearningShell>
   );
 }
-
