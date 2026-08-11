@@ -22,6 +22,7 @@ import LegalPage from './pages/LegalPage';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './auth/ProtectedRoute';
 import AdminRoute from './auth/AdminRoute';
+import { useAuth } from './auth/AuthContext.jsx';
 import { legalPages } from './data/legalPages';
 
 const Trainer = lazy(() => import('./pages/Trainer'));
@@ -119,6 +120,16 @@ function PageFallback() {
   return <div className="section-shell py-16"><div className="mx-auto max-w-3xl rounded-lg border border-ink/10 bg-white p-6 text-center shadow-sm dark:border-white/10 dark:bg-white/[0.06]"><p className="text-sm font-black text-ink dark:text-white">Loading...</p></div></div>;
 }
 
+function AccountEntry() {
+  const { loading, profile } = useAuth();
+
+  if (loading) return <PageFallback />;
+  if (profile?.role === 'learner' && profile?.status === 'active') {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return <Account />;
+}
+
 export default function App() {
   const location = useLocation();
   const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
@@ -178,7 +189,8 @@ export default function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/update-password" element={<UpdatePassword />} />
-            <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+            <Route path="/account" element={<ProtectedRoute><AccountEntry /></ProtectedRoute>} />
+            <Route path="/account/settings" element={<ProtectedRoute><Account /></ProtectedRoute>} />
             <Route path="/checkout/success" element={<ProtectedRoute><CheckoutSuccess /></ProtectedRoute>} />
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
             <Route path="/dashboard" element={<ProtectedRoute><LearnerHome /></ProtectedRoute>} />
