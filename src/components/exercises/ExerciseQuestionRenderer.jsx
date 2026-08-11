@@ -14,6 +14,7 @@ export default function ExerciseQuestionRenderer(props) {
       <EditorialTeachingBlock
         content={question.content || {}}
         prompt={question.prompt || ''}
+        instructions={question.instructions || ''}
         body={(
           <SafeTeachingContent>
             {question.content?.body || question.prompt || ''}
