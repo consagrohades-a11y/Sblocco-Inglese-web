@@ -5,6 +5,7 @@ import SEO from '../components/SEO';
 import LearnerDiagnosticPanel from '../components/admin/LearnerDiagnosticPanel.jsx';
 import LearnerNextLessonPanel from '../components/admin/LearnerNextLessonPanel.jsx';
 import LearnerNotesPanel from '../components/admin/LearnerNotesPanel.jsx';
+import LearnerRecoveryPanel from '../components/admin/LearnerRecoveryPanel.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 
 const languageLabels = { it: 'Italiano', en: 'English' };
@@ -146,6 +147,7 @@ export default function AdminLearnerDetail() {
         {accountMessage ? <div className="mt-6 border-l-4 border-moss bg-mint/30 p-5 text-sm font-bold text-ink dark:bg-emerald-400/10 dark:text-emerald-100">{accountMessage}</div> : null}
 
         {!loading && !error && learner ? <div className="mt-6 grid gap-6">
+          <LearnerRecoveryPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} disabled={learner.status === 'deleted'} />
           <LearnerNextLessonPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} />
           <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">
             <div className="grid content-start gap-6">
