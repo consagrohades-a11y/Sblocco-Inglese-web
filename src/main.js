@@ -10,6 +10,7 @@ import './index.css';
 import './styles/learnerEditorial.css';
 import './styles/editorialLearning.css';
 import './styles/learnerExperience.css';
+import './styles/exerciseExperience.css';
 import './styles/downloadCompatibility.css';
 import './styles/question-editor-layout.css';
 

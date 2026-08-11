@@ -76,7 +76,7 @@ export default function SrsCard({
 
   return (
     <article
-      className={`mx-auto w-full min-w-0 max-w-none overflow-hidden rounded-lg border shadow-soft ${
+      className={`exercise-experience exercise-srs-card mx-auto w-full min-w-0 max-w-none overflow-hidden rounded-lg border shadow-soft ${
         dark ? 'border-white/10 bg-[#111f1b] text-white' : 'border-ink/10 bg-white text-ink'
       }`}
     >

@@ -15,17 +15,17 @@ export default function DialogueGapFill({
 
   // TODO: Future dialogue variants must select lines and items together as complete scenario bundles.
   return (
-    <div className="rounded-xl border border-ink/10 bg-white p-5 shadow-sm">
-      <div className="grid gap-4">
+    <div className="exercise-dialogue">
         {(exercise.lines || []).map((line, lineIndex) => {
           const lineItemIds = (line.parts || [])
             .filter((part) => typeof part !== 'string' && part.blankId)
             .map((part) => part.blankId);
 
           return (
-            <div key={`${line.speaker || 'line'}-${lineIndex}`}>
-              <p className="text-base leading-9 text-ink">
-                {line.speaker ? <span className="mr-2 font-black text-moss">{line.speaker}:</span> : null}
+            <div key={`${line.speaker || 'line'}-${lineIndex}`} className="exercise-dialogue-turn">
+              <p className="exercise-dialogue-turn__speaker">{line.speaker || `Turno ${lineIndex + 1}`}</p>
+              <div className="exercise-dialogue-turn__body">
+              <p className="text-base leading-9 text-ink dark:text-white">
                 {(line.parts || []).map((part, partIndex) => {
                   if (typeof part === 'string') {
                     return <React.Fragment key={`${lineIndex}-${partIndex}`}>{part}</React.Fragment>;
@@ -39,7 +39,7 @@ export default function DialogueGapFill({
                   return (
                     <React.Fragment key={item.id}>
                       <input
-                        className="focus-ring mx-1 inline-block w-28 rounded-lg border border-ink/15 bg-white px-3 py-1.5 text-center text-sm font-black text-ink"
+                        className="focus-ring exercise-inline-gap mx-1 inline-block px-3 py-1.5 text-center text-sm font-black"
                         name={item.id}
                         aria-label={item.prompt || item.id}
                         value={answers[item.id] ?? ''}
@@ -60,10 +60,10 @@ export default function DialogueGapFill({
               {lineItemIds.map((itemId) => (
                 <InlineExerciseFeedback key={itemId} item={attemptItemsById[itemId]} />
               ))}
+              </div>
             </div>
           );
         })}
-      </div>
     </div>
   );
 }

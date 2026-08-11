@@ -8,6 +8,12 @@ import MultipleChoice from './MultipleChoice';
 import GapFill from './GapFill';
 import DialogueGapFill from './DialogueGapFill';
 import ExerciseResult from './ExerciseResult';
+import {
+  ExerciseActionBar,
+  ExerciseActivity,
+  ExerciseCanvas,
+  ExercisePrompt,
+} from './ExerciseExperience.jsx';
 
 const renderers = {
   'multiple-choice': MultipleChoice,
@@ -67,12 +73,10 @@ export default function ExerciseRenderer({
   const goodResult = attempt && attempt.percent >= 70;
 
   return (
-    <article className="rounded-2xl border border-ink/10 bg-white/90 p-5 shadow-sm">
+    <ExerciseCanvas>
+    <ExerciseActivity type={activeExercise.type}>
       {showHeader ? (
-        <div>
-          <h3 className="mt-2 text-xl font-black text-ink">{activeExercise.title}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70">{activeExercise.instructions}</p>
-        </div>
+        <ExercisePrompt type={activeExercise.type} prompt={activeExercise.title} instructions={activeExercise.instructions} />
       ) : null}
 
       <dl className={`${showHeader ? 'mt-4' : ''} grid gap-2 rounded-xl bg-linen/70 p-4 text-sm sm:grid-cols-3`}>
@@ -100,7 +104,7 @@ export default function ExerciseRenderer({
             attemptItemsById={attemptItemsById}
           />
           {!attempt ? (
-            <button type="submit" className="focus-ring mt-5 rounded-full bg-moss px-5 py-3 font-black text-white shadow-lift">
+            <button type="submit" className="focus-ring exercise-primary-action mt-5">
               Controlla le risposte
             </button>
           ) : null}
@@ -114,33 +118,34 @@ export default function ExerciseRenderer({
       {attempt ? (
         <div className="mt-5 border-t border-ink/10 pt-5">
           <ExerciseResult attempt={attempt} exercise={activeExercise} isFinal={isFinal} />
-          <div className="mt-5 flex flex-wrap gap-3">
+          <ExerciseActionBar>
             {isFinal ? (
               <>
-                <button type="button" onClick={reset} className="focus-ring inline-flex items-center gap-2 rounded-full bg-moss px-5 py-3 font-black text-white">
+                <button type="button" onClick={reset} className="focus-ring exercise-primary-action">
                   <RotateCcw className="h-4 w-4" /> Allenati sugli errori
                 </button>
-                <Link to="/grammar/a1" className="focus-ring rounded-full bg-butter px-5 py-3 font-black text-ink">
+                <Link to="/grammar/a1" className="focus-ring exercise-secondary-action">
                   Torna ad A1 English Foundations
                 </Link>
               </>
             ) : goodResult ? (
-              <button type="button" onClick={onContinue} className="focus-ring rounded-full bg-moss px-5 py-3 font-black text-white">
+              <button type="button" onClick={onContinue} className="focus-ring exercise-primary-action">
                 {continueLabel}
               </button>
             ) : (
               <>
-                <button type="button" onClick={reset} className="focus-ring inline-flex items-center gap-2 rounded-full bg-moss px-5 py-3 font-black text-white">
+                <button type="button" onClick={reset} className="focus-ring exercise-primary-action">
                   <RotateCcw className="h-4 w-4" /> Riprova
                 </button>
-                <button type="button" onClick={onContinue} className="focus-ring rounded-full bg-butter px-5 py-3 font-black text-ink">
+                <button type="button" onClick={onContinue} className="focus-ring exercise-secondary-action">
                   Continua comunque
                 </button>
               </>
             )}
-          </div>
+          </ExerciseActionBar>
         </div>
       ) : null}
-    </article>
+    </ExerciseActivity>
+    </ExerciseCanvas>
   );
 }

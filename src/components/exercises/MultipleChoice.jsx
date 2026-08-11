@@ -1,11 +1,12 @@
 import React from 'react';
 import InlineExerciseFeedback from './InlineExerciseFeedback';
+import { ExerciseChoice } from './ExerciseExperience.jsx';
 
 export default function MultipleChoice({ exercise, answers, setAnswer, disabled = false, attemptItemsById = {} }) {
   return (
     <div className="grid gap-4">
       {(exercise.items || []).map((item, index) => (
-        <fieldset key={item.id} className="rounded-xl border border-ink/10 bg-white p-4 shadow-sm">
+        <fieldset key={item.id} className="border-t border-ink/10 pt-4 first:border-t-0 first:pt-0 dark:border-white/10">
           <legend className="px-2 text-xs font-bold uppercase tracking-wide text-moss">
             Domanda {index + 1}
           </legend>
@@ -13,22 +14,16 @@ export default function MultipleChoice({ exercise, answers, setAnswer, disabled 
           {item.sentence ? (
             <p className="mt-2 text-base font-black leading-7 text-ink">{item.sentence}</p>
           ) : null}
-          <div className="mt-3 grid gap-2">
+          <div className="exercise-choice-grid is-two-column mt-3">
             {(item.options || []).map((option, optionIndex) => (
-              <label
+              <ExerciseChoice
                 key={`${item.id}-${optionIndex}`}
-                className="flex cursor-pointer gap-3 rounded-lg border border-ink/10 bg-linen/40 p-3 text-sm font-semibold text-ink hover:bg-mint/30"
+                selected={String(answers[item.id] ?? '') === String(optionIndex)}
+                disabled={disabled}
+                onClick={() => setAnswer(item.id, String(optionIndex))}
               >
-                <input
-                  type="radio"
-                  name={item.id}
-                  value={optionIndex}
-                  checked={String(answers[item.id] ?? '') === String(optionIndex)}
-                  onChange={(event) => setAnswer(item.id, event.target.value)}
-                  disabled={disabled}
-                />
                 <span>{option}</span>
-              </label>
+              </ExerciseChoice>
             ))}
           </div>
           <InlineExerciseFeedback item={attemptItemsById[item.id]} />

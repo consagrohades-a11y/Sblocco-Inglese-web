@@ -28,8 +28,8 @@ export default function ExerciseDiagnosticSummary({ summary, admin = false }) {
   return (
     <div className="grid gap-4">
       {main ? (
-        <section className="rounded-2xl border border-violet-200 bg-violet-50/70 p-5 dark:border-violet-300/20 dark:bg-violet-400/[0.08] sm:p-6">
-          <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">{admin ? 'Diagnosi principale' : 'Cosa rivedere'}</p>
+        <section className="border-y border-sky-200 bg-sky-50/70 p-5 dark:border-sky-300/20 dark:bg-sky-400/[0.08] sm:p-6">
+          <p className="text-xs font-bold uppercase tracking-wide text-sky-700 dark:text-sky-300">{admin ? 'Diagnosi principale' : 'Cosa rivedere'}</p>
           <h2 className="mt-3 text-xl font-black leading-7 text-ink dark:text-white">{main.message || 'È emersa una difficoltà da rivedere.'}</h2>
           {admin ? (
             <p className="mt-2 text-xs font-bold text-ink/60 dark:text-white/60">
@@ -47,8 +47,8 @@ export default function ExerciseDiagnosticSummary({ summary, admin = false }) {
           <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">Osservazioni secondarie utili per rendere le risposte più precise.</p>
 
           {secondary.length ? (
-            <div className="mt-5 rounded-xl border border-violet-200/70 bg-violet-50/45 p-4 dark:border-violet-300/15 dark:bg-violet-400/[0.05]">
-              <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">Altri aspetti da tenere d’occhio</p>
+            <div className="mt-5 border-t border-sky-200/70 bg-sky-50/45 p-4 dark:border-sky-300/15 dark:bg-sky-400/[0.05]">
+              <p className="text-xs font-bold uppercase tracking-wide text-sky-700 dark:text-sky-300">Altri aspetti da tenere d’occhio</p>
               <DiagnosticList items={secondary} admin={admin} />
             </div>
           ) : null}

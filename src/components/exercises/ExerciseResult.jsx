@@ -165,7 +165,7 @@ export default function ExerciseResult({ attempt, exercise, isFinal = false }) {
 
   return (
     <div className="grid gap-4">
-      <div className="rounded-xl bg-ink p-4 text-white">
+      <div className="exercise-result-summary">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-white/60">{isFinal ? 'Risultato del test finale' : 'Risultato dell’esercizio'}</p>

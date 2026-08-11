@@ -5,7 +5,7 @@ export default function GapFill({ exercise, answers, setAnswer, disabled = false
   return (
     <div className="grid gap-3 md:grid-cols-2">
       {(exercise.items || []).map((item) => (
-        <label key={item.id} className="rounded-xl border border-ink/10 bg-white p-4 shadow-sm">
+        <label key={item.id} className="border-t border-ink/10 py-4 first:border-t-0 first:pt-0 dark:border-white/10">
           <span className="block text-sm font-black text-ink">{item.prompt}</span>
           {item.baseForm ? (
             <span className="mt-2 inline-flex rounded-full bg-butter px-2.5 py-1 text-xs font-black text-ink">
@@ -13,7 +13,7 @@ export default function GapFill({ exercise, answers, setAnswer, disabled = false
             </span>
           ) : null}
           <input
-            className="focus-ring mt-3 w-full rounded-lg border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink"
+            className="focus-ring exercise-text-field mt-3 w-full px-4 py-3 text-sm font-semibold"
             name={item.id}
             value={answers[item.id] ?? ''}
             onChange={(event) => setAnswer(item.id, event.target.value)}
