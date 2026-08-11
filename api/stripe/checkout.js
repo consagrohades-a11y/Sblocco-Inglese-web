@@ -37,6 +37,8 @@ export default async function handler(request, response) {
       integration_identifier: 'sblocco-pathway-rkqmvxzt',
       ...(offer.id === 'recupero-debito'
         ? {
+            locale: 'it',
+            adaptive_pricing: { enabled: false },
             payment_method_types: ['card', 'klarna', 'satispay'],
             wallet_options: { link: { display: 'never' } },
           }
