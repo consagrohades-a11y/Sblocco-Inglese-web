@@ -86,6 +86,8 @@ assert.equal(beforeMissedDays.mode, RECOVERY_MODE.INTENSIVE);
 assert.equal(afterMissedDays.mode, RECOVERY_MODE.SOS, 'Missed days should automatically change the mode as the exam approaches.');
 
 const app = readFileSync('src/App.jsx', 'utf8');
+const navbar = readFileSync('src/components/Navbar.jsx', 'utf8');
+const learnerHome = readFileSync('src/pages/LearnerHome.jsx', 'utf8');
 const diagnosticPage = readFileSync('src/pages/RecoveryDiagnostic.jsx', 'utf8');
 const onboardingPage = readFileSync('src/pages/RecoveryOnboarding.jsx', 'utf8');
 const recoveryApi = readFileSync('src/lib/recoveryApi.js', 'utf8');
@@ -126,5 +128,20 @@ assert.match(learnerCss, /--learner-orange: #ef5b28/);
 assert.match(app, /path="\/dashboard" element={<ProtectedRoute><LearnerHome \/><\/ProtectedRoute>}/);
 assert.match(app, /path="\/assignments" element={<ProtectedRoute><LearnerAssignments \/><\/ProtectedRoute>}/);
 assert.match(app, /path="\/progressi" element={<ProtectedRoute><LearnerProgress \/><\/ProtectedRoute>}/);
+
+// M: the adaptive dashboard is the learner entry point, while account settings stay separate.
+assert.match(app, /function AccountEntry\(\)/);
+assert.match(app, /profile\?\.role === 'learner'.*profile\?\.status === 'active'/s);
+assert.match(app, /<Navigate to="\/dashboard" replace \/>/);
+assert.match(app, /path="\/account\/settings" element={<ProtectedRoute><Account \/><\/ProtectedRoute>}/);
+assert.match(navbar, /label: 'Dashboard', to: '\/dashboard'/);
+assert.match(navbar, /to="\/account\/settings"/);
+
+// N: recovery access selects the dedicated experience; all other learners keep a useful dashboard.
+assert.match(learnerHome, /access\?\.entitled \? <RecoveryDashboard/);
+assert.match(learnerHome, /!access\?\.entitled \? <GenericDashboard/);
+assert.match(learnerHome, /function GenericDashboard/);
+assert.match(learnerHome, /Il tuo prossimo passo/);
+assert.match(learnerHome, /Ripasso SRS/);
 
 console.log('Recovery MVP validation passed.');

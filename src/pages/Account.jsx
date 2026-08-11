@@ -218,6 +218,14 @@ export default function Account() {
             ) : null}
           </header>
 
+          {isLearner ? (
+            <div className="mt-5 flex justify-end">
+              <Link to="/dashboard" className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-moss px-5 py-2.5 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-[#19947b]">
+                Torna alla dashboard <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          ) : null}
+
           {isLearner ? <LearnerNotificationsPanel limit={3} /> : null}
 
           {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 dark:border-white/10 dark:bg-surface-900 dark:text-white/65">Caricamento profilo...</div> : null}

@@ -12,7 +12,7 @@ function LearnerFooter() {
           <Link className="transition hover:text-white" to="/assignments">Attività</Link>
           <Link className="transition hover:text-white" to="/trainers">Trainer</Link>
           <Link className="transition hover:text-white" to="/progressi">Progressi</Link>
-          <Link className="transition hover:text-white" to="/account">Account</Link>
+          <Link className="transition hover:text-white" to="/account/settings">Account</Link>
           <Link className="transition hover:text-white" to="/privacy-policy">Privacy</Link>
         </nav>
       </div>

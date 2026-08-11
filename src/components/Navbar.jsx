@@ -8,6 +8,7 @@ import {
   ClipboardList,
   Dumbbell,
   GraduationCap,
+  LayoutDashboard,
   LogOut,
   Menu,
   Settings,
@@ -31,6 +32,7 @@ const publicItems = [
 ];
 
 const learnerItems = [
+  { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
   { label: 'Esercizi', to: '/attivita/esercizi', icon: ClipboardList },
   { label: 'Ripasso SRS', to: '/attivita/srs', icon: Dumbbell },
   { label: 'Pratica mirata', to: '/attivita/pratica-mirata', icon: Target },
@@ -50,7 +52,7 @@ function isRouteActive(pathname, to) {
   return pathname === to || pathname.startsWith(`${to}/`);
 }
 
-function AccountMenu({ displayName, isAdmin, onSignOut }) {
+function AccountMenu({ displayName, isAdmin, isLearner, onSignOut }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
   const initial = displayName?.trim()?.charAt(0)?.toUpperCase() || 'A';
@@ -90,9 +92,15 @@ function AccountMenu({ displayName, isAdmin, onSignOut }) {
             <p className="truncate text-sm font-black">{displayName || 'Il tuo account'}</p>
             <p className="mt-0.5 text-xs font-semibold text-ink/60 dark:text-white/65">Profilo e impostazioni</p>
           </div>
-          <Link role="menuitem" to="/account" onClick={() => setOpen(false)} className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-ink/80 transition hover:bg-linen/70 hover:text-ink dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white">
+          {isLearner ? (
+            <Link role="menuitem" to="/dashboard" onClick={() => setOpen(false)} className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-ink/80 transition hover:bg-linen/70 hover:text-ink dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white">
+              <LayoutDashboard aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />
+              Dashboard
+            </Link>
+          ) : null}
+          <Link role="menuitem" to="/account/settings" onClick={() => setOpen(false)} className={`${isLearner ? '' : 'mt-2'} flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-ink/80 transition hover:bg-linen/70 hover:text-ink dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white`}>
             <Settings aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />
-            Account
+            Account e impostazioni
           </Link>
           {isAdmin ? (
             <Link role="menuitem" to="/admin" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-ink/80 transition hover:bg-linen/70 hover:text-ink dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white">
@@ -110,7 +118,7 @@ function AccountMenu({ displayName, isAdmin, onSignOut }) {
   );
 }
 
-function EditorialHomeNavbar({ displayName, isAdmin, loading, mobileOpen, onSignOut, setMobileOpen, showThemeToggle = false, user }) {
+function EditorialHomeNavbar({ displayName, isAdmin, isLearner, loading, mobileOpen, onSignOut, setMobileOpen, showThemeToggle = false, user }) {
   return (
     <header className={`home-site-header ${showThemeToggle ? 'home-site-header--pathway' : ''}`}>
       <div className="home-site-header__inner">
@@ -125,7 +133,7 @@ function EditorialHomeNavbar({ displayName, isAdmin, loading, mobileOpen, onSign
         <div className="home-site-header__actions">
           {showThemeToggle ? <ThemeToggle /> : null}
           {!loading && user ? (
-            <AccountMenu displayName={displayName} isAdmin={isAdmin} onSignOut={onSignOut} />
+            <AccountMenu displayName={displayName} isAdmin={isAdmin} isLearner={isLearner} onSignOut={onSignOut} />
           ) : !loading ? (
             <Link to="/login" className="home-site-header__login">Accedi</Link>
           ) : null}
@@ -150,7 +158,8 @@ function EditorialHomeNavbar({ displayName, isAdmin, loading, mobileOpen, onSign
           ))}
           {!loading && user ? (
             <>
-              <Link to="/account">Account</Link>
+              {isLearner ? <Link to="/dashboard">Dashboard</Link> : null}
+              <Link to="/account/settings">Account e impostazioni</Link>
               {isAdmin ? <Link to="/admin">Pannello admin</Link> : null}
               <button type="button" onClick={onSignOut}>Esci</button>
             </>
@@ -217,6 +226,7 @@ export default function Navbar() {
       <EditorialHomeNavbar
         displayName={displayName}
         isAdmin={isAdmin}
+        isLearner={isLearner}
         loading={loading}
         mobileOpen={mobileOpen}
         onSignOut={handleSignOut}
@@ -235,7 +245,7 @@ export default function Navbar() {
       </div>
 
       <div className={`section-shell relative flex items-center justify-between gap-4 transition-all duration-300 ${compact ? 'min-h-[58px] py-1' : 'min-h-[68px] py-1.5'}`}>
-        <BrandLogo to={isLearner ? '/assignments' : '/'} compact />
+        <BrandLogo to={isLearner ? '/dashboard' : '/'} compact />
 
         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex" aria-label={isLearner ? 'Navigazione studente' : 'Navigazione principale'}>
           {items.map((item) => {
@@ -273,7 +283,7 @@ export default function Navbar() {
           <ThemeToggle />
 
           {!loading && user ? (
-            <AccountMenu displayName={displayName} isAdmin={isAdmin} onSignOut={handleSignOut} />
+            <AccountMenu displayName={displayName} isAdmin={isAdmin} isLearner={isLearner} onSignOut={handleSignOut} />
           ) : !loading ? (
             <NavLink to="/login" className="focus-ring inline-flex h-10 items-center rounded-full border border-ink/15 bg-white/70 px-4 text-sm font-semibold text-ink/80 transition hover:bg-white hover:text-ink dark:border-white/12 dark:bg-white/[0.045] dark:text-white/80 dark:hover:bg-white/[0.08] dark:hover:text-white">
               Accedi
@@ -332,9 +342,9 @@ export default function Navbar() {
             {!loading && user ? (
               <>
                 <ThemeToggle mobile />
-                <Link to="/account" className="focus-ring mt-2 flex min-h-12 items-center gap-3 rounded-2xl border border-ink/12 bg-white px-4 py-3 text-base font-extrabold text-ink dark:border-white/12 dark:bg-white/[0.07] dark:text-white">
+                <Link to="/account/settings" className="focus-ring mt-2 flex min-h-12 items-center gap-3 rounded-2xl border border-ink/12 bg-white px-4 py-3 text-base font-extrabold text-ink dark:border-white/12 dark:bg-white/[0.07] dark:text-white">
                   <span className="grid h-8 w-8 place-items-center rounded-full bg-mint text-sm font-black text-ink">{displayName.charAt(0).toUpperCase()}</span>
-                  Account
+                  Account e impostazioni
                 </Link>
                 {isAdmin ? (
                   <Link to="/admin" className="focus-ring flex min-h-12 items-center gap-3 rounded-2xl bg-ink/[0.04] px-4 py-3 text-base font-extrabold text-ink/80 dark:bg-white/[0.05] dark:text-white/80">
