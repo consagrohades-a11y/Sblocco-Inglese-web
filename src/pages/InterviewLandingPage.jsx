@@ -2,17 +2,15 @@ import React from 'react';
 import SEO from '../components/SEO.jsx';
 import InterviewEnquiry from '../components/interview/InterviewEnquiry.jsx';
 import {
-  InterviewDifference,
   InterviewFinalCTA,
   InterviewHero,
-  InterviewMethod,
-  InterviewModules,
   InterviewPainPoints,
   InterviewPrivateUpsell,
   TechnicalInterviewSection,
 } from '../components/interview/InterviewEditorialSections.jsx';
+import InterviewCoreTeaser from '../components/interview/InterviewCoreTeaser.jsx';
 import InterviewFAQ from '../components/interview/InterviewFAQ.jsx';
-import InterviewOffers from '../components/interview/InterviewOffers.jsx';
+import { InterviewHubOffers, InterviewLab, InterviewRolePacks } from '../components/interview/InterviewOffers.jsx';
 import InterviewSample from '../components/interview/InterviewSample.jsx';
 import '../styles/interview.css';
 
@@ -26,11 +24,11 @@ export default function InterviewLandingPage() {
       <InterviewHero />
       <InterviewPainPoints />
       <TechnicalInterviewSection />
+      <InterviewHubOffers />
+      <InterviewCoreTeaser />
       <InterviewSample />
-      <InterviewModules />
-      <InterviewMethod />
-      <InterviewDifference />
-      <InterviewOffers />
+      <InterviewRolePacks />
+      <InterviewLab />
       <InterviewPrivateUpsell />
       <InterviewEnquiry />
       <InterviewFAQ />
@@ -38,4 +36,3 @@ export default function InterviewLandingPage() {
     </div>
   );
 }
-

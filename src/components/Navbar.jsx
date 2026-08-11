@@ -173,7 +173,7 @@ export default function Navbar() {
   const isLearner = profile?.role === 'learner' && profile?.status === 'active';
   const isAdmin = profile?.role === 'admin' && profile?.status === 'active';
   const displayName = profile?.display_name || user?.user_metadata?.display_name || 'Account';
-  const isEditorialPublicPage = location.pathname === '/' || location.pathname === '/percorsi/colloquio';
+  const isEditorialPublicPage = location.pathname === '/' || location.pathname.startsWith('/percorsi/colloquio');
   const items = useMemo(() => (isLearner ? learnerItems : publicItems), [isLearner]);
   const routeParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const requestedReturnTo = routeParams.get('returnTo') || '';
@@ -221,7 +221,7 @@ export default function Navbar() {
         mobileOpen={mobileOpen}
         onSignOut={handleSignOut}
         setMobileOpen={setMobileOpen}
-        showThemeToggle={location.pathname === '/percorsi/colloquio'}
+        showThemeToggle={location.pathname.startsWith('/percorsi/colloquio')}
         user={user}
       />
     );

@@ -8,24 +8,34 @@ assert.equal(resolveOffer('not-a-real-offer', {}), null);
 assert.equal(listResolvedOffers({}).length, 11);
 assert.ok(listResolvedOffers({}).every((offer) => !offer.configured));
 
-const configured = resolveOffer('colloquio-essential', {
+const inactiveKit = resolveOffer('colloquio-essential', {
   STRIPE_PRICE_COLLOQUIO_ESSENTIAL: 'price_testConfigured123',
   STRIPE_ACCESS_COLLOQUIO_ESSENTIAL: 'real-resource-public-id',
   STRIPE_ACCESS_URL_COLLOQUIO_ESSENTIAL: '/collections?assignmentId=known&resourceId=known',
 });
-assert.equal(configured.configured, true);
-assert.equal(configured.stripePriceId, 'price_testConfigured123');
-assert.equal(configured.accessTarget, 'real-resource-public-id');
-assert.equal(configured.fulfillable, true);
+assert.equal(inactiveKit.active, false);
+assert.equal(inactiveKit.configured, false);
+assert.equal(inactiveKit.stripePriceId, 'price_testConfigured123');
+assert.equal(inactiveKit.accessTarget, 'real-resource-public-id');
+assert.equal(inactiveKit.fulfillable, false);
+
+const configuredCore = resolveOffer('colloquio-complete', {
+  STRIPE_PRICE_COLLOQUIO_COMPLETE: 'price_coreConfigured123',
+  STRIPE_ACCESS_COLLOQUIO_COMPLETE: 'core-resource-public-id',
+  STRIPE_ACCESS_URL_COLLOQUIO_COMPLETE: '/collections?assignmentId=core',
+});
+assert.equal(configuredCore.active, true);
+assert.equal(configuredCore.configured, true);
+assert.equal(configuredCore.fulfillable, true);
 
 assert.equal(resolveOffer('colloquio-essential', { STRIPE_PRICE_COLLOQUIO_ESSENTIAL: 'price_testOnly' }).configured, false);
 assert.equal(resolveOffer('colloquio-complete-plus', {
   STRIPE_PRICE_COLLOQUIO_COMPLETE_PLUS: 'price_completePlus123',
   STRIPE_ACCESS_COLLOQUIO_COMPLETE_PLUS: 'complete-plus-resource',
-}).configured, true);
+}).configured, false);
 assert.equal(resolveOffer('colloquio-complete-plus', {
   STRIPE_ACCESS_COLLOQUIO_COMPLETE_PLUS: 'payment-link-resource',
-}).fulfillable, true);
+}).fulfillable, false);
 assert.equal(resolveOffer('colloquio-essential', {
   STRIPE_PRICE_COLLOQUIO_ESSENTIAL: 'arbitrary-client-value',
   STRIPE_ACCESS_COLLOQUIO_ESSENTIAL: 'resource',
