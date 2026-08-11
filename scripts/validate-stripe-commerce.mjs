@@ -57,18 +57,22 @@ assert.equal(safeReturnTo('https://evil.example/path'), '/account');
 assert.equal(safeReturnTo('//evil.example/path'), '/account');
 assert.equal(safeReturnTo('/\\evil.example'), '/account');
 
+const stripeClient = readFileSync('server/stripe/client.js', 'utf8');
 const checkout = readFileSync('api/stripe/checkout.js', 'utf8');
 const webhook = readFileSync('api/stripe/webhook.js', 'utf8');
 const migration = readFileSync('supabase/migrations/20260809140000_stripe_pathway_commerce.sql', 'utf8');
 const recoveryMigration = readFileSync('supabase/migrations/20260811010000_recovery_debt_foundation.sql', 'utf8');
 
+assert.match(stripeClient, /apiVersion: '2026-06-24\.dahlia'/);
 assert.match(checkout, /mode: 'payment'/);
+assert.match(checkout, /integration_identifier: 'sblocco-pathway-[a-z]{8}'/);
 assert.match(checkout, /line_items: \[\{ price: offer\.stripePriceId, quantity: 1 \}\]/);
 assert.match(checkout, /resolveOffer\(offerId\)/);
 assert.match(checkout, /already_owned/);
 assert.match(checkout, /offer_not_configured/);
 assert.doesNotMatch(checkout, /body\.(amount|currency|price|priceId|accessTarget)/);
 assert.doesNotMatch(checkout, /subscription|payment_intent_data/);
+assert.doesNotMatch(checkout, /payment_method_types/);
 
 assert.match(webhook, /bodyParser: false/);
 assert.match(webhook, /webhooks\.constructEvent/);
