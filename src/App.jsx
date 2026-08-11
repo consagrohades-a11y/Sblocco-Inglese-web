@@ -60,6 +60,7 @@ const AdminWordDecks = lazy(() => import('./pages/AdminWordDecks'));
 const AdminDecks = lazy(() => import('./pages/AdminDecks'));
 const AdminWordTrainerArchive = lazy(() => import('./pages/AdminWordTrainerArchive'));
 const AdminContentOverview = lazy(() => import('./pages/AdminContentOverview'));
+const AdminRecoveryContent = lazy(() => import('./pages/AdminRecoveryContent'));
 const AdminSectionOverview = lazy(() => import('./pages/AdminSectionOverview'));
 const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics'));
 const AdminLearnerAnalytics = lazy(() => import('./pages/AdminLearnerAnalytics'));
@@ -80,6 +81,13 @@ const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
 const LearnerCollectionPath = lazy(() => import('./pages/LearnerCollectionPath'));
 const LearnerProgress = lazy(() => import('./pages/LearnerProgress'));
+const LearnerHome = lazy(() => import('./pages/LearnerHome'));
+const RecoveryDiagnostic = lazy(() => import('./pages/RecoveryDiagnostic'));
+const RecoveryLandingPage = lazy(() => import('./pages/RecoveryLandingPage'));
+const RecoveryOnboarding = lazy(() => import('./pages/RecoveryOnboarding'));
+const RecoveryReadiness = lazy(() => import('./pages/RecoveryReadiness'));
+const RecoverySession = lazy(() => import('./pages/RecoverySession'));
+const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
 const PathwayPage = lazy(() => import('./pages/PathwayPage'));
 const InterviewKitPage = lazy(() => import('./pages/InterviewKitPage'));
 const InterviewProductPage = lazy(() => import('./pages/InterviewProductPage'));
@@ -116,12 +124,17 @@ export default function App() {
   const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
   const isHomepage = location.pathname === '/';
   const isColloquioPathway = location.pathname.startsWith('/percorsi/colloquio');
+  const isRecoveryExperience = location.pathname === '/dashboard'
+    || location.pathname.startsWith('/recupero-debito')
+    || location.pathname === '/test-recupero-inglese'
+    || location.pathname === '/percorsi/recupero-debito';
+  const suppressMarketingMobileCta = isRecoveryExperience;
 
   return (
     <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-surface-950 dark:text-white">
       <ScrollManager />
       {!isAdmin ? <Navbar /> : null}
-      <main className={isAdmin || isHomepage || isColloquioPathway ? '' : 'pb-24 xl:pb-0'}>
+      <main className={isAdmin || isHomepage || isColloquioPathway || isRecoveryExperience ? '' : 'pb-24 xl:pb-0'}>
         <Suspense fallback={<PageFallback />}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -135,6 +148,8 @@ export default function App() {
             <Route path="/percorsi/parlare" element={<PathwayPage pathwayId="parlare" />} />
             <Route path="/percorsi/estero" element={<PathwayPage pathwayId="estero" />} />
             <Route path="/percorsi/basi" element={<PathwayPage pathwayId="basi" />} />
+            <Route path="/percorsi/recupero-debito" element={<RecoveryLandingPage />} />
+            <Route path="/test-recupero-inglese" element={<RecoveryDiagnostic />} />
             <Route path="/corsi/business-english-flow" element={<BusinessEnglishFlow />} />
             <Route path="/metodo" element={<Method />} />
             <Route path="/piattaforma" element={<Platform />} />
@@ -166,6 +181,15 @@ export default function App() {
             <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
             <Route path="/checkout/success" element={<ProtectedRoute><CheckoutSuccess /></ProtectedRoute>} />
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
+            <Route path="/dashboard" element={<ProtectedRoute><LearnerHome /></ProtectedRoute>} />
+            <Route path="/recupero-debito" element={<ProtectedRoute><Navigate to="/dashboard" replace /></ProtectedRoute>} />
+            <Route path="/recupero-debito/onboarding" element={<ProtectedRoute><RecoveryOnboarding /></ProtectedRoute>} />
+            <Route path="/recupero-debito/sessione/:sessionId" element={<ProtectedRoute><RecoverySession /></ProtectedRoute>} />
+            <Route path="/recupero-debito/percorso" element={<ProtectedRoute><RecoveryWorkspace view="percorso" /></ProtectedRoute>} />
+            <Route path="/recupero-debito/argomenti" element={<ProtectedRoute><RecoveryWorkspace view="argomenti" /></ProtectedRoute>} />
+            <Route path="/recupero-debito/errori" element={<ProtectedRoute><RecoveryWorkspace view="errori" /></ProtectedRoute>} />
+            <Route path="/recupero-debito/simulazioni" element={<ProtectedRoute><RecoveryWorkspace view="simulazioni" /></ProtectedRoute>} />
+            <Route path="/recupero-debito/preparazione" element={<ProtectedRoute><RecoveryReadiness /></ProtectedRoute>} />
             <Route path="/assignments" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
             <Route path="/attivita/esercizi" element={<ProtectedRoute><LearnerAssignments initialArea="exercises" /></ProtectedRoute>} />
             <Route path="/attivita/srs" element={<ProtectedRoute><LearnerAssignments initialArea="srs" /></ProtectedRoute>} />
@@ -182,6 +206,7 @@ export default function App() {
               <Route path="learners/:learnerId/assignments/new" element={<AdminCreateAssignment />} />
               <Route path="learners/:learnerId/assignments/:assignmentId/content" element={<AdminAssignmentContent />} />
               <Route path="content" element={<AdminContentOverview />} />
+              <Route path="content/recovery" element={<AdminRecoveryContent />} />
               <Route path="content/exercises" element={<AdminExerciseBuilder />} />
               <Route path="content/exercises/review" element={<AdminExerciseBuilderReview />} />
               <Route path="content/exercises/library" element={<AdminExerciseBuilderLibrary />} />
@@ -235,7 +260,7 @@ export default function App() {
         </Suspense>
       </main>
       {!isAdmin ? <Footer /> : null}
-      {!isAdmin ? <StickyMobileCTA /> : null}
+      {!isAdmin && !suppressMarketingMobileCta ? <StickyMobileCTA /> : null}
       {!isAdmin ? <BackToTopButton /> : null}
     </div>
   );
