@@ -9,8 +9,10 @@ const runtimeFiles = [
   'src/components/learning/EditorialLearning.jsx',
   'src/pages/ExercisePlayerV2.jsx',
   'src/pages/GrammarA1Test.jsx',
+  'src/pages/LearnerAssignments.jsx',
   'src/styles/exerciseExperience.css',
   'src/styles/editorialLearning.css',
+  'src/styles/learnerEditorial.css',
 ];
 
 const sourceEntries = await Promise.all(runtimeFiles.map(async (file) => [file, await readFile(file, 'utf8')]));
