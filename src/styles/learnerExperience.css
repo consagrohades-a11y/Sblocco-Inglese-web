@@ -1,0 +1,483 @@
+/*
+ * Sblocco Editorial Learner Experience
+ * ------------------------------------
+ * Route-scoped compatibility layer for the entire learner-facing product.
+ *
+ * Goals:
+ * - one visual grammar across dashboard, assignments, exercises, trainers,
+ *   practice, progress, collections, grammar, recovery and account;
+ * - warm editorial light mode and deep-navy editorial dark mode;
+ * - preserve interaction semantics and existing learning logic;
+ * - progressively retire one-off LMS card styling without requiring a risky
+ *   rewrite of every learner component at once.
+ */
+
+html.sblocco-learner-experience {
+  --lx-navy: #0e3045;
+  --lx-navy-soft: #17465f;
+  --lx-orange: #d34c1a;
+  --lx-orange-strong: #b94117;
+  --lx-paper: #f9f0e8;
+  --lx-paper-top: #fbf5ef;
+  --lx-raised: #fffaf5;
+  --lx-deep: #f1e5da;
+  --lx-line: rgba(14, 48, 69, 0.13);
+  --lx-line-strong: rgba(14, 48, 69, 0.2);
+  --lx-muted: rgba(14, 48, 69, 0.67);
+  --lx-soft-orange: rgba(211, 76, 26, 0.085);
+  --lx-soft-navy: rgba(14, 48, 69, 0.055);
+  --lx-shadow: 0 18px 55px rgba(14, 48, 69, 0.065);
+  --lx-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  background: var(--lx-paper);
+  color-scheme: light;
+}
+
+html.dark.sblocco-learner-experience {
+  --lx-navy: #f8f1e9;
+  --lx-navy-soft: #cbd9df;
+  --lx-orange: #ef5b28;
+  --lx-orange-strong: #ff6b35;
+  --lx-paper: #07263a;
+  --lx-paper-top: #08283d;
+  --lx-raised: #0d334b;
+  --lx-deep: #0a2d44;
+  --lx-line: rgba(231, 241, 246, 0.11);
+  --lx-line-strong: rgba(231, 241, 246, 0.18);
+  --lx-muted: rgba(231, 241, 246, 0.68);
+  --lx-soft-orange: rgba(239, 91, 40, 0.12);
+  --lx-soft-navy: rgba(95, 167, 190, 0.09);
+  --lx-shadow: 0 22px 60px rgba(0, 0, 0, 0.14);
+  color-scheme: dark;
+}
+
+html.sblocco-learner-experience body,
+html.sblocco-learner-experience #root,
+html.sblocco-learner-experience #root > div,
+html.sblocco-learner-experience main {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255, 255, 255, 0.7), transparent 29rem),
+    linear-gradient(180deg, var(--lx-paper-top) 0%, var(--lx-paper) 68%, #f7ece4 100%);
+  color: var(--lx-navy);
+}
+
+html.dark.sblocco-learner-experience body,
+html.dark.sblocco-learner-experience #root,
+html.dark.sblocco-learner-experience #root > div,
+html.dark.sblocco-learner-experience main {
+  background:
+    radial-gradient(circle at 86% 3%, rgba(55, 113, 143, 0.19), transparent 30rem),
+    radial-gradient(circle at 10% 20%, rgba(239, 91, 40, 0.04), transparent 26rem),
+    linear-gradient(180deg, #07263a 0%, #082b40 56%, #07263a 100%);
+}
+
+/* Global learner typography ------------------------------------------------ */
+html.sblocco-learner-experience main h1,
+html.sblocco-learner-experience main h2 {
+  color: var(--lx-navy);
+}
+
+html.sblocco-learner-experience main h1 {
+  font-family: var(--lx-display);
+  font-weight: 400 !important;
+  letter-spacing: -0.045em !important;
+}
+
+html.sblocco-learner-experience main h2:not(.sr-only) {
+  letter-spacing: -0.025em;
+}
+
+html.sblocco-learner-experience main p,
+html.sblocco-learner-experience main li,
+html.sblocco-learner-experience main label {
+  text-wrap: pretty;
+}
+
+html.sblocco-learner-experience main .eyebrow,
+html.sblocco-learner-experience main [class*="uppercase"][class*="tracking"] {
+  letter-spacing: 0.1em;
+}
+
+/* The normal page shell becomes an editorial canvas rather than a white LMS
+   backdrop. Existing components keep their dimensions and interaction logic. */
+html.sblocco-learner-experience main .section-shell {
+  background: transparent !important;
+}
+
+html.sblocco-learner-experience main :where(article, section, header)[class*="rounded-3xl"],
+html.sblocco-learner-experience main :where(article, section, header)[class*="rounded-2xl"] {
+  border-radius: 0.8rem !important;
+}
+
+html.sblocco-learner-experience main :where(article, section, header)[class*="shadow-soft"],
+html.sblocco-learner-experience main :where(article, section, header)[class*="shadow-["] {
+  box-shadow: var(--lx-shadow) !important;
+}
+
+/* Old white/surface cards are translated to the same paper system. */
+html.sblocco-learner-experience main :where(article, section, header, div)[class*="bg-[#fffdf9]"],
+html.sblocco-learner-experience main :where(article, section, header)[class~="bg-white"],
+html.sblocco-learner-experience main :where(article, section, header)[class*="from-white"] {
+  border-color: var(--lx-line) !important;
+  background-color: color-mix(in srgb, var(--lx-raised) 94%, transparent) !important;
+}
+
+html.sblocco-learner-experience main :where(article, section, header)[class*="from-white"] {
+  background-image: none !important;
+}
+
+html.dark.sblocco-learner-experience main :where(article, section, header, div)[class*="dark:bg-surface-900"],
+html.dark.sblocco-learner-experience main :where(article, section, header)[class*="dark:bg-white/["],
+html.dark.sblocco-learner-experience main :where(article, section, header)[class*="dark:from-surface-900"] {
+  border-color: var(--lx-line) !important;
+  background-color: color-mix(in srgb, var(--lx-raised) 96%, transparent) !important;
+  background-image: none !important;
+}
+
+/* Editorial links and primary actions. Do not globally recolor semantic
+   correction/rating controls. */
+html.sblocco-learner-experience main a[class*="underline"] {
+  color: var(--lx-orange);
+  text-decoration-color: color-mix(in srgb, var(--lx-orange) 34%, transparent);
+  text-underline-offset: 0.22em;
+}
+
+html.sblocco-learner-experience main :where(a, button)[class*="bg-coral"] {
+  background-color: var(--lx-orange) !important;
+  color: #fffaf5 !important;
+}
+
+html.sblocco-learner-experience main :where(a, button)[class*="bg-coral"]:hover {
+  background-color: var(--lx-orange-strong) !important;
+}
+
+html.sblocco-learner-experience main :where(a, button)[class*="rounded-full"][class*="px-"] {
+  border-radius: 0.42rem !important;
+}
+
+/* Form controls use the same raised paper instead of generic browser/LMS white. */
+html.sblocco-learner-experience main :where(input, textarea, select) {
+  border-color: var(--lx-line-strong) !important;
+  border-radius: 0.55rem !important;
+  color: var(--lx-navy) !important;
+  background: color-mix(in srgb, var(--lx-raised) 96%, transparent) !important;
+}
+
+html.sblocco-learner-experience main :where(input, textarea)::placeholder {
+  color: color-mix(in srgb, var(--lx-muted) 68%, transparent) !important;
+}
+
+html.sblocco-learner-experience main :where(input, textarea, select):focus {
+  border-color: color-mix(in srgb, var(--lx-orange) 55%, var(--lx-line)) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lx-orange) 10%, transparent) !important;
+}
+
+/* Learner navigation ------------------------------------------------------- */
+html.sblocco-learner-experience #root > div > header.sticky {
+  border-color: var(--lx-line) !important;
+  color: var(--lx-navy) !important;
+  background: color-mix(in srgb, var(--lx-paper-top) 94%, transparent) !important;
+  box-shadow: 0 10px 32px rgba(14, 48, 69, 0.055) !important;
+}
+
+html.dark.sblocco-learner-experience #root > div > header.sticky {
+  background: color-mix(in srgb, #07263a 95%, transparent) !important;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.13) !important;
+}
+
+html.sblocco-learner-experience #root > div > header.sticky nav a[aria-current="page"]::after {
+  background: var(--lx-orange);
+}
+
+/* Assignment directory ---------------------------------------------------- */
+html.sblocco-learner-experience[data-learning-surface="assignments"] main header[class*="rounded-3xl"] {
+  border-radius: 0.5rem !important;
+  border-color: var(--lx-line) !important;
+  background: color-mix(in srgb, var(--lx-raised) 94%, transparent) !important;
+  box-shadow: var(--lx-shadow) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="assignments"] main header h1 {
+  max-width: 13ch;
+  font-size: clamp(3rem, 7vw, 5.4rem) !important;
+  line-height: 0.92 !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="assignments"] main article[class*="rounded-3xl"] {
+  border-radius: 0.65rem !important;
+  border-color: var(--lx-line) !important;
+  background: color-mix(in srgb, var(--lx-raised) 94%, transparent) !important;
+  background-image: none !important;
+  box-shadow: 0 10px 34px rgba(14, 48, 69, 0.045) !important;
+}
+
+html.dark.sblocco-learner-experience[data-learning-surface="assignments"] main article[class*="rounded-3xl"] {
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.1) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="assignments"] main article > [aria-hidden="true"][class*="inset-y-0"][class*="left-0"] {
+  width: 3px !important;
+  background: var(--lx-orange) !important;
+}
+
+/* Assignment detail ------------------------------------------------------- */
+html.sblocco-learner-experience[data-learning-surface="assignment-detail"] main header[class*="rounded-3xl"],
+html.sblocco-learner-experience[data-learning-surface="assignment-detail"] main article[class*="rounded-3xl"] {
+  border-radius: 0.6rem !important;
+  border-color: var(--lx-line) !important;
+  background: color-mix(in srgb, var(--lx-raised) 95%, transparent) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="assignment-detail"] main header h1 {
+  max-width: 15ch;
+  font-size: clamp(3rem, 7vw, 5rem) !important;
+  line-height: 0.94 !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="assignment-detail"] main article h2 {
+  font-family: var(--lx-display);
+  font-weight: 400 !important;
+  font-size: clamp(2.25rem, 5vw, 3.8rem) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="assignment-detail"] main article[class*="bg-white"] {
+  background: color-mix(in srgb, var(--lx-raised) 96%, transparent) !important;
+}
+
+/* Exercise Builder learner player ---------------------------------------- */
+html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell {
+  min-height: calc(100vh - 7rem);
+  padding-top: clamp(1.8rem, 4vw, 3.2rem) !important;
+  padding-bottom: clamp(3rem, 7vw, 5rem) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > div > header {
+  border: 0 !important;
+  border-top: 1px solid var(--lx-line) !important;
+  border-bottom: 1px solid var(--lx-line) !important;
+  border-radius: 0 !important;
+  padding: clamp(1.6rem, 4vw, 2.5rem) 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > div > header h1 {
+  margin-top: 0.45rem !important;
+  font-size: clamp(2.6rem, 6vw, 4.6rem) !important;
+  line-height: 0.96 !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > div > header [class*="bg-blush"] {
+  color: var(--lx-orange) !important;
+  background: var(--lx-soft-orange) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > div > header [class*="h-2"] {
+  height: 0.3rem !important;
+  background: var(--lx-soft-navy) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > div > header [class*="h-full"] {
+  background: var(--lx-orange) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > div > section[class*="rounded-2xl"],
+html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > div > div > article[class*="rounded-2xl"],
+html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > div > div > section[class*="rounded-2xl"] {
+  border-radius: 0.65rem !important;
+  border-color: var(--lx-line) !important;
+  background: color-mix(in srgb, var(--lx-raised) 96%, transparent) !important;
+  box-shadow: var(--lx-shadow) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="exercise"] main [class*="text-clay"],
+html.sblocco-learner-experience[data-learning-surface="exercise"] main [class*="dark:text-[#f7a98d]"] {
+  color: var(--lx-orange) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="exercise"] main [class*="bg-blush"]:not([class*="red"]),
+html.sblocco-learner-experience[data-learning-surface="exercise"] main [class*="dark:bg-coral/"] {
+  background-color: var(--lx-soft-orange) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="exercise"] main :where(button, a)[class*="rounded-full"] {
+  min-height: 2.8rem;
+  border-radius: 0.38rem !important;
+}
+
+/* Exercise intro/result cards receive the same editorial opening instead of
+   a floating LMS card. */
+html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > .mx-auto > article[class*="rounded-3xl"] {
+  border-radius: 0.55rem !important;
+  border-color: var(--lx-line) !important;
+  background: color-mix(in srgb, var(--lx-raised) 95%, transparent) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > .mx-auto > article[class*="rounded-3xl"] h1 {
+  max-width: 15ch;
+  font-size: clamp(3rem, 7vw, 5rem) !important;
+  line-height: 0.94 !important;
+}
+
+/* Trainer + SRS ----------------------------------------------------------- */
+html.sblocco-learner-experience[data-learning-surface="trainer"] main,
+html.sblocco-learner-experience[data-learning-surface="practice"] main {
+  min-height: calc(100vh - 4rem);
+}
+
+html.sblocco-learner-experience[data-learning-surface="trainer"] main :where(article, section)[class*="rounded-lg"],
+html.sblocco-learner-experience[data-learning-surface="practice"] main :where(article, section)[class*="rounded-lg"] {
+  border-radius: 0.55rem !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="trainer"] main article[class*="shadow-soft"],
+html.sblocco-learner-experience[data-learning-surface="practice"] main section[class*="shadow-soft"] {
+  border-color: var(--lx-line) !important;
+  background: color-mix(in srgb, var(--lx-raised) 95%, transparent) !important;
+  box-shadow: var(--lx-shadow) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="trainer"] main article h2,
+html.sblocco-learner-experience[data-learning-surface="practice"] main h1,
+html.sblocco-learner-experience[data-learning-surface="practice"] main h2 {
+  font-family: var(--lx-display);
+  font-weight: 400 !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="trainer"] main article h2 {
+  font-size: clamp(2.4rem, 5vw, 4rem) !important;
+  letter-spacing: -0.04em !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="trainer"] main article > div:first-child,
+html.sblocco-learner-experience[data-learning-surface="practice"] main [class*="border-moss/15"][class*="bg-gradient"] {
+  border-color: var(--lx-line) !important;
+}
+
+/* Progress: remove the old forced-dark page in light mode ---------------- */
+html.sblocco-learner-experience[data-learning-surface="progress"] main > section {
+  min-height: calc(100vh - 4rem);
+  background: transparent !important;
+}
+
+html.sblocco-learner-experience:not(.dark)[data-learning-surface="progress"] main > section {
+  color: var(--lx-navy) !important;
+}
+
+html.sblocco-learner-experience:not(.dark)[data-learning-surface="progress"] main > section [class*="text-white"] {
+  color: var(--lx-navy) !important;
+}
+
+html.sblocco-learner-experience:not(.dark)[data-learning-surface="progress"] main > section [class*="text-[#8e"],
+html.sblocco-learner-experience:not(.dark)[data-learning-surface="progress"] main > section [class*="text-[#9c"],
+html.sblocco-learner-experience:not(.dark)[data-learning-surface="progress"] main > section [class*="text-[#a6"] {
+  color: var(--lx-orange) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="progress"] main article {
+  border-color: var(--lx-line) !important;
+  border-radius: 0.7rem !important;
+  background: color-mix(in srgb, var(--lx-raised) 94%, transparent) !important;
+  background-image: none !important;
+  box-shadow: var(--lx-shadow) !important;
+}
+
+html.sblocco-learner-experience[data-learning-surface="progress"] main article h2 {
+  font-family: var(--lx-display);
+  font-weight: 400 !important;
+  font-size: clamp(2rem, 4vw, 3rem) !important;
+}
+
+html.sblocco-learner-experience:not(.dark)[data-learning-surface="progress"] main article [class*="bg-black"],
+html.sblocco-learner-experience:not(.dark)[data-learning-surface="progress"] main article [class*="bg-white/["],
+html.sblocco-learner-experience:not(.dark)[data-learning-surface="progress"] main > section [class*="bg-black"] {
+  background-color: var(--lx-soft-navy) !important;
+}
+
+html.sblocco-learner-experience:not(.dark)[data-learning-surface="progress"] main :where(a, button)[class*="bg-gradient"] {
+  color: #fffaf5 !important;
+}
+
+html.sblocco-learner-experience:not(.dark)[data-learning-surface="progress"] main :where(a, button)[class*="bg-gradient"] * {
+  color: inherit !important;
+}
+
+html.dark.sblocco-learner-experience[data-learning-surface="progress"] main > section {
+  color: var(--lx-navy);
+  background: transparent !important;
+}
+
+html.dark.sblocco-learner-experience[data-learning-surface="progress"] main article {
+  background: color-mix(in srgb, var(--lx-raised) 96%, transparent) !important;
+}
+
+/* Collection, grammar and account ---------------------------------------- */
+html.sblocco-learner-experience:is([data-learning-surface="collection"], [data-learning-surface="grammar"], [data-learning-surface="account"]) main :where(article, section, header)[class*="bg-white"] {
+  border-color: var(--lx-line) !important;
+  background: color-mix(in srgb, var(--lx-raised) 95%, transparent) !important;
+}
+
+html.sblocco-learner-experience:is([data-learning-surface="collection"], [data-learning-surface="grammar"], [data-learning-surface="account"]) main :where(h1, h2) {
+  color: var(--lx-navy);
+}
+
+/* Recovery already uses learnerEditorial.css; these rules align the tokens
+   so shared theory blocks and recovery dashboard never diverge. */
+html.sblocco-learner-experience[data-learning-surface="recovery"] .learner-editorial,
+html.sblocco-learner-experience[data-learning-surface="dashboard"] .learner-editorial {
+  --learner-navy: var(--lx-navy);
+  --learner-navy-soft: var(--lx-navy-soft);
+  --learner-orange: var(--lx-orange);
+  --learner-paper: var(--lx-paper);
+  --learner-paper-raised: var(--lx-raised);
+  --learner-paper-deep: var(--lx-deep);
+  --learner-line: var(--lx-line);
+  --learner-muted: var(--lx-muted);
+}
+
+/* Shared semantic theory blocks ------------------------------------------ */
+html.sblocco-learner-experience .sblocco-learning-surface {
+  --sblocco-brand-navy: var(--lx-navy);
+  --sblocco-brand-navy-soft: var(--lx-navy-soft);
+  --sblocco-brand-orange: var(--lx-orange);
+  --sblocco-brand-paper: var(--lx-paper);
+  --sblocco-brand-paper-raised: var(--lx-raised);
+  --sblocco-brand-paper-deep: var(--lx-deep);
+  --sblocco-brand-line: var(--lx-line);
+  --sblocco-brand-muted: var(--lx-muted);
+  background: transparent;
+}
+
+/* Footer stays deliberately dark like the marketing site, but uses the same
+   deep navy rather than near-black. */
+html.sblocco-learner-experience footer {
+  border-color: rgba(255, 250, 245, 0.1) !important;
+  background: #08283d !important;
+  color: #fffaf5 !important;
+}
+
+/* Accessibility / reduced motion ----------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html.sblocco-learner-experience main *,
+  html.sblocco-learner-experience main *::before,
+  html.sblocco-learner-experience main *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 800px) {
+  html.sblocco-learner-experience main .section-shell {
+    padding-inline: 1rem;
+  }
+
+  html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > div > header h1,
+  html.sblocco-learner-experience[data-learning-surface="assignment-detail"] main header h1,
+  html.sblocco-learner-experience[data-learning-surface="assignments"] main header h1 {
+    max-width: none;
+    font-size: clamp(2.55rem, 13vw, 4rem) !important;
+  }
+
+  html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-shell > div > header {
+    padding-block: 1.35rem !important;
+  }
+}

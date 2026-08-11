@@ -3,9 +3,13 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import { AuthProvider } from './auth/AuthContext.jsx';
+import LearnerExperienceBoundary from './components/learning/LearnerExperienceBoundary.jsx';
 import { installDownloadCompatibility } from './lib/downloadCompatibility.js';
 import { validateSupabaseConfig } from './lib/supabaseConfig.js';
 import './index.css';
+import './styles/learnerEditorial.css';
+import './styles/editorialLearning.css';
+import './styles/learnerExperience.css';
 import './styles/downloadCompatibility.css';
 import './styles/question-editor-layout.css';
 
@@ -22,7 +26,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       React.createElement(
         AuthProvider,
         null,
-        React.createElement(App),
+        React.createElement(
+          React.Fragment,
+          null,
+          React.createElement(LearnerExperienceBoundary),
+          React.createElement(App),
+        ),
       ),
     ),
   ),
