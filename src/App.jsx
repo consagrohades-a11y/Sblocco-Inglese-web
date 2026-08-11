@@ -39,6 +39,9 @@ const EngineDemo = lazy(() => import('./pages/EngineDemo'));
 const ExerciseExperienceGallery = import.meta.env.DEV
   ? lazy(() => import('./pages/ExerciseExperienceGallery'))
   : null;
+const LearnerAssignmentsPreview = import.meta.env.DEV
+  ? lazy(() => import('./pages/LearnerAssignmentsPreview'))
+  : null;
 const A1UnitPage = lazy(() => import('./pages/A1UnitPage'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
@@ -188,6 +191,7 @@ export default function App() {
             <Route path="/grammar/a1/:topicId" element={<GrammarA1Topic />} />
             <Route path="/engine-demo" element={<EngineDemo />} />
             {import.meta.env.DEV ? <Route path="/__preview/exercises" element={<ExerciseExperienceGallery />} /> : null}
+            {import.meta.env.DEV ? <Route path="/__preview/assignments" element={<LearnerAssignmentsPreview />} /> : null}
             <Route path="/diagnostic" element={<Navigate to="/assessment" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
