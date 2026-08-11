@@ -77,7 +77,7 @@ function GenericDashboard({ firstName }) {
           .in('status', ['published', 'completed'])
           .order('display_order', { ascending: true })
           .order('created_at', { ascending: false })
-          .limit(12),
+          .limit(100),
         supabase
           .from('learner_review_history')
           .select('id, created_at')
@@ -102,70 +102,89 @@ function GenericDashboard({ firstName }) {
 
   const open = assignments.filter((item) => item.status === 'published');
   const completed = assignments.filter((item) => item.status === 'completed');
-  const next = open[0] || null;
+  const nextAssignments = open.slice(0, 3);
   const nearestDeadline = open
     .filter((item) => item.deadline_at)
     .sort((a, b) => new Date(a.deadline_at) - new Date(b.deadline_at))[0]?.deadline_at;
   const completion = assignments.length ? Math.round((completed.length / assignments.length) * 100) : 0;
   const week = Array.from({ length: 7 }, (_, offset) => {
     const date = new Date(Date.now() - (6 - offset) * 86_400_000);
-    return activeDays.has(date.toISOString().slice(0, 10));
+    const key = date.toISOString().slice(0, 10);
+    return {
+      active: activeDays.has(key),
+      key,
+      label: new Intl.DateTimeFormat('it-IT', { weekday: 'narrow' }).format(date),
+    };
   });
 
   return (
-    <div className="learner-shell learner-dashboard">
+    <div className="learner-shell learner-dashboard learner-dashboard--standard">
       <header className="learner-hero">
         <div className="learner-hero__copy">
           <p className="learner-hero__hello">Che bello rivederti!</p>
           <h1 className="learner-display">Ciao, <em>{firstName}.</em></h1>
-          <p className="learner-hero__support">Qui trovi prima ciò che conviene fare adesso. Gli altri contenuti restano disponibili quando vuoi consultarli.</p>
-          {!loading ? <div className="learner-notice"><CheckCircle2 aria-hidden="true" /> Hai {open.length} {open.length === 1 ? 'attività aperta' : 'attività aperte'} in questo momento.</div> : null}
+          <p className="learner-hero__support"><strong>Ogni piccolo passo</strong> ti avvicina ai tuoi obiettivi.<br />Sei nel posto giusto.</p>
+          {!loading ? <div className="learner-notice">{reviewCount ? <Flame aria-hidden="true" /> : <CheckCircle2 aria-hidden="true" />} {reviewCount ? `Hai completato ${reviewCount} ${reviewCount === 1 ? 'ripasso' : 'ripassi'} questa settimana. Ottimo ritmo!` : open.length ? `Hai ${open.length} ${open.length === 1 ? 'attività pronta' : 'attività pronte'} da cui continuare.` : 'Sei in pari con le attività assegnate.'}</div> : null}
         </div>
-        <div className="learner-hero__art" aria-hidden="true"><img src="/assets/brand/sblocco-editorial-conversation-v2.png" alt="" /></div>
+        <div className="learner-hero__art learner-standard-hero-art" aria-hidden="true">
+          <img className="learner-standard-hero-art__light" src="/assets/brand/learner-dashboard-hero-light-transparent-v2.png" alt="" />
+          <img className="learner-standard-hero-art__dark" src="/assets/brand/learner-dashboard-hero-dark-transparent-v2.png" alt="" />
+        </div>
       </header>
 
       <div className="learner-summary-grid">
         <SummaryCard icon={Target} label="Il tuo obiettivo" value="Un passo alla volta" detail="Continua dal prossimo compito utile." />
-        <SummaryCard icon={ListChecks} label="Da fare oggi" value={`${open.length} attività`} detail="Le attività assegnate restano il percorso principale." />
-        <SummaryCard icon={CalendarDays} label="Prossima scadenza" value={formatDate(nearestDeadline)} detail={nearestDeadline ? 'La scadenza più vicina tra le attività assegnate.' : 'Puoi seguire il tuo ritmo.'} />
-        <SummaryCard icon={Flame} label="Ripasso SRS" value={`${dueCount} da rivedere`} detail={dueCount ? 'Sono pronti nel trainer.' : 'Nessun ripasso urgente.'} />
+        <SummaryCard icon={ListChecks} label="Da fare oggi" value={`${open.length} ${open.length === 1 ? 'attività' : 'attività'}`} detail={open.length ? 'Apri il prossimo passo qui sotto.' : 'Sei in pari con il piano.'} />
+        <SummaryCard icon={CalendarDays} label="Prossima scadenza" value={formatDate(nearestDeadline)} detail={nearestDeadline ? 'La scadenza più vicina tra le tue attività.' : 'Puoi seguire il tuo ritmo.'} />
       </div>
 
       <div className="learner-main-grid">
         <section className="learner-panel learner-panel--main">
           <div className="learner-panel__heading">
             <div><span className="learner-panel__eyebrow">Oggi</span><h2>Il tuo prossimo passo</h2></div>
-            <Link to="/assignments" className="learner-text-link">Tutte le attività <ArrowRight aria-hidden="true" /></Link>
+            <Link to="/assignments" className="learner-text-link">Vedi il piano <ArrowRight aria-hidden="true" /></Link>
           </div>
-          {next ? (
-            <article className="learner-next-card">
-              <div className="learner-next-card__topline"><span className="learner-next-card__number">1</span><span className="learner-next-card__type">Attività assegnata</span></div>
-              <h3>{next.title}</h3>
-              <p className="learner-next-card__reason">{next.learner_note || 'Continua da qui prima di aprire nuove attività.'}</p>
-              <div className="learner-next-card__meta">{next.estimated_minutes ? <span><Clock3 aria-hidden="true" />~ {next.estimated_minutes} min</span> : null}{next.deadline_at ? <span><CalendarDays aria-hidden="true" />Entro {formatDate(next.deadline_at)}</span> : null}</div>
-              <div className="learner-next-card__action"><Link to={`/assignments/${next.id}`} className="learner-primary-button">Inizia <ArrowRight aria-hidden="true" size={16} /></Link></div>
-            </article>
-          ) : <p className="learner-empty">Non hai attività assegnate da completare. Puoi usare il ripasso SRS o scegliere un corso già disponibile.</p>}
+          {nextAssignments.length ? (
+            <ol className="learner-standard-assignment-list">
+              {nextAssignments.map((assignment, index) => (
+                <li key={assignment.id}>
+                  <span className="learner-standard-assignment-list__number">{index + 1}</span>
+                  <span className="learner-standard-assignment-list__icon"><BookOpen aria-hidden="true" /></span>
+                  <span className="learner-standard-assignment-list__copy"><small>Attività assegnata</small><strong>{assignment.title}</strong><p>{assignment.learner_note || 'Continua da qui per mantenere il filo del tuo percorso.'}</p></span>
+                  <span className="learner-standard-assignment-list__time">{assignment.estimated_minutes ? <><Clock3 aria-hidden="true" />~ {assignment.estimated_minutes} min</> : null}</span>
+                  <Link to={`/assignments/${assignment.id}`} className={index === 0 ? 'learner-primary-button' : 'learner-secondary-button'}>{index === 0 ? 'Inizia' : 'Apri'} <ArrowRight aria-hidden="true" size={15} /></Link>
+                </li>
+              ))}
+            </ol>
+          ) : <div className="learner-empty"><strong>Le attività assegnate sono complete.</strong><br />Puoi fare un ripasso SRS oppure allenarti sulle parole scelte per te.</div>}
         </section>
 
         <aside className="learner-panel learner-panel--side">
-          <div className="learner-panel__heading"><div><span className="learner-panel__eyebrow">Il tuo progresso</span><h3>Attività</h3></div></div>
+          <div className="learner-panel__heading"><div><span className="learner-panel__eyebrow">Il tuo ritmo</span><h3>Progressi visibili</h3></div></div>
           <ProgressRing value={completion} label="completate" />
+          <p className="learner-progress-cheer">{completion ? 'Stai andando forte!' : 'Ogni passo conta.'}</p>
           <div className="learner-progress-list">
             <div className="learner-progress-row"><span>Completate</span><span className="learner-progress-row__track"><span className="learner-progress-row__fill" style={{ width: `${completion}%` }} /></span><span>{completed.length}</span></div>
             <div className="learner-progress-row"><span>Da fare</span><span className="learner-progress-row__track"><span className="learner-progress-row__fill" style={{ width: `${assignments.length ? (open.length / assignments.length) * 100 : 0}%` }} /></span><span>{open.length}</span></div>
             <div className="learner-progress-row"><span>Ripassi 7g</span><span className="learner-progress-row__track"><span className="learner-progress-row__fill" style={{ width: `${Math.min(100, reviewCount * 5)}%` }} /></span><span>{reviewCount}</span></div>
           </div>
+          <p className="learner-empty learner-progress-note">Questi dati servono a vedere cosa stai consolidando. Non sono un voto.</p>
+          <Link to="/progressi" className="learner-text-link">Apri i progressi <ArrowRight size={14} /></Link>
         </aside>
       </div>
 
-      <div className="learner-lower-grid">
-        <article className="learner-lower-card"><p className="learner-kicker">Il tuo piano</p><h3>Le attività in ordine</h3><p>Apri la lista completa quando vuoi vedere ciò che hai già terminato e ciò che resta.</p><div className="learner-form-actions"><Link to="/assignments" className="learner-text-link">Vedi il piano <ArrowRight /></Link></div></article>
-        <article className="learner-lower-card"><p className="learner-kicker">Continua a costruire</p><h3>Ripassa ciò che vuoi rendere più disponibile</h3><p>Il trainer resta separato dalle attività: puoi usarlo senza perdere il filo del percorso principale.</p><div className="learner-form-actions"><Link to="/attivita/srs" className="learner-text-link">Apri Ripasso SRS <ArrowRight /></Link></div></article>
-        <article className="learner-lower-card"><p className="learner-kicker">La tua settimana</p><h3>{activeDays.size} {activeDays.size === 1 ? 'giorno attivo' : 'giorni attivi'}</h3><p>Nessuna penalità: serve soltanto a vedere il ritmo reale.</p><div className="learner-streak-bars">{week.map((activeDay, index) => <span key={index} className={activeDay ? 'is-active' : ''} style={{ height: `${activeDay ? 75 : 28}%` }} />)}</div></article>
+      <div className="learner-lower-grid learner-lower-grid--standard">
+        <article className="learner-lower-card"><p className="learner-kicker">Esercizi</p><h3>La tua giornata tipo</h3><p>Un piccolo segreto: la costanza fa una grande differenza.</p><div className="learner-form-actions"><Link to="/assignments" className="learner-text-link">Vedi il tuo piano <ArrowRight /></Link></div></article>
+        <article className="learner-lower-card"><p className="learner-kicker">Ripasso SRS</p><h3>Continua a costruire il tuo futuro</h3><p>{dueCount ? `${dueCount} ${dueCount === 1 ? 'card è pronta' : 'card sono pronte'} per un ripasso breve.` : 'Le parole torneranno quando sarà il momento giusto.'}</p><div className="learner-form-actions"><Link to="/attivita/srs" className="learner-text-link">Apri il ripasso <ArrowRight /></Link></div></article>
+        <article className="learner-lower-card"><p className="learner-kicker">Pratica mirata</p><h3>Allenati sulle parole scelte per te</h3><p>Quiz separati dal ripasso SRS, costruiti sulle indicazioni del tuo insegnante.</p><div className="learner-form-actions"><Link to="/attivita/pratica-mirata" className="learner-text-link">Apri la pratica <ArrowRight /></Link></div></article>
       </div>
 
-      <section className="learner-bottom-cta"><div><h2 className="learner-display">Tu, cosa vuoi riuscire a fare?</h2><p>Se il tuo obiettivo cambia, puoi esplorare i percorsi Sblocco senza perdere i progressi.</p></div><Link to="/percorsi" className="learner-primary-button">I miei obiettivi <ArrowRight size={16} /></Link></section>
+      <section className="learner-standard-week">
+        <div><p className="learner-kicker">La tua settimana</p><h2 className="learner-display">{activeDays.size} {activeDays.size === 1 ? 'giorno di ripasso' : 'giorni di ripasso'}</h2><p>Nessuna serie da proteggere. Serve soltanto a vedere il ritmo che stai costruendo.</p></div>
+        <div className="learner-standard-week__days" aria-label="Attività di ripasso negli ultimi sette giorni">{week.map((day) => <span key={day.key} className={day.active ? 'is-active' : ''}><i aria-hidden="true" />{day.label}</span>)}</div>
+      </section>
+
+      <section className="learner-bottom-cta"><div><h2 className="learner-display">Tu, cosa vuoi riuscire a fare?</h2><p>Qual è il tuo prossimo obiettivo? Studiare, lavorare, viaggiare o parlare con più sicurezza?</p></div><Link to="/assessment" className="learner-primary-button">I miei obiettivi <ArrowRight size={16} /></Link></section>
     </div>
   );
 }

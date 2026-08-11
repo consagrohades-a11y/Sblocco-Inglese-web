@@ -324,7 +324,7 @@
 
 .home-goals__list {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -938,6 +938,10 @@
   .home-method__grid {
     grid-template-columns: 1fr;
     gap: 3rem;
+  }
+
+  .home-goals__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .home-example {

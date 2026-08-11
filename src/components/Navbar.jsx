@@ -305,7 +305,7 @@ export default function Navbar() {
       </div>
 
       {mobileOpen ? (
-        <div className="relative border-t border-ink/10 bg-paper/[0.98] px-5 pb-6 pt-4 shadow-[0_24px_50px_rgba(24,34,31,0.14)] dark:border-white/10 dark:bg-surface-950/98 dark:shadow-[0_24px_50px_rgba(0,0,0,0.38)] xl:hidden">
+        <div className="relative border-t border-ink/10 bg-paper/[0.98] px-5 pb-6 pt-4 shadow-[0_24px_50px_rgba(24,34,31,0.14)] dark:border-white/10 dark:bg-surface-950 dark:shadow-[0_24px_50px_rgba(0,0,0,0.38)] xl:hidden">
           <nav className="mx-auto grid max-w-lg gap-2" aria-label={isLearner ? 'Navigazione studente mobile' : 'Navigazione mobile'}>
             {isLearner ? (
               learnerAction.to ? (
@@ -339,9 +339,10 @@ export default function Navbar() {
               </Link>
             ) : null}
 
+            <ThemeToggle mobile />
+
             {!loading && user ? (
               <>
-                <ThemeToggle mobile />
                 <Link to="/account/settings" className="focus-ring mt-2 flex min-h-12 items-center gap-3 rounded-2xl border border-ink/12 bg-white px-4 py-3 text-base font-extrabold text-ink dark:border-white/12 dark:bg-white/[0.07] dark:text-white">
                   <span className="grid h-8 w-8 place-items-center rounded-full bg-mint text-sm font-black text-ink">{displayName.charAt(0).toUpperCase()}</span>
                   Account e impostazioni
