@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, BookOpen, BriefcaseBusiness, Globe2, MessageCircle, UsersRound } from 'lucide-react';
+import { ArrowRight, BookOpen, BriefcaseBusiness, Globe2, GraduationCap, MessageCircle, UsersRound } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const goals = [
@@ -32,6 +32,12 @@ const goals = [
     description: 'Partire dalle fondamenta e costruire l’inglese che ti serve per iniziare a comunicare.',
     to: '/percorsi/basi',
     icon: BookOpen,
+  },
+  {
+    label: 'Recupero debito',
+    description: 'Capire cosa recuperare, seguire un piano guidato e prepararti alle prove della scuola.',
+    to: '/percorsi/recupero-debito',
+    icon: GraduationCap,
   },
 ];
 
