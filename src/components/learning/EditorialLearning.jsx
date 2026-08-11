@@ -1,5 +1,20 @@
 import React from 'react';
-import { ArrowRight, BookOpen, Check, Clock3, Lightbulb, X } from 'lucide-react';
+import {
+  AlertTriangle,
+  ArrowRight,
+  BookOpen,
+  Check,
+  Clock3,
+  Globe2,
+  Lightbulb,
+  ListChecks,
+  MessageCircleMore,
+  Mic2,
+  Quote,
+  Sparkles,
+  Volume2,
+  X,
+} from 'lucide-react';
 
 export const EDITORIAL_BLOCK_TYPES = Object.freeze([
   ['explanation', 'Spiegazione'],
@@ -9,8 +24,65 @@ export const EDITORIAL_BLOCK_TYPES = Object.freeze([
   ['common_error', 'Errore comune'],
   ['recap', 'In breve'],
   ['note', 'Nota'],
+  ['pattern', 'Nota il modello'],
+  ['language_bank', 'Lingua utile'],
+  ['vocabulary', 'Vocabolario'],
+  ['useful_phrases', 'Frasi utili'],
+  ['pronunciation', 'Pronuncia'],
+  ['teacher_tip', 'Consiglio dell’insegnante'],
+  ['warning', 'Attenzione'],
+  ['culture', 'Inglese reale e cultura'],
+  ['scenario', 'Scenario'],
+  ['reading', 'Lettura'],
+  ['dialogue', 'Dialogo'],
+  ['checklist', 'Checklist'],
+  ['reflection', 'Rifletti'],
+  ['instructions', 'Istruzioni'],
+  ['summary', 'Riepilogo'],
+  ['section_intro', 'Apertura sezione'],
+  ['section_outro', 'Chiusura sezione'],
   ['lesson_hero', 'Apertura lezione'],
 ]);
+
+const PRESENTATION_ALIASES = {
+  grammar_note: 'rule',
+  grammar_rule: 'rule',
+  notice: 'pattern',
+  expressions: 'language_bank',
+  language_support: 'language_bank',
+  common_mistake: 'common_error',
+  real_english: 'culture',
+  teacher_note: 'teacher_tip',
+  speaking_tip: 'teacher_tip',
+  section_summary: 'summary',
+};
+
+const BLOCK_META = {
+  rule: ['La regola', BookOpen],
+  examples: ['Guarda gli esempi', Quote],
+  contrast: ['Confronta', Sparkles],
+  common_error: ['Errore comune', X],
+  recap: ['In breve', Check],
+  summary: ['Riepilogo', Check],
+  note: ['Da ricordare', Lightbulb],
+  pattern: ['Nota il modello', Sparkles],
+  language_bank: ['Lingua utile', MessageCircleMore],
+  vocabulary: ['Vocabolario', BookOpen],
+  useful_phrases: ['Frasi utili', Quote],
+  pronunciation: ['Pronuncia', Volume2],
+  teacher_tip: ['Consiglio dell’insegnante', Lightbulb],
+  warning: ['Attenzione', AlertTriangle],
+  culture: ['Inglese reale', Globe2],
+  scenario: ['Scenario', MessageCircleMore],
+  reading: ['Leggi', BookOpen],
+  dialogue: ['Dialogo', MessageCircleMore],
+  checklist: ['Controlla', ListChecks],
+  reflection: ['Rifletti', Lightbulb],
+  instructions: ['Cosa fare', ListChecks],
+  section_intro: ['Nuova sezione', Sparkles],
+  section_outro: ['Prima di continuare', Check],
+  explanation: ['Capire prima di esercitarsi', BookOpen],
+};
 
 function cleanList(value) {
   if (Array.isArray(value)) return value.map((item) => String(item || '').trim()).filter(Boolean);
@@ -82,17 +154,11 @@ export function EditorialAction({ as: Component = 'button', children, className 
 }
 
 export function EditorialTeachingBlock({ content = {}, prompt = '', instructions = '', body = null }) {
-  const type = content.presentation || 'explanation';
+  const requestedType = content.presentation || 'explanation';
+  const type = PRESENTATION_ALIASES[requestedType] || requestedType;
   const heading = content.heading || prompt;
-  const eyebrow = content.eyebrow || (
-    type === 'rule' ? 'La regola' :
-      type === 'examples' ? 'Guarda gli esempi' :
-        type === 'contrast' ? 'Confronta' :
-          type === 'common_error' ? 'Errore comune' :
-            type === 'recap' ? 'In breve' :
-              type === 'note' ? 'Da ricordare' :
-                'Capire prima di esercitarsi'
-  );
+  const [defaultEyebrow, BlockIcon] = BLOCK_META[type] || BLOCK_META.explanation;
+  const eyebrow = content.eyebrow || defaultEyebrow;
   const examples = cleanList(content.examples);
   const items = cleanList(content.items);
 
@@ -109,10 +175,10 @@ export function EditorialTeachingBlock({ content = {}, prompt = '', instructions
   }
 
   return (
-    <article className={`sblocco-teaching-block sblocco-teaching-block--${type}`}>
+    <article className={`sblocco-teaching-block sblocco-teaching-block--${type}`} data-teaching-block={requestedType}>
       <div className="sblocco-teaching-block__header">
         <span className="sblocco-teaching-block__icon" aria-hidden="true">
-          {type === 'common_error' ? <X /> : type === 'recap' ? <Check /> : type === 'note' ? <Lightbulb /> : <BookOpen />}
+          <BlockIcon />
         </span>
         <div>
           <p className="sblocco-learning-eyebrow">{eyebrow}</p>
@@ -152,6 +218,12 @@ export function EditorialTeachingBlock({ content = {}, prompt = '', instructions
       {type === 'recap' && items.length ? (
         <ul className="sblocco-teaching-recap">
           {items.map((item, index) => <li key={`${item}-${index}`}><Check aria-hidden="true" />{item}</li>)}
+        </ul>
+      ) : null}
+
+      {['summary', 'checklist', 'instructions', 'language_bank', 'vocabulary', 'useful_phrases', 'pronunciation'].includes(type) && items.length ? (
+        <ul className={`sblocco-teaching-list sblocco-teaching-list--${type}`}>
+          {items.map((item, index) => <li key={`${item}-${index}`}>{type === 'pronunciation' ? <Mic2 aria-hidden="true" /> : <Check aria-hidden="true" />}<span>{item}</span></li>)}
         </ul>
       ) : null}
     </article>

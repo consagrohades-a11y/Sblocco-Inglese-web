@@ -8,12 +8,18 @@ import {
   Clock3,
   Coffee,
   Save,
-  Sparkles,
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import SEO from "../components/SEO";
 import ExerciseDiagnosticSummary from "../components/exercises/ExerciseDiagnosticSummary.jsx";
 import ExerciseQuestionRenderer from "../components/exercises/ExerciseQuestionRenderer.jsx";
+import {
+  ExerciseActionBar,
+  ExerciseActivity,
+  ExerciseCanvas,
+  ExerciseMilestone,
+  ExerciseProgressHeader,
+} from "../components/exercises/ExerciseExperience.jsx";
 import { normalizeExerciseAnswerForSave } from "../lib/exerciseAnswerNormalization.js";
 import {
   completeExerciseSection,
@@ -80,6 +86,14 @@ function answerIsEmpty(answer, question) {
   return !hasMeaningfulValue(answer);
 }
 
+function getProgressMilestone(previousCount, completedCount, sectionTitle) {
+  if (previousCount < 50 && completedCount >= 50) return { title: '50 attività completate', body: 'Hai costruito una pratica davvero solida. Fermati un momento e riconosci quanta strada hai fatto.' };
+  if (previousCount < 25 && completedCount >= 25) return { title: '25 attività completate', body: 'Ottimo ritmo. Le strutture stanno diventando più familiari e più facili da usare.' };
+  if (previousCount < 10 && completedCount >= 10) return { title: '10 attività completate', body: 'Bel lavoro. Hai già trasformato questa sessione in pratica concreta.' };
+  if (previousCount < 5 && completedCount >= 5) return { title: '5 attività completate', body: 'Hai superato il primo traguardo. Continua così, un passo alla volta.' };
+  return { title: `${sectionTitle || 'Sezione'} completata`, body: 'Hai completato questa parte. Continua quando sei pronta.' };
+}
+
 function Intro({ payload, assignmentId, onStart }) {
   const total = payload.sections.reduce(
     (sum, section) => sum + section.questions.length,
@@ -97,6 +111,7 @@ function Intro({ payload, assignmentId, onStart }) {
   );
   return (
     <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
+      <ExerciseCanvas>
       <div className="mx-auto max-w-4xl">
         <Link
           to={`/assignments/${assignmentId}`}
@@ -105,7 +120,7 @@ function Intro({ payload, assignmentId, onStart }) {
           <ArrowLeft className="h-4 w-4" />
           Torna all’attività
         </Link>
-        <article className="mt-5 overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-surface-900">
+        <article className="exercise-activity mt-5 overflow-hidden">
           <div className="relative p-7 sm:p-10">
             <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-blush blur-3xl dark:bg-coral/10" />
             <div className="relative">
@@ -135,7 +150,7 @@ function Intro({ payload, assignmentId, onStart }) {
                   </span>
                 ) : null}
                 {manual ? (
-                  <span className="rounded-full bg-violet-100 px-3 py-2 text-violet-800 dark:bg-violet-300/10 dark:text-violet-200">
+                  <span className="rounded-full bg-sky-100 px-3 py-2 text-sky-800 dark:bg-sky-300/10 dark:text-sky-200">
                     {manual} da valutare dall’insegnante
                   </span>
                 ) : null}
@@ -163,7 +178,7 @@ function Intro({ payload, assignmentId, onStart }) {
               <button
                 type="button"
                 onClick={onStart}
-                className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-coral px-6 py-3 text-sm font-black text-white hover:bg-clay dark:bg-[#ff8b6c] dark:text-surface-950"
+                className="exercise-primary-action mt-7"
               >
                 <BookOpenCheck className="h-4 w-4" />
                 Inizia o riprendi
@@ -172,6 +187,7 @@ function Intro({ payload, assignmentId, onStart }) {
           </div>
         </article>
       </div>
+      </ExerciseCanvas>
     </section>
   );
 }
@@ -182,7 +198,7 @@ function ResultBreakdown({ summary }) {
     ["nearly_correct", "quasi corrette", "bg-amber-100 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100"],
     ["incorrect", "da rivedere", "bg-red-100 text-red-900 dark:bg-red-300/10 dark:text-red-100"],
     ["unanswered", "senza risposta", "bg-slate-200 text-slate-800 dark:bg-white/10 dark:text-white/70"],
-    ["pending_review", "in attesa di valutazione", "bg-violet-100 text-violet-900 dark:bg-violet-300/10 dark:text-violet-200"],
+    ["pending_review", "in attesa di valutazione", "bg-sky-100 text-sky-900 dark:bg-sky-300/10 dark:text-sky-200"],
   ].filter(([key]) => key === "correct" || Number(summary?.[key] || 0) > 0);
   if (!chips.length) return null;
   return (
@@ -216,10 +232,11 @@ function FinalResult({ payload, assignmentId, resourceId }) {
 
   return (
     <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
+      <ExerciseCanvas>
       <div className="mx-auto max-w-4xl">
-        <article className="rounded-3xl border border-clay/15 bg-[#fffdf9] p-7 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-10">
+        <article className="exercise-activity p-7 sm:p-10">
           <span
-            className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${awaitingPublishedReview ? "bg-violet-100 text-violet-800 dark:bg-violet-300/10 dark:text-violet-200" : "bg-blush text-clay dark:bg-coral/10 dark:text-[#f7a98d]"}`}
+            className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${awaitingPublishedReview ? "bg-sky-100 text-sky-800 dark:bg-sky-300/10 dark:text-sky-200" : "bg-blush text-clay dark:bg-coral/10 dark:text-[#f7a98d]"}`}
           >
             {awaitingPublishedReview ? (
               <Clock3 className="h-4 w-4" />
@@ -234,11 +251,11 @@ function FinalResult({ payload, assignmentId, resourceId }) {
             {payload.exercise.title}
           </h1>
           {awaitingPublishedReview ? (
-            <div className="mt-7 rounded-2xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-300/20 dark:bg-violet-400/[0.07]">
-              <p className="text-lg font-black text-violet-950 dark:text-violet-100">
+            <div className="mt-7 border-y border-sky-200 bg-sky-50 p-5 dark:border-sky-300/20 dark:bg-sky-400/[0.07]">
+              <p className="text-lg font-black text-sky-950 dark:text-sky-100">
                 La valutazione dell’insegnante non è ancora stata pubblicata
               </p>
-              <p className="mt-2 text-sm font-semibold leading-6 text-violet-900/70 dark:text-violet-100/70">
+              <p className="mt-2 text-sm font-semibold leading-6 text-sky-900/70 dark:text-sky-100/70">
                 {pending > 0
                   ? `${pending} ${pending === 1 ? "attività verrà valutata" : "attività verranno valutate"} dall’insegnante: il punteggio finale comprenderà anche ${pending === 1 ? "quella valutazione" : "quelle valutazioni"}.`
                   : "Riceverai una notifica nella tua area studente quando punteggio e considerazioni saranno pronti."}
@@ -347,10 +364,12 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                   </p>
                 ) : null}
                 <div className="mt-5 grid gap-5">
-                  {section.questions.map((item) => (
-                    <article
+                  {section.questions.map((item, index) => (
+                    <ExerciseActivity
                       key={item.id}
-                      className="rounded-xl border border-ink/10 p-4 dark:border-white/10"
+                      type={item.question.type}
+                      index={index + 1}
+                      total={section.questions.length}
                     >
                       <ExerciseQuestionRenderer
                         item={item}
@@ -374,7 +393,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                         }
                         attemptId={attempt.id}
                       />
-                    </article>
+                    </ExerciseActivity>
                   ))}
                 </div>
               </section>
@@ -382,6 +401,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
           })}
         </div>
       </div>
+      </ExerciseCanvas>
     </section>
   );
 }
@@ -728,6 +748,12 @@ export default function ExercisePlayerV2() {
     sectionCompleted &&
     currentSection?.feedback_timing === "section_end" &&
     (currentSection?.questions || []).some((item) => item.result);
+  const completedThroughSection = payload.sections.reduce(
+    (sum, section, index) => sum + (index <= sectionIndex ? section.questions.length : 0),
+    0,
+  );
+  const completedBeforeSection = completedThroughSection - (currentSection?.questions.length || 0);
+  const milestone = getProgressMilestone(completedBeforeSection, completedThroughSection, currentSection?.title);
   const currentQuestionAnswered =
     currentQuestion?.question.type === "content_block" ||
     !answerIsEmpty(currentQuestion?.answer, currentQuestion?.question) ||
@@ -739,6 +765,7 @@ export default function ExercisePlayerV2() {
         description="Completa esercizio"
       />
       <section className="section-shell py-7 dark:bg-surface-950 lg:py-10">
+        <ExerciseCanvas>
         <div className="mx-auto max-w-5xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <button
@@ -760,67 +787,46 @@ export default function ExercisePlayerV2() {
               {error}
             </div>
           ) : null}
-          <header className="mt-5 rounded-3xl border border-clay/15 bg-[#fffdf9] p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]">
-                  <Sparkles className="h-4 w-4" />
-                  Sezione {sectionIndex + 1} di {payload.sections.length}
-                </span>
-                <h1 className="mt-2 text-3xl font-black text-ink dark:text-white">
-                  {currentSection.title}
-                </h1>
-                {currentSection.instructions ? (
-                  <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">
-                    {currentSection.instructions}
-                  </p>
-                ) : null}
-              </div>
-              <span className="rounded-full bg-blush px-4 py-2 text-sm font-black text-clay dark:bg-coral/10 dark:text-[#f7a98d]">
-                {progress}%
-              </span>
-            </div>
-            <div className="mt-5 h-2 overflow-hidden rounded-full bg-ink/10 dark:bg-white/10">
-              <div
-                className="h-full rounded-full bg-coral transition-all"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </header>
+          <div className="mt-5">
+            <ExerciseProgressHeader
+              title={currentSection.title}
+              instructions={currentSection.instructions}
+              progress={progress}
+              sectionIndex={sectionIndex + 1}
+              sectionTotal={payload.sections.length}
+            />
+          </div>
           {sectionCompleted ? (
             <>
-              <section className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-6 dark:border-emerald-300/20 dark:bg-emerald-400/[0.07]">
-                <p className="text-xl font-black text-emerald-950 dark:text-emerald-100">
-                  Sezione completata
-                </p>
-                {sectionRecapVisible ? (
-                  <p className="mt-2 text-sm font-semibold leading-6 text-emerald-900/70 dark:text-emerald-100/70">
-                    Qui sotto trovi le tue risposte con le correzioni di questa
-                    sezione.
-                  </p>
-                ) : null}
+              <div className="mt-5">
+              <ExerciseMilestone
+                title={milestone.title}
+                body={sectionRecapVisible
+                  ? "Qui sotto trovi le tue risposte con le correzioni di questa sezione."
+                  : milestone.body}
+              >
                 <button
                   type="button"
                   disabled={busy}
                   onClick={continueAfterSection}
-                  className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-3 text-sm font-black text-white"
+                  className="exercise-primary-action"
                 >
                   {sectionIndex >= payload.sections.length - 1
                     ? "Consegna esercizio"
                     : "Sezione successiva"}
                   <ArrowRight className="h-4 w-4" />
                 </button>
-              </section>
+              </ExerciseMilestone>
+              </div>
               {sectionRecapVisible ? (
                 <div className="mt-5 grid gap-5">
                   {currentSection.questions.map((item, index) => (
-                    <article
+                    <ExerciseActivity
                       key={item.id}
-                      className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7"
+                      type={item.question.type}
+                      index={index + 1}
+                      total={currentSection.questions.length}
                     >
-                      <p className="mb-4 text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]">
-                        Attività {index + 1}
-                      </p>
                       <ExerciseQuestionRenderer
                         item={item}
                         answer={item.answer}
@@ -835,7 +841,7 @@ export default function ExercisePlayerV2() {
                         }
                         attemptId={payload.attempt.id}
                       />
-                    </article>
+                    </ExerciseActivity>
                   ))}
                 </div>
               ) : null}
@@ -843,13 +849,12 @@ export default function ExercisePlayerV2() {
           ) : displayMode === "all_questions" ? (
             <section className="mt-5 grid gap-5">
               {currentSection.questions.map((item, index) => (
-                <article
+                <ExerciseActivity
                   key={item.id}
-                  className="rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7"
+                  type={item.question.type}
+                  index={index + 1}
+                  total={currentSection.questions.length}
                 >
-                  <p className="mb-4 text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]">
-                    Attività {index + 1}
-                  </p>
                   <ExerciseQuestionRenderer
                     item={item}
                     answer={item.answer}
@@ -858,29 +863,25 @@ export default function ExercisePlayerV2() {
                     }
                     attemptId={payload.attempt.id}
                   />
-                </article>
+                </ExerciseActivity>
               ))}
               <button
                 type="button"
                 disabled={busy}
                 onClick={finishSection}
-                className="justify-self-end rounded-full bg-coral px-6 py-3 text-sm font-black text-white dark:bg-[#ff8b6c] dark:text-surface-950"
+                className="exercise-primary-action justify-self-end"
               >
                 {busy ? "Salvataggio..." : "Completa sezione"}
               </button>
             </section>
           ) : currentQuestion ? (
-            <section className="mt-5 rounded-2xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-8">
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9678]">
-                  Attività {questionIndex + 1} di{" "}
-                  {currentSection.questions.length}
-                </p>
-                <span className="text-xs font-bold text-ink/60 dark:text-white/60">
-                  {currentQuestion.question.type}
-                </span>
-              </div>
-              <div className="mt-5">
+            <ExerciseActivity
+              className="mt-5"
+              type={currentQuestion.question.type}
+              index={questionIndex + 1}
+              total={currentSection.questions.length}
+            >
+              <div>
                 <ExerciseQuestionRenderer
                   item={currentQuestion}
                   answer={currentQuestion.answer}
@@ -905,32 +906,26 @@ export default function ExercisePlayerV2() {
                   }
                 />
               </div>
-              <div className="mt-7 flex flex-col gap-3">
-                {!currentQuestionAnswered ? (
-                  <p className="text-right text-xs font-bold text-ink/65 dark:text-white/65">
-                    Seleziona o inserisci una risposta per continuare.
-                  </p>
-                ) : null}
-                <div className="flex flex-wrap items-center justify-between gap-3">
+              <ExerciseActionBar hint={!currentQuestionAnswered ? "Seleziona o inserisci una risposta per continuare." : null}>
                   {questionIndex > 0 &&
                   currentSection.feedback_timing !== "question_end" ? (
                     <button
                       type="button"
                       disabled={busy}
                       onClick={moveToPreviousQuestion}
-                      className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-black text-ink disabled:opacity-40 dark:border-white/15 dark:bg-white/[0.06] dark:text-white"
+                      className="exercise-secondary-action"
                     >
                       <ArrowLeft className="h-4 w-4" />
                       Precedente
                     </button>
                   ) : (
-                    <span />
+                    <span aria-hidden="true" />
                   )}
                   <button
                     type="button"
                     disabled={busy || !currentQuestionAnswered}
                     onClick={moveToNextQuestion}
-                    className="inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#ff8b6c] dark:text-surface-950"
+                    className="exercise-primary-action"
                   >
                     {busy
                       ? "Controllo..."
@@ -943,11 +938,11 @@ export default function ExercisePlayerV2() {
                           : "Prossima"}
                     <ArrowRight className="h-4 w-4" />
                   </button>
-                </div>
-              </div>
-            </section>
+              </ExerciseActionBar>
+            </ExerciseActivity>
           ) : null}
         </div>
+        </ExerciseCanvas>
       </section>
     </>
   );

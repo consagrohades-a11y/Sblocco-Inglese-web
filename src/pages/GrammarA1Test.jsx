@@ -2,6 +2,14 @@ import React, { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2, Moon, RotateCcw, Sun, Target, XCircle } from 'lucide-react';
 import SEO from '../components/SEO';
+import {
+  ExerciseActionBar,
+  ExerciseActivity,
+  ExerciseCanvas,
+  ExerciseChoice,
+  ExerciseFeedbackPanel,
+  ExercisePrompt,
+} from '../components/exercises/ExerciseExperience.jsx';
 import { grammarA1Checkpoints, grammarDiagnosticTags } from '../data/grammarA1Test';
 
 const normalize = (value) => String(value || '').trim().toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, ' ');
@@ -77,14 +85,10 @@ function ItemFeedback({ item, answers }) {
   const checked = isCorrect(item, answers[item.id]);
 
   return (
-    <div className={'mt-3 rounded-lg border p-3 text-sm leading-6 ' + (checked ? 'border-moss/25 bg-mint/45 text-ink dark:bg-mint/10 dark:text-white' : 'border-coral/30 bg-blush text-ink dark:bg-coral/10 dark:text-white')}>
-      <p className="flex items-start gap-2 font-black">
-        {checked ? <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-moss dark:text-mint" /> : <XCircle className="mt-1 h-4 w-4 shrink-0 text-coral" />}
-        <span>{checked ? 'Corretto' : 'Da correggere'}</span>
-      </p>
+    <ExerciseFeedbackPanel status={checked ? 'correct' : 'incorrect'} title={checked ? 'Corretta' : 'Da rivedere'}>
       <p className="mt-1"><strong>Risposta corretta:</strong> {correctAnswer(item)}</p>
       <p className="mt-1"><strong>Perché:</strong> {item.feedback}</p>
-    </div>
+    </ExerciseFeedbackPanel>
   );
 }
 
@@ -147,24 +151,13 @@ function ChoiceSet({ exercise, answers, setAnswer, submitted }) {
       {exercise.items.map((item, index) => {
         const checked = submitted ? isCorrect(item, answers[item.id]) : null;
         return (
-          <fieldset key={item.id} className={'rounded-lg border p-4 ' + (submitted ? checked ? 'border-moss/30 bg-mint/40 dark:bg-mint/10' : 'border-coral/35 bg-blush/60 dark:bg-coral/10' : 'border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.04]')}>
+          <fieldset key={item.id} className="border-t border-ink/10 pt-4 first:border-t-0 first:pt-0 dark:border-white/10">
             <legend className="px-2 text-xs font-bold uppercase tracking-wide text-moss dark:text-mint">Domanda {index + 1}</legend>
             <p className="mt-2 text-sm font-black leading-6 text-ink dark:text-white">{item.prompt}</p>
             <BaseFormHint item={item} />
-            <div className="mt-3 grid gap-2">
+            <div className="exercise-choice-grid is-two-column mt-3">
               {item.options.map((option, optionIndex) => (
-                <label key={option} className="flex cursor-pointer gap-3 rounded-lg border border-ink/10 bg-white/80 p-3 text-sm font-semibold text-ink hover:bg-mint/30 dark:border-white/10 dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/10">
-                  <input
-                    type="radio"
-                    name={item.id}
-                    value={optionIndex}
-                    checked={String(answers[item.id]) === String(optionIndex)}
-                    onChange={(event) => setAnswer(item.id, event.target.value)}
-                    required
-                    disabled={submitted}
-                  />
-                  <span>{option}</span>
-                </label>
+                <ExerciseChoice key={option} selected={String(answers[item.id]) === String(optionIndex)} disabled={submitted} onClick={() => setAnswer(item.id, String(optionIndex))}>{option}</ExerciseChoice>
               ))}
             </div>
             {submitted ? <ItemFeedback item={item} answers={answers} /> : null}
@@ -179,11 +172,11 @@ function BlankSet({ exercise, answers, setAnswer, submitted }) {
   return (
     <div className="grid gap-3 md:grid-cols-2">
       {exercise.items.map((item) => (
-        <label key={item.id} className="rounded-lg border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.04]">
+        <label key={item.id} className="border-t border-ink/10 py-4 first:border-t-0 first:pt-0 dark:border-white/10">
           <span className="block text-sm font-black text-ink dark:text-white">{item.prompt}</span>
           <BaseFormHint item={item} />
           <input
-            className="focus-ring mt-3 w-full rounded-lg border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink dark:border-white/10 dark:bg-[#101816] dark:text-white"
+            className="focus-ring exercise-text-field mt-3 w-full px-4 py-3 text-sm font-semibold"
             value={answers[item.id] || ''}
             onChange={(event) => setAnswer(item.id, event.target.value)}
             required
@@ -201,11 +194,11 @@ function DialogueExercise({ exercise, answers, setAnswer, submitted }) {
   const itemsById = useMemo(() => Object.fromEntries(exercise.items.map((item) => [item.id, item])), [exercise.items]);
 
   return (
-    <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.04]">
-      <div className="grid gap-3">
+    <div className="exercise-dialogue">
         {exercise.lines.map((line, lineIndex) => (
-          <p key={`${line.speaker}-${lineIndex}`} className="text-base leading-8 text-ink dark:text-white">
-            <span className="mr-2 font-black text-moss dark:text-mint">{line.speaker}:</span>
+          <div key={`${line.speaker}-${lineIndex}`} className="exercise-dialogue-turn">
+            <span className="exercise-dialogue-turn__speaker">{line.speaker}</span>
+            <p className="exercise-dialogue-turn__body">
             {line.parts.map((part, partIndex) => {
               if (typeof part === 'string') return <React.Fragment key={partIndex}>{part}</React.Fragment>;
 
@@ -213,7 +206,7 @@ function DialogueExercise({ exercise, answers, setAnswer, submitted }) {
               return (
                 <React.Fragment key={part.blankId}>
                   <input
-                    className="focus-ring mx-1 inline-block w-28 rounded-lg border border-ink/15 bg-white px-3 py-1.5 text-center text-sm font-black text-ink dark:border-white/10 dark:bg-[#101816] dark:text-white"
+                    className="focus-ring exercise-inline-gap mx-1 inline-block px-3 py-1.5 text-center text-sm font-black"
                     aria-label={item.prompt}
                     value={answers[item.id] || ''}
                     onChange={(event) => setAnswer(item.id, event.target.value)}
@@ -225,9 +218,9 @@ function DialogueExercise({ exercise, answers, setAnswer, submitted }) {
                 </React.Fragment>
               );
             })}
-          </p>
+            </p>
+          </div>
         ))}
-      </div>
     </div>
   );
 }
@@ -242,12 +235,9 @@ function ExerciseCard({ exercise, answers, setAnswer, submitted, onSubmit, onRes
   };
 
   return (
-    <form id={exercise.id} onSubmit={handleSubmit} className="scroll-mt-28 rounded-2xl border border-ink/10 bg-white/90 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
+    <ExerciseActivity as="form" id={exercise.id} type={exercise.type} className="scroll-mt-28" onSubmit={handleSubmit}>
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h3 className="text-xl font-black text-ink dark:text-white">{exercise.title}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70 dark:text-white/70">{exercise.instruction}</p>
-        </div>
+        <ExercisePrompt type={exercise.type} prompt={exercise.title} instructions={exercise.instruction} />
         {score ? (
           <span className="rounded-full bg-ink px-3 py-1 text-sm font-black text-white dark:bg-mint dark:text-ink">
             {score.correct}/{score.total}
@@ -264,16 +254,16 @@ function ExerciseCard({ exercise, answers, setAnswer, submitted, onSubmit, onRes
       {submitted ? <div className="mt-5"><DiagnosticPanel items={items} answers={answers} title="Diagnosi esercizio" /></div> : null}
       {submitted && exercise.type === 'dialogue' ? <CorrectionList items={items} answers={answers} /> : null}
 
-      <div className="mt-5 flex flex-wrap gap-3">
+      <ExerciseActionBar>
         {!submitted ? (
-          <button className="focus-ring rounded-full bg-moss px-5 py-3 font-black text-white shadow-lift" type="submit">Controlla questo test</button>
+          <button className="focus-ring exercise-primary-action" type="submit">Controlla questo test</button>
         ) : (
-          <button type="button" onClick={() => onReset(exercise)} className="focus-ring inline-flex items-center gap-2 rounded-full bg-butter px-5 py-3 font-black text-ink">
+          <button type="button" onClick={() => onReset(exercise)} className="focus-ring exercise-secondary-action">
             <RotateCcw className="h-4 w-4" />Rifai test
           </button>
         )}
-      </div>
-    </form>
+      </ExerciseActionBar>
+    </ExerciseActivity>
   );
 }
 
@@ -338,6 +328,7 @@ export default function GrammarA1Test() {
     <div className={grammarDark ? 'dark' : ''}>
       <SEO title={`${checkpoint.title} | A1 Grammar`} description={`${checkpoint.title}: checkpoint A1 con esercizi, dialoghi e correzioni in italiano.`} />
       <section className="section-shell py-12 transition-colors dark:bg-surface-950">
+        <ExerciseCanvas>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link to="/grammar/a1" className="focus-ring inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-ink shadow-sm dark:bg-white/10 dark:text-white">
             <ArrowLeft className="h-4 w-4" />Torna agli argomenti A1
@@ -407,6 +398,7 @@ export default function GrammarA1Test() {
             </div>
           ) : null}
         </div>
+        </ExerciseCanvas>
       </section>
     </div>
   );

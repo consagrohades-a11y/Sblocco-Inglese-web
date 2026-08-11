@@ -181,6 +181,72 @@
   background: color-mix(in srgb, var(--sblocco-brand-navy-soft) 7%, var(--sblocco-brand-paper-raised));
 }
 
+.sblocco-teaching-block--pattern,
+.sblocco-teaching-block--language_bank,
+.sblocco-teaching-block--vocabulary,
+.sblocco-teaching-block--useful_phrases,
+.sblocco-teaching-block--pronunciation,
+.sblocco-teaching-block--dialogue {
+  border-left: 3px solid #176884;
+  background: color-mix(in srgb, #e5f1f4 46%, var(--sblocco-brand-paper-raised));
+}
+
+.dark .sblocco-teaching-block--pattern,
+.dark .sblocco-teaching-block--language_bank,
+.dark .sblocco-teaching-block--vocabulary,
+.dark .sblocco-teaching-block--useful_phrases,
+.dark .sblocco-teaching-block--pronunciation,
+.dark .sblocco-teaching-block--dialogue {
+  background: color-mix(in srgb, #176884 12%, var(--sblocco-brand-paper-raised));
+}
+
+.sblocco-teaching-block--teacher_tip,
+.sblocco-teaching-block--reflection,
+.sblocco-teaching-block--scenario {
+  border-left: 3px solid #9c6717;
+  background: color-mix(in srgb, #f7ecd2 56%, var(--sblocco-brand-paper-raised));
+}
+
+.dark .sblocco-teaching-block--teacher_tip,
+.dark .sblocco-teaching-block--reflection,
+.dark .sblocco-teaching-block--scenario {
+  background: color-mix(in srgb, #9c6717 13%, var(--sblocco-brand-paper-raised));
+}
+
+.sblocco-teaching-block--warning {
+  border-left: 3px solid #a43b2b;
+  background: color-mix(in srgb, #f8e7e1 58%, var(--sblocco-brand-paper-raised));
+}
+
+.dark .sblocco-teaching-block--warning {
+  background: color-mix(in srgb, #a43b2b 14%, var(--sblocco-brand-paper-raised));
+}
+
+.sblocco-teaching-block--culture,
+.sblocco-teaching-block--reading {
+  border-top-width: 3px;
+  border-top-color: #147765;
+  background: color-mix(in srgb, #e3f1eb 42%, var(--sblocco-brand-paper-raised));
+}
+
+.dark .sblocco-teaching-block--culture,
+.dark .sblocco-teaching-block--reading {
+  background: color-mix(in srgb, #147765 11%, var(--sblocco-brand-paper-raised));
+}
+
+.sblocco-teaching-block--section_intro,
+.sblocco-teaching-block--section_outro {
+  padding-block: clamp(2rem, 5vw, 3.8rem);
+  border-top-width: 3px;
+  border-top-color: var(--sblocco-brand-orange);
+  background: transparent;
+}
+
+.sblocco-teaching-block--section_intro h2,
+.sblocco-teaching-block--section_outro h2 {
+  font-size: clamp(2.35rem, 6vw, 4.6rem);
+}
+
 .sblocco-teaching-block--common_error {
   border-left: 3px solid var(--sblocco-brand-orange);
   background: color-mix(in srgb, var(--sblocco-brand-orange) 7%, var(--sblocco-brand-paper-raised));
@@ -260,6 +326,7 @@
 .sblocco-teaching-examples,
 .sblocco-teaching-error-pair,
 .sblocco-teaching-recap,
+.sblocco-teaching-list,
 .sblocco-teaching-contrast {
   margin: 1.4rem 0 0 3.35rem;
 }
@@ -359,6 +426,33 @@
   line-height: 1.55;
 }
 
+.sblocco-teaching-list {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sblocco-teaching-list li {
+  display: grid;
+  grid-template-columns: 1.15rem minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: start;
+  padding: 0.78rem 0;
+  border-bottom: 1px solid var(--sblocco-brand-line);
+  color: var(--sblocco-brand-muted);
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.sblocco-teaching-list svg {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.18rem;
+  color: var(--sblocco-brand-orange);
+}
+
 .sblocco-learning-continuation {
   display: flex;
   align-items: flex-end;
@@ -444,8 +538,9 @@
 
   .sblocco-teaching-block__body,
   .sblocco-teaching-examples,
-  .sblocco-teaching-error-pair,
-  .sblocco-teaching-recap,
+    .sblocco-teaching-error-pair,
+    .sblocco-teaching-recap,
+    .sblocco-teaching-list,
   .sblocco-teaching-contrast {
     margin-left: 0;
   }
