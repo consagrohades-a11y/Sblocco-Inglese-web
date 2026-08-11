@@ -6,6 +6,7 @@ import {
   recoveryModeForDays,
 } from '../src/lib/recoveryPlanEngine.js';
 import { RECOVERY_MODE } from '../src/config/recovery.js';
+import { recoveryDiagnosticQuestions } from '../src/data/recoveryDiagnostic.js';
 
 // D / E / F: exam proximity selects the configured study mode.
 assert.equal(recoveryModeForDays(18), RECOVERY_MODE.COMPLETE);
@@ -100,6 +101,23 @@ const learnerCss = readFileSync('src/styles/learnerEditorial.css', 'utf8');
 assert.match(app, /path="\/test-recupero-inglese" element={<RecoveryDiagnostic \/>}/);
 assert.match(diagnosticPage, /submitRecoveryDiagnostic\(answers\)/);
 assert.match(recoverySchema, /grant execute on function public\.submit_public_recovery_diagnostic\(jsonb, text\) to anon, authenticated/);
+assert.match(diagnosticPage, /6–8 minuti/);
+assert.match(diagnosticPage, /Non lo so/);
+assert.match(diagnosticPage, /UNKNOWN_ANSWER = 'unknown'/);
+
+const diagnosticAnswerKeys = new Map(
+  [...recoverySchema.matchAll(/\('(rdq\d{2})', '[^']+', '([a-d])', \d+\)/g)]
+    .map((match) => [match[1], match[2]]),
+);
+assert.equal(recoveryDiagnosticQuestions.length, 24);
+assert.equal(diagnosticAnswerKeys.size, 24);
+for (const question of recoveryDiagnosticQuestions) {
+  assert.equal(question.options.length, 4, `${question.id} should offer four credible alternatives.`);
+  assert.ok(
+    question.options.some((option) => option.key === diagnosticAnswerKeys.get(question.id)),
+    `${question.id} must retain the server-side correct answer key.`,
+  );
+}
 
 // B: an anonymous diagnostic can be claimed after login/purchase and reused.
 assert.match(recoveryApi, /claim_recovery_diagnostic/);
