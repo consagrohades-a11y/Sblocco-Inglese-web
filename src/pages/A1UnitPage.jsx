@@ -255,7 +255,7 @@ export default function A1UnitPage({ unitId }) {
                   type="button"
                   onClick={openFinalTest}
                   aria-pressed={isFinal}
-                  className="learner-secondary-button focus-ring"
+                  className="sblocco-learning-action sblocco-learning-action--secondary focus-ring"
                 >
                   Vai al test finale
                 </button>
