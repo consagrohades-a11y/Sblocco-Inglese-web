@@ -15,6 +15,13 @@ const statusLabels = {
   deleted: 'Eliminato',
 };
 
+const recoveryStatusLabels = {
+  onboarding: 'Onboarding',
+  active: 'Recupero attivo',
+  completed: 'Recupero completato',
+  archived: 'Recupero archiviato',
+};
+
 function formatDate(value) {
   if (!value) return '-';
 
@@ -27,10 +34,12 @@ function formatDate(value) {
 
 export default function AdminLearners() {
   const [learners, setLearners] = useState([]);
+  const [recoveryStatuses, setRecoveryStatuses] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('all');
+  const [recoveryFilter, setRecoveryFilter] = useState('all');
   const [groups, setGroups] = useState([]);
   const [groupId, setGroupId] = useState('all');
 
@@ -41,19 +50,26 @@ export default function AdminLearners() {
       setLoading(true);
       setError('');
 
-      const [{ data, error: rpcError }, loadedGroups] = await Promise.all([
+      const [learnerResponse, recoveryResponse, loadedGroups] = await Promise.all([
         supabase.rpc('admin_list_learners'),
+        supabase.rpc('admin_list_recovery_learner_statuses'),
         loadLearnerGroups().catch(() => []),
       ]);
 
       if (!active) return;
 
-      if (rpcError) {
+      if (learnerResponse.error) {
         setError('Non è stato possibile caricare gli studenti. Verifica che la migrazione admin_list_learners sia stata applicata in Supabase.');
         setLearners([]);
       } else {
-        setLearners(data ?? []);
+        setLearners(learnerResponse.data ?? []);
         setGroups(loadedGroups);
+      }
+
+      if (recoveryResponse.error) {
+        setRecoveryStatuses({});
+      } else {
+        setRecoveryStatuses(Object.fromEntries((recoveryResponse.data || []).map((row) => [row.user_id, row])));
       }
 
       setLoading(false);
@@ -73,12 +89,16 @@ export default function AdminLearners() {
       const matchesStatus = status === 'all' || learner.status === status;
       const selectedGroup = groups.find((group) => group.id === groupId);
       const matchesGroup = groupId === 'all' || (selectedGroup?.member_ids || []).includes(learner.id);
+      const recovery = recoveryStatuses[learner.id];
+      const matchesRecovery = recoveryFilter === 'all'
+        || (recoveryFilter === 'recovery' && recovery?.has_access)
+        || (recoveryFilter === 'standard' && !recovery?.has_access);
       const matchesQuery = !normalizedQuery || [learner.display_name, learner.email]
         .some((value) => String(value ?? '').toLowerCase().includes(normalizedQuery));
 
-      return matchesStatus && matchesGroup && matchesQuery;
+      return matchesStatus && matchesGroup && matchesRecovery && matchesQuery;
     });
-  }, [groupId, groups, learners, query, status]);
+  }, [groupId, groups, learners, query, recoveryFilter, recoveryStatuses, status]);
 
   return (
     <>
@@ -93,7 +113,7 @@ export default function AdminLearners() {
               <span className="eyebrow">Amministrazione</span>
               <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-4xl">Studenti</h1>
               <p className="mt-3 max-w-2xl text-base leading-7 text-ink/70 dark:text-white/65">
-                Cerca gli account learner e apri il profilo dello studente su cui vuoi lavorare.
+                Cerca gli account learner, distingui i percorsi standard da Recupero Debito e apri il profilo su cui vuoi lavorare.
               </p>
             </div>
             <Link
@@ -104,7 +124,7 @@ export default function AdminLearners() {
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-4 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-5 shadow-sm md:grid-cols-[1fr_auto_auto]">
+          <div className="mt-6 grid gap-4 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-5 shadow-sm md:grid-cols-[minmax(0,1fr)_auto_auto_auto]">
             <label className="block">
               <span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Cerca</span>
               <input
@@ -116,7 +136,7 @@ export default function AdminLearners() {
               />
             </label>
 
-            <label className="block md:min-w-48">
+            <label className="block md:min-w-44">
               <span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Stato</span>
               <select
                 value={status}
@@ -129,7 +149,21 @@ export default function AdminLearners() {
                 <option value="deleted">Eliminati</option>
               </select>
             </label>
-            <label className="block md:min-w-56">
+
+            <label className="block md:min-w-52">
+              <span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Percorso</span>
+              <select
+                value={recoveryFilter}
+                onChange={(event) => setRecoveryFilter(event.target.value)}
+                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white"
+              >
+                <option value="all">Tutti i percorsi</option>
+                <option value="recovery">Recupero Debito</option>
+                <option value="standard">Senza Recupero Debito</option>
+              </select>
+            </label>
+
+            <label className="block md:min-w-52">
               <span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Gruppo</span>
               <select value={groupId} onChange={(event) => setGroupId(event.target.value)} className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white">
                 <option value="all">Tutti i gruppi</option>
@@ -159,26 +193,38 @@ export default function AdminLearners() {
 
             {!loading && !error && filteredLearners.length > 0 ? (
               <div className="divide-y divide-ink/10 dark:divide-white/10">
-                {filteredLearners.map((learner) => (
-                  <Link
-                    key={learner.id}
-                    to={`/admin/learners/${learner.id}`}
-                    className="focus-ring grid gap-4 p-5 transition hover:bg-linen/45 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1.6fr)_auto_auto_auto] md:items-center"
-                  >
-                    <div>
-                      <p className="text-base font-black text-ink dark:text-white">{learner.display_name || 'Nome non impostato'}</p>
-                      <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">Registrato il {formatDate(learner.created_at)}</p>
-                    </div>
-                    <p className="break-all text-sm font-semibold text-ink/70 dark:text-white/65">{learner.email || '-'}</p>
-                    <p className="text-sm font-bold text-ink/65 dark:text-white/60">
-                      {languageLabels[learner.interface_language] || learner.interface_language || '-'}
-                    </p>
-                    <span className="inline-flex w-fit rounded-full border border-ink/10 bg-linen dark:border-white/10 dark:bg-white/10 dark:text-white px-3 py-1.5 text-xs font-black text-ink dark:text-white">
-                      {statusLabels[learner.status] || learner.status}
-                    </span>
-                    <span className="text-sm font-black text-moss">Apri profilo</span>
-                  </Link>
-                ))}
+                {filteredLearners.map((learner) => {
+                  const recovery = recoveryStatuses[learner.id];
+                  return (
+                    <Link
+                      key={learner.id}
+                      to={`/admin/learners/${learner.id}`}
+                      className="focus-ring grid gap-4 p-5 transition hover:bg-linen/45 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1.5fr)_auto_auto_auto] md:items-center"
+                    >
+                      <div>
+                        <p className="text-base font-black text-ink dark:text-white">{learner.display_name || 'Nome non impostato'}</p>
+                        <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">Registrato il {formatDate(learner.created_at)}</p>
+                      </div>
+                      <p className="break-all text-sm font-semibold text-ink/70 dark:text-white/65">{learner.email || '-'}</p>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="inline-flex w-fit rounded-full border border-ink/10 bg-linen px-3 py-1.5 text-xs font-black text-ink dark:border-white/10 dark:bg-white/10 dark:text-white">
+                          {statusLabels[learner.status] || learner.status}
+                        </span>
+                        {recovery?.has_access ? (
+                          <span className="inline-flex w-fit rounded-full border border-coral/20 bg-blush px-3 py-1.5 text-xs font-black text-clay dark:bg-coral/10 dark:text-[#f7a98d]">
+                            Recupero Debito
+                          </span>
+                        ) : null}
+                      </div>
+                      <p className="text-sm font-bold text-ink/65 dark:text-white/60">
+                        {recovery?.has_access
+                          ? recoveryStatusLabels[recovery.enrollment_status] || 'Accesso pronto'
+                          : languageLabels[learner.interface_language] || learner.interface_language || '-'}
+                      </p>
+                      <span className="text-sm font-black text-moss">Apri profilo</span>
+                    </Link>
+                  );
+                })}
               </div>
             ) : null}
           </div>
