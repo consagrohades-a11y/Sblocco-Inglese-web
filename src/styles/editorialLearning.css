@@ -1,0 +1,441 @@
+:root {
+  --sblocco-brand-navy: #0e3045;
+  --sblocco-brand-navy-soft: #17465f;
+  --sblocco-brand-orange: #d34c1a;
+  --sblocco-brand-paper: #f9f0e8;
+  --sblocco-brand-paper-raised: #fffaf5;
+  --sblocco-brand-paper-deep: #f1e5da;
+  --sblocco-brand-line: rgba(14, 48, 69, 0.13);
+  --sblocco-brand-muted: rgba(14, 48, 69, 0.68);
+  --sblocco-display-font: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+}
+
+.dark {
+  --sblocco-brand-navy: #f8f1e9;
+  --sblocco-brand-navy-soft: #cbd9df;
+  --sblocco-brand-orange: #ef5b28;
+  --sblocco-brand-paper: #08283d;
+  --sblocco-brand-paper-raised: #0d334b;
+  --sblocco-brand-paper-deep: #0a2d44;
+  --sblocco-brand-line: rgba(231, 241, 246, 0.11);
+  --sblocco-brand-muted: rgba(231, 241, 246, 0.68);
+}
+
+.sblocco-learning-surface {
+  color: var(--sblocco-brand-navy);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255, 255, 255, 0.72), transparent 28rem),
+    linear-gradient(180deg, #fbf4ed 0%, var(--sblocco-brand-paper) 68%, #f7ece4 100%);
+}
+
+.dark .sblocco-learning-surface {
+  background:
+    radial-gradient(circle at 86% 4%, rgba(55, 113, 143, 0.2), transparent 29rem),
+    radial-gradient(circle at 10% 18%, rgba(239, 91, 40, 0.045), transparent 25rem),
+    linear-gradient(180deg, #07263a 0%, #082b40 58%, #07263a 100%);
+}
+
+.sblocco-learning-display {
+  margin: 0;
+  font-family: var(--sblocco-display-font);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+
+.sblocco-learning-eyebrow {
+  margin: 0;
+  color: var(--sblocco-brand-orange);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sblocco-lesson-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(15rem, 0.92fr);
+  min-height: 21rem;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1.25rem, 4vw, 3.5rem);
+  border: 1px solid var(--sblocco-brand-line);
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--sblocco-brand-paper-raised) 94%, transparent);
+}
+
+.sblocco-lesson-hero--compact {
+  min-height: 17rem;
+  padding-block: clamp(1.6rem, 4vw, 3.2rem);
+}
+
+.sblocco-lesson-hero__copy {
+  position: relative;
+  z-index: 2;
+  max-width: 45rem;
+}
+
+.sblocco-lesson-hero h1 {
+  max-width: 12ch;
+  margin-top: 0.7rem;
+  font-size: clamp(3rem, 7vw, 5.8rem);
+  line-height: 0.91;
+}
+
+.sblocco-lesson-hero--compact h1 {
+  font-size: clamp(2.6rem, 6vw, 4.7rem);
+}
+
+.sblocco-lesson-hero__intro {
+  max-width: 39rem;
+  margin: 1.25rem 0 0;
+  color: var(--sblocco-brand-muted);
+  font-size: 0.98rem;
+  font-weight: 540;
+  line-height: 1.75;
+}
+
+.sblocco-lesson-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  margin-top: 1.4rem;
+  color: var(--sblocco-brand-muted);
+  font-size: 0.75rem;
+  font-weight: 720;
+}
+
+.sblocco-lesson-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+}
+
+.sblocco-lesson-meta svg,
+.sblocco-learning-action svg {
+  width: 1rem;
+  height: 1rem;
+  stroke-width: 1.8;
+}
+
+.sblocco-lesson-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+
+.sblocco-lesson-hero__art {
+  position: relative;
+  align-self: stretch;
+  min-height: 14rem;
+}
+
+.sblocco-lesson-hero__shape {
+  position: absolute;
+  top: 8%;
+  right: 12%;
+  width: min(14rem, 72%);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sblocco-brand-orange) 10%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--sblocco-brand-orange) 9%, transparent);
+}
+
+.sblocco-lesson-hero__art img {
+  position: absolute;
+  right: -0.75rem;
+  bottom: -1.2rem;
+  width: min(25rem, 100%);
+  height: auto;
+  object-fit: contain;
+  filter: saturate(0.88) contrast(0.98);
+}
+
+.dark .sblocco-lesson-hero__art img {
+  filter: saturate(0.82) brightness(0.88) contrast(1.03);
+}
+
+.sblocco-teaching-block {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  border-top: 1px solid var(--sblocco-brand-line);
+  border-bottom: 1px solid var(--sblocco-brand-line);
+  color: var(--sblocco-brand-navy);
+}
+
+.sblocco-teaching-block--explanation,
+.sblocco-teaching-block--examples,
+.sblocco-teaching-block--contrast {
+  background: color-mix(in srgb, var(--sblocco-brand-paper-raised) 68%, transparent);
+}
+
+.sblocco-teaching-block--rule {
+  border-left: 3px solid var(--sblocco-brand-orange);
+  background: color-mix(in srgb, var(--sblocco-brand-orange) 6%, var(--sblocco-brand-paper-raised));
+}
+
+.sblocco-teaching-block--note {
+  background: color-mix(in srgb, var(--sblocco-brand-navy-soft) 7%, var(--sblocco-brand-paper-raised));
+}
+
+.sblocco-teaching-block--common_error {
+  border-left: 3px solid var(--sblocco-brand-orange);
+  background: color-mix(in srgb, var(--sblocco-brand-orange) 7%, var(--sblocco-brand-paper-raised));
+}
+
+.sblocco-teaching-block--recap {
+  color: #fffaf5;
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #0e3045;
+}
+
+.dark .sblocco-teaching-block--recap {
+  background: #0b354e;
+}
+
+.sblocco-teaching-block__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.sblocco-teaching-block__icon {
+  display: grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--sblocco-brand-line);
+  border-radius: 50%;
+  color: var(--sblocco-brand-orange);
+  background: color-mix(in srgb, var(--sblocco-brand-paper-raised) 88%, transparent);
+}
+
+.sblocco-teaching-block__icon svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  stroke-width: 1.8;
+}
+
+.sblocco-teaching-block h2 {
+  margin-top: 0.35rem;
+  font-size: clamp(1.8rem, 4vw, 3.15rem);
+  line-height: 1;
+}
+
+.sblocco-teaching-block__body {
+  max-width: 48rem;
+  margin: 1.3rem 0 0 3.35rem;
+  color: var(--sblocco-brand-muted);
+  font-size: 0.96rem;
+  font-weight: 520;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.sblocco-teaching-block--recap .sblocco-learning-eyebrow,
+.sblocco-teaching-block--recap .sblocco-teaching-block__body {
+  color: rgba(255, 250, 245, 0.74);
+}
+
+.sblocco-teaching-block--recap .sblocco-teaching-block__icon {
+  color: #fffaf5;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.sblocco-teaching-examples,
+.sblocco-teaching-error-pair,
+.sblocco-teaching-recap,
+.sblocco-teaching-contrast {
+  margin: 1.4rem 0 0 3.35rem;
+}
+
+.sblocco-teaching-examples {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.sblocco-teaching-examples p {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border-left: 2px solid color-mix(in srgb, var(--sblocco-brand-orange) 65%, transparent);
+  background: color-mix(in srgb, var(--sblocco-brand-paper-deep) 52%, transparent);
+  font-family: var(--sblocco-display-font);
+  font-size: 1.15rem;
+  line-height: 1.45;
+}
+
+.sblocco-teaching-contrast {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--sblocco-brand-line);
+  background: var(--sblocco-brand-line);
+}
+
+.sblocco-teaching-contrast > div {
+  min-height: 8rem;
+  padding: 1rem;
+  background: var(--sblocco-brand-paper-raised);
+}
+
+.sblocco-teaching-contrast span {
+  color: var(--sblocco-brand-orange);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sblocco-teaching-contrast p {
+  margin: 0.55rem 0 0;
+  color: var(--sblocco-brand-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.sblocco-teaching-error-pair {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.sblocco-teaching-error-pair p {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--sblocco-brand-line);
+  font-family: var(--sblocco-display-font);
+  font-size: 1.15rem;
+}
+
+.sblocco-teaching-error-pair svg,
+.sblocco-teaching-recap svg {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.22rem;
+  flex: 0 0 auto;
+}
+
+.sblocco-teaching-error-pair__wrong {
+  color: color-mix(in srgb, var(--sblocco-brand-orange) 82%, #7a1f12);
+}
+
+.sblocco-teaching-error-pair__correct {
+  color: color-mix(in srgb, var(--sblocco-brand-navy) 88%, #1d7668);
+}
+
+.sblocco-teaching-recap {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0;
+  list-style: none;
+}
+
+.sblocco-teaching-recap li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.sblocco-learning-continuation {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(1.5rem, 4vw, 2.8rem) 0;
+  border-top: 1px solid var(--sblocco-brand-line);
+}
+
+.sblocco-learning-continuation h2 {
+  margin-top: 0.4rem;
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  line-height: 0.98;
+}
+
+.sblocco-learning-continuation p:not(.sblocco-learning-eyebrow) {
+  max-width: 42rem;
+  margin: 0.8rem 0 0;
+  color: var(--sblocco-brand-muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.sblocco-learning-continuation__actions {
+  flex: 0 0 auto;
+}
+
+.sblocco-learning-action {
+  display: inline-flex;
+  min-height: 2.9rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1.05rem;
+  border-radius: 0.2rem;
+  color: #fffaf5;
+  background: var(--sblocco-brand-orange);
+  box-shadow: 0 0.8rem 1.8rem rgba(211, 76, 26, 0.13);
+  font-size: 0.8rem;
+  font-weight: 720;
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+
+.sblocco-learning-action:hover {
+  color: white;
+  background: #b83e13;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 800px) {
+  .sblocco-lesson-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 1.5rem 1rem 0;
+  }
+
+  .sblocco-lesson-hero__art {
+    min-height: 11rem;
+  }
+
+  .sblocco-lesson-hero__art img {
+    right: 0;
+    width: min(20rem, 92%);
+  }
+
+  .sblocco-teaching-block {
+    padding: 1.2rem 0.9rem;
+  }
+
+  .sblocco-teaching-block__body,
+  .sblocco-teaching-examples,
+  .sblocco-teaching-error-pair,
+  .sblocco-teaching-recap,
+  .sblocco-teaching-contrast {
+    margin-left: 0;
+  }
+
+  .sblocco-teaching-block__body {
+    margin-top: 1rem;
+  }
+
+  .sblocco-teaching-contrast {
+    grid-template-columns: 1fr;
+  }
+
+  .sblocco-learning-continuation {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
