@@ -72,7 +72,8 @@ assert.match(checkout, /already_owned/);
 assert.match(checkout, /offer_not_configured/);
 assert.doesNotMatch(checkout, /body\.(amount|currency|price|priceId|accessTarget)/);
 assert.doesNotMatch(checkout, /subscription|payment_intent_data/);
-assert.doesNotMatch(checkout, /payment_method_types/);
+assert.match(checkout, /offer\.id === 'recupero-debito' \? \{ payment_method_types: \['card', 'klarna'\] \} : \{\}/);
+assert.equal((checkout.match(/payment_method_types/g) || []).length, 1);
 
 assert.match(webhook, /bodyParser: false/);
 assert.match(webhook, /webhooks\.constructEvent/);
