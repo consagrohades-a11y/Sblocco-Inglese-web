@@ -6,6 +6,7 @@ import { AuthProvider } from './auth/AuthContext.jsx';
 import { installDownloadCompatibility } from './lib/downloadCompatibility.js';
 import { validateSupabaseConfig } from './lib/supabaseConfig.js';
 import './index.css';
+import './styles/editorialLearning.css';
 import './styles/downloadCompatibility.css';
 import './styles/question-editor-layout.css';
 
