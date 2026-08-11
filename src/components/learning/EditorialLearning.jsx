@@ -81,7 +81,7 @@ export function EditorialAction({ as: Component = 'button', children, className 
   );
 }
 
-export function EditorialTeachingBlock({ content = {}, prompt = '', body = null }) {
+export function EditorialTeachingBlock({ content = {}, prompt = '', instructions = '', body = null }) {
   const type = content.presentation || 'explanation';
   const heading = content.heading || prompt;
   const eyebrow = content.eyebrow || (
@@ -101,7 +101,7 @@ export function EditorialTeachingBlock({ content = {}, prompt = '', body = null 
       <EditorialLessonHero
         eyebrow={content.eyebrow || 'Lezione'}
         title={heading || 'Prima di iniziare'}
-        intro={content.body || ''}
+        intro={content.body || instructions || ''}
         meta={cleanList(content.meta).map((label, index) => ({ label, icon: index === 0 ? 'time' : null }))}
         compact
       />
@@ -117,6 +117,7 @@ export function EditorialTeachingBlock({ content = {}, prompt = '', body = null 
         <div>
           <p className="sblocco-learning-eyebrow">{eyebrow}</p>
           {heading ? <h2 className="sblocco-learning-display">{heading}</h2> : null}
+          {instructions ? <p className="sblocco-teaching-block__instructions">{instructions}</p> : null}
         </div>
       </div>
 
