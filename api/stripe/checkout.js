@@ -35,7 +35,12 @@ export default async function handler(request, response) {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       integration_identifier: 'sblocco-pathway-rkqmvxzt',
-      ...(offer.id === 'recupero-debito' ? { payment_method_types: ['card', 'klarna', 'satispay'] } : {}),
+      ...(offer.id === 'recupero-debito'
+        ? {
+            payment_method_types: ['card', 'klarna', 'satispay'],
+            wallet_options: { link: { display: 'never' } },
+          }
+        : {}),
       line_items: [{ price: offer.stripePriceId, quantity: 1 }],
       client_reference_id: auth.user.id,
       customer_email: auth.user.email || undefined,
