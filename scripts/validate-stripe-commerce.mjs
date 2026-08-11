@@ -72,7 +72,7 @@ assert.match(checkout, /already_owned/);
 assert.match(checkout, /offer_not_configured/);
 assert.doesNotMatch(checkout, /body\.(amount|currency|price|priceId|accessTarget)/);
 assert.doesNotMatch(checkout, /subscription|payment_intent_data/);
-assert.match(checkout, /offer\.id === 'recupero-debito' \? \{ payment_method_types: \['card', 'klarna'\] \} : \{\}/);
+assert.match(checkout, /offer\.id === 'recupero-debito' \? \{ payment_method_types: \['card', 'klarna', 'satispay'\] \} : \{\}/);
 assert.equal((checkout.match(/payment_method_types/g) || []).length, 1);
 
 assert.match(webhook, /bodyParser: false/);
