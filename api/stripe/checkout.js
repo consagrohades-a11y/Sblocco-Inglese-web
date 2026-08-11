@@ -34,6 +34,7 @@ export default async function handler(request, response) {
     const stripe = getStripe();
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
+      integration_identifier: 'sblocco-pathway-rkqmvxzt',
       line_items: [{ price: offer.stripePriceId, quantity: 1 }],
       client_reference_id: auth.user.id,
       customer_email: auth.user.email || undefined,
