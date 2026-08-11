@@ -17,17 +17,24 @@ function publicPaymentLink(key) {
 export const interviewOffers = [
   {
     id: 'interview-kit',
+    slug: 'kit',
     offerId: 'colloquio-essential',
     name: 'Kit Colloquio',
     price: 19,
     currency: 'EUR',
-    badge: 'Essenziale',
-    type: 'digital',
-    active: true,
+    badge: 'Prepara',
+    commercialRole: 'PREPARA',
+    hubCta: 'Guarda cosa include',
+    detailPath: '/percorsi/colloquio/kit',
+    type: 'resource',
+    status: 'preview',
+    active: false,
     featured: false,
     paymentUrl: publicPaymentLink('VITE_STRIPE_INTERVIEW_KIT_URL'),
-    positioning: 'Per preparare velocemente struttura, lingua e domande più comuni.',
-    cta: 'Prendi il Kit',
+    positioning: 'Domande, strutture, espressioni e workbook per organizzare la preparazione.',
+    cta: 'Ottieni il Kit — 19 €',
+    shortDescription: 'Risorse per preparare rapidamente domande, esempi e lingua utile.',
+    formatItems: ['Question Bank', 'Answer Builders', 'STAR', 'Emergency English', 'Workbook'],
     includes: [
       'Question bank e answer frameworks',
       'Tell me about yourself builder',
@@ -39,17 +46,25 @@ export const interviewOffers = [
   },
   {
     id: 'interview-core',
+    slug: 'sblocco-colloquio',
     offerId: 'colloquio-complete',
     name: 'Sblocco Colloquio',
     price: 49,
     currency: 'EUR',
-    badge: 'Più scelto',
-    type: 'digital',
+    badge: 'Allenati',
+    commercialRole: 'ALLENATI',
+    recommended: true,
+    hubCta: 'Esplora il percorso',
+    detailPath: '/percorsi/colloquio/sblocco-colloquio',
+    type: 'training',
+    status: 'active',
     active: true,
     featured: true,
     paymentUrl: publicPaymentLink('VITE_STRIPE_INTERVIEW_CORE_URL'),
-    positioning: 'Il sistema completo per allenarti a produrre le risposte, non solo a studiarle.',
-    cta: 'Inizia Sblocco Colloquio',
+    positioning: 'Speaking, esercizi attivi, Interview File e mock interview per allenarti prima del colloquio.',
+    cta: 'Acquista Sblocco Colloquio — 49 €',
+    shortDescription: 'Il sistema interattivo e self-guided per allenare speaking e performance.',
+    formatItems: ['8 moduli', 'Speaking', 'Interview File', 'Story Bank', '3 mock interview'],
     includes: [
       'Percorso self-guided completo',
       'Scenari HR, behavioral e motivazionali',
@@ -61,24 +76,30 @@ export const interviewOffers = [
   },
   {
     id: 'interview-complete',
+    slug: 'complete',
     offerId: 'colloquio-complete-plus',
     name: 'Sblocco Colloquio Complete',
     price: 79,
     currency: 'EUR',
-    badge: 'Miglior valore',
+    badge: 'Prepara + allenati',
+    commercialRole: 'PREPARA + ALLENATI + SPECIALIZZA',
+    hubCta: 'Scopri Complete',
+    detailPath: '/percorsi/colloquio/complete',
     type: 'bundle',
-    active: true,
+    status: 'comingSoon',
+    active: false,
     featured: true,
-    bestValue: true,
+    bestValue: false,
     paymentUrl: publicPaymentLink('VITE_STRIPE_INTERVIEW_COMPLETE_URL'),
-    positioning: 'Percorso completo e materiali extra per prepararti in modo più specifico.',
-    cta: 'Scegli Complete',
+    positioning: 'Il percorso, il Kit e la preparazione specialistica in un unico sistema.',
+    cta: 'Scegli Complete — 79 €',
+    shortDescription: 'Preparazione, allenamento e materiali specialistici in un solo sistema.',
+    formatItems: ['Kit', 'Training', 'Interview File', 'Specialised practice', 'Mock interview'],
     includes: [
       'Tutto Sblocco Colloquio',
       'Kit Colloquio incluso',
-      'Due role pack a scelta quando disponibili',
-      'Mock interview aggiuntive',
-      'Risorse extra di preparazione',
+      'Preparazione specifica per ruolo al lancio',
+      'Pratica aggiuntiva al lancio',
     ],
   },
 ];
@@ -117,11 +138,20 @@ export const interviewRolePacks = [
   price: 14,
   currency: 'EUR',
   type: 'add-on',
+  status: 'comingSoon',
   active: false,
   comingSoon: true,
-  bundleEligible: true,
+  includedInComplete: false,
   paymentUrl: publicPaymentLink(`VITE_STRIPE_INTERVIEW_${slug.toUpperCase()}_URL`),
 }));
+
+export function getInterviewProductBySlug(slug) {
+  return interviewOffers.find((product) => product.slug === slug) || null;
+}
+
+export function isInterviewProductPurchasable(product) {
+  return Boolean(product?.status === 'active' && product.active);
+}
 
 export const interviewPrivateSimulation = {
   id: 'interview-private-simulation',
@@ -148,4 +178,3 @@ export function formatInterviewPrice(product) {
   }).format(product.price);
   return product.pricePrefix ? `${product.pricePrefix} ${price}` : price;
 }
-

@@ -1,7 +1,7 @@
 const offerDefinitions = [
-  ['colloquio-essential', 'colloquio', 'Essenziale', 'COLLOQUIO_ESSENTIAL'],
-  ['colloquio-complete', 'colloquio', 'Percorso completo', 'COLLOQUIO_COMPLETE'],
-  ['colloquio-complete-plus', 'colloquio', 'Sblocco Colloquio Complete', 'COLLOQUIO_COMPLETE_PLUS'],
+  ['colloquio-essential', 'colloquio', 'Kit Colloquio', 'COLLOQUIO_ESSENTIAL', false],
+  ['colloquio-complete', 'colloquio', 'Sblocco Colloquio', 'COLLOQUIO_COMPLETE', true],
+  ['colloquio-complete-plus', 'colloquio', 'Sblocco Colloquio Complete', 'COLLOQUIO_COMPLETE_PLUS', false],
   ['lavorare-essential', 'lavorare', 'Essenziale', 'LAVORARE_ESSENTIAL'],
   ['lavorare-complete', 'lavorare', 'Percorso completo', 'LAVORARE_COMPLETE'],
   ['parlare-essential', 'parlare', 'Essenziale', 'PARLARE_ESSENTIAL'],
@@ -11,13 +11,13 @@ const offerDefinitions = [
   ['basi-essential', 'basi', 'Essenziale', 'BASI_ESSENTIAL'],
   ['basi-complete', 'basi', 'Percorso completo', 'BASI_COMPLETE'],
   ['recupero-debito', 'recupero-debito', 'Recupero Debito Inglese', 'RECUPERO_DEBITO'],
-].map(([id, pathway, name, envKey]) => ({
+].map(([id, pathway, name, envKey, active = true]) => ({
   id,
   pathway,
   name,
   envKey,
   accessType: 'digital_product',
-  active: true,
+  active,
 }));
 
 const offerIndex = new Map(offerDefinitions.map((offer) => [offer.id, offer]));

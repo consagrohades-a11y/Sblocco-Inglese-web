@@ -89,6 +89,9 @@ const RecoveryReadiness = lazy(() => import('./pages/RecoveryReadiness'));
 const RecoverySession = lazy(() => import('./pages/RecoverySession'));
 const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
 const PathwayPage = lazy(() => import('./pages/PathwayPage'));
+const InterviewKitPage = lazy(() => import('./pages/InterviewKitPage'));
+const InterviewProductPage = lazy(() => import('./pages/InterviewProductPage'));
+const InterviewCompletePage = lazy(() => import('./pages/InterviewCompletePage'));
 const CheckoutSuccess = lazy(() => import('./pages/CheckoutSuccess'));
 const CheckoutCancel = lazy(() => import('./pages/CheckoutCancel'));
 
@@ -120,7 +123,7 @@ export default function App() {
   const location = useLocation();
   const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
   const isHomepage = location.pathname === '/';
-  const isColloquioPathway = location.pathname === '/percorsi/colloquio';
+  const isColloquioPathway = location.pathname.startsWith('/percorsi/colloquio');
   const isRecoveryExperience = location.pathname === '/dashboard'
     || location.pathname.startsWith('/recupero-debito')
     || location.pathname === '/test-recupero-inglese'
@@ -138,6 +141,9 @@ export default function App() {
             <Route path="/simulazione-39" element={<Simulation />} />
             <Route path="/percorsi" element={<Percorsi />} />
             <Route path="/percorsi/colloquio" element={<PathwayPage pathwayId="colloquio" />} />
+            <Route path="/percorsi/colloquio/kit" element={<InterviewKitPage />} />
+            <Route path="/percorsi/colloquio/sblocco-colloquio" element={<InterviewProductPage />} />
+            <Route path="/percorsi/colloquio/complete" element={<InterviewCompletePage />} />
             <Route path="/percorsi/lavorare" element={<PathwayPage pathwayId="lavorare" />} />
             <Route path="/percorsi/parlare" element={<PathwayPage pathwayId="parlare" />} />
             <Route path="/percorsi/estero" element={<PathwayPage pathwayId="estero" />} />
