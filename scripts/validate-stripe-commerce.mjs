@@ -72,10 +72,13 @@ assert.match(checkout, /already_owned/);
 assert.match(checkout, /offer_not_configured/);
 assert.doesNotMatch(checkout, /body\.(amount|currency|price|priceId|accessTarget)/);
 assert.doesNotMatch(checkout, /subscription|payment_intent_data/);
+assert.match(checkout, /locale: 'it'/);
+assert.match(checkout, /adaptive_pricing: \{ enabled: false \}/);
 assert.match(checkout, /payment_method_types: \['card', 'klarna', 'satispay'\]/);
 assert.match(checkout, /wallet_options: \{ link: \{ display: 'never' \} \}/);
 assert.equal((checkout.match(/payment_method_types/g) || []).length, 1);
 assert.equal((checkout.match(/wallet_options/g) || []).length, 1);
+assert.equal((checkout.match(/adaptive_pricing/g) || []).length, 1);
 
 assert.match(webhook, /bodyParser: false/);
 assert.match(webhook, /webhooks\.constructEvent/);
