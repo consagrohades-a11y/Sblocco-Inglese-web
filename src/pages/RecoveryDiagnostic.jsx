@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, CheckCircle2, ClipboardCheck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, CircleHelp, Clock3 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import {
@@ -8,6 +8,8 @@ import {
 } from '../data/recoveryDiagnostic.js';
 import { submitRecoveryDiagnostic } from '../lib/recoveryApi.js';
 import '../styles/learnerEditorial.css';
+
+const UNKNOWN_ANSWER = 'unknown';
 
 function ResultGroup({ title, items }) {
   return (
@@ -76,6 +78,16 @@ export default function RecoveryDiagnostic() {
               <p className="learner-diagnostic-card__intro">
                 24 domande brevi su strutture che ricorrono spesso nei programmi delle superiori. Alla fine vedrai cosa è già abbastanza solido, cosa va ripassato e quali aree hanno la priorità.
               </p>
+              <div className="learner-diagnostic-facts" aria-label="Informazioni sul test">
+                <div className="learner-diagnostic-fact">
+                  <Clock3 aria-hidden="true" size={21} />
+                  <span><strong>6–8 minuti</strong><small>Tempo stimato</small></span>
+                </div>
+                <div className="learner-diagnostic-fact">
+                  <CircleHelp aria-hidden="true" size={21} />
+                  <span><strong>Puoi scegliere “Non lo so”</strong><small>Meglio non indovinare: il risultato sarà più utile.</small></span>
+                </div>
+              </div>
               <div className="learner-plan-update">
                 <strong>Non è una previsione del voto.</strong> È un primo quadro di preparazione che, se poi attivi Recupero Debito Inglese, viene conservato e usato per costruire il piano.
               </div>
@@ -139,6 +151,16 @@ export default function RecoveryDiagnostic() {
                       <span>{option.key}</span><span>{option.text}</span>
                     </button>
                   ))}
+                  <button
+                    type="button"
+                    role="radio"
+                    aria-checked={selected === UNKNOWN_ANSWER}
+                    className={`learner-question__unknown focus-ring ${selected === UNKNOWN_ANSWER ? 'is-selected' : ''}`}
+                    onClick={() => setAnswers((current) => ({ ...current, [question.id]: UNKNOWN_ANSWER }))}
+                  >
+                    <CircleHelp aria-hidden="true" size={18} />
+                    <span>Non lo so</span>
+                  </button>
                 </div>
               </section>
               {error ? <p className="learner-error" role="alert">{error}</p> : null}

@@ -600,6 +600,30 @@
   line-height: 1.65;
 }
 
+.learner-diagnostic-facts {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.8fr) minmax(16rem, 1.4fr);
+  gap: 0.7rem;
+  margin-top: 1.25rem;
+}
+
+.learner-diagnostic-fact {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 4.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--learner-orange) 20%, var(--learner-line));
+  border-radius: 0.85rem;
+  color: var(--learner-navy);
+  background: color-mix(in srgb, var(--learner-soft-orange) 70%, var(--learner-paper-raised));
+}
+
+.learner-diagnostic-fact svg { flex: 0 0 auto; color: var(--learner-orange); }
+.learner-diagnostic-fact span { display: grid; gap: 0.14rem; }
+.learner-diagnostic-fact strong { font-size: 0.88rem; line-height: 1.25; }
+.learner-diagnostic-fact small { color: var(--learner-muted); font-size: 0.72rem; line-height: 1.4; }
+
 .learner-form-section {
   margin-top: 1.6rem;
   padding-top: 1.4rem;
@@ -687,6 +711,32 @@
 .learner-question__option:hover,
 .learner-question__option.is-selected { border-color: rgba(211, 76, 26, 0.5); background: var(--learner-soft-orange); }
 .learner-question__option span:first-child { display: grid; width: 1.8rem; height: 1.8rem; place-items: center; border-radius: 50%; background: var(--learner-soft-blue); font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
+
+.learner-question__unknown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.8rem 1rem;
+  border: 1px dashed color-mix(in srgb, var(--learner-navy) 30%, var(--learner-line));
+  border-radius: 0.7rem;
+  color: var(--learner-muted);
+  background: color-mix(in srgb, var(--learner-soft-blue) 50%, transparent);
+  font-weight: 750;
+}
+
+.learner-question__unknown:hover,
+.learner-question__unknown.is-selected {
+  border-color: color-mix(in srgb, var(--learner-orange) 60%, var(--learner-line));
+  color: var(--learner-navy);
+  background: var(--learner-soft-orange);
+}
+
+@media (max-width: 38rem) {
+  .learner-diagnostic-facts { grid-template-columns: 1fr; }
+}
 
 .learner-result-score {
   display: flex;
