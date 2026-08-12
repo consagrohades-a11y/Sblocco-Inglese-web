@@ -1,0 +1,2088 @@
+{
+  "schema_version": 2,
+  "entity_type": "bundle",
+  "questions": [],
+  "pools": [],
+  "exercises": [
+    {
+      "client_key": "recovery_articles_recover",
+      "title": "Articles — Recupera",
+      "description": "Costruisci il sistema a/an, the e zero article dal significato.",
+      "instructions": "Decidi se il referente è nuovo, identificabile o generale.",
+      "instruction_language": "it",
+      "level": "A1+",
+      "topic": "articles",
+      "estimated_minutes": 12,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "question_end",
+        "show_score": false,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_articles_recover_section",
+          "title": "Recupera",
+          "instructions": "Decidi se il referente è nuovo, identificabile o generale.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_articles_recover_teaching",
+              "type": "content_block",
+              "title": "Articles: scegli dal riferimento",
+              "prompt": "Prima di esercitarti",
+              "instructions": "Leggi le regole e osserva gli esempi.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "core",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose a/an, the or zero article from countability and discourse reference.",
+              "difficulty": "support",
+              "content": {
+                "educational_schema_version": 1,
+                "template_id": "educational-content-block-v1",
+                "variant": "grammar",
+                "body": "Gli articoli non dipendono solo dal nome: dipendono da come lo presenti nel discorso.",
+                "intro": "Per un italofono il problema principale è trasferire automaticamente l'articolo italiano. Chiediti: è una cosa nuova? è identificabile? sto parlando della categoria in generale?",
+                "sections": [
+                  {
+                    "key": "a_an",
+                    "type": "rule",
+                    "title": "A / an: una cosa non ancora identificata",
+                    "body": "Usa a/an con un nome singolare numerabile quando presenti una persona o cosa non ancora specificata. A/an dipende dal suono che segue.",
+                    "examples": [
+                      {
+                        "text": "I saw a dog outside school.",
+                        "highlight": [
+                          "a dog"
+                        ]
+                      },
+                      {
+                        "text": "She has an exam tomorrow.",
+                        "highlight": [
+                          "an exam"
+                        ]
+                      },
+                      {
+                        "text": "He is a university student.",
+                        "highlight": [
+                          "a university student"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "key": "known",
+                    "type": "comparison",
+                    "title": "Prima menzione e riferimento noto",
+                    "body": "Alla prima menzione puoi introdurre qualcosa con a/an. Quando è già chiaro quale elemento intendi, usa the.",
+                    "correct": {
+                      "text": "I bought a notebook. The notebook is blue.",
+                      "highlight": [
+                        "a notebook",
+                        "The notebook"
+                      ]
+                    },
+                    "incorrect": {
+                      "text": "I bought the notebook. The notebook is blue. (senza un riferimento precedente o condiviso)",
+                      "highlight": [
+                        "the notebook"
+                      ]
+                    }
+                  },
+                  {
+                    "key": "specific",
+                    "type": "rule",
+                    "title": "The: riferimento specifico o condiviso",
+                    "body": "Usa the quando chi ascolta può identificare il referente: è già stato nominato, è specificato dal contesto o è unico nella situazione.",
+                    "examples": [
+                      {
+                        "text": "Close the door, please.",
+                        "highlight": [
+                          "the door"
+                        ]
+                      },
+                      {
+                        "text": "The teacher we met yesterday is new.",
+                        "highlight": [
+                          "The teacher"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "key": "zero",
+                    "type": "rule",
+                    "title": "Zero article: categorie in generale",
+                    "body": "Quando parli in generale di una categoria con un plurale o un nome non numerabile, spesso non usi articolo.",
+                    "examples": [
+                      {
+                        "text": "Dogs need exercise.",
+                        "highlight": [
+                          "Dogs"
+                        ]
+                      },
+                      {
+                        "text": "Music helps me study.",
+                        "highlight": [
+                          "Music"
+                        ]
+                      },
+                      {
+                        "text": "Students often use public transport.",
+                        "highlight": [
+                          "Students"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "key": "italian",
+                    "type": "mistake",
+                    "title": "Attenzione all'italiano",
+                    "body": "In italiano l'articolo definito è molto più frequente davanti a categorie generali. In inglese non tradurlo automaticamente.",
+                    "correct": {
+                      "text": "I like coffee. · Teenagers use social media.",
+                      "highlight": [
+                        "coffee",
+                        "Teenagers"
+                      ]
+                    },
+                    "incorrect": {
+                      "text": "I like the coffee. (= il caffè in generale) · The teenagers use social media. (= gli adolescenti in generale)",
+                      "highlight": [
+                        "the coffee",
+                        "The teenagers"
+                      ]
+                    }
+                  },
+                  {
+                    "key": "singular",
+                    "type": "mistake",
+                    "title": "Il singolare numerabile non resta nudo",
+                    "body": "Un nome singolare numerabile normalmente ha bisogno di un determinante. Se non è specifico, usa a/an.",
+                    "correct": {
+                      "text": "I need a charger.",
+                      "highlight": [
+                        "a charger"
+                      ]
+                    },
+                    "incorrect": {
+                      "text": "I need charger.",
+                      "highlight": [
+                        "charger"
+                      ]
+                    }
+                  },
+                  {
+                    "key": "recap",
+                    "type": "recap",
+                    "title": "Prima di continuare",
+                    "points": [
+                      "a/an: singolare numerabile, non ancora identificato.",
+                      "the: referente specifico o già noto.",
+                      "plurali e non numerabili generali: spesso zero article.",
+                      "a/an segue il suono iniziale, non semplicemente la lettera.",
+                      "non tradurre automaticamente l'articolo italiano."
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 0,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "articles",
+                "recover",
+                "structured-teaching"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_recover_1",
+              "type": "multiple_choice",
+              "title": "Un oggetto nuovo",
+              "prompt": "I need ___ charger for my phone.",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "indefinite_singular",
+              "primary_skill": "grammar",
+              "learning_objective": "Use a with a new singular countable noun.",
+              "difficulty": "support",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "a",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "the",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  },
+                  {
+                    "key": "c",
+                    "text": "— (no article)",
+                    "is_correct": false,
+                    "error_code": "ARTICLES_A_AN"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {
+                "explanation": "Charger è singolare numerabile e non specificato: a charger."
+              },
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_recover_2",
+              "type": "multiple_choice",
+              "title": "Il suono iniziale",
+              "prompt": "Sara has ___ English exam at nine.",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "a_an_sound",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose an before a vowel sound.",
+              "difficulty": "support",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "an",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "a",
+                    "is_correct": false,
+                    "error_code": "ARTICLES_A_AN"
+                  },
+                  {
+                    "key": "c",
+                    "text": "the",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {
+                "explanation": "English inizia con suono vocalico: an English exam."
+              },
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_recover_3",
+              "type": "select_gap",
+              "title": "Prima e seconda menzione",
+              "prompt": "Completa il messaggio.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "first_known_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Move from first mention to known reference.",
+              "difficulty": "support",
+              "content": {
+                "text_template": "I saw [[blank_1]] bike outside the station. [[blank_2]] bike had a flat tyre.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "a"
+                    ],
+                    "options": [
+                      "a",
+                      "the",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "the",
+                        "error_code": "CORE_ARTICLES"
+                      },
+                      {
+                        "answer": "—",
+                        "error_code": "ARTICLES_A_AN"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "The",
+                      "the"
+                    ],
+                    "options": [
+                      "The",
+                      "A",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "A",
+                        "error_code": "CORE_ARTICLES"
+                      },
+                      {
+                        "answer": "—",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {
+                "explanation": "Prima introduci a bike; poi il referente è noto: the bike."
+              },
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_recover_4",
+              "type": "multiple_choice",
+              "title": "Una categoria",
+              "prompt": "Which sentence talks about dogs in general?",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "zero_article_general_plural",
+              "primary_skill": "grammar",
+              "learning_objective": "Use zero article for a general plural category.",
+              "difficulty": "support",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "Dogs need regular exercise.",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "The dogs need regular exercise.",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  },
+                  {
+                    "key": "c",
+                    "text": "A dogs need regular exercise.",
+                    "is_correct": false,
+                    "error_code": "ARTICLES_A_AN"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {
+                "explanation": "Per la categoria generale al plurale: Dogs, senza articolo."
+              },
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_recover_5",
+              "type": "error_correction",
+              "title": "Un trasferimento dall'italiano",
+              "prompt": "Correggi: I usually drink the coffee after lunch. (coffee in general)",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "zero_article_uncountable",
+              "primary_skill": "grammar",
+              "learning_objective": "Remove the before a general uncountable noun.",
+              "difficulty": "support",
+              "content": {
+                "accepted_answers": [
+                  "I usually drink coffee after lunch."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {
+                "explanation": "Coffee indica la bevanda in generale: zero article."
+              },
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_recover_6",
+              "type": "translation",
+              "title": "Un riferimento chiaro",
+              "prompt": "Chiudi la finestra, per favore.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "specific_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce the for an identifiable object in the shared situation.",
+              "difficulty": "support",
+              "content": {
+                "accepted_answers": [
+                  "Close the window, please.",
+                  "Please close the window."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {
+                "explanation": "La finestra è identificabile nella situazione: the window."
+              },
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "articles",
+        "recover",
+        "wave-2"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_articles_practice",
+      "title": "Articles — Allenati",
+      "description": "Pratica gli articoli in messaggi, scuola e vita quotidiana.",
+      "instructions": "Usa il contesto, non la traduzione parola per parola.",
+      "instruction_language": "it",
+      "level": "A1+",
+      "topic": "articles",
+      "estimated_minutes": 12,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "question_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_articles_practice_section",
+          "title": "Allenati",
+          "instructions": "Usa il contesto, non la traduzione parola per parola.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_articles_practice_1",
+              "type": "select_gap",
+              "title": "Un nuovo compagno",
+              "prompt": "Completa.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "discourse_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Track a new referent from first mention to known reference.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "There's [[blank_1]] new student in our class. [[blank_2]] student is from Bologna.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "a"
+                    ],
+                    "options": [
+                      "a",
+                      "the",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "the",
+                        "error_code": "CORE_ARTICLES"
+                      },
+                      {
+                        "answer": "—",
+                        "error_code": "ARTICLES_A_AN"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "The",
+                      "the"
+                    ],
+                    "options": [
+                      "The",
+                      "A",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "A",
+                        "error_code": "CORE_ARTICLES"
+                      },
+                      {
+                        "answer": "—",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_practice_2",
+              "type": "dialogue_choice",
+              "title": "In una biblioteca",
+              "prompt": "Which follow-up is natural?",
+              "instructions": "Leggi il dialogo e scegli la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "shared_specific_reference",
+              "primary_skill": "interaction",
+              "learning_objective": "Use the for a now-identifiable object in a dialogue.",
+              "difficulty": "standard",
+              "content": {
+                "scenario": "A student asks about a printer both people can see.",
+                "response_prompt": "Which follow-up is natural?",
+                "turns": [
+                  {
+                    "key": "turn_1",
+                    "speaker": "Student",
+                    "text": "Excuse me, can I use the printer near the window?"
+                  },
+                  {
+                    "key": "turn_2",
+                    "speaker": "Librarian",
+                    "text": "Yes, but you need your library card."
+                  }
+                ],
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "Where do I put the card?",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "Where do I put a card?",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  },
+                  {
+                    "key": "c",
+                    "text": "Where do I put card?",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_practice_3",
+              "type": "error_correction",
+              "title": "Parlare in generale",
+              "prompt": "Correggi: The smartphones are useful, but they can be distracting. (smartphones in general)",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "zero_article_general_plural",
+              "primary_skill": "grammar",
+              "learning_objective": "Remove the before a general plural category.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "Smartphones are useful, but they can be distracting."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_practice_4",
+              "type": "word_order",
+              "title": "Una frase completa",
+              "prompt": "Forma la frase.",
+              "instructions": "Metti le parti nell'ordine corretto.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "a_an_profession",
+              "primary_skill": "word_order",
+              "learning_objective": "Use an with a singular profession beginning with a vowel sound.",
+              "difficulty": "standard",
+              "content": {
+                "tokens": [
+                  "My sister",
+                  "is",
+                  "an engineer",
+                  "in Milan"
+                ],
+                "correct_order": [
+                  "My sister",
+                  "is",
+                  "an engineer",
+                  "in Milan"
+                ],
+                "terminal_punctuation": "."
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_practice_5",
+              "type": "multiple_choice",
+              "title": "Suono, non lettera",
+              "prompt": "Which phrase is correct?",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "a_an_sound",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose a before the /juː/ sound in university.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "a university course",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "an university course",
+                    "is_correct": false,
+                    "error_code": "ARTICLES_A_AN"
+                  },
+                  {
+                    "key": "c",
+                    "text": "the university course",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {
+                "explanation": "University inizia con il suono /j/: a university course."
+              },
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_practice_6",
+              "type": "translation",
+              "title": "Categoria generale",
+              "prompt": "Mi piace la musica, ma non ascolto la radio mentre studio.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "zero_vs_specific_fixed_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Contrast zero article for music in general with the in a familiar specific expression.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "I like music, but I don't listen to the radio while I study.",
+                  "I like music, but I do not listen to the radio while I study."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_practice_7",
+              "type": "select_gap",
+              "title": "Una descrizione",
+              "prompt": "Completa il breve testo.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "connected_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Maintain article reference across a connected description.",
+              "difficulty": "challenge",
+              "content": {
+                "text_template": "We rented [[blank_1]] small flat near school. [[blank_2]] flat has one bedroom, and [[blank_3]] kitchen is very bright.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "a"
+                    ],
+                    "options": [
+                      "a",
+                      "the",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "the",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "The",
+                      "the"
+                    ],
+                    "options": [
+                      "The",
+                      "A",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "A",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_3",
+                    "accepted_answers": [
+                      "the"
+                    ],
+                    "options": [
+                      "the",
+                      "a",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "a",
+                        "error_code": "CORE_ARTICLES"
+                      },
+                      {
+                        "answer": "—",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_practice_8",
+              "type": "error_correction",
+              "title": "Un singolare nudo",
+              "prompt": "Correggi: I need pen for the test.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "singular_countable_determiner",
+              "primary_skill": "grammar",
+              "learning_objective": "Supply an indefinite article before a non-specific singular countable noun.",
+              "difficulty": "challenge",
+              "content": {
+                "accepted_answers": [
+                  "I need a pen for the test."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "articles",
+        "practice",
+        "wave-2"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_articles_school",
+      "title": "Articles — Modalità scuola",
+      "description": "Formati tipici di verifica scolastica sugli articoli.",
+      "instructions": "Completa tutto prima del feedback.",
+      "instruction_language": "it",
+      "level": "A1+",
+      "topic": "articles",
+      "estimated_minutes": 10,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_articles_school_section",
+          "title": "Modalità scuola",
+          "instructions": "Completa tutto prima del feedback.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_articles_school_1",
+              "type": "select_gap",
+              "title": "Completa le frasi",
+              "prompt": "Scegli gli articoli corretti.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "a_an_known_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Apply a/an then the in a school-style completion task.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "1. I have [[blank_1]] appointment at four. 2. [[blank_2]] appointment is with my dentist.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "an"
+                    ],
+                    "options": [
+                      "an",
+                      "a",
+                      "the"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "a",
+                        "error_code": "ARTICLES_A_AN"
+                      },
+                      {
+                        "answer": "the",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "The",
+                      "the"
+                    ],
+                    "options": [
+                      "The",
+                      "An",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "An",
+                        "error_code": "CORE_ARTICLES"
+                      },
+                      {
+                        "answer": "—",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_school_2",
+              "type": "error_correction",
+              "title": "Correggi",
+              "prompt": "The teenagers often use public transport. (teenagers in general)",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "zero_article_general_plural",
+              "primary_skill": "grammar",
+              "learning_objective": "Correct overuse of the for a general plural.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "Teenagers often use public transport."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_school_3",
+              "type": "translation",
+              "title": "Traduzione",
+              "prompt": "Ho comprato un libro. Il libro è per mia sorella.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "first_known_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Translate first mention with a and known reference with the.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "I bought a book. The book is for my sister."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_school_4",
+              "type": "word_order",
+              "title": "Riordina",
+              "prompt": "Forma una frase corretta.",
+              "instructions": "Metti le parti nell'ordine corretto.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "indefinite_profession_company",
+              "primary_skill": "word_order",
+              "learning_objective": "Build two indefinite singular noun phrases with correct a/an.",
+              "difficulty": "standard",
+              "content": {
+                "tokens": [
+                  "She",
+                  "is",
+                  "an architect",
+                  "at",
+                  "a small company"
+                ],
+                "correct_order": [
+                  "She",
+                  "is",
+                  "an architect",
+                  "at",
+                  "a small company"
+                ],
+                "terminal_punctuation": "."
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_school_5",
+              "type": "multiple_choice",
+              "title": "Scegli",
+              "prompt": "Which sentence is correct when talking about breakfast in general?",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "zero_article_general",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose zero article for a general routine concept.",
+              "difficulty": "challenge",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "Breakfast is important.",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "The breakfast is important.",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  },
+                  {
+                    "key": "c",
+                    "text": "A breakfast is important.",
+                    "is_correct": false,
+                    "error_code": "ARTICLES_A_AN"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_school_6",
+              "type": "select_gap",
+              "title": "Breve testo",
+              "prompt": "Completa il testo.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "integrated_reference_zero",
+              "primary_skill": "grammar",
+              "learning_objective": "Integrate first mention, known reference and zero article in a connected text.",
+              "difficulty": "challenge",
+              "content": {
+                "text_template": "Yesterday I found [[blank_1]] wallet on the bus. I gave [[blank_2]] wallet to the driver. [[blank_3]] honesty is important to me.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "a"
+                    ],
+                    "options": [
+                      "a",
+                      "the",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "the",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "the"
+                    ],
+                    "options": [
+                      "the",
+                      "a",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "a",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_3",
+                    "accepted_answers": [
+                      "—"
+                    ],
+                    "options": [
+                      "—",
+                      "the",
+                      "an"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "the",
+                        "error_code": "CORE_ARTICLES"
+                      },
+                      {
+                        "answer": "an",
+                        "error_code": "ARTICLES_A_AN"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "articles",
+        "school",
+        "wave-2"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_articles_verify",
+      "title": "Articles — Verifica argomento",
+      "description": "Verifica indipendente su a/an, the, zero article e riferimento.",
+      "instructions": "Completa l’intera verifica prima di vedere il feedback.",
+      "instruction_language": "it",
+      "level": "A1+",
+      "topic": "articles",
+      "estimated_minutes": 14,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_articles_verify_section",
+          "title": "Verifica argomento",
+          "instructions": "Completa l’intera verifica prima di vedere il feedback.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_articles_verify_1",
+              "type": "multiple_choice",
+              "title": "Una prenotazione",
+              "prompt": "I need ___ room for one night.",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "indefinite_singular",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose an indefinite article for a new singular countable noun.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "a",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "the",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  },
+                  {
+                    "key": "c",
+                    "text": "—",
+                    "is_correct": false,
+                    "error_code": "ARTICLES_A_AN"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_verify_2",
+              "type": "error_correction",
+              "title": "Rivedi la frase",
+              "prompt": "Correggi: I love the animals. (animals in general)",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "zero_article_general_plural",
+              "primary_skill": "grammar",
+              "learning_objective": "Remove the before a general plural category.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "I love animals."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_verify_3",
+              "type": "select_gap",
+              "title": "Una storia breve",
+              "prompt": "Completa.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "first_known_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Track an initially new referent across two sentences.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "We saw [[blank_1]] accident near the station. [[blank_2]] accident blocked the road for twenty minutes.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "an"
+                    ],
+                    "options": [
+                      "an",
+                      "a",
+                      "the"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "a",
+                        "error_code": "ARTICLES_A_AN"
+                      },
+                      {
+                        "answer": "the",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "The",
+                      "the"
+                    ],
+                    "options": [
+                      "The",
+                      "An",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "An",
+                        "error_code": "CORE_ARTICLES"
+                      },
+                      {
+                        "answer": "—",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_verify_4",
+              "type": "translation",
+              "title": "Un oggetto condiviso",
+              "prompt": "Puoi aprire la porta, per favore?",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "specific_shared_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce the for an identifiable object in the situation.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "Can you open the door, please?",
+                  "Could you open the door, please?"
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_verify_5",
+              "type": "multiple_choice",
+              "title": "Una categoria non numerabile",
+              "prompt": "Which sentence talks about information in general?",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "zero_article_uncountable",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose zero article for a general uncountable noun.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "Information is useful.",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "The information is useful.",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  },
+                  {
+                    "key": "c",
+                    "text": "An information is useful.",
+                    "is_correct": false,
+                    "error_code": "ARTICLES_A_AN"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_verify_6",
+              "type": "word_order",
+              "title": "Una professione",
+              "prompt": "Forma la frase.",
+              "instructions": "Metti le parti nell'ordine corretto.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "indefinite_and_specific",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a profession noun phrase and a specific place reference.",
+              "difficulty": "standard",
+              "content": {
+                "tokens": [
+                  "My uncle",
+                  "is",
+                  "a doctor",
+                  "at",
+                  "the local hospital"
+                ],
+                "correct_order": [
+                  "My uncle",
+                  "is",
+                  "a doctor",
+                  "at",
+                  "the local hospital"
+                ],
+                "terminal_punctuation": "."
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_verify_7",
+              "type": "dialogue_choice",
+              "title": "Un oggetto già identificato",
+              "prompt": "A minute later, what can Maya naturally ask?",
+              "instructions": "Leggi il dialogo e scegli la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "discourse_specific_reference",
+              "primary_skill": "interaction",
+              "learning_objective": "Infer the for a recently established referent.",
+              "difficulty": "challenge",
+              "content": {
+                "scenario": "Two friends are in a café. Maya has just placed a blue umbrella next to their table.",
+                "response_prompt": "A minute later, what can Maya naturally ask?",
+                "turns": [
+                  {
+                    "key": "turn_1",
+                    "speaker": "Maya",
+                    "text": "I'll leave my umbrella here while I order."
+                  },
+                  {
+                    "key": "turn_2",
+                    "speaker": "Leo",
+                    "text": "Okay. I'll watch it."
+                  }
+                ],
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "Can you pass me the umbrella?",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "Can you pass me an umbrella?",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  },
+                  {
+                    "key": "c",
+                    "text": "Can you pass me umbrella?",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_verify_8",
+              "type": "error_correction",
+              "title": "Controlla due articoli",
+              "prompt": "Correggi: She is an university student and she studies the economics. (economics in general)",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "integrated_a_an_zero",
+              "primary_skill": "grammar",
+              "learning_objective": "Correct a/an by sound and remove the before a general subject field.",
+              "difficulty": "challenge",
+              "content": {
+                "accepted_answers": [
+                  "She is a university student and she studies economics."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_verify_9",
+              "type": "select_gap",
+              "title": "Un annuncio",
+              "prompt": "Completa il messaggio.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "integrative_discourse_zero",
+              "primary_skill": "grammar",
+              "learning_objective": "Integrate indefinite introduction, known reference and zero article for a general uncountable concept.",
+              "difficulty": "challenge",
+              "content": {
+                "text_template": "We're looking for [[blank_1]] student to help at reception. [[blank_2]] student will work on Saturdays. Experience is useful, but [[blank_3]] experience is not essential.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "a"
+                    ],
+                    "options": [
+                      "a",
+                      "the",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "the",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "The",
+                      "the"
+                    ],
+                    "options": [
+                      "The",
+                      "A",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "A",
+                        "error_code": "CORE_ARTICLES"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_3",
+                    "accepted_answers": [
+                      "—"
+                    ],
+                    "options": [
+                      "—",
+                      "the",
+                      "an"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "the",
+                        "error_code": "CORE_ARTICLES"
+                      },
+                      {
+                        "answer": "an",
+                        "error_code": "ARTICLES_A_AN"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "ARTICLES_A_AN",
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "ARTICLES_A_AN"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_verify_10",
+              "type": "translation",
+              "title": "Produzione controllata",
+              "prompt": "I libri sono costosi, ma la biblioteca della mia scuola è gratuita.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "integrated_production",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce zero article for a general category and the/specific reference for an identifiable library.",
+              "difficulty": "challenge",
+              "content": {
+                "accepted_answers": [
+                  "Books are expensive, but the library at my school is free.",
+                  "Books are expensive, but my school library is free."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_articles_verify_11",
+              "type": "multiple_choice",
+              "title": "Quale frase funziona?",
+              "prompt": "You enter a room for the first time and see one open window. Which sentence is most natural?",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "articles",
+              "subtopic": "situational_identifiability",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose the when the situation makes one referent identifiable.",
+              "difficulty": "challenge",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "Can I close the window?",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "Can I close a window?",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  },
+                  {
+                    "key": "c",
+                    "text": "Can I close window?",
+                    "is_correct": false,
+                    "error_code": "CORE_ARTICLES"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_ARTICLES"
+                ],
+                "fallback_error_code": "CORE_ARTICLES"
+              },
+              "tags": [
+                "recovery",
+                "articles"
+              ],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "articles",
+        "verify",
+        "wave-2"
+      ],
+      "foundation_links": []
+    }
+  ]
+}
