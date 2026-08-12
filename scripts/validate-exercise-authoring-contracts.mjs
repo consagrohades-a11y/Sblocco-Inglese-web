@@ -85,10 +85,34 @@ for (const item of exerciseBuilderTemplateManifest) {
   }
 }
 
+const guided = exerciseBuilderTemplates.guided_exercise;
+const guidedGuide = guided?._template || {};
+const guidedQuestions = guided?.exercise?.sections?.[0]?.questions || [];
+const guidedFirst = guidedQuestions[0];
+const expectedGuidedTypes = ['content_block', 'multiple_choice', 'select_gap', 'word_order'];
+const actualGuidedTypes = guidedQuestions.map((question) => question.type);
+
+if (JSON.stringify(actualGuidedTypes) !== JSON.stringify(expectedGuidedTypes)) {
+  failures.push(`guided_exercise: expected progressive question sequence ${expectedGuidedTypes.join(' -> ')}, got ${actualGuidedTypes.join(' -> ')}.`);
+}
+if (guidedFirst?.type !== 'content_block' || guidedFirst?.content?.educational_schema_version !== 1) {
+  failures.push('guided_exercise: first activity must be a structured educational content_block.');
+}
+if (!String(guidedFirst?.content?.template_id || '').trim() || !String(guidedFirst?.content?.variant || '').trim()) {
+  failures.push('guided_exercise: structured teaching block must declare template_id and variant.');
+}
+requireArray(guidedFirst?.content?.sections, 4, 'guided_exercise structured teaching sections');
+requireArray(guidedGuide.guided_stage_contract?.rules, 4, 'guided_exercise guided stage rules');
+requireArray(guidedGuide.structured_teaching_contract?.global_pedagogical_rules, 8, 'guided_exercise embedded teaching rules');
+requireArray(guidedGuide.structured_teaching_contract?.supported_section_types, 6, 'guided_exercise embedded section types');
+if (guidedQuestions.some((question) => question.topic !== 'adjectives')) {
+  failures.push('guided_exercise: all sample activities must stay on the same adjectives lesson objective.');
+}
+
 if (failures.length) {
   console.error('Exercise authoring contract validation failed:');
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exit(1);
 }
 
-console.log(`Validated ${exerciseBuilderTemplateManifest.length} self-contained authoring contracts and their generated downloads.`);
+console.log(`Validated ${exerciseBuilderTemplateManifest.length} self-contained authoring contracts and their generated downloads, including the structured guided lesson sequence.`);
