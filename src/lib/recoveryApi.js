@@ -37,6 +37,14 @@ function isMissingMasteryCapability(error) {
     || message.includes('mastery_reason');
 }
 
+function isMissingReadinessCapability(error) {
+  const code = String(error?.code || '');
+  const message = String(error?.message || '').toLowerCase();
+  return ['42P01', '42703', '42883', 'PGRST202', 'PGRST205'].includes(code)
+    || message.includes('get_recovery_readiness')
+    || message.includes('recovery_readiness_snapshots');
+}
+
 export async function submitRecoveryDiagnostic(answers) {
   const data = rpcError(await supabase.rpc('submit_public_recovery_diagnostic', {
     p_answers: answers,
@@ -165,6 +173,16 @@ export async function loadRecoveryState(enrollmentId) {
   };
 }
 
+export async function loadRecoveryReadiness(enrollmentId) {
+  if (!enrollmentId) return null;
+  const response = await supabase.rpc('get_recovery_readiness', { p_enrollment_id: enrollmentId });
+  if (response.error) {
+    if (isMissingReadinessCapability(response.error)) return null;
+    return rpcError(response, 'Non è stato possibile calcolare la preparazione attuale.');
+  }
+  return response.data || null;
+}
+
 export async function configureRecoveryEnrollment({ classYear, examDate, topicKeys, mode, diagnosticToken }) {
   const data = rpcError(await supabase.rpc('configure_recovery_enrollment', {
     p_class_year: Number(classYear),
@@ -258,13 +276,18 @@ export async function syncMaterializedRecoverySessions(sessions = []) {
 
 export async function loadRecoveryAccessState() {
   const entitled = await hasRecoveryEntitlement();
-  if (!entitled) return { entitled: false, enrollment: null, state: null };
+  if (!entitled) return { entitled: false, enrollment: null, state: null, readiness: null };
   const enrollment = await loadRecoveryEnrollment();
   if (enrollment?.id && enrollment.status === 'active') {
     await activateRecoveryPlan(enrollment.id);
   }
-  const state = enrollment ? await loadRecoveryState(enrollment.id) : null;
-  return { entitled: true, enrollment, state };
+  const [state, readiness] = enrollment
+    ? await Promise.all([
+      loadRecoveryState(enrollment.id),
+      loadRecoveryReadiness(enrollment.id),
+    ])
+    : [null, null];
+  return { entitled: true, enrollment, state, readiness };
 }
 
 export function recoveryOfferId() {
