@@ -2,13 +2,15 @@
 // validation remains backward-compatible with schema v1 and schema v2.
 export {
   EXERCISE_BUILDER_LEVELS,
-  EXERCISE_BUILDER_QUESTION_TYPES,
   EXERCISE_BUILDER_SCHEMA_VERSION,
   EXERCISE_BUILDER_SKILLS,
   EXERCISE_BUILDER_SUPPORTED_SCHEMA_VERSIONS,
 } from './exerciseBuilderSchemaV2.js';
 
-import { validateExerciseBuilderJson as validateExerciseBuilderJsonV2 } from './exerciseBuilderSchemaV2.js';
+import {
+  EXERCISE_BUILDER_QUESTION_TYPES as BASE_EXERCISE_BUILDER_QUESTION_TYPES,
+  validateExerciseBuilderJson as validateExerciseBuilderJsonV2,
+} from './exerciseBuilderSchemaV2.js';
 import {
   EXERCISE_BUILDER_TEMPLATE_VERSION as BASE_EXERCISE_BUILDER_TEMPLATE_VERSION,
   exerciseBuilderQuestionTemplates as baseExerciseBuilderQuestionTemplates,
@@ -27,6 +29,18 @@ import {
   isStructuredEducationalContent,
   validateEducationalContentBlock,
 } from './educationalContentBlock.js';
+import {
+  LISTENING_COMPREHENSION_TEMPLATE_KEY,
+  applyListeningComprehensionValidation,
+  listeningComprehensionTemplate,
+  prepareListeningComprehensionForV2,
+  restoreListeningComprehensionValidationResult,
+} from './listeningComprehension.js';
+
+export const EXERCISE_BUILDER_QUESTION_TYPES = [
+  ...BASE_EXERCISE_BUILDER_QUESTION_TYPES,
+  LISTENING_COMPREHENSION_TEMPLATE_KEY,
+];
 
 function applyEducationalContentValidation(result) {
   if (!result || !Array.isArray(result.items)) return result;
@@ -138,16 +152,31 @@ export function validateExerciseBuilderJson(input) {
     };
   }
 
-  const result = validateExerciseBuilderJsonV2(source.parsed);
+  const prepared = prepareListeningComprehensionForV2(source.parsed);
+  const result = restoreListeningComprehensionValidationResult(validateExerciseBuilderJsonV2(prepared));
   result.sourceAdjustments = source.adjustments;
   result.normalizedJson = source.normalizedText;
-  return applyAuthoringContractValidation(applyEducationalContentValidation(result));
+  return applyAuthoringContractValidation(
+    applyListeningComprehensionValidation(
+      applyEducationalContentValidation(result),
+    ),
+  );
 }
 
 // Template exports are composed here so the V2 importer stays stable while
 // authoring/download contracts can evolve independently of database payloads.
-export const EXERCISE_BUILDER_TEMPLATE_VERSION = Math.max(BASE_EXERCISE_BUILDER_TEMPLATE_VERSION, 5);
-export const exerciseBuilderQuestionTemplates = baseExerciseBuilderQuestionTemplates;
+export const EXERCISE_BUILDER_TEMPLATE_VERSION = Math.max(BASE_EXERCISE_BUILDER_TEMPLATE_VERSION, 6);
+export const exerciseBuilderQuestionTemplates = {
+  ...baseExerciseBuilderQuestionTemplates,
+  [LISTENING_COMPREHENSION_TEMPLATE_KEY]: listeningComprehensionTemplate.question,
+};
+
+const listeningManifestItem = {
+  key: LISTENING_COMPREHENSION_TEMPLATE_KEY,
+  entityType: 'question',
+  label: 'Listening comprehension con audio',
+  fileName: 'exercise-builder-question-listening_comprehension-template.json',
+};
 
 const educationalManifestItem = {
   key: 'educational_content_block',
@@ -158,12 +187,14 @@ const educationalManifestItem = {
 
 export const exerciseBuilderTemplateManifest = [
   ...baseExerciseBuilderTemplateManifest,
+  listeningManifestItem,
   educationalManifestItem,
 ];
 
 const composedTemplates = {
   ...baseExerciseBuilderTemplates,
   guided_exercise: structuredGuidedExerciseTemplate,
+  [LISTENING_COMPREHENSION_TEMPLATE_KEY]: listeningComprehensionTemplate,
   educational_content_block: educationalContentBlockTemplate,
 };
 
@@ -179,6 +210,7 @@ const selfContainedTemplates = makeSelfContainedExerciseTemplates(
 // fresh chat: no separate content-block template is required to author stage 1.
 export const exerciseBuilderTemplates = {
   ...selfContainedTemplates,
+  [LISTENING_COMPREHENSION_TEMPLATE_KEY]: listeningComprehensionTemplate,
   guided_exercise: {
     ...selfContainedTemplates.guided_exercise,
     _template: {
