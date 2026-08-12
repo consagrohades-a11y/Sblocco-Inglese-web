@@ -17,7 +17,7 @@ import {
   wordOrderDisplayToken,
   wordOrderTerminalPunctuation,
 } from '../../lib/wordOrderPresentation.js';
-import SafeTeachingContent from './SafeTeachingContent.jsx';
+import EducationalContentBlock from './EducationalContentBlock.jsx';
 import SbloccoSelect from './SbloccoSelect.jsx';
 import {
   ExerciseChoice,
@@ -392,7 +392,7 @@ export default function ExerciseQuestionRendererV2({
     if (type === 'select_gap') return <GapFill question={question} answer={answer} onChange={onChange} disabled={disabled} select />;
     if (type === 'translation' || type === 'error_correction') return <TextAnswer multiline={type === 'error_correction'} value={answer || ''} onChange={onChange} disabled={disabled} />;
     if (type === 'word_order') return <WordOrder question={question} answer={answer} onChange={onChange} disabled={disabled} />;
-    if (type === 'content_block') return <article className="exercise-reading"><div className="exercise-reading__passage"><SafeTeachingContent>{question.content?.body || question.prompt}</SafeTeachingContent></div></article>;
+    if (type === 'content_block') return <EducationalContentBlock content={question.content} fallback={question.prompt} />;
     if (type === 'written_response') return <div className="grid gap-4"><WrittenResponse question={question} answer={answer} onChange={onChange} disabled={disabled} /><RubricPreview rubric={question.content?.rubric} /></div>;
     if (type === 'dialogue_roleplay') return <DialogueRoleplay question={question} answer={answer} onChange={onChange} disabled={disabled} attemptId={attemptId} attemptQuestionId={item?.id} teacherTurnReviews={item?.teacher_turn_reviews} />;
     if (type === 'audio_response') return <AudioRecorder question={question} answer={answer} onChange={onChange} disabled={disabled} attemptId={attemptId} attemptQuestionId={item?.id} />;
