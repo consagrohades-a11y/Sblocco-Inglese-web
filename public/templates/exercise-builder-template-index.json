@@ -95,6 +95,11 @@
       "key": "bundle",
       "entity_type": "bundle",
       "file_name": "exercise-builder-bundle-template.json"
+    },
+    {
+      "key": "educational_content_block",
+      "entity_type": "question",
+      "file_name": "exercise-builder-educational-content-block-template.json"
     }
   ]
 }
