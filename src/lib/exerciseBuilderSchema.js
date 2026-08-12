@@ -42,6 +42,7 @@ export const EXERCISE_BUILDER_QUESTION_TYPES = [
   LISTENING_COMPREHENSION_TEMPLATE_KEY,
 ];
 
+const clone = (value) => JSON.parse(JSON.stringify(value));
 const canonicalListeningComprehensionTemplate = {
   ...listeningComprehensionTemplate,
   question: {
@@ -51,6 +52,50 @@ const canonicalListeningComprehensionTemplate = {
       fallback_error_code: null,
     },
   },
+};
+const listeningQuestion = canonicalListeningComprehensionTemplate.question;
+
+function appendListeningQuestion(questions = []) {
+  return questions.some((question) => question?.type === LISTENING_COMPREHENSION_TEMPLATE_KEY)
+    ? clone(questions)
+    : [...clone(questions), clone(listeningQuestion)];
+}
+
+function appendListeningRef(refs = []) {
+  const key = listeningQuestion.client_key;
+  return refs.includes(key) ? [...refs] : [...refs, key];
+}
+
+const canonicalQuestionPoolTemplate = {
+  ...clone(baseExerciseBuilderTemplates.question_pool),
+  pool: {
+    ...clone(baseExerciseBuilderTemplates.question_pool.pool),
+    questions: appendListeningQuestion(baseExerciseBuilderTemplates.question_pool.pool?.questions),
+  },
+};
+
+const canonicalExerciseTemplate = {
+  ...clone(baseExerciseBuilderTemplates.exercise),
+  exercise: {
+    ...clone(baseExerciseBuilderTemplates.exercise.exercise),
+    sections: (baseExerciseBuilderTemplates.exercise.exercise?.sections || []).map((section, index) => index === 0
+      ? { ...clone(section), questions: appendListeningQuestion(section.questions) }
+      : clone(section)),
+  },
+};
+
+const canonicalBundleTemplate = {
+  ...clone(baseExerciseBuilderTemplates.bundle),
+  questions: appendListeningQuestion(baseExerciseBuilderTemplates.bundle.questions),
+  pools: (baseExerciseBuilderTemplates.bundle.pools || []).map((pool, index) => index === 0
+    ? { ...clone(pool), question_refs: appendListeningRef(pool.question_refs) }
+    : clone(pool)),
+  exercises: (baseExerciseBuilderTemplates.bundle.exercises || []).map((exercise) => ({
+    ...clone(exercise),
+    sections: (exercise.sections || []).map((section, index) => index === 0
+      ? { ...clone(section), question_refs: appendListeningRef(section.question_refs) }
+      : clone(section)),
+  })),
 };
 
 function applyEducationalContentValidation(result) {
@@ -204,6 +249,9 @@ export const exerciseBuilderTemplateManifest = [
 
 const composedTemplates = {
   ...baseExerciseBuilderTemplates,
+  question_pool: canonicalQuestionPoolTemplate,
+  exercise: canonicalExerciseTemplate,
+  bundle: canonicalBundleTemplate,
   guided_exercise: structuredGuidedExerciseTemplate,
   [LISTENING_COMPREHENSION_TEMPLATE_KEY]: canonicalListeningComprehensionTemplate,
   educational_content_block: educationalContentBlockTemplate,
