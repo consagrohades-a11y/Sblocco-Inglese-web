@@ -15,6 +15,11 @@ import {
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import ExerciseBuilderBreadcrumb from '../components/admin/ExerciseBuilderBreadcrumb.jsx';
+import ExerciseQuestionRenderer from '../components/exercises/ExerciseQuestionRenderer.jsx';
+import {
+  ExerciseActivity,
+  ExerciseCanvas,
+} from '../components/exercises/ExerciseExperience.jsx';
 import {
   loadExerciseBuilderReviewQueue,
   promoteExerciseBuilderImportItems,
@@ -75,6 +80,42 @@ function ValidationBadge({ status }) {
       <XCircle aria-hidden="true" className="h-3 w-3" />
       Non valido
     </span>
+  );
+}
+
+function ImportedItemPreview({ item }) {
+  if (item.entity_type !== 'question') {
+    return (
+      <pre className="max-h-96 overflow-auto bg-surface-800 p-4 text-xs leading-5 text-emerald-50">{JSON.stringify(item.payload, null, 2)}</pre>
+    );
+  }
+
+  return (
+    <div className="border-t border-ink/10 bg-linen/20 p-4 dark:border-white/10 dark:bg-white/[0.025] sm:p-5">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-moss dark:text-mint">Anteprima learner</p>
+          <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">Usa lo stesso renderer della pagina esercizio. I controlli sono disabilitati in revisione.</p>
+        </div>
+        <details className="text-xs">
+          <summary className="focus-ring cursor-pointer rounded-lg border border-ink/10 px-3 py-2 font-black text-ink dark:border-white/15 dark:text-white">JSON normalizzato</summary>
+          <pre className="mt-2 max-h-80 max-w-[70vw] overflow-auto rounded-lg bg-surface-800 p-3 text-left text-[0.68rem] leading-5 text-emerald-50">{JSON.stringify(item.payload, null, 2)}</pre>
+        </details>
+      </div>
+      <ExerciseCanvas>
+        <ExerciseActivity type={item.payload?.type}>
+          <ExerciseQuestionRenderer
+            item={{ question: item.payload, result: null }}
+            answer={null}
+            onChange={() => {}}
+            disabled
+            showScore={false}
+            showCorrectAnswers={false}
+            showExplanations={false}
+          />
+        </ExerciseActivity>
+      </ExerciseCanvas>
+    </div>
   );
 }
 
@@ -187,7 +228,7 @@ export default function AdminExerciseBuilderReview() {
               <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-moss dark:text-mint">Exercise Builder</p>
               <h1 className="mt-2 text-3xl font-black tracking-tight text-ink dark:text-white sm:text-4xl">Coda di revisione</h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
-                Seleziona le bozze corrette e promuovile nella Question Bank, nelle Pool e negli Esercizi. Gli ID pubblici vengono creati soltanto in questo passaggio.
+                Apri un elemento per vederlo con il renderer learner prima di promuoverlo. Gli ID pubblici vengono creati soltanto dopo questa revisione.
               </p>
             </div>
             <button
@@ -341,14 +382,12 @@ export default function AdminExerciseBuilderReview() {
                               type="button"
                               onClick={() => setExpandedItemId(expanded ? null : item.id)}
                               className="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-ink/10 text-ink dark:border-white/15 dark:text-white"
-                              aria-label="Mostra payload"
+                              aria-label={expanded ? 'Chiudi anteprima' : 'Mostra anteprima'}
                             >
                               <ChevronRight aria-hidden="true" className={`h-4 w-4 transition ${expanded ? 'rotate-90' : ''}`} />
                             </button>
                           </div>
-                          {expanded ? (
-                            <pre className="max-h-80 overflow-auto border-t border-ink/10 bg-surface-800 p-4 text-xs leading-5 text-emerald-50 dark:border-white/10">{JSON.stringify(item.payload, null, 2)}</pre>
-                          ) : null}
+                          {expanded ? <ImportedItemPreview item={item} /> : null}
                         </article>
                       );
                     })}
