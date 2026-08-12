@@ -1,0 +1,5326 @@
+{
+  "schema_version": 1,
+  "audit_id": "recovery-curriculum-v2-pedagogical-gap-analysis",
+  "status": "draft",
+  "source_main_sha": "ca408400622feefe9dc8d117b9491c0aef8a2755",
+  "scope": "Cross-year pedagogical progression and evidence-coverage audit for Recovery Curriculum v2. This is not the definitive technical gap-analysis.json.",
+  "methodology": {
+    "authority_order": [
+      "student_official_school_recovery_programme",
+      "year_profile_default",
+      "cefr_difficulty_control"
+    ],
+    "audited_outcome_count": 63,
+    "expected_outcomes_by_year": {
+      "year_1": 21,
+      "year_2": 19,
+      "year_3": 23
+    },
+    "live_recovery_topic_bundle_count": 24,
+    "coverage_values": [
+      "covered",
+      "partially_covered",
+      "missing"
+    ],
+    "coverage_definitions": {
+      "covered": "Existing validated content provides the required primary-axis evidence shape plus enough unseen/mixed cumulative transfer potential to satisfy the outcome when selected by the learner programme.",
+      "partially_covered": "Existing content provides meaningful prerequisite, controlled-performance or topic-level transfer evidence, but one or more required primary-axis, breadth or cumulative-transfer evidence families are absent.",
+      "missing": "No existing Recovery content provides sufficient primary-axis evidence for the observable performance; incidental grammar context or prerequisite support is not counted as outcome coverage."
+    },
+    "weighted_coverage_formula": "covered = 1.0; partially_covered = 0.5; missing = 0.0. Weighted coverage is a planning indicator, not a readiness score.",
+    "critical_year_exit_rule": "topic_verify is supporting evidence only. assessment-blueprint.json sets can_satisfy_year_exit_alone=false, so no outcome is classified covered solely from a four-phase topic bundle or Verification v2.",
+    "topic_audit_evidence_ceiling": "Recover provides knowledge/scaffolding, Practice controlled performance, School topic-scoped school-format transfer, Verify topic-level transfer. None independently supplies cumulative year-exit transfer.",
+    "exclusions": [
+      "readiness thresholds or scoring",
+      "planner/runtime changes",
+      "Supabase changes",
+      "new exercises or mocks",
+      "definitive technical gap analysis"
+    ],
+    "readiness_policy_compatibility": "Read-only compatibility check performed after readiness-policy.json merged: topic_verify remains supporting evidence; required blocking outcomes require cumulative transfer evidence; inactive programme-dependent axes do not lower readiness. No readiness policy fields were modified by this audit."
+  },
+  "summary": {
+    "outcomes_total": 63,
+    "live_topics": 24,
+    "covered": 0,
+    "partially_covered": 31,
+    "missing": 32,
+    "fully_covered_percent": 0,
+    "weighted_coverage_percent": 24.6,
+    "priority_counts": {
+      "P0": 34,
+      "P1": 11,
+      "P2": 18
+    },
+    "headline_findings": [
+      "The existing 24 topic bundles form a strong grammar recovery layer but do not yet constitute a complete year-exit curriculum evidence system.",
+      "The main P0 blocker is not another large wave of isolated grammar worksheets: it is the absence of approved cumulative unseen assessment fragments plus core reading, lexical and Year 1 connected-writing content.",
+      "Year 2 currently contains several outcomes with no Year 1 prerequisite links even though their observable performance is explicitly a consolidation/extension; these links should be added during integration.",
+      "Year 3 progression is structurally stronger, but several B1 core grammar outcomes depend on planned Wave 3 topics, while all B1 reading/lexical/writing transfer needs dedicated content families.",
+      "Listening and functional communication remain correctly conditional and should not become universal readiness blockers."
+    ]
+  },
+  "coverage_by_year": {
+    "year_1": {
+      "total": 21,
+      "covered": 0,
+      "partially_covered": 16,
+      "missing": 5,
+      "fully_covered_percent": 0,
+      "weighted_coverage_percent": 38.1
+    },
+    "year_2": {
+      "total": 19,
+      "covered": 0,
+      "partially_covered": 11,
+      "missing": 8,
+      "fully_covered_percent": 0,
+      "weighted_coverage_percent": 28.9
+    },
+    "year_3": {
+      "total": 23,
+      "covered": 0,
+      "partially_covered": 4,
+      "missing": 19,
+      "fully_covered_percent": 0,
+      "weighted_coverage_percent": 8.7
+    }
+  },
+  "coverage_by_competence_axis": {
+    "grammar_sentence_control": {
+      "total": 19,
+      "covered": 0,
+      "partially_covered": 16,
+      "missing": 3,
+      "fully_covered_percent": 0,
+      "weighted_coverage_percent": 42.1
+    },
+    "lexical_competence": {
+      "total": 9,
+      "covered": 0,
+      "partially_covered": 4,
+      "missing": 5,
+      "fully_covered_percent": 0,
+      "weighted_coverage_percent": 22.2
+    },
+    "reading": {
+      "total": 9,
+      "covered": 0,
+      "partially_covered": 0,
+      "missing": 9,
+      "fully_covered_percent": 0,
+      "weighted_coverage_percent": 0
+    },
+    "writing": {
+      "total": 10,
+      "covered": 0,
+      "partially_covered": 6,
+      "missing": 4,
+      "fully_covered_percent": 0,
+      "weighted_coverage_percent": 30
+    },
+    "listening": {
+      "total": 7,
+      "covered": 0,
+      "partially_covered": 0,
+      "missing": 7,
+      "fully_covered_percent": 0,
+      "weighted_coverage_percent": 0
+    },
+    "functional_communication": {
+      "total": 9,
+      "covered": 0,
+      "partially_covered": 5,
+      "missing": 4,
+      "fully_covered_percent": 0,
+      "weighted_coverage_percent": 27.8
+    }
+  },
+  "outcome_coverage": [
+    {
+      "outcome_id": "RY1-GRAM-001",
+      "school_year_profile": 1,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A1+",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/question-formation.bundle.json",
+          "content/recovery/wave-2/negatives.bundle.json",
+          "content/recovery/wave-2/pronouns.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/possessives.bundle.json",
+          "content/recovery/wave-2/articles.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [
+        "be-have-got-there-is-are"
+      ],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "required grammar/language-system content: be-have-got-there-is-are",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "grammar_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I bundle live (question-formation, negatives, pronouns) forniscono knowledge, controlled performance e transfer limitato al topic, ma mancano topic richiesti (be-have-got-there-is-are) e manca evidenza cumulativa unseen a livello di outcome."
+    },
+    {
+      "outcome_id": "RY1-GRAM-002",
+      "school_year_profile": 1,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-1/present-simple.bundle.json",
+          "content/recovery/wave-1/present-continuous.bundle.json",
+          "content/recovery/wave-1/present-simple-vs-present-continuous.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "adverbs-frequency"
+      ],
+      "missing_evidence": [
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I topic grammaticali richiesti sono disponibili e forniscono knowledge, controlled performance e topic-level transfer, ma le verifiche restano etichettate per argomento: manca evidenza cumulativa/mista unseen, necessaria per il year-exit transfer."
+    },
+    {
+      "outcome_id": "RY1-GRAM-003",
+      "school_year_profile": 1,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-1/past-simple.bundle.json",
+          "content/recovery/wave-1/irregular-verbs.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I topic grammaticali richiesti sono disponibili e forniscono knowledge, controlled performance e topic-level transfer, ma le verifiche restano etichettate per argomento: manca evidenza cumulativa/mista unseen, necessaria per il year-exit transfer."
+    },
+    {
+      "outcome_id": "RY1-GRAM-004",
+      "school_year_profile": 1,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-1/future-forms.bundle.json",
+          "content/recovery/wave-2/will.bundle.json",
+          "content/recovery/wave-2/going-to.bundle.json",
+          "content/recovery/wave-2/present-continuous-future.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I topic grammaticali richiesti sono disponibili e forniscono knowledge, controlled performance e topic-level transfer, ma le verifiche restano etichettate per argomento: manca evidenza cumulativa/mista unseen, necessaria per il year-exit transfer."
+    },
+    {
+      "outcome_id": "RY1-GRAM-005",
+      "school_year_profile": 1,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/articles.bundle.json",
+          "content/recovery/wave-2/pronouns.bundle.json",
+          "content/recovery/wave-2/possessives.bundle.json",
+          "content/recovery/wave-2/countable-uncountable.bundle.json",
+          "content/recovery/wave-2/some-any.bundle.json",
+          "content/recovery/wave-2/much-many-a-lot-of.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I topic grammaticali richiesti sono disponibili e forniscono knowledge, controlled performance e topic-level transfer, ma le verifiche restano etichettate per argomento: manca evidenza cumulativa/mista unseen, necessaria per il year-exit transfer."
+    },
+    {
+      "outcome_id": "RY1-GRAM-006",
+      "school_year_profile": 1,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/comparatives.bundle.json",
+          "content/recovery/wave-2/superlatives.bundle.json",
+          "content/recovery/wave-2/prepositions.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I topic grammaticali richiesti sono disponibili e forniscono knowledge, controlled performance e topic-level transfer, ma le verifiche restano etichettate per argomento: manca evidenza cumulativa/mista unseen, necessaria per il year-exit transfer."
+    },
+    {
+      "outcome_id": "RY1-GRAM-007",
+      "school_year_profile": 1,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/modal-verbs.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I topic grammaticali richiesti sono disponibili e forniscono knowledge, controlled performance e topic-level transfer, ma le verifiche restano etichettate per argomento: manca evidenza cumulativa/mista unseen, necessaria per il year-exit transfer."
+    },
+    {
+      "outcome_id": "RY1-LEX-001",
+      "school_year_profile": 1,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "A1+",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/present-simple.bundle.json",
+          "content/recovery/wave-2/possessives.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_contextual_exposure",
+          "limited_controlled_word_choice"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "adverbs-frequency"
+      ],
+      "missing_evidence": [
+        "systematic lexical-domain/chunk/collocation evidence with lexical competence as primary axis",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "lexical_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "I bundle grammaticali espongono lessico frequente nei contesti pertinenti (present-simple, possessives), ma il lessico è secondario alla grammatica: mancano copertura sistematica dei domini, collocazioni/chunk e assessment primario lessicale con transfer cumulativo."
+    },
+    {
+      "outcome_id": "RY1-LEX-002",
+      "school_year_profile": 1,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/prepositions.bundle.json",
+          "content/recovery/wave-2/countable-uncountable.bundle.json",
+          "content/recovery/wave-2/some-any.bundle.json",
+          "content/recovery/wave-2/much-many-a-lot-of.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_contextual_exposure",
+          "limited_controlled_word_choice"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "systematic lexical-domain/chunk/collocation evidence with lexical competence as primary axis",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "lexical_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "I bundle grammaticali espongono lessico frequente nei contesti pertinenti (prepositions, countable-uncountable, some-any, much-many-a-lot-of), ma il lessico è secondario alla grammatica: mancano copertura sistematica dei domini, collocazioni/chunk e assessment primario lessicale con transfer cumulativo."
+    },
+    {
+      "outcome_id": "RY1-LEX-003",
+      "school_year_profile": 1,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/past-simple.bundle.json",
+          "content/recovery/wave-1/future-forms.bundle.json",
+          "content/recovery/wave-2/modal-verbs.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_contextual_exposure",
+          "limited_controlled_word_choice"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "systematic lexical-domain/chunk/collocation evidence with lexical competence as primary axis",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "lexical_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "I bundle grammaticali espongono lessico frequente nei contesti pertinenti (past-simple, future-forms, modal-verbs), ma il lessico è secondario alla grammatica: mancano copertura sistematica dei domini, collocazioni/chunk e assessment primario lessicale con transfer cumulativo."
+    },
+    {
+      "outcome_id": "RY1-READ-001",
+      "school_year_profile": 1,
+      "competence_axis": "reading",
+      "cefr_target": "A1+",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated primary-axis reading comprehension tasks at the target year/CEFR",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "reading_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "I mini-testi e dialoghi dentro i bundle grammaticali servono a determinare una scelta grammaticale, non a misurare reading come asse primario. Mancano testi dedicati con gist/detail/sequence/inference/reference/context evidence e forme cumulative unseen."
+    },
+    {
+      "outcome_id": "RY1-READ-002",
+      "school_year_profile": 1,
+      "competence_axis": "reading",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/present-simple.bundle.json",
+          "content/recovery/wave-1/present-continuous.bundle.json",
+          "content/recovery/wave-1/past-simple.bundle.json",
+          "content/recovery/wave-1/future-forms.bundle.json"
+        ],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated primary-axis reading comprehension tasks at the target year/CEFR",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "reading_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "I mini-testi e dialoghi dentro i bundle grammaticali servono a determinare una scelta grammaticale, non a misurare reading come asse primario. Mancano testi dedicati con gist/detail/sequence/inference/reference/context evidence e forme cumulative unseen."
+    },
+    {
+      "outcome_id": "RY1-READ-003",
+      "school_year_profile": 1,
+      "competence_axis": "reading",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/pronouns.bundle.json"
+        ],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated primary-axis reading comprehension tasks at the target year/CEFR",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "reading_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "I mini-testi e dialoghi dentro i bundle grammaticali servono a determinare una scelta grammaticale, non a misurare reading come asse primario. Mancano testi dedicati con gist/detail/sequence/inference/reference/context evidence e forme cumulative unseen."
+    },
+    {
+      "outcome_id": "RY1-WRITE-001",
+      "school_year_profile": 1,
+      "competence_axis": "writing",
+      "cefr_target": "A1+",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/present-simple.bundle.json",
+          "content/recovery/wave-2/possessives.bundle.json",
+          "content/recovery/wave-2/prepositions.bundle.json",
+          "content/recovery/wave-2/comparatives.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_controlled_sentence_production"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "connected writing task(s) scored for task completion, organisation, language and independence",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Esistono produzione controllata di frase, traduzione ed error correction nei topic collegati, ma non bastano per dimostrare una produzione connessa. Mancano task dedicati di paragrafo/email/narrazione/descrizione con organizzazione, task completion, revisione e independent transfer."
+    },
+    {
+      "outcome_id": "RY1-WRITE-002",
+      "school_year_profile": 1,
+      "competence_axis": "writing",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/question-formation.bundle.json",
+          "content/recovery/wave-2/modal-verbs.bundle.json",
+          "content/recovery/wave-1/future-forms.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_controlled_sentence_production"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "connected writing task(s) scored for task completion, organisation, language and independence",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Esistono produzione controllata di frase, traduzione ed error correction nei topic collegati, ma non bastano per dimostrare una produzione connessa. Mancano task dedicati di paragrafo/email/narrazione/descrizione con organizzazione, task completion, revisione e independent transfer."
+    },
+    {
+      "outcome_id": "RY1-WRITE-003",
+      "school_year_profile": 1,
+      "competence_axis": "writing",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-1/past-simple.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/irregular-verbs.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_controlled_sentence_production"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "connected writing task(s) scored for task completion, organisation, language and independence",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Esistono produzione controllata di frase, traduzione ed error correction nei topic collegati, ma non bastano per dimostrare una produzione connessa. Mancano task dedicati di paragrafo/email/narrazione/descrizione con organizzazione, task completion, revisione e independent transfer."
+    },
+    {
+      "outcome_id": "RY1-LISTEN-001",
+      "school_year_profile": 1,
+      "competence_axis": "listening",
+      "cefr_target": "A1+",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "audio-backed primary-axis listening tasks without transcript-first support",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "listening_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "I 24 bundle Recovery non contengono un corpus audio/listening primario. Mancano audio unseen a velocità naturale controllata, task di gist/detail/inference e, ai livelli superiori, input multi-turn/multi-speaker."
+    },
+    {
+      "outcome_id": "RY1-LISTEN-002",
+      "school_year_profile": 1,
+      "competence_axis": "listening",
+      "cefr_target": "A2",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/present-simple.bundle.json",
+          "content/recovery/wave-1/past-simple.bundle.json",
+          "content/recovery/wave-1/future-forms.bundle.json"
+        ],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "audio-backed primary-axis listening tasks without transcript-first support",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "listening_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "I 24 bundle Recovery non contengono un corpus audio/listening primario. Mancano audio unseen a velocità naturale controllata, task di gist/detail/inference e, ai livelli superiori, input multi-turn/multi-speaker."
+    },
+    {
+      "outcome_id": "RY1-COMM-001",
+      "school_year_profile": 1,
+      "competence_axis": "functional_communication",
+      "cefr_target": "A1+",
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/question-formation.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/present-simple.bundle.json",
+          "content/recovery/wave-2/possessives.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_functional_context",
+          "limited_controlled_response"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated functional/interactive response evidence appropriate to the programme",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "functional_communication_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Modal verbs, questions, future forms e quantifiers includono situazioni funzionali e risposte vincolate, ma non esiste evidenza primaria sufficiente di scambio reattivo: mancano interaction, clarification/repair e transfer non memorizzato."
+    },
+    {
+      "outcome_id": "RY1-COMM-002",
+      "school_year_profile": 1,
+      "competence_axis": "functional_communication",
+      "cefr_target": "A2",
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/modal-verbs.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/some-any.bundle.json",
+          "content/recovery/wave-2/prepositions.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_functional_context",
+          "limited_controlled_response"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated functional/interactive response evidence appropriate to the programme",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "functional_communication_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Modal verbs, questions, future forms e quantifiers includono situazioni funzionali e risposte vincolate, ma non esiste evidenza primaria sufficiente di scambio reattivo: mancano interaction, clarification/repair e transfer non memorizzato."
+    },
+    {
+      "outcome_id": "RY1-COMM-003",
+      "school_year_profile": 1,
+      "competence_axis": "functional_communication",
+      "cefr_target": "A2",
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-1/past-simple.bundle.json",
+          "content/recovery/wave-1/future-forms.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/irregular-verbs.bundle.json",
+          "content/recovery/wave-2/going-to.bundle.json",
+          "content/recovery/wave-2/present-continuous-future.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_functional_context",
+          "limited_controlled_response"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated functional/interactive response evidence appropriate to the programme",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "functional_communication_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Modal verbs, questions, future forms e quantifiers includono situazioni funzionali e risposte vincolate, ma non esiste evidenza primaria sufficiente di scambio reattivo: mancano interaction, clarification/repair e transfer non memorizzato."
+    },
+    {
+      "outcome_id": "RY2-GRAM-001",
+      "school_year_profile": 2,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2+",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-1/present-simple.bundle.json",
+          "content/recovery/wave-1/present-continuous.bundle.json",
+          "content/recovery/wave-1/past-simple.bundle.json",
+          "content/recovery/wave-2/past-continuous.bundle.json",
+          "content/recovery/wave-1/present-perfect.bundle.json",
+          "content/recovery/wave-1/future-forms.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/present-simple-vs-present-continuous.bundle.json",
+          "content/recovery/wave-1/past-simple-vs-present-perfect.bundle.json",
+          "content/recovery/wave-1/irregular-verbs.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "past-simple-vs-past-continuous",
+        "present-perfect-time-expressions"
+      ],
+      "missing_evidence": [
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I topic grammaticali richiesti sono disponibili e forniscono knowledge, controlled performance e topic-level transfer, ma le verifiche restano etichettate per argomento: manca evidenza cumulativa/mista unseen, necessaria per il year-exit transfer."
+    },
+    {
+      "outcome_id": "RY2-GRAM-002",
+      "school_year_profile": 2,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/question-formation.bundle.json",
+          "content/recovery/wave-2/negatives.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/present-simple.bundle.json",
+          "content/recovery/wave-1/present-continuous.bundle.json",
+          "content/recovery/wave-1/past-simple.bundle.json",
+          "content/recovery/wave-1/present-perfect.bundle.json",
+          "content/recovery/wave-2/modal-verbs.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "adverbs-frequency"
+      ],
+      "missing_evidence": [
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I topic grammaticali richiesti sono disponibili e forniscono knowledge, controlled performance e topic-level transfer, ma le verifiche restano etichettate per argomento: manca evidenza cumulativa/mista unseen, necessaria per il year-exit transfer."
+    },
+    {
+      "outcome_id": "RY2-GRAM-003",
+      "school_year_profile": 2,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2+",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/modal-verbs.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/future-forms.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [
+        "zero-first-conditionals"
+      ],
+      "recommended_topics_not_live": [
+        "second-conditional"
+      ],
+      "missing_evidence": [
+        "required grammar/language-system content: zero-first-conditionals",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "grammar_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I bundle live (modal-verbs) forniscono knowledge, controlled performance e transfer limitato al topic, ma mancano topic richiesti (zero-first-conditionals) e manca evidenza cumulativa unseen a livello di outcome."
+    },
+    {
+      "outcome_id": "RY2-GRAM-004",
+      "school_year_profile": 2,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2+",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/pronouns.bundle.json",
+          "content/recovery/wave-2/prepositions.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/articles.bundle.json",
+          "content/recovery/wave-2/possessives.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [
+        "relative-clauses"
+      ],
+      "recommended_topics_not_live": [
+        "gerunds-infinitives"
+      ],
+      "missing_evidence": [
+        "required grammar/language-system content: relative-clauses",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "grammar_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I bundle live (pronouns, prepositions) forniscono knowledge, controlled performance e transfer limitato al topic, ma mancano topic richiesti (relative-clauses) e manca evidenza cumulativa unseen a livello di outcome."
+    },
+    {
+      "outcome_id": "RY2-GRAM-005",
+      "school_year_profile": 2,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/articles.bundle.json",
+          "content/recovery/wave-2/countable-uncountable.bundle.json",
+          "content/recovery/wave-2/some-any.bundle.json",
+          "content/recovery/wave-2/much-many-a-lot-of.bundle.json",
+          "content/recovery/wave-2/comparatives.bundle.json",
+          "content/recovery/wave-2/superlatives.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/pronouns.bundle.json",
+          "content/recovery/wave-2/possessives.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "indefinite-pronouns",
+        "too-enough"
+      ],
+      "missing_evidence": [
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I topic grammaticali richiesti sono disponibili e forniscono knowledge, controlled performance e topic-level transfer, ma le verifiche restano etichettate per argomento: manca evidenza cumulativa/mista unseen, necessaria per il year-exit transfer."
+    },
+    {
+      "outcome_id": "RY2-LEX-001",
+      "school_year_profile": 2,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [
+          "supporting_contextual_exposure",
+          "limited_controlled_word_choice"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "systematic lexical-domain/chunk/collocation evidence with lexical competence as primary axis",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "lexical_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "I bundle grammaticali espongono lessico frequente nei contesti pertinenti (contesti Recovery), ma il lessico è secondario alla grammatica: mancano copertura sistematica dei domini, collocazioni/chunk e assessment primario lessicale con transfer cumulativo."
+    },
+    {
+      "outcome_id": "RY2-LEX-002",
+      "school_year_profile": 2,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "A2+",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "systematic lexical-domain/chunk/collocation evidence with lexical competence as primary axis",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "lexical_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "Non esiste contenuto Recovery primario per questo livello di competenza lessicale: i contesti grammaticali non raccolgono evidenza autonoma su domini, collocazioni, word families, precisione o parafrasi richieste dall'outcome."
+    },
+    {
+      "outcome_id": "RY2-LEX-003",
+      "school_year_profile": 2,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "A2+",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P1",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "systematic lexical-domain/chunk/collocation evidence with lexical competence as primary axis",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "lexical_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "Non esiste contenuto Recovery primario per questo livello di competenza lessicale: i contesti grammaticali non raccolgono evidenza autonoma su domini, collocazioni, word families, precisione o parafrasi richieste dall'outcome."
+    },
+    {
+      "outcome_id": "RY2-READ-001",
+      "school_year_profile": 2,
+      "competence_axis": "reading",
+      "cefr_target": "A2",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated primary-axis reading comprehension tasks at the target year/CEFR",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "reading_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "I mini-testi e dialoghi dentro i bundle grammaticali servono a determinare una scelta grammaticale, non a misurare reading come asse primario. Mancano testi dedicati con gist/detail/sequence/inference/reference/context evidence e forme cumulative unseen."
+    },
+    {
+      "outcome_id": "RY2-READ-002",
+      "school_year_profile": 2,
+      "competence_axis": "reading",
+      "cefr_target": "A2+",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/pronouns.bundle.json"
+        ],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "relative-clauses"
+      ],
+      "missing_evidence": [
+        "dedicated primary-axis reading comprehension tasks at the target year/CEFR",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "reading_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "I mini-testi e dialoghi dentro i bundle grammaticali servono a determinare una scelta grammaticale, non a misurare reading come asse primario. Mancano testi dedicati con gist/detail/sequence/inference/reference/context evidence e forme cumulative unseen."
+    },
+    {
+      "outcome_id": "RY2-READ-003",
+      "school_year_profile": 2,
+      "competence_axis": "reading",
+      "cefr_target": "B1",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P1",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated primary-axis reading comprehension tasks at the target year/CEFR",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "reading_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "I mini-testi e dialoghi dentro i bundle grammaticali servono a determinare una scelta grammaticale, non a misurare reading come asse primario. Mancano testi dedicati con gist/detail/sequence/inference/reference/context evidence e forme cumulative unseen."
+    },
+    {
+      "outcome_id": "RY2-WRITE-001",
+      "school_year_profile": 2,
+      "competence_axis": "writing",
+      "cefr_target": "A2",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P1",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/question-formation.bundle.json",
+          "content/recovery/wave-2/negatives.bundle.json",
+          "content/recovery/wave-1/future-forms.bundle.json",
+          "content/recovery/wave-2/modal-verbs.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_controlled_sentence_production"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "connected writing task(s) scored for task completion, organisation, language and independence",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Esistono produzione controllata di frase, traduzione ed error correction nei topic collegati, ma non bastano per dimostrare una produzione connessa. Mancano task dedicati di paragrafo/email/narrazione/descrizione con organizzazione, task completion, revisione e independent transfer."
+    },
+    {
+      "outcome_id": "RY2-WRITE-002",
+      "school_year_profile": 2,
+      "competence_axis": "writing",
+      "cefr_target": "A2+",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P1",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-1/past-simple.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/past-continuous.bundle.json",
+          "content/recovery/wave-1/irregular-verbs.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_controlled_sentence_production"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "past-simple-vs-past-continuous"
+      ],
+      "missing_evidence": [
+        "connected writing task(s) scored for task completion, organisation, language and independence",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Esistono produzione controllata di frase, traduzione ed error correction nei topic collegati, ma non bastano per dimostrare una produzione connessa. Mancano task dedicati di paragrafo/email/narrazione/descrizione con organizzazione, task completion, revisione e independent transfer."
+    },
+    {
+      "outcome_id": "RY2-WRITE-003",
+      "school_year_profile": 2,
+      "competence_axis": "writing",
+      "cefr_target": "A2+",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P1",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/comparatives.bundle.json",
+          "content/recovery/wave-2/superlatives.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_controlled_sentence_production"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "relative-clauses",
+        "too-enough"
+      ],
+      "missing_evidence": [
+        "connected writing task(s) scored for task completion, organisation, language and independence",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Esistono produzione controllata di frase, traduzione ed error correction nei topic collegati, ma non bastano per dimostrare una produzione connessa. Mancano task dedicati di paragrafo/email/narrazione/descrizione con organizzazione, task completion, revisione e independent transfer."
+    },
+    {
+      "outcome_id": "RY2-LISTEN-001",
+      "school_year_profile": 2,
+      "competence_axis": "listening",
+      "cefr_target": "A2",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "audio-backed primary-axis listening tasks without transcript-first support",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "listening_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "I 24 bundle Recovery non contengono un corpus audio/listening primario. Mancano audio unseen a velocità naturale controllata, task di gist/detail/inference e, ai livelli superiori, input multi-turn/multi-speaker."
+    },
+    {
+      "outcome_id": "RY2-LISTEN-002",
+      "school_year_profile": 2,
+      "competence_axis": "listening",
+      "cefr_target": "A2+",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "audio-backed primary-axis listening tasks without transcript-first support",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "listening_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "I 24 bundle Recovery non contengono un corpus audio/listening primario. Mancano audio unseen a velocità naturale controllata, task di gist/detail/inference e, ai livelli superiori, input multi-turn/multi-speaker."
+    },
+    {
+      "outcome_id": "RY2-COMM-001",
+      "school_year_profile": 2,
+      "competence_axis": "functional_communication",
+      "cefr_target": "A2",
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/modal-verbs.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/some-any.bundle.json",
+          "content/recovery/wave-2/question-formation.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_functional_context",
+          "limited_controlled_response"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated functional/interactive response evidence appropriate to the programme",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "functional_communication_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Modal verbs, questions, future forms e quantifiers includono situazioni funzionali e risposte vincolate, ma non esiste evidenza primaria sufficiente di scambio reattivo: mancano interaction, clarification/repair e transfer non memorizzato."
+    },
+    {
+      "outcome_id": "RY2-COMM-002",
+      "school_year_profile": 2,
+      "competence_axis": "functional_communication",
+      "cefr_target": "A2+",
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/comparatives.bundle.json",
+          "content/recovery/wave-1/future-forms.bundle.json",
+          "content/recovery/wave-1/present-perfect.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "supporting_functional_context",
+          "limited_controlled_response"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated functional/interactive response evidence appropriate to the programme",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "functional_communication_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Modal verbs, questions, future forms e quantifiers includono situazioni funzionali e risposte vincolate, ma non esiste evidenza primaria sufficiente di scambio reattivo: mancano interaction, clarification/repair e transfer non memorizzato."
+    },
+    {
+      "outcome_id": "RY2-COMM-003",
+      "school_year_profile": 2,
+      "competence_axis": "functional_communication",
+      "cefr_target": "B1",
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated functional/interactive response evidence appropriate to the programme",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "functional_communication_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Non esiste contenuto primario sufficiente per l'interazione richiesta: i contesti grammaticali non dimostrano gestione di chiarimento, repair, follow-up e più turni autonomi."
+    },
+    {
+      "outcome_id": "RY3-GRAM-001",
+      "school_year_profile": 3,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "B1",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-1/past-simple.bundle.json",
+          "content/recovery/wave-2/past-continuous.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/irregular-verbs.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [
+        "past-simple-vs-past-continuous",
+        "used-to"
+      ],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "required grammar/language-system content: past-simple-vs-past-continuous, used-to",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "grammar_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I bundle live (past-simple, past-continuous) forniscono knowledge, controlled performance e transfer limitato al topic, ma mancano topic richiesti (past-simple-vs-past-continuous, used-to) e manca evidenza cumulativa unseen a livello di outcome."
+    },
+    {
+      "outcome_id": "RY3-GRAM-002",
+      "school_year_profile": 3,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "B1+",
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/past-simple.bundle.json",
+          "content/recovery/wave-2/past-continuous.bundle.json"
+        ],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [
+        "past-perfect-narrative-tenses"
+      ],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "required grammar/language-system content: past-perfect-narrative-tenses",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "grammar_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "La prestazione richiede strutture non ancora costruite (past-perfect-narrative-tenses); i topic live collegati non possono dimostrare il transfer integrato richiesto e manca un pool cumulativo unseen."
+    },
+    {
+      "outcome_id": "RY3-GRAM-003",
+      "school_year_profile": 3,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "B1",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-1/present-perfect.bundle.json",
+          "content/recovery/wave-1/past-simple-vs-present-perfect.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/irregular-verbs.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [
+        "present-perfect-time-expressions"
+      ],
+      "recommended_topics_not_live": [
+        "present-perfect-continuous"
+      ],
+      "missing_evidence": [
+        "required grammar/language-system content: present-perfect-time-expressions",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "grammar_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I bundle live (present-perfect, past-simple-vs-present-perfect) forniscono knowledge, controlled performance e transfer limitato al topic, ma mancano topic richiesti (present-perfect-time-expressions) e manca evidenza cumulativa unseen a livello di outcome."
+    },
+    {
+      "outcome_id": "RY3-GRAM-004",
+      "school_year_profile": 3,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "B1",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/modal-verbs.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [
+        "zero-first-conditionals",
+        "second-conditional"
+      ],
+      "recommended_topics_not_live": [
+        "modal-deduction",
+        "third-conditional",
+        "wish-if-only"
+      ],
+      "missing_evidence": [
+        "required grammar/language-system content: zero-first-conditionals, second-conditional",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "grammar_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I bundle live (modal-verbs) forniscono knowledge, controlled performance e transfer limitato al topic, ma mancano topic richiesti (zero-first-conditionals, second-conditional) e manca evidenza cumulativa unseen a livello di outcome."
+    },
+    {
+      "outcome_id": "RY3-GRAM-005",
+      "school_year_profile": 3,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "B1",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/pronouns.bundle.json",
+          "content/recovery/wave-2/articles.bundle.json",
+          "content/recovery/wave-2/prepositions.bundle.json"
+        ],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [
+        "relative-clauses",
+        "passive-voice"
+      ],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "required grammar/language-system content: relative-clauses, passive-voice",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "grammar_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "La prestazione richiede strutture non ancora costruite (relative-clauses, passive-voice); i topic live collegati non possono dimostrare il transfer integrato richiesto e manca un pool cumulativo unseen."
+    },
+    {
+      "outcome_id": "RY3-GRAM-006",
+      "school_year_profile": 3,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "B1+",
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/pronouns.bundle.json",
+          "content/recovery/wave-2/question-formation.bundle.json",
+          "content/recovery/wave-1/past-simple.bundle.json"
+        ],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [
+        "reported-speech"
+      ],
+      "recommended_topics_not_live": [
+        "past-perfect-narrative-tenses"
+      ],
+      "missing_evidence": [
+        "required grammar/language-system content: reported-speech",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "grammar_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "La prestazione richiede strutture non ancora costruite (reported-speech); i topic live collegati non possono dimostrare il transfer integrato richiesto e manca un pool cumulativo unseen."
+    },
+    {
+      "outcome_id": "RY3-GRAM-007",
+      "school_year_profile": 3,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "B1",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "partially_covered",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [
+          "content/recovery/wave-2/question-formation.bundle.json",
+          "content/recovery/wave-2/negatives.bundle.json"
+        ],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/articles.bundle.json",
+          "content/recovery/wave-2/pronouns.bundle.json",
+          "content/recovery/wave-2/prepositions.bundle.json"
+        ],
+        "evidence_levels_present": [
+          "knowledge",
+          "controlled_performance",
+          "topic_level_transfer"
+        ],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "gerunds-infinitives",
+        "relative-clauses",
+        "too-enough",
+        "indefinite-pronouns"
+      ],
+      "missing_evidence": [
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "I topic grammaticali richiesti sono disponibili e forniscono knowledge, controlled performance e topic-level transfer, ma le verifiche restano etichettate per argomento: manca evidenza cumulativa/mista unseen, necessaria per il year-exit transfer."
+    },
+    {
+      "outcome_id": "RY3-LEX-001",
+      "school_year_profile": 3,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "B1",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "systematic lexical-domain/chunk/collocation evidence with lexical competence as primary axis",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "lexical_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "Non esiste contenuto Recovery primario per questo livello di competenza lessicale: i contesti grammaticali non raccolgono evidenza autonoma su domini, collocazioni, word families, precisione o parafrasi richieste dall'outcome."
+    },
+    {
+      "outcome_id": "RY3-LEX-002",
+      "school_year_profile": 3,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "B1",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "systematic lexical-domain/chunk/collocation evidence with lexical competence as primary axis",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "lexical_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "translation_production"
+      ],
+      "reason": "Non esiste contenuto Recovery primario per questo livello di competenza lessicale: i contesti grammaticali non raccolgono evidenza autonoma su domini, collocazioni, word families, precisione o parafrasi richieste dall'outcome."
+    },
+    {
+      "outcome_id": "RY3-LEX-003",
+      "school_year_profile": 3,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "B1+",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P1",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "systematic lexical-domain/chunk/collocation evidence with lexical competence as primary axis",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "lexical_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "Non esiste contenuto Recovery primario per questo livello di competenza lessicale: i contesti grammaticali non raccolgono evidenza autonoma su domini, collocazioni, word families, precisione o parafrasi richieste dall'outcome."
+    },
+    {
+      "outcome_id": "RY3-READ-001",
+      "school_year_profile": 3,
+      "competence_axis": "reading",
+      "cefr_target": "B1",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated primary-axis reading comprehension tasks at the target year/CEFR",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "reading_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "I mini-testi e dialoghi dentro i bundle grammaticali servono a determinare una scelta grammaticale, non a misurare reading come asse primario. Mancano testi dedicati con gist/detail/sequence/inference/reference/context evidence e forme cumulative unseen."
+    },
+    {
+      "outcome_id": "RY3-READ-002",
+      "school_year_profile": 3,
+      "competence_axis": "reading",
+      "cefr_target": "B1",
+      "programme_requirement": "default_core",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P0",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/pronouns.bundle.json"
+        ],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "relative-clauses"
+      ],
+      "missing_evidence": [
+        "dedicated primary-axis reading comprehension tasks at the target year/CEFR",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "reading_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "I mini-testi e dialoghi dentro i bundle grammaticali servono a determinare una scelta grammaticale, non a misurare reading come asse primario. Mancano testi dedicati con gist/detail/sequence/inference/reference/context evidence e forme cumulative unseen."
+    },
+    {
+      "outcome_id": "RY3-READ-003",
+      "school_year_profile": 3,
+      "competence_axis": "reading",
+      "cefr_target": "B1+",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P1",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated primary-axis reading comprehension tasks at the target year/CEFR",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "reading_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "I mini-testi e dialoghi dentro i bundle grammaticali servono a determinare una scelta grammaticale, non a misurare reading come asse primario. Mancano testi dedicati con gist/detail/sequence/inference/reference/context evidence e forme cumulative unseen."
+    },
+    {
+      "outcome_id": "RY3-WRITE-001",
+      "school_year_profile": 3,
+      "competence_axis": "writing",
+      "cefr_target": "B1",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P1",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "connected writing task(s) scored for task completion, organisation, language and independence",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Non esiste una progressione B1 di writing primario capace di raccogliere evidenza su organizzazione, sviluppo, scelta autonoma delle forme e revisione; la produzione sentence-level dei bundle grammaticali non soddisfa l'outcome."
+    },
+    {
+      "outcome_id": "RY3-WRITE-002",
+      "school_year_profile": 3,
+      "competence_axis": "writing",
+      "cefr_target": "B1",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P1",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "past-perfect-narrative-tenses",
+        "used-to"
+      ],
+      "missing_evidence": [
+        "connected writing task(s) scored for task completion, organisation, language and independence",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Non esiste una progressione B1 di writing primario capace di raccogliere evidenza su organizzazione, sviluppo, scelta autonoma delle forme e revisione; la produzione sentence-level dei bundle grammaticali non soddisfa l'outcome."
+    },
+    {
+      "outcome_id": "RY3-WRITE-003",
+      "school_year_profile": 3,
+      "competence_axis": "writing",
+      "cefr_target": "B1",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P1",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-2/comparatives.bundle.json",
+          "content/recovery/wave-2/modal-verbs.bundle.json"
+        ],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "relative-clauses",
+        "zero-first-conditionals",
+        "second-conditional"
+      ],
+      "missing_evidence": [
+        "connected writing task(s) scored for task completion, organisation, language and independence",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Non esiste una progressione B1 di writing primario capace di raccogliere evidenza su organizzazione, sviluppo, scelta autonoma delle forme e revisione; la produzione sentence-level dei bundle grammaticali non soddisfa l'outcome."
+    },
+    {
+      "outcome_id": "RY3-WRITE-004",
+      "school_year_profile": 3,
+      "competence_axis": "writing",
+      "cefr_target": "B1+",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P1",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "connected writing task(s) scored for task completion, organisation, language and independence",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Non esiste una progressione B1 di writing primario capace di raccogliere evidenza su organizzazione, sviluppo, scelta autonoma delle forme e revisione; la produzione sentence-level dei bundle grammaticali non soddisfa l'outcome."
+    },
+    {
+      "outcome_id": "RY3-LISTEN-001",
+      "school_year_profile": 3,
+      "competence_axis": "listening",
+      "cefr_target": "B1",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "audio-backed primary-axis listening tasks without transcript-first support",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "listening_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "I 24 bundle Recovery non contengono un corpus audio/listening primario. Mancano audio unseen a velocità naturale controllata, task di gist/detail/inference e, ai livelli superiori, input multi-turn/multi-speaker."
+    },
+    {
+      "outcome_id": "RY3-LISTEN-002",
+      "school_year_profile": 3,
+      "competence_axis": "listening",
+      "cefr_target": "B1",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "audio-backed primary-axis listening tasks without transcript-first support",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "listening_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "I 24 bundle Recovery non contengono un corpus audio/listening primario. Mancano audio unseen a velocità naturale controllata, task di gist/detail/inference e, ai livelli superiori, input multi-turn/multi-speaker."
+    },
+    {
+      "outcome_id": "RY3-LISTEN-003",
+      "school_year_profile": 3,
+      "competence_axis": "listening",
+      "cefr_target": "B1+",
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "audio-backed primary-axis listening tasks without transcript-first support",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "listening_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "reason": "I 24 bundle Recovery non contengono un corpus audio/listening primario. Mancano audio unseen a velocità naturale controllata, task di gist/detail/inference e, ai livelli superiori, input multi-turn/multi-speaker."
+    },
+    {
+      "outcome_id": "RY3-COMM-001",
+      "school_year_profile": 3,
+      "competence_axis": "functional_communication",
+      "cefr_target": "B1",
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated functional/interactive response evidence appropriate to the programme",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "functional_communication_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Non esiste contenuto primario sufficiente per l'interazione richiesta: i contesti grammaticali non dimostrano gestione di chiarimento, repair, follow-up e più turni autonomi."
+    },
+    {
+      "outcome_id": "RY3-COMM-002",
+      "school_year_profile": 3,
+      "competence_axis": "functional_communication",
+      "cefr_target": "B1",
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [
+          "content/recovery/wave-1/present-perfect.bundle.json",
+          "content/recovery/wave-1/future-forms.bundle.json",
+          "content/recovery/wave-2/modal-verbs.bundle.json"
+        ],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [
+        "zero-first-conditionals",
+        "second-conditional"
+      ],
+      "missing_evidence": [
+        "dedicated functional/interactive response evidence appropriate to the programme",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "functional_communication_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Non esiste contenuto primario sufficiente per l'interazione richiesta: i contesti grammaticali non dimostrano gestione di chiarimento, repair, follow-up e più turni autonomi."
+    },
+    {
+      "outcome_id": "RY3-COMM-003",
+      "school_year_profile": 3,
+      "competence_axis": "functional_communication",
+      "cefr_target": "B1+",
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true,
+      "coverage": "missing",
+      "priority": "P2",
+      "existing_evidence_sources": {
+        "required_live_topic_bundles": [],
+        "supporting_live_topic_bundles": [],
+        "evidence_levels_present": [],
+        "primary_axis_year_exit_evidence_available": false,
+        "cumulative_unseen_evidence_available": false
+      },
+      "required_topics_not_live": [],
+      "recommended_topics_not_live": [],
+      "missing_evidence": [
+        "dedicated functional/interactive response evidence appropriate to the programme",
+        "approved cumulative assessment fragment(s) providing unseen/mixed year-exit transfer evidence"
+      ],
+      "gap_categories": [
+        "functional_communication_content",
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "reason": "Non esiste contenuto primario sufficiente per l'interazione richiesta: i contesti grammaticali non dimostrano gestione di chiarimento, repair, follow-up e più turni autonomi."
+    }
+  ],
+  "cross_year_prerequisite_recommendations": [
+    {
+      "outcome_id": "RY2-GRAM-001",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004"
+      ],
+      "rationale": "Year 2 integrated tense transfer presupposes Year 1 control of present contrast, finished past and basic future choice; currently it restarts with no v2 outcome dependency."
+    },
+    {
+      "outcome_id": "RY2-GRAM-002",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-GRAM-001"
+      ],
+      "rationale": "Auxiliary, question, negative and word-order control is a direct progression from the Year 1 basic sentence outcome."
+    },
+    {
+      "outcome_id": "RY2-GRAM-003",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-GRAM-007",
+        "RY1-GRAM-004"
+      ],
+      "rationale": "Meaning-based modals extend Year 1 modal control; zero/first conditional also relies on established present/future meaning."
+    },
+    {
+      "outcome_id": "RY2-GRAM-004",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-GRAM-005",
+        "RY1-GRAM-006"
+      ],
+      "rationale": "Reference, pronouns and prepositional/descriptive control should precede relative-clause and sentence-expansion work."
+    },
+    {
+      "outcome_id": "RY2-GRAM-005",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-GRAM-005",
+        "RY1-GRAM-006"
+      ],
+      "rationale": "Year 2 nominal/quantity/comparison transfer is consolidation and extension of Year 1 noun-phrase and comparison control."
+    },
+    {
+      "outcome_id": "RY2-LEX-001",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003"
+      ],
+      "rationale": "The Year 2 broad lexical profile explicitly consolidates the major Year 1 domain families rather than starting a new lexicon."
+    },
+    {
+      "outcome_id": "RY2-READ-001",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-READ-002"
+      ],
+      "rationale": "Connected A2 Year 2 reading should build on Year 1 short descriptive/narrative text comprehension."
+    },
+    {
+      "outcome_id": "RY2-READ-002",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-READ-003"
+      ],
+      "rationale": "Contextual inference and reference tracking are explicit extensions of the Year 1 context/reference outcome."
+    },
+    {
+      "outcome_id": "RY2-WRITE-001",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-WRITE-002"
+      ],
+      "rationale": "Year 2 functional email/message production is a direct progression from the Year 1 A2 message/email outcome."
+    },
+    {
+      "outcome_id": "RY2-WRITE-002",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-WRITE-003"
+      ],
+      "rationale": "Year 2 narration with background actions extends the Year 1 simple completed-event narrative."
+    },
+    {
+      "outcome_id": "RY2-WRITE-003",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-WRITE-001"
+      ],
+      "rationale": "Organised description/explanation should build on basic connected descriptive paragraph production."
+    },
+    {
+      "outcome_id": "RY2-LISTEN-001",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-LISTEN-002"
+      ],
+      "rationale": "The Year 2 profile assumes the learner can already follow short A2 dialogue/monologue input before increasing naturalness and breadth."
+    },
+    {
+      "outcome_id": "RY2-COMM-001",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-COMM-002"
+      ],
+      "rationale": "Requests, offers, permission and practical exchanges directly extend the corresponding Year 1 functional outcome."
+    },
+    {
+      "outcome_id": "RY2-COMM-002",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY1-COMM-003"
+      ],
+      "rationale": "Experiences/plans with reasons extend Year 1 experience/plan communication rather than restarting the communicative chain."
+    },
+    {
+      "outcome_id": "RY3-GRAM-006",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY2-GRAM-001",
+        "RY2-GRAM-004"
+      ],
+      "rationale": "Reported speech requires tense/reference control and sentence linking in addition to the already-declared question/negative sentence control."
+    },
+    {
+      "outcome_id": "RY3-GRAM-007",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY2-GRAM-002"
+      ],
+      "rationale": "Independent error revision presupposes established auxiliary, question, negative and word-order control."
+    },
+    {
+      "outcome_id": "RY3-LEX-001",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY2-LEX-002"
+      ],
+      "rationale": "B1 lexical breadth/collocation use should depend on Year 2 contextual lexical selection; avoid depending on optional RY2-LEX-003."
+    },
+    {
+      "outcome_id": "RY3-WRITE-003",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY2-WRITE-003"
+      ],
+      "rationale": "B1 explanation/opinion with reasons extends Year 2 organised description/explanation."
+    },
+    {
+      "outcome_id": "RY3-WRITE-004",
+      "type": "same_year",
+      "add_prerequisite_outcome_ids": [
+        "RY3-WRITE-003"
+      ],
+      "rationale": "Revision of clarity/cohesion is meaningful only after the learner can produce the connected B1 text being revised."
+    },
+    {
+      "outcome_id": "RY3-LISTEN-001",
+      "type": "cross_year",
+      "add_prerequisite_outcome_ids": [
+        "RY2-LISTEN-002"
+      ],
+      "rationale": "B1 listening should build on Year 2 detail/sequence/simple-inference control; RY2-LISTEN-001 alone is too low a bridge."
+    }
+  ],
+  "optionality_audit": {
+    "status": "sound_with_recommendations",
+    "findings": [
+      "No default_core outcome currently depends on a programme_dependent functional/oral outcome.",
+      "Listening remains default_if_assessed and functional_communication remains programme_dependent across the progression, so those axes are not automatically forced into every recovery profile.",
+      "The proposed prerequisite additions intentionally avoid making a default_core outcome depend on a prior-year default_if_assessed/programme_dependent outcome.",
+      "RY3-READ-001 is not recommended to depend on RY2-READ-003 because RY2-READ-003 is default_if_assessed while RY3-READ-001 is default_core."
+    ]
+  },
+  "live_topic_audit": [
+    {
+      "topic_key": "future-forms",
+      "wave": 1,
+      "bundle_path": "content/recovery/wave-1/future-forms.bundle.json",
+      "total_minutes": 42,
+      "directly_supports_outcome_ids": [
+        "RY1-COMM-003",
+        "RY1-GRAM-004",
+        "RY2-GRAM-001"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-LEX-003",
+        "RY1-LISTEN-002",
+        "RY1-READ-002",
+        "RY1-WRITE-002",
+        "RY2-COMM-002",
+        "RY2-GRAM-003",
+        "RY2-WRITE-001",
+        "RY3-COMM-002"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LISTEN-001",
+        "RY1-READ-001",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-003",
+        "RY2-GRAM-002",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "irregular-verbs",
+      "wave": 1,
+      "bundle_path": "content/recovery/wave-1/irregular-verbs.bundle.json",
+      "total_minutes": 42,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-003"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-COMM-003",
+        "RY1-WRITE-003",
+        "RY2-GRAM-001",
+        "RY2-WRITE-002",
+        "RY3-GRAM-001",
+        "RY3-GRAM-003"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-002",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "past-simple",
+      "wave": 1,
+      "bundle_path": "content/recovery/wave-1/past-simple.bundle.json",
+      "total_minutes": 42,
+      "directly_supports_outcome_ids": [
+        "RY1-COMM-003",
+        "RY1-GRAM-003",
+        "RY1-WRITE-003",
+        "RY2-GRAM-001",
+        "RY2-WRITE-002",
+        "RY3-GRAM-001"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-LEX-003",
+        "RY1-LISTEN-002",
+        "RY1-READ-002",
+        "RY2-GRAM-002",
+        "RY3-GRAM-002",
+        "RY3-GRAM-006"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LISTEN-001",
+        "RY1-READ-001",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "past-simple-vs-present-perfect",
+      "wave": 1,
+      "bundle_path": "content/recovery/wave-1/past-simple-vs-present-perfect.bundle.json",
+      "total_minutes": 42,
+      "directly_supports_outcome_ids": [
+        "RY3-GRAM-003"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "present-continuous",
+      "wave": 1,
+      "bundle_path": "content/recovery/wave-1/present-continuous.bundle.json",
+      "total_minutes": 42,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-002",
+        "RY2-GRAM-001"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-READ-002",
+        "RY2-GRAM-002"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "present-perfect",
+      "wave": 1,
+      "bundle_path": "content/recovery/wave-1/present-perfect.bundle.json",
+      "total_minutes": 42,
+      "directly_supports_outcome_ids": [
+        "RY2-GRAM-001",
+        "RY3-GRAM-003"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY2-COMM-002",
+        "RY2-GRAM-002",
+        "RY3-COMM-002"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-003",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "present-simple",
+      "wave": 1,
+      "bundle_path": "content/recovery/wave-1/present-simple.bundle.json",
+      "total_minutes": 42,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-002",
+        "RY2-GRAM-001"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-LEX-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-002",
+        "RY1-WRITE-001",
+        "RY2-GRAM-002"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-READ-001",
+        "RY1-READ-003",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "present-simple-vs-present-continuous",
+      "wave": 1,
+      "bundle_path": "content/recovery/wave-1/present-simple-vs-present-continuous.bundle.json",
+      "total_minutes": 42,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-002"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "articles",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/articles.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-005",
+        "RY2-GRAM-005"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-GRAM-001",
+        "RY2-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-007"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-006",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "comparatives",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/comparatives.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-006",
+        "RY2-GRAM-005"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-WRITE-001",
+        "RY2-COMM-002",
+        "RY2-WRITE-003",
+        "RY3-WRITE-003"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "countable-uncountable",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/countable-uncountable.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-005",
+        "RY2-GRAM-005"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-LEX-002"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "going-to",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/going-to.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-004"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-COMM-003"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "modal-verbs",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/modal-verbs.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-COMM-002",
+        "RY1-GRAM-007",
+        "RY2-COMM-001",
+        "RY2-GRAM-003",
+        "RY3-GRAM-004"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-LEX-003",
+        "RY1-WRITE-002",
+        "RY2-GRAM-002",
+        "RY2-WRITE-001",
+        "RY3-COMM-002",
+        "RY3-WRITE-003"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-003",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "much-many-a-lot-of",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/much-many-a-lot-of.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-005",
+        "RY2-GRAM-005"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-LEX-002"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "negatives",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/negatives.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-001",
+        "RY2-GRAM-002",
+        "RY3-GRAM-007"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY2-WRITE-001"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "past-continuous",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/past-continuous.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY2-GRAM-001",
+        "RY3-GRAM-001"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY2-WRITE-002",
+        "RY3-GRAM-002"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "possessives",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/possessives.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-005"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-GRAM-001",
+        "RY1-LEX-001",
+        "RY1-WRITE-001",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "prepositions",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/prepositions.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-006",
+        "RY2-GRAM-004"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-COMM-002",
+        "RY1-LEX-002",
+        "RY1-WRITE-001",
+        "RY3-GRAM-005",
+        "RY3-GRAM-007"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-006",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "present-continuous-future",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/present-continuous-future.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-004"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-COMM-003"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "pronouns",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/pronouns.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-001",
+        "RY1-GRAM-005",
+        "RY2-GRAM-004"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-READ-003",
+        "RY2-GRAM-005",
+        "RY2-READ-002",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-READ-002"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "question-formation",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/question-formation.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-GRAM-001",
+        "RY2-GRAM-002",
+        "RY3-GRAM-007"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-WRITE-002",
+        "RY2-COMM-001",
+        "RY2-WRITE-001",
+        "RY3-GRAM-006"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-003",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "some-any",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/some-any.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-005",
+        "RY2-GRAM-005"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY1-COMM-002",
+        "RY1-LEX-002",
+        "RY2-COMM-001"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "superlatives",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/superlatives.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-006",
+        "RY2-GRAM-005"
+      ],
+      "partially_supports_outcome_ids": [
+        "RY2-WRITE-003"
+      ],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004",
+        "RY1-GRAM-005",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    },
+    {
+      "topic_key": "will",
+      "wave": 2,
+      "bundle_path": "content/recovery/wave-2/will.bundle.json",
+      "total_minutes": 48,
+      "directly_supports_outcome_ids": [
+        "RY1-GRAM-004"
+      ],
+      "partially_supports_outcome_ids": [],
+      "cannot_demonstrate_outcome_ids": [
+        "RY1-COMM-001",
+        "RY1-COMM-002",
+        "RY1-COMM-003",
+        "RY1-GRAM-001",
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006",
+        "RY1-GRAM-007",
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003",
+        "RY1-LISTEN-001",
+        "RY1-LISTEN-002",
+        "RY1-READ-001",
+        "RY1-READ-002",
+        "RY1-READ-003",
+        "RY1-WRITE-001",
+        "RY1-WRITE-002",
+        "RY1-WRITE-003",
+        "RY2-COMM-001",
+        "RY2-COMM-002",
+        "RY2-COMM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY2-LEX-001",
+        "RY2-LEX-002",
+        "RY2-LEX-003",
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002",
+        "RY2-READ-001",
+        "RY2-READ-002",
+        "RY2-READ-003",
+        "RY2-WRITE-001",
+        "RY2-WRITE-002",
+        "RY2-WRITE-003",
+        "RY3-COMM-001",
+        "RY3-COMM-002",
+        "RY3-COMM-003",
+        "RY3-GRAM-001",
+        "RY3-GRAM-002",
+        "RY3-GRAM-003",
+        "RY3-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007",
+        "RY3-LEX-001",
+        "RY3-LEX-002",
+        "RY3-LEX-003",
+        "RY3-LISTEN-001",
+        "RY3-LISTEN-002",
+        "RY3-LISTEN-003",
+        "RY3-READ-001",
+        "RY3-READ-002",
+        "RY3-READ-003",
+        "RY3-WRITE-001",
+        "RY3-WRITE-002",
+        "RY3-WRITE-003",
+        "RY3-WRITE-004"
+      ],
+      "evidence_profile": {
+        "recover": [
+          "knowledge",
+          "scaffolded_controlled_performance"
+        ],
+        "practice": [
+          "controlled_performance"
+        ],
+        "school": [
+          "controlled_performance",
+          "topic_scoped_school_format_transfer"
+        ],
+        "verify": [
+          "topic_level_transfer",
+          "controlled_production"
+        ],
+        "year_exit_transfer": false,
+        "rule": "Even Verification v2 remains topic_verify evidence; assessment-blueprint.json explicitly states it cannot satisfy a year-exit outcome alone."
+      },
+      "primary_axis_limits": "The bundle is grammar/language-system primary. Embedded vocabulary, mini-text, translation or dialogue context may support other axes secondarily but cannot independently prove lexical, reading, writing, listening or functional-communication year-exit outcomes."
+    }
+  ],
+  "missing_grammar_topics": [
+    {
+      "topic_key": "be-have-got-there-is-are",
+      "label": "Be, have got, there is/are",
+      "legacy_tier": "foundation",
+      "legacy_introduced_by_year": 1,
+      "priority": "P0",
+      "build_requirement": "must_build",
+      "required_by_outcome_ids": [
+        "RY1-GRAM-001"
+      ],
+      "recommended_for_outcome_ids": [],
+      "rationale": "Required by RY1-GRAM-001; basic sentence control cannot be fully supported without be/have got/there is-are."
+    },
+    {
+      "topic_key": "adverbs-frequency",
+      "label": "Adverbs of frequency",
+      "legacy_tier": "core",
+      "legacy_introduced_by_year": 1,
+      "priority": "P1",
+      "build_requirement": "must_build",
+      "required_by_outcome_ids": [],
+      "recommended_for_outcome_ids": [
+        "RY1-GRAM-002",
+        "RY1-LEX-001",
+        "RY2-GRAM-002"
+      ],
+      "rationale": "Recommended across Year 1 routine/lexical control and Year 2 sentence control; legacy tier is core, but no current default-core outcome makes the separate topic a hard prerequisite."
+    },
+    {
+      "topic_key": "past-simple-vs-past-continuous",
+      "label": "Past Simple vs Past Continuous",
+      "legacy_tier": "core",
+      "legacy_introduced_by_year": 2,
+      "priority": "P0",
+      "build_requirement": "must_build",
+      "required_by_outcome_ids": [
+        "RY3-GRAM-001"
+      ],
+      "recommended_for_outcome_ids": [
+        "RY2-GRAM-001",
+        "RY2-WRITE-002"
+      ],
+      "rationale": "Required by RY3-GRAM-001 and central to Year 2 narrative transfer."
+    },
+    {
+      "topic_key": "present-perfect-time-expressions",
+      "label": "Present Perfect: ever/never, just/already/yet, for/since",
+      "legacy_tier": "core",
+      "legacy_introduced_by_year": 2,
+      "priority": "P0",
+      "build_requirement": "must_build",
+      "required_by_outcome_ids": [
+        "RY3-GRAM-003"
+      ],
+      "recommended_for_outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "rationale": "Required by RY3-GRAM-003 and supports mature Year 2/3 Present Perfect choice."
+    },
+    {
+      "topic_key": "zero-first-conditionals",
+      "label": "Zero and First Conditional",
+      "legacy_tier": "core",
+      "legacy_introduced_by_year": 2,
+      "priority": "P0",
+      "build_requirement": "must_build",
+      "required_by_outcome_ids": [
+        "RY2-GRAM-003",
+        "RY3-GRAM-004"
+      ],
+      "recommended_for_outcome_ids": [
+        "RY3-COMM-002",
+        "RY3-WRITE-003"
+      ],
+      "rationale": "Required by RY2-GRAM-003 and RY3-GRAM-004."
+    },
+    {
+      "topic_key": "second-conditional",
+      "label": "Second Conditional",
+      "legacy_tier": "frequent",
+      "legacy_introduced_by_year": 2,
+      "priority": "P0",
+      "build_requirement": "must_build",
+      "required_by_outcome_ids": [
+        "RY3-GRAM-004"
+      ],
+      "recommended_for_outcome_ids": [
+        "RY2-GRAM-003",
+        "RY3-COMM-002",
+        "RY3-WRITE-003"
+      ],
+      "rationale": "Required by core RY3-GRAM-004."
+    },
+    {
+      "topic_key": "relative-clauses",
+      "label": "Relative clauses",
+      "legacy_tier": "frequent",
+      "legacy_introduced_by_year": 2,
+      "priority": "P0",
+      "build_requirement": "must_build",
+      "required_by_outcome_ids": [
+        "RY2-GRAM-004",
+        "RY3-GRAM-005"
+      ],
+      "recommended_for_outcome_ids": [
+        "RY2-READ-002",
+        "RY2-WRITE-003",
+        "RY3-GRAM-007",
+        "RY3-READ-002",
+        "RY3-WRITE-003"
+      ],
+      "rationale": "Required by RY2-GRAM-004 and RY3-GRAM-005."
+    },
+    {
+      "topic_key": "gerunds-infinitives",
+      "label": "Gerund and infinitive",
+      "legacy_tier": "frequent",
+      "legacy_introduced_by_year": 2,
+      "priority": "P1",
+      "build_requirement": "programme_dependent",
+      "required_by_outcome_ids": [],
+      "recommended_for_outcome_ids": [
+        "RY2-GRAM-004",
+        "RY3-GRAM-007"
+      ],
+      "rationale": "Supports sentence expansion/revision but is only recommended, not required, by current v2 core outcomes."
+    },
+    {
+      "topic_key": "indefinite-pronouns",
+      "label": "Somebody / anything / nobody / everywhere...",
+      "legacy_tier": "frequent",
+      "legacy_introduced_by_year": 2,
+      "priority": "P1",
+      "build_requirement": "programme_dependent",
+      "required_by_outcome_ids": [],
+      "recommended_for_outcome_ids": [
+        "RY2-GRAM-005",
+        "RY3-GRAM-007"
+      ],
+      "rationale": "Useful noun/reference extension; currently recommended rather than required."
+    },
+    {
+      "topic_key": "too-enough",
+      "label": "Too / enough",
+      "legacy_tier": "frequent",
+      "legacy_introduced_by_year": 2,
+      "priority": "P1",
+      "build_requirement": "programme_dependent",
+      "required_by_outcome_ids": [],
+      "recommended_for_outcome_ids": [
+        "RY2-GRAM-005",
+        "RY2-WRITE-003",
+        "RY3-GRAM-007"
+      ],
+      "rationale": "Useful for comparison/description and revision, but not required by a current core outcome."
+    },
+    {
+      "topic_key": "used-to",
+      "label": "Used to",
+      "legacy_tier": "frequent",
+      "legacy_introduced_by_year": 2,
+      "priority": "P0",
+      "build_requirement": "must_build",
+      "required_by_outcome_ids": [
+        "RY3-GRAM-001"
+      ],
+      "recommended_for_outcome_ids": [
+        "RY3-WRITE-002"
+      ],
+      "rationale": "Required by core RY3-GRAM-001 for past habits/states."
+    },
+    {
+      "topic_key": "passive-voice",
+      "label": "Passive voice",
+      "legacy_tier": "frequent",
+      "legacy_introduced_by_year": 2,
+      "priority": "P0",
+      "build_requirement": "must_build",
+      "required_by_outcome_ids": [
+        "RY3-GRAM-005"
+      ],
+      "recommended_for_outcome_ids": [],
+      "rationale": "Required by core RY3-GRAM-005."
+    },
+    {
+      "topic_key": "present-perfect-continuous",
+      "label": "Present Perfect Continuous",
+      "legacy_tier": "programme-dependent",
+      "legacy_introduced_by_year": 3,
+      "priority": "P2",
+      "build_requirement": "programme_dependent",
+      "required_by_outcome_ids": [],
+      "recommended_for_outcome_ids": [
+        "RY3-GRAM-003"
+      ],
+      "rationale": "Programme-dependent B1+ extension; only recommended by RY3-GRAM-003."
+    },
+    {
+      "topic_key": "past-perfect-narrative-tenses",
+      "label": "Past Perfect and narrative tenses",
+      "legacy_tier": "programme-dependent",
+      "legacy_introduced_by_year": 3,
+      "priority": "P2",
+      "build_requirement": "programme_dependent",
+      "required_by_outcome_ids": [
+        "RY3-GRAM-002"
+      ],
+      "recommended_for_outcome_ids": [
+        "RY3-GRAM-006",
+        "RY3-WRITE-002"
+      ],
+      "rationale": "Required only by programme-dependent RY3-GRAM-002; also supports advanced narration."
+    },
+    {
+      "topic_key": "reported-speech",
+      "label": "Reported speech",
+      "legacy_tier": "programme-dependent",
+      "legacy_introduced_by_year": 3,
+      "priority": "P2",
+      "build_requirement": "programme_dependent",
+      "required_by_outcome_ids": [
+        "RY3-GRAM-006"
+      ],
+      "recommended_for_outcome_ids": [],
+      "rationale": "Required only by programme-dependent RY3-GRAM-006."
+    },
+    {
+      "topic_key": "modal-deduction",
+      "label": "Modal verbs for deduction",
+      "legacy_tier": "programme-dependent",
+      "legacy_introduced_by_year": 3,
+      "priority": "P2",
+      "build_requirement": "programme_dependent",
+      "required_by_outcome_ids": [],
+      "recommended_for_outcome_ids": [
+        "RY3-GRAM-004"
+      ],
+      "rationale": "Programme-dependent extension recommended by RY3-GRAM-004."
+    },
+    {
+      "topic_key": "question-tags",
+      "label": "Question tags",
+      "legacy_tier": "programme-dependent",
+      "legacy_introduced_by_year": 3,
+      "priority": "P2",
+      "build_requirement": "programme_dependent",
+      "required_by_outcome_ids": [],
+      "recommended_for_outcome_ids": [],
+      "rationale": "Present in the legacy catalogue but no current v2 outcome requires or recommends it; build only when a declared school programme needs it."
+    },
+    {
+      "topic_key": "third-conditional",
+      "label": "Third Conditional",
+      "legacy_tier": "programme-dependent",
+      "legacy_introduced_by_year": 3,
+      "priority": "P2",
+      "build_requirement": "programme_dependent",
+      "required_by_outcome_ids": [],
+      "recommended_for_outcome_ids": [
+        "RY3-GRAM-004"
+      ],
+      "rationale": "Programme-dependent extension recommended by RY3-GRAM-004."
+    },
+    {
+      "topic_key": "wish-if-only",
+      "label": "Wish / if only",
+      "legacy_tier": "programme-dependent",
+      "legacy_introduced_by_year": 3,
+      "priority": "P2",
+      "build_requirement": "programme_dependent",
+      "required_by_outcome_ids": [],
+      "recommended_for_outcome_ids": [
+        "RY3-GRAM-004"
+      ],
+      "rationale": "Programme-dependent B1+ extension recommended by RY3-GRAM-004."
+    }
+  ],
+  "missing_content_families": [
+    {
+      "family_id": "cumulative_assessment_fragment_pool",
+      "priority": "P0",
+      "gap_categories": [
+        "assessment_fragment",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "affected_outcome_scope": "all required Curriculum v2 outcomes",
+      "need": "Approved unseen/transformed fragments tagged by primary axis, outcome_ids, mode, school task family, duration and difficulty so checkpoints and mocks can collect disaggregated transfer evidence.",
+      "why": "Without this pool, topic_verify remains supporting evidence and no outcome can be fully covered at year-exit level."
+    },
+    {
+      "family_id": "mixed_grammar_year_exit_transfer",
+      "priority": "P0",
+      "gap_categories": [
+        "cumulative_transfer",
+        "assessment_fragment"
+      ],
+      "affected_outcome_scope": "core grammar outcomes Year 1-3",
+      "need": "Fresh mixed grammar, sentence building, transformation and plausible error-correction fragments where the target rule is not announced.",
+      "why": "Current School/Verify phases are still scoped to a known topic and therefore cannot alone prove autonomous system selection across topics."
+    },
+    {
+      "family_id": "translation_it_en_progression",
+      "priority": "P0",
+      "gap_categories": [
+        "translation_production",
+        "cumulative_transfer",
+        "school_task_format"
+      ],
+      "affected_outcome_scope": "grammar plus lexical/writing-supporting outcomes that declare translation_it_en",
+      "need": "Cumulative Italian→English fragments mixing previously learned systems, with complete accepted natural variants and increasing sentence/discourse load.",
+      "why": "Existing translations are useful but topic-scoped; they do not yet test cross-topic choice or year-level interference patterns."
+    },
+    {
+      "family_id": "lexical_core_domains_and_chunks",
+      "priority": "P0",
+      "gap_categories": [
+        "lexical_content",
+        "assessment_fragment"
+      ],
+      "affected_outcome_scope": "RY1-LEX-001..003, RY2-LEX-001..002, RY3-LEX-001..002",
+      "need": "Year-banded lexical sets embedded in context across school/daily life, relationships, travel, technology, health, environment and work/future, including chunks, common collocations and contextual choice.",
+      "why": "Current vocabulary is incidental to grammar prompts and is not scored as lexical competence."
+    },
+    {
+      "family_id": "lexical_depth_word_families_collocations_paraphrase",
+      "priority": "P0",
+      "gap_categories": [
+        "lexical_content",
+        "cumulative_transfer"
+      ],
+      "affected_outcome_scope": "especially RY2-LEX-002..003 and RY3-LEX-002..003",
+      "need": "Contextual collocation work, word-family selection where programme-appropriate, anti-calque tasks and paraphrase/precision evidence.",
+      "why": "B1 lexical outcomes explicitly require precision and reformulation that the grammar bundles do not teach or assess."
+    },
+    {
+      "family_id": "reading_progression_years_1_3",
+      "priority": "P0",
+      "gap_categories": [
+        "reading_content",
+        "assessment_fragment",
+        "school_task_format",
+        "cumulative_transfer"
+      ],
+      "affected_outcome_scope": "all 9 reading outcomes",
+      "need": "Year 1 functional/short personal texts; Year 2 longer connected texts with gist/detail/sequence/simple inference/context; Year 3 multiparagraph B1 texts with cohesion, attitude, comparison and synthesis.",
+      "why": "No current Recovery bundle has reading_comprehension as a dedicated primary-axis evidence source."
+    },
+    {
+      "family_id": "year1_connected_writing_core",
+      "priority": "P0",
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "school_task_format",
+        "cumulative_transfer"
+      ],
+      "affected_outcome_scope": "RY1-WRITE-001..003",
+      "need": "Personal/descriptive paragraph, short message/email and simple narrative tasks with guided-to-independent progression and explicit task/organisation/language evidence.",
+      "why": "Year 1 writing is default_core; sentence-level translation or grammar production cannot establish connected writing competence."
+    },
+    {
+      "family_id": "school_task_format_fragment_library",
+      "priority": "P0",
+      "gap_categories": [
+        "school_task_format",
+        "assessment_fragment"
+      ],
+      "affected_outcome_scope": "all core written axes",
+      "need": "Reusable fresh forms for mixed grammar, open cloze, transformations, error correction, IT→EN, sentence production, reading text, functional text and writing, mapped to outcomes/axes.",
+      "why": "Modalità scuola exists per topic, but cumulative school evidence needs cross-topic/outcome fragments and format breadth."
+    },
+    {
+      "family_id": "year2_year3_connected_writing",
+      "priority": "P1",
+      "gap_categories": [
+        "writing_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "affected_outcome_scope": "RY2-WRITE-001..003 and RY3-WRITE-001..004",
+      "need": "Email/message, narration, description/explanation, opinion/reasons and B1 revision tasks with independent-writing rubrics.",
+      "why": "These outcomes are default_if_assessed but are essential for a robust school profile when writing is part of the recovery test."
+    },
+    {
+      "family_id": "writing_revision_and_self_editing",
+      "priority": "P1",
+      "gap_categories": [
+        "writing_content",
+        "cumulative_transfer"
+      ],
+      "affected_outcome_scope": "RY2-WRITE-003, RY3-GRAM-007, RY3-WRITE-004",
+      "need": "Own-text revision and plausible-error editing that distinguishes grammar correction from improving cohesion, reference, lexical choice and organisation.",
+      "why": "Current error correction acts on supplied sentences, not on revision of connected learner writing."
+    },
+    {
+      "family_id": "integrated_reading_to_writing_tasks",
+      "priority": "P1",
+      "gap_categories": [
+        "reading_content",
+        "writing_content",
+        "assessment_fragment"
+      ],
+      "affected_outcome_scope": "RY2-READ-003, RY3-READ-003 and upper-year writing outcomes",
+      "need": "Short integrated tasks requiring selection/synthesis of source information before a concise written response.",
+      "why": "The curriculum asks for selecting and combining distributed information, which isolated grammar items cannot show."
+    },
+    {
+      "family_id": "listening_progression_years_1_3",
+      "priority": "P2",
+      "gap_categories": [
+        "listening_content",
+        "assessment_fragment",
+        "cumulative_transfer"
+      ],
+      "affected_outcome_scope": "all 7 listening outcomes when assessed",
+      "need": "Year 1 short dialogues/monologues; Year 2 more natural detail/inference tasks; Year 3 B1 longer multi-turn and multi-speaker audio, always without transcript-first support.",
+      "why": "No current Recovery topic bundle provides audio-backed listening evidence; the axis is conditional on the school programme."
+    },
+    {
+      "family_id": "functional_interaction_clarification_repair",
+      "priority": "P2",
+      "gap_categories": [
+        "functional_communication_content",
+        "assessment_fragment",
+        "school_task_format"
+      ],
+      "affected_outcome_scope": "all 9 functional communication outcomes when required",
+      "need": "Practical exchanges, responsive follow-ups, clarification requests, repair/reformulation and non-memorised multi-turn interaction in written/spoken form as appropriate.",
+      "why": "Current functional contexts are largely grammar-scoped and cannot demonstrate adaptive interaction."
+    },
+    {
+      "family_id": "programme_dependent_b1_plus_grammar",
+      "priority": "P2",
+      "gap_categories": [
+        "grammar_content"
+      ],
+      "affected_outcome_scope": "programme-dependent Year 3 grammar outcomes and school-specific overrides",
+      "need": "Past Perfect/narrative tenses, Reported Speech and selected B1+ extensions only when the official school programme requires them.",
+      "why": "These should not delay a core first release for students whose school programme does not assess them."
+    }
+  ],
+  "recommended_implementation_batches": [
+    {
+      "batch": 0,
+      "priority": "P0",
+      "name": "Cross-year prerequisite alignment",
+      "deliverable": "Review and apply the prerequisite recommendations to Year 2/3 outcome files in the later integration PR; no content authoring in this audit.",
+      "rationale": "Prevents Year 2 from appearing to restart at zero and makes Year 3 dependency chains explicit before readiness consumes them."
+    },
+    {
+      "batch": 1,
+      "priority": "P0",
+      "name": "Core missing grammar systems",
+      "deliverable": "Build be/have got/there is-are, past simple vs past continuous, Present Perfect time expressions, zero/first conditional, second conditional, relative clauses, used to and passive voice.",
+      "rationale": "These are required by default-core outcomes and currently block complete language-system evidence."
+    },
+    {
+      "batch": 2,
+      "priority": "P0",
+      "name": "Cumulative transfer foundation",
+      "deliverable": "Create approved assessment fragments for mixed grammar, IT→EN, sentence production, transformation and error correction with unseen/transformed forms and outcome/axis metadata.",
+      "rationale": "This is the main architectural pedagogical blocker: without cumulative transfer fragments, no existing topic can become full year-exit evidence."
+    },
+    {
+      "batch": 3,
+      "priority": "P0",
+      "name": "Core lexical + reading progression",
+      "deliverable": "Build Year 1-3 lexical domain/chunk progression and primary-axis reading sets at A1+/A2, A2+/early B1 and B1/B1+.",
+      "rationale": "Lexical and reading are core axes but current Recovery content is grammar-primary."
+    },
+    {
+      "batch": 4,
+      "priority": "P0",
+      "name": "Year 1 connected writing",
+      "deliverable": "Build paragraph, email/message and simple narrative progression with guided and independent evidence.",
+      "rationale": "Year 1 writing outcomes are default_core and currently lack connected production."
+    },
+    {
+      "batch": 5,
+      "priority": "P1",
+      "name": "Upper-year writing, lexical depth and integrated tasks",
+      "deliverable": "Build Year 2/3 writing, self-editing, collocation/word-family/paraphrase and integrated reading-to-writing fragments.",
+      "rationale": "Raises the product from grammar recovery to robust A2+/B1 school competence where those formats are assessed."
+    },
+    {
+      "batch": 6,
+      "priority": "P2",
+      "name": "Listening + functional communication",
+      "deliverable": "Build year-banded listening and adaptive practical interaction/clarification/repair content, activated only by programme profile.",
+      "rationale": "Important when assessed, but must remain optional rather than delaying grammar/written core for all learners."
+    },
+    {
+      "batch": 7,
+      "priority": "P2",
+      "name": "Programme-dependent Year 3 grammar",
+      "deliverable": "Build Past Perfect/narrative tenses, Reported Speech and selected modal/conditional B1+ extensions according to actual school demand.",
+      "rationale": "Useful library depth without inflating the default Year 3 profile toward B2."
+    },
+    {
+      "batch": 8,
+      "priority": "integration",
+      "name": "Definitive gap analysis",
+      "deliverable": "Merge this pedagogical audit with the separate technical/runtime audit and approved readiness policy into gap-analysis.json.",
+      "rationale": "The definitive plan should only be created when pedagogical need, runtime feasibility and readiness evidence rules are aligned."
+    }
+  ]
+}
