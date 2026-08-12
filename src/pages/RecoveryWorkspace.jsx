@@ -12,8 +12,8 @@ import { supabase } from '../lib/supabaseClient.js';
 import '../styles/learnerEditorial.css';
 
 const viewCopy = {
-  percorso: ['Il mio percorso', 'Le sessioni restano ordinate per priorità, ma gli argomenti non sono bloccati in sequenza rigida.'],
-  argomenti: ['Argomenti', 'Il programma della scuola resta sempre visibile. Puoi aprire un argomento manualmente, mentre “Oggi” continua a indicare la priorità consigliata.'],
+  percorso: ['Il mio percorso', '“Oggi” indica la priorità consigliata, non un blocco. Se vuoi, puoi iniziare in anticipo le sessioni di argomento già previste nel tuo piano.'],
+  argomenti: ['Argomenti', 'Il programma della scuola resta sempre visibile. Puoi studiare un argomento prima del giorno previsto, mentre “Oggi” continua a indicare la priorità consigliata.'],
   errori: ['Ripassa gli errori', 'Qui compaiono i pattern già rilevati dal sistema di diagnostica degli esercizi Sblocco.'],
   simulazioni: ['Simulazioni', 'Le simulazioni sono separate dalla pratica normale: niente correzioni durante la prova, risultati dopo la consegna.'],
 };
@@ -28,7 +28,20 @@ function sessionStatus(session) {
   if (session.status === 'completed') return 'Completata';
   if (session.status === 'in_progress') return 'In corso';
   if (session.status === 'available') return 'Da fare ora';
-  return 'Più avanti';
+  return 'Programmato';
+}
+
+function canStudyAhead(session) {
+  return session?.status === 'planned'
+    && Boolean(session.topic_key)
+    && ['topic', 'quick_review'].includes(session.session_type);
+}
+
+function topicSessionActionLabel(session, verificationOnly = false) {
+  if (verificationOnly) return 'Verifica rapida';
+  if (session?.status === 'planned') return 'Studia in anticipo';
+  if (session?.status === 'in_progress') return 'Continua';
+  return 'Apri ora';
 }
 
 export default function RecoveryWorkspace({ view }) {
@@ -140,10 +153,13 @@ export default function RecoveryWorkspace({ view }) {
                     ? <span className="learner-list__status"><CheckCircle2 size={14} style={{ display: 'inline' }} /> {sessionStatus(session)}</span>
                     : session.status === 'available' || session.status === 'in_progress'
                       ? <Link to={`/recupero-debito/sessione/${session.id}`} className="learner-text-link">{sessionStatus(session)} <ArrowRight size={14} /></Link>
-                      : <span className="learner-list__status">{sessionStatus(session)}</span>}
+                      : canStudyAhead(session)
+                        ? <Link to={`/recupero-debito/sessione/${session.id}`} className="learner-text-link">Studia in anticipo <ArrowRight size={14} /></Link>
+                        : <span className="learner-list__status">{sessionStatus(session)}</span>}
                 </li>
               ))}
             </ol>
+            <p className="learner-empty" style={{ marginTop: '1rem' }}>Puoi anticipare le sessioni dedicate a un argomento. Checkpoint e simulazioni restano invece legati al percorso consigliato, perché servono a misurare i progressi nel momento giusto.</p>
           </section>
         ) : null}
 
@@ -155,6 +171,7 @@ export default function RecoveryWorkspace({ view }) {
                 const score = Math.round(Number(topic.mastery_score ?? topic.diagnostic_score ?? 0));
                 const topicSession = sessions.find((session) => session.topic_key === topic.topic_key && !['completed', 'skipped'].includes(session.status));
                 const review = reviewAvailability[topic.topic_key];
+                const showFreeReview = review?.available && (topic.verification_only || !topicSession);
                 return (
                   <li className="learner-list__row" key={topic.topic_key}>
                     <span className="learner-list__index">{index + 1}</span>
@@ -162,13 +179,15 @@ export default function RecoveryWorkspace({ view }) {
                       <strong>{recoveryTopicLabel(topic.topic_key)}</strong>
                       <p>{topic.verification_only
                         ? 'Risulta già abbastanza solido. Puoi fare la verifica rapida consigliata oppure riaprire l’intero argomento quando vuoi.'
-                        : `${score}% sui dati attualmente disponibili.`}</p>
+                        : topicSession?.status === 'planned'
+                          ? `${score}% sui dati attualmente disponibili. È previsto più avanti, ma puoi iniziarlo subito se vuoi portarti avanti.`
+                          : `${score}% sui dati attualmente disponibili.`}</p>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.8rem', flexWrap: 'wrap' }}>
                       {topicSession
-                        ? <Link to={`/recupero-debito/sessione/${topicSession.id}`} className="learner-text-link">{topic.verification_only ? 'Verifica rapida' : 'Apri'} <ArrowRight size={14} /></Link>
+                        ? <Link to={`/recupero-debito/sessione/${topicSession.id}`} className="learner-text-link">{topicSessionActionLabel(topicSession, topic.verification_only)} <ArrowRight size={14} /></Link>
                         : <span className={`learner-list__status ${topic.priority_band === 'high' ? 'learner-list__status--high' : ''}`}>{priorityLabel(topic)}</span>}
-                      {review?.available ? (
+                      {showFreeReview ? (
                         <button
                           type="button"
                           className="learner-text-link"
@@ -185,7 +204,7 @@ export default function RecoveryWorkspace({ view }) {
               })}
             </ul>
             {reviewError ? <p className="learner-error" role="alert">{reviewError}</p> : null}
-            <p className="learner-empty" style={{ marginTop: '1rem' }}>“Rivedi tutto” è un ripasso volontario: non abbassa il livello già consolidato e non aggiunge una nuova sessione obbligatoria al piano.</p>
+            <p className="learner-empty" style={{ marginTop: '1rem' }}>“Studia in anticipo” completa una sessione reale del tuo piano e conta nei progressi. “Rivedi tutto” è invece un ripasso volontario e non cambia la priorità dell’argomento.</p>
           </section>
         ) : null}
 
