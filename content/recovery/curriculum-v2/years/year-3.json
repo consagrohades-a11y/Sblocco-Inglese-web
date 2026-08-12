@@ -5,7 +5,7 @@
   "outcomes": [
     {
       "id": "RY3-GRAM-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "B1",
@@ -51,7 +51,7 @@
     },
     {
       "id": "RY3-GRAM-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "B1+",
@@ -93,7 +93,7 @@
     },
     {
       "id": "RY3-GRAM-003",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "B1",
@@ -139,7 +139,7 @@
     },
     {
       "id": "RY3-GRAM-004",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "B1",
@@ -187,7 +187,7 @@
     },
     {
       "id": "RY3-GRAM-005",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "B1",
@@ -229,7 +229,7 @@
     },
     {
       "id": "RY3-GRAM-006",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "B1+",
@@ -276,7 +276,7 @@
     },
     {
       "id": "RY3-GRAM-007",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "B1",
@@ -324,7 +324,7 @@
     },
     {
       "id": "RY3-LEX-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "lexical_competence",
       "cefr_target": "B1",
@@ -367,7 +367,7 @@
     },
     {
       "id": "RY3-LEX-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "lexical_competence",
       "cefr_target": "B1",
@@ -407,7 +407,7 @@
     },
     {
       "id": "RY3-LEX-003",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "lexical_competence",
       "cefr_target": "B1+",
@@ -447,7 +447,7 @@
     },
     {
       "id": "RY3-READ-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "reading",
       "cefr_target": "B1",
@@ -487,7 +487,7 @@
     },
     {
       "id": "RY3-READ-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "reading",
       "cefr_target": "B1",
@@ -528,7 +528,7 @@
     },
     {
       "id": "RY3-READ-003",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "reading",
       "cefr_target": "B1+",
@@ -567,7 +567,7 @@
     },
     {
       "id": "RY3-WRITE-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "writing",
       "cefr_target": "B1",
@@ -606,7 +606,7 @@
     },
     {
       "id": "RY3-WRITE-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "writing",
       "cefr_target": "B1",
@@ -648,7 +648,7 @@
     },
     {
       "id": "RY3-WRITE-003",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "writing",
       "cefr_target": "B1",
@@ -695,7 +695,7 @@
     },
     {
       "id": "RY3-WRITE-004",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "writing",
       "cefr_target": "B1+",
@@ -730,7 +730,7 @@
     },
     {
       "id": "RY3-LISTEN-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "listening",
       "cefr_target": "B1",
@@ -769,7 +769,7 @@
     },
     {
       "id": "RY3-LISTEN-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "listening",
       "cefr_target": "B1",
@@ -807,7 +807,7 @@
     },
     {
       "id": "RY3-LISTEN-003",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "listening",
       "cefr_target": "B1+",
@@ -844,7 +844,7 @@
     },
     {
       "id": "RY3-COMM-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "functional_communication",
       "cefr_target": "B1",
@@ -882,7 +882,7 @@
     },
     {
       "id": "RY3-COMM-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "functional_communication",
       "cefr_target": "B1",
@@ -928,7 +928,7 @@
     },
     {
       "id": "RY3-COMM-003",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 3,
       "competence_axis": "functional_communication",
       "cefr_target": "B1+",

@@ -5,7 +5,7 @@
   "outcomes": [
     {
       "id": "RY2-GRAM-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "A2+",
@@ -55,7 +55,7 @@
     },
     {
       "id": "RY2-GRAM-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "A2",
@@ -100,7 +100,7 @@
     },
     {
       "id": "RY2-GRAM-003",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "A2+",
@@ -142,7 +142,7 @@
     },
     {
       "id": "RY2-GRAM-004",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "A2+",
@@ -187,7 +187,7 @@
     },
     {
       "id": "RY2-GRAM-005",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "grammar_sentence_control",
       "cefr_target": "A2",
@@ -235,7 +235,7 @@
     },
     {
       "id": "RY2-LEX-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "lexical_competence",
       "cefr_target": "A2",
@@ -279,7 +279,7 @@
     },
     {
       "id": "RY2-LEX-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "lexical_competence",
       "cefr_target": "A2+",
@@ -320,7 +320,7 @@
     },
     {
       "id": "RY2-LEX-003",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "lexical_competence",
       "cefr_target": "A2+",
@@ -360,7 +360,7 @@
     },
     {
       "id": "RY2-READ-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "reading",
       "cefr_target": "A2",
@@ -398,7 +398,7 @@
     },
     {
       "id": "RY2-READ-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "reading",
       "cefr_target": "A2+",
@@ -440,7 +440,7 @@
     },
     {
       "id": "RY2-READ-003",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "reading",
       "cefr_target": "B1",
@@ -478,7 +478,7 @@
     },
     {
       "id": "RY2-WRITE-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "writing",
       "cefr_target": "A2",
@@ -522,7 +522,7 @@
     },
     {
       "id": "RY2-WRITE-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "writing",
       "cefr_target": "A2+",
@@ -567,7 +567,7 @@
     },
     {
       "id": "RY2-WRITE-003",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "writing",
       "cefr_target": "A2+",
@@ -612,7 +612,7 @@
     },
     {
       "id": "RY2-LISTEN-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "listening",
       "cefr_target": "A2",
@@ -649,7 +649,7 @@
     },
     {
       "id": "RY2-LISTEN-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "listening",
       "cefr_target": "A2+",
@@ -686,7 +686,7 @@
     },
     {
       "id": "RY2-COMM-001",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "functional_communication",
       "cefr_target": "A2",
@@ -730,7 +730,7 @@
     },
     {
       "id": "RY2-COMM-002",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "functional_communication",
       "cefr_target": "A2+",
@@ -774,7 +774,7 @@
     },
     {
       "id": "RY2-COMM-003",
-      "status": "draft",
+      "status": "approved",
       "school_year_profile": 2,
       "competence_axis": "functional_communication",
       "cefr_target": "B1",
