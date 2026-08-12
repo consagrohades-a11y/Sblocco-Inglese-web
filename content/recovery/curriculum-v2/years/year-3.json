@@ -241,7 +241,9 @@
         "transfer"
       ],
       "prerequisite_outcome_ids": [
-        "RY2-GRAM-002"
+        "RY2-GRAM-002",
+        "RY2-GRAM-001",
+        "RY2-GRAM-004"
       ],
       "required_topic_keys": [
         "reported-speech"
@@ -287,7 +289,8 @@
       ],
       "prerequisite_outcome_ids": [
         "RY3-GRAM-001",
-        "RY3-GRAM-005"
+        "RY3-GRAM-005",
+        "RY2-GRAM-002"
       ],
       "required_topic_keys": [
         "question-formation",
@@ -332,7 +335,9 @@
         "controlled_performance",
         "transfer"
       ],
-      "prerequisite_outcome_ids": [],
+      "prerequisite_outcome_ids": [
+        "RY2-LEX-002"
+      ],
       "required_topic_keys": [],
       "recommended_topic_keys": [],
       "vocabulary_domains": [
@@ -655,7 +660,8 @@
         "transfer"
       ],
       "prerequisite_outcome_ids": [
-        "RY3-LEX-001"
+        "RY3-LEX-001",
+        "RY2-WRITE-003"
       ],
       "required_topic_keys": [],
       "recommended_topic_keys": [
@@ -701,7 +707,8 @@
       ],
       "prerequisite_outcome_ids": [
         "RY3-GRAM-007",
-        "RY3-LEX-002"
+        "RY3-LEX-002",
+        "RY3-WRITE-003"
       ],
       "required_topic_keys": [],
       "recommended_topic_keys": [],
@@ -735,7 +742,8 @@
         "transfer"
       ],
       "prerequisite_outcome_ids": [
-        "RY2-LISTEN-001"
+        "RY2-LISTEN-001",
+        "RY2-LISTEN-002"
       ],
       "required_topic_keys": [],
       "recommended_topic_keys": [],

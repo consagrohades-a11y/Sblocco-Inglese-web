@@ -16,7 +16,11 @@
         "controlled_performance",
         "transfer"
       ],
-      "prerequisite_outcome_ids": [],
+      "prerequisite_outcome_ids": [
+        "RY1-GRAM-002",
+        "RY1-GRAM-003",
+        "RY1-GRAM-004"
+      ],
       "required_topic_keys": [
         "present-simple",
         "present-continuous",
@@ -62,7 +66,9 @@
         "controlled_performance",
         "transfer"
       ],
-      "prerequisite_outcome_ids": [],
+      "prerequisite_outcome_ids": [
+        "RY1-GRAM-001"
+      ],
       "required_topic_keys": [
         "question-formation",
         "negatives"
@@ -105,7 +111,10 @@
         "controlled_performance",
         "transfer"
       ],
-      "prerequisite_outcome_ids": [],
+      "prerequisite_outcome_ids": [
+        "RY1-GRAM-007",
+        "RY1-GRAM-004"
+      ],
       "required_topic_keys": [
         "modal-verbs",
         "zero-first-conditionals"
@@ -145,7 +154,9 @@
         "transfer"
       ],
       "prerequisite_outcome_ids": [
-        "RY2-GRAM-002"
+        "RY2-GRAM-002",
+        "RY1-GRAM-005",
+        "RY1-GRAM-006"
       ],
       "required_topic_keys": [
         "pronouns",
@@ -187,7 +198,10 @@
         "controlled_performance",
         "transfer"
       ],
-      "prerequisite_outcome_ids": [],
+      "prerequisite_outcome_ids": [
+        "RY1-GRAM-005",
+        "RY1-GRAM-006"
+      ],
       "required_topic_keys": [
         "articles",
         "countable-uncountable",
@@ -232,7 +246,11 @@
         "controlled_performance",
         "transfer"
       ],
-      "prerequisite_outcome_ids": [],
+      "prerequisite_outcome_ids": [
+        "RY1-LEX-001",
+        "RY1-LEX-002",
+        "RY1-LEX-003"
+      ],
       "required_topic_keys": [],
       "recommended_topic_keys": [],
       "vocabulary_domains": [
@@ -353,7 +371,9 @@
         "controlled_performance",
         "transfer"
       ],
-      "prerequisite_outcome_ids": [],
+      "prerequisite_outcome_ids": [
+        "RY1-READ-002"
+      ],
       "required_topic_keys": [],
       "recommended_topic_keys": [],
       "vocabulary_domains": [
@@ -390,7 +410,8 @@
         "transfer"
       ],
       "prerequisite_outcome_ids": [
-        "RY2-READ-001"
+        "RY2-READ-001",
+        "RY1-READ-003"
       ],
       "required_topic_keys": [],
       "recommended_topic_keys": [
@@ -468,7 +489,9 @@
         "controlled_performance",
         "transfer"
       ],
-      "prerequisite_outcome_ids": [],
+      "prerequisite_outcome_ids": [
+        "RY1-WRITE-002"
+      ],
       "required_topic_keys": [],
       "recommended_topic_keys": [
         "question-formation",
@@ -511,7 +534,8 @@
         "transfer"
       ],
       "prerequisite_outcome_ids": [
-        "RY2-GRAM-001"
+        "RY2-GRAM-001",
+        "RY1-WRITE-003"
       ],
       "required_topic_keys": [
         "past-simple"
@@ -555,7 +579,8 @@
       ],
       "prerequisite_outcome_ids": [
         "RY2-GRAM-005",
-        "RY2-LEX-001"
+        "RY2-LEX-001",
+        "RY1-WRITE-001"
       ],
       "required_topic_keys": [],
       "recommended_topic_keys": [
@@ -598,7 +623,9 @@
         "controlled_performance",
         "transfer"
       ],
-      "prerequisite_outcome_ids": [],
+      "prerequisite_outcome_ids": [
+        "RY1-LISTEN-002"
+      ],
       "required_topic_keys": [],
       "recommended_topic_keys": [],
       "vocabulary_domains": [
@@ -670,7 +697,9 @@
         "controlled_performance",
         "transfer"
       ],
-      "prerequisite_outcome_ids": [],
+      "prerequisite_outcome_ids": [
+        "RY1-COMM-002"
+      ],
       "required_topic_keys": [
         "modal-verbs"
       ],
@@ -713,7 +742,8 @@
       ],
       "prerequisite_outcome_ids": [
         "RY2-GRAM-001",
-        "RY2-GRAM-005"
+        "RY2-GRAM-005",
+        "RY1-COMM-003"
       ],
       "required_topic_keys": [],
       "recommended_topic_keys": [
