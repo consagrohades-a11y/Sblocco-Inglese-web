@@ -1,0 +1,22 @@
+{
+  "schema_version":1,
+  "topic_key":"question-formation",
+  "label":"Question formation",
+  "wave":2,
+  "introduced_by_year":1,
+  "level":"A2",
+  "prerequisites":[],
+  "outcome":"Lo studente costruisce domande naturali scegliendo la question word e l'ausiliare corretto, distinguendo be da do/does/did e mantenendo la forma base dopo do/does/did.",
+  "must_master":["who/what/where/when/why/how choice","be before subject","do/does for Present Simple","did for Past Simple","base verb after do/does/did","yes/no and wh-question order","natural short personal questions"],
+  "do_not_teach_yet":["indirect questions","embedded questions","subject questions as a systematic exception","question tags","advanced auxiliary systems"],
+  "italian_learner_risks":[
+    {"risk":"keeping statement order","example_wrong":"Where you live?","target":"Where do you live?"},
+    {"risk":"adding do to be","example_wrong":"Where do you are?","target":"Where are you?"},
+    {"risk":"double marking after does/did","example_wrong":"Does she works? / Did he went?","target":"Does she work? / Did he go?"},
+    {"risk":"choosing the wrong question word","example_wrong":"Where old are you?","target":"How old are you?"}
+  ],
+  "context_bank":["personal information","school routines","past weekend","asking for place/time/reason","short conversations","classroom questions"],
+  "phase_requirements":{"recover":["structured teaching","decision tree be vs do/does/did","question words","5-6 scaffolded checks"],"practice":["8 activities","four formats","present and past questions","dialogue","translation"],"school":["6 school-style tasks","exercise-end feedback"],"verify":["verification-standard-v2","10-13 activities","4+ formats","6+ subskills","3+ challenge items"]},
+  "approved_diagnostic_codes":["CORE_QUESTION_ORDER_WORDS","QUESTION_WORD_CHOICE","QUESTION_WORD_ORDER","BE_QUESTION_ORDER","PRESENT_SIMPLE_QUESTION_AUXILIARY","PRESENT_SIMPLE_QUESTION_BASE_FORM","PRESENT_SIMPLE_QUESTION_WORD_ORDER","PAST_SIMPLE_QUESTION_DID","PAST_SIMPLE_QUESTION_BASE_FORM"],
+  "quality_rejections":["indirect-question syntax","ambiguous who/what prompts","question-word drills without auxiliary choice","more than two word-order tasks in sequence","questions made difficult through obscure vocabulary"]
+}

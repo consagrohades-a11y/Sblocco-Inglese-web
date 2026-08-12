@@ -1,0 +1,22 @@
+{
+  "schema_version":1,
+  "topic_key":"possessives",
+  "label":"Possessives",
+  "wave":2,
+  "introduced_by_year":1,
+  "level":"A1",
+  "prerequisites":["pronouns"],
+  "outcome":"Lo studente distingue e usa possessive adjectives, possessive pronouns e possessive 's in frasi e domande di possesso.",
+  "must_master":["my/your/his/her/its/our/their before a noun","mine/yours/his/hers/ours/theirs without a following noun","possessive 's for people and common relationships","whose in simple ownership questions","possessive word order"],
+  "do_not_teach_yet":["double genitives","formal of-phrases as a systematic contrast","advanced noun phrase possession","independent its form because standard English has no possessive pronoun *its*"],
+  "italian_learner_risks":[
+    {"risk":"using a possessive adjective without a noun","example_wrong":"This bag is my.","target":"This bag is mine."},
+    {"risk":"using a possessive pronoun before a noun","example_wrong":"This is mine bag.","target":"This is my bag."},
+    {"risk":"confusing his/her from the object rather than the owner","example_wrong":"Maria loves his job.","target":"Maria loves her job."},
+    {"risk":"omitting possessive 's","example_wrong":"This is Marco phone.","target":"This is Marco's phone."}
+  ],
+  "context_bank":["school objects","family relationships","phones and bags","shared rooms","lost property","Whose...? exchanges"],
+  "phase_requirements":{"recover":["structured teaching","adjective vs pronoun contrast","possessive 's","5-6 scaffolded checks"],"practice":["8 activities","four formats","whose context","translation"],"school":["6 school-style tasks","exercise-end feedback"],"verify":["verification-standard-v2","10-13 activities","4+ formats","6+ subskills","3+ challenge items"]},
+  "approved_diagnostic_codes":["POSSESSION_GENERAL","POSSESSIVE_ADJECTIVE_CHOICE","POSSESSIVE_ADJECTIVES","POSSESSIVE_WORD_ORDER","SAXON_GENITIVE","CORE_POSSESSIVE_S_WHOSE","POSSESSIVE_PRONOUN_CHOICE"],
+  "quality_rejections":["testing pronouns that the lesson does not teach","mechanical owner-name replacement only","ambiguous his/her ownership","using *its* as an independent possessive pronoun","more than two identical gap-fill patterns in sequence"]
+}
