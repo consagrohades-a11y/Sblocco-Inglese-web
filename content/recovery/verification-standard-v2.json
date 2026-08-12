@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "id": "recovery-topic-verification-v2",
+  "display_label": "Verifica argomento",
+  "purpose": "Confermare che lo studente sa usare l'argomento senza spiegazioni, cue espliciti o feedback durante lo svolgimento.",
+  "duration_minutes": {
+    "min": 12,
+    "target": 14,
+    "max": 15
+  },
+  "activity_count": {
+    "min": 10,
+    "target": 11,
+    "max": 13
+  },
+  "mastery_thresholds": {
+    "recovered": 80,
+    "strong": 90
+  },
+  "feedback_timing": "exercise_end",
+  "required_properties": [
+    "no content_block or teaching explanation",
+    "at least four distinct exercise formats",
+    "at least six distinct subskills or objectives",
+    "at least two integrative items combining more than one subskill",
+    "at least one connected context, mini-text or dialogue",
+    "at least one controlled-production item such as translation, correction or question formation",
+    "distractors based on plausible learner errors rather than obviously absurd options",
+    "neutral task titles that do not reveal the grammar rule needed to answer",
+    "enough context that the answer is determined by meaning, not one isolated trigger word"
+  ],
+  "difficulty_profile": {
+    "standard_percent": 60,
+    "challenge_percent": 40,
+    "rule": "Challenge comes from combining decisions, producing language and reading context, not from obscure vocabulary."
+  },
+  "prohibited_patterns": [
+    "six to eight near-identical one-line multiple-choice questions",
+    "question titles such as Use, Negative, Auxiliary or Short answer when the title gives away the tested rule",
+    "a test solvable mainly from signal words such as now, usually, yesterday or tomorrow",
+    "immediate correctness feedback before the whole verification is submitted",
+    "more than two consecutive items using the same exercise type and sentence pattern",
+    "testing content outside the lesson brief simply to make the verification harder"
+  ],
+  "relationship_to_school_phase": "Modalità scuola prepares the learner for common school formats. Verifica argomento independently samples the whole topic and must still stand as a credible assessment on its own.",
+  "relationship_to_full_review": "A voluntary full-topic review ends with this verification, but completing that voluntary review does not lower an already consolidated Recovery mastery state."
+}
