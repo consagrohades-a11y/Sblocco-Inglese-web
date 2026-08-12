@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "topic_key": "irregular-verbs",
+  "label": "Irregular Verbs",
+  "wave": 1,
+  "introduced_by_year": 1,
+  "level": "A2",
+  "prerequisites": ["past-simple"],
+  "outcome": "Lo studente recupera rapidamente le forme irregolari ad alta frequenza, usa la forma di Past Simple in un contesto passato e il past participle dopo un ausiliare, e distingue le due forme senza affidarsi a una lista alfabetica.",
+  "must_master": [
+    "high-frequency irregular Past Simple forms",
+    "high-frequency irregular past participles",
+    "choose Past Simple form versus past participle from grammatical context",
+    "retrieve forms inside meaningful sentences rather than only from infinitive-to-form tables",
+    "recognise useful form families and recurring patterns without treating them as exception-free rules"
+  ],
+  "scope_boundary": {
+    "present_perfect": "Use have/has + past participle only as a clear grammatical signal for the participle form. Do not teach Present Perfect meanings, time adverbs or Past Simple vs Present Perfect choice yet.",
+    "verb_inventory": "Prioritise a compact high-frequency core rather than an exhaustive school list. Less frequent verbs can be added later through SRS or programme-specific practice.",
+    "pronunciation": "Do not turn this Recovery topic into a pronunciation course, but flag read/read/read as a spelling trap if used.",
+    "regional_variants": "Avoid grading dialect-sensitive participles unless all standard variants are accepted."
+  },
+  "core_verb_set": [
+    {"base":"go","past":"went","participle":"gone"},
+    {"base":"do","past":"did","participle":"done"},
+    {"base":"have","past":"had","participle":"had"},
+    {"base":"make","past":"made","participle":"made"},
+    {"base":"see","past":"saw","participle":"seen"},
+    {"base":"take","past":"took","participle":"taken"},
+    {"base":"come","past":"came","participle":"come"},
+    {"base":"give","past":"gave","participle":"given"},
+    {"base":"know","past":"knew","participle":"known"},
+    {"base":"write","past":"wrote","participle":"written"},
+    {"base":"speak","past":"spoke","participle":"spoken"},
+    {"base":"eat","past":"ate","participle":"eaten"},
+    {"base":"drink","past":"drank","participle":"drunk"},
+    {"base":"buy","past":"bought","participle":"bought"},
+    {"base":"bring","past":"brought","participle":"brought"},
+    {"base":"think","past":"thought","participle":"thought"},
+    {"base":"tell","past":"told","participle":"told"},
+    {"base":"find","past":"found","participle":"found"},
+    {"base":"feel","past":"felt","participle":"felt"},
+    {"base":"leave","past":"left","participle":"left"},
+    {"base":"meet","past":"met","participle":"met"},
+    {"base":"run","past":"ran","participle":"run"},
+    {"base":"sleep","past":"slept","participle":"slept"},
+    {"base":"say","past":"said","participle":"said"}
+  ],
+  "form_families": [
+    {"name":"past_equals_participle","examples":["have → had → had","make → made → made","buy → bought → bought","tell → told → told","leave → left → left"]},
+    {"name":"participle_en_or_n","examples":["write → wrote → written","speak → spoke → spoken","take → took → taken","give → gave → given","see → saw → seen","know → knew → known"]},
+    {"name":"base_equals_participle","examples":["come → came → come","run → ran → run"]},
+    {"name":"high_frequency_unique","examples":["go → went → gone","do → did → done","drink → drank → drunk"]}
+  ],
+  "italian_learner_risks": [
+    {"risk":"regularising an irregular verb","example_wrong":"Yesterday I goed home.","target":"Yesterday I went home."},
+    {"risk":"using the Past Simple form after have/has","example_wrong":"I have saw that film.","target":"I have seen that film."},
+    {"risk":"using the participle as the simple past","example_wrong":"I seen Marco yesterday.","target":"I saw Marco yesterday."},
+    {"risk":"memorising isolated triples but failing to retrieve the form in a sentence","example_wrong":"knowing go-went-gone but writing I go there yesterday","target":"retrieve went from the finished-past context"},
+    {"risk":"assuming every irregular verb follows the same vowel-change pattern","example_wrong":"creating forms by analogy rather than retrieving the stored form","target":"use pattern families as memory support, not grammar rules"}
+  ],
+  "context_bank": [
+    "a weekend or school trip recap",
+    "what someone ate, drank, bought or took",
+    "messages about people someone saw or met",
+    "a short sequence of completed actions",
+    "a checklist of things someone has or has not done, used only to cue the participle form",
+    "school-style base/past/participle completion",
+    "choosing between a Past Simple form and a participle from the surrounding auxiliary"
+  ],
+  "recover_phase": {
+    "minutes": 12,
+    "requirements": [
+      "one structured educational content block",
+      "explain why three forms matter before showing form families",
+      "teach a compact core set rather than an exhaustive list",
+      "show at least three form families",
+      "make Past Simple versus participle choice depend on grammatical context",
+      "five scaffolded graded checks after teaching",
+      "include both retrieval and recognition",
+      "do not teach Present Perfect meaning"
+    ]
+  },
+  "practice_phase": {
+    "minutes": 12,
+    "item_target": 8,
+    "requirements": [
+      "at least four exercise formats",
+      "mix direct retrieval with connected contexts",
+      "include at least six different verbs across the phase",
+      "include Past Simple forms and participles",
+      "include at least two items where the learner must choose past versus participle from context",
+      "include one Italian-to-English contextual translation",
+      "avoid more than two consecutive table-like form prompts"
+    ]
+  },
+  "school_phase": {
+    "minutes": 10,
+    "item_target": 6,
+    "feedback_timing": "exercise_end",
+    "requirements": [
+      "one connected gap-fill using several irregular Past Simple forms",
+      "one base/past/participle school-style task",
+      "one error correction involving past versus participle",
+      "one contextual translation",
+      "one mixed recognition task",
+      "no teaching block or coaching during the task"
+    ]
+  },
+  "verify_phase": {
+    "minutes": 8,
+    "item_target": 8,
+    "feedback_timing": "exercise_end",
+    "recommended_mastery_threshold": 80,
+    "requirements": [
+      "sample at least ten distinct irregular verbs across the phase",
+      "test Past Simple retrieval",
+      "test past participle retrieval",
+      "test Past Simple versus participle choice",
+      "include at least one connected-context item",
+      "include one controlled production or translation item",
+      "no teaching content"
+    ]
+  },
+  "approved_diagnostic_codes": [
+    "PAST_IRREGULAR_FORM",
+    "PAST_SIMPLE_IRREGULAR_VERB_FORM",
+    "IRREGULAR_PAST_PARTICIPLE_FORM",
+    "IRREGULAR_PAST_VS_PARTICIPLE"
+  ],
+  "quality_rejections": [
+    "an alphabetical wall of 40-100 verb triples",
+    "a lesson made only of base → past → participle table completion",
+    "teaching Present Perfect meaning before the dedicated topic",
+    "testing rare verbs while high-frequency forms remain uncovered",
+    "treating form families as exception-free transformation rules",
+    "using dialect-sensitive forms without accepting standard variants",
+    "more than two consecutive items with no sentence-level context",
+    "difficulty created by obscure vocabulary rather than verb-form retrieval"
+  ]
+}
