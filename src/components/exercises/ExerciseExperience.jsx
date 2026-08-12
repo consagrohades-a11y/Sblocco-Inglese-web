@@ -153,6 +153,7 @@ export function ExerciseProgressHeader({
   sectionIndex,
   sectionTotal,
 }) {
+  const boundedProgress = Math.max(0, Math.min(100, progress));
   return (
     <header className="exercise-progress-header">
       <div className="exercise-progress-header__copy">
@@ -160,9 +161,10 @@ export function ExerciseProgressHeader({
         <h1>{title}</h1>
         {instructions ? <p>{instructions}</p> : null}
       </div>
-      <div className="exercise-progress-header__meter" aria-label={`Progresso ${progress}%`}>
-        <span>{progress}%</span>
-        <div><i style={{ width: `${Math.max(0, Math.min(100, progress))}%` }} /></div>
+      <div className="exercise-progress-header__meter" aria-label={`Progresso ${boundedProgress}%`}>
+        <small>Progresso</small>
+        <span>{boundedProgress}%</span>
+        <div><i style={{ width: `${boundedProgress}%` }} /></div>
       </div>
     </header>
   );
@@ -188,10 +190,18 @@ export function ExerciseMilestone({
 }
 
 export function ExerciseActionBar({ children, hint }) {
+  const hasHint = Boolean(hint);
   return (
-    <footer className="exercise-action-bar">
-      {hint ? <p>{hint}</p> : null}
-      <div>{children}</div>
+    <footer className="exercise-action-bar" data-has-hint={hasHint ? 'true' : 'false'}>
+      <p className="exercise-action-bar__hint" aria-live="polite">
+        {hasHint ? (
+          <>
+            <CircleAlert aria-hidden="true" />
+            <span>{hint}</span>
+          </>
+        ) : null}
+      </p>
+      <div className="exercise-action-bar__actions">{children}</div>
     </footer>
   );
 }
