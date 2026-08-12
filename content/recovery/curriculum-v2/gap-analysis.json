@@ -1,0 +1,425 @@
+{
+  "schema_version": 1,
+  "curriculum_id": "recovery-years-1-3-v2",
+  "plan_id": "recovery-curriculum-v2-definitive-gap-analysis",
+  "status": "active_planning_contract",
+  "purpose": "Reconcile the pedagogical coverage audit, technical runtime audit, assessment blueprint and readiness policy into one implementation order for a defensible Year 1-3 Recovery product.",
+  "authoritative_inputs": [
+    "content/recovery/curriculum-v2/gap-analysis-pedagogical.json",
+    "content/recovery/curriculum-v2/gap-analysis-technical.json",
+    "content/recovery/curriculum-v2/assessment-blueprint.json",
+    "content/recovery/curriculum-v2/readiness-policy.json",
+    "content/recovery/curriculum-v2/years/year-1.json",
+    "content/recovery/curriculum-v2/years/year-2.json",
+    "content/recovery/curriculum-v2/years/year-3.json"
+  ],
+  "decision_rules": [
+    "The learner's official school recovery programme remains authoritative over the default school-year profile and CEFR defaults.",
+    "Renderer or database capability is not pedagogical coverage; an outcome is covered only when suitable content and valid evidence pathways both exist.",
+    "Topic completion and topic verification remain supporting evidence and cannot establish year-exit readiness alone.",
+    "Development priority and learner-level necessity are different: content that is globally P1/P2 becomes a learner-level P0 blocker whenever that learner's official programme activates the corresponding outcome or axis.",
+    "Do not activate Readiness v2 until missing P0 content can actually be assessed and the outcome-evidence runtime can represent the required evidence.",
+    "Do not create a second exercise engine; reuse Exercise Builder and extend Recovery scope, metadata, evidence capture and cumulative materialization."
+  ],
+  "current_state": {
+    "curriculum_v2_outcomes": {
+      "total": 63,
+      "year_1": 21,
+      "year_2": 19,
+      "year_3": 23
+    },
+    "pedagogical_coverage": {
+      "covered": 0,
+      "partially_covered": 31,
+      "missing": 32,
+      "weighted_planning_coverage_percent": 24.6,
+      "note": "Weighted planning coverage is not a readiness score. No outcome is classified fully covered because cumulative unseen year-exit evidence does not yet exist."
+    },
+    "coverage_by_year_percent": {
+      "year_1": 38.1,
+      "year_2": 28.9,
+      "year_3": 8.7
+    },
+    "coverage_by_axis_percent": {
+      "grammar_sentence_control": 42.1,
+      "lexical_competence": 22.2,
+      "reading": 0,
+      "writing": 30.0,
+      "listening": 0,
+      "functional_communication": 27.8
+    },
+    "live_topic_layer": {
+      "topics": 24,
+      "active_phase_mappings": 96,
+      "phases_per_topic": ["recover", "practice", "school", "verify"],
+      "wave_1_runtime_minutes_per_topic": 48,
+      "note": "Wave 1 base bundle files retain older duration metadata, but active production mappings use Verification v2 overlays and total 48 minutes. Production mapping state is authoritative for runtime duration."
+    },
+    "cumulative_assessment_layer": {
+      "checkpoint_fragments_live": 0,
+      "mock_intermediate_fragments_live": 0,
+      "mock_final_fragments_live": 0,
+      "error_review_mappings_live": 0
+    },
+    "runtime_foundation": {
+      "production_migration": "20260812232454_recovery_curriculum_v2_runtime_foundation",
+      "competence_axes_seeded": 6,
+      "assessment_modes_seeded": 15,
+      "curriculum_outcomes_seeded": 0,
+      "enrollment_outcomes_created": 0,
+      "assessment_fragments_created": 0,
+      "outcome_evidence_created": 0,
+      "status": "schema_available_but_inert"
+    },
+    "readiness": {
+      "v2_policy_defined": true,
+      "v2_runtime_active": false,
+      "legacy_client_readiness": "simple topic mastery/diagnostic average",
+      "legacy_database_readiness": "topic-based weighted readiness with mastery, coverage, assessment and error-stability components",
+      "required_end_state": "one canonical server-side Curriculum v2 readiness calculation, shadow-tested before learner-facing cutover"
+    }
+  },
+  "cross_year_prerequisite_alignment": {
+    "priority": "P0",
+    "status": "not_yet_applied",
+    "reason": "Year 2 was authored in parallel with Year 1 and several progression links were intentionally deferred. Readiness and runtime outcome scoping should consume the corrected dependency graph, not the temporary parallel-authoring graph.",
+    "recommendations": [
+      {"outcome_id":"RY2-GRAM-001","add":["RY1-GRAM-002","RY1-GRAM-003","RY1-GRAM-004"]},
+      {"outcome_id":"RY2-GRAM-002","add":["RY1-GRAM-001"]},
+      {"outcome_id":"RY2-GRAM-003","add":["RY1-GRAM-007","RY1-GRAM-004"]},
+      {"outcome_id":"RY2-GRAM-004","add":["RY1-GRAM-005","RY1-GRAM-006"]},
+      {"outcome_id":"RY2-GRAM-005","add":["RY1-GRAM-005","RY1-GRAM-006"]},
+      {"outcome_id":"RY2-LEX-001","add":["RY1-LEX-001","RY1-LEX-002","RY1-LEX-003"]},
+      {"outcome_id":"RY2-READ-001","add":["RY1-READ-002"]},
+      {"outcome_id":"RY2-READ-002","add":["RY1-READ-003"]},
+      {"outcome_id":"RY2-WRITE-001","add":["RY1-WRITE-002"]},
+      {"outcome_id":"RY2-WRITE-002","add":["RY1-WRITE-003"]},
+      {"outcome_id":"RY2-WRITE-003","add":["RY1-WRITE-001"]},
+      {"outcome_id":"RY2-LISTEN-001","add":["RY1-LISTEN-002"]},
+      {"outcome_id":"RY2-COMM-001","add":["RY1-COMM-002"]},
+      {"outcome_id":"RY2-COMM-002","add":["RY1-COMM-003"]},
+      {"outcome_id":"RY3-GRAM-006","add":["RY2-GRAM-001","RY2-GRAM-004"]},
+      {"outcome_id":"RY3-GRAM-007","add":["RY2-GRAM-002"]},
+      {"outcome_id":"RY3-LEX-001","add":["RY2-LEX-002"]},
+      {"outcome_id":"RY3-WRITE-003","add":["RY2-WRITE-003"]},
+      {"outcome_id":"RY3-WRITE-004","add":["RY3-WRITE-003"]},
+      {"outcome_id":"RY3-LISTEN-001","add":["RY2-LISTEN-002"]}
+    ],
+    "optionality_guard": "Do not make a default_core outcome depend on a prior default_if_assessed or programme_dependent outcome."
+  },
+  "grammar_content_backlog": {
+    "P0_must_build": [
+      "be-have-got-there-is-are",
+      "past-simple-vs-past-continuous",
+      "present-perfect-time-expressions",
+      "zero-first-conditionals",
+      "second-conditional",
+      "relative-clauses",
+      "used-to",
+      "passive-voice"
+    ],
+    "P1": [
+      "adverbs-frequency",
+      "gerunds-infinitives",
+      "indefinite-pronouns",
+      "too-enough"
+    ],
+    "P2_programme_dependent": [
+      "present-perfect-continuous",
+      "past-perfect-narrative-tenses",
+      "reported-speech",
+      "modal-deduction",
+      "question-tags",
+      "third-conditional",
+      "wish-if-only"
+    ],
+    "notes": [
+      "adverbs-frequency is P1 globally but should be built for a robust Year 1/2 progression.",
+      "question-tags currently has no Curriculum v2 outcome reference and should only be authored for a declared school-programme need.",
+      "Any programme-dependent grammar item escalates to learner-level P0 if the official school programme requires it."
+    ]
+  },
+  "missing_content_families": [
+    {
+      "family_id": "cumulative_assessment_fragment_pool",
+      "global_priority": "P0",
+      "required_for": "all required Curriculum v2 outcomes",
+      "deliverable": "Approved unseen/transformed fragments tagged with primary axis, outcome IDs, assessment modes, school task family, duration, transfer level and form family."
+    },
+    {
+      "family_id": "mixed_grammar_year_exit_transfer",
+      "global_priority": "P0",
+      "required_for": "core grammar outcomes Year 1-3",
+      "deliverable": "Fresh mixed grammar, sentence construction, transformation and plausible error-correction forms that do not announce the target rule."
+    },
+    {
+      "family_id": "translation_it_en_progression",
+      "global_priority": "P0",
+      "required_for": "grammar plus lexical/writing-supporting outcomes using translation_it_en",
+      "deliverable": "Cumulative Italian→English forms mixing systems and accepting all natural level-appropriate variants."
+    },
+    {
+      "family_id": "lexical_core_domains_and_chunks",
+      "global_priority": "P0",
+      "required_for": "Year 1-3 lexical core",
+      "deliverable": "Year-banded lexical domains, chunks and common collocations scored as lexical competence rather than incidental grammar vocabulary."
+    },
+    {
+      "family_id": "lexical_depth_word_families_collocations_paraphrase",
+      "global_priority": "P0",
+      "required_for": "especially upper Year 2 and Year 3 lexical transfer",
+      "deliverable": "Contextual collocation, anti-calque, word-family where appropriate, precision and paraphrase evidence."
+    },
+    {
+      "family_id": "reading_progression_years_1_3",
+      "global_priority": "P0",
+      "required_for": "all reading core outcomes",
+      "deliverable": "Year 1 short functional/personal texts; Year 2 connected A2+/early-B1 texts; Year 3 multiparagraph B1 texts with cohesion, inference, attitude and synthesis."
+    },
+    {
+      "family_id": "year1_connected_writing_core",
+      "global_priority": "P0",
+      "required_for": "RY1-WRITE-001..003",
+      "deliverable": "Personal/descriptive paragraph, short message/email and simple narrative with guided-to-independent progression and explicit writing evidence."
+    },
+    {
+      "family_id": "school_task_format_fragment_library",
+      "global_priority": "P0",
+      "required_for": "core written axes",
+      "deliverable": "Fresh cumulative school forms for mixed grammar, open cloze, transformations, error correction, IT→EN, sentence production, reading, functional text and writing."
+    },
+    {
+      "family_id": "year2_year3_connected_writing",
+      "global_priority": "P1",
+      "conditional_escalation": "P0 when writing is active in the learner's official programme",
+      "deliverable": "Email/message, narration, description/explanation, opinion/reasons and B1 revision tasks with independent-writing rubrics."
+    },
+    {
+      "family_id": "writing_revision_and_self_editing",
+      "global_priority": "P1",
+      "conditional_escalation": "P0 when relevant writing/revision outcomes are active",
+      "deliverable": "Own-text revision evidence covering clarity, cohesion, reference, lexical choice, organisation and essential accuracy."
+    },
+    {
+      "family_id": "integrated_reading_to_writing_tasks",
+      "global_priority": "P1",
+      "conditional_escalation": "P0 when the school test requires integrated source-based response",
+      "deliverable": "Tasks requiring selection/synthesis of source information before a concise written response."
+    },
+    {
+      "family_id": "listening_progression_years_1_3",
+      "global_priority": "P2",
+      "conditional_escalation": "P0 when listening is active in the official school programme",
+      "deliverable": "Stable-audio Year 1-3 progression from short dialogue/monologue to B1 multi-turn and multi-speaker gist/detail/inference tasks."
+    },
+    {
+      "family_id": "functional_interaction_clarification_repair",
+      "global_priority": "P2",
+      "conditional_escalation": "P0 when functional/oral communication is active in the official school programme",
+      "deliverable": "Practical exchanges, follow-up, clarification, repair/reformulation and non-memorised multi-turn interaction."
+    },
+    {
+      "family_id": "programme_dependent_b1_plus_grammar",
+      "global_priority": "P2",
+      "conditional_escalation": "P0 for learners whose official programme requires the relevant structures",
+      "deliverable": "Past Perfect/narrative tenses, Reported Speech and selected B1+ modal/conditional extensions only when required."
+    }
+  ],
+  "technical_backlog": {
+    "completed_foundation": [
+      "Runtime tables for canonical axes and assessment modes",
+      "Runtime table for source-versioned Curriculum v2 outcomes",
+      "Per-enrollment outcome-scope table",
+      "Assessment-fragment metadata and outcome/mode junction tables",
+      "First-class outcome-evidence table",
+      "Read-only learner RLS boundary"
+    ],
+    "P0_remaining": [
+      {
+        "id": "RUNTIME-P0-001",
+        "title": "Synchronize the 63 source-controlled outcomes into the runtime catalogue",
+        "depends_on": ["cross_year_prerequisite_alignment"]
+      },
+      {
+        "id": "RUNTIME-P0-002",
+        "title": "Derive and persist enrollment required outcomes from the official programme/year fallback",
+        "depends_on": ["RUNTIME-P0-001"]
+      },
+      {
+        "id": "RUNTIME-P0-003",
+        "title": "Register approved assessment fragments against outcomes/modes/form families",
+        "depends_on": ["content fragment authoring", "RUNTIME-P0-001"]
+      },
+      {
+        "id": "RUNTIME-P0-004",
+        "title": "Upgrade cumulative materialization to choose under-evidenced outcomes and satisfy active-axis coverage within time budget",
+        "depends_on": ["RUNTIME-P0-002", "RUNTIME-P0-003"]
+      },
+      {
+        "id": "RUNTIME-P0-005",
+        "title": "Capture automatic and manually reviewed fragment results into recovery_outcome_evidence",
+        "depends_on": ["RUNTIME-P0-003"]
+      },
+      {
+        "id": "RUNTIME-P0-006",
+        "title": "Implement canonical server-side Readiness v2 in shadow mode",
+        "depends_on": ["RUNTIME-P0-002", "RUNTIME-P0-004", "RUNTIME-P0-005", "enough P0 assessment content to make evidence completeness achievable"]
+      }
+    ],
+    "P1_after_shadow": [
+      "Admin programme/outcome override controls",
+      "Learner disaggregated readiness reporting",
+      "Outcome-aware remediation/error review",
+      "Legacy-vs-v2 readiness calibration/debug views"
+    ]
+  },
+  "implementation_sequence": [
+    {
+      "batch": "B0",
+      "priority": "P0",
+      "name": "Dependency graph + runtime catalogue",
+      "parallel_tracks": [
+        "Apply cross-year prerequisite recommendations to Year 2/3 source files",
+        "Synchronize all 63 corrected outcomes into recovery_curriculum_outcomes",
+        "Implement programme/year-profile outcome scoping for enrollments"
+      ],
+      "exit_condition": "Runtime can answer exactly which Curriculum v2 outcomes/axes are required for an enrollment without changing legacy readiness."
+    },
+    {
+      "batch": "B1",
+      "priority": "P0",
+      "name": "Missing core grammar systems",
+      "parallel_tracks": [
+        "Build and validate the eight P0 grammar topics",
+        "Add cumulative-ready metadata planning for the grammar outcomes they support"
+      ],
+      "exit_condition": "Every default-core grammar outcome has its required language-system content available."
+    },
+    {
+      "batch": "B2",
+      "priority": "P0",
+      "name": "Cumulative transfer engine + first fragment pool",
+      "parallel_tracks": [
+        "Build mixed grammar, IT→EN, sentence production, transformation, error-correction and school-format fragments",
+        "Implement assessment-fragment registration",
+        "Implement outcome/axis-first materialization",
+        "Implement result-to-outcome evidence capture"
+      ],
+      "exit_condition": "Checkpoint and mock sessions can be generated from unseen fragments and record disaggregated Curriculum v2 evidence."
+    },
+    {
+      "batch": "B3",
+      "priority": "P0",
+      "name": "Core lexical + reading progression",
+      "parallel_tracks": [
+        "Build lexical domains/chunks/collocations progression",
+        "Build Year 1-3 primary-axis reading progression",
+        "Register alternate cumulative forms for both axes"
+      ],
+      "exit_condition": "Core lexical and reading outcomes can receive independent primary-axis and cumulative evidence."
+    },
+    {
+      "batch": "B4",
+      "priority": "P0",
+      "name": "Year 1 connected writing",
+      "parallel_tracks": [
+        "Build paragraph, functional message/email and simple narrative progression",
+        "Define automatic/manual rubric capture boundaries for independent writing"
+      ],
+      "exit_condition": "All Year 1 default-core writing outcomes have valid production and cumulative evidence paths."
+    },
+    {
+      "batch": "B5",
+      "priority": "P0-technical / P1-content",
+      "name": "Checkpoint/mock completion + shadow Readiness v2",
+      "parallel_tracks": [
+        "Build enough alternate forms for checkpoint, intermediate mock and final mock independence",
+        "Activate shadow server-side Readiness v2",
+        "Compare legacy and v2 status/gates without changing learner-facing readiness"
+      ],
+      "exit_condition": "A default written-core profile can accumulate complete evidence and receive a reproducible shadow READY/NOT READY decision."
+    },
+    {
+      "batch": "B6",
+      "priority": "P1",
+      "name": "Upper-year writing, lexical depth and integrated tasks",
+      "parallel_tracks": [
+        "Year 2/3 connected writing",
+        "Self-editing/revision",
+        "Paraphrase/lexical precision",
+        "Integrated reading-to-writing"
+      ],
+      "exit_condition": "Supported Year 2/3 programmes with writing have complete evidence paths."
+    },
+    {
+      "batch": "B7",
+      "priority": "P2 globally / P0 conditionally",
+      "name": "Listening + functional communication",
+      "parallel_tracks": [
+        "Year-banded stable-audio listening",
+        "Functional interaction, clarification and repair",
+        "Manual oral rubric path before considering automated speaking scoring"
+      ],
+      "exit_condition": "Programmes that assess listening/oral communication can activate those axes without false missing-evidence states."
+    },
+    {
+      "batch": "B8",
+      "priority": "P2 globally / P0 conditionally",
+      "name": "Programme-dependent Year 3 grammar depth",
+      "parallel_tracks": [
+        "Past Perfect/narrative tenses",
+        "Reported Speech",
+        "Selected B1+ modal/conditional systems based on actual school demand"
+      ],
+      "exit_condition": "Declared Year 3 programmes can add advanced requirements without inflating the default profile."
+    },
+    {
+      "batch": "B9",
+      "priority": "cutover",
+      "name": "Readiness v2 learner-facing activation",
+      "parallel_tracks": [
+        "Resolve calibration disagreements",
+        "Expose axis/outcome blockers and missing evidence",
+        "Switch learner-facing readiness from legacy to the canonical server-side v2 decision"
+      ],
+      "exit_condition": "Readiness v2 policy activation preconditions are all satisfied and the learner UI never represents product content gaps as learner failure."
+    }
+  ],
+  "readiness_v2_activation_gates": [
+    "Cross-year prerequisite alignment applied and validated.",
+    "All 63 source-controlled outcomes synchronized to runtime.",
+    "Enrollment required-outcome scope derives from the official programme with year-profile fallback.",
+    "All globally P0 content required for the supported default written-core profile exists and is approved.",
+    "Any conditionally required axis/content for a specific supported programme is available before that programme can use v2 readiness.",
+    "Assessment fragments can produce valid independent, unseen/mixed and production evidence according to the readiness policy.",
+    "Checkpoint and final mock can sample every active blocking axis when feasible.",
+    "Outcome evidence capture handles manual responses as pending review rather than zero.",
+    "Shadow Readiness v2 has been compared against legacy behavior and calibrated.",
+    "Learner-facing reporting can explain status through axis/outcome blockers rather than a single percentage."
+  ],
+  "first_release_definition": {
+    "name": "Recovery Curriculum v2 written-core release",
+    "includes_by_default": [
+      "grammar_sentence_control",
+      "lexical_competence",
+      "reading",
+      "Year 1 default-core writing and any writing explicitly required by the school programme",
+      "mixed school-format cumulative transfer",
+      "checkpoint and final mock evidence"
+    ],
+    "conditional_axes": [
+      "listening",
+      "functional_communication",
+      "upper-year writing where default_if_assessed",
+      "programme-dependent B1+ grammar"
+    ],
+    "important_rule": "Conditional does not mean optional once the learner's official programme requires it; at that point missing content/evidence blocks READY and the programme should not be advertised as fully supported until the content exists."
+  },
+  "next_execution": [
+    "Apply B0 prerequisite alignment.",
+    "Seed/synchronize the corrected 63 outcomes into the production runtime catalogue without assigning them to existing learners yet.",
+    "Split the eight P0 grammar topics and the first cumulative-fragment pool into parallel content workstreams.",
+    "Implement programme-scoped enrollment outcome derivation and outcome evidence capture in parallel with content authoring.",
+    "Do not switch learner-facing readiness during these steps."
+  ]
+}
