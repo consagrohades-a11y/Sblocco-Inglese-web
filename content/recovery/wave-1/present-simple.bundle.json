@@ -1,0 +1,864 @@
+{
+  "schema_version": 2,
+  "entity_type": "bundle",
+  "questions": [],
+  "pools": [],
+  "exercises": [
+    {
+      "client_key": "recovery_present_simple_recover",
+      "title": "Present Simple — Recupera",
+      "description": "Ricostruisci uso, forma, domande, negative e posizione degli avverbi di frequenza prima della pratica.",
+      "instructions": "Leggi la spiegazione, osserva gli esempi e controlla subito se la regola è chiara.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-simple",
+      "estimated_minutes": 12,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "question_end",
+        "show_score": false,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_present_simple_recover_section",
+          "title": "Capisci e prova subito",
+          "instructions": "Non memorizzare una tabella: collega ogni forma al significato e poi usala.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_ps_recover_teaching",
+              "type": "content_block",
+              "title": "Present Simple: quello che devi saper usare",
+              "prompt": "Prima di esercitarti",
+              "instructions": "Leggi le regole e osserva cosa cambia con il soggetto.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "core_form_use",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the present simple for routines and facts with correct verb forms, questions, negatives and frequency-adverb position.",
+              "difficulty": "support",
+              "content": {
+                "educational_schema_version": 1,
+                "template_id": "educational-content-block-v1",
+                "variant": "grammar",
+                "body": "Usa il Present Simple per routine, abitudini e fatti. Con he/she/it il verbo cambia; nelle domande e negative usa do/does e il verbo torna alla forma base.",
+                "intro": "Il punto non è solo aggiungere -s: devi riconoscere quando usare il tempo e sapere cosa succede al verbo in affermative, domande e negative.",
+                "sections": [
+                  {
+                    "key": "use",
+                    "type": "rule",
+                    "title": "Routine, abitudini e fatti",
+                    "body": "Usa il Present Simple per ciò che succede regolarmente o è generalmente vero, non per descrivere ciò che sta succedendo proprio adesso.",
+                    "examples": [
+                      { "text": "I walk to school every day.", "highlight": ["walk"] },
+                      { "text": "My aunt works in a hospital.", "highlight": ["works"] }
+                    ]
+                  },
+                  {
+                    "key": "affirmative",
+                    "type": "rule",
+                    "title": "Il verbo cambia con he, she, it",
+                    "body": "Con I/you/we/they usa la forma base. Con he/she/it aggiungi normalmente -s; alcuni verbi prendono -es o cambiano -y in -ies.",
+                    "examples": [
+                      { "text": "We study English after lunch.", "highlight": ["study"] },
+                      { "text": "She studies English after lunch.", "highlight": ["studies"] },
+                      { "text": "He watches football on Sunday.", "highlight": ["watches"] }
+                    ]
+                  },
+                  {
+                    "key": "questions_negatives",
+                    "type": "pattern",
+                    "title": "Do/does porta la persona",
+                    "body": "Nelle domande e nelle negative dei verbi normali, do/does indica la persona. Dopo do, does, don't e doesn't il verbo resta alla forma base.",
+                    "pattern": "Does + he/she/it + base verb? · he/she/it + doesn't + base verb",
+                    "examples": [
+                      { "text": "Does she study English?", "highlight": ["Does", "study"] },
+                      { "text": "She doesn't study on Sunday.", "highlight": ["doesn't", "study"] }
+                    ]
+                  },
+                  {
+                    "key": "double_marking",
+                    "type": "mistake",
+                    "title": "Non mettere due volte la terza persona",
+                    "body": "Se c'è does o doesn't, non aggiungere anche -s al verbo principale.",
+                    "correct": { "text": "Does Marco work here?", "highlight": ["Does", "work"] },
+                    "incorrect": { "text": "Does Marco works here?", "highlight": ["Does", "works"] }
+                  },
+                  {
+                    "key": "be",
+                    "type": "rule",
+                    "title": "Be funziona da solo",
+                    "body": "Con be usi am/is/are e non do/does. Per fare una domanda sposti be prima del soggetto; per la negativa aggiungi not.",
+                    "examples": [
+                      { "text": "I am tired after school.", "highlight": ["am"] },
+                      { "text": "Are they at home?", "highlight": ["Are"] },
+                      { "text": "She isn't late today.", "highlight": ["isn't"] }
+                    ]
+                  },
+                  {
+                    "key": "frequency",
+                    "type": "rule",
+                    "title": "Dove metto usually, often, never?",
+                    "body": "Con un verbo normale l'avverbio di frequenza viene di solito prima del verbo. Con be viene dopo am/is/are.",
+                    "examples": [
+                      { "text": "I usually take the bus.", "highlight": ["usually"] },
+                      { "text": "She is often tired after training.", "highlight": ["often"] }
+                    ]
+                  },
+                  {
+                    "key": "recap",
+                    "type": "recap",
+                    "title": "Prima di continuare",
+                    "points": [
+                      "Routine/fatto: Present Simple.",
+                      "He/she/it: il verbo cambia nell'affermativa.",
+                      "Do/does/don't/doesn't + verbo base.",
+                      "Be usa am/is/are senza do/does.",
+                      "Usually/often/never: prima del verbo, dopo be."
+                    ]
+                  }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 0, "nearly_correct_multiplier": 0.5 },
+              "feedback": {},
+              "diagnostics": { "tested_codes": [], "fallback_error_code": null },
+              "tags": ["recovery", "present-simple", "recover", "structured-teaching"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_recover_use",
+              "type": "multiple_choice",
+              "title": "Quando lo usi?",
+              "prompt": "Marta works at a café near the station.",
+              "instructions": "Che cosa comunica qui il Present Simple?",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "use",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise the routine/fact use of the present simple.",
+              "difficulty": "support",
+              "content": {
+                "options": [
+                  { "key": "fact", "text": "È un fatto stabile della sua vita/lavoro.", "is_correct": true },
+                  { "key": "now", "text": "Sta lavorando proprio in questo momento.", "is_correct": false, "error_code": "PRESENT_SIMPLE_USE" },
+                  { "key": "past", "text": "Ha lavorato lì in passato ma non più.", "is_correct": false, "error_code": "PRESENT_SIMPLE_USE" }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Works descrive qui un fatto abituale/stabile. Per un'azione in corso useresti il Present Continuous." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_USE"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "use"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_recover_affirmative",
+              "type": "select_gap",
+              "title": "La forma cambia con il soggetto",
+              "prompt": "Completa le due frasi.",
+              "instructions": "Scegli la forma corretta del verbo.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "affirmative",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the base form and third-person singular correctly.",
+              "difficulty": "support",
+              "content": {
+                "text_template": "My cousins [[blank_1]] in Bologna, but my sister [[blank_2]] in Modena.",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["live"], "options": ["live", "lives", "living"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "lives", "error_code": "PRESENT_SIMPLE_BASE_FORM" }] },
+                  { "key": "blank_2", "accepted_answers": ["lives"], "options": ["live", "lives", "living"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "live", "error_code": "PRESENT_SIMPLE_THIRD_PERSON" }] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "My cousins = they → live. My sister = she → lives." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_BASE_FORM", "PRESENT_SIMPLE_THIRD_PERSON"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "affirmative"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_recover_negative",
+              "type": "error_correction",
+              "title": "Doesn't + verbo base",
+              "prompt": "Correggi: He doesn't works on Saturdays.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "negative",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the base verb after doesn't.",
+              "difficulty": "support",
+              "content": { "accepted_answers": ["He doesn't work on Saturdays.", "He does not work on Saturdays."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Doesn't contiene già la terza persona: il verbo principale torna a work." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_NEGATIVE_BASE_FORM"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "negative"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_recover_question",
+              "type": "word_order",
+              "title": "Costruisci la domanda",
+              "prompt": "Metti le parole nell'ordine corretto.",
+              "instructions": "Usa tutte le parti.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "questions",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a present simple information question with does.",
+              "difficulty": "support",
+              "content": { "tokens": ["where", "does", "your brother", "work"], "correct_order": ["where", "does", "your brother", "work"], "terminal_punctuation": "?" },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Con un question word: Where + does + soggetto + verbo base?" },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_QUESTION_WORD_ORDER"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "questions"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_recover_be",
+              "type": "gap_fill",
+              "title": "Be al presente",
+              "prompt": "Completa con la forma corretta di be.",
+              "instructions": "Scrivi una parola per spazio.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "be_present",
+              "primary_skill": "grammar",
+              "learning_objective": "Use am/is/are with the correct subject.",
+              "difficulty": "support",
+              "content": {
+                "text_template": "My parents [[blank_1]] at work and I [[blank_2]] at home today.",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["are"], "points": 1, "feedback": {}, "answer_error_mappings": [] },
+                  { "key": "blank_2", "accepted_answers": ["am"], "points": 1, "feedback": {}, "answer_error_mappings": [] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "My parents = they → are. I → am." },
+              "diagnostics": { "tested_codes": ["BE_PRESENT_FORM"], "fallback_error_code": "CORE_BE_PRESENT" },
+              "tags": ["recovery", "present-simple", "be"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "present-simple", "recover", "wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_present_simple_practice",
+      "title": "Present Simple — Allenati",
+      "description": "Pratica mista su forma, terza persona, domande, negative, short answers e frequenza senza rileggere la regola.",
+      "instructions": "Lavora a memoria. Usa il feedback per capire il tipo di errore, non solo la risposta.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-simple",
+      "estimated_minutes": 12,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "question_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_present_simple_practice_section",
+          "title": "Forma e uso in contesto",
+          "instructions": "Le frasi cambiano soggetto e contesto: decidi ogni volta quale struttura serve.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_ps_practice_correct_sentences",
+              "type": "multiple_select",
+              "title": "Quali frasi funzionano?",
+              "prompt": "Seleziona tutte le frasi corrette.",
+              "instructions": "Ce n'è più di una.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "mixed_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise correct present simple affirmative, negative and question forms.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  { "key": "a", "text": "My dad drives to work every day.", "is_correct": true },
+                  { "key": "b", "text": "Does your friend lives nearby?", "is_correct": false, "error_code": "PRESENT_SIMPLE_QUESTION_BASE_FORM" },
+                  { "key": "c", "text": "We don't eat lunch at school.", "is_correct": true },
+                  { "key": "d", "text": "Sara study English on Tuesday.", "is_correct": false, "error_code": "PRESENT_SIMPLE_THIRD_PERSON" }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Dopo does serve live, mentre Sara richiede studies/studies depending verb: con study → studies." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_QUESTION_BASE_FORM", "PRESENT_SIMPLE_THIRD_PERSON"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "mixed"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_practice_routine_text",
+              "type": "gap_fill",
+              "title": "Una routine completa",
+              "prompt": "Completa il testo con il Present Simple.",
+              "instructions": "Scrivi la forma corretta del verbo suggerito dal contesto.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "affirmative_negative",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce present simple forms in a short connected routine text.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Leo [[blank_1]] up at seven. His parents [[blank_2]] home before him, so he [[blank_3]] breakfast alone. He [[blank_4]] coffee, and he [[blank_5]] the bus to school.",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["gets"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "get", "error_code": "PRESENT_SIMPLE_THIRD_PERSON" }] },
+                  { "key": "blank_2", "accepted_answers": ["leave"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "leaves", "error_code": "PRESENT_SIMPLE_BASE_FORM" }] },
+                  { "key": "blank_3", "accepted_answers": ["has"], "points": 1, "feedback": {}, "answer_error_mappings": [] },
+                  { "key": "blank_4", "accepted_answers": ["doesn't drink", "does not drink"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "doesn't drinks", "error_code": "PRESENT_SIMPLE_NEGATIVE_BASE_FORM" }] },
+                  { "key": "blank_5", "accepted_answers": ["takes"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "take", "error_code": "PRESENT_SIMPLE_THIRD_PERSON" }] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Controlla ogni soggetto separatamente: Leo/he richiede la terza persona; his parents = they usa la forma base." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_THIRD_PERSON", "PRESENT_SIMPLE_BASE_FORM", "PRESENT_SIMPLE_NEGATIVE_BASE_FORM"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "routine"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_practice_question_order",
+              "type": "word_order",
+              "title": "Domanda con do",
+              "prompt": "Riordina la domanda.",
+              "instructions": "Usa tutte le parole.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "questions",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a present simple question with do.",
+              "difficulty": "standard",
+              "content": { "tokens": ["what time", "do", "your classes", "finish"], "correct_order": ["what time", "do", "your classes", "finish"], "terminal_punctuation": "?" },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "What time + do + subject + base verb." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_QUESTION_WORD_ORDER"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "questions"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_practice_question_base",
+              "type": "error_correction",
+              "title": "Dopo does",
+              "prompt": "Correggi: Does Anna goes to the gym after school?",
+              "instructions": "Riscrivi la domanda corretta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "questions",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the base verb after does in a question.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["Does Anna go to the gym after school?"] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Does porta già la terza persona; il verbo resta go." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_QUESTION_BASE_FORM"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "questions"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_practice_short_answer",
+              "type": "select_gap",
+              "title": "Short answer",
+              "prompt": "Completa la risposta breve.",
+              "instructions": "Scegli l'ausiliare corretto.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "short_answers",
+              "primary_skill": "grammar",
+              "learning_objective": "Use do/does in a present simple short answer.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Does your sister play volleyball? — Yes, she [[blank_1]].",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["does"], "options": ["does", "do", "plays"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "do", "error_code": "PRESENT_SIMPLE_SHORT_ANSWER" }, { "answer": "plays", "error_code": "PRESENT_SIMPLE_SHORT_ANSWER" }] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "La domanda usa does e la short answer riprende lo stesso ausiliare: Yes, she does." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_SHORT_ANSWER"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "short-answer"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_practice_frequency",
+              "type": "word_order",
+              "title": "Avverbio di frequenza",
+              "prompt": "Riordina la frase.",
+              "instructions": "Metti usually nella posizione naturale.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "frequency",
+              "primary_skill": "word_order",
+              "learning_objective": "Place a frequency adverb before a main verb.",
+              "difficulty": "standard",
+              "content": { "tokens": ["I", "usually", "walk", "home", "after school"], "correct_order": ["I", "usually", "walk", "home", "after school"], "terminal_punctuation": "." },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Con un verbo normale, usually viene prima di walk." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_FREQUENCY_ADVERB_POSITION"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "frequency"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_practice_translation",
+              "type": "translation",
+              "title": "Produci la frase",
+              "prompt": "Traduci: Mio fratello non guarda mai la TV dopo cena.",
+              "instructions": "Scrivi una traduzione naturale completa.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "translation",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce a third-person present simple negative with a frequency adverb.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["My brother never watches TV after dinner.", "My brother never watches television after dinner."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Never rende già negativa l'idea: My brother never watches..., senza doesn't." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_TRANSLATION", "PRESENT_SIMPLE_FREQUENCY_ADVERB_POSITION", "PRESENT_SIMPLE_THIRD_PERSON"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "translation"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_practice_be_question",
+              "type": "multiple_choice",
+              "title": "Be non usa do/does",
+              "prompt": "Qual è la domanda corretta?",
+              "instructions": "Scegli una risposta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "be_present",
+              "primary_skill": "grammar",
+              "learning_objective": "Form a present simple question with be without do/does.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  { "key": "a", "text": "Are your classmates ready?", "is_correct": true },
+                  { "key": "b", "text": "Do your classmates are ready?", "is_correct": false, "error_code": "BE_PRESENT_FORM" },
+                  { "key": "c", "text": "Does your classmates ready?", "is_correct": false, "error_code": "BE_PRESENT_FORM" }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Con be, sposti are prima del soggetto: Are your classmates ready?" },
+              "diagnostics": { "tested_codes": ["BE_PRESENT_FORM"], "fallback_error_code": "CORE_BE_PRESENT" },
+              "tags": ["recovery", "present-simple", "be"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "present-simple", "practice", "wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_present_simple_school",
+      "title": "Present Simple — Modalità scuola",
+      "description": "Formati tipici da verifica: completamento di testo, correzione, riordino e traduzione senza suggerimenti sulla regola.",
+      "instructions": "Lavora come in una verifica. Le correzioni vengono mostrate alla fine della sezione.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-simple",
+      "estimated_minutes": 10,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_present_simple_school_section",
+          "title": "Verifica in formati scolastici",
+          "instructions": "Non ci sono regole sopra le domande: scegli la struttura dal contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_ps_school_text",
+              "type": "gap_fill",
+              "title": "Complete the text",
+              "prompt": "Complete the text with the correct Present Simple form.",
+              "instructions": "Scrivi la forma completa richiesta in ogni spazio.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "school_gap_text",
+              "primary_skill": "grammar",
+              "learning_objective": "Complete a school-style connected text using present simple forms.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Nina [[blank_1]] near her school. She [[blank_2]] home at 7:30 and [[blank_3]] the bus. Her lessons [[blank_4]] at 8:15. She [[blank_5]] lunch at school because her parents [[blank_6]] nearby.",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["lives"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "live", "error_code": "PRESENT_SIMPLE_THIRD_PERSON" }] },
+                  { "key": "blank_2", "accepted_answers": ["leaves"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "leave", "error_code": "PRESENT_SIMPLE_THIRD_PERSON" }] },
+                  { "key": "blank_3", "accepted_answers": ["takes"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "take", "error_code": "PRESENT_SIMPLE_THIRD_PERSON" }] },
+                  { "key": "blank_4", "accepted_answers": ["start"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "starts", "error_code": "PRESENT_SIMPLE_BASE_FORM" }] },
+                  { "key": "blank_5", "accepted_answers": ["has"], "points": 1, "feedback": {}, "answer_error_mappings": [] },
+                  { "key": "blank_6", "accepted_answers": ["don't work", "do not work"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "doesn't work", "error_code": "PRESENT_SIMPLE_NEGATIVE_AUXILIARY" }] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Controlla il soggetto di ogni verbo: il testo alterna she e soggetti plurali." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_THIRD_PERSON", "PRESENT_SIMPLE_BASE_FORM", "PRESENT_SIMPLE_NEGATIVE_AUXILIARY"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "school", "gap-text"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_school_error_1",
+              "type": "error_correction",
+              "title": "Correct the sentence",
+              "prompt": "Correct: My friends doesn't study French.",
+              "instructions": "Write the complete correct sentence.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "school_error_correction",
+              "primary_skill": "grammar",
+              "learning_objective": "Correct auxiliary agreement in a present simple negative.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["My friends don't study French.", "My friends do not study French."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "My friends = they, quindi don't." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_NEGATIVE_AUXILIARY"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "school", "error-correction"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_school_error_2",
+              "type": "error_correction",
+              "title": "Correct the question",
+              "prompt": "Correct: Where your teacher works?",
+              "instructions": "Write the complete correct question.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "school_error_correction",
+              "primary_skill": "grammar",
+              "learning_objective": "Add the required auxiliary and form a present simple question.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["Where does your teacher work?"] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Where + does + your teacher + work?" },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_QUESTION_AUXILIARY", "PRESENT_SIMPLE_QUESTION_BASE_FORM"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "school", "error-correction"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_school_order",
+              "type": "word_order",
+              "title": "Put the words in order",
+              "prompt": "Put the words in the correct order.",
+              "instructions": "Use every element once.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "school_word_order",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a present simple question from scrambled elements.",
+              "difficulty": "standard",
+              "content": { "tokens": ["how often", "does", "Luca", "go", "swimming"], "correct_order": ["how often", "does", "Luca", "go", "swimming"], "terminal_punctuation": "?" },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "How often + does + Luca + go...?" },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_QUESTION_WORD_ORDER"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "school", "word-order"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_school_translation",
+              "type": "translation",
+              "title": "Translate",
+              "prompt": "Traduci: Di solito tua sorella torna a casa a piedi?",
+              "instructions": "Write one natural English sentence.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "school_translation",
+              "primary_skill": "grammar",
+              "learning_objective": "Translate a present simple frequency question accurately.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["Does your sister usually walk home?", "Does your sister usually go home on foot?"] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Does + subject + usually + base verb. Walk home è una resa naturale di tornare a casa a piedi." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_TRANSLATION", "PRESENT_SIMPLE_QUESTION_AUXILIARY", "PRESENT_SIMPLE_FREQUENCY_ADVERB_POSITION"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "school", "translation"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_school_choice",
+              "type": "multiple_choice",
+              "title": "Choose the correct sentence",
+              "prompt": "Which sentence is correct?",
+              "instructions": "Choose one answer.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "school_multiple_choice",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise a correct third-person present simple sentence with a frequency adverb.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  { "key": "a", "text": "Tom often plays video games after dinner.", "is_correct": true },
+                  { "key": "b", "text": "Tom plays often video games after dinner.", "is_correct": false, "error_code": "PRESENT_SIMPLE_FREQUENCY_ADVERB_POSITION" },
+                  { "key": "c", "text": "Tom often play video games after dinner.", "is_correct": false, "error_code": "PRESENT_SIMPLE_THIRD_PERSON" }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Often viene prima del verbo normale e Tom richiede plays." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_FREQUENCY_ADVERB_POSITION", "PRESENT_SIMPLE_THIRD_PERSON"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "school", "multiple-choice"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "present-simple", "school", "wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_present_simple_verify",
+      "title": "Present Simple — Mini-verifica",
+      "description": "Controllo breve e bilanciato senza spiegazioni preventive.",
+      "instructions": "Rispondi senza consultare la spiegazione. Il risultato serve a capire se questo argomento può essere considerato stabile.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-simple",
+      "estimated_minutes": 8,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_present_simple_verify_section",
+          "title": "Mini-verifica",
+          "instructions": "Le domande coprono uso, forma, domande, negative, be e frequenza.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_ps_verify_use",
+              "type": "multiple_choice",
+              "title": "Use",
+              "prompt": "Every Friday, our class ___ in the language lab.",
+              "instructions": "Choose the correct answer.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "verify_use",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose present simple for a repeated routine.",
+              "difficulty": "standard",
+              "content": { "options": [
+                { "key": "a", "text": "works", "is_correct": true },
+                { "key": "b", "text": "is working", "is_correct": false, "error_code": "PRESENT_SIMPLE_USE" },
+                { "key": "c", "text": "worked", "is_correct": false, "error_code": "PRESENT_SIMPLE_USE" }
+              ] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Every Friday indica una routine ripetuta." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_USE"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_verify_spelling",
+              "type": "select_gap",
+              "title": "Third person spelling",
+              "prompt": "Complete the sentence.",
+              "instructions": "Choose the correct form.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "verify_third_person",
+              "primary_skill": "grammar",
+              "learning_objective": "Apply third-person spelling accurately.",
+              "difficulty": "standard",
+              "content": { "text_template": "My cousin [[blank_1]] English and German at school.", "blanks": [
+                { "key": "blank_1", "accepted_answers": ["studies"], "options": ["study", "studies", "studys"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "study", "error_code": "PRESENT_SIMPLE_THIRD_PERSON" }, { "answer": "studys", "error_code": "PRESENT_SIMPLE_THIRD_PERSON_IES" }] }
+              ] },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Con consonante + y, study diventa studies." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_THIRD_PERSON", "PRESENT_SIMPLE_THIRD_PERSON_IES"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_verify_negative",
+              "type": "gap_fill",
+              "title": "Negative",
+              "prompt": "Complete the sentence.",
+              "instructions": "Write the complete negative verb form.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "verify_negative",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce a third-person present simple negative.",
+              "difficulty": "standard",
+              "content": { "text_template": "Emma [[blank_1]] meat.", "blanks": [
+                { "key": "blank_1", "accepted_answers": ["doesn't eat", "does not eat"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "doesn't eats", "error_code": "PRESENT_SIMPLE_NEGATIVE_BASE_FORM" }, { "answer": "don't eat", "error_code": "PRESENT_SIMPLE_NEGATIVE_AUXILIARY" }] }
+              ] },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Emma = she: doesn't + eat." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_NEGATIVE_AUXILIARY", "PRESENT_SIMPLE_NEGATIVE_BASE_FORM"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_verify_question",
+              "type": "word_order",
+              "title": "Question",
+              "prompt": "Put the words in order.",
+              "instructions": "Use every element once.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "verify_question",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a third-person present simple question.",
+              "difficulty": "standard",
+              "content": { "tokens": ["does", "your mother", "work", "on Saturdays"], "correct_order": ["does", "your mother", "work", "on Saturdays"], "terminal_punctuation": "?" },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Does + subject + base verb." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_QUESTION_WORD_ORDER", "PRESENT_SIMPLE_QUESTION_BASE_FORM"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_verify_double_marking",
+              "type": "multiple_choice",
+              "title": "Base verb after does",
+              "prompt": "Choose the correct question.",
+              "instructions": "Choose one answer.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "verify_base_after_auxiliary",
+              "primary_skill": "grammar",
+              "learning_objective": "Keep the main verb in the base form after does.",
+              "difficulty": "standard",
+              "content": { "options": [
+                { "key": "a", "text": "Does he speak Spanish?", "is_correct": true },
+                { "key": "b", "text": "Does he speaks Spanish?", "is_correct": false, "error_code": "PRESENT_SIMPLE_QUESTION_BASE_FORM" },
+                { "key": "c", "text": "Do he speak Spanish?", "is_correct": false, "error_code": "PRESENT_SIMPLE_QUESTION_AUXILIARY" }
+              ] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "He richiede does; dopo does il verbo è speak." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_QUESTION_BASE_FORM", "PRESENT_SIMPLE_QUESTION_AUXILIARY"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_verify_frequency",
+              "type": "multiple_choice",
+              "title": "Frequency adverb",
+              "prompt": "Which sentence is correct?",
+              "instructions": "Choose one answer.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "verify_frequency",
+              "primary_skill": "grammar",
+              "learning_objective": "Place a frequency adverb correctly with a main verb.",
+              "difficulty": "standard",
+              "content": { "options": [
+                { "key": "a", "text": "We usually have lunch at home.", "is_correct": true },
+                { "key": "b", "text": "We have usually lunch at home.", "is_correct": false, "error_code": "PRESENT_SIMPLE_FREQUENCY_ADVERB_POSITION" },
+                { "key": "c", "text": "We have lunch usually at home.", "is_correct": false, "error_code": "PRESENT_SIMPLE_FREQUENCY_ADVERB_POSITION" }
+              ] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Usually viene normalmente prima del verbo have." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_FREQUENCY_ADVERB_POSITION"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_verify_be",
+              "type": "select_gap",
+              "title": "Be",
+              "prompt": "Complete the sentence.",
+              "instructions": "Choose the correct form.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "verify_be",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose the correct present form of be.",
+              "difficulty": "standard",
+              "content": { "text_template": "The classrooms [[blank_1]] on the second floor.", "blanks": [
+                { "key": "blank_1", "accepted_answers": ["are"], "options": ["are", "is", "do"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "is", "error_code": "BE_PRESENT_FORM" }, { "answer": "do", "error_code": "BE_PRESENT_FORM" }] }
+              ] },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "The classrooms è plurale: are." },
+              "diagnostics": { "tested_codes": ["BE_PRESENT_FORM"], "fallback_error_code": "CORE_BE_PRESENT" },
+              "tags": ["recovery", "present-simple", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ps_verify_translation",
+              "type": "translation",
+              "title": "Final production",
+              "prompt": "Traduci: I miei genitori lavorano a casa due giorni alla settimana.",
+              "instructions": "Write one natural English sentence.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple",
+              "subtopic": "verify_translation",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce a natural present simple sentence about a repeated routine.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["My parents work from home two days a week.", "My parents work at home two days a week."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "My parents = they, quindi work senza -s. Two days a week esprime la frequenza." },
+              "diagnostics": { "tested_codes": ["PRESENT_SIMPLE_TRANSLATION", "PRESENT_SIMPLE_BASE_FORM", "PRESENT_SIMPLE_TIME_EXPRESSION"], "fallback_error_code": "PRESENT_SIMPLE_GENERAL" },
+              "tags": ["recovery", "present-simple", "verify"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "present-simple", "verify", "wave-1"],
+      "foundation_links": []
+    }
+  ]
+}
