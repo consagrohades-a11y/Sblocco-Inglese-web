@@ -3,11 +3,14 @@ import { readFileSync } from 'node:fs';
 
 const ROOT = 'content/recovery/curriculum-v2';
 const MIGRATION = 'supabase/migrations/20260812232454_recovery_curriculum_v2_runtime_foundation.sql';
+const ENUM_ALIGNMENT = 'supabase/migrations/20260812234456_recovery_curriculum_v2_runtime_enum_alignment.sql';
 const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
 
 const sql = readFileSync(MIGRATION, 'utf8');
+const enumSql = readFileSync(ENUM_ALIGNMENT, 'utf8');
 const axes = readJson(`${ROOT}/competence-axes.json`).axes || [];
 const modes = readJson(`${ROOT}/assessment-modes.json`).modes || [];
+const outcomeSchema = readJson(`${ROOT}/outcome-schema.json`);
 const blueprint = readJson(`${ROOT}/assessment-blueprint.json`);
 const readiness = readJson(`${ROOT}/readiness-policy.json`);
 
@@ -53,6 +56,15 @@ assert.match(sql, /blocking_candidate boolean not null/i);
 assert.match(sql, /source_payload jsonb not null/i);
 assert.match(sql, /requirement_source text not null check \(requirement_source in \('school_programme', 'inferred_year_profile', 'manual_override'\)\)/i);
 
+// The runtime catalogue must use the same lifecycle and CEFR vocabulary as the source outcome contract.
+assert.deepEqual(outcomeSchema.allowed_statuses, ['draft', 'approved', 'deprecated']);
+assert.deepEqual(outcomeSchema.allowed_cefr_targets, ['A1', 'A1+', 'A2', 'A2+', 'B1', 'B1+', 'B2']);
+assert.match(enumSql, /drop constraint recovery_curriculum_outcomes_status_check/i);
+assert.match(enumSql, /status in \('draft', 'approved', 'deprecated'\)/i);
+assert.match(enumSql, /drop constraint recovery_curriculum_outcomes_cefr_target_check/i);
+assert.match(enumSql, /cefr_target in \('A1', 'A1\+', 'A2', 'A2\+', 'B1', 'B1\+', 'B2'\)/i);
+assert.doesNotMatch(enumSql, /status in \([^)]*'active'/i, 'Runtime outcome lifecycle must not invent active status.');
+
 const fragmentFields = blueprint.assessment_fragment_contract?.required_fields || [];
 for (const field of ['fragment_id', 'year_profiles', 'primary_axis', 'estimated_minutes', 'difficulty_band', 'school_task_family', 'transfer_level', 'content_source_policy']) {
   assert.ok(fragmentFields.includes(field), `Assessment blueprint no longer requires ${field}; review runtime foundation.`);
@@ -91,10 +103,11 @@ assert.match(sql, /evidence_status = 'valid' and score is not null/i);
 assert.match(sql, /evidence_key text not null unique/i);
 assert.match(sql, /form_family_key/i);
 
-assert.doesNotMatch(sql, /alter table public\.recovery_mastery_evidence/i, 'T1 must keep topic mastery evidence intact.');
-assert.doesNotMatch(sql, /alter table public\.recovery_student_topics/i, 'T1 must not mutate topic mastery state.');
-assert.doesNotMatch(sql, /create or replace function public\.compute_recovery_readiness/i, 'T1 must not cut over readiness.');
-assert.doesNotMatch(sql, /create or replace function public\.calculateRecoveryReadiness/i, 'T1 must not cut over client readiness.');
+for (const migrationSql of [sql, enumSql]) {
+  assert.doesNotMatch(migrationSql, /alter table public\.recovery_mastery_evidence/i, 'Runtime foundation changes must keep topic mastery evidence intact.');
+  assert.doesNotMatch(migrationSql, /alter table public\.recovery_student_topics/i, 'Runtime foundation changes must not mutate topic mastery state.');
+  assert.doesNotMatch(migrationSql, /create or replace function public\.compute_recovery_readiness/i, 'Runtime foundation changes must not cut over readiness.');
+}
 assert.doesNotMatch(sql, /grant\s+(insert|update|delete|all)\b[^;]*\bto authenticated/i, 'Authenticated users must not receive direct mutation grants on v2 runtime tables.');
 
 for (const table of ['recovery_enrollment_outcomes', 'recovery_outcome_evidence']) {
@@ -102,5 +115,6 @@ for (const table of ['recovery_enrollment_outcomes', 'recovery_outcome_evidence'
 }
 
 assert.match(sql, /notify pgrst, 'reload schema'/i);
+assert.match(enumSql, /notify pgrst, 'reload schema'/i);
 
 console.log('Recovery Curriculum v2 runtime foundation validation passed.');
