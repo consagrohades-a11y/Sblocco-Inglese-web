@@ -11,6 +11,7 @@ import {
   Layers3,
   LibraryBig,
   Loader2,
+  Sparkles,
   Upload,
   XCircle,
 } from 'lucide-react';
@@ -29,10 +30,10 @@ import {
 } from '../lib/exerciseBuilderApi.js';
 
 const QUICK_TEMPLATE_OPTIONS = [
+  { key: 'educational_content_block', label: 'Blocco educativo' },
+  { key: 'guided_exercise', label: 'Lezione guidata' },
   { key: 'question', label: 'Domanda base' },
-  { key: 'question_pool', label: 'Pool completo' },
   { key: 'exercise', label: 'Esercizio completo' },
-  { key: 'bundle', label: 'Bundle completo' },
 ];
 
 const QUESTION_LABELS = {
@@ -43,7 +44,9 @@ const QUESTION_LABELS = {
   translation: 'Traduzione',
   error_correction: 'Correzione errore',
   word_order: 'Riordino parole',
-  content_block: 'Blocco di contenuto',
+  content_block: 'Blocco di contenuto legacy',
+  educational_content_block: 'Blocco educativo strutturato',
+  guided_exercise: 'Lezione guidata',
   dialogue_choice: 'Dialogo a scelta',
   reading_comprehension: 'Lettura e comprensione',
   written_response: 'Produzione scritta',
@@ -53,16 +56,20 @@ const QUESTION_LABELS = {
 
 const TEMPLATE_GROUPS = [
   {
-    label: 'Pacchetti completi',
-    keys: ['question_pool', 'exercise', 'bundle'],
+    label: 'Lezioni e pacchetti',
+    keys: ['guided_exercise', 'question_pool', 'exercise', 'bundle'],
+  },
+  {
+    label: 'Contenuto educativo',
+    keys: ['educational_content_block', 'content_block'],
   },
   {
     label: 'Domande automatiche',
     keys: ['multiple_choice', 'multiple_select', 'gap_fill', 'select_gap', 'translation', 'error_correction', 'word_order', 'dialogue_choice'],
   },
   {
-    label: 'Contenuti e produzioni',
-    keys: ['content_block', 'reading_comprehension', 'written_response', 'dialogue_roleplay', 'dialogue_roleplay_audio_per_turn', 'audio_response'],
+    label: 'Comprensione e produzioni',
+    keys: ['reading_comprehension', 'written_response', 'dialogue_roleplay', 'dialogue_roleplay_audio_per_turn', 'audio_response'],
   },
 ];
 
@@ -216,6 +223,7 @@ export default function AdminExerciseBuilder() {
     const result = validateExerciseBuilderJson(jsonText);
     setValidation(result);
     setSelectedIndexes(result.items.filter((item) => item.status !== 'invalid').map((item) => item.index));
+    if (result.normalizedJson && result.sourceAdjustments?.length) setJsonText(result.normalizedJson);
     setSaveError('');
     setSavedBatch(null);
   }
@@ -248,7 +256,7 @@ export default function AdminExerciseBuilder() {
     try {
       const batch = await createExerciseBuilderImportBatch({
         validation,
-        rawPayload: jsonText,
+        rawPayload: validation.parsed,
         sourceName,
         selectedIndexes,
         createdBy: user?.id || null,
@@ -273,7 +281,7 @@ export default function AdminExerciseBuilder() {
               <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-moss dark:text-mint">Contenuti</p>
               <h1 className="mt-2 text-3xl font-black tracking-tight text-ink dark:text-white sm:text-4xl">Exercise Builder</h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
-                Importa JSON schema v1 o v2. I modelli aggiornati coprono tutti i tipi automatici, le produzioni manuali, audio, dialoghi e reading.
+                Scarica un template autosufficiente, usalo con ChatGPT e importa il risultato. L’importer verifica struttura, contratto di authoring e contenuto prima della revisione.
               </p>
             </div>
             <div className="relative flex flex-wrap gap-2">
@@ -329,7 +337,7 @@ export default function AdminExerciseBuilder() {
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.14em] text-moss dark:text-mint">1. Sorgente</p>
-                  <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Incolla o modifica il JSON</h2>
+                  <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Incolla il risultato di ChatGPT</h2>
                   <p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">{sourceName}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -342,7 +350,7 @@ export default function AdminExerciseBuilder() {
               </div>
               <textarea value={jsonText} onChange={(event) => replaceJson(event.target.value, sourceName)} spellCheck="false" className="mt-4 min-h-[34rem] w-full resize-y rounded-xl border border-ink/15 bg-surface-800 p-4 font-mono text-xs leading-6 text-emerald-50 outline-none transition focus:border-emerald-400 sm:text-sm" aria-label="JSON Exercise Builder" />
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                <p className="flex items-center gap-2 text-xs font-semibold text-ink/65 dark:text-white/65"><CircleHelp aria-hidden="true" className="h-4 w-4" /> Gli ID tecnici presenti nel JSON vengono ignorati.</p>
+                <p className="flex items-center gap-2 text-xs font-semibold text-ink/65 dark:text-white/65"><CircleHelp aria-hidden="true" className="h-4 w-4" /> Code fence e testo introduttivo dell’AI vengono rimossi automaticamente; la struttura pedagogica non viene corretta alla cieca.</p>
                 <button type="button" onClick={validateCurrentJson} className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-xl bg-moss px-5 py-2.5 text-sm font-black text-white transition hover:bg-ink"><ClipboardCheck aria-hidden="true" className="h-4 w-4" /> Valida JSON</button>
               </div>
             </article>
@@ -353,7 +361,9 @@ export default function AdminExerciseBuilder() {
                   <div><p className="text-xs font-bold uppercase tracking-[0.14em] text-moss dark:text-mint">2. Validazione</p><h2 className="mt-1 text-xl font-black text-ink dark:text-white">Elementi trovati</h2></div>
                   {validation ? <div className="flex gap-2 text-xs font-black"><span className="rounded-full bg-emerald-100 px-2.5 py-1 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200">{counts.valid} validi</span><span className="rounded-full bg-amber-100 px-2.5 py-1 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100">{counts.warning} avvisi</span><span className="rounded-full bg-red-100 px-2.5 py-1 text-red-900 dark:bg-red-300/10 dark:text-red-100">{counts.invalid} errori</span></div> : null}
                 </div>
-                {!validation ? <div className="mt-4 rounded-xl border border-dashed border-ink/15 bg-linen/35 p-5 text-sm leading-6 text-ink/60 dark:border-white/15 dark:bg-white/[0.04] dark:text-white/60">Valida il JSON per vedere domande, pool ed esercizi separatamente.</div> : null}
+                {!validation ? <div className="mt-4 rounded-xl border border-dashed border-ink/15 bg-linen/35 p-5 text-sm leading-6 text-ink/60 dark:border-white/15 dark:bg-white/[0.04] dark:text-white/60">Valida il JSON per verificare sia il payload sia il contratto del template usato per generarlo.</div> : null}
+                {validation?.sourceAdjustments?.length > 0 ? <div className="mt-4 rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-950 dark:border-sky-300/25 dark:bg-sky-300/10 dark:text-sky-100"><p className="flex items-center gap-2 font-black"><Sparkles aria-hidden="true" className="h-4 w-4" /> Pulizia automatica completata</p><ul className="mt-2 space-y-1 font-semibold opacity-80">{validation.sourceAdjustments.map((message) => <li key={message}>• {message}</li>)}</ul></div> : null}
+                {validation?.authoring?.status === 'verified' ? <div className="mt-4 flex items-start gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-950 dark:border-emerald-300/25 dark:bg-emerald-300/10 dark:text-emerald-100"><CheckCircle2 aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" /><div><p className="font-black">Template verificato</p><p className="mt-0.5 text-xs font-semibold opacity-80">{validation.authoring.templateKey}{validation.authoring.templateVersion ? ` · contratto v${validation.authoring.templateVersion}` : ''}</p></div></div> : null}
                 {validation?.errors.length > 0 ? <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-950 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100"><p className="font-black">Il file non può essere importato</p><ul className="mt-2 space-y-1 font-semibold">{validation.errors.map((error) => <li key={error}>• {error}</li>)}</ul></div> : null}
                 {validation?.items.length > 0 ? (
                   <>
@@ -383,7 +393,7 @@ export default function AdminExerciseBuilder() {
 
               <article className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.06] sm:p-5">
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-moss dark:text-mint">3. Salvataggio</p><h2 className="mt-1 text-xl font-black text-ink dark:text-white">Crea batch di revisione</h2>
-                <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">Il batch conserva il JSON originale e gli elementi normalizzati. Nessun ID pubblico viene ancora assegnato.</p>
+                <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">Il batch conserva l’oggetto JSON validato e gli elementi normalizzati. Nessun ID pubblico viene ancora assegnato.</p>
                 {savedBatch ? <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950 dark:border-emerald-300/25 dark:bg-emerald-300/10 dark:text-emerald-100"><p className="font-black">Batch salvato</p><p className="mt-1 font-semibold opacity-80">{savedBatch.source_name} è pronto per la revisione.</p></div> : null}
                 {saveError ? <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-950 dark:border-red-300/25 dark:bg-red-300/10 dark:text-red-100">{saveError}</div> : null}
                 <button type="button" onClick={saveImportBatch} disabled={saving || !validation || validation.errors.length > 0 || selectedCount === 0 || Boolean(overviewError)} className="focus-ring mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss disabled:cursor-not-allowed disabled:opacity-40">{saving ? <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" /> : <ClipboardCheck aria-hidden="true" className="h-4 w-4" />} Salva {selectedCount || 0} elementi da revisionare</button>
