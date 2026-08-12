@@ -1,0 +1,2027 @@
+{
+  "schema_version": 2,
+  "entity_type": "bundle",
+  "questions": [],
+  "pools": [],
+  "exercises": [
+    {
+      "client_key": "recovery_pronouns_recover",
+      "title": "Pronouns — Recupera",
+      "description": "Distingui soggetto e oggetto dal ruolo nella frase.",
+      "instructions": "Guarda prima la posizione del pronome.",
+      "instruction_language": "it",
+      "level": "A1+",
+      "topic": "pronouns",
+      "estimated_minutes": 12,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "question_end",
+        "show_score": false,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_pronouns_recover_section",
+          "title": "Recupera",
+          "instructions": "Guarda prima la posizione del pronome.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_pronouns_recover_teaching",
+              "type": "content_block",
+              "title": "Pronouns: soggetto o oggetto?",
+              "prompt": "Prima di esercitarti",
+              "instructions": "Leggi le regole e osserva gli esempi.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "core",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose subject or object pronouns from grammatical role and reference.",
+              "difficulty": "support",
+              "content": {
+                "educational_schema_version": 1,
+                "template_id": "educational-content-block-v1",
+                "variant": "grammar",
+                "body": "Il pronome corretto dipende dalla funzione nella frase, non solo dalla persona a cui ti riferisci.",
+                "intro": "Per un italofono gli errori più frequenti sono usare la forma oggetto come soggetto (me, him, her, them) o mantenere la forma soggetto dopo un verbo/preposizione.",
+                "sections": [
+                  {
+                    "key": "subject",
+                    "type": "rule",
+                    "title": "Subject pronouns: chi fa o vive l'azione",
+                    "body": "I, you, he, she, it, we, they occupano normalmente la posizione di soggetto prima del verbo.",
+                    "examples": [
+                      {
+                        "text": "Maya is tired. She is tired.",
+                        "highlight": [
+                          "She"
+                        ]
+                      },
+                      {
+                        "text": "The books are new. They are new.",
+                        "highlight": [
+                          "They"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "key": "object",
+                    "type": "rule",
+                    "title": "Object pronouns: chi riceve l'azione",
+                    "body": "me, you, him, her, it, us, them vengono dopo un verbo o una preposizione quando la persona/cosa è l'oggetto.",
+                    "examples": [
+                      {
+                        "text": "I know Luca. I know him.",
+                        "highlight": [
+                          "him"
+                        ]
+                      },
+                      {
+                        "text": "Come with Sara and me.",
+                        "highlight": [
+                          "me"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "key": "map",
+                    "type": "pattern",
+                    "title": "Collega le due serie",
+                    "body": "Non scegliere il pronome solo dalla persona: controlla la funzione nella frase.",
+                    "pattern": "I → me · you → you · he → him · she → her · it → it · we → us · they → them",
+                    "examples": [
+                      {
+                        "text": "She calls me. · I call her.",
+                        "highlight": [
+                          "She",
+                          "me",
+                          "I",
+                          "her"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "key": "position",
+                    "type": "comparison",
+                    "title": "Posizione prima o dopo il verbo",
+                    "body": "Il soggetto viene prima del verbo; l'oggetto viene dopo il verbo o una preposizione.",
+                    "correct": {
+                      "text": "They help us after school.",
+                      "highlight": [
+                        "They",
+                        "us"
+                      ]
+                    },
+                    "incorrect": {
+                      "text": "Them help we after school.",
+                      "highlight": [
+                        "Them",
+                        "we"
+                      ]
+                    }
+                  },
+                  {
+                    "key": "italian",
+                    "type": "mistake",
+                    "title": "Non ripetere il nome inutilmente",
+                    "body": "In inglese, quando il referente è chiaro, usa il pronome appropriato invece di ripetere sempre il nome. Ma non confondere soggetto e oggetto.",
+                    "correct": {
+                      "text": "I see Anna every day. I usually talk to her after class.",
+                      "highlight": [
+                        "her"
+                      ]
+                    },
+                    "incorrect": {
+                      "text": "I see Anna every day. Me usually talk to she after class.",
+                      "highlight": [
+                        "Me",
+                        "she"
+                      ]
+                    }
+                  },
+                  {
+                    "key": "it",
+                    "type": "rule",
+                    "title": "It per una cosa singolare",
+                    "body": "Usa it come soggetto o oggetto per una cosa/animale singolare quando il referente è chiaro; usa they/them per plurali.",
+                    "examples": [
+                      {
+                        "text": "Where is my phone? It is on the desk.",
+                        "highlight": [
+                          "It"
+                        ]
+                      },
+                      {
+                        "text": "I bought two notebooks. I need them for school.",
+                        "highlight": [
+                          "them"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "key": "recap",
+                    "type": "recap",
+                    "title": "Prima di continuare",
+                    "points": [
+                      "Soggetto: I/you/he/she/it/we/they.",
+                      "Oggetto: me/you/him/her/it/us/them.",
+                      "Il soggetto normalmente precede il verbo.",
+                      "L'oggetto segue il verbo o una preposizione.",
+                      "Scegli il pronome anche in base a singolare/plurale e referente."
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 0,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "pronouns",
+                "recover",
+                "structured-teaching"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_recover_1",
+              "type": "multiple_choice",
+              "title": "Prima del verbo",
+              "prompt": "___ lives near my school. (Marta)",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "subject_pronoun",
+              "primary_skill": "grammar",
+              "learning_objective": "Replace a female singular subject with she.",
+              "difficulty": "support",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "She",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "Her",
+                    "is_correct": false,
+                    "error_code": "SUBJECT_PRONOUNS"
+                  },
+                  {
+                    "key": "c",
+                    "text": "Him",
+                    "is_correct": false,
+                    "error_code": "SUBJECT_PRONOUNS"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_recover_2",
+              "type": "multiple_choice",
+              "title": "Dopo il verbo",
+              "prompt": "I see Marco every morning. I see ___ at the bus stop.",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "object_pronoun",
+              "primary_skill": "grammar",
+              "learning_objective": "Replace a male singular object with him.",
+              "difficulty": "support",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "him",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "he",
+                    "is_correct": false,
+                    "error_code": "CORE_OBJECT_PRONOUNS"
+                  },
+                  {
+                    "key": "c",
+                    "text": "his",
+                    "is_correct": false,
+                    "error_code": "CORE_OBJECT_PRONOUNS"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "CORE_OBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_recover_3",
+              "type": "select_gap",
+              "title": "Due funzioni",
+              "prompt": "Completa.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "subject_object_contrast",
+              "primary_skill": "grammar",
+              "learning_objective": "Contrast they as subject with them after a preposition.",
+              "difficulty": "support",
+              "content": {
+                "text_template": "[[blank_1]] are my classmates. I usually study with [[blank_2]] after school.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "They",
+                      "they"
+                    ],
+                    "options": [
+                      "They",
+                      "Them",
+                      "We"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "Them",
+                        "error_code": "SUBJECT_PRONOUNS"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "them"
+                    ],
+                    "options": [
+                      "them",
+                      "they",
+                      "us"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "they",
+                        "error_code": "CORE_OBJECT_PRONOUNS"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {
+                "explanation": "Prima del verbo: they. Dopo with: them."
+              },
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_recover_4",
+              "type": "multiple_choice",
+              "title": "Una cosa",
+              "prompt": "My laptop is old, but ___ still works well.",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "it_subject",
+              "primary_skill": "grammar",
+              "learning_objective": "Use it as a subject pronoun for a singular thing.",
+              "difficulty": "support",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "it",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "him",
+                    "is_correct": false,
+                    "error_code": "SUBJECT_PRONOUNS"
+                  },
+                  {
+                    "key": "c",
+                    "text": "them",
+                    "is_correct": false,
+                    "error_code": "SUBJECT_PRONOUNS"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_recover_5",
+              "type": "error_correction",
+              "title": "Scambia la forma",
+              "prompt": "Correggi: Me and Luca are in the same class.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "subject_I",
+              "primary_skill": "grammar",
+              "learning_objective": "Use I rather than me as part of a compound subject.",
+              "difficulty": "support",
+              "content": {
+                "accepted_answers": [
+                  "Luca and I are in the same class.",
+                  "I and Luca are in the same class."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {
+                "explanation": "Il gruppo è il soggetto della frase: Luca and I."
+              },
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_recover_6",
+              "type": "translation",
+              "title": "Dopo una preposizione",
+              "prompt": "Vieni con noi.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "object_after_preposition",
+              "primary_skill": "grammar",
+              "learning_objective": "Use us after the preposition with.",
+              "difficulty": "support",
+              "content": {
+                "accepted_answers": [
+                  "Come with us."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {
+                "explanation": "Dopo with serve la forma oggetto: us."
+              },
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "CORE_OBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "pronouns",
+        "recover",
+        "wave-2"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_pronouns_practice",
+      "title": "Pronouns — Allenati",
+      "description": "Pratica subject e object pronouns in riferimenti realistici.",
+      "instructions": "Segui il referente e la funzione nella frase.",
+      "instruction_language": "it",
+      "level": "A1+",
+      "topic": "pronouns",
+      "estimated_minutes": 12,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "question_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_pronouns_practice_section",
+          "title": "Allenati",
+          "instructions": "Segui il referente e la funzione nella frase.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_pronouns_practice_1",
+              "type": "select_gap",
+              "title": "Un messaggio",
+              "prompt": "Completa.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "we_us",
+              "primary_skill": "grammar",
+              "learning_objective": "Contrast we as subject with us as object in a connected context.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Sara and I have an exam tomorrow. [[blank_1]] are studying tonight. Luca is helping [[blank_2]].",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "We",
+                      "we"
+                    ],
+                    "options": [
+                      "We",
+                      "Us",
+                      "They"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "Us",
+                        "error_code": "SUBJECT_PRONOUNS"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "us"
+                    ],
+                    "options": [
+                      "us",
+                      "we",
+                      "them"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "we",
+                        "error_code": "CORE_OBJECT_PRONOUNS"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_practice_2",
+              "type": "dialogue_choice",
+              "title": "Parlare di un amico",
+              "prompt": "Which reply is natural?",
+              "instructions": "Leggi il dialogo e scegli la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "object_after_preposition",
+              "primary_skill": "interaction",
+              "learning_objective": "Use him after a preposition in dialogue.",
+              "difficulty": "standard",
+              "content": {
+                "scenario": "Two students are talking about Daniel.",
+                "response_prompt": "Which reply is natural?",
+                "turns": [
+                  {
+                    "key": "turn_1",
+                    "speaker": "Maya",
+                    "text": "Do you know Daniel?"
+                  },
+                  {
+                    "key": "turn_2",
+                    "speaker": "Nina",
+                    "text": "Yes, he's in my maths class."
+                  }
+                ],
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "I sit next to him.",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "I sit next to he.",
+                    "is_correct": false,
+                    "error_code": "CORE_OBJECT_PRONOUNS"
+                  },
+                  {
+                    "key": "c",
+                    "text": "Me sit next to him.",
+                    "is_correct": false,
+                    "error_code": "SUBJECT_PRONOUNS"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_practice_3",
+              "type": "error_correction",
+              "title": "Due errori",
+              "prompt": "Correggi: Them live near us, and we see they every weekend.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "they_them",
+              "primary_skill": "grammar",
+              "learning_objective": "Correct subject/object forms for third-person plural reference.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "They live near us, and we see them every weekend."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_practice_4",
+              "type": "word_order",
+              "title": "Forma la frase",
+              "prompt": "Metti in ordine.",
+              "instructions": "Metti le parti nell'ordine corretto.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "she_me",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a clause with a subject pronoun and an object pronoun.",
+              "difficulty": "standard",
+              "content": {
+                "tokens": [
+                  "She",
+                  "usually calls",
+                  "me",
+                  "after school"
+                ],
+                "correct_order": [
+                  "She",
+                  "usually calls",
+                  "me",
+                  "after school"
+                ],
+                "terminal_punctuation": "."
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_practice_5",
+              "type": "multiple_choice",
+              "title": "Un oggetto plurale",
+              "prompt": "I bought two tickets yesterday. I can't find ___ now.",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "plural_object",
+              "primary_skill": "grammar",
+              "learning_objective": "Use them for a plural object referent.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "them",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "they",
+                    "is_correct": false,
+                    "error_code": "CORE_OBJECT_PRONOUNS"
+                  },
+                  {
+                    "key": "c",
+                    "text": "it",
+                    "is_correct": false,
+                    "error_code": "CORE_OBJECT_PRONOUNS"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "CORE_OBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_practice_6",
+              "type": "translation",
+              "title": "Due persone",
+              "prompt": "Lei ci aiuta spesso.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "subject_object_production",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce she as subject and us as object.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "She often helps us.",
+                  "She helps us often."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_practice_7",
+              "type": "select_gap",
+              "title": "Una famiglia",
+              "prompt": "Completa il testo.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "connected_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Track plural and first-person references across a short connected text.",
+              "difficulty": "challenge",
+              "content": {
+                "text_template": "My parents work near the station. [[blank_1]] go there by bus. I sometimes meet [[blank_2]] after work, and [[blank_3]] have dinner together.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "They",
+                      "they"
+                    ],
+                    "options": [
+                      "They",
+                      "Them",
+                      "We"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "Them",
+                        "error_code": "SUBJECT_PRONOUNS"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "them"
+                    ],
+                    "options": [
+                      "them",
+                      "they",
+                      "us"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "they",
+                        "error_code": "CORE_OBJECT_PRONOUNS"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_3",
+                    "accepted_answers": [
+                      "we"
+                    ],
+                    "options": [
+                      "we",
+                      "us",
+                      "they"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "us",
+                        "error_code": "SUBJECT_PRONOUNS"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_practice_8",
+              "type": "error_correction",
+              "title": "Dopo with",
+              "prompt": "Correggi: The teacher wants to speak with I after class.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "object_after_preposition",
+              "primary_skill": "grammar",
+              "learning_objective": "Use me after a preposition.",
+              "difficulty": "challenge",
+              "content": {
+                "accepted_answers": [
+                  "The teacher wants to speak with me after class."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "CORE_OBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "pronouns",
+        "practice",
+        "wave-2"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_pronouns_school",
+      "title": "Pronouns — Modalità scuola",
+      "description": "Formati tipici di verifica scolastica sui pronomi.",
+      "instructions": "Completa tutto prima del feedback.",
+      "instruction_language": "it",
+      "level": "A1+",
+      "topic": "pronouns",
+      "estimated_minutes": 10,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_pronouns_school_section",
+          "title": "Modalità scuola",
+          "instructions": "Completa tutto prima del feedback.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_pronouns_school_1",
+              "type": "select_gap",
+              "title": "Completa",
+              "prompt": "Scegli i pronomi corretti.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "subject_object_singular",
+              "primary_skill": "grammar",
+              "learning_objective": "Apply subject and object forms in two school-style sentences.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "1. Marta is absent. [[blank_1]] is ill. 2. I called Marco, but I couldn't reach [[blank_2]].",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "She",
+                      "she"
+                    ],
+                    "options": [
+                      "She",
+                      "Her",
+                      "He"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "Her",
+                        "error_code": "SUBJECT_PRONOUNS"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "him"
+                    ],
+                    "options": [
+                      "him",
+                      "he",
+                      "her"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "he",
+                        "error_code": "CORE_OBJECT_PRONOUNS"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_school_2",
+              "type": "error_correction",
+              "title": "Correggi",
+              "prompt": "Us are ready, but the teacher hasn't called we yet.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "we_us",
+              "primary_skill": "grammar",
+              "learning_objective": "Correct first-person plural subject and object forms.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "We are ready, but the teacher hasn't called us yet.",
+                  "We are ready, but the teacher has not called us yet."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_school_3",
+              "type": "translation",
+              "title": "Traduzione",
+              "prompt": "Li vedo ogni mattina alla fermata.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "them_object",
+              "primary_skill": "grammar",
+              "learning_objective": "Translate a plural object pronoun.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "I see them every morning at the bus stop.",
+                  "I see them every morning at the stop."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "CORE_OBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_school_4",
+              "type": "word_order",
+              "title": "Riordina",
+              "prompt": "Forma una frase corretta.",
+              "instructions": "Metti le parti nell'ordine corretto.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "they_her",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a clause with plural subject and singular object pronouns.",
+              "difficulty": "standard",
+              "content": {
+                "tokens": [
+                  "They",
+                  "invited",
+                  "her",
+                  "to the party"
+                ],
+                "correct_order": [
+                  "They",
+                  "invited",
+                  "her",
+                  "to the party"
+                ],
+                "terminal_punctuation": "."
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_school_5",
+              "type": "multiple_choice",
+              "title": "Scegli",
+              "prompt": "The keys are on the desk. Please give ___ to Sara.",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "plural_object_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose them for a plural object referent.",
+              "difficulty": "challenge",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "them",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "they",
+                    "is_correct": false,
+                    "error_code": "CORE_OBJECT_PRONOUNS"
+                  },
+                  {
+                    "key": "c",
+                    "text": "it",
+                    "is_correct": false,
+                    "error_code": "CORE_OBJECT_PRONOUNS"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "CORE_OBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_school_6",
+              "type": "select_gap",
+              "title": "Breve testo",
+              "prompt": "Completa.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "integrated_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Maintain first-person plural reference through subject and object positions.",
+              "difficulty": "challenge",
+              "content": {
+                "text_template": "Leo and I are working on a project. [[blank_1]] meet on Tuesdays. Our teacher checks the work and gives [[blank_2]] feedback. Nina sometimes joins [[blank_3]].",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "We",
+                      "we"
+                    ],
+                    "options": [
+                      "We",
+                      "Us",
+                      "They"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "Us",
+                        "error_code": "SUBJECT_PRONOUNS"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "us"
+                    ],
+                    "options": [
+                      "us",
+                      "we",
+                      "them"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "we",
+                        "error_code": "CORE_OBJECT_PRONOUNS"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_3",
+                    "accepted_answers": [
+                      "us"
+                    ],
+                    "options": [
+                      "us",
+                      "we",
+                      "them"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "we",
+                        "error_code": "CORE_OBJECT_PRONOUNS"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "pronouns",
+        "school",
+        "wave-2"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_pronouns_verify",
+      "title": "Pronouns — Verifica argomento",
+      "description": "Verifica indipendente su subject/object pronouns e reference replacement.",
+      "instructions": "Completa l’intera verifica prima di vedere il feedback.",
+      "instruction_language": "it",
+      "level": "A1+",
+      "topic": "pronouns",
+      "estimated_minutes": 14,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_pronouns_verify_section",
+          "title": "Verifica argomento",
+          "instructions": "Completa l’intera verifica prima di vedere il feedback.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_pronouns_verify_1",
+              "type": "multiple_choice",
+              "title": "Prima del verbo",
+              "prompt": "___ works in the library. (Omar)",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "subject_pronoun",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose he as a male singular subject pronoun.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "He",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "Him",
+                    "is_correct": false,
+                    "error_code": "SUBJECT_PRONOUNS"
+                  },
+                  {
+                    "key": "c",
+                    "text": "Her",
+                    "is_correct": false,
+                    "error_code": "SUBJECT_PRONOUNS"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_verify_2",
+              "type": "error_correction",
+              "title": "Rivedi la frase",
+              "prompt": "Correggi: Her lives next door to me.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "subject_she",
+              "primary_skill": "grammar",
+              "learning_objective": "Correct object-form her used incorrectly as a subject.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "She lives next door to me."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_verify_3",
+              "type": "select_gap",
+              "title": "Due posizioni",
+              "prompt": "Completa.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "they_them",
+              "primary_skill": "grammar",
+              "learning_objective": "Contrast they as subject with them as object across one reference chain.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Marco and Anna are my cousins. [[blank_1]] visit me in summer, and I usually visit [[blank_2]] at Christmas.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "They",
+                      "they"
+                    ],
+                    "options": [
+                      "They",
+                      "Them",
+                      "We"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "Them",
+                        "error_code": "SUBJECT_PRONOUNS"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "them"
+                    ],
+                    "options": [
+                      "them",
+                      "they",
+                      "us"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "they",
+                        "error_code": "CORE_OBJECT_PRONOUNS"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_verify_4",
+              "type": "translation",
+              "title": "Dopo una preposizione",
+              "prompt": "Puoi venire con me?",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "me_after_preposition",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce me after with.",
+              "difficulty": "standard",
+              "content": {
+                "accepted_answers": [
+                  "Can you come with me?",
+                  "Could you come with me?"
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "CORE_OBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_verify_5",
+              "type": "multiple_choice",
+              "title": "Una cosa singolare",
+              "prompt": "Where is my passport? I had ___ a minute ago.",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "it_object",
+              "primary_skill": "grammar",
+              "learning_objective": "Use it for a singular inanimate object.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "it",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "them",
+                    "is_correct": false,
+                    "error_code": "CORE_OBJECT_PRONOUNS"
+                  },
+                  {
+                    "key": "c",
+                    "text": "he",
+                    "is_correct": false,
+                    "error_code": "CORE_OBJECT_PRONOUNS"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "CORE_OBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_verify_6",
+              "type": "word_order",
+              "title": "Una frase completa",
+              "prompt": "Forma la frase.",
+              "instructions": "Metti le parti nell'ordine corretto.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "we_her",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a clause with we as subject and her as object.",
+              "difficulty": "standard",
+              "content": {
+                "tokens": [
+                  "We",
+                  "can help",
+                  "her",
+                  "after lunch"
+                ],
+                "correct_order": [
+                  "We",
+                  "can help",
+                  "her",
+                  "after lunch"
+                ],
+                "terminal_punctuation": "."
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_verify_7",
+              "type": "dialogue_choice",
+              "title": "Un nuovo collega",
+              "prompt": "Which sentence is natural?",
+              "instructions": "Leggi il dialogo e scegli la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "dialogue_reference",
+              "primary_skill": "interaction",
+              "learning_objective": "Maintain female reference with an object pronoun after with.",
+              "difficulty": "challenge",
+              "content": {
+                "scenario": "Two people are talking about a new colleague, Marta.",
+                "response_prompt": "Which sentence is natural?",
+                "turns": [
+                  {
+                    "key": "turn_1",
+                    "speaker": "Leo",
+                    "text": "Have you met Marta yet?"
+                  },
+                  {
+                    "key": "turn_2",
+                    "speaker": "Nina",
+                    "text": "Yes. She started yesterday."
+                  }
+                ],
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "I worked with her this morning.",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "I worked with she this morning.",
+                    "is_correct": false,
+                    "error_code": "CORE_OBJECT_PRONOUNS"
+                  },
+                  {
+                    "key": "c",
+                    "text": "Me worked with her this morning.",
+                    "is_correct": false,
+                    "error_code": "SUBJECT_PRONOUNS"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_verify_8",
+              "type": "error_correction",
+              "title": "Controlla due ruoli",
+              "prompt": "Correggi: Him called I after the lesson.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "integrated_he_me",
+              "primary_skill": "grammar",
+              "learning_objective": "Correct both a subject and an object pronoun in one clause.",
+              "difficulty": "challenge",
+              "content": {
+                "accepted_answers": [
+                  "He called me after the lesson."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_verify_9",
+              "type": "select_gap",
+              "title": "Un gruppo di amici",
+              "prompt": "Completa il testo.",
+              "instructions": "Completa scegliendo la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "integrative_reference_chain",
+              "primary_skill": "grammar",
+              "learning_objective": "Track changing referents through subject and object positions in a connected text.",
+              "difficulty": "challenge",
+              "content": {
+                "text_template": "Nina, Leo and I are planning a trip. [[blank_1]] found a cheap hostel. Sara wants to join [[blank_2]], so I sent [[blank_3]] the details.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "We",
+                      "we"
+                    ],
+                    "options": [
+                      "We",
+                      "Us",
+                      "They"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "Us",
+                        "error_code": "SUBJECT_PRONOUNS"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "us"
+                    ],
+                    "options": [
+                      "us",
+                      "we",
+                      "them"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "we",
+                        "error_code": "CORE_OBJECT_PRONOUNS"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "blank_3",
+                    "accepted_answers": [
+                      "her"
+                    ],
+                    "options": [
+                      "her",
+                      "she",
+                      "them"
+                    ],
+                    "points": 1,
+                    "feedback": {},
+                    "answer_error_mappings": [
+                      {
+                        "answer": "she",
+                        "error_code": "CORE_OBJECT_PRONOUNS"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "per_blank",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_verify_10",
+              "type": "translation",
+              "title": "Produzione controllata",
+              "prompt": "Loro ci conoscono, ma noi non conosciamo loro.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "integrated_production",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce plural subject/object contrasts in two coordinated clauses.",
+              "difficulty": "challenge",
+              "content": {
+                "accepted_answers": [
+                  "They know us, but we don't know them.",
+                  "They know us, but we do not know them."
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pronouns_verify_11",
+              "type": "multiple_choice",
+              "title": "Quale frase è corretta?",
+              "prompt": "Sara and I sent an email to Luca. Which sentence keeps the same meaning?",
+              "instructions": "Scegli la risposta corretta.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "pronouns",
+              "subtopic": "reference_replacement",
+              "primary_skill": "grammar",
+              "learning_objective": "Replace two named referents with the correct subject and object pronouns.",
+              "difficulty": "challenge",
+              "content": {
+                "options": [
+                  {
+                    "key": "a",
+                    "text": "We sent an email to him.",
+                    "is_correct": true
+                  },
+                  {
+                    "key": "b",
+                    "text": "Us sent an email to he.",
+                    "is_correct": false,
+                    "error_code": "SUBJECT_PRONOUNS"
+                  },
+                  {
+                    "key": "c",
+                    "text": "They sent an email to him.",
+                    "is_correct": false,
+                    "error_code": "SUBJECT_PRONOUNS"
+                  }
+                ]
+              },
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [
+                  "SUBJECT_PRONOUNS",
+                  "CORE_OBJECT_PRONOUNS"
+                ],
+                "fallback_error_code": "SUBJECT_PRONOUNS"
+              },
+              "tags": [
+                "recovery",
+                "pronouns"
+              ],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "pronouns",
+        "verify",
+        "wave-2"
+      ],
+      "foundation_links": []
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "topic_key": "pronouns",
+  "label": "Pronouns",
+  "wave": 2,
+  "introduced_by_year": 1,
+  "level": "A1+",
+  "prerequisites": [],
+  "outcome": "Lo studente sostituisce nomi e gruppi nominali con subject pronouns e object pronouns corretti, mantenendo il referente e scegliendo la forma in base alla funzione prima/dopo il verbo o una preposizione.",
+  "must_master": [
+    "I/you/he/she/it/we/they as subject pronouns",
+    "me/you/him/her/it/us/them as object pronouns",
+    "subject pronoun before the verb in normal statements",
+    "object pronoun after a verb",
+    "object pronoun after a preposition",
+    "singular/plural reference with it vs they/them",
+    "simple replacement of repeated names while preserving reference"
+  ],
+  "scope_boundary": {
+    "possessives": "Do not teach possessive adjectives or possessive pronouns; the possessives topic belongs to another content stream.",
+    "reflexives": "Do not teach myself/yourself/themselves or reflexive meaning.",
+    "relatives": "Do not teach relative pronouns who/which/that.",
+    "indefinites": "Do not teach someone/anyone/nobody etc. as part of this topic.",
+    "advanced_reference": "Keep reference chains short and explicit; no discourse-heavy anaphora beyond A1+/A2."
+  },
+  "italian_learner_risks": [
+    {
+      "risk": "using an object pronoun as subject",
+      "example_wrong": "Me live near school.",
+      "target": "I live near school."
+    },
+    {
+      "risk": "using a subject pronoun after a verb",
+      "example_wrong": "I see she every day.",
+      "target": "I see her every day."
+    },
+    {
+      "risk": "using a subject pronoun after a preposition",
+      "example_wrong": "Come with we.",
+      "target": "Come with us."
+    },
+    {
+      "risk": "confusing they and them",
+      "example_wrong": "Them are my friends. I see they often.",
+      "target": "They are my friends. I see them often."
+    },
+    {
+      "risk": "using me instead of I in a compound subject",
+      "example_wrong": "Me and Luca are classmates.",
+      "target": "Luca and I are classmates."
+    },
+    {
+      "risk": "losing singular/plural reference",
+      "example_wrong": "I bought two books. I need it for school.",
+      "target": "I bought two books. I need them for school."
+    }
+  ],
+  "context_bank": [
+    "talking about classmates and family",
+    "messages about friends",
+    "school projects",
+    "objects such as phones, keys and tickets",
+    "work or study partners",
+    "short connected stories",
+    "travel plans",
+    "giving or receiving help"
+  ],
+  "recover_phase": {
+    "minutes": 12,
+    "requirements": [
+      "one structured educational content block",
+      "map subject and object series",
+      "teach position/function, not only memorised pairs",
+      "show pronouns after verbs and prepositions",
+      "include singular/plural reference",
+      "six scaffolded checks including production"
+    ]
+  },
+  "practice_phase": {
+    "minutes": 12,
+    "item_target": 8,
+    "requirements": [
+      "at least four exercise formats",
+      "mix subject and object positions",
+      "use connected reference chains",
+      "include at least one translation",
+      "include after-preposition use",
+      "increase autonomy from selection to production"
+    ]
+  },
+  "school_phase": {
+    "minutes": 10,
+    "item_target": 6,
+    "feedback_timing": "exercise_end",
+    "requirements": [
+      "gap/select-gap",
+      "error correction",
+      "translation",
+      "word order",
+      "mixed reference task",
+      "no possessive forms as a learning target"
+    ]
+  },
+  "verify_phase": {
+    "standard_id": "recovery-topic-verification-v2",
+    "minutes": 14,
+    "item_target": 11,
+    "feedback_timing": "exercise_end",
+    "mastery_threshold": 80,
+    "strong_threshold": 90,
+    "requirements": [
+      "at least four formats",
+      "at least six subskills",
+      "at least two integrative items",
+      "connected context/dialogue",
+      "controlled production",
+      "approximately 60 percent standard and 40 percent challenge",
+      "neutral titles",
+      "no teaching content"
+    ]
+  },
+  "approved_diagnostic_codes": [
+    "SUBJECT_PRONOUNS",
+    "CORE_OBJECT_PRONOUNS"
+  ],
+  "quality_rejections": [
+    "including possessive adjectives/pronouns as assessed content",
+    "turning the topic into a pronoun chart with repetitive substitution only",
+    "ambiguous gender/reference tasks with no clear antecedent",
+    "advanced reflexive, relative or indefinite pronouns",
+    "distractors that change the referent rather than test pronoun function unless clearly designed as reference tracking",
+    "titles that announce 'subject pronoun' or 'object pronoun' as the answer cue",
+    "difficulty created by long lexical content rather than reference tracking"
+  ]
+}
