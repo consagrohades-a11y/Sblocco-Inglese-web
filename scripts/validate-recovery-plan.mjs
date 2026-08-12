@@ -5,6 +5,7 @@ import {
   buildRecoveryTopicStates,
   recoveryModeForDays,
 } from '../src/lib/recoveryPlanEngine.js';
+import { validateExerciseBuilderJson } from '../src/lib/exerciseBuilderSchema.js';
 import { RECOVERY_MODE } from '../src/config/recovery.js';
 import { recoveryDiagnosticQuestions } from '../src/data/recoveryDiagnostic.js';
 
@@ -162,4 +163,40 @@ assert.match(learnerHome, /function GenericDashboard/);
 assert.match(learnerHome, /Il tuo prossimo passo/);
 assert.match(learnerHome, /Ripasso SRS/);
 
-console.log('Recovery MVP validation passed.');
+// O: Recovery curriculum and production content are source-controlled and importable.
+const recoveryCurriculum = JSON.parse(readFileSync('content/recovery/curriculum-years-1-3.json', 'utf8'));
+assert.equal(recoveryCurriculum.school_programme_is_authoritative, true);
+assert.ok(recoveryCurriculum.topics.length >= 35, 'Years 1-3 curriculum should include core and programme-dependent coverage.');
+assert.ok(recoveryCurriculum.content_waves[0].topics.includes('present-simple'));
+assert.ok(recoveryCurriculum.topics.some((topic) => topic.key === 'reported-speech' && topic.introduced_by_year === 3));
+assert.ok(recoveryCurriculum.topics.some((topic) => topic.key === 'relative-clauses'));
+assert.ok(recoveryCurriculum.topics.some((topic) => topic.key === 'passive-voice'));
+
+const presentSimpleBundle = JSON.parse(readFileSync('content/recovery/wave-1/present-simple.bundle.json', 'utf8'));
+const presentSimpleValidation = validateExerciseBuilderJson(presentSimpleBundle);
+assert.deepEqual(presentSimpleValidation.errors, [], `Present Simple bundle import errors: ${presentSimpleValidation.errors.join(' | ')}`);
+const invalidPresentSimpleItems = presentSimpleValidation.items.filter((item) => item.status === 'invalid');
+assert.equal(invalidPresentSimpleItems.length, 0, `Present Simple invalid items: ${invalidPresentSimpleItems.flatMap((item) => item.errors || []).join(' | ')}`);
+assert.equal(presentSimpleBundle.exercises.length, 4, 'Present Simple gold-standard batch must contain four Recovery phases.');
+
+const presentSimpleExercises = new Map(presentSimpleBundle.exercises.map((exercise) => [exercise.client_key, exercise]));
+const recoverExercise = presentSimpleExercises.get('recovery_present_simple_recover');
+const practiceExercise = presentSimpleExercises.get('recovery_present_simple_practice');
+const schoolExercise = presentSimpleExercises.get('recovery_present_simple_school');
+const verifyExercise = presentSimpleExercises.get('recovery_present_simple_verify');
+assert.ok(recoverExercise && practiceExercise && schoolExercise && verifyExercise, 'Present Simple batch must include recover, practice, school and verify exercises.');
+assert.equal(presentSimpleBundle.exercises.reduce((sum, exercise) => sum + exercise.estimated_minutes, 0), 42, 'Complete Present Simple session should match the 42-minute Recovery Complete target.');
+assert.ok(recoverExercise.sections.flatMap((section) => section.questions).some((question) => question.type === 'content_block' && question.content?.educational_schema_version === 1), 'Recover must begin from structured teaching input.');
+assert.ok(practiceExercise.sections.flatMap((section) => section.questions).length >= 7, 'Practice must contain enough retrieval to be meaningful.');
+assert.ok(schoolExercise.sections.every((section) => section.feedback_timing === 'exercise_end'), 'Modalità scuola must not coach after each question.');
+assert.ok(verifyExercise.sections.every((section) => section.feedback_timing === 'exercise_end'), 'Mini-verifica must release feedback only at the end.');
+assert.ok(verifyExercise.sections.flatMap((section) => section.questions).length >= 6, 'Mini-verifica must sample the full objective, not one narrow rule.');
+assert.equal(verifyExercise.sections.flatMap((section) => section.questions).some((question) => question.type === 'content_block'), false, 'Mini-verifica must not teach before measuring mastery.');
+for (const exercise of presentSimpleBundle.exercises) {
+  assert.equal(exercise.topic, 'present-simple');
+  for (const question of exercise.sections.flatMap((section) => section.questions)) {
+    assert.equal(question.topic, 'present-simple', `${question.client_key} must use the Recovery topic key so checkpoint evidence can aggregate correctly.`);
+  }
+}
+
+console.log('Recovery MVP and curriculum-content validation passed.');
