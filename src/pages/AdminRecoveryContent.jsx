@@ -237,6 +237,121 @@ export default function AdminRecoveryContent() {
     }
   }
 
+
+  async function publishValidatedRecoveryWave() {
+    if (waveBusy) return;
+    const missingTopics = recoveryWaveBundles.filter((entry) => !isTopicReady(mappings, entry.topicKey));
+    if (!missingTopics.length) {
+      setMessage('Wave 1 già pubblicata: tutti i topic disponibili hanno le quattro fasi attive.');
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Pubblicare ${missingTopics.length} topic Wave 1 validati in production? `
+      + 'L’operazione usa i controlli di pubblicazione dell’Exercise Builder e poi sincronizza i mapping Recovery.',
+    );
+    if (!confirmed) return;
+
+    setWaveBusy(true);
+    setMessage('');
+    setError('');
+    try {
+      let createdBatches = 0;
+      let reusedBatches = 0;
+      let promotedItems = 0;
+      let publishedExercises = 0;
+      let skippedCovered = 0;
+      const publishedTopics = [];
+
+      for (const entry of recoveryWaveBundles) {
+        if (!entry.topicKey || !RECOVERY_TOPICS.some((topic) => topic.key === entry.topicKey)) {
+          throw new Error(`${entry.fileName}: topic Recovery non riconosciuto.`);
+        }
+        if (isTopicReady(mappings, entry.topicKey)) {
+          skippedCovered += 1;
+          continue;
+        }
+
+        const validation = validateExerciseBuilderJson(entry.bundle);
+        const invalidItems = (validation.items || []).filter((item) => item.status === 'invalid');
+        if (validation.errors?.length || invalidItems.length) {
+          const detail = [
+            ...(validation.errors || []),
+            ...invalidItems.flatMap((item) => item.errors || []),
+          ].slice(0, 5).join(' · ');
+          throw new Error(`${entry.fileName}: pubblicazione bloccata dal validator. ${detail}`);
+        }
+
+        const hash = await contentHash(entry.bundle);
+        const sourceName = `recovery-wave-1:${entry.fileName}:${hash}`;
+        let batch = await findExistingBatch(sourceName);
+        if (!batch) {
+          const selectedIndexes = (validation.items || [])
+            .filter((item) => ['valid', 'warning'].includes(item.status))
+            .map((item) => item.index);
+          batch = await createExerciseBuilderImportBatch({
+            validation,
+            rawPayload: entry.bundle,
+            sourceName,
+            selectedIndexes,
+            createdBy: user?.id || null,
+          });
+          createdBatches += 1;
+        } else {
+          reusedBatches += 1;
+        }
+
+        let items = await listExerciseBuilderImportItems(batch.id);
+        const pendingIds = items
+          .filter((item) => ['valid', 'warning'].includes(item.validation_status) && !item.promoted_entity_id)
+          .map((item) => item.id);
+        if (pendingIds.length) {
+          const result = await promoteExerciseBuilderImportItems(batch.id, pendingIds);
+          promotedItems += Number(result?.promoted_count || 0);
+          items = await listExerciseBuilderImportItems(batch.id);
+        }
+
+        const exerciseItems = items.filter(
+          (item) => item.entity_type === 'exercise'
+            && ['valid', 'warning'].includes(item.validation_status)
+            && item.promoted_entity_id,
+        );
+        if (!exerciseItems.length) {
+          throw new Error(`${entry.fileName}: nessun esercizio promosso disponibile per la pubblicazione.`);
+        }
+
+        for (const item of exerciseItems) {
+          const { error: publishError } = await supabase.rpc('admin_set_exercise_builder_status', {
+            p_entity_type: 'exercise',
+            p_entity_id: item.promoted_entity_id,
+            p_next_status: 'published',
+          });
+          if (publishError) {
+            throw new Error(`${entry.fileName} · ${item.client_key || item.id}: ${publishError.message}`);
+          }
+          publishedExercises += 1;
+        }
+
+        publishedTopics.push(entry.topicKey);
+      }
+
+      const { data: syncData, error: syncError } = await supabase.rpc('admin_sync_recovery_wave_mappings');
+      if (syncError) throw syncError;
+      await load();
+
+      setMessage(
+        `Wave 1 pubblicata: ${publishedTopics.length} topic elaborati, ${publishedExercises} esercizi pubblicati, `
+        + `${promotedItems} elementi promossi, ${createdBatches} nuovi batch, ${reusedBatches} batch riusati, `
+        + `${skippedCovered} topic già coperti. Mapping sincronizzati: ${syncData?.synced_mappings || 0}. `
+        + `Topic pronti: ${syncData?.ready_topics || 0}.`,
+      );
+    } catch (publishError) {
+      setError(publishError.message || 'Non è stato possibile pubblicare la Wave 1 validata.');
+    } finally {
+      setWaveBusy(false);
+    }
+  }
+
   async function syncPublishedMappings() {
     if (waveBusy) return;
     setWaveBusy(true);
@@ -336,12 +451,15 @@ export default function AdminRecoveryContent() {
                 <p className="text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ffad93]">Pipeline Wave 1</p>
                 <h2 className="mt-2 text-xl font-black text-ink dark:text-white">Dal bundle validato al contenuto pubblicato</h2>
                 <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">
-                  I bundle nel repository vengono validati con il contratto reale dell’Exercise Builder e promossi come draft/in review. Nessun esercizio viene auto-pubblicato. Dopo la review editoriale, il sync collega solo versioni approved + published.
+                  I bundle nel repository vengono sempre validati con il contratto reale dell’Exercise Builder. Puoi importarli in review oppure pubblicare esplicitamente la Wave validata: anche il percorso rapido passa dai normali controlli di publishability prima di sincronizzare i mapping Recovery.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
-                <button type="button" disabled={waveBusy || loading} onClick={importRecoveryWave} className={adminButton.primary}>
-                  {waveBusy ? 'Operazione in corso...' : 'Importa Wave 1 in review'}
+                <button type="button" disabled={waveBusy || loading} onClick={publishValidatedRecoveryWave} className={adminButton.primary}>
+                  {waveBusy ? 'Operazione in corso...' : 'Pubblica Wave 1 validata'}
+                </button>
+                <button type="button" disabled={waveBusy || loading} onClick={importRecoveryWave} className={adminButton.secondary}>
+                  Importa Wave 1 in review
                 </button>
                 <button type="button" disabled={waveBusy || loading} onClick={syncPublishedMappings} className={adminButton.secondary}>
                   Sincronizza mapping pubblicati

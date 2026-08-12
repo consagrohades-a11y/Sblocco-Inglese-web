@@ -31,11 +31,18 @@ assert.match(page, /crypto\.subtle\.digest\('SHA-256'/);
 assert.match(page, /findExistingBatch\(sourceName\)/);
 assert.match(page, /if \(!batch\)[\s\S]*createExerciseBuilderImportBatch/);
 
-// Import may create reviewable Exercise Builder entities, but publication must remain an explicit editorial step.
+// The cautious import action remains review-only. Production publication is a separate, confirmed action.
+const importStart = page.indexOf('async function importRecoveryWave()');
+const publishStart = page.indexOf('async function publishValidatedRecoveryWave()');
+assert.ok(importStart >= 0 && publishStart > importStart, 'Recovery import/publish actions must remain separate');
+const reviewImportFlow = page.slice(importStart, publishStart);
+assert.doesNotMatch(reviewImportFlow, /admin_set_exercise_builder_status/);
+assert.doesNotMatch(reviewImportFlow, /p_next_status\s*:\s*['"]published['"]/);
+assert.doesNotMatch(reviewImportFlow, /review_status\s*:\s*['"]approved['"]/);
+
+// Neither path may bypass Exercise Builder by inserting/updating catalog tables directly.
 assert.doesNotMatch(page, /\.from\(['"]exercise_builder_exercises['"]\)\s*\.insert/);
 assert.doesNotMatch(page, /\.from\(['"]exercise_builder_exercise_versions['"]\)\s*\.insert/);
-assert.doesNotMatch(page, /status\s*:\s*['"]published['"]/);
-assert.doesNotMatch(page, /review_status\s*:\s*['"]approved['"]/);
 assert.doesNotMatch(page, /\.update\([^)]*published/);
 assert.doesNotMatch(page, /\.update\([^)]*approved/);
 
