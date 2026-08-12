@@ -1,0 +1,34 @@
+name: Temporary Wave 2 PR C transfer
+
+on:
+  push:
+    branches:
+      - content/recovery-wave2-articles-pronouns-pr-c
+
+permissions:
+  contents: write
+
+jobs:
+  transfer:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Copy only final Articles and Pronouns content
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin 343c5af75a932f1b286dbd0baa2e7bef8d40f110
+          git checkout 343c5af75a932f1b286dbd0baa2e7bef8d40f110 -- \
+            content/recovery/briefs/articles.lesson-brief.json \
+            content/recovery/briefs/pronouns.lesson-brief.json \
+            content/recovery/wave-2/articles.bundle.json \
+            content/recovery/wave-2/pronouns.bundle.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add content/recovery/briefs content/recovery/wave-2
+          git rm .github/workflows/wave2-prc-transfer.yml
+          git commit -m 'content: add Recovery Wave 2 articles and pronouns'
+          git push origin HEAD:content/recovery-wave2-articles-pronouns-pr-c
