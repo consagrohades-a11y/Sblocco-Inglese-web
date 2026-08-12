@@ -1,0 +1,44 @@
+name: Temporary Wave 2 PR B materializer
+
+on:
+  push:
+    branches:
+      - content/recovery-wave2-quantifiers
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Decode and validate packaged content
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 -d .wave2-prb.tar.gz.b64 > /tmp/wave2-prb.tar.gz
+          tar -xzf /tmp/wave2-prb.tar.gz -C .
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          for (const topic of ['countable-uncountable','some-any','much-many-a-lot-of']) {
+            const bundle = JSON.parse(readFileSync(`content/recovery/wave-2/${topic}.bundle.json`, 'utf8'));
+            const brief = JSON.parse(readFileSync(`content/recovery/briefs/${topic}.lesson-brief.json`, 'utf8'));
+            if (bundle.schema_version !== 2 || bundle.entity_type !== 'bundle' || bundle.exercises?.length !== 4) throw new Error(`${topic}: invalid bundle`);
+            if (bundle.exercises.reduce((sum, ex) => sum + ex.estimated_minutes, 0) !== 48) throw new Error(`${topic}: invalid duration`);
+            if (brief.topic_key !== topic) throw new Error(`${topic}: invalid brief`);
+          }
+          NODE
+      - name: Commit only final content
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add content/recovery/briefs content/recovery/wave-2
+          git rm .wave2-prb.tar.gz.b64 .github/workflows/wave2-prb-materialize.yml
+          git commit -m 'content: add Recovery Wave 2 countability and quantifiers'
+          git push origin HEAD:content/recovery-wave2-quantifiers
