@@ -23,6 +23,59 @@ alter table public.exercise_builder_question_versions
     'listening_comprehension'
   ));
 
+-- Listening had no registered diagnostic codes before this question type.
+-- Add a small stable core rather than forcing authors to invent codes.
+insert into public.exercise_builder_diagnostic_codes (
+  code, label, primary_skill, topic, subtopic, group_key,
+  severity, category, recommended_resources, status
+) values
+  (
+    'LISTENING_GIST',
+    'Understand the main idea in spoken English',
+    'listening',
+    'listening_comprehension',
+    'gist',
+    'listening_comprehension',
+    'major',
+    'learning',
+    '[]'::jsonb,
+    'active'
+  ),
+  (
+    'LISTENING_DETAIL',
+    'Understand key details in spoken English',
+    'listening',
+    'listening_comprehension',
+    'detail',
+    'listening_comprehension',
+    'major',
+    'learning',
+    '[]'::jsonb,
+    'active'
+  ),
+  (
+    'LISTENING_INFERENCE',
+    'Infer speaker meaning or intention',
+    'listening',
+    'listening_comprehension',
+    'inference',
+    'listening_comprehension',
+    'minor',
+    'learning',
+    '[]'::jsonb,
+    'active'
+  )
+on conflict (code) do update set
+  label = excluded.label,
+  primary_skill = excluded.primary_skill,
+  topic = excluded.topic,
+  subtopic = excluded.subtopic,
+  group_key = excluded.group_key,
+  severity = excluded.severity,
+  category = excluded.category,
+  status = 'active',
+  updated_at = now();
+
 -- Learner snapshots for listening use the same item sanitisation as reading:
 -- correct flags and accepted answers are removed, while the audio metadata is
 -- retained for playback. Transcript visibility remains a learner-renderer rule.
