@@ -3,7 +3,9 @@ import { EXERCISE_BUILDER_QUESTION_TYPES } from '../src/lib/exerciseBuilderSchem
 
 const runtimeFiles = [
   'src/components/exercises/ExerciseExperience.jsx',
+  'src/components/exercises/ExerciseQuestionRenderer.jsx',
   'src/components/exercises/ExerciseQuestionRendererV2.jsx',
+  'src/components/exercises/EducationalContentBlock.jsx',
   'src/components/exercises/ExerciseRenderer.jsx',
   'src/components/exercises/ExerciseDiagnosticSummary.jsx',
   'src/components/learning/EditorialLearning.jsx',
@@ -50,6 +52,27 @@ for (const selector of [
   requireText(sources['src/styles/exerciseExperience.css'], selector, `shared style ${selector}`);
 }
 
+requireText(
+  sources['src/components/exercises/ExerciseQuestionRenderer.jsx'],
+  'isStructuredEducationalContent(question.content)',
+  'compatibility renderer structured-content routing',
+);
+requireText(
+  sources['src/components/exercises/ExerciseQuestionRenderer.jsx'],
+  '<ExerciseQuestionRendererV2 {...props} />',
+  'compatibility renderer v2 delegation',
+);
+requireText(
+  sources['src/components/exercises/ExerciseQuestionRendererV2.jsx'],
+  '<EducationalContentBlock content={question.content} fallback={question.prompt} />',
+  'v2 structured educational renderer',
+);
+requireText(
+  sources['src/components/exercises/EducationalContentBlock.jsx'],
+  'normalizeEducationalContentBlock',
+  'educational content normalization',
+);
+
 if (/violet|purple|#7c3aed|#8b5cf6|#a855f7/i.test(combined)) {
   failures.push('Learner exercise runtime contains a banned purple token.');
 }
@@ -59,4 +82,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Validated ${EXERCISE_BUILDER_QUESTION_TYPES.length} Builder types, 3 legacy types, semantic blocks, shared surfaces, and the no-purple rule.`);
+console.log(`Validated ${EXERCISE_BUILDER_QUESTION_TYPES.length} Builder types, 3 legacy types, semantic blocks, shared surfaces, structured-content routing, and the no-purple rule.`);
