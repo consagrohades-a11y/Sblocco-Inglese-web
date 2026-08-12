@@ -1,0 +1,478 @@
+{
+  "schema_version": 1,
+  "curriculum_id": "recovery-years-1-3-v2",
+  "audit_id": "recovery-curriculum-v2-technical-gap-analysis",
+  "status": "draft",
+  "observed_at": "2026-08-13",
+  "scope": "Technical capability and production-state audit only. Pedagogical coverage decisions belong to gap-analysis-pedagogical.json; the final gap-analysis.json must reconcile both audits.",
+  "executive_summary": {
+    "current_strength": "Recovery already has a mature topic-level learning and evidence stack: 24 active topics, four published phases per topic, adaptive plan sessions, topic mastery evidence, cumulative-session materialization hooks, readiness snapshots and a broad Exercise Builder question renderer.",
+    "primary_gap": "Curriculum v2 cannot yet become runtime truth because Recovery production has no first-class outcome_id, competence_axis, assessment_mode, independence or unseen-context evidence model. Existing Recovery state is keyed primarily by topic_key.",
+    "content_runtime_gap": "There are 96 active topic-phase mappings in production (24 recover, 24 practice, 24 school, 24 verify) and zero active checkpoint, mock_intermediate, mock_final or error_review mappings.",
+    "engine_reuse_conclusion": "Do not build a second exercise engine. Exercise Builder already supports the task families needed for Curriculum v2; extend Recovery metadata, evidence capture and cumulative materialization around the existing engine.",
+    "readiness_cutover_conclusion": "Do not activate Readiness v2 yet. Missing outcome/axis evidence infrastructure and missing cumulative P0 content would otherwise turn product gaps into false learner weaknesses."
+  },
+  "production_inventory": {
+    "recovery_topic_content": {
+      "active_topic_count": 24,
+      "active_phase_mappings": {
+        "recover": 24,
+        "practice": 24,
+        "school": 24,
+        "verify": 24,
+        "checkpoint": 0,
+        "mock_intermediate": 0,
+        "mock_final": 0,
+        "error_review": 0
+      },
+      "coverage_interpretation": "Strong infrastructure for grammar/sentence-control topic recovery; not evidence of curriculum-axis or year-exit coverage by itself."
+    },
+    "exercise_builder_published_question_inventory": {
+      "grammar": {
+        "multiple_choice": 660,
+        "select_gap": 381,
+        "error_correction": 267,
+        "translation": 217,
+        "gap_fill": 206,
+        "dialogue_choice": 56,
+        "multiple_select": 53,
+        "word_order": 13
+      },
+      "reading": {
+        "reading_comprehension": 32,
+        "multiple_choice": 14
+      },
+      "writing": {
+        "written_response": 22,
+        "translation": 62
+      },
+      "functional_language": {
+        "dialogue_choice": 106,
+        "multiple_choice": 44,
+        "word_order": 12,
+        "dialogue_roleplay": 3
+      },
+      "interaction": {
+        "dialogue_choice": 22,
+        "dialogue_roleplay": 11
+      },
+      "speaking": {
+        "audio_response": 22
+      },
+      "vocabulary": {
+        "multiple_choice": 4
+      },
+      "listening": {
+        "published_current_question_versions": 0,
+        "engine_support_exists": true,
+        "note": "A native listening-comprehension authoring/validation bridge exists, but no current published Exercise Builder question version has primary_skill=listening in production."
+      }
+    },
+    "exercise_builder_capabilities": {
+      "supported_relevant_question_types": [
+        "multiple_choice",
+        "multiple_select",
+        "gap_fill",
+        "select_gap",
+        "translation",
+        "error_correction",
+        "word_order",
+        "dialogue_choice",
+        "written_response",
+        "dialogue_roleplay",
+        "audio_response",
+        "reading_comprehension",
+        "listening_comprehension_via_native_bridge"
+      ],
+      "manual_review_capability": "written_response, dialogue_roleplay and audio_response already have manual-review infrastructure in Exercise Builder attempts.",
+      "conclusion": "Reading, writing, functional communication and listening do not require a new generic renderer."
+    },
+    "current_recovery_evidence_storage": {
+      "recovery_mastery_evidence": {
+        "key_dimension": "topic_key",
+        "supports": [
+          "diagnostic",
+          "guided_practice",
+          "practice",
+          "school_mode",
+          "mini_check",
+          "error_review",
+          "checkpoint",
+          "mock"
+        ],
+        "has_generic_metadata_json": true,
+        "missing_first_class_dimensions": [
+          "outcome_id",
+          "primary_axis",
+          "assessment_mode",
+          "independence_key/form_family",
+          "unseen_or_mixed_context_flag",
+          "production_evidence_flag"
+        ]
+      },
+      "recovery_assessment_attempts": {
+        "stores": [
+          "assessment_type",
+          "global score",
+          "topic_scores"
+        ],
+        "missing": [
+          "axis_scores",
+          "outcome_scores",
+          "assessment-mode evidence",
+          "rubric dimensions by Curriculum v2 outcome"
+        ]
+      },
+      "recovery_readiness_snapshots": {
+        "stores": [
+          "readiness_score",
+          "confidence_score",
+          "mastery_component",
+          "coverage_component",
+          "assessment_component",
+          "error_stability_component",
+          "topic counts",
+          "checkpoint score",
+          "mock score"
+        ],
+        "missing": [
+          "active_axes",
+          "axis_scores",
+          "required_outcome_scores",
+          "blocking_outcomes",
+          "blocking_axes",
+          "evidence_completeness by outcome"
+        ]
+      }
+    },
+    "current_programme_scope_storage": {
+      "available": [
+        "class_year",
+        "exam_date",
+        "mode",
+        "required topic_key rows"
+      ],
+      "missing": [
+        "required Curriculum v2 outcome set per enrollment",
+        "source of requirement: school programme vs inferred year profile",
+        "active competence axes",
+        "declared school assessment profile",
+        "axis/assessment weights when school-specific",
+        "programme-dependent listening/oral activation"
+      ]
+    },
+    "current_cumulative_materializer": {
+      "existing_strengths": [
+        "session families checkpoint, mock_intermediate and mock_final already exist",
+        "materializer already scopes topic-specific mappings to required recovery_student_topics",
+        "session time budgets already constrain selected resources",
+        "mock resources already suppress immediate score/correct-answer/explanation feedback"
+      ],
+      "current_selection_dimensions": [
+        "phase",
+        "topic_key",
+        "topic priority",
+        "sort order",
+        "estimated minutes"
+      ],
+      "missing_selection_dimensions": [
+        "outcome_ids",
+        "primary_axis",
+        "secondary_axes",
+        "assessment_modes",
+        "difficulty band",
+        "transfer level",
+        "content source independence",
+        "school task family",
+        "required axis coverage"
+      ],
+      "conclusion": "Extend the existing materializer; do not replace it."
+    },
+    "legacy_readiness_divergence": {
+      "client_runtime": "src/lib/recoveryPlanEngine.js exposes calculateRecoveryReadiness() as a simple average of topic masteryScore/diagnosticScore.",
+      "database_runtime": "compute_recovery_readiness_internal() is more sophisticated but remains topic-based: approximately 60% topic mastery, 10% evidence coverage, 20% cumulative assessment and 10% error stability, plus confidence bands.",
+      "risk": "Two legacy readiness concepts coexist. Curriculum v2 cutover must establish one canonical server-side calculation and prevent the learner UI from silently using a different formula."
+    }
+  },
+  "technical_gaps": [
+    {
+      "gap_id": "TECH-P0-001",
+      "priority": "P0",
+      "area": "programme_scope",
+      "title": "Persist required Curriculum v2 outcomes per enrollment",
+      "current_state": "Enrollment scope is represented by class_year plus required topic_key rows.",
+      "required_state": "Persist the active required outcome set, requirement source and programme-dependent activation so runtime assessment/readiness can follow the learner's actual school programme.",
+      "recommended_implementation": [
+        "Add a source-versioned Curriculum v2 outcome catalogue consumable by runtime or an equivalent safe projection from source-controlled JSON.",
+        "Add enrollment-outcome rows with required flag, requirement_source and override metadata.",
+        "Derive active axes from required outcomes instead of storing six unrelated booleans."
+      ],
+      "blocking_for_readiness_v2": true
+    },
+    {
+      "gap_id": "TECH-P0-002",
+      "priority": "P0",
+      "area": "evidence_model",
+      "title": "Add first-class outcome and axis evidence",
+      "current_state": "recovery_mastery_evidence is topic-keyed; generic metadata cannot safely enforce Curriculum v2 integrity rules.",
+      "required_state": "Every cumulative evidence observation can be queried by outcome, primary axis, source, assessment mode, independent form family, production requirement and unseen/mixed-context flag.",
+      "recommended_implementation": [
+        "Prefer a dedicated recovery_outcome_evidence table rather than overloading recovery_mastery_evidence.",
+        "Reference enrollment, session, exercise attempt, outcome_id, primary_axis, evidence_source and assessment_mode.",
+        "Store independence/form-family key, unseen flag, production flag, normalized score/rubric dimensions and observed_at.",
+        "Keep topic mastery evidence in place for topic-level adaptation."
+      ],
+      "blocking_for_readiness_v2": true
+    },
+    {
+      "gap_id": "TECH-P0-003",
+      "priority": "P0",
+      "area": "assessment_fragments",
+      "title": "Represent cumulative assessment fragments independently of topic phases",
+      "current_state": "recovery_exercise_map is optimized for topic_key + phase and has no Curriculum v2 fragment contract metadata.",
+      "required_state": "Checkpoint/mock selection can discover approved fragments by year profile, outcome_ids, primary_axis, assessment_modes, estimated time, school task family and transfer level.",
+      "recommended_implementation": [
+        "Create a recovery_assessment_fragment_map (or equivalent) referencing published Exercise Builder exercise/version IDs.",
+        "Keep recovery_exercise_map for topic phases to avoid destabilizing the mature 24-topic path.",
+        "Make fragment metadata match assessment-blueprint.json exactly."
+      ],
+      "blocking_for_readiness_v2": true
+    },
+    {
+      "gap_id": "TECH-P0-004",
+      "priority": "P0",
+      "area": "cumulative_materialization",
+      "title": "Upgrade cumulative session selection from topic-first to outcome/axis-first",
+      "current_state": "materialize_recovery_session() can materialize checkpoint/mock sessions by required topic and time budget, but production has no cumulative mappings and no axis coverage logic.",
+      "required_state": "Select fragments from under-evidenced required outcomes, preserve required writing/listening/oral time, satisfy active blocking-axis coverage and rotate forms without exceeding the session budget.",
+      "recommended_implementation": [
+        "Reuse the current assignment/session materialization flow.",
+        "Introduce a v2 fragment-selection function that returns an ordered exercise/version set for the current enrollment.",
+        "Apply assessment-blueprint grammar-share ceilings and active-axis coverage before short grammar fill.",
+        "Record selected fragment IDs/form families on the session attempt for independence checks."
+      ],
+      "blocking_for_readiness_v2": true
+    },
+    {
+      "gap_id": "TECH-P0-005",
+      "priority": "P0",
+      "area": "assessment_content",
+      "title": "Publish cumulative checkpoint/mock content",
+      "current_state": "Production has zero active checkpoint, mock_intermediate and mock_final mappings/fragments.",
+      "required_state": "Approved P0 fragments exist for every default-core active axis and can form valid checkpoint/intermediate/final sessions for Year 1-3 profiles.",
+      "recommended_implementation": [
+        "Use the pedagogical gap audit to determine exact fragment families and quantities.",
+        "Author unseen/rotatable forms rather than copying topic verification items.",
+        "Map one fragment to multiple outcome_ids only when it genuinely collects scoreable evidence for each."
+      ],
+      "blocking_for_readiness_v2": true
+    },
+    {
+      "gap_id": "TECH-P0-006",
+      "priority": "P0",
+      "area": "readiness_runtime",
+      "title": "Implement Readiness v2 as a shadow server-side calculator",
+      "current_state": "Client and database legacy readiness are both topic-based and use different formulas.",
+      "required_state": "One canonical v2 calculation applies readiness-policy.json to active outcomes/axes without changing learner-facing status during calibration.",
+      "recommended_implementation": [
+        "Create compute_recovery_readiness_v2_internal() or equivalent without replacing legacy output.",
+        "Store v2 shadow snapshots with axis/outcome reasons.",
+        "Compare legacy vs v2 decisions on real Recovery attempts before cutover.",
+        "Switch learner UI only after P0 evidence completeness is technically achievable."
+      ],
+      "blocking_for_readiness_v2": true
+    },
+    {
+      "gap_id": "TECH-P0-007",
+      "priority": "P0",
+      "area": "attempt_capture",
+      "title": "Capture rubric/automatic results into Curriculum v2 evidence",
+      "current_state": "Exercise Builder stores rich per-question grading and manual teacher review, but Recovery assessment capture collapses cumulative evidence to global/topic scores.",
+      "required_state": "Submission processing translates scored fragment results into outcome evidence, including manual writing/speaking rubric dimensions where applicable.",
+      "recommended_implementation": [
+        "Use exercise/version/fragment metadata to know which outcomes each scored part samples.",
+        "For automatic items, derive normalized outcome evidence at submit.",
+        "For manual question types, keep readiness evidence pending until review_status is complete.",
+        "Never treat an unreviewed written/audio response as zero."
+      ],
+      "blocking_for_readiness_v2": true
+    },
+    {
+      "gap_id": "TECH-P0-008",
+      "priority": "P0",
+      "area": "listening",
+      "title": "Publish native listening evidence content where programme-required",
+      "current_state": "Listening authoring/validation infrastructure exists but production currently has zero published current questions with primary_skill=listening.",
+      "required_state": "When listening is active for an enrollment, approved stable-audio listening fragments can supply valid gist/detail/inference evidence.",
+      "recommended_implementation": [
+        "Reuse listening-comprehension-v1 and stable hosted audio/storage paths.",
+        "Do not make listening globally mandatory; activate only from programme scope.",
+        "Create sufficient alternate forms for mock independence."
+      ],
+      "blocking_for_readiness_v2": "conditional_when_listening_is_required"
+    },
+    {
+      "gap_id": "TECH-P1-001",
+      "priority": "P1",
+      "area": "admin_programme_controls",
+      "title": "Expose programme/outcome overrides to admin",
+      "current_state": "Admin workflows are topic-centric.",
+      "required_state": "An administrator can inspect inferred Year profile outcomes and explicitly include/exclude programme-dependent outcomes based on the real school syllabus/test format.",
+      "recommended_implementation": [
+        "Show source: school_programme, inferred_year_profile or manual_override.",
+        "Do not require admins to manipulate raw outcome IDs.",
+        "Preview active axes and readiness consequences before saving."
+      ],
+      "blocking_for_readiness_v2": false
+    },
+    {
+      "gap_id": "TECH-P1-002",
+      "priority": "P1",
+      "area": "learner_reporting",
+      "title": "Render disaggregated readiness status",
+      "current_state": "Existing UI can surface a single readiness concept but does not have Curriculum v2 axis/outcome reporting data.",
+      "required_state": "Learner sees status, active axis scores, concrete blocking weaknesses, missing evidence and next priority rather than one unexplained percentage.",
+      "recommended_implementation": [
+        "Implement only after shadow readiness stabilizes.",
+        "Mark inactive axes as non richiesto, never zero.",
+        "Use readiness-policy reporting_contract as the API shape."
+      ],
+      "blocking_for_readiness_v2": false
+    },
+    {
+      "gap_id": "TECH-P1-003",
+      "priority": "P1",
+      "area": "error_review",
+      "title": "Bridge error review from topic-only to outcome-aware remediation",
+      "current_state": "Error-review session type/evidence support exists, but production has zero active error_review mappings and no outcome relationship.",
+      "required_state": "Repeated errors from cumulative tasks can recommend targeted topic review or skill remediation without converting error review itself into READY evidence.",
+      "recommended_implementation": [
+        "Keep outcome evidence and remediation recommendations separate.",
+        "Use diagnostic codes/topic links for grammar errors and outcome/axis links for skill failures."
+      ],
+      "blocking_for_readiness_v2": false
+    },
+    {
+      "gap_id": "TECH-P1-004",
+      "priority": "P1",
+      "area": "calibration_observability",
+      "title": "Add readiness calibration and evidence-debug views",
+      "current_state": "Snapshots explain legacy components but not Curriculum v2 decision gates.",
+      "required_state": "Admin can inspect why v2 returned insufficient_evidence/not_ready/near_ready/ready and compare it with legacy readiness before cutover.",
+      "recommended_implementation": [
+        "Store machine-readable gate results and evidence IDs used in each shadow snapshot.",
+        "Provide aggregate disagreement metrics between legacy and v2 statuses."
+      ],
+      "blocking_for_readiness_v2": false
+    },
+    {
+      "gap_id": "TECH-P2-001",
+      "priority": "P2",
+      "area": "automated_speaking_scoring",
+      "title": "Optional automated speaking/oral scoring",
+      "current_state": "Audio responses and manual review exist; automatic oral quality scoring is not required for the first Curriculum v2 release.",
+      "required_state": "Only if later needed, add calibrated automatic support while retaining human-review fallback.",
+      "recommended_implementation": [
+        "Do not block first release on automated pronunciation/fluency scoring.",
+        "Programme-dependent oral outcomes can initially use manual rubric review."
+      ],
+      "blocking_for_readiness_v2": false
+    }
+  ],
+  "recommended_implementation_batches": [
+    {
+      "batch": "T1",
+      "priority": "P0",
+      "title": "Curriculum scope and evidence schema",
+      "includes": [
+        "TECH-P0-001",
+        "TECH-P0-002",
+        "TECH-P0-003"
+      ],
+      "dependency": "Final pedagogical gap audit may refine outcome/content mappings but is not required to design the generic schema."
+    },
+    {
+      "batch": "T2",
+      "priority": "P0",
+      "title": "Assessment capture and outcome-first materialization",
+      "includes": [
+        "TECH-P0-004",
+        "TECH-P0-007"
+      ],
+      "dependency": "T1"
+    },
+    {
+      "batch": "T3",
+      "priority": "P0",
+      "title": "P0 cumulative content and listening where required",
+      "includes": [
+        "TECH-P0-005",
+        "TECH-P0-008"
+      ],
+      "dependency": "Pedagogical gap analysis + T1 metadata contract"
+    },
+    {
+      "batch": "T4",
+      "priority": "P0",
+      "title": "Shadow Readiness v2",
+      "includes": [
+        "TECH-P0-006"
+      ],
+      "dependency": "T1 + T2 + enough T3 content to make evidence completeness achievable"
+    },
+    {
+      "batch": "T5",
+      "priority": "P1",
+      "title": "Admin, learner reporting and remediation observability",
+      "includes": [
+        "TECH-P1-001",
+        "TECH-P1-002",
+        "TECH-P1-003",
+        "TECH-P1-004"
+      ],
+      "dependency": "Stable shadow v2 output"
+    }
+  ],
+  "reuse_decisions": [
+    {
+      "component": "Exercise Builder renderer/schema",
+      "decision": "reuse",
+      "reason": "Already supports the required automatic, reading, written, dialogue, audio and listening task families."
+    },
+    {
+      "component": "Recovery topic mastery evidence",
+      "decision": "retain_for_topic_adaptation",
+      "reason": "Useful and mature for topic recovery; do not force Curriculum v2 axis evidence into the same semantics."
+    },
+    {
+      "component": "Recovery cumulative session/assignment materializer",
+      "decision": "extend",
+      "reason": "Session families, feedback behavior and time budgeting already exist; selection metadata is the missing layer."
+    },
+    {
+      "component": "recovery_exercise_map",
+      "decision": "retain_for_topic_phases",
+      "reason": "Stable 24-topic production bridge; assessment-fragment metadata is sufficiently different to justify a separate mapping contract."
+    },
+    {
+      "component": "legacy readiness",
+      "decision": "shadow_then_replace",
+      "reason": "Immediate replacement would be unsafe while evidence coverage is structurally incomplete."
+    }
+  ],
+  "final_gap_analysis_merge_contract": {
+    "inputs_required": [
+      "gap-analysis-pedagogical.json",
+      "gap-analysis-technical.json",
+      "readiness-policy.json",
+      "assessment-blueprint.json"
+    ],
+    "final_output": "content/recovery/curriculum-v2/gap-analysis.json",
+    "merge_rules": [
+      "Pedagogical coverage determines what evidence/content must exist; technical audit determines whether the platform can represent, deliver and score it.",
+      "A pedagogically missing content family is not solved merely because a renderer supports its question type.",
+      "A technically reusable general exercise is not counted as Recovery coverage until its outcome metadata, level, programme relevance and independence policy are validated.",
+      "P0 final backlog contains only gaps that block a defensible READY decision for at least one default-core programme profile or a supported explicitly assessed axis."
+    ]
+  }
+}
