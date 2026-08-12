@@ -1,12 +1,15 @@
+import { readFile } from 'node:fs/promises';
 import {
   exerciseBuilderTemplates,
   validateExerciseBuilderJson,
 } from '../src/lib/exerciseBuilderSchema.js';
 import {
+  EDUCATIONAL_SECTION_TYPES,
   isStructuredEducationalContent,
   normalizeEducationalContentBlock,
   validateEducationalContentBlock,
 } from '../src/lib/educationalContentBlock.js';
+import { educationalContentQaFixtures } from '../src/lib/educationalContentQaFixtures.js';
 
 const failures = [];
 const template = exerciseBuilderTemplates.educational_content_block;
@@ -82,10 +85,49 @@ if (legacy.structured || legacy.body !== 'Legacy teaching text.') {
   failures.push('Legacy content_block fallback is not backward compatible.');
 }
 
+const qaTypes = new Set();
+for (const fixture of educationalContentQaFixtures) {
+  const fixtureValidation = validateEducationalContentBlock(fixture.content, `qa.${fixture.key}`);
+  if (fixtureValidation.errors.length) {
+    failures.push(`${fixture.key}: ${fixtureValidation.errors.join(' | ')}`);
+  }
+  const fixtureNormalized = normalizeEducationalContentBlock(fixture.content);
+  if (!fixtureNormalized.structured) failures.push(`${fixture.key}: fixture did not normalize as structured.`);
+  fixtureNormalized.sections.forEach((section) => qaTypes.add(section.type));
+}
+
+for (const sectionType of EDUCATIONAL_SECTION_TYPES) {
+  if (!qaTypes.has(sectionType)) failures.push(`QA fixtures do not cover section type: ${sectionType}`);
+}
+
+const allTypesFixture = educationalContentQaFixtures.find((fixture) => fixture.key === 'all-section-types');
+const oneSidedComparison = allTypesFixture?.content?.sections?.find((section) => section.key === 'comparison');
+if (!oneSidedComparison?.correct || oneSidedComparison?.incorrect) {
+  failures.push('QA must preserve a one-sided comparison edge case.');
+}
+
+const longDialogue = educationalContentQaFixtures.find((fixture) => fixture.key === 'long-dialogue');
+const longDialogueTurns = longDialogue?.content?.sections?.[0]?.turns || [];
+if (longDialogueTurns.length < 8) failures.push('Long-dialogue QA fixture is no longer a meaningful stress case.');
+
+const resilienceCss = await readFile(new URL('../src/styles/educationalContentResilience.css', import.meta.url), 'utf8');
+for (const requiredRule of [
+  'overflow-wrap: anywhere',
+  '.educational-content__comparison > :only-child',
+  '@media (max-width: 640px)',
+]) {
+  if (!resilienceCss.includes(requiredRule)) failures.push(`Structured-content resilience CSS is missing: ${requiredRule}`);
+}
+
+const gallerySource = await readFile(new URL('../src/pages/ExerciseExperienceGallery.jsx', import.meta.url), 'utf8');
+for (const requiredToken of ['educationalContentQaFixtures', 'Structured content stress cases', 'preview-structured-']) {
+  if (!gallerySource.includes(requiredToken)) failures.push(`Exercise gallery is missing structured QA coverage: ${requiredToken}`);
+}
+
 if (failures.length) {
   console.error('Educational content block validation failed:');
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exit(1);
 }
 
-console.log(`Educational content block validation passed with ${normalized.sections.length} structured sections, exact-highlight checks and legacy fallback coverage.`);
+console.log(`Educational content block validation passed with ${EDUCATIONAL_SECTION_TYPES.length} semantic section types, stress fixtures, exact-highlight checks, responsive resilience and legacy fallback coverage.`);

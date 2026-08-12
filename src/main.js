@@ -12,6 +12,7 @@ import './styles/editorialLearning.css';
 import './styles/learnerExperience.css';
 import './styles/exerciseExperience.css';
 import './styles/exerciseShellRefinement.css';
+import './styles/educationalContentResilience.css';
 import './styles/downloadCompatibility.css';
 import './styles/question-editor-layout.css';
 
