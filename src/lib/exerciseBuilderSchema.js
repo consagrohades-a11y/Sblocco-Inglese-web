@@ -15,7 +15,10 @@ import {
   exerciseBuilderTemplateManifest as baseExerciseBuilderTemplateManifest,
   exerciseBuilderTemplates as baseExerciseBuilderTemplates,
 } from './exerciseBuilderTemplatesV2.js';
-import { educationalContentBlockTemplate } from './educationalContentTemplate.js';
+import {
+  educationalContentBlockAuthoringGuide,
+  educationalContentBlockTemplate,
+} from './educationalContentTemplate.js';
 import { structuredGuidedExerciseTemplate } from './guidedExerciseTemplate.js';
 import { makeSelfContainedExerciseTemplates } from './exerciseAuthoringTemplateContracts.js';
 import {
@@ -69,10 +72,39 @@ const composedTemplates = {
 
 // Every object downloaded from Exercise Builder now carries enough authoring
 // instructions to be handed to an AI in a fresh chat with no repository context.
-export const exerciseBuilderTemplates = makeSelfContainedExerciseTemplates(
+const selfContainedTemplates = makeSelfContainedExerciseTemplates(
   composedTemplates,
   exerciseBuilderTemplateManifest,
 );
+
+// A guided lesson embeds the complete structured-teaching contract as well as
+// the generic exercise contract. This keeps the downloaded file sufficient in a
+// fresh chat: no separate content-block template is required to author stage 1.
+export const exerciseBuilderTemplates = {
+  ...selfContainedTemplates,
+  guided_exercise: {
+    ...selfContainedTemplates.guided_exercise,
+    _template: {
+      ...selfContainedTemplates.guided_exercise._template,
+      guided_stage_contract: {
+        required_order: [
+          'structured teaching input',
+          'recognition/comprehension',
+          'controlled practice',
+          'controlled production',
+        ],
+        rules: [
+          'The first question must be a structured content_block with educational_schema_version, template_id, variant, intro and sections.',
+          'Do not replace the structured first stage with a single long body paragraph.',
+          'All graded questions must practise the same lesson objective introduced by the teaching block.',
+          'Increase cognitive demand gradually; do not jump from explanation directly to unsupported freer production.',
+          'Keep question_end feedback concise and directly connected to the rule or pattern just practised.',
+        ],
+      },
+      structured_teaching_contract: educationalContentBlockAuthoringGuide,
+    },
+  },
+};
 
 export function stringifyExerciseBuilderTemplate(type = 'bundle') {
   return JSON.stringify(exerciseBuilderTemplates[type] || exerciseBuilderTemplates.bundle, null, 2);
