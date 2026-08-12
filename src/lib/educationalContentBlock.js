@@ -76,6 +76,15 @@ function normalizeVocabularyItem(value) {
   };
 }
 
+function validateHighlights(displayText, highlights, path, errors) {
+  const source = text(displayText);
+  stringArray(highlights).forEach((highlight, index) => {
+    if (!source.includes(highlight)) {
+      errors.push(`${path}.highlight[${index}]: "${highlight}" deve essere una sottostringa esatta del testo associato.`);
+    }
+  });
+}
+
 export function normalizeEducationalSection(value, index = 0) {
   if (!isObject(value)) return null;
   const type = text(value.type);
@@ -151,6 +160,10 @@ export function validateEducationalContentBlock(content, path = 'content') {
     return { errors, warnings };
   }
 
+  if (!text(content.template_id)) {
+    warnings.push(`${path}.template_id: consigliato per identificare il contratto di authoring usato.`);
+  }
+
   sections.forEach((section, index) => {
     const sectionPath = `${path}.sections[${index}]`;
     if (!isObject(section)) {
@@ -164,7 +177,8 @@ export function validateEducationalContentBlock(content, path = 'content') {
     }
 
     const sectionBody = text(section.body || section.explanation);
-    const examples = Array.isArray(section.examples) ? section.examples.map(normalizeExample).filter(Boolean) : [];
+    const rawExamples = Array.isArray(section.examples) ? section.examples : section.example ? [section.example] : [];
+    const examples = rawExamples.map(normalizeExample).filter(Boolean);
     if (['rule', 'tip', 'pattern'].includes(type) && !sectionBody && !text(section.pattern)) {
       errors.push(`${sectionPath}: ${type} richiede body/explanation oppure pattern.`);
     }
@@ -174,16 +188,37 @@ export function validateEducationalContentBlock(content, path = 'content') {
     if (type === 'example' && !examples.length) {
       errors.push(`${sectionPath}: example richiede examples.`);
     }
-    if (['mistake', 'comparison'].includes(type) && !normalizeExample(section.correct) && !normalizeExample(section.incorrect)) {
+
+    rawExamples.forEach((example, exampleIndex) => {
+      const normalizedExample = normalizeExample(example);
+      if (normalizedExample) validateHighlights(normalizedExample.text, normalizedExample.highlight, `${sectionPath}.examples[${exampleIndex}]`, errors);
+    });
+
+    const correct = normalizeExample(section.correct);
+    const incorrect = normalizeExample(section.incorrect);
+    if (['mistake', 'comparison'].includes(type) && !correct && !incorrect) {
       errors.push(`${sectionPath}: ${type} richiede correct e/o incorrect.`);
     }
+    if (correct) validateHighlights(correct.text, correct.highlight, `${sectionPath}.correct`, errors);
+    if (incorrect) validateHighlights(incorrect.text, incorrect.highlight, `${sectionPath}.incorrect`, errors);
+
     if (type === 'dialogue') {
-      const turns = Array.isArray(section.turns) ? section.turns.map(normalizeTurn).filter(Boolean) : [];
+      const rawTurns = Array.isArray(section.turns) ? section.turns : [];
+      const turns = rawTurns.map(normalizeTurn).filter(Boolean);
       if (turns.length < 2) errors.push(`${sectionPath}: dialogue richiede almeno due turns validi.`);
+      rawTurns.forEach((turn, turnIndex) => {
+        const normalizedTurn = normalizeTurn(turn);
+        if (normalizedTurn) validateHighlights(normalizedTurn.text, normalizedTurn.highlight, `${sectionPath}.turns[${turnIndex}]`, errors);
+      });
     }
     if (type === 'vocabulary') {
-      const items = Array.isArray(section.items) ? section.items.map(normalizeVocabularyItem).filter(Boolean) : [];
+      const rawItems = Array.isArray(section.items) ? section.items : [];
+      const items = rawItems.map(normalizeVocabularyItem).filter(Boolean);
       if (!items.length) errors.push(`${sectionPath}: vocabulary richiede almeno un item valido.`);
+      rawItems.forEach((item, itemIndex) => {
+        const normalizedItem = normalizeVocabularyItem(item);
+        if (normalizedItem?.example) validateHighlights(normalizedItem.example, normalizedItem.highlight, `${sectionPath}.items[${itemIndex}]`, errors);
+      });
     }
     if (type === 'recap' && !sectionBody && !stringArray(section.points).length) {
       errors.push(`${sectionPath}: recap richiede body oppure points.`);
