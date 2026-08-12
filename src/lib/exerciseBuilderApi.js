@@ -68,6 +68,17 @@ export async function createExerciseBuilderImportBatch({
   return batch;
 }
 
+export async function listExerciseBuilderImportItems(batchId) {
+  if (!batchId) return [];
+  const { data, error } = await supabase
+    .from('exercise_builder_import_items')
+    .select('id, batch_id, item_index, client_key, entity_type, validation_status, selected, payload, errors, warnings, promoted_entity_id, created_at')
+    .eq('batch_id', batchId)
+    .order('item_index', { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
 export async function loadExerciseBuilderOverview() {
   const [
     { count: questionCount, error: questionError },
