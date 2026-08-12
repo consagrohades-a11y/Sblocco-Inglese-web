@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "topic_key": "past-simple-vs-present-perfect",
+  "label": "Past Simple vs Present Perfect",
+  "wave": 1,
+  "introduced_by_year": 2,
+  "level": "A2",
+  "prerequisites": ["past-simple", "irregular-verbs", "present-perfect"],
+  "outcome": "Lo studente sceglie tra Past Simple e Present Perfect partendo dal rapporto tra evento passato e presente: tempo passato finito, esperienza fino ad ora, risultato attuale e periodo ancora aperto.",
+  "must_master": [
+    "finished past time versus connection to now",
+    "specific finished past time markers require Past Simple at this level",
+    "life experience without a stated finished time uses Present Perfect",
+    "a current result can motivate Present Perfect when no finished past time is stated",
+    "unfinished current time versus finished past time period",
+    "switch from Present Perfect experience/result to Past Simple when asking or giving a specific finished-time detail",
+    "build the chosen tense correctly after making the meaning decision"
+  ],
+  "scope_boundary": {
+    "time_adverbs": "Do not turn this topic into the dedicated ever/never, just/already/yet, for/since lesson. Use only transparent contrastive time contexts needed to decide the tense.",
+    "advanced_nuance": "Teach the standard school-level contrast. Do not introduce dialectal or discourse-level exceptions where either tense may be acceptable.",
+    "present_perfect_continuous": "Do not introduce Present Perfect Continuous.",
+    "narrative_tenses": "Do not introduce Past Continuous or Past Perfect contrast here."
+  },
+  "decision_model": [
+    "Is a specific finished past time stated or clearly completed? → Past Simple.",
+    "Is this life experience up to now with no finished time stated? → Present Perfect.",
+    "Is a past event important because of its result now, with no finished past time stated? → Present Perfect.",
+    "Is the time period still open? → Present Perfect can be appropriate; if the period is finished, use Past Simple.",
+    "After choosing the tense, check its form separately."
+  ],
+  "italian_learner_risks": [
+    {"risk":"using Present Perfect with a specific finished past time","example_wrong":"I have seen Luca yesterday.","target":"I saw Luca yesterday."},
+    {"risk":"using Past Simple for life experience when no finished time is given","example_wrong":"I visited London three times.","target":"I've visited London three times."},
+    {"risk":"keeping Present Perfect when a follow-up asks when the event happened","example_wrong":"When have you visited London?","target":"When did you visit London?"},
+    {"risk":"choosing from one signal word without checking whether the time period is finished","example_wrong":"treating this week as an automatic Present Perfect trigger even after the week has been framed as finished","target":"read the whole time context"},
+    {"risk":"choosing the correct tense meaning but building the wrong form","example_wrong":"I've saw / Did you seen","target":"I've seen / Did you see"}
+  ],
+  "context_bank": [
+    "life experience followed by a specific detail question",
+    "a lost item with a present consequence followed by where/when it happened",
+    "this week versus last week",
+    "a completed school trip versus experiences from school trips in general",
+    "a current problem caused by a recent event",
+    "messages and short dialogues where the speaker moves from general experience to a specific past event",
+    "school-style mixed tense completion with unambiguous time context"
+  ],
+  "recover_phase": {
+    "minutes": 12,
+    "requirements": [
+      "one structured educational content block",
+      "teach the meaning decision before signal words",
+      "include finished-time versus no-finished-time comparison",
+      "include experience followed by a specific Past Simple detail",
+      "include current-result meaning",
+      "include unfinished versus finished time period",
+      "five scaffolded graded checks after teaching",
+      "at least one item must require tense choice and correct form together"
+    ]
+  },
+  "practice_phase": {
+    "minutes": 12,
+    "item_target": 8,
+    "requirements": [
+      "at least four exercise formats",
+      "mix experience, result, finished-time and unfinished-time contexts",
+      "include one connected mini-text",
+      "include one dialogue that switches from Present Perfect to Past Simple for a specific detail",
+      "include one Italian-to-English translation using both tenses",
+      "include regular and irregular verbs",
+      "avoid dedicated ever/never, already/yet, for/since drilling"
+    ]
+  },
+  "school_phase": {
+    "minutes": 10,
+    "item_target": 6,
+    "feedback_timing": "exercise_end",
+    "requirements": [
+      "connected mixed-tense gap fill",
+      "error correction",
+      "mixed choice task",
+      "question formation",
+      "translation using both tenses",
+      "no coaching or rule labels that reveal the answer"
+    ]
+  },
+  "verify_phase": {
+    "minutes": 8,
+    "item_target": 8,
+    "feedback_timing": "exercise_end",
+    "recommended_mastery_threshold": 80,
+    "requirements": [
+      "cover specific finished time",
+      "cover life experience",
+      "cover current result",
+      "cover unfinished current time",
+      "cover a Present Perfect-to-Past Simple detail switch",
+      "test correct tense form as well as tense choice",
+      "include one controlled production or translation item",
+      "no teaching content"
+    ]
+  },
+  "approved_diagnostic_codes": [
+    "PRESENT_PERFECT_VS_PAST_SIMPLE",
+    "B1_PRESENT_PERFECT_VS_PAST_SIMPLE",
+    "PAST_TIME_EXPRESSIONS",
+    "PRESENT_PERFECT_EXPERIENCE",
+    "PRESENT_PERFECT_RECENT_RESULT",
+    "PRESENT_PERFECT_UNFINISHED_TIME",
+    "PRESENT_PERFECT_AUXILIARY",
+    "PRESENT_PERFECT_PARTICIPLE_FORM",
+    "PRESENT_PERFECT_QUESTION_STRUCTURE",
+    "PAST_SIMPLE_QUESTION_BASE_FORM",
+    "PAST_SIMPLE_WH_WORD_ORDER",
+    "PAST_IRREGULAR_FORM",
+    "IRREGULAR_PAST_PARTICIPLE_FORM"
+  ],
+  "quality_rejections": [
+    "a worksheet where tense choice is reducible to circling yesterday versus ever",
+    "ambiguous contexts where both tenses are defensible in standard English",
+    "Present Perfect with a specific finished past time in an answer key",
+    "Past Simple used for a general life-experience statement with no finished time unless context clearly frames a completed life period",
+    "systematic teaching of the later time-expression syllabus",
+    "advanced regional exceptions",
+    "more than two consecutive isolated tense-choice sentences",
+    "difficulty created by vocabulary rather than tense meaning"
+  ]
+}
