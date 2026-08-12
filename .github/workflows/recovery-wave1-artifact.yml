@@ -11,27 +11,14 @@ permissions:
 jobs:
   package:
     runs-on: ubuntu-latest
-    env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
     steps:
       - uses: actions/checkout@v4
-      - name: Report bootstrap secret availability
-        shell: bash
-        run: |
-          for name in SUPABASE_ACCESS_TOKEN SUPABASE_SERVICE_ROLE_KEY SUPABASE_DB_PASSWORD SUPABASE_URL; do
-            if [ -n "${!name}" ]; then
-              echo "${name}=present"
-            else
-              echo "${name}=absent"
-            fi
-          done
-      - name: Package canonical Wave 1 bundles
+      - name: Package canonical Wave 1 bundles and admin source
         uses: actions/upload-artifact@v4
         with:
-          name: recovery-wave1-bundles
-          path: content/recovery/wave-1/*.bundle.json
+          name: recovery-wave1-workspace
+          path: |
+            content/recovery/wave-1/*.bundle.json
+            src/pages/AdminRecoveryContent.jsx
           if-no-files-found: error
           retention-days: 1
