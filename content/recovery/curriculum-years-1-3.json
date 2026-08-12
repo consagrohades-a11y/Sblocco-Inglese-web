@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "curriculum_id": "recovery-years-1-3-v1",
+  "scope": "Recupero Debito English for Italian secondary-school years 1-3",
+  "school_programme_is_authoritative": true,
+  "principles": [
+    "The student's official school recovery programme decides which topics are required.",
+    "Do not expose a topic as ready in the learner product until all required recovery phases have publishable content.",
+    "Teach for school success and usable English at the same time: examples must sound natural, while Modalità scuola must reproduce realistic Italian-school task formats.",
+    "Avoid mechanical Cambridge-style repetition when the same grammar can be practised through realistic routines, school life, messages, plans, short dialogues and mini-texts.",
+    "Prioritise high-probability Italian learner errors only when they genuinely apply to the target structure.",
+    "A topic is not mastered because a learner recognises the rule in multiple choice; production, question formation, negatives and form choice must be tested when relevant.",
+    "Do not mix a later grammar point into an earlier topic merely to make examples look harder.",
+    "Every graded item must have one defensible answer or a complete accepted-answer set. No trick questions."
+  ],
+  "phase_contract": {
+    "recover": {
+      "purpose": "Rebuild the rule and immediately connect it to successful use.",
+      "target_minutes": "10-12",
+      "requirements": [
+        "structured educational content block",
+        "concrete examples before unnecessary terminology",
+        "4-6 scaffolded checks",
+        "immediate explanatory feedback",
+        "at least one likely Italian-learner error when relevant"
+      ]
+    },
+    "practice": {
+      "purpose": "Make the learner retrieve and manipulate the target without relying on the explanation.",
+      "target_minutes": "10-14",
+      "requirements": [
+        "8-12 meaningful items",
+        "at least three exercise formats when the grammar allows it",
+        "mix affirmative, negative and interrogative forms when relevant",
+        "natural contexts and varied subjects",
+        "diagnostic error codes for the specific misconception being tested"
+      ]
+    },
+    "school": {
+      "purpose": "Transfer the grammar to formats commonly seen in Italian school recovery tests.",
+      "target_minutes": "8-12",
+      "requirements": [
+        "no teaching block or rule label that reveals the answer",
+        "exercise-end feedback rather than coaching during the task",
+        "use realistic formats such as gap fill, transformations, error correction, translation, word order, short text completion or mixed choice",
+        "instructions may be Italian, but target language remains English",
+        "difficulty comes from retrieval and format, not obscure vocabulary"
+      ]
+    },
+    "verify": {
+      "purpose": "Measure whether the learner can now handle the topic independently.",
+      "target_minutes": "6-10",
+      "requirements": [
+        "6-10 balanced graded items",
+        "no teaching content",
+        "coverage of every must-master subskill",
+        "exercise-end feedback",
+        "recommended mastery threshold 80 percent"
+      ]
+    }
+  },
+  "content_waves": [
+    {
+      "wave": 1,
+      "reason": "Highest-frequency recovery grammar and strongest diagnostic support.",
+      "topics": [
+        "present-simple",
+        "present-continuous",
+        "present-simple-vs-present-continuous",
+        "past-simple",
+        "irregular-verbs",
+        "present-perfect",
+        "past-simple-vs-present-perfect",
+        "future-forms"
+      ]
+    },
+    {
+      "wave": 2,
+      "reason": "Common Year 1-2 school grammar that regularly appears in written recovery tests.",
+      "topics": [
+        "past-continuous",
+        "comparatives",
+        "superlatives",
+        "modal-verbs",
+        "countable-uncountable",
+        "some-any",
+        "much-many-a-lot-of",
+        "articles",
+        "pronouns",
+        "possessives",
+        "prepositions",
+        "question-formation",
+        "negatives"
+      ]
+    },
+    {
+      "wave": 3,
+      "reason": "Frequently included Year 2-3 structures missing from the current runtime topic catalogue.",
+      "topics": [
+        "be-have-got-there-is-are",
+        "adverbs-frequency",
+        "past-simple-vs-past-continuous",
+        "present-perfect-time-expressions",
+        "zero-first-conditionals",
+        "second-conditional",
+        "relative-clauses",
+        "gerunds-infinitives",
+        "indefinite-pronouns",
+        "too-enough",
+        "used-to",
+        "passive-voice"
+      ]
+    },
+    {
+      "wave": 4,
+      "reason": "Year 3 and programme-dependent B1/B1+ structures. Keep available in the library, but only assign when the school programme requires them.",
+      "topics": [
+        "present-perfect-continuous",
+        "past-perfect-narrative-tenses",
+        "reported-speech",
+        "modal-deduction",
+        "question-tags",
+        "third-conditional",
+        "wish-if-only"
+      ]
+    }
+  ],
+  "topics": [
+    { "key": "present-simple", "label": "Present Simple", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["routine and fact use", "base form with I/you/we/they", "third-person singular -s/-es/-ies", "do/does questions", "don't/doesn't negatives", "base verb after do/does/don't/doesn't", "short answers", "frequency-adverb position"] },
+    { "key": "present-continuous", "label": "Present Continuous", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["be + -ing form", "actions happening now", "temporary situations", "questions and negatives", "basic -ing spelling"] },
+    { "key": "present-simple-vs-present-continuous", "label": "Present Simple vs Present Continuous", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": ["present-simple", "present-continuous"], "must_master": ["routine versus now", "permanent versus temporary", "time markers", "state verbs at the level required by the school programme"] },
+    { "key": "past-simple", "label": "Past Simple", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["finished past time", "regular forms", "key irregular forms", "did questions", "didn't negatives", "base form after did/didn't", "time expressions"] },
+    { "key": "irregular-verbs", "label": "Irregular verbs", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": ["past-simple"], "must_master": ["high-frequency past forms", "high-frequency past participles", "choose past versus participle in context"] },
+    { "key": "past-continuous", "label": "Past Continuous", "introduced_by_year": 2, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": ["past-simple"], "must_master": ["was/were + -ing", "action in progress at a past time", "background action", "questions and negatives"] },
+    { "key": "present-perfect", "label": "Present Perfect", "introduced_by_year": 2, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": ["past-simple", "irregular-verbs"], "must_master": ["have/has + past participle", "life experience", "recent result", "unfinished time at programme-appropriate level", "questions and negatives"] },
+    { "key": "past-simple-vs-present-perfect", "label": "Past Simple vs Present Perfect", "introduced_by_year": 2, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": ["past-simple", "present-perfect"], "must_master": ["finished past time versus connection to now", "specific finished time markers", "experience without finished time", "choose tense from context"] },
+    { "key": "future-forms", "label": "Future forms", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["prediction", "instant decision", "plan/intention", "arrangement", "choose will/going to/present continuous from meaning"] },
+    { "key": "will", "label": "Will", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["predictions", "instant decisions", "offers and promises when required"] },
+    { "key": "going-to", "label": "Be going to", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["plans and intentions", "evidence-based prediction", "correct be form"] },
+    { "key": "present-continuous-future", "label": "Present Continuous for future", "introduced_by_year": 1, "tier": "frequent", "runtime_status": "ready-for-content", "prerequisites": ["present-continuous"], "must_master": ["fixed arrangements", "future time expression", "distinguish arrangement from action happening now"] },
+    { "key": "comparatives", "label": "Comparatives", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["-er and more forms", "irregular comparatives", "than", "basic equality when included"] },
+    { "key": "superlatives", "label": "Superlatives", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": ["comparatives"], "must_master": ["the + -est", "the most", "irregular superlatives", "in/of group context"] },
+    { "key": "modal-verbs", "label": "Modal verbs", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["ability and permission", "obligation and prohibition", "advice", "possibility", "modal + base verb"] },
+    { "key": "countable-uncountable", "label": "Countable and uncountable nouns", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["countability", "singular/plural behaviour", "common food and everyday nouns", "quantifier compatibility"] },
+    { "key": "some-any", "label": "Some / any", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": ["countable-uncountable"], "must_master": ["affirmative some", "negative/question any", "offers and requests when required"] },
+    { "key": "much-many-a-lot-of", "label": "Much / many / a lot of", "introduced_by_year": 1, "tier": "core", "runtime_status": "ready-for-content", "prerequisites": ["countable-uncountable"], "must_master": ["much with uncountable", "many with plural countable", "a lot of with both", "common question/negative patterns"] },
+    { "key": "articles", "label": "Articles", "introduced_by_year": 1, "tier": "foundation", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["a/an", "the", "zero article in common school-level contexts"] },
+    { "key": "pronouns", "label": "Pronouns", "introduced_by_year": 1, "tier": "foundation", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["subject pronouns", "object pronouns", "basic reflexive forms when required"] },
+    { "key": "possessives", "label": "Possessives", "introduced_by_year": 1, "tier": "foundation", "runtime_status": "ready-for-content", "prerequisites": ["pronouns"], "must_master": ["possessive adjectives", "possessive pronouns", "possessive 's"] },
+    { "key": "prepositions", "label": "Prepositions", "introduced_by_year": 1, "tier": "foundation", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["time", "place", "movement and common adjective/verb combinations at programme level"] },
+    { "key": "question-formation", "label": "Question formation", "introduced_by_year": 1, "tier": "foundation", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["question words", "auxiliary before subject", "do/does/did patterns", "be questions", "natural short questions"] },
+    { "key": "negatives", "label": "Negatives", "introduced_by_year": 1, "tier": "foundation", "runtime_status": "ready-for-content", "prerequisites": [], "must_master": ["be negatives", "do/does/did negatives", "base verb after auxiliary", "not placement"] },
+    { "key": "be-have-got-there-is-are", "label": "Be, have got, there is/are", "introduced_by_year": 1, "tier": "foundation", "runtime_status": "planned", "prerequisites": [], "must_master": ["am/is/are", "have/has got", "there is/are", "questions and negatives"] },
+    { "key": "adverbs-frequency", "label": "Adverbs of frequency", "introduced_by_year": 1, "tier": "core", "runtime_status": "planned", "prerequisites": ["present-simple"], "must_master": ["always/usually/often/sometimes/never", "position before main verb", "position after be", "how often"] },
+    { "key": "past-simple-vs-past-continuous", "label": "Past Simple vs Past Continuous", "introduced_by_year": 2, "tier": "core", "runtime_status": "planned", "prerequisites": ["past-simple", "past-continuous"], "must_master": ["completed event versus action in progress", "when/while", "background versus interrupting event"] },
+    { "key": "present-perfect-time-expressions", "label": "Present Perfect: ever/never, just/already/yet, for/since", "introduced_by_year": 2, "tier": "core", "runtime_status": "planned", "prerequisites": ["present-perfect"], "must_master": ["ever/never", "just/already/yet", "for/since", "position in the sentence"] },
+    { "key": "zero-first-conditionals", "label": "Zero and First Conditional", "introduced_by_year": 2, "tier": "core", "runtime_status": "planned", "prerequisites": ["present-simple", "future-forms"], "must_master": ["general truth versus real future possibility", "if-clause present form", "will in main clause for first conditional", "clause order"] },
+    { "key": "second-conditional", "label": "Second Conditional", "introduced_by_year": 2, "tier": "frequent", "runtime_status": "planned", "prerequisites": ["past-simple", "modal-verbs"], "must_master": ["hypothetical present/future", "if + past", "would + base verb", "were at programme level"] },
+    { "key": "relative-clauses", "label": "Relative clauses", "introduced_by_year": 2, "tier": "frequent", "runtime_status": "planned", "prerequisites": ["pronouns"], "must_master": ["who/which/that/where", "defining clauses", "non-defining clauses when required"] },
+    { "key": "gerunds-infinitives", "label": "Gerund and infinitive", "introduced_by_year": 2, "tier": "frequent", "runtime_status": "planned", "prerequisites": [], "must_master": ["verb + -ing", "verb + to infinitive", "high-frequency verb patterns", "purpose with to"] },
+    { "key": "indefinite-pronouns", "label": "Somebody / anything / nobody / everywhere...", "introduced_by_year": 2, "tier": "frequent", "runtime_status": "planned", "prerequisites": ["some-any", "pronouns"], "must_master": ["some-/any-/no-/every- compounds", "person/place/thing endings", "agreement and double-negative avoidance"] },
+    { "key": "too-enough", "label": "Too / enough", "introduced_by_year": 2, "tier": "frequent", "runtime_status": "planned", "prerequisites": [], "must_master": ["too + adjective/adverb", "adjective/adverb + enough", "enough + noun", "meaning contrast"] },
+    { "key": "used-to", "label": "Used to", "introduced_by_year": 2, "tier": "frequent", "runtime_status": "planned", "prerequisites": ["past-simple"], "must_master": ["past habits/states no longer true", "used to + base verb", "didn't use to", "did ... use to"] },
+    { "key": "passive-voice", "label": "Passive voice", "introduced_by_year": 2, "tier": "frequent", "runtime_status": "planned", "prerequisites": ["past-simple", "present-perfect", "irregular-verbs"], "must_master": ["be + past participle", "present and past passive", "agent with by when useful", "active/passive choice"] },
+    { "key": "present-perfect-continuous", "label": "Present Perfect Continuous", "introduced_by_year": 3, "tier": "programme-dependent", "runtime_status": "planned", "prerequisites": ["present-perfect", "present-continuous"], "must_master": ["have/has been + -ing", "duration up to now", "recent ongoing activity", "simple versus continuous contrast when required"] },
+    { "key": "past-perfect-narrative-tenses", "label": "Past Perfect and narrative tenses", "introduced_by_year": 3, "tier": "programme-dependent", "runtime_status": "planned", "prerequisites": ["past-simple", "past-continuous", "irregular-verbs"], "must_master": ["had + past participle", "earlier past event", "sequence past simple/past continuous/past perfect", "narrative time markers"] },
+    { "key": "reported-speech", "label": "Reported speech", "introduced_by_year": 3, "tier": "programme-dependent", "runtime_status": "planned", "prerequisites": ["past-simple", "present-perfect", "future-forms"], "must_master": ["reported statements", "basic tense backshift", "pronoun/time-reference changes", "reported questions when required"] },
+    { "key": "modal-deduction", "label": "Modal verbs for deduction", "introduced_by_year": 3, "tier": "programme-dependent", "runtime_status": "planned", "prerequisites": ["modal-verbs"], "must_master": ["must/might/could/can't for present deduction", "strength of certainty", "modal + base verb"] },
+    { "key": "question-tags", "label": "Question tags", "introduced_by_year": 3, "tier": "programme-dependent", "runtime_status": "planned", "prerequisites": ["question-formation", "negatives"], "must_master": ["positive statement + negative tag", "negative statement + positive tag", "match auxiliary and subject"] },
+    { "key": "third-conditional", "label": "Third Conditional", "introduced_by_year": 3, "tier": "programme-dependent", "runtime_status": "planned", "prerequisites": ["past-perfect-narrative-tenses", "modal-verbs"], "must_master": ["unreal past condition", "if + past perfect", "would have + past participle"] },
+    { "key": "wish-if-only", "label": "Wish / if only", "introduced_by_year": 3, "tier": "programme-dependent", "runtime_status": "planned", "prerequisites": ["past-simple", "past-perfect-narrative-tenses"], "must_master": ["present regret with past form", "past regret when included", "meaning not literal tense"] }
+  ]
+}
