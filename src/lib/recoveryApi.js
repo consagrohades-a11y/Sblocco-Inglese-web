@@ -27,6 +27,16 @@ function isMissingDailyPlanCapability(error) {
     || message.includes('get_today_recovery_plan');
 }
 
+function isMissingMasteryCapability(error) {
+  const code = String(error?.code || '');
+  const message = String(error?.message || '').toLowerCase();
+  return ['42P01', '42703', 'PGRST205'].includes(code)
+    || message.includes('recovery_mastery_evidence')
+    || message.includes('mastery_state')
+    || message.includes('mastery_confidence')
+    || message.includes('mastery_reason');
+}
+
 export async function submitRecoveryDiagnostic(answers) {
   const data = rpcError(await supabase.rpc('submit_public_recovery_diagnostic', {
     p_answers: answers,
@@ -73,6 +83,36 @@ export async function loadRecoveryEnrollment() {
   return data || null;
 }
 
+async function loadRecoveryTopics(enrollmentId) {
+  const masteryResponse = await supabase
+    .from('recovery_student_topics')
+    .select('topic_key, required, diagnostic_score, checkpoint_score, mock_score, mastery_score, mastery_state, mastery_confidence, mastery_reason, repeated_errors, priority_score, priority_band, verification_only, last_evidence_at')
+    .eq('enrollment_id', enrollmentId)
+    .eq('required', true)
+    .order('priority_score', { ascending: false });
+
+  if (!masteryResponse.error) return masteryResponse;
+  if (!isMissingMasteryCapability(masteryResponse.error)) return masteryResponse;
+
+  return supabase
+    .from('recovery_student_topics')
+    .select('topic_key, required, diagnostic_score, checkpoint_score, mock_score, mastery_score, repeated_errors, priority_score, priority_band, verification_only, last_evidence_at')
+    .eq('enrollment_id', enrollmentId)
+    .eq('required', true)
+    .order('priority_score', { ascending: false });
+}
+
+async function loadRecoveryMasteryEvidence(enrollmentId) {
+  const response = await supabase
+    .from('recovery_mastery_evidence')
+    .select('id, topic_key, session_id, exercise_attempt_id, evidence_type, score, evidence_weight, evidence_key, metadata, observed_at, created_at')
+    .eq('enrollment_id', enrollmentId)
+    .order('observed_at', { ascending: false });
+  if (!response.error) return response;
+  if (isMissingMasteryCapability(response.error)) return { data: [], error: null };
+  return response;
+}
+
 async function loadRecoverySessions(enrollmentId) {
   const dailyResponse = await supabase
     .from('recovery_plan_sessions')
@@ -91,14 +131,10 @@ async function loadRecoverySessions(enrollmentId) {
 }
 
 export async function loadRecoveryState(enrollmentId) {
-  if (!enrollmentId) return { topics: [], days: [], sessions: [], assessments: [], errorEvidence: [] };
-  const [topicResponse, dayResponse, sessionResponse, assessmentResponse, errorResponse] = await Promise.all([
-    supabase
-      .from('recovery_student_topics')
-      .select('topic_key, required, diagnostic_score, checkpoint_score, mock_score, mastery_score, repeated_errors, priority_score, priority_band, verification_only, last_evidence_at')
-      .eq('enrollment_id', enrollmentId)
-      .eq('required', true)
-      .order('priority_score', { ascending: false }),
+  if (!enrollmentId) return { topics: [], masteryEvidence: [], days: [], sessions: [], assessments: [], errorEvidence: [] };
+  const [topicResponse, masteryEvidenceResponse, dayResponse, sessionResponse, assessmentResponse, errorResponse] = await Promise.all([
+    loadRecoveryTopics(enrollmentId),
+    loadRecoveryMasteryEvidence(enrollmentId),
     supabase
       .from('recovery_plan_days')
       .select('id, plan_version, day_index, scheduled_for, target_minutes, status, created_at, updated_at')
@@ -117,10 +153,11 @@ export async function loadRecoveryState(enrollmentId) {
   const dayError = dayResponse.error && !isMissingDailyPlanCapability(dayResponse.error)
     ? dayResponse.error
     : null;
-  const firstError = topicResponse.error || dayError || sessionResponse.error || assessmentResponse.error || errorResponse.error;
+  const firstError = topicResponse.error || masteryEvidenceResponse.error || dayError || sessionResponse.error || assessmentResponse.error || errorResponse.error;
   if (firstError) throw firstError;
   return {
     topics: topicResponse.data || [],
+    masteryEvidence: masteryEvidenceResponse.data || [],
     days: dayResponse.error ? [] : (dayResponse.data || []),
     sessions: sessionResponse.data || [],
     assessments: assessmentResponse.data || [],
