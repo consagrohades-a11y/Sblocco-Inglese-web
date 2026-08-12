@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "topic_key": "present-continuous-future",
+  "label": "Present Continuous for future",
+  "wave": 2,
+  "introduced_by_year": 1,
+  "level": "A2",
+  "prerequisites": ["present-continuous"],
+  "outcome": "Lo studente usa il Present Continuous per accordi futuri già organizzati e distingue questo uso da un'azione che sta accadendo adesso.",
+  "must_master": ["fixed future arrangements", "clear future-time context", "am/is/are + verb-ing", "future questions and negatives when natural", "distinguish arrangement from action happening now"],
+  "do_not_teach_yet": ["full future-form contrast", "advanced timetable use of Present Simple", "future continuous", "going to as the main target"],
+  "italian_learner_risks": [
+    {"risk":"using Present Continuous without a future context","example_wrong":"I'm meeting Luca. interpreted without context","target":"I'm meeting Luca at six tomorrow."},
+    {"risk":"dropping be","example_wrong":"We meeting the teacher tomorrow.","target":"We're meeting the teacher tomorrow."},
+    {"risk":"wrong be agreement","example_wrong":"They is leaving on Friday.","target":"They are leaving on Friday."},
+    {"risk":"confusing a vague intention with an organised arrangement","example_wrong":"using an arrangement form when no concrete arrangement exists","target":"require a booking, time, place, person or equivalent organisational detail"}
+  ],
+  "context_bank": ["appointments", "meeting friends", "travel bookings", "school meetings", "dentist or doctor appointments", "organised weekend plans"],
+  "phase_requirements": {"recover":["structured teaching","arrangement evidence","now vs future distinction","5-6 checks"],"practice":["8 items","four formats","dialogue","translation"],"school":["6 school-style tasks","exercise-end feedback"],"verify":["verification-standard-v2","10-13 items","four formats","six subskills","three challenge items"]},
+  "approved_diagnostic_codes": ["FUTURE_ARRANGEMENTS","PRESENT_CONTINUOUS_AUXILIARY","PRESENT_CONTINUOUS_VERB_ING","PRESENT_CONTINUOUS_NEGATIVE","PRESENT_CONTINUOUS_QUESTION_WORD_ORDER"],
+  "quality_rejections": ["future use without enough future context", "tomorrow as the only reason for the answer", "teaching vague intentions as arrangements", "repeating Present Continuous basic form without future meaning"]
+}

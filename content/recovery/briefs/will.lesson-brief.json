@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "topic_key": "will",
+  "label": "Will",
+  "wave": 2,
+  "introduced_by_year": 1,
+  "level": "A2",
+  "prerequisites": [],
+  "outcome": "Lo studente usa will correttamente per previsioni/opinioni, decisioni prese sul momento e offerte/promesse scolasticamente rilevanti, costruendo affermative, negative e domande.",
+  "must_master": ["will + base verb", "won't + base verb", "will questions", "prediction/opinion", "instant decision", "offer or promise in clear context"],
+  "do_not_teach_yet": ["first conditional", "future time clauses", "advanced modal meanings of will", "full three-way future-form contrast"],
+  "italian_learner_risks": [
+    {"risk":"adding to after will","example_wrong":"I'll to call you.","target":"I'll call you."},
+    {"risk":"conjugating the verb after will","example_wrong":"She will goes.","target":"She will go."},
+    {"risk":"using do/did in will questions","example_wrong":"Do you will come?","target":"Will you come?"},
+    {"risk":"treating will as the automatic form for every future sentence","example_wrong":"Tomorrow = always will","target":"choose will only when its meaning fits the context"}
+  ],
+  "context_bank": ["instant responses to small problems", "opinions about school or everyday future", "offers to help", "simple promises", "messages about decisions made while speaking"],
+  "phase_requirements": {"recover":["structured teaching","meaning before form","5-6 checks"],"practice":["8 items","four formats","dialogue","translation"],"school":["6 school-style tasks","exercise-end feedback"],"verify":["verification-standard-v2","10-13 items","four formats","six subskills","three challenge items"]},
+  "approved_diagnostic_codes": ["FUTURE_WILL","FUTURE_WILL_INSTANT_DECISION","FUTURE_WILL_BASE_FORM"],
+  "quality_rejections": ["will taught as generic future", "tomorrow used as an automatic answer key", "more than two consecutive form-only items", "ambiguous plan contexts better expressed with going to"]
+}

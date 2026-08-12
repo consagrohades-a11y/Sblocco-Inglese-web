@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "topic_key": "going-to",
+  "label": "Be going to",
+  "wave": 2,
+  "introduced_by_year": 1,
+  "level": "A2",
+  "prerequisites": [],
+  "outcome": "Lo studente usa be going to per piani/intenzioni già decisi e previsioni basate su evidenza presente, con forma corretta di be, negative e domande.",
+  "must_master": ["am/is/are going to + base verb", "plans and intentions already decided", "evidence-based prediction", "negative form", "question form"],
+  "do_not_teach_yet": ["full future-form contrast", "Present Continuous arrangements as the main target", "first conditional", "advanced prediction nuance"],
+  "italian_learner_risks": [
+    {"risk":"dropping be","example_wrong":"I going to study.","target":"I'm going to study."},
+    {"risk":"wrong be agreement","example_wrong":"They is going to leave.","target":"They are going to leave."},
+    {"risk":"adding to before the main verb twice","example_wrong":"I'm going to to study.","target":"I'm going to study."},
+    {"risk":"choosing going to only because tomorrow appears","example_wrong":"tomorrow = always going to","target":"read whether the idea is a prior plan or evidence-based prediction"}
+  ],
+  "context_bank": ["study plans", "weekend intentions", "saving money", "weather evidence", "objects about to fall or break", "questions about plans"],
+  "phase_requirements": {"recover":["structured teaching","plan vs evidence prediction","form control","5-6 checks"],"practice":["8 items","four formats","dialogue","translation"],"school":["6 school-style tasks","exercise-end feedback"],"verify":["verification-standard-v2","10-13 items","four formats","six subskills","three challenge items"]},
+  "approved_diagnostic_codes": ["FUTURE_GOING_TO","FUTURE_GOING_TO_BE","FUTURE_GOING_TO_EVIDENCE"],
+  "quality_rejections": ["tomorrow as automatic cue", "mixing fixed arrangements into the main lesson", "evidence-free predictions treated as necessarily going to", "repetitive am/is/are drills without meaning"]
+}
