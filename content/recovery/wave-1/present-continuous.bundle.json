@@ -1,0 +1,870 @@
+{
+  "schema_version": 2,
+  "entity_type": "bundle",
+  "questions": [],
+  "pools": [],
+  "exercises": [
+    {
+      "client_key": "recovery_present_continuous_recover",
+      "title": "Present Continuous — Recupera",
+      "description": "Ricostruisci uso, struttura be + -ing, domande, negative e spelling prima della pratica.",
+      "instructions": "Capisci la struttura completa: il verbo in -ing da solo non basta.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-continuous",
+      "estimated_minutes": 12,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "question_end",
+        "show_score": false,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_present_continuous_recover_section",
+          "title": "Costruisci il tempo completo",
+          "instructions": "Osserva prima il significato, poi controlla be e la forma in -ing.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_pc_recover_teaching",
+              "type": "content_block",
+              "title": "Present Continuous: be + verbo in -ing",
+              "prompt": "Prima di esercitarti",
+              "instructions": "Leggi le regole e osserva come cambia be.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "core_form_use",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the present continuous for actions happening now or temporary situations with correct be + -ing structure, questions, negatives and basic spelling.",
+              "difficulty": "support",
+              "content": {
+                "educational_schema_version": 1,
+                "template_id": "educational-content-block-v1",
+                "variant": "grammar",
+                "body": "Il Present Continuous usa am/is/are + verbo in -ing. Serve soprattutto per azioni in corso e situazioni temporanee. Nelle domande be va prima del soggetto; nelle negative aggiungi not a be.",
+                "intro": "L'errore più importante da evitare è usare solo il verbo in -ing: in inglese serve sempre anche am, is o are.",
+                "sections": [
+                  {
+                    "key": "use_now",
+                    "type": "rule",
+                    "title": "Un'azione in corso",
+                    "body": "Usa il Present Continuous quando descrivi qualcosa che sta succedendo adesso o intorno al momento in cui parli.",
+                    "examples": [
+                      { "text": "I'm waiting for the bus.", "highlight": ["I'm waiting"] },
+                      { "text": "They're having lunch right now.", "highlight": ["They're having"] }
+                    ]
+                  },
+                  {
+                    "key": "temporary",
+                    "type": "rule",
+                    "title": "Anche per una situazione temporanea",
+                    "body": "L'azione non deve avvenire in questo preciso secondo: può essere una situazione temporanea che dura per un periodo limitato.",
+                    "examples": [
+                      { "text": "This week, I'm staying with my aunt.", "highlight": ["I'm staying"] }
+                    ]
+                  },
+                  {
+                    "key": "structure",
+                    "type": "pattern",
+                    "title": "La struttura non si spezza",
+                    "body": "Scegli am/is/are in base al soggetto, poi usa il verbo in -ing.",
+                    "pattern": "subject + am/is/are + verb-ing",
+                    "examples": [
+                      { "text": "I am studying.", "highlight": ["am studying"] },
+                      { "text": "She is studying.", "highlight": ["is studying"] },
+                      { "text": "We are studying.", "highlight": ["are studying"] }
+                    ]
+                  },
+                  {
+                    "key": "missing_be",
+                    "type": "mistake",
+                    "title": "Non dimenticare be",
+                    "body": "Una forma in -ing senza am/is/are non forma il Present Continuous.",
+                    "correct": { "text": "They are playing outside.", "highlight": ["are playing"] },
+                    "incorrect": { "text": "They playing outside.", "highlight": ["playing"] }
+                  },
+                  {
+                    "key": "questions_negatives",
+                    "type": "rule",
+                    "title": "Domande e negative cambiano be",
+                    "body": "Per la domanda sposta am/is/are prima del soggetto. Per la negativa aggiungi not dopo be. Non usare do o does.",
+                    "examples": [
+                      { "text": "Are you listening?", "highlight": ["Are"] },
+                      { "text": "She isn't sleeping.", "highlight": ["isn't sleeping"] }
+                    ]
+                  },
+                  {
+                    "key": "spelling",
+                    "type": "rule",
+                    "title": "Come formare -ing",
+                    "body": "Di solito aggiungi -ing. Con molti verbi in -e togli la e; con alcuni verbi brevi raddoppi la consonante finale.",
+                    "examples": [
+                      { "text": "work → working", "highlight": ["working"] },
+                      { "text": "make → making", "highlight": ["making"] },
+                      { "text": "run → running", "highlight": ["running"] }
+                    ]
+                  },
+                  {
+                    "key": "recap",
+                    "type": "recap",
+                    "title": "Prima di continuare",
+                    "points": [
+                      "Azione in corso o situazione temporanea.",
+                      "Am/is/are + verbo in -ing.",
+                      "Domanda: be prima del soggetto.",
+                      "Negativa: be + not + verbo in -ing.",
+                      "Controlla lo spelling della forma in -ing."
+                    ]
+                  }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 0, "nearly_correct_multiplier": 0.5 },
+              "feedback": {},
+              "diagnostics": { "tested_codes": [], "fallback_error_code": null },
+              "tags": ["recovery", "present-continuous", "recover", "structured-teaching"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_recover_use",
+              "type": "multiple_choice",
+              "title": "Che cosa descrive?",
+              "prompt": "Be quiet. Maya is talking to her tutor.",
+              "instructions": "Perché qui usiamo il Present Continuous?",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "use",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise an action happening now.",
+              "difficulty": "support",
+              "content": {
+                "options": [
+                  { "key": "now", "text": "La conversazione è in corso adesso.", "is_correct": true },
+                  { "key": "habit", "text": "È un'abitudine che si ripete ogni giorno.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_USE" },
+                  { "key": "past", "text": "La conversazione è già finita.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_USE" }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Be quiet indica che Maya sta parlando proprio ora." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_USE"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "use"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_recover_structure",
+              "type": "select_gap",
+              "title": "Be + -ing",
+              "prompt": "Completa le frasi.",
+              "instructions": "Scegli la forma completa corretta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "affirmative",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose the correct auxiliary and -ing form.",
+              "difficulty": "support",
+              "content": {
+                "text_template": "I [[blank_1]] for the train and my friends [[blank_2]] near the entrance.",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["am waiting"], "options": ["am waiting", "is waiting", "waiting"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "is waiting", "error_code": "PRESENT_CONTINUOUS_BE_AUXILIARY" }, { "answer": "waiting", "error_code": "PRESENT_CONTINUOUS_AUXILIARY" }] },
+                  { "key": "blank_2", "accepted_answers": ["are standing"], "options": ["are standing", "is standing", "standing"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "is standing", "error_code": "PRESENT_CONTINUOUS_BE_AUXILIARY" }, { "answer": "standing", "error_code": "PRESENT_CONTINUOUS_AUXILIARY" }] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "I → am waiting. My friends = they → are standing." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_BE_AUXILIARY", "PRESENT_CONTINUOUS_AUXILIARY", "PRESENT_CONTINUOUS_VERB_ING"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "affirmative"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_recover_missing_be",
+              "type": "error_correction",
+              "title": "Manca qualcosa",
+              "prompt": "Correggi: My friends playing basketball outside.",
+              "instructions": "Riscrivi la frase completa.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "affirmative",
+              "primary_skill": "grammar",
+              "learning_objective": "Include the required be auxiliary in the present continuous.",
+              "difficulty": "support",
+              "content": { "accepted_answers": ["My friends are playing basketball outside."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "My friends = they: serve are prima di playing." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_AUXILIARY", "PRESENT_CONTINUOUS_AFFIRMATIVE_STRUCTURE"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "auxiliary"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_recover_question",
+              "type": "word_order",
+              "title": "Costruisci la domanda",
+              "prompt": "Metti le parti nell'ordine corretto.",
+              "instructions": "Usa tutte le parti.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "questions",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a present continuous information question.",
+              "difficulty": "support",
+              "content": { "tokens": ["why", "are", "you", "wearing", "a coat"], "correct_order": ["why", "are", "you", "wearing", "a coat"], "terminal_punctuation": "?" },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Why + are + you + wearing...? Non serve do." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_QUESTION_WORD_ORDER", "PRESENT_CONTINUOUS_QUESTION_AUXILIARY"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "questions"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_recover_spelling",
+              "type": "select_gap",
+              "title": "Spelling in -ing",
+              "prompt": "Completa con la forma in -ing corretta.",
+              "instructions": "Scegli la grafia corretta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "spelling",
+              "primary_skill": "spelling",
+              "learning_objective": "Apply basic -ing spelling rules.",
+              "difficulty": "support",
+              "content": {
+                "text_template": "She is [[blank_1]] dinner while her brother is [[blank_2]] in the park.",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["making"], "options": ["making", "makeing", "makking"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "makeing", "error_code": "PRESENT_CONTINUOUS_DROP_E" }] },
+                  { "key": "blank_2", "accepted_answers": ["running"], "options": ["running", "runing", "runeing"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "runing", "error_code": "PRESENT_CONTINUOUS_DOUBLE_CONSONANT" }] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Make perde la e → making. Run raddoppia la consonante finale → running." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_DROP_E", "PRESENT_CONTINUOUS_DOUBLE_CONSONANT", "PRESENT_CONTINUOUS_ING_SPELLING"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "spelling"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "present-continuous", "recover", "wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_present_continuous_practice",
+      "title": "Present Continuous — Allenati",
+      "description": "Recupero attivo su uso, ausiliare, -ing, domande, negative, short answers e situazioni temporanee.",
+      "instructions": "Decidi prima il significato, poi costruisci la forma completa.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-continuous",
+      "estimated_minutes": 12,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "question_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_present_continuous_practice_section",
+          "title": "Usalo senza rileggere la regola",
+          "instructions": "Le attività cambiano formato e contesto per evitare risposte automatiche.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_pc_practice_correct_sentences",
+              "type": "multiple_select",
+              "title": "Quali frasi sono corrette?",
+              "prompt": "Seleziona tutte le frasi corrette.",
+              "instructions": "Controlla sia be sia il verbo in -ing.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "mixed_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise correct present continuous affirmative, negative and question forms.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  { "key": "a", "text": "I'm waiting outside the library.", "is_correct": true },
+                  { "key": "b", "text": "They are play football now.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_VERB_ING" },
+                  { "key": "c", "text": "Is Sofia coming with us?", "is_correct": true },
+                  { "key": "d", "text": "We not are working today.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_NEGATIVE" }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Serve be + -ing; nella negativa not viene dopo am/is/are." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_VERB_ING", "PRESENT_CONTINUOUS_NEGATIVE"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "mixed"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_practice_scene",
+              "type": "gap_fill",
+              "title": "Che cosa sta succedendo?",
+              "prompt": "Completa la scena con il Present Continuous.",
+              "instructions": "Scrivi la forma completa del verbo.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "connected_scene",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce present continuous forms in a connected scene.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "It's lunch break. I [[blank_1]] at a table near the window. Two classmates [[blank_2]] about tomorrow's test, and our teacher [[blank_3]] coffee. We [[blank_4]] our phones because they are in our bags.",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["am sitting", "'m sitting"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "sitting", "error_code": "PRESENT_CONTINUOUS_AUXILIARY" }] },
+                  { "key": "blank_2", "accepted_answers": ["are talking", "'re talking"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "is talking", "error_code": "PRESENT_CONTINUOUS_BE_AUXILIARY" }] },
+                  { "key": "blank_3", "accepted_answers": ["is drinking", "'s drinking"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "drinks", "error_code": "PRESENT_CONTINUOUS_AFFIRMATIVE_STRUCTURE" }] },
+                  { "key": "blank_4", "accepted_answers": ["aren't using", "are not using"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "don't use", "error_code": "PRESENT_CONTINUOUS_NEGATIVE" }] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Ogni spazio richiede be + -ing; cambia solo la forma di be e, nella negativa, la posizione di not." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_AUXILIARY", "PRESENT_CONTINUOUS_BE_AUXILIARY", "PRESENT_CONTINUOUS_NEGATIVE", "PRESENT_CONTINUOUS_VERB_ING"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "scene"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_practice_negative",
+              "type": "error_correction",
+              "title": "Forma negativa",
+              "prompt": "Correggi: Luca is not wait for us outside.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "negative",
+              "primary_skill": "grammar",
+              "learning_objective": "Use be + not + verb-ing in a present continuous negative.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["Luca is not waiting for us outside.", "Luca isn't waiting for us outside."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Dopo is not serve waiting, non wait." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_NEGATIVE", "PRESENT_CONTINUOUS_VERB_ING"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "negative"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_practice_question",
+              "type": "word_order",
+              "title": "Domanda con be",
+              "prompt": "Riordina la domanda.",
+              "instructions": "Usa tutte le parti.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "questions",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a present continuous information question.",
+              "difficulty": "standard",
+              "content": { "tokens": ["what", "is", "your brother", "doing", "upstairs"], "correct_order": ["what", "is", "your brother", "doing", "upstairs"], "terminal_punctuation": "?" },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "What + is + your brother + doing...?" },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_QUESTION_WORD_ORDER", "PRESENT_CONTINUOUS_QUESTION_AUXILIARY"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "questions"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_practice_short_answer",
+              "type": "select_gap",
+              "title": "Short answer",
+              "prompt": "Completa la risposta breve.",
+              "instructions": "Scegli la forma di be corretta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "short_answers",
+              "primary_skill": "grammar",
+              "learning_objective": "Use be correctly in a present continuous short answer.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Are the children sleeping? — No, they [[blank_1]].",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["aren't", "are not"], "options": ["aren't", "don't", "isn't"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "don't", "error_code": "PRESENT_CONTINUOUS_SHORT_ANSWER" }, { "answer": "isn't", "error_code": "PRESENT_CONTINUOUS_BE_AUXILIARY" }] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "La domanda usa are, quindi la risposta è No, they aren't." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_SHORT_ANSWER", "PRESENT_CONTINUOUS_BE_AUXILIARY"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "short-answer"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_practice_spelling",
+              "type": "error_correction",
+              "title": "Controlla -ing",
+              "prompt": "Correggi: She is makeing a sandwich.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "spelling",
+              "primary_skill": "spelling",
+              "learning_objective": "Spell the -ing form of a verb ending in final -e.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["She is making a sandwich."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Make perde la e prima di -ing: making." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_DROP_E", "PRESENT_CONTINUOUS_ING_SPELLING"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "spelling"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_practice_translation",
+              "type": "translation",
+              "title": "Produci la struttura completa",
+              "prompt": "Traduci: Stiamo studiando in biblioteca in questo momento.",
+              "instructions": "Scrivi una frase inglese naturale.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "translation",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce a natural present continuous sentence for an action in progress.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["We are studying in the library right now.", "We're studying in the library right now.", "We are studying at the library right now.", "We're studying at the library right now."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "We richiede are; study diventa studying." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_AUXILIARY", "PRESENT_CONTINUOUS_VERB_ING", "PRESENT_CONTINUOUS_TIME_EXPRESSION"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "translation"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_practice_temporary",
+              "type": "multiple_choice",
+              "title": "Non solo questo secondo",
+              "prompt": "This month, I'm staying with my grandparents while my flat is being repaired.",
+              "instructions": "Perché staying è al Present Continuous?",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "temporary",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise a temporary present situation.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  { "key": "temporary", "text": "È una situazione temporanea per un periodo limitato.", "is_correct": true },
+                  { "key": "habit", "text": "È una routine permanente che si ripete sempre.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_USE" },
+                  { "key": "future", "text": "Descrive un piano futuro.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_USE" }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "This month indica un periodo temporaneo attuale, anche se l'azione non avviene in ogni singolo momento." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_USE", "PRESENT_CONTINUOUS_TIME_EXPRESSION"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "temporary"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "present-continuous", "practice", "wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_present_continuous_school",
+      "title": "Present Continuous — Modalità scuola",
+      "description": "Completamento, correzione, riordino, traduzione e scelta multipla in formati da verifica.",
+      "instructions": "Lavora senza suggerimenti sulla regola. Il feedback arriva alla fine.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-continuous",
+      "estimated_minutes": 10,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_present_continuous_school_section",
+          "title": "Formati da verifica",
+          "instructions": "Scegli autonomamente la struttura corretta dal contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_pc_school_text",
+              "type": "gap_fill",
+              "title": "Complete the text",
+              "prompt": "Complete the text with the Present Continuous form of the verbs in context.",
+              "instructions": "Write the complete verb form in each gap.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "school_gap_text",
+              "primary_skill": "grammar",
+              "learning_objective": "Complete a connected school-style text with present continuous forms.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "It's break time. Sara [[blank_1]] to her friend near the door. Two students [[blank_2]] a poster, and I [[blank_3]] my notes for the next lesson. Our teacher [[blank_4]] in the classroom because she has a meeting.",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["is talking", "'s talking"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "talking", "error_code": "PRESENT_CONTINUOUS_AUXILIARY" }] },
+                  { "key": "blank_2", "accepted_answers": ["are making", "'re making"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "are makeing", "error_code": "PRESENT_CONTINUOUS_DROP_E" }] },
+                  { "key": "blank_3", "accepted_answers": ["am checking", "'m checking"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "is checking", "error_code": "PRESENT_CONTINUOUS_BE_AUXILIARY" }] },
+                  { "key": "blank_4", "accepted_answers": ["isn't staying", "is not staying"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "doesn't stay", "error_code": "PRESENT_CONTINUOUS_NEGATIVE" }] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Ogni azione è in corso nella scena: controlla soggetto, be e spelling della forma in -ing." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_AUXILIARY", "PRESENT_CONTINUOUS_BE_AUXILIARY", "PRESENT_CONTINUOUS_DROP_E", "PRESENT_CONTINUOUS_NEGATIVE"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "school", "gap-text"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_school_error_aux",
+              "type": "error_correction",
+              "title": "Correct the sentence",
+              "prompt": "Correct: We waiting for the teacher outside.",
+              "instructions": "Write the complete correct sentence.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "school_error_correction",
+              "primary_skill": "grammar",
+              "learning_objective": "Correct a missing present continuous auxiliary.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["We are waiting for the teacher outside.", "We're waiting for the teacher outside."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "We richiede are prima di waiting." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_AUXILIARY", "PRESENT_CONTINUOUS_AFFIRMATIVE_STRUCTURE"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "school", "error-correction"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_school_error_question",
+              "type": "error_correction",
+              "title": "Correct the question",
+              "prompt": "Correct: Do you studying for the test?",
+              "instructions": "Write the complete correct question.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "school_error_correction",
+              "primary_skill": "grammar",
+              "learning_objective": "Form a present continuous yes/no question with be rather than do.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["Are you studying for the test?"] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Nel Present Continuous la domanda usa be: Are you studying...?" },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_QUESTION_AUXILIARY", "PRESENT_CONTINUOUS_QUESTION_WORD_ORDER"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "school", "error-correction"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_school_order",
+              "type": "word_order",
+              "title": "Put the words in order",
+              "prompt": "Put the words in the correct order.",
+              "instructions": "Use every element once.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "school_word_order",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a present continuous information question.",
+              "difficulty": "standard",
+              "content": { "tokens": ["where", "are", "the children", "playing"], "correct_order": ["where", "are", "the children", "playing"], "terminal_punctuation": "?" },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Where + are + the children + playing?" },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_QUESTION_WORD_ORDER", "PRESENT_CONTINUOUS_QUESTION_AUXILIARY"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "school", "word-order"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_school_translation",
+              "type": "translation",
+              "title": "Translate",
+              "prompt": "Traduci: Perché stai correndo? Ti sto aspettando alla fermata.",
+              "instructions": "Write two natural English sentences.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "school_translation",
+              "primary_skill": "grammar",
+              "learning_objective": "Translate a present continuous question and statement accurately.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["Why are you running? I'm waiting for you at the bus stop.", "Why are you running? I am waiting for you at the bus stop.", "Why are you running? I'm waiting for you at the stop.", "Why are you running? I am waiting for you at the stop."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Why are you running? usa be prima del soggetto; I am waiting usa am + -ing." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_QUESTION_WORD_ORDER", "PRESENT_CONTINUOUS_DOUBLE_CONSONANT", "PRESENT_CONTINUOUS_AUXILIARY"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "school", "translation"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_school_choice",
+              "type": "multiple_choice",
+              "title": "Choose the correct sentence",
+              "prompt": "Which sentence is correct?",
+              "instructions": "Choose one answer.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "school_multiple_choice",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise a complete present continuous negative.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  { "key": "a", "text": "The students aren't using their phones.", "is_correct": true },
+                  { "key": "b", "text": "The students don't using their phones.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_NEGATIVE" },
+                  { "key": "c", "text": "The students aren't use their phones.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_VERB_ING" }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "La negativa è aren't + using." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_NEGATIVE", "PRESENT_CONTINUOUS_VERB_ING"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "school", "multiple-choice"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "present-continuous", "school", "wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_present_continuous_verify",
+      "title": "Present Continuous — Mini-verifica",
+      "description": "Controllo breve su uso, struttura, domande, negative e spelling senza spiegazione preventiva.",
+      "instructions": "Rispondi senza consultare la spiegazione. Il feedback arriva alla fine.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-continuous",
+      "estimated_minutes": 8,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": true,
+        "show_diagnostic_summary": true,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_present_continuous_verify_section",
+          "title": "Mini-verifica",
+          "instructions": "Le domande coprono tutti i punti essenziali del topic.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_pc_verify_use",
+              "type": "multiple_choice",
+              "title": "Use",
+              "prompt": "Look! The dog ___ into the garden.",
+              "instructions": "Choose the correct answer.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "verify_use",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose the present continuous for an action happening now.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  { "key": "a", "text": "is running", "is_correct": true },
+                  { "key": "b", "text": "runs", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_USE" },
+                  { "key": "c", "text": "running", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_AUXILIARY" }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Look! segnala un'azione in corso: is running." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_USE", "PRESENT_CONTINUOUS_AUXILIARY", "PRESENT_CONTINUOUS_DOUBLE_CONSONANT"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_verify_auxiliary",
+              "type": "select_gap",
+              "title": "Auxiliary",
+              "prompt": "Complete the sentence.",
+              "instructions": "Choose the complete correct form.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "verify_auxiliary",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose the correct be auxiliary in a present continuous statement.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "My parents [[blank_1]] dinner in the kitchen.",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["are making"], "options": ["are making", "is making", "making"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "is making", "error_code": "PRESENT_CONTINUOUS_BE_AUXILIARY" }, { "answer": "making", "error_code": "PRESENT_CONTINUOUS_AUXILIARY" }] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "My parents = they → are making." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_BE_AUXILIARY", "PRESENT_CONTINUOUS_AUXILIARY"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_verify_spelling",
+              "type": "select_gap",
+              "title": "-ing spelling",
+              "prompt": "Complete the sentence.",
+              "instructions": "Choose the correct spelling.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "verify_spelling",
+              "primary_skill": "spelling",
+              "learning_objective": "Apply -ing spelling after a final -e verb.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "I am [[blank_1]] an email to my teacher.",
+                "blanks": [
+                  { "key": "blank_1", "accepted_answers": ["writing"], "options": ["writing", "writeing", "writting"], "points": 1, "feedback": {}, "answer_error_mappings": [{ "answer": "writeing", "error_code": "PRESENT_CONTINUOUS_DROP_E" }] }
+                ]
+              },
+              "grading": { "mode": "per_blank", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Write perde la e: writing." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_DROP_E", "PRESENT_CONTINUOUS_ING_SPELLING"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_verify_negative",
+              "type": "error_correction",
+              "title": "Negative",
+              "prompt": "Correct: She not is wearing her glasses today.",
+              "instructions": "Write the complete correct sentence.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "verify_negative",
+              "primary_skill": "grammar",
+              "learning_objective": "Place not correctly in a present continuous negative.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["She is not wearing her glasses today.", "She isn't wearing her glasses today."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Not viene dopo is: She is not wearing..." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_NEGATIVE"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_verify_question",
+              "type": "word_order",
+              "title": "Question",
+              "prompt": "Put the words in order.",
+              "instructions": "Use every element once.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "verify_question",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a present continuous yes/no question.",
+              "difficulty": "standard",
+              "content": { "tokens": ["is", "your sister", "coming", "with us"], "correct_order": ["is", "your sister", "coming", "with us"], "terminal_punctuation": "?" },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "Is + your sister + coming...?" },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_QUESTION_AUXILIARY", "PRESENT_CONTINUOUS_QUESTION_WORD_ORDER"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_verify_short_answer",
+              "type": "multiple_choice",
+              "title": "Short answer",
+              "prompt": "Is Marco working today?",
+              "instructions": "Choose the correct short answer.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "verify_short_answer",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the correct auxiliary in a present continuous short answer.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  { "key": "a", "text": "Yes, he is.", "is_correct": true },
+                  { "key": "b", "text": "Yes, he does.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_SHORT_ANSWER" },
+                  { "key": "c", "text": "Yes, he working.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_SHORT_ANSWER" }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "La domanda usa is, quindi la risposta riprende is." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_SHORT_ANSWER"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_verify_temporary",
+              "type": "multiple_choice",
+              "title": "Temporary situation",
+              "prompt": "For a few weeks, we're using a different classroom because ours is being painted.",
+              "instructions": "Why is we're using appropriate here?",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "verify_temporary",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise a temporary present situation.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  { "key": "temporary", "text": "The situation is temporary.", "is_correct": true },
+                  { "key": "past", "text": "The situation finished in the past.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_USE" },
+                  { "key": "habit", "text": "It is their permanent normal classroom.", "is_correct": false, "error_code": "PRESENT_CONTINUOUS_USE" }
+                ]
+              },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "For a few weeks signals a temporary situation around the present." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_USE", "PRESENT_CONTINUOUS_TIME_EXPRESSION"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_pc_verify_translation",
+              "type": "translation",
+              "title": "Final production",
+              "prompt": "Traduci: I ragazzi stanno aspettando fuori e io sto cercando le chiavi.",
+              "instructions": "Write one natural English sentence.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-continuous",
+              "subtopic": "verify_translation",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce two coordinated present continuous clauses with different subjects.",
+              "difficulty": "standard",
+              "content": { "accepted_answers": ["The boys are waiting outside and I am looking for the keys.", "The boys are waiting outside and I'm looking for the keys.", "The kids are waiting outside and I am looking for the keys.", "The kids are waiting outside and I'm looking for the keys."] },
+              "grading": { "mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5 },
+              "feedback": { "explanation": "The boys/kids → are waiting; I → am looking." },
+              "diagnostics": { "tested_codes": ["PRESENT_CONTINUOUS_AUXILIARY", "PRESENT_CONTINUOUS_BE_AUXILIARY", "PRESENT_CONTINUOUS_VERB_ING"], "fallback_error_code": "CORE_PRESENT_CONTINUOUS" },
+              "tags": ["recovery", "present-continuous", "verify"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "present-continuous", "verify", "wave-1"],
+      "foundation_links": []
+    }
+  ]
+}
