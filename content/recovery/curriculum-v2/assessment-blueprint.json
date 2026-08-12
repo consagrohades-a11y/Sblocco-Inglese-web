@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "curriculum_id": "recovery-years-1-3-v2",
+  "status": "draft",
+  "purpose": "Define how Recovery collects valid evidence for curriculum outcomes through topic verification, cumulative checkpoints and school-like mocks without collapsing all competence into a single grammar score.",
+  "principles": [
+    "Assessment scope is derived from the learner's official school recovery programme and its required Curriculum v2 outcomes, not from the full Sblocco catalogue.",
+    "Topic verification is useful local evidence but cannot by itself prove year-level transfer or Recovery readiness.",
+    "Cumulative assessments must conceal which grammar or language system is being tested whenever transfer is the evidence target.",
+    "Every assessment stores evidence by primary competence axis and outcome; an overall mark must never erase a blocking weakness in a required axis.",
+    "Listening and functional/oral communication are included only when the learner's programme or selected school-assessment profile requires them.",
+    "Assessment difficulty comes from independent selection, integration and school-like task demands, not obscure vocabulary or trick questions.",
+    "Exact questions used for teaching or topic verification must not be copied into mocks as transfer evidence.",
+    "The blueprint defines evidence shape and composition. Numeric readiness thresholds and compensation rules belong to readiness-policy.json."
+  ],
+  "evidence_sources": [
+    {
+      "key": "topic_verify",
+      "label_it": "Verifica argomento",
+      "role": "Confirm independent control of one topic after Recupera, Allenati and Modalità scuola.",
+      "evidence_level": ["controlled_performance", "transfer"],
+      "can_satisfy_year_exit_alone": false,
+      "feedback_policy": "after_submit",
+      "retry_policy": "allowed",
+      "reuse_policy": "May contribute supporting evidence, but year-exit transfer requires cumulative or mock evidence as well."
+    },
+    {
+      "key": "checkpoint",
+      "label_it": "Verifica di percorso",
+      "role": "Sample several currently required outcomes in mixed form so the plan can detect transfer weaknesses before the final phase.",
+      "evidence_level": ["transfer"],
+      "can_satisfy_year_exit_alone": false,
+      "feedback_policy": "after_submit",
+      "retry_policy": "allowed_after_review",
+      "reuse_policy": "Questions must be unseen or substantially transformed from topic verification items."
+    },
+    {
+      "key": "mock_intermediate",
+      "label_it": "Simulazione prova di recupero #1",
+      "role": "Provide an exam-like cumulative performance sample across the learner's active programme while there is still time to change priorities.",
+      "evidence_level": ["transfer"],
+      "can_satisfy_year_exit_alone": false,
+      "feedback_policy": "withheld_during_attempt",
+      "retry_policy": "no_immediate_retry",
+      "reuse_policy": "Use a distinct form from checkpoint and final mock; do not reveal target rules in task titles."
+    },
+    {
+      "key": "mock_final",
+      "label_it": "Simulazione finale",
+      "role": "Collect the strongest pre-exam transfer evidence on the outcomes and assessment formats required by the learner's school programme.",
+      "evidence_level": ["transfer"],
+      "can_satisfy_year_exit_alone": false,
+      "feedback_policy": "withheld_during_attempt",
+      "retry_policy": "no_immediate_retry",
+      "reuse_policy": "Must use a fresh assessment form and must not copy exact teaching, topic-verify or intermediate-mock questions."
+    }
+  ],
+  "programme_scope_policy": {
+    "source_of_truth": "required Curriculum v2 outcomes derived from the learner's official school recovery programme",
+    "default_year_profile_role": "fills the initial outcome set only when the school programme does not specify enough detail",
+    "active_axis_definition": "a competence axis is active when at least one required outcome on that axis belongs to the learner's programme",
+    "optional_axis_rule": "listening and functional_communication do not become active merely because the year profile contains them; their programme_requirement and the learner's declared assessment profile must be respected",
+    "topic_relationship": "grammar topic mappings can select suitable fragments, but topic completion never substitutes for required skill/outcome coverage",
+    "unknown_programme_rule": "when the school programme is incomplete, prefer the robust year profile and explicitly mark inferred requirements so they can be changed later"
+  },
+  "sampling_priority": [
+    "required blocking-candidate outcomes with insufficient cumulative transfer evidence",
+    "required outcomes with weak diagnostic, topic-verify or prior checkpoint evidence",
+    "repeated error patterns that affect more than one required outcome",
+    "breadth across remaining required active axes",
+    "representative high-frequency school task formats from the learner's programme"
+  ],
+  "axis_coverage_rules": {
+    "all_assessments": [
+      "Every scored fragment declares one primary competence axis and one or more outcome_ids.",
+      "Secondary axes may receive supporting evidence only when the task genuinely samples them.",
+      "If only one axis is active, the assessment may be single-axis; otherwise cumulative assessment must not silently omit active blocking-candidate axes merely to preserve a fixed grammar quota.",
+      "Grammar and lexical items embedded inside reading, writing or listening may provide secondary evidence, but they do not automatically count as independent grammar or lexical transfer evidence."
+    ],
+    "checkpoint": {
+      "target_active_axis_coverage": "min(all active axes, 3) with priority to under-evidenced blocking candidates",
+      "minimum_distinct_primary_axes_when_available": 2,
+      "grammar_time_share_ceiling_when_multiple_axes_active": 0.6,
+      "exceptions": "The ceiling does not apply when the official programme is grammar-only or when only grammar_sentence_control is active."
+    },
+    "mock_intermediate": {
+      "target_active_axis_coverage": "all active blocking-candidate axes that fit the session budget, then breadth across remaining required axes",
+      "minimum_distinct_primary_axes_when_available": 3,
+      "grammar_time_share_ceiling_when_multiple_axes_active": 0.55,
+      "exceptions": "The ceiling does not apply when fewer than three axes are active or the official school test is explicitly grammar-dominant."
+    },
+    "mock_final": {
+      "target_active_axis_coverage": "all active blocking-candidate axes, plus representative evidence for every other active core axis when the time budget permits",
+      "minimum_distinct_primary_axes_when_available": 3,
+      "grammar_time_share_ceiling_when_multiple_axes_active": 0.5,
+      "exceptions": "The ceiling may be exceeded only when the official school assessment format or required outcome set justifies it."
+    }
+  },
+  "session_blueprints": {
+    "checkpoint": {
+      "session_type": "checkpoint",
+      "time_budget_minutes": {
+        "complete": 28,
+        "intensive": 24,
+        "sos": 20
+      },
+      "purpose": "Detect whether isolated topic gains transfer into mixed school-style performance and update remediation priorities.",
+      "minimum_fragment_count": 3,
+      "target_fragment_count": "4-7 depending on fragment duration and active axes",
+      "required_properties": [
+        "no teaching content",
+        "no rule labels that reveal the target",
+        "at least one unseen or mixed-context fragment",
+        "at least one controlled-production or transfer-production fragment when grammar or writing is active",
+        "feedback only after submission",
+        "per-axis and per-outcome evidence retained"
+      ],
+      "preferred_assessment_modes": [
+        "mixed_grammar",
+        "translation_it_en",
+        "sentence_building",
+        "reading_comprehension",
+        "guided_writing",
+        "listening_comprehension",
+        "functional_response",
+        "cumulative_school_test"
+      ]
+    },
+    "mock_intermediate": {
+      "session_type": "mock_intermediate",
+      "time_budget_minutes": {
+        "complete": 50,
+        "intensive": 45,
+        "sos": null
+      },
+      "purpose": "Simulate the learner's likely recovery-test demands early enough for the plan to respond to weaknesses.",
+      "minimum_fragment_count": 4,
+      "target_fragment_count": "5-9 depending on required writing/listening tasks and school format",
+      "required_properties": [
+        "fresh assessment form",
+        "no coaching or explanations during the attempt",
+        "task order mixes language systems where school-appropriate",
+        "required reading, writing, listening or communication axes receive dedicated primary evidence rather than being inferred from grammar items",
+        "per-axis and per-outcome evidence retained",
+        "results feed priority changes but do not alone declare READY"
+      ],
+      "preferred_assessment_modes": [
+        "mixed_grammar",
+        "translation_it_en",
+        "reading_comprehension",
+        "independent_writing",
+        "listening_comprehension",
+        "functional_response",
+        "dialogue_interaction",
+        "cumulative_school_test",
+        "recovery_mock"
+      ]
+    },
+    "mock_final": {
+      "session_type": "mock_final",
+      "time_budget_minutes": {
+        "complete": 55,
+        "intensive": 55,
+        "sos": 40
+      },
+      "purpose": "Collect the strongest final transfer sample before the school recovery assessment across the outcomes the learner is actually required to demonstrate.",
+      "minimum_fragment_count": 4,
+      "target_fragment_count": "6-10 depending on required extended tasks and session mode",
+      "required_properties": [
+        "fresh unseen form distinct from previous cumulative assessments",
+        "no teaching, hints, rule labels or immediate corrections",
+        "all active blocking-candidate axes sampled when feasible within the declared school-test profile",
+        "at least two distinct transfer assessment modes when two or more are valid for the programme",
+        "integrated production included when writing or functional communication is required",
+        "per-axis and per-outcome evidence retained for readiness evaluation",
+        "global score may be displayed as a summary but cannot override blocking outcome evidence"
+      ],
+      "preferred_assessment_modes": [
+        "mixed_grammar",
+        "translation_it_en",
+        "reading_comprehension",
+        "independent_writing",
+        "listening_comprehension",
+        "functional_response",
+        "dialogue_interaction",
+        "oral_response",
+        "cumulative_school_test",
+        "recovery_mock"
+      ]
+    }
+  },
+  "assessment_fragment_contract": {
+    "purpose": "Define the reusable unit from which checkpoint and mock sessions can be materialized dynamically for the learner's required outcome set.",
+    "required_fields": [
+      "fragment_id",
+      "status",
+      "year_profiles",
+      "primary_axis",
+      "secondary_axes",
+      "outcome_ids",
+      "assessment_modes",
+      "estimated_minutes",
+      "difficulty_band",
+      "school_task_family",
+      "transfer_level",
+      "content_source_policy"
+    ],
+    "field_contract": {
+      "fragment_id": "Stable source identity independent of a generated assignment or learner.",
+      "status": "draft, approved or deprecated.",
+      "year_profiles": "Default compatible school-year profiles; the school programme may override them.",
+      "primary_axis": "Single competence axis receiving primary scored evidence.",
+      "secondary_axes": "Optional supporting evidence axes; [] is valid.",
+      "outcome_ids": "One or more Curriculum v2 outcomes genuinely sampled by the fragment.",
+      "assessment_modes": "One or more modes from assessment-modes.json.",
+      "estimated_minutes": "Expected learner time used by dynamic materialization budgets.",
+      "difficulty_band": "CEFR/task-demand band appropriate to the outcome evidence.",
+      "school_task_family": "Human-readable family such as mixed grammar, reading text, translation, guided/independent writing or listening.",
+      "transfer_level": "controlled_performance or transfer; cumulative mocks should prioritize transfer.",
+      "content_source_policy": "Must indicate whether the fragment is unseen, transformed or reusable; exact teaching-item copies are not valid mock transfer evidence."
+    },
+    "selection_rules": [
+      "Prefer approved fragments whose outcome_ids intersect the learner's required under-evidenced outcomes.",
+      "Do not select two near-duplicate fragments merely to increase question count.",
+      "Do not exceed the session time budget after the first selected fragment unless no valid smaller fragment exists.",
+      "Preserve enough time for required writing, listening or oral fragments before filling remaining time with short grammar items.",
+      "Where multiple equivalent fragments exist, rotate forms to reduce exact item reuse across checkpoint and mocks."
+    ]
+  },
+  "school_task_families": [
+    "mixed_grammar",
+    "gap_or_open_cloze",
+    "sentence_transformation",
+    "error_correction",
+    "translation_it_en",
+    "sentence_production",
+    "reading_text",
+    "functional_text",
+    "guided_writing",
+    "independent_writing",
+    "listening_dialogue",
+    "listening_monologue",
+    "functional_exchange",
+    "oral_response"
+  ],
+  "anti_false_readiness_rules": [
+    "A learner who has only topic_verify evidence for an outcome has not yet demonstrated cumulative year-level transfer.",
+    "A strong global mock mark cannot erase a weak required blocking-candidate outcome or axis; the future readiness policy must inspect disaggregated evidence.",
+    "Grammar accuracy inside a reading or writing task cannot by itself establish reading or writing competence, and the reverse is also true.",
+    "Recognition-heavy success must not replace required production evidence.",
+    "Repeated exposure to the same item or near-identical item cannot be counted as independent transfer evidence.",
+    "An axis that is not part of the student's programme must not lower readiness merely because no evidence was collected for it."
+  ],
+  "future_readiness_interface": {
+    "blueprint_outputs": [
+      "outcome_id",
+      "primary_axis",
+      "evidence_source",
+      "assessment_mode",
+      "performance_level",
+      "attempt_timestamp",
+      "score_or_rubric_dimensions",
+      "independence_flag",
+      "unseen_or_mixed_context_flag"
+    ],
+    "not_defined_here": [
+      "numeric mastery thresholds",
+      "axis weights",
+      "overall readiness formula",
+      "blocking cutoff values",
+      "compensation rules",
+      "minimum recency windows"
+    ]
+  }
+}
