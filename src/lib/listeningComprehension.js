@@ -10,18 +10,68 @@ const clone = (value) => JSON.parse(JSON.stringify(value));
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 const text = (value) => typeof value === 'string' ? value.trim() : '';
 
+const COMMON_PEDAGOGICAL_RULES = [
+  'Write natural spoken English that learners could genuinely hear in the target situation; do not write textbook prose and simply label it listening.',
+  'Match speech rate, lexical load, sentence complexity and task demands to the requested CEFR level.',
+  'Give the learner a concrete listening purpose before playback.',
+  'Questions must test meaning, gist, selected details, pragmatic intent or reasonable inference rather than isolated word spotting alone.',
+  'For Italian learners, include realistic connected speech and common reductions only when level-appropriate; accent difficulty must not become the only challenge.',
+  'If the audio is a dialogue, speakers must respond naturally and keep roles, register and context internally consistent.',
+  'At A0-A2 prefer short audio, clear contexts and a progression from gist to selected details; at B1+ allow natural redundancy, reformulation and limited inference.',
+  'Avoid repetitive, mechanical or exam-book phrasing unless the requested material is explicitly exam preparation.',
+];
+
+const METADATA_RULES = [
+  'client_key must be stable, descriptive, unique within the returned JSON and use lowercase snake_case.',
+  'level must reflect both the audio difficulty and the cognitive demand of the questions.',
+  'topic and subtopic should be concise machine-friendly identifiers, preferably lowercase snake_case.',
+  'primary_skill must remain listening.',
+  'learning_objective must describe what the learner should understand from spoken English, not merely name a grammar point.',
+];
+
+const DIAGNOSTIC_RULES = [
+  'Do not invent diagnostic codes unless the user supplies approved codes or they are already present in the downloaded template.',
+  'If no registered listening diagnostic code is known, use diagnostics.tested_codes = [] and diagnostics.fallback_error_code = null.',
+  'Attach error codes only when a wrong option maps unambiguously to one known listening misconception.',
+];
+
+const GRADING_RULES = [
+  'Keep grading.mode = per_item because listening comprehension is automatically graded item by item.',
+  'For multiple_choice and true_false, exactly one option must be correct.',
+  'For multiple_select, at least one option must be correct and the selection criterion must be explicit.',
+  'For short_answer, keep expected answers short enough for reliable automatic grading and include all clearly valid accepted_answers.',
+];
+
+const VALIDATION_CHECKLIST = [
+  'The JSON parses and preserves schema_version, entity_type, _template and question.type.',
+  'question.type is listening_comprehension and primary_skill is listening.',
+  'content.audio has a stable HTTPS url, a storage_path, or both.',
+  'content.audio.transcript_visibility is after_submit, always or never.',
+  'Every comprehension item is answerable from the actual audio content.',
+  'Choice-item correctness flags are internally valid and short answers list valid accepted_answers.',
+  'No correct answer is exposed in learner-facing prompt or instructions.',
+  'The audio difficulty, task demand and CEFR label are coherent with each other.',
+];
+
 export const listeningComprehensionAuthoringGuide = {
   template_id: LISTENING_COMPREHENSION_TEMPLATE_ID,
   template_key: LISTENING_COMPREHENSION_TEMPLATE_KEY,
   template_version: LISTENING_COMPREHENSION_TEMPLATE_VERSION,
+  entity_type: 'question',
+  question_type: LISTENING_COMPREHENSION_TEMPLATE_KEY,
   purpose: 'Generate an import-ready listening comprehension question for Sblocco Inglese using one audio source and one or more comprehension items.',
   workflow: [
     'Read this entire _template object before generating the question.',
+    'Use the requested CEFR level and lesson brief to design the listening situation before writing questions.',
     'Keep the same top-level JSON structure and preserve every invariant field.',
-    'Replace the example lesson content with the requested listening lesson.',
-    'Return one complete JSON object. The Exercise Builder accepts plain JSON and common AI code-fence wrappers, but valid JSON remains the canonical output.',
+    'Return one complete import-ready JSON object after checking audio, item answers and metadata against the validation checklist.',
   ],
   generation_contract: {
+    output: 'valid_json_only',
+    markdown_fences: false,
+    comments: false,
+    preserve_top_level_metadata: true,
+    do_not_rename_keys: true,
     invariant_fields: [
       'schema_version',
       'entity_type',
@@ -45,6 +95,31 @@ export const listeningComprehensionAuthoringGuide = {
       'question.diagnostics',
       'question.tags',
       'question.foundation_links',
+    ],
+  },
+  common_pedagogical_rules: COMMON_PEDAGOGICAL_RULES,
+  metadata_rules: METADATA_RULES,
+  diagnostics_rules: DIAGNOSTIC_RULES,
+  grading_rules: GRADING_RULES,
+  validation_checklist: VALIDATION_CHECKLIST,
+  entity_contract: {
+    purpose: 'Generate one native listening comprehension question that can be imported and published without conversion to another question type.',
+    rules: [
+      'Return exactly one top-level question object under question.',
+      'Keep question.type unchanged as listening_comprehension.',
+      'Keep the audio source and all comprehension items inside question.content.',
+      'Do not add unrelated exercises, teaching blocks or answer keys outside the supported question structure.',
+    ],
+  },
+  question_contract: {
+    purpose: 'Assess understanding of one spoken source through automatically graded comprehension items.',
+    required_content: ['audio', 'items'],
+    rules: [
+      'Provide one playable audio source and at least one comprehension item.',
+      'Use the same item structures as reading comprehension: multiple_choice, multiple_select, true_false or short_answer.',
+      'Order questions pedagogically: gist before detail/inference when both are present.',
+      'Make distractors plausible from what the learner hears, not obviously unrelated.',
+      'Do not turn the task into grammar manipulation unless the lesson brief explicitly asks for form-focused listening.',
     ],
   },
   audio_contract: {
@@ -80,23 +155,14 @@ export const listeningComprehensionAuthoringGuide = {
       'Distractors must be plausible from the audio context rather than obviously absurd.',
     ],
   },
-  pedagogical_rules: [
-    'Match speech rate, lexical load, sentence complexity and task demands to the requested CEFR level.',
-    'Use natural spoken English: contractions, discourse markers and realistic turn-taking are preferable to textbook prose read aloud.',
-    'Give the learner a concrete listening purpose before playback.',
-    'At A0-A2, prefer short audio, clear contexts and a progression from gist to selected details.',
-    'At B1+, include natural redundancy, reformulation and limited inference where useful.',
-    'If the audio is a dialogue, speakers must respond naturally to one another and have internally consistent roles.',
-    'Avoid turning listening into a disguised grammar worksheet. Grammar can be present, but meaning and comprehension remain primary.',
-    'For Italian learners, include realistic connected speech and common everyday reductions when level-appropriate, without making accent difficulty the only challenge.',
-  ],
   invalid_patterns: [
     'A transcript with no audio source.',
     'A temporary or expiring audio URL embedded in the template.',
     'Questions whose answers depend on information that is not actually said or reasonably inferred.',
     'Five near-identical detail questions about isolated vocabulary.',
     'An A1 audio written like a formal C1 article and merely read aloud.',
-    'Correct answers exposed in prompt, instructions, transcript shown before submission, or option wording.',
+    'Correct answers exposed in prompt, instructions, or transcript configured as always when that makes the task trivial.',
+    'A listening activity whose primary_skill is changed to reading, grammar or speaking.',
   ],
 };
 
