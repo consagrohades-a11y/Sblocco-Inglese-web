@@ -144,6 +144,7 @@ const yearsDir = join(ROOT, 'years');
 const yearFiles = existsSync(yearsDir)
   ? readdirSync(yearsDir).filter((name) => /^year-[1-3]\.json$/.test(name)).sort()
   : [];
+const authoredYears = new Set(yearFiles.map((name) => Number(name.match(/year-([1-3])\.json/)[1])));
 const allOutcomes = [];
 yearFiles.forEach((name) => {
   const year = Number(name.match(/year-([1-3])\.json/)[1]);
@@ -161,11 +162,29 @@ yearFiles.forEach((name) => {
 
 assertUnique(allOutcomes.map((outcome) => outcome.id), 'Curriculum outcome id');
 const outcomeIds = new Set(allOutcomes.map((outcome) => outcome.id));
+let deferredPriorYearPrerequisites = 0;
 allOutcomes.forEach((outcome) => {
   outcome.prerequisite_outcome_ids.forEach((prerequisiteId) => {
-    assert.ok(outcomeIds.has(prerequisiteId), `${outcome.source}: ${outcome.id} references unknown prerequisite outcome ${prerequisiteId}`);
     assert.notEqual(prerequisiteId, outcome.id, `${outcome.source}: ${outcome.id} cannot depend on itself`);
+    const match = prerequisiteId.match(/^RY([1-3])-/);
+    assert.ok(match, `${outcome.source}: ${outcome.id} has invalid prerequisite outcome id ${prerequisiteId}`);
+    const prerequisiteYear = Number(match[1]);
+    assert.ok(prerequisiteYear <= outcome.school_year_profile, `${outcome.source}: ${outcome.id} cannot depend on a future-year outcome ${prerequisiteId}`);
+
+    if (outcomeIds.has(prerequisiteId)) return;
+
+    const canDeferForParallelAuthoring = prerequisiteYear < outcome.school_year_profile
+      && !authoredYears.has(prerequisiteYear);
+    if (canDeferForParallelAuthoring) {
+      deferredPriorYearPrerequisites += 1;
+      return;
+    }
+
+    assert.fail(`${outcome.source}: ${outcome.id} references unknown prerequisite outcome ${prerequisiteId}`);
   });
 });
 
-console.log(`Recovery Curriculum v2 foundation validation passed${yearFiles.length ? ` (${allOutcomes.length} outcomes across ${yearFiles.length} year files)` : ' (year outcomes not authored yet)'}.`);
+const deferredNote = deferredPriorYearPrerequisites
+  ? `; ${deferredPriorYearPrerequisites} prior-year prerequisite reference(s) deferred until the missing earlier-year file is integrated`
+  : '';
+console.log(`Recovery Curriculum v2 foundation validation passed${yearFiles.length ? ` (${allOutcomes.length} outcomes across ${yearFiles.length} year files${deferredNote})` : ' (year outcomes not authored yet)'}.`);
