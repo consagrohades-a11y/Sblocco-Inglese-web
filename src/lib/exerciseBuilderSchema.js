@@ -9,12 +9,32 @@ export {
   validateExerciseBuilderJson,
 } from './exerciseBuilderSchemaV2.js';
 
-// Template exports are maintained separately so every supported question type,
-// pool, exercise and bundle download stays complete without duplicating validator logic.
-export {
-  EXERCISE_BUILDER_TEMPLATE_VERSION,
-  exerciseBuilderQuestionTemplates,
-  exerciseBuilderTemplateManifest,
-  exerciseBuilderTemplates,
-  stringifyExerciseBuilderTemplate,
+import {
+  EXERCISE_BUILDER_TEMPLATE_VERSION as BASE_EXERCISE_BUILDER_TEMPLATE_VERSION,
+  exerciseBuilderQuestionTemplates as baseExerciseBuilderQuestionTemplates,
+  exerciseBuilderTemplateManifest as baseExerciseBuilderTemplateManifest,
+  exerciseBuilderTemplates as baseExerciseBuilderTemplates,
 } from './exerciseBuilderTemplatesV2.js';
+import { educationalContentBlockTemplate } from './educationalContentTemplate.js';
+
+// Template exports are composed here so the existing V2 importer stays stable while
+// new authoring templates can evolve independently and remain fully self-contained.
+export const EXERCISE_BUILDER_TEMPLATE_VERSION = Math.max(BASE_EXERCISE_BUILDER_TEMPLATE_VERSION, 3);
+export const exerciseBuilderQuestionTemplates = baseExerciseBuilderQuestionTemplates;
+export const exerciseBuilderTemplates = {
+  ...baseExerciseBuilderTemplates,
+  educational_content_block: educationalContentBlockTemplate,
+};
+export const exerciseBuilderTemplateManifest = [
+  ...baseExerciseBuilderTemplateManifest,
+  {
+    key: 'educational_content_block',
+    entityType: 'question',
+    label: 'Content block educativo strutturato',
+    fileName: 'exercise-builder-educational-content-block-template.json',
+  },
+];
+
+export function stringifyExerciseBuilderTemplate(type = 'bundle') {
+  return JSON.stringify(exerciseBuilderTemplates[type] || exerciseBuilderTemplates.bundle, null, 2);
+}
