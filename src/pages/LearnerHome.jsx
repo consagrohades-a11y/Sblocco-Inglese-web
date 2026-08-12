@@ -197,10 +197,13 @@ function RecoveryDashboard({ firstName, access }) {
   const completedSessions = state.sessions.filter((session) => session.status === 'completed');
   const remainingSessions = state.sessions.filter((session) => !['completed', 'skipped'].includes(session.status));
   const next = remainingSessions.find((session) => ['available', 'in_progress'].includes(session.status)) || remainingSessions[0] || null;
-  const readiness = calculateRecoveryReadiness(state.topics.map((topic) => ({
+  const backendReadiness = access.readiness?.current?.available ? access.readiness.current : null;
+  const fallbackReadiness = calculateRecoveryReadiness(state.topics.map((topic) => ({
     masteryScore: topic.mastery_score,
     diagnosticScore: topic.diagnostic_score,
   })));
+  const readiness = Math.round(Number(backendReadiness?.readiness_score ?? fallbackReadiness));
+  const confidence = backendReadiness ? Math.round(Number(backendReadiness.confidence_score || 0)) : null;
   const highPriority = state.topics.filter((topic) => topic.priority_band === 'high').length;
   const totalErrors = state.errorEvidence.reduce((sum, item) => sum + Number(item.repeated_errors || 0), 0);
   const nextMockIndex = state.sessions.findIndex((session) => !['completed', 'skipped'].includes(session.status) && session.session_type.startsWith('mock_'));
@@ -241,7 +244,7 @@ function RecoveryDashboard({ firstName, access }) {
 
       <div className="learner-summary-grid">
         <SummaryCard icon={ListChecks} label="Il tuo percorso" value={`${completedSessions.length} / ${state.sessions.length} sessioni`} detail={`${completedPercent}% del piano completato`} />
-        <SummaryCard icon={Target} label="Preparazione" value={`${readiness}%`} detail="Stima educativa sui dati disponibili." />
+        <SummaryCard icon={Target} label="Preparazione" value={`${readiness}%`} detail={confidence == null ? 'Stima educativa sui dati disponibili.' : `Qualità delle evidenze: ${confidence}%.`} />
         <SummaryCard icon={BookOpen} label="Argomenti da recuperare" value={`${highPriority}`} detail={highPriority ? 'Con priorità alta nel piano attuale.' : 'Nessuna priorità alta al momento.'} />
         <SummaryCard icon={CalendarDays} label="Prossima simulazione" value={sessionsToMock === null ? 'Completata o non prevista' : sessionsToMock === 0 ? 'È il prossimo passo' : `Tra ${sessionsToMock} ${sessionsToMock === 1 ? 'sessione' : 'sessioni'}`} detail="Le simulazioni non mostrano correzioni durante la prova." />
       </div>
@@ -269,13 +272,14 @@ function RecoveryDashboard({ firstName, access }) {
         <aside className="learner-panel learner-panel--side">
           <div className="learner-panel__heading"><div><span className="learner-panel__eyebrow">Prontezza sul programma</span><h3>Preparazione attuale</h3></div></div>
           <ProgressRing value={readiness} label="preparazione" />
+          {confidence != null ? <p className="learner-progress-cheer">Evidenze disponibili: {confidence}%</p> : null}
           <div className="learner-progress-list">
             {state.topics.slice(0, 4).map((topic) => {
               const value = Math.round(Number(topic.mastery_score ?? topic.diagnostic_score ?? 0));
               return <div className="learner-progress-row" key={topic.topic_key}><span>{recoveryTopicLabel(topic.topic_key)}</span><span className="learner-progress-row__track"><span className="learner-progress-row__fill" style={{ width: `${value}%` }} /></span><span>{value}%</span></div>;
             })}
           </div>
-          <p className="learner-empty" style={{ paddingBottom: 0 }}>Questa percentuale descrive i risultati raccolti nel percorso. Non predice il voto della scuola.</p>
+          <p className="learner-empty" style={{ paddingBottom: 0 }}>La preparazione combina padronanza, qualità delle verifiche, simulazioni ed errori ricorrenti. Non predice il voto della scuola.</p>
           <Link to="/recupero-debito/preparazione" className="learner-text-link">Vedi il report <ArrowRight size={14} /></Link>
         </aside>
       </div>
@@ -316,13 +320,9 @@ export default function LearnerHome() {
             const freshEnrollment = await loadRecoveryEnrollment();
             const freshState = await loadRecoveryState(freshEnrollment.id);
             await recalculateRecoveryPlan({ enrollment: freshEnrollment, state: freshState });
-            loaded = {
-              entitled: true,
-              enrollment: await loadRecoveryEnrollment(),
-              state: await loadRecoveryState(freshEnrollment.id),
-            };
+            loaded = await loadRecoveryAccessState();
           } else if (newlyCompleted) {
-            loaded = { ...loaded, state: await loadRecoveryState(loaded.enrollment.id) };
+            loaded = await loadRecoveryAccessState();
           }
         }
         if (active) setAccess(loaded);
