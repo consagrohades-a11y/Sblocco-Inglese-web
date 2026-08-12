@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "modes": [
+    {
+      "key": "controlled_gap_fill",
+      "label_it": "Completamento controllato",
+      "evidence_level": ["knowledge", "controlled_performance"],
+      "best_for": ["grammar_sentence_control", "lexical_competence"],
+      "limitations": ["Weak transfer evidence when the target structure is obvious from the task label."]
+    },
+    {
+      "key": "sentence_transformation",
+      "label_it": "Trasformazione di frase",
+      "evidence_level": ["controlled_performance"],
+      "best_for": ["grammar_sentence_control"],
+      "limitations": ["Must not count as independent transfer if the transformation type reveals the target rule."
+      ]
+    },
+    {
+      "key": "error_correction",
+      "label_it": "Correzione dell'errore",
+      "evidence_level": ["controlled_performance", "transfer"],
+      "best_for": ["grammar_sentence_control", "writing"],
+      "limitations": ["Errors must be plausible and unambiguous; deliberately broken English is not useful evidence."
+      ]
+    },
+    {
+      "key": "sentence_building",
+      "label_it": "Costruzione di frase",
+      "evidence_level": ["controlled_performance"],
+      "best_for": ["grammar_sentence_control", "writing", "functional_communication"],
+      "limitations": ["Highly constrained prompts provide less transfer evidence than open contextual production."
+      ]
+    },
+    {
+      "key": "translation_it_en",
+      "label_it": "Traduzione italiano → inglese",
+      "evidence_level": ["controlled_performance", "transfer"],
+      "best_for": ["grammar_sentence_control", "lexical_competence", "writing"],
+      "limitations": ["Accepted-answer sets must cover all natural level-appropriate renderings; translation is an assessment mode, not a competence axis."
+      ]
+    },
+    {
+      "key": "mixed_grammar",
+      "label_it": "Grammatica mista",
+      "evidence_level": ["transfer"],
+      "best_for": ["grammar_sentence_control"],
+      "limitations": ["Items must not announce the grammar point being tested. Mixed grammar must sample genuine choice, not random juxtaposition."
+      ]
+    },
+    {
+      "key": "reading_comprehension",
+      "label_it": "Comprensione scritta",
+      "evidence_level": ["controlled_performance", "transfer"],
+      "best_for": ["reading", "lexical_competence"],
+      "limitations": ["Text difficulty, length and inference load must be controlled by the target year/CEFR profile."
+      ]
+    },
+    {
+      "key": "guided_writing",
+      "label_it": "Produzione scritta guidata",
+      "evidence_level": ["controlled_performance"],
+      "best_for": ["writing", "grammar_sentence_control", "lexical_competence"],
+      "limitations": ["Prompt scaffolding must not be so strong that the learner merely copies a template."
+      ]
+    },
+    {
+      "key": "independent_writing",
+      "label_it": "Produzione scritta autonoma",
+      "evidence_level": ["transfer"],
+      "best_for": ["writing", "grammar_sentence_control", "lexical_competence"],
+      "limitations": ["Scoring must separate task completion, comprehensibility, organisation, grammar and vocabulary rather than use one opaque correctness score."
+      ]
+    },
+    {
+      "key": "listening_comprehension",
+      "label_it": "Comprensione orale",
+      "evidence_level": ["controlled_performance", "transfer"],
+      "best_for": ["listening", "lexical_competence"],
+      "limitations": ["Transcript access must follow the assessment policy; audio delivery must be level-appropriate and not artificially word-by-word."
+      ]
+    },
+    {
+      "key": "functional_response",
+      "label_it": "Risposta funzionale",
+      "evidence_level": ["controlled_performance", "transfer"],
+      "best_for": ["functional_communication", "writing", "grammar_sentence_control"],
+      "limitations": ["The communicative situation must make the expected function clear without prescribing the exact wording."
+      ]
+    },
+    {
+      "key": "dialogue_interaction",
+      "label_it": "Interazione / dialogo",
+      "evidence_level": ["controlled_performance", "transfer"],
+      "best_for": ["functional_communication", "listening"],
+      "limitations": ["Dialogue turns must be responsive and natural rather than mechanical grammar repetition."
+      ]
+    },
+    {
+      "key": "oral_response",
+      "label_it": "Produzione orale",
+      "evidence_level": ["transfer"],
+      "best_for": ["functional_communication", "grammar_sentence_control", "lexical_competence"],
+      "limitations": ["Use only when oral performance is relevant to the learner's school programme or selected assessment profile."
+      ]
+    },
+    {
+      "key": "cumulative_school_test",
+      "label_it": "Verifica scolastica cumulativa",
+      "evidence_level": ["transfer"],
+      "best_for": ["grammar_sentence_control", "lexical_competence", "reading", "writing"],
+      "limitations": ["Must report axis-level evidence as well as overall performance; an overall score must not hide a blocking weakness."
+      ]
+    },
+    {
+      "key": "recovery_mock",
+      "label_it": "Simulazione recupero",
+      "evidence_level": ["transfer"],
+      "best_for": ["grammar_sentence_control", "lexical_competence", "reading", "writing", "listening", "functional_communication"],
+      "limitations": ["Only sample axes and outcomes required by the learner's actual school programme; do not force all catalogue content into every mock."
+      ]
+    }
+  ],
+  "mode_rules": [
+    "Assessment modes collect evidence for competence outcomes; they must never be treated as competence axes themselves.",
+    "A single task may collect evidence for multiple axes, but one primary axis must always be declared.",
+    "Recognition-only modes cannot by themselves satisfy a transfer requirement.",
+    "A cumulative test or recovery mock must preserve per-axis evidence so a high global score cannot automatically compensate for a critical required weakness."
+  ]
+}

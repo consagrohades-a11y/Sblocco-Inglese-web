@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "entity": "recovery_curriculum_outcome",
+  "id_pattern": "^RY[1-3]-(GRAM|LEX|READ|WRITE|LISTEN|COMM)-[0-9]{3}$",
+  "allowed_school_year_profiles": [1, 2, 3],
+  "allowed_cefr_targets": ["A1", "A1+", "A2", "A2+", "B1", "B1+", "B2"],
+  "allowed_statuses": ["draft", "approved", "deprecated"],
+  "allowed_performance_levels": ["knowledge", "controlled_performance", "transfer"],
+  "required_fields": [
+    "id",
+    "status",
+    "school_year_profile",
+    "competence_axis",
+    "cefr_target",
+    "label_it",
+    "observable_outcome_it",
+    "performance_levels_required",
+    "prerequisite_outcome_ids",
+    "required_topic_keys",
+    "recommended_topic_keys",
+    "vocabulary_domains",
+    "assessment_modes",
+    "evidence_requirements",
+    "programme_requirement",
+    "blocking_candidate"
+  ],
+  "field_contract": {
+    "id": "Stable curriculum identity. Must not encode a specific grammar topic because one outcome may depend on several topics.",
+    "status": "draft until pedagogically reviewed; approved only after year-level review.",
+    "school_year_profile": "Default Italian secondary-school year profile. It never overrides the student's official school programme.",
+    "competence_axis": "One primary competence axis from competence-axes.json.",
+    "cefr_target": "Expected task/language difficulty, not a substitute for the school syllabus.",
+    "label_it": "Short learner/admin-facing label in Italian.",
+    "observable_outcome_it": "Measurable statement describing what the learner can actually do. Avoid labels such as 'knows the Present Simple'.",
+    "performance_levels_required": "Subset of knowledge, controlled_performance and transfer. Transfer should normally be required for exit outcomes.",
+    "prerequisite_outcome_ids": "Stable v2 outcome dependencies. Do not use topic keys here.",
+    "required_topic_keys": "Existing Recovery grammar/language-system topics that are necessary evidence inputs for this outcome.",
+    "recommended_topic_keys": "Useful supporting topics that are not hard prerequisites.",
+    "vocabulary_domains": "Named lexical domains needed for successful performance. Use [] when not applicable.",
+    "assessment_modes": "Permitted evidence collection modes from assessment-modes.json.",
+    "evidence_requirements": "Minimum evidence shape for mastery; numeric scoring thresholds belong to readiness-policy.json, not here.",
+    "programme_requirement": "Whether the outcome is default_core, default_if_assessed, or programme_dependent for this year profile.",
+    "blocking_candidate": "Whether later readiness policy is allowed to make this outcome a blocking gate when required by the school programme. This field does not itself define the threshold.",
+    "transfer_not_applicable": "Optional boolean exception. Must be justified in notes if true.",
+    "notes": "Optional implementation/pedagogy notes that do not change the observable outcome."
+  },
+  "programme_requirement_values": [
+    "default_core",
+    "default_if_assessed",
+    "programme_dependent"
+  ],
+  "evidence_requirements_contract": {
+    "required_fields": [
+      "minimum_distinct_assessment_modes",
+      "requires_controlled_production",
+      "requires_transfer_evidence",
+      "requires_unseen_or_mixed_context"
+    ],
+    "field_contract": {
+      "minimum_distinct_assessment_modes": "Integer >= 1. Diversity of evidence, not number of individual questions.",
+      "requires_controlled_production": "Boolean. True when recognition is insufficient to demonstrate the outcome.",
+      "requires_transfer_evidence": "Boolean. Normally true for year-exit outcomes.",
+      "requires_unseen_or_mixed_context": "Boolean. True when the learner must choose language/strategy without the target being announced."
+    }
+  },
+  "authoring_rules": [
+    "Write outcomes as observable performance, not content coverage.",
+    "Do not create one outcome per grammar topic by default; combine language-system knowledge when the real competence is integrated.",
+    "Do not put translation_it_en or cumulative_school_test in competence_axis; those are assessment modes.",
+    "Do not mark an outcome default_core merely because the language point is common. Default core means it is expected in the robust year profile unless the student's official programme says otherwise.",
+    "Every default_core exit outcome should normally require transfer evidence.",
+    "If writing, listening or functional communication is not assessed by a particular school programme, the programme override may remove those outcomes from readiness without deleting them from the year profile.",
+    "Do not set numeric readiness thresholds here. Thresholds and compensation/gating rules belong to readiness-policy.json.",
+    "Do not add new Recovery topic keys while authoring year outcomes. Missing topic/content needs are recorded later in gap-analysis.json."
+  ],
+  "example": {
+    "id": "RY1-GRAM-001",
+    "status": "draft",
+    "school_year_profile": 1,
+    "competence_axis": "grammar_sentence_control",
+    "cefr_target": "A2",
+    "label_it": "Gestire presente, passato e futuro di base in contesto",
+    "observable_outcome_it": "Lo studente sceglie e produce forme verbali di base coerenti con riferimenti temporali chiari in frasi, brevi dialoghi e compiti misti senza che il tempo verbale venga indicato in anticipo.",
+    "performance_levels_required": ["knowledge", "controlled_performance", "transfer"],
+    "prerequisite_outcome_ids": [],
+    "required_topic_keys": ["present-simple", "present-continuous", "past-simple", "future-forms"],
+    "recommended_topic_keys": ["present-simple-vs-present-continuous"],
+    "vocabulary_domains": [],
+    "assessment_modes": ["mixed_grammar", "sentence_building", "translation_it_en", "cumulative_school_test"],
+    "evidence_requirements": {
+      "minimum_distinct_assessment_modes": 2,
+      "requires_controlled_production": true,
+      "requires_transfer_evidence": true,
+      "requires_unseen_or_mixed_context": true
+    },
+    "programme_requirement": "default_core",
+    "blocking_candidate": true
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "schema_version": 2,
+  "curriculum_id": "recovery-years-1-3-v2",
+  "status": "foundation",
+  "scope": "Recupero Debito English for Italian secondary-school years 1-3",
+  "purpose": "Define what a learner must know, control and transfer in order to be considered prepared for the school recovery programme, before deciding which content needs to be built.",
+  "authority_order": [
+    "student_official_school_recovery_programme",
+    "year_profile_default",
+    "cefr_difficulty_control"
+  ],
+  "school_programme_is_authoritative": true,
+  "year_profiles_are_defaults_not_hard_limits": true,
+  "cefr_is_a_difficulty_and_progression_reference": true,
+  "model": {
+    "competence_axes": [
+      "grammar_sentence_control",
+      "lexical_competence",
+      "reading",
+      "writing",
+      "listening",
+      "functional_communication"
+    ],
+    "assessment_modes_are_separate_from_competence_axes": true,
+    "performance_levels": [
+      "knowledge",
+      "controlled_performance",
+      "transfer"
+    ],
+    "evidence_is_required_for_mastery": true,
+    "readiness_is_not_a_simple_topic_average": true
+  },
+  "principles": [
+    "Grammar remains a core part of Recovery, but it is one competence axis rather than the whole curriculum.",
+    "A learner is not ready because individual grammar topics were completed; readiness requires transfer across mixed and school-like tasks.",
+    "Every exit outcome must describe observable learner performance rather than only naming a language point.",
+    "Knowledge, controlled performance and transfer are distinct evidence levels and must not be treated as interchangeable.",
+    "Assessment mode and competence axis are different concepts: translation and mixed-school tests are ways to collect evidence, not language skills by themselves.",
+    "The student's official school programme can add, remove or move outcomes regardless of the default school-year profile.",
+    "CEFR controls expected language complexity, text length, task load and independence; it does not override the school's declared syllabus.",
+    "A readiness decision may contain blocking outcomes; high performance elsewhere must not automatically compensate for a critical required weakness.",
+    "Cumulative assessment must sample transfer, not simply repeat isolated topic verification items.",
+    "Content gaps are defined only after comparing required curriculum evidence with validated available content and assessment coverage."
+  ],
+  "outcome_identity": {
+    "format": "RY{year}-{axis_code}-{sequence}",
+    "examples": [
+      "RY1-GRAM-001",
+      "RY2-READ-003",
+      "RY3-WRITE-002"
+    ],
+    "stable_ids_required": true,
+    "ids_must_not_encode_topic_keys": true
+  },
+  "evidence_model": {
+    "knowledge": "The learner understands or recognises the relevant language system or strategy.",
+    "controlled_performance": "The learner can produce or manipulate the target when the task constrains what is required.",
+    "transfer": "The learner can select and use the relevant language or strategy without being told which rule is being tested.",
+    "minimum_mastery_rule": "An outcome cannot be fully mastered without at least one valid transfer evidence item unless the outcome explicitly declares transfer_not_applicable=true."
+  },
+  "programme_override_policy": {
+    "default_year_profile": "Provides a robust starting curriculum for the selected school year.",
+    "school_programme_override": "The learner's declared recovery programme determines the required outcome set.",
+    "later_or_earlier_topics": "An outcome can be required outside its default introduced year when the school programme explicitly includes it.",
+    "optional_oral_components": "Functional/spoken communication becomes readiness-relevant only when required by the school programme or selected assessment profile."
+  },
+  "relationship_to_v1": {
+    "v1_file": "content/recovery/curriculum-years-1-3.json",
+    "v1_role": "Legacy topic catalogue and grammar dependency reference.",
+    "v2_role": "Authoritative competence/outcome curriculum once year profiles and readiness policy are approved.",
+    "migration_rule": "Do not delete or rewrite v1 topic definitions during Curriculum v2 foundation work. Map existing topics into v2 outcomes later."
+  },
+  "planned_files": {
+    "competence_axes": "content/recovery/curriculum-v2/competence-axes.json",
+    "assessment_modes": "content/recovery/curriculum-v2/assessment-modes.json",
+    "outcome_schema": "content/recovery/curriculum-v2/outcome-schema.json",
+    "year_1": "content/recovery/curriculum-v2/years/year-1.json",
+    "year_2": "content/recovery/curriculum-v2/years/year-2.json",
+    "year_3": "content/recovery/curriculum-v2/years/year-3.json",
+    "assessment_blueprint": "content/recovery/curriculum-v2/assessment-blueprint.json",
+    "readiness_policy": "content/recovery/curriculum-v2/readiness-policy.json",
+    "gap_analysis": "content/recovery/curriculum-v2/gap-analysis.json"
+  },
+  "phase_1_scope": {
+    "included": [
+      "curriculum architecture",
+      "competence axis definitions",
+      "assessment mode definitions",
+      "outcome authoring contract",
+      "foundation validation"
+    ],
+    "excluded_until_later_phases": [
+      "year-specific outcomes",
+      "readiness thresholds",
+      "assessment weighting",
+      "content gap conclusions",
+      "new exercise production"
+    ]
+  }
+}
