@@ -63,6 +63,20 @@ if (!validateEducationalContentBlock(invalidSection).errors.length) {
   failures.push('Educational validation accepted an unsupported section type.');
 }
 
+const invalidHighlight = structuredClone(content);
+invalidHighlight.sections[0].examples[0].highlight = ['word-that-is-not-in-the-example'];
+const invalidHighlightResult = validateEducationalContentBlock(invalidHighlight);
+if (!invalidHighlightResult.errors.some((error) => error.includes('sottostringa esatta'))) {
+  failures.push('Educational validation accepted a highlight that is not an exact substring of its example.');
+}
+const importedInvalidHighlight = validateExerciseBuilderJson({
+  ...template,
+  question: { ...template.question, content: invalidHighlight },
+});
+if (!importedInvalidHighlight.items.some((item) => item.status === 'invalid')) {
+  failures.push('Exercise Builder import did not reject an invalid educational highlight.');
+}
+
 const legacy = normalizeEducationalContentBlock({ body: 'Legacy teaching text.' });
 if (legacy.structured || legacy.body !== 'Legacy teaching text.') {
   failures.push('Legacy content_block fallback is not backward compatible.');
@@ -74,4 +88,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Educational content block validation passed with ${normalized.sections.length} structured sections and legacy fallback coverage.`);
+console.log(`Educational content block validation passed with ${normalized.sections.length} structured sections, exact-highlight checks and legacy fallback coverage.`);
