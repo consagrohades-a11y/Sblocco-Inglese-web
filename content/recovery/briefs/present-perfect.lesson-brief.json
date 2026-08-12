@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "topic_key": "present-perfect",
+  "label": "Present Perfect",
+  "wave": 1,
+  "introduced_by_year": 2,
+  "level": "A2",
+  "prerequisites": ["past-simple", "irregular-verbs"],
+  "outcome": "Lo studente costruisce il Present Perfect con have/has + past participle e lo usa nei tre significati core richiesti dal programma: esperienza senza tempo passato specifico, risultato collegato al presente e periodo di tempo non ancora concluso.",
+  "must_master": [
+    "have/has + past participle structure",
+    "regular and high-frequency irregular past participles",
+    "life experience without a stated finished past time",
+    "recent or relevant result connected to now",
+    "unfinished time period at programme-appropriate level",
+    "questions with have/has before the subject",
+    "negatives with haven't/hasn't + past participle",
+    "short answers at a basic school level"
+  ],
+  "scope_boundary": {
+    "time_adverbs": "Do not systematically teach ever/never, just/already/yet or for/since here. Those belong to the later present-perfect-time-expressions topic.",
+    "past_simple_contrast": "Do not build a full Past Simple vs Present Perfect contrast. The dedicated Wave 1 contrast topic follows this lesson.",
+    "continuous": "Do not introduce Present Perfect Continuous.",
+    "experience": "Experience examples should avoid a specific finished past time so the learner can focus on the core meaning without prematurely teaching the full tense contrast.",
+    "unfinished_time": "Use transparent unfinished periods such as this week, this month or today only when the context makes it clear that the period is still open."
+  },
+  "core_use_model": [
+    {"use":"experience","question":"Has this happened in your life up to now?","example":"I've visited Venice twice."},
+    {"use":"recent_result","question":"Did something happen with an important result now?","example":"I've lost my keys, so I can't get in."},
+    {"use":"unfinished_time","question":"Is the time period still continuing?","example":"We've had three tests this month."}
+  ],
+  "italian_learner_risks": [
+    {"risk":"omitting have/has","example_wrong":"I seen that film.","target":"I've seen that film."},
+    {"risk":"using the Past Simple form after have/has","example_wrong":"She has went home.","target":"She has gone home."},
+    {"risk":"choosing have/has from the noun nearest the verb rather than the subject","example_wrong":"My parents has visited London.","target":"My parents have visited London."},
+    {"risk":"forming questions with do/does","example_wrong":"Do you have tried sushi?","target":"Have you tried sushi?"},
+    {"risk":"forming negatives with don't/doesn't","example_wrong":"He doesn't finished the task.","target":"He hasn't finished the task."},
+    {"risk":"using a base verb after have/has","example_wrong":"We have see the message.","target":"We have seen the message."}
+  ],
+  "context_bank": [
+    "things someone has experienced in their life",
+    "a lost key, broken phone or missed connection with a consequence now",
+    "tasks completed or not completed with a visible present result",
+    "things that have happened during the current week or month",
+    "short questions about experiences",
+    "messages explaining a current problem caused by a recent event",
+    "school-style have/has and participle completion"
+  ],
+  "recover_phase": {
+    "minutes": 12,
+    "requirements": [
+      "one structured educational content block",
+      "teach the two-part structure before the three core uses",
+      "show regular and irregular participles without reopening the full irregular-verb lesson",
+      "teach experience, recent result and unfinished time as distinct meanings",
+      "show question and negative structure",
+      "five scaffolded graded checks after teaching",
+      "include at least one form-focused check and at least two meaning-focused checks",
+      "do not teach the reserved time-adverb syllabus"
+    ]
+  },
+  "practice_phase": {
+    "minutes": 12,
+    "item_target": 8,
+    "requirements": [
+      "at least four exercise formats",
+      "mix structure and meaning rather than grouping all form questions together",
+      "include experience, result and unfinished-time contexts",
+      "include one question and one negative production task",
+      "include regular and irregular participles",
+      "include one Italian-to-English contextual translation",
+      "avoid explicit Past Simple contrast exercises"
+    ]
+  },
+  "school_phase": {
+    "minutes": 10,
+    "item_target": 6,
+    "feedback_timing": "exercise_end",
+    "requirements": [
+      "connected gap-fill or mini-text",
+      "have/has + participle completion",
+      "error correction",
+      "question formation or word order",
+      "translation",
+      "meaning recognition without answer-revealing labels",
+      "no systematic ever/never, just/already/yet or for/since testing"
+    ]
+  },
+  "verify_phase": {
+    "minutes": 8,
+    "item_target": 8,
+    "feedback_timing": "exercise_end",
+    "recommended_mastery_threshold": 80,
+    "requirements": [
+      "cover have/has agreement",
+      "cover an irregular participle",
+      "cover experience meaning",
+      "cover recent-result meaning",
+      "cover unfinished-time meaning",
+      "cover a question",
+      "cover a negative",
+      "include one controlled production or translation item",
+      "no teaching content"
+    ]
+  },
+  "approved_diagnostic_codes": [
+    "PRESENT_PERFECT_AUXILIARY",
+    "PRESENT_PERFECT_PARTICIPLE_FORM",
+    "PRESENT_PERFECT_QUESTION_STRUCTURE",
+    "PRESENT_PERFECT_NEGATIVE_STRUCTURE",
+    "PRESENT_PERFECT_EXPERIENCE",
+    "B1_PRESENT_PERFECT_EXPERIENCE",
+    "PRESENT_PERFECT_RECENT_RESULT",
+    "PRESENT_PERFECT_UNFINISHED_TIME",
+    "PRESENT_PERFECT_DURATION",
+    "IRREGULAR_PAST_PARTICIPLE_FORM"
+  ],
+  "quality_rejections": [
+    "a lesson that becomes a Past Simple vs Present Perfect comparison",
+    "systematic teaching of ever/never, just/already/yet or for/since before their dedicated topic",
+    "questions where the answer can be chosen only from a memorised signal word",
+    "Present Perfect forms without a clear present connection or experience context",
+    "using the Past Simple form after have/has in answer keys",
+    "more than two consecutive decontextualised auxiliary/participle drills",
+    "advanced B1/B2 Present Perfect nuances",
+    "difficulty created by obscure irregular verbs rather than the target tense"
+  ]
+}
