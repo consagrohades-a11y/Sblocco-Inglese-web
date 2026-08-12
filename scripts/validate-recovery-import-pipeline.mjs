@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 
 const migration = readFileSync('supabase/migrations/20260812144057_recovery_wave_mapping_sync.sql', 'utf8');
 const allWaveMigration = readFileSync('supabase/migrations/20260812192912_recovery_all_wave_mapping_sync.sql', 'utf8');
+const versionedVerifyMigration = readFileSync('supabase/migrations/20260812205000_recovery_versioned_verify_mapping_sync.sql', 'utf8');
 const page = readFileSync('src/pages/AdminRecoveryContent.jsx', 'utf8');
 const api = readFileSync('src/lib/exerciseBuilderApi.js', 'utf8');
 
@@ -25,6 +26,15 @@ assert.match(allWaveMigration, /version\.review_status\s*=\s*'approved'/);
 assert.match(allWaveMigration, /manual\.mapping_source\s*=\s*'manual'/);
 assert.match(allWaveMigration, /managed\.mapping_source\s*=\s*'recovery_wave_import'/);
 assert.doesNotMatch(allWaveMigration, /batch\.source_name like 'recovery-wave-1:%'/);
+
+// Versioned verification overlays must still resolve to the canonical verify phase.
+assert.match(versionedVerifyMigration, /create or replace function public\.admin_sync_recovery_wave_mappings\(\)/);
+assert.ok(versionedVerifyMigration.includes("item.client_key ~ '_verify(_v[0-9]+)?$'"), 'Versioned verify client keys must map to the verify phase.');
+assert.match(versionedVerifyMigration, /batch\.source_name ~ '\^recovery-wave-\[0-9\]\+:'/);
+assert.match(versionedVerifyMigration, /exercise\.status\s*=\s*'published'/);
+assert.match(versionedVerifyMigration, /version\.review_status\s*=\s*'approved'/);
+assert.match(versionedVerifyMigration, /manual\.mapping_source\s*=\s*'manual'/);
+assert.match(versionedVerifyMigration, /managed\.mapping_source\s*=\s*'recovery_wave_import'/);
 
 // Admin import discovers repository Wave 1 bundles automatically and passes through the real validator/import pipeline.
 assert.match(page, /import\.meta\.glob\([\s\S]*content\/recovery\/wave-1\/\*\.bundle\.json/);
