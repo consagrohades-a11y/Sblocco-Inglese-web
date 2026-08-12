@@ -1,0 +1,92 @@
+name: Align Recovery Curriculum v2 catalog state
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/align-recovery-curriculum-v2-catalog.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  align:
+    if: github.head_ref == 'fix/recovery-curriculum-v2-catalog-alignment'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Align migration and planning state
+        run: |
+          git mv supabase/migrations/20260813030000_recovery_curriculum_v2_outcome_catalog.sql \
+                 supabase/migrations/20260812235354_recovery_curriculum_v2_outcome_catalog.sql
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const catalogValidatorPath = 'scripts/validate-recovery-curriculum-v2-outcome-catalog.mjs';
+          let catalogValidator = fs.readFileSync(catalogValidatorPath, 'utf8');
+          const oldMigration = 'supabase/migrations/20260813030000_recovery_curriculum_v2_outcome_catalog.sql';
+          const newMigration = 'supabase/migrations/20260812235354_recovery_curriculum_v2_outcome_catalog.sql';
+          if (!catalogValidator.includes(oldMigration)) throw new Error('Catalog validator old migration path not found.');
+          catalogValidator = catalogValidator.replace(oldMigration, newMigration);
+          fs.writeFileSync(catalogValidatorPath, catalogValidator);
+
+          const planPath = 'content/recovery/curriculum-v2/gap-analysis.json';
+          const plan = JSON.parse(fs.readFileSync(planPath, 'utf8'));
+          const runtime = plan.current_state.runtime_foundation;
+          runtime.outcome_catalog_migration = '20260812235354_recovery_curriculum_v2_outcome_catalog';
+          runtime.curriculum_outcomes_seeded = 63;
+          runtime.status = 'catalog_seeded_scope_inactive';
+
+          const completed = plan.technical_backlog.completed_foundation;
+          const completedLabel = '63 reviewed Curriculum v2 outcomes synchronized to the runtime catalogue';
+          if (!completed.includes(completedLabel)) completed.push(completedLabel);
+          plan.technical_backlog.P0_remaining = plan.technical_backlog.P0_remaining.filter((item) => item.id !== 'RUNTIME-P0-001');
+
+          const b0 = plan.implementation_sequence.find((batch) => batch.batch === 'B0');
+          b0.status = 'in_progress';
+          b0.completed_tracks = [
+            'Apply cross-year prerequisite recommendations to Year 2/3 source files',
+            'Synchronize all 63 corrected outcomes into recovery_curriculum_outcomes'
+          ];
+          b0.remaining_tracks = [
+            'Implement programme/year-profile outcome scoping for enrollments'
+          ];
+
+          plan.next_execution = [
+            'Implement programme-scoped enrollment outcome derivation using the 63 approved runtime outcomes.',
+            'Split the eight P0 grammar topics and the first cumulative-fragment pool into parallel content workstreams.',
+            'Implement outcome evidence capture and outcome/axis-first cumulative materialization in parallel with content authoring.',
+            'Do not switch learner-facing readiness during these steps.'
+          ];
+          fs.writeFileSync(planPath, `${JSON.stringify(plan, null, 2)}\n`);
+
+          const definitiveValidatorPath = 'scripts/validate-recovery-definitive-gap-analysis.mjs';
+          let definitive = fs.readFileSync(definitiveValidatorPath, 'utf8');
+          const replacements = [
+            ["assert.equal(plan.current_state.runtime_foundation.curriculum_outcomes_seeded, 0);", "assert.equal(plan.current_state.runtime_foundation.curriculum_outcomes_seeded, 63);"],
+            ["assert.equal(plan.current_state.runtime_foundation.status, 'schema_available_but_inert');", "assert.equal(plan.current_state.runtime_foundation.status, 'catalog_seeded_scope_inactive');\nassert.equal(plan.current_state.runtime_foundation.outcome_catalog_migration, '20260812235354_recovery_curriculum_v2_outcome_catalog');"],
+            ["  'RUNTIME-P0-001',\n", ""]
+          ];
+          for (const [from, to] of replacements) {
+            if (!definitive.includes(from)) throw new Error(`Definitive validator replacement target not found: ${from}`);
+            definitive = definitive.replace(from, to);
+          }
+          fs.writeFileSync(definitiveValidatorPath, definitive);
+          NODE
+      - name: Commit aligned state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add supabase/migrations/20260812235354_recovery_curriculum_v2_outcome_catalog.sql \
+                  scripts/validate-recovery-curriculum-v2-outcome-catalog.mjs \
+                  scripts/validate-recovery-definitive-gap-analysis.mjs \
+                  content/recovery/curriculum-v2/gap-analysis.json
+          git add -u supabase/migrations/20260813030000_recovery_curriculum_v2_outcome_catalog.sql
+          git commit -m 'plan: align Curriculum v2 outcome catalog production state'
+          git push origin HEAD:${{ github.head_ref }}
