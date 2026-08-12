@@ -20,7 +20,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base64 --decode --ignore-garbage .wave2-prb.tar.gz.b64 > /tmp/wave2-prb.tar.gz
+          cat .wave2-prb.part01 .wave2-prb.part02 .wave2-prb.part03 .wave2-prb.part04 .wave2-prb.part05 .wave2-prb.part06 .wave2-prb.part07 .wave2-prb.part08 > /tmp/wave2-prb.b64
+          test "$(wc -c < /tmp/wave2-prb.b64)" -eq 25260
+          base64 --decode /tmp/wave2-prb.b64 > /tmp/wave2-prb.tar.gz
+          echo 'ba978d2be26f823aa2a1e782a5659506d45d8808c616ce65b67a71382e662df4  /tmp/wave2-prb.tar.gz' | sha256sum -c -
+          tar -tzf /tmp/wave2-prb.tar.gz >/dev/null
           tar -xzf /tmp/wave2-prb.tar.gz -C .
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs';
@@ -39,6 +43,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add content/recovery/briefs content/recovery/wave-2
+          git rm .wave2-prb.part01 .wave2-prb.part02 .wave2-prb.part03 .wave2-prb.part04 .wave2-prb.part05 .wave2-prb.part06 .wave2-prb.part07 .wave2-prb.part08
           git rm .wave2-prb.tar.gz.b64 .github/workflows/wave2-prb-materialize.yml
           git commit -m 'content: add Recovery Wave 2 countability and quantifiers'
           git push origin HEAD:content/recovery-wave2-quantifiers
