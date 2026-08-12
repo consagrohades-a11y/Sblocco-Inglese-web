@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "npm run generate:exercise-templates && npm run validate:exercise-authoring && npm run validate:exercise-authoring-workflow && npm run validate:exercise-templates && npm run validate:educational-content && npm run validate:listening && npm run validate:structured-migrations && npm run validate:exercise-experience && npm run validate:assessment && npm run validate:practice && npm run validate:word-publishing && npm run validate:next-lesson && npm run validate:assignment-order && npm run validate:pathways && npm run validate:interview && npm run validate:commerce && npm run validate:recovery && npm run validate:recovery-mastery && npm run validate:recovery-readiness && npm run validate:recovery-events && npm run validate:recovery-content && npm run validate:recovery-import && npm run validate:recovery-assessment-scope && npm run validate:editorial && vite build",
+    "build": "npm run generate:exercise-templates && npm run validate:exercise-authoring && npm run validate:exercise-authoring-workflow && npm run validate:exercise-templates && npm run validate:educational-content && npm run validate:listening && npm run validate:structured-migrations && npm run validate:exercise-experience && npm run validate:assessment && npm run validate:practice && npm run validate:word-publishing && npm run validate:next-lesson && npm run validate:assignment-order && npm run validate:pathways && npm run validate:interview && npm run validate:commerce && npm run validate:recovery && npm run validate:recovery-mastery && npm run validate:recovery-readiness && npm run validate:recovery-events && npm run validate:recovery-content && npm run validate:recovery-full-review && npm run validate:recovery-import && npm run validate:recovery-assessment-scope && npm run validate:editorial && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "audit:general-expression": "node scripts/audit-general-expression-cards.mjs",
     "audit:general-expression:strict": "node scripts/audit-general-expression-cards.mjs --strict",
@@ -31,6 +31,7 @@
     "validate:recovery-readiness": "node scripts/validate-recovery-readiness.mjs",
     "validate:recovery-events": "node scripts/validate-recovery-events.mjs",
     "validate:recovery-content": "node scripts/validate-recovery-content.mjs",
+    "validate:recovery-full-review": "node scripts/validate-recovery-full-review.mjs",
     "validate:recovery-import": "node scripts/validate-recovery-import-pipeline.mjs",
     "validate:recovery-assessment-scope": "node scripts/validate-recovery-assessment-scope.mjs",
     "validate:editorial": "node scripts/validate-editorial-learning-coverage.mjs",
