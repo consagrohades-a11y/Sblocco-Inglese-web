@@ -44,14 +44,19 @@
       "grammar_sentence_control": 42.1,
       "lexical_competence": 22.2,
       "reading": 0,
-      "writing": 30.0,
+      "writing": 30,
       "listening": 0,
       "functional_communication": 27.8
     },
     "live_topic_layer": {
       "topics": 24,
       "active_phase_mappings": 96,
-      "phases_per_topic": ["recover", "practice", "school", "verify"],
+      "phases_per_topic": [
+        "recover",
+        "practice",
+        "school",
+        "verify"
+      ],
       "wave_1_runtime_minutes_per_topic": 48,
       "note": "Wave 1 base bundle files retain older duration metadata, but active production mappings use Verification v2 overlays and total 48 minutes. Production mapping state is authoritative for runtime duration."
     },
@@ -81,29 +86,137 @@
   },
   "cross_year_prerequisite_alignment": {
     "priority": "P0",
-    "status": "not_yet_applied",
+    "status": "applied",
     "reason": "Year 2 was authored in parallel with Year 1 and several progression links were intentionally deferred. Readiness and runtime outcome scoping should consume the corrected dependency graph, not the temporary parallel-authoring graph.",
     "recommendations": [
-      {"outcome_id":"RY2-GRAM-001","add":["RY1-GRAM-002","RY1-GRAM-003","RY1-GRAM-004"]},
-      {"outcome_id":"RY2-GRAM-002","add":["RY1-GRAM-001"]},
-      {"outcome_id":"RY2-GRAM-003","add":["RY1-GRAM-007","RY1-GRAM-004"]},
-      {"outcome_id":"RY2-GRAM-004","add":["RY1-GRAM-005","RY1-GRAM-006"]},
-      {"outcome_id":"RY2-GRAM-005","add":["RY1-GRAM-005","RY1-GRAM-006"]},
-      {"outcome_id":"RY2-LEX-001","add":["RY1-LEX-001","RY1-LEX-002","RY1-LEX-003"]},
-      {"outcome_id":"RY2-READ-001","add":["RY1-READ-002"]},
-      {"outcome_id":"RY2-READ-002","add":["RY1-READ-003"]},
-      {"outcome_id":"RY2-WRITE-001","add":["RY1-WRITE-002"]},
-      {"outcome_id":"RY2-WRITE-002","add":["RY1-WRITE-003"]},
-      {"outcome_id":"RY2-WRITE-003","add":["RY1-WRITE-001"]},
-      {"outcome_id":"RY2-LISTEN-001","add":["RY1-LISTEN-002"]},
-      {"outcome_id":"RY2-COMM-001","add":["RY1-COMM-002"]},
-      {"outcome_id":"RY2-COMM-002","add":["RY1-COMM-003"]},
-      {"outcome_id":"RY3-GRAM-006","add":["RY2-GRAM-001","RY2-GRAM-004"]},
-      {"outcome_id":"RY3-GRAM-007","add":["RY2-GRAM-002"]},
-      {"outcome_id":"RY3-LEX-001","add":["RY2-LEX-002"]},
-      {"outcome_id":"RY3-WRITE-003","add":["RY2-WRITE-003"]},
-      {"outcome_id":"RY3-WRITE-004","add":["RY3-WRITE-003"]},
-      {"outcome_id":"RY3-LISTEN-001","add":["RY2-LISTEN-002"]}
+      {
+        "outcome_id": "RY2-GRAM-001",
+        "add": [
+          "RY1-GRAM-002",
+          "RY1-GRAM-003",
+          "RY1-GRAM-004"
+        ]
+      },
+      {
+        "outcome_id": "RY2-GRAM-002",
+        "add": [
+          "RY1-GRAM-001"
+        ]
+      },
+      {
+        "outcome_id": "RY2-GRAM-003",
+        "add": [
+          "RY1-GRAM-007",
+          "RY1-GRAM-004"
+        ]
+      },
+      {
+        "outcome_id": "RY2-GRAM-004",
+        "add": [
+          "RY1-GRAM-005",
+          "RY1-GRAM-006"
+        ]
+      },
+      {
+        "outcome_id": "RY2-GRAM-005",
+        "add": [
+          "RY1-GRAM-005",
+          "RY1-GRAM-006"
+        ]
+      },
+      {
+        "outcome_id": "RY2-LEX-001",
+        "add": [
+          "RY1-LEX-001",
+          "RY1-LEX-002",
+          "RY1-LEX-003"
+        ]
+      },
+      {
+        "outcome_id": "RY2-READ-001",
+        "add": [
+          "RY1-READ-002"
+        ]
+      },
+      {
+        "outcome_id": "RY2-READ-002",
+        "add": [
+          "RY1-READ-003"
+        ]
+      },
+      {
+        "outcome_id": "RY2-WRITE-001",
+        "add": [
+          "RY1-WRITE-002"
+        ]
+      },
+      {
+        "outcome_id": "RY2-WRITE-002",
+        "add": [
+          "RY1-WRITE-003"
+        ]
+      },
+      {
+        "outcome_id": "RY2-WRITE-003",
+        "add": [
+          "RY1-WRITE-001"
+        ]
+      },
+      {
+        "outcome_id": "RY2-LISTEN-001",
+        "add": [
+          "RY1-LISTEN-002"
+        ]
+      },
+      {
+        "outcome_id": "RY2-COMM-001",
+        "add": [
+          "RY1-COMM-002"
+        ]
+      },
+      {
+        "outcome_id": "RY2-COMM-002",
+        "add": [
+          "RY1-COMM-003"
+        ]
+      },
+      {
+        "outcome_id": "RY3-GRAM-006",
+        "add": [
+          "RY2-GRAM-001",
+          "RY2-GRAM-004"
+        ]
+      },
+      {
+        "outcome_id": "RY3-GRAM-007",
+        "add": [
+          "RY2-GRAM-002"
+        ]
+      },
+      {
+        "outcome_id": "RY3-LEX-001",
+        "add": [
+          "RY2-LEX-002"
+        ]
+      },
+      {
+        "outcome_id": "RY3-WRITE-003",
+        "add": [
+          "RY2-WRITE-003"
+        ]
+      },
+      {
+        "outcome_id": "RY3-WRITE-004",
+        "add": [
+          "RY3-WRITE-003"
+        ]
+      },
+      {
+        "outcome_id": "RY3-LISTEN-001",
+        "add": [
+          "RY2-LISTEN-002"
+        ]
+      }
     ],
     "optionality_guard": "Do not make a default_core outcome depend on a prior default_if_assessed or programme_dependent outcome."
   },
@@ -238,32 +351,49 @@
       {
         "id": "RUNTIME-P0-001",
         "title": "Synchronize the 63 source-controlled outcomes into the runtime catalogue",
-        "depends_on": ["cross_year_prerequisite_alignment"]
+        "depends_on": [
+          "cross_year_prerequisite_alignment"
+        ]
       },
       {
         "id": "RUNTIME-P0-002",
         "title": "Derive and persist enrollment required outcomes from the official programme/year fallback",
-        "depends_on": ["RUNTIME-P0-001"]
+        "depends_on": [
+          "RUNTIME-P0-001"
+        ]
       },
       {
         "id": "RUNTIME-P0-003",
         "title": "Register approved assessment fragments against outcomes/modes/form families",
-        "depends_on": ["content fragment authoring", "RUNTIME-P0-001"]
+        "depends_on": [
+          "content fragment authoring",
+          "RUNTIME-P0-001"
+        ]
       },
       {
         "id": "RUNTIME-P0-004",
         "title": "Upgrade cumulative materialization to choose under-evidenced outcomes and satisfy active-axis coverage within time budget",
-        "depends_on": ["RUNTIME-P0-002", "RUNTIME-P0-003"]
+        "depends_on": [
+          "RUNTIME-P0-002",
+          "RUNTIME-P0-003"
+        ]
       },
       {
         "id": "RUNTIME-P0-005",
         "title": "Capture automatic and manually reviewed fragment results into recovery_outcome_evidence",
-        "depends_on": ["RUNTIME-P0-003"]
+        "depends_on": [
+          "RUNTIME-P0-003"
+        ]
       },
       {
         "id": "RUNTIME-P0-006",
         "title": "Implement canonical server-side Readiness v2 in shadow mode",
-        "depends_on": ["RUNTIME-P0-002", "RUNTIME-P0-004", "RUNTIME-P0-005", "enough P0 assessment content to make evidence completeness achievable"]
+        "depends_on": [
+          "RUNTIME-P0-002",
+          "RUNTIME-P0-004",
+          "RUNTIME-P0-005",
+          "enough P0 assessment content to make evidence completeness achievable"
+        ]
       }
     ],
     "P1_after_shadow": [
