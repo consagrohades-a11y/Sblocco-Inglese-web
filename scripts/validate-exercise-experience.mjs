@@ -69,6 +69,21 @@ requireText(
 );
 requireText(
   sources['src/components/exercises/ExerciseExperience.jsx'],
+  'role="navigation"',
+  'exercise action bar navigation semantics',
+);
+requireText(
+  sources['src/components/exercises/ExerciseExperience.jsx'],
+  'aria-label="Navigazione esercizio"',
+  'exercise action bar accessible label',
+);
+requireText(
+  sources['src/styles/exerciseShellRefinement.css'],
+  'background: transparent;',
+  'exercise action bar neutral background',
+);
+requireText(
+  sources['src/components/exercises/ExerciseExperience.jsx'],
   '<small>Progresso</small>',
   'compact progress meter label',
 );
@@ -92,6 +107,10 @@ requireText(
   'normalizeEducationalContentBlock',
   'educational content normalization',
 );
+
+if (sources['src/components/exercises/ExerciseExperience.jsx'].includes('<footer className="exercise-action-bar"')) {
+  failures.push('Exercise action bar must not use the site footer element; it can inherit the global navy footer treatment.');
+}
 
 if (/violet|purple|#7c3aed|#8b5cf6|#a855f7/i.test(combined)) {
   failures.push('Learner exercise runtime contains a banned purple token.');

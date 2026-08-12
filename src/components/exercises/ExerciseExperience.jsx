@@ -193,8 +193,13 @@ export function ExerciseMilestone({
 export function ExerciseActionBar({ children, hint }) {
   const hasHint = Boolean(hint);
   return (
-    <footer className="exercise-action-bar" data-has-hint={hasHint ? 'true' : 'false'}>
-      <p className="exercise-action-bar__hint" aria-live="polite">
+    <div
+      className="exercise-action-bar"
+      data-has-hint={hasHint ? 'true' : 'false'}
+      role="navigation"
+      aria-label="Navigazione esercizio"
+    >
+      <p className="exercise-action-bar__hint" aria-live="polite" aria-atomic="true">
         {hasHint ? (
           <>
             <CircleAlert aria-hidden="true" />
@@ -203,6 +208,6 @@ export function ExerciseActionBar({ children, hint }) {
         ) : null}
       </p>
       <div className="exercise-action-bar__actions">{children}</div>
-    </footer>
+    </div>
   );
 }
