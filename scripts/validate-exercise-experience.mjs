@@ -13,6 +13,7 @@ const runtimeFiles = [
   'src/pages/GrammarA1Test.jsx',
   'src/pages/LearnerAssignments.jsx',
   'src/styles/exerciseExperience.css',
+  'src/styles/exerciseShellRefinement.css',
   'src/styles/editorialLearning.css',
   'src/styles/learnerEditorial.css',
 ];
@@ -52,6 +53,25 @@ for (const selector of [
   requireText(sources['src/styles/exerciseExperience.css'], selector, `shared style ${selector}`);
 }
 
+for (const selector of [
+  '.exercise-progress-header__meter > small',
+  '.exercise-action-bar[data-has-hint="true"]',
+  '.exercise-action-bar__hint',
+  '.exercise-action-bar__actions',
+]) {
+  requireText(sources['src/styles/exerciseShellRefinement.css'], selector, `refined shell style ${selector}`);
+}
+
+requireText(
+  sources['src/components/exercises/ExerciseExperience.jsx'],
+  "data-has-hint={hasHint ? 'true' : 'false'}",
+  'shared action bar hint state',
+);
+requireText(
+  sources['src/components/exercises/ExerciseExperience.jsx'],
+  '<small>Progresso</small>',
+  'compact progress meter label',
+);
 requireText(
   sources['src/components/exercises/ExerciseQuestionRenderer.jsx'],
   'isStructuredEducationalContent(question.content)',
@@ -82,4 +102,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Validated ${EXERCISE_BUILDER_QUESTION_TYPES.length} Builder types, 3 legacy types, semantic blocks, shared surfaces, structured-content routing, and the no-purple rule.`);
+console.log(`Validated ${EXERCISE_BUILDER_QUESTION_TYPES.length} Builder types, 3 legacy types, semantic blocks, shared surfaces, structured-content routing, refined exercise shell, and the no-purple rule.`);

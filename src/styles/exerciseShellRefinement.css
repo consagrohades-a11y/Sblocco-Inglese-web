@@ -1,0 +1,190 @@
+/* Shared shell refinement: keep exercise navigation light, compact and editorial. */
+
+.exercise-progress-header {
+  grid-template-columns: minmax(0, 1fr) minmax(10.5rem, 13.5rem);
+  gap: clamp(1.2rem, 3vw, 2rem);
+  align-items: center;
+  padding: 1rem 0 1.2rem;
+  border-top: 0;
+}
+
+.exercise-progress-header h1 {
+  margin-top: 0.35rem;
+  max-width: 18ch;
+  font-size: clamp(1.9rem, 3.5vw, 3rem);
+  line-height: 1.04;
+}
+
+.exercise-progress-header__copy > p:last-child {
+  max-width: 44rem;
+  margin-top: 0.55rem;
+}
+
+.exercise-progress-header__meter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.3rem 0.75rem;
+}
+
+.exercise-progress-header__meter > small {
+  color: var(--ex-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.exercise-progress-header__meter > span {
+  margin: 0;
+  color: var(--ex-accent);
+  font-size: 0.82rem;
+  font-weight: 850;
+  text-align: right;
+}
+
+.exercise-progress-header__meter > div {
+  grid-column: 1 / -1;
+  height: 0.32rem;
+  margin-top: 0.15rem;
+}
+
+.exercise-activity {
+  box-shadow: 0 10px 34px rgba(14, 48, 69, 0.055);
+}
+
+.dark .exercise-activity {
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+}
+
+.exercise-action-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.9rem 1.25rem;
+  margin-top: 1.45rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ex-line);
+  background: transparent;
+}
+
+.exercise-action-bar[data-has-hint="true"] {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.exercise-action-bar[data-has-hint="false"] {
+  grid-template-columns: 1fr;
+}
+
+.exercise-action-bar > .exercise-action-bar__hint {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  color: var(--ex-muted);
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.exercise-action-bar[data-has-hint="false"] > .exercise-action-bar__hint {
+  display: none;
+}
+
+.exercise-action-bar__hint svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex: 0 0 auto;
+  color: var(--ex-accent);
+  stroke-width: 2;
+}
+
+.exercise-action-bar > .exercise-action-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.7rem;
+}
+
+.exercise-action-bar[data-has-hint="false"] > .exercise-action-bar__actions {
+  justify-content: space-between;
+}
+
+.exercise-primary-action,
+.exercise-secondary-action {
+  min-height: 2.75rem;
+  padding: 0.7rem 1rem;
+}
+
+.exercise-primary-action:disabled,
+.exercise-secondary-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.exercise-primary-action:disabled {
+  color: color-mix(in srgb, #fffaf5 78%, var(--ex-ink));
+  background: color-mix(in srgb, var(--ex-accent) 58%, var(--ex-surface-soft));
+}
+
+/* Milestones belong to the same navy/orange system as the rest of the shell. */
+.exercise-milestone {
+  border-top-color: var(--ex-accent);
+  background: linear-gradient(
+    110deg,
+    color-mix(in srgb, var(--ex-accent) 8%, var(--ex-surface)),
+    color-mix(in srgb, var(--ex-surface) 92%, transparent)
+  );
+}
+
+.exercise-milestone__icon {
+  background: var(--ex-accent);
+}
+
+.exercise-milestone .exercise-eyebrow {
+  color: var(--ex-accent);
+}
+
+@media (max-width: 720px) {
+  .exercise-progress-header {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    padding-top: 0.7rem;
+  }
+
+  .exercise-progress-header h1 {
+    max-width: none;
+    font-size: clamp(1.75rem, 8vw, 2.35rem);
+  }
+
+  .exercise-action-bar,
+  .exercise-action-bar[data-has-hint="true"],
+  .exercise-action-bar[data-has-hint="false"] {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .exercise-action-bar > .exercise-action-bar__actions,
+  .exercise-action-bar[data-has-hint="false"] > .exercise-action-bar__actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .exercise-action-bar__actions > .exercise-primary-action:last-child {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 460px) {
+  .exercise-action-bar > .exercise-action-bar__actions {
+    gap: 0.55rem;
+  }
+
+  .exercise-action-bar__actions > .exercise-primary-action,
+  .exercise-action-bar__actions > .exercise-secondary-action {
+    flex: 1 1 auto;
+  }
+}
