@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "topic_key": "articles",
+  "label": "Articles",
+  "wave": 2,
+  "introduced_by_year": 1,
+  "level": "A1+",
+  "prerequisites": [
+    "countable-uncountable"
+  ],
+  "outcome": "Lo studente sceglie a/an, the o zero article in frasi e brevi testi distinguendo singolare numerabile non specifico, referente identificabile e categoria generale, senza trasferire automaticamente l'articolo italiano.",
+  "must_master": [
+    "a/an with a non-specific singular countable noun",
+    "a/an by initial sound",
+    "the for an already mentioned or situationally identifiable referent",
+    "zero article with general plural categories",
+    "zero article with common general uncountable nouns",
+    "first mention with a/an followed by known reference with the",
+    "avoid bare singular countable nouns"
+  ],
+  "scope_boundary": {
+    "advanced_idioms": "Do not systematically teach institutional zero-article idioms such as go to school/hospital/prison as a separate rule set.",
+    "geography": "Do not teach geographical article exceptions with countries, seas, mountain ranges or institutions.",
+    "proper_names": "Proper-name article patterns are outside this recovery slice.",
+    "countability": "Use countability only as a prerequisite for article choice; do not reteach the entire countable/uncountable topic."
+  },
+  "italian_learner_risks": [
+    {
+      "risk": "overusing the for categories in general",
+      "example_wrong": "The dogs are friendly. (= dogs in general)",
+      "target": "Dogs are friendly."
+    },
+    {
+      "risk": "omitting a/an before a singular countable noun",
+      "example_wrong": "I need charger.",
+      "target": "I need a charger."
+    },
+    {
+      "risk": "using the on first mention without an identifiable reference",
+      "example_wrong": "I bought the notebook yesterday. (= no previous reference)",
+      "target": "I bought a notebook yesterday."
+    },
+    {
+      "risk": "failing to switch to the after first mention",
+      "example_wrong": "I saw a dog. A dog was wet.",
+      "target": "I saw a dog. The dog was wet."
+    },
+    {
+      "risk": "choosing a/an from spelling rather than sound",
+      "example_wrong": "an university student",
+      "target": "a university student"
+    },
+    {
+      "risk": "using the before a general uncountable concept",
+      "example_wrong": "I like the music. (= music in general)",
+      "target": "I like music."
+    }
+  ],
+  "context_bank": [
+    "introducing an object then referring to it again",
+    "classroom and library objects",
+    "shopping and appointments",
+    "jobs and professions",
+    "general preferences and categories",
+    "short narratives and messages",
+    "shared objects in a room",
+    "school subjects and study habits"
+  ],
+  "recover_phase": {
+    "minutes": 12,
+    "requirements": [
+      "one structured educational content block",
+      "teach discourse reference, not a three-row memorisation table only",
+      "contrast first mention and known reference",
+      "contrast specific reference with general plural/uncountable zero article",
+      "explain a/an by sound",
+      "six scaffolded checks including production"
+    ]
+  },
+  "practice_phase": {
+    "minutes": 12,
+    "item_target": 8,
+    "requirements": [
+      "at least four exercise formats",
+      "connected discourse reference",
+      "general-category zero article",
+      "a/an by sound",
+      "at least one translation",
+      "increase autonomy from recognition to production"
+    ]
+  },
+  "school_phase": {
+    "minutes": 10,
+    "item_target": 6,
+    "feedback_timing": "exercise_end",
+    "requirements": [
+      "gap/select-gap",
+      "error correction",
+      "translation",
+      "word order or transformation-like task",
+      "connected short text",
+      "no answer-revealing task titles"
+    ]
+  },
+  "verify_phase": {
+    "standard_id": "recovery-topic-verification-v2",
+    "minutes": 14,
+    "item_target": 11,
+    "feedback_timing": "exercise_end",
+    "mastery_threshold": 80,
+    "strong_threshold": 90,
+    "requirements": [
+      "at least four formats",
+      "at least six subskills",
+      "at least two integrative items",
+      "connected context/dialogue",
+      "controlled production",
+      "approximately 60 percent standard and 40 percent challenge",
+      "neutral titles",
+      "no teaching content"
+    ]
+  },
+  "approved_diagnostic_codes": [
+    "ARTICLES_A_AN",
+    "CORE_ARTICLES"
+  ],
+  "quality_rejections": [
+    "a worksheet that reduces article choice to 'singular=a, plural=the'",
+    "systematic use of the before general categories",
+    "a/an questions based only on letters while ignoring sound",
+    "advanced geography or institutional article exceptions",
+    "ambiguous first-mention tasks where a specific shared referent could reasonably exist",
+    "titles that reveal 'use zero article' or 'use the'",
+    "difficulty created by rare nouns rather than reference decisions"
+  ]
+}
