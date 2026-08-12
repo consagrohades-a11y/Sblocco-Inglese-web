@@ -35,6 +35,9 @@ export default function RecoveryWorkspace({ view }) {
   const [loading, setLoading] = useState(true);
   const [access, setAccess] = useState(null);
   const [errors, setErrors] = useState([]);
+  const [reviewAvailability, setReviewAvailability] = useState({});
+  const [reviewLaunching, setReviewLaunching] = useState('');
+  const [reviewError, setReviewError] = useState('');
   const [loadError, setLoadError] = useState('');
   const copy = viewCopy[view] || viewCopy.percorso;
 
@@ -43,6 +46,7 @@ export default function RecoveryWorkspace({ view }) {
     async function load() {
       setLoading(true);
       setLoadError('');
+      setReviewError('');
       try {
         let loaded = await loadRecoveryAccessState();
         if (!active) return;
@@ -59,6 +63,13 @@ export default function RecoveryWorkspace({ view }) {
           if (error) throw error;
           if (active) setErrors(data || []);
         }
+        if (loaded.enrollment?.id && view === 'argomenti') {
+          const { data, error } = await supabase.rpc('get_recovery_topic_review_availability', { p_enrollment_id: loaded.enrollment.id });
+          if (error) throw error;
+          if (active) {
+            setReviewAvailability(Object.fromEntries((data || []).map((item) => [item.topic_key, item])));
+          }
+        }
       } catch (error) {
         if (active) setLoadError(error.message || 'Non è stato possibile caricare questa sezione.');
       } finally {
@@ -70,6 +81,28 @@ export default function RecoveryWorkspace({ view }) {
   }, [view]);
 
   const assessmentsBySession = useMemo(() => new Map((access?.state?.assessments || []).map((attempt) => [attempt.session_id, attempt])), [access]);
+
+  async function launchFullReview(topicKey) {
+    if (!access?.enrollment?.id || reviewLaunching) return;
+    setReviewLaunching(topicKey);
+    setReviewError('');
+    try {
+      const { data, error } = await supabase.rpc('start_recovery_topic_full_review', {
+        p_enrollment_id: access.enrollment.id,
+        p_topic_key: topicKey,
+      });
+      if (error) throw error;
+      if (!data?.ready || !data?.assignment_id) {
+        setReviewError('Il ripasso completo non è ancora disponibile per questo argomento.');
+        return;
+      }
+      window.location.assign(`/assignments/${data.assignment_id}`);
+    } catch (error) {
+      setReviewError(error.message || 'Non è stato possibile preparare il ripasso completo.');
+    } finally {
+      setReviewLaunching('');
+    }
+  }
 
   if (loading) return <div className="learner-editorial learner-workspace-page"><div className="learner-shell"><p className="learner-empty">Caricamento...</p></div></div>;
   if (loadError) return <div className="learner-editorial learner-workspace-page"><div className="learner-shell"><p className="learner-error">{loadError}</p><Link to="/dashboard" className="learner-secondary-button">Torna alla dashboard</Link></div></div>;
@@ -121,17 +154,38 @@ export default function RecoveryWorkspace({ view }) {
               {topics.map((topic, index) => {
                 const score = Math.round(Number(topic.mastery_score ?? topic.diagnostic_score ?? 0));
                 const topicSession = sessions.find((session) => session.topic_key === topic.topic_key && !['completed', 'skipped'].includes(session.status));
+                const review = reviewAvailability[topic.topic_key];
                 return (
                   <li className="learner-list__row" key={topic.topic_key}>
                     <span className="learner-list__index">{index + 1}</span>
-                    <div><strong>{recoveryTopicLabel(topic.topic_key)}</strong><p>{topic.verification_only ? 'Risulta già abbastanza solido: resta nel piano come ripasso e verifica.' : `${score}% sui dati attualmente disponibili.`}</p></div>
-                    {topicSession
-                      ? <Link to={`/recupero-debito/sessione/${topicSession.id}`} className="learner-text-link">Apri <ArrowRight size={14} /></Link>
-                      : <span className={`learner-list__status ${topic.priority_band === 'high' ? 'learner-list__status--high' : ''}`}>{priorityLabel(topic)}</span>}
+                    <div>
+                      <strong>{recoveryTopicLabel(topic.topic_key)}</strong>
+                      <p>{topic.verification_only
+                        ? 'Risulta già abbastanza solido. Puoi fare la verifica rapida consigliata oppure riaprire l’intero argomento quando vuoi.'
+                        : `${score}% sui dati attualmente disponibili.`}</p>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.8rem', flexWrap: 'wrap' }}>
+                      {topicSession
+                        ? <Link to={`/recupero-debito/sessione/${topicSession.id}`} className="learner-text-link">{topic.verification_only ? 'Verifica rapida' : 'Apri'} <ArrowRight size={14} /></Link>
+                        : <span className={`learner-list__status ${topic.priority_band === 'high' ? 'learner-list__status--high' : ''}`}>{priorityLabel(topic)}</span>}
+                      {review?.available ? (
+                        <button
+                          type="button"
+                          className="learner-text-link"
+                          onClick={() => launchFullReview(topic.topic_key)}
+                          disabled={Boolean(reviewLaunching)}
+                          style={{ border: 0, padding: 0, background: 'transparent', cursor: reviewLaunching ? 'wait' : 'pointer' }}
+                        >
+                          {reviewLaunching === topic.topic_key ? 'Preparazione...' : `Rivedi tutto · ~${review.estimated_minutes} min`} {!reviewLaunching ? <RotateCcw size={14} /> : null}
+                        </button>
+                      ) : null}
+                    </div>
                   </li>
                 );
               })}
             </ul>
+            {reviewError ? <p className="learner-error" role="alert">{reviewError}</p> : null}
+            <p className="learner-empty" style={{ marginTop: '1rem' }}>“Rivedi tutto” è un ripasso volontario: non abbassa il livello già consolidato e non aggiunge una nuova sessione obbligatoria al piano.</p>
           </section>
         ) : null}
 
