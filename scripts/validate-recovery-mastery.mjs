@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const mastery = readFileSync('supabase/migrations/20260812154000_recovery_mastery_v2.sql', 'utf8');
-const hardening = readFileSync('supabase/migrations/20260812154500_recovery_mastery_v2_hardening.sql', 'utf8');
+const mastery = readFileSync('supabase/migrations/20260812133100_recovery_mastery_v2.sql', 'utf8');
+const hardening = readFileSync('supabase/migrations/20260812133122_recovery_mastery_v2_hardening.sql', 'utf8');
+const indexes = readFileSync('supabase/migrations/20260812133211_recovery_mastery_v2_fk_indexes.sql', 'utf8');
 
 // Mastery is an evidence ledger, not a generic running average.
 assert.match(mastery, /create table public\.recovery_mastery_evidence/);
@@ -52,5 +53,9 @@ assert.match(mastery, /grant select on table public\.recovery_mastery_evidence t
 assert.match(hardening, /revoke execute on function public\.recalculate_recovery_topic_mastery\(uuid, text\) from authenticated/);
 assert.match(hardening, /revoke execute on function public\.recovery_evidence_weight\(text\) from authenticated/);
 assert.match(hardening, /grant execute on function public\.sync_recovery_session\(uuid\) to authenticated/);
+
+// New foreign keys used by evidence cleanup/lookups are covered.
+assert.match(indexes, /recovery_mastery_evidence_topic_key_idx/);
+assert.match(indexes, /recovery_mastery_evidence_exercise_attempt_idx/);
 
 console.log('Recovery Mastery Engine v2 validation passed.');
