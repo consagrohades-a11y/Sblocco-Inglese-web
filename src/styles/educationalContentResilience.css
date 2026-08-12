@@ -1,0 +1,48 @@
+/* Resilience rules for semantic educational content.
+   Keep long authoring strings inside the shared exercise canvas on narrow screens. */
+.educational-content__body,
+.educational-content__example,
+.educational-content__turn,
+.educational-content__turn > span,
+.educational-content__turn p,
+.educational-content__vocabulary article,
+.educational-content__vocabulary h4,
+.educational-content__vocabulary p,
+.educational-content__vocab-example,
+.educational-content__recap-list li,
+.educational-content__pattern,
+.educational-content__pattern code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.educational-content__comparison > :only-child {
+  grid-column: 1 / -1;
+}
+
+.educational-content__vocabulary article {
+  max-width: 100%;
+}
+
+.educational-content__highlight {
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+@media (max-width: 640px) {
+  .educational-content__section-heading {
+    grid-template-columns: 1.8rem minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  .educational-content__section-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .educational-content__example,
+  .educational-content__vocabulary article {
+    padding-right: 0.78rem;
+    padding-left: 0.78rem;
+  }
+}
