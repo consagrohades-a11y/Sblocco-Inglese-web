@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "topic_key": "past-continuous",
+  "label": "Past Continuous",
+  "wave": 2,
+  "introduced_by_year": 2,
+  "level": "A2",
+  "prerequisites": ["past-simple"],
+  "outcome": "Lo studente costruisce e usa il Past Continuous per descrivere un'azione in corso in un momento passato o come sfondo di una scena, incluse domande e negative.",
+  "must_master": [
+    "was/were + verb-ing",
+    "action in progress at a past time",
+    "background action in a past scene",
+    "questions with was/were before the subject",
+    "negatives with was not/were not",
+    "basic -ing spelling already known from Present Continuous"
+  ],
+  "do_not_teach_yet": [
+    "full Past Simple vs Past Continuous contrast",
+    "when/while as a mechanical tense-selection rule",
+    "Past Perfect",
+    "advanced narrative tense sequencing"
+  ],
+  "italian_learner_risks": [
+    {"risk":"dropping the auxiliary","example_wrong":"I studying at eight.","target":"I was studying at eight."},
+    {"risk":"wrong was/were agreement","example_wrong":"They was waiting.","target":"They were waiting."},
+    {"risk":"using the base verb after was/were","example_wrong":"She was cook dinner.","target":"She was cooking dinner."},
+    {"risk":"using did in Past Continuous questions","example_wrong":"Did you studying?","target":"Were you studying?"},
+    {"risk":"placing not without the auxiliary","example_wrong":"We not sleeping.","target":"We weren't sleeping."}
+  ],
+  "context_bank": [
+    "what people were doing at a specific time yesterday",
+    "background actions in a photo-like past scene",
+    "school evening routines at a past moment",
+    "phone calls asking what someone was doing",
+    "weather and surrounding actions in a short story"
+  ],
+  "phase_requirements": {
+    "recover": ["structured content block", "meaning before form", "was/were agreement", "questions and negatives", "5-6 scaffolded checks"],
+    "practice": ["8 meaningful items", "at least four formats", "mixed subjects", "one connected context", "one translation"],
+    "school": ["6 school-style tasks", "exercise-end feedback", "gap fill", "correction", "question formation", "translation"],
+    "verify": ["verification-standard-v2", "10-13 activities", "at least four formats", "at least six subskills", "at least three challenge items", "no teaching content"]
+  },
+  "approved_diagnostic_codes": [
+    "PAST_CONTINUOUS_USE",
+    "PAST_CONTINUOUS_AUXILIARY",
+    "PAST_CONTINUOUS_VERB_ING",
+    "PAST_CONTINUOUS_NEGATIVE",
+    "PAST_CONTINUOUS_QUESTION_STRUCTURE",
+    "PAST_CONTINUOUS_BACKGROUND"
+  ],
+  "quality_rejections": [
+    "a worksheet solvable only from at 8 o'clock",
+    "mixing in a full Past Simple contrast lesson",
+    "more than two consecutive near-identical gap fills",
+    "ambiguous past contexts where a simple past reading is equally intended",
+    "difficulty created by obscure vocabulary"
+  ]
+}
