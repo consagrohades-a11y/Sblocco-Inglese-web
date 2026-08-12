@@ -16,6 +16,7 @@ import {
   exerciseBuilderTemplates as baseExerciseBuilderTemplates,
 } from './exerciseBuilderTemplatesV2.js';
 import { educationalContentBlockTemplate } from './educationalContentTemplate.js';
+import { makeSelfContainedExerciseTemplates } from './exerciseAuthoringTemplateContracts.js';
 import {
   isStructuredEducationalContent,
   validateEducationalContentBlock,
@@ -42,23 +43,34 @@ export function validateExerciseBuilderJson(input) {
   return applyEducationalContentValidation(validateExerciseBuilderJsonV2(input));
 }
 
-// Template exports are composed here so the existing V2 importer stays stable while
-// new authoring templates can evolve independently and remain fully self-contained.
-export const EXERCISE_BUILDER_TEMPLATE_VERSION = Math.max(BASE_EXERCISE_BUILDER_TEMPLATE_VERSION, 3);
+// Template exports are composed here so the V2 importer stays stable while
+// authoring/download contracts can evolve independently of database payloads.
+export const EXERCISE_BUILDER_TEMPLATE_VERSION = Math.max(BASE_EXERCISE_BUILDER_TEMPLATE_VERSION, 4);
 export const exerciseBuilderQuestionTemplates = baseExerciseBuilderQuestionTemplates;
-export const exerciseBuilderTemplates = {
+
+const educationalManifestItem = {
+  key: 'educational_content_block',
+  entityType: 'question',
+  label: 'Content block educativo strutturato',
+  fileName: 'exercise-builder-educational-content-block-template.json',
+};
+
+export const exerciseBuilderTemplateManifest = [
+  ...baseExerciseBuilderTemplateManifest,
+  educationalManifestItem,
+];
+
+const composedTemplates = {
   ...baseExerciseBuilderTemplates,
   educational_content_block: educationalContentBlockTemplate,
 };
-export const exerciseBuilderTemplateManifest = [
-  ...baseExerciseBuilderTemplateManifest,
-  {
-    key: 'educational_content_block',
-    entityType: 'question',
-    label: 'Content block educativo strutturato',
-    fileName: 'exercise-builder-educational-content-block-template.json',
-  },
-];
+
+// Every object downloaded from Exercise Builder now carries enough authoring
+// instructions to be handed to an AI in a fresh chat with no repository context.
+export const exerciseBuilderTemplates = makeSelfContainedExerciseTemplates(
+  composedTemplates,
+  exerciseBuilderTemplateManifest,
+);
 
 export function stringifyExerciseBuilderTemplate(type = 'bundle') {
   return JSON.stringify(exerciseBuilderTemplates[type] || exerciseBuilderTemplates.bundle, null, 2);
