@@ -1,0 +1,856 @@
+{
+  "schema_version": 2,
+  "entity_type": "bundle",
+  "questions": [],
+  "pools": [],
+  "exercises": [
+    {
+      "client_key": "recovery_present_tense_choice_recover",
+      "title": "Present Simple vs Present Continuous — Recupera",
+      "description": "Impara a scegliere il tempo dal significato: routine o fatto stabile, azione in corso o situazione temporanea.",
+      "instructions": "Prima decidi che cosa significa la situazione; solo dopo costruisci la forma corretta.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-simple-vs-present-continuous",
+      "estimated_minutes": 12,
+      "settings": {"display_mode":"one_at_a_time","feedback_timing":"question_end","show_score":false,"show_correct_answers":true,"show_explanations":true,"show_diagnostic_summary":true,"allow_retry":true},
+      "sections": [
+        {
+          "client_key": "recovery_present_tense_choice_recover_section",
+          "title": "Scegli dal significato",
+          "instructions": "Non cercare una parola magica: leggi tutta la situazione.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_ptc_recover_teaching",
+              "type": "content_block",
+              "title": "Present Simple o Present Continuous?",
+              "prompt": "Prima di esercitarti",
+              "instructions": "Usa il significato per scegliere il tempo, poi controlla la forma.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "meaning_and_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose between present simple and present continuous from meaning and context, then build the selected tense correctly.",
+              "difficulty": "support",
+              "content": {
+                "educational_schema_version": 1,
+                "template_id": "educational-content-block-v1",
+                "variant": "grammar",
+                "body": "Il Present Simple descrive soprattutto routine, fatti e situazioni stabili. Il Present Continuous descrive soprattutto azioni in corso e situazioni temporanee. Gli indicatori di tempo aiutano, ma non sostituiscono il significato.",
+                "intro": "La scelta corretta nasce da una domanda: sto descrivendo ciò che succede normalmente oppure ciò che sta succedendo adesso o per un periodo limitato?",
+                "sections": [
+                  {
+                    "key": "meaning_first",
+                    "type": "rule",
+                    "title": "Prima scegli il significato",
+                    "body": "Per una routine o un fatto stabile usa normalmente il Present Simple. Per un'azione in corso o una situazione temporanea usa normalmente il Present Continuous.",
+                    "examples": [
+                      {"text":"Leo walks to school every day.","highlight":["walks"]},
+                      {"text":"Leo is walking to school now because the bus is late.","highlight":["is walking"]}
+                    ]
+                  },
+                  {
+                    "key": "stable_temporary",
+                    "type": "rule",
+                    "title": "Stabile o temporaneo?",
+                    "body": "Una situazione può essere vera in questo periodo senza essere permanente. In quel caso il Continuous può essere la scelta giusta anche se non sta succedendo in questo preciso secondo.",
+                    "examples": [
+                      {"text":"Marta works in Bologna.","highlight":["works"]},
+                      {"text":"This month, Marta is working in Milan.","highlight":["is working"]}
+                    ]
+                  },
+                  {
+                    "key": "markers",
+                    "type": "tip",
+                    "title": "Le parole di tempo sono indizi, non risposte",
+                    "body": "Usually, every day, now, at the moment e this week possono aiutarti, ma devi comunque leggere il contesto. Non scegliere un tempo solo perché vedi una singola parola."
+                  },
+                  {
+                    "key": "form_after_choice",
+                    "type": "pattern",
+                    "title": "Dopo la scelta, costruisci bene la forma",
+                    "body": "Present Simple e Present Continuous hanno strutture diverse nelle affermative, domande e negative.",
+                    "pattern": "routine/fact → Present Simple · current/temporary → am/is/are + verb-ing",
+                    "examples": [
+                      {"text":"Does she work here?","highlight":["Does","work"]},
+                      {"text":"Is she working here today?","highlight":["Is","working"]}
+                    ]
+                  },
+                  {
+                    "key": "state_verbs",
+                    "type": "mistake",
+                    "title": "Know, like, want, need: niente -ing a questo livello",
+                    "body": "Con alcuni verbi di stato molto comuni usiamo normalmente il Present Simple anche se la situazione riguarda adesso.",
+                    "correct": {"text":"I know the answer.","highlight":["know"]},
+                    "incorrect": {"text":"I'm knowing the answer.","highlight":["'m knowing"]}
+                  },
+                  {
+                    "key": "recap",
+                    "type": "recap",
+                    "title": "La decisione in quattro passi",
+                    "points": [
+                      "1. Leggi il contesto completo.",
+                      "2. Decidi: routine/fatto stabile oppure azione in corso/situazione temporanea?",
+                      "3. Usa gli indicatori di tempo solo come conferma.",
+                      "4. Costruisci correttamente il tempo scelto."
+                    ]
+                  }
+                ]
+              },
+              "grading": {"mode":"automatic","weight":0,"nearly_correct_multiplier":0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes":[],"fallback_error_code":null},
+              "tags": ["recovery","present-tense-choice","recover","structured-teaching"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_recover_1",
+              "type": "multiple_choice",
+              "title": "Leggi tutta la situazione",
+              "prompt": "Nina normally eats lunch at school, but the canteen is closed today. She is eating at a café with her sister.",
+              "instructions": "Perché i due verbi usano tempi diversi?",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "routine_vs_current",
+              "primary_skill": "grammar",
+              "learning_objective": "Distinguish a usual routine from a current exceptional action.",
+              "difficulty": "support",
+              "content": {
+                "options": [
+                  {"key":"a","text":"Eats descrive la routine; is eating descrive ciò che succede nella situazione di oggi.","is_correct":true},
+                  {"key":"b","text":"Eats è corretto solo perché c'è normally; senza normally servirebbe sempre il Continuous.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"},
+                  {"key":"c","text":"I due tempi sono intercambiabili perché entrambe le azioni riguardano il presente.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Il contrasto è di significato: routine abituale contro azione eccezionale/in corso oggi."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","meaning"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_recover_2",
+              "type": "select_gap",
+              "title": "Stabile e temporaneo nella stessa situazione",
+              "prompt": "Completa le due informazioni su Paolo.",
+              "instructions": "Scegli la forma che corrisponde al significato.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "stable_vs_temporary",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose present simple for a stable situation and present continuous for a temporary current situation.",
+              "difficulty": "support",
+              "content": {
+                "text_template": "Paolo [[blank_1]] in a sports shop, but this week he [[blank_2]] at the shop near the station.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["works"],"options":["works","is working"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"is working","error_code":"CORE_PRESENT_TENSE_CHOICE"}]},
+                  {"key":"blank_2","accepted_answers":["is working"],"options":["works","is working"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"works","error_code":"CORE_PRESENT_TENSE_CHOICE"}]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Works descrive il lavoro stabile; this week introduce qui un cambiamento temporaneo."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","stable-temporary"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_recover_3",
+              "type": "error_correction",
+              "title": "Una forma che in inglese non funziona",
+              "prompt": "Correggi: I'm knowing the answer now.",
+              "instructions": "Riscrivi la frase naturale e corretta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "basic_state_verbs",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the present simple with the basic state verb know.",
+              "difficulty": "support",
+              "content": {"accepted_answers":["I know the answer now.","I know the answer."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Know è un verbo di stato: a questo livello usa I know, anche se il sapere riguarda adesso."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","state-verbs"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_recover_4",
+              "type": "dialogue_choice",
+              "title": "Che cosa risponde Luca?",
+              "prompt": "Scegli la risposta che rende coerenti abitudine e situazione di oggi.",
+              "instructions": "Leggi il mini-dialogo completo.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "dialogue_context",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose present tenses appropriately in a short dialogue contrasting routine and current action.",
+              "difficulty": "support",
+              "content": {
+                "scenario": "Two classmates meet on the way to school.",
+                "response_prompt": "What should Luca say next?",
+                "turns": [
+                  {"key":"turn_1","speaker":"Maya","text":"You usually take the bus. Why are you walking today?"}
+                ],
+                "options": [
+                  {"key":"a","text":"The bus isn't running this morning, so I'm walking.","is_correct":true},
+                  {"key":"b","text":"The bus doesn't run this morning, so I walk now.","is_correct":false,"error_code":"DIALOGUE_PRESENT_TENSE_CONTEXT"},
+                  {"key":"c","text":"I'm usually taking the bus, but today I walk.","is_correct":false,"error_code":"DIALOGUE_PRESENT_TENSE_CONTEXT"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"La domanda contrasta una routine con una situazione eccezionale di questa mattina."},
+              "diagnostics": {"tested_codes":["DIALOGUE_PRESENT_TENSE_CONTEXT"],"fallback_error_code":"CORE_PRESENT_TENSE_CHOICE"},
+              "tags": ["recovery","present-tense-choice","dialogue"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_recover_5",
+              "type": "translation",
+              "title": "Due significati, due tempi",
+              "prompt": "Di solito mio padre lavora da casa, ma questa settimana sta lavorando in ufficio.",
+              "instructions": "Traduci in inglese mantenendo il contrasto tra situazione abituale e temporanea.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "translation_contrast",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce present simple and present continuous accurately in the same sentence.",
+              "difficulty": "support",
+              "content": {"accepted_answers":["My father usually works from home, but this week he is working in the office.","My father usually works from home, but this week he's working in the office.","My dad usually works from home, but this week he is working in the office.","My dad usually works from home, but this week he's working in the office."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Usually works = situazione abituale; this week he is working = situazione temporanea."},
+              "diagnostics": {"tested_codes":["TRANSLATION_PRESENT_TENSE_CHOICE"],"fallback_error_code":"CORE_PRESENT_TENSE_CHOICE"},
+              "tags": ["recovery","present-tense-choice","translation"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery","present-simple-vs-present-continuous","recover","wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_present_tense_choice_practice",
+      "title": "Present Simple vs Present Continuous — Allenati",
+      "description": "Pratica la scelta del tempo in messaggi, routine, cambiamenti temporanei, domande, state verbs e mini-contesti collegati.",
+      "instructions": "Scegli dal significato, poi controlla la struttura del tempo scelto.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-simple-vs-present-continuous",
+      "estimated_minutes": 12,
+      "settings": {"display_mode":"one_at_a_time","feedback_timing":"question_end","show_score":true,"show_correct_answers":true,"show_explanations":true,"show_diagnostic_summary":true,"allow_retry":true},
+      "sections": [
+        {
+          "client_key": "recovery_present_tense_choice_practice_section",
+          "title": "Usa il contesto",
+          "instructions": "Gli esercizi non ti diranno quale tempo usare: devi dedurlo.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_ptc_practice_1",
+              "type": "gap_fill",
+              "title": "Un pomeriggio diverso dal solito",
+              "prompt": "Completa il mini-testo con la forma corretta dei verbi tra parentesi.",
+              "instructions": "Scrivi la forma completa richiesta dal contesto.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "connected_context",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose and produce both present tenses across a connected context.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Leo usually [[blank_1]] (cycle) home after school, but it [[blank_2]] (rain) heavily today, so he [[blank_3]] (wait) for the bus. His sister never [[blank_4]] (take) that bus because she prefers walking.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["cycles"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_2","accepted_answers":["is raining","'s raining"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_3","accepted_answers":["is waiting","'s waiting"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_4","accepted_answers":["takes"],"points":1,"feedback":{},"answer_error_mappings":[]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Usually/never confermano routine; la pioggia e l'attesa appartengono alla situazione di oggi."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE","PRESENT_SIMPLE_THIRD_PERSON","PRESENT_CONTINUOUS_USE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_practice_2",
+              "type": "multiple_choice",
+              "title": "Una situazione temporanea",
+              "prompt": "Chiara lives in Florence, but her flat is being repaired. For two weeks, she is staying with her cousin in Prato.",
+              "instructions": "Quale interpretazione è corretta?",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "stable_vs_temporary",
+              "primary_skill": "grammar",
+              "learning_objective": "Distinguish a stable home situation from temporary accommodation.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {"key":"a","text":"Lives indica la situazione stabile; is staying indica una sistemazione temporanea.","is_correct":true},
+                  {"key":"b","text":"Is staying è usato solo perché la frase contiene for two weeks.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"},
+                  {"key":"c","text":"Lives dovrebbe essere is living perché entrambe le città riguardano il presente.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"La differenza è stabile vs temporaneo, non semplicemente presente vs presente."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_practice_3",
+              "type": "error_correction",
+              "title": "Una frase da sistemare",
+              "prompt": "Correggi: I am needing my laptop for class today.",
+              "instructions": "Riscrivi la frase naturale e corretta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "basic_state_verbs",
+              "primary_skill": "grammar",
+              "learning_objective": "Use present simple with the basic state verb need.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["I need my laptop for class today."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Need è un verbo di stato: qui usiamo I need, anche se la necessità riguarda oggi."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_practice_4",
+              "type": "word_order",
+              "title": "Una domanda sulla routine",
+              "prompt": "Metti le parti nell'ordine corretto.",
+              "instructions": "Costruisci la domanda completa.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "question_form",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a present simple question about a regular routine.",
+              "difficulty": "standard",
+              "content": {"tokens":["what","do","you","usually do","after school"],"correct_order":["what","do","you","usually do","after school"],"terminal_punctuation":"?"},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"La domanda riguarda una routine: What do you usually do after school?"},
+              "diagnostics": {"tested_codes":["PRESENT_SIMPLE_QUESTION_WORD_ORDER"],"fallback_error_code":"CORE_PRESENT_TENSE_CHOICE"},
+              "tags": ["recovery","present-tense-choice","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_practice_5",
+              "type": "dialogue_choice",
+              "title": "Un messaggio tra amici",
+              "prompt": "Scegli la risposta coerente con il contesto.",
+              "instructions": "Leggi prima entrambe le battute.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "dialogue_context",
+              "primary_skill": "grammar",
+              "learning_objective": "Select appropriate present tense forms in an everyday dialogue.",
+              "difficulty": "standard",
+              "content": {
+                "scenario": "A friend calls while Sam is at his grandmother's house.",
+                "response_prompt": "What should Sam say?",
+                "turns": [
+                  {"key":"turn_1","speaker":"Eva","text":"Where are you? You normally study at the library on Wednesday."}
+                ],
+                "options": [
+                  {"key":"a","text":"I do, but this week I'm studying at my grandmother's house.","is_correct":true},
+                  {"key":"b","text":"I am, but this week I study at my grandmother's house.","is_correct":false,"error_code":"DIALOGUE_PRESENT_TENSE_CONTEXT"},
+                  {"key":"c","text":"I'm normally studying at the library, but I study here now.","is_correct":false,"error_code":"DIALOGUE_PRESENT_TENSE_CONTEXT"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"I do riprende la routine; I'm studying descrive il cambiamento temporaneo di questa settimana."},
+              "diagnostics": {"tested_codes":["DIALOGUE_PRESENT_TENSE_CONTEXT"],"fallback_error_code":"CORE_PRESENT_TENSE_CHOICE"},
+              "tags": ["recovery","present-tense-choice","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_practice_6",
+              "type": "translation",
+              "title": "Una cosa stabile e una cosa che succede ora",
+              "prompt": "Non mi piace il caffè, quindi sto aspettando un tè.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "translation_contrast",
+              "primary_skill": "grammar",
+              "learning_objective": "Combine a basic state verb in present simple with a current action in present continuous.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["I don't like coffee, so I'm waiting for a tea.","I don't like coffee, so I am waiting for a tea.","I don't like coffee, so I'm waiting for tea.","I don't like coffee, so I am waiting for tea."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Don't like = stato/preferenza; am waiting = azione in corso."},
+              "diagnostics": {"tested_codes":["TRANSLATION_PRESENT_TENSE_CHOICE"],"fallback_error_code":"CORE_PRESENT_TENSE_CHOICE"},
+              "tags": ["recovery","present-tense-choice","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_practice_7",
+              "type": "multiple_select",
+              "title": "Quali frasi corrispondono al contesto?",
+              "prompt": "Amina works in a bakery. Today the bakery is closed, so she is helping at her uncle's café. Seleziona tutte le frasi corrette.",
+              "instructions": "Valuta sia grammatica sia significato.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "meaning_and_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise forms that accurately express stable work and a temporary current change.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {"key":"a","text":"Amina works in a bakery.","is_correct":true},
+                  {"key":"b","text":"She is helping at her uncle's café today.","is_correct":true},
+                  {"key":"c","text":"Amina is usually working in a bakery.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"},
+                  {"key":"d","text":"She helps at her uncle's café right now.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Il lavoro in bakery è stabile; l'aiuto al café è una situazione eccezionale di oggi."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_practice_8",
+              "type": "select_gap",
+              "title": "Due informazioni su Sara",
+              "prompt": "Completa il messaggio.",
+              "instructions": "Scegli la forma che rende il messaggio coerente.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "stable_vs_temporary",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose correct tense forms across stable and temporary information.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Sara [[blank_1]] at the city library, but while her colleague is away she [[blank_2]] at the smaller branch near the station.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["works"],"options":["works","is working"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"is working","error_code":"CORE_PRESENT_TENSE_CHOICE"}]},
+                  {"key":"blank_2","accepted_answers":["is working"],"options":["works","is working"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"works","error_code":"CORE_PRESENT_TENSE_CHOICE"}]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Il primo lavoro è la situazione stabile; la seconda sede è un cambiamento temporaneo finché la collega è assente."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","practice"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery","present-simple-vs-present-continuous","practice","wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_present_tense_choice_school",
+      "title": "Present Simple vs Present Continuous — Modalità scuola",
+      "description": "Applica la scelta dei due tempi in formati tipici di una verifica scolastica, senza suggerimenti durante l'esercizio.",
+      "instructions": "Completa tutto prima di vedere correzioni e spiegazioni.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-simple-vs-present-continuous",
+      "estimated_minutes": 10,
+      "settings": {"display_mode":"one_at_a_time","feedback_timing":"exercise_end","show_score":true,"show_correct_answers":true,"show_explanations":true,"show_diagnostic_summary":true,"allow_retry":true},
+      "sections": [
+        {
+          "client_key": "recovery_present_tense_choice_school_section",
+          "title": "Verifica scolastica mista",
+          "instructions": "Nessun feedback fino alla fine.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_ptc_school_1",
+              "type": "gap_fill",
+              "title": "Complete the text",
+              "prompt": "Put the verbs in brackets into the Present Simple or Present Continuous.",
+              "instructions": "Scrivi la forma completa del verbo.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "connected_text",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose and form both present tenses in a connected school-style text.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Mia usually [[blank_1]] (walk) to school with Elena. This week Elena [[blank_2]] (stay) with relatives in another town, so Mia [[blank_3]] (take) the bus. She [[blank_4]] (not/like) buses, but today it [[blank_5]] (rain) and she [[blank_6]] (not/want) to walk alone.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["walks"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_2","accepted_answers":["is staying","'s staying"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_3","accepted_answers":["is taking","'s taking"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_4","accepted_answers":["doesn't like","does not like"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_5","accepted_answers":["is raining","'s raining"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_6","accepted_answers":["doesn't want","does not want"],"points":1,"feedback":{},"answer_error_mappings":[]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Il testo alterna routine, cambiamenti temporanei, azioni in corso e state verbs."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE","PRESENT_SIMPLE_THIRD_PERSON","PRESENT_CONTINUOUS_USE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","school"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_school_2",
+              "type": "error_correction",
+              "title": "Correct the mistake",
+              "prompt": "Correct: My brother usually is playing football after school.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "routine_vs_current",
+              "primary_skill": "grammar",
+              "learning_objective": "Correct inappropriate continuous use for a repeated routine.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["My brother usually plays football after school."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"La frase descrive una routine ripetuta: usually plays."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE","PRESENT_SIMPLE_THIRD_PERSON"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","school"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_school_3",
+              "type": "select_gap",
+              "title": "Choose the correct form",
+              "prompt": "Complete both sentences.",
+              "instructions": "Scegli la forma corretta dal contesto.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "meaning_and_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose the appropriate present tense from contrasting contexts.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "1. Our English teacher normally [[blank_1]] us homework on Friday. 2. Please wait: she [[blank_2]] to another student at the moment.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["gives"],"options":["gives","is giving"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"is giving","error_code":"CORE_PRESENT_TENSE_CHOICE"}]},
+                  {"key":"blank_2","accepted_answers":["is talking"],"options":["talks","is talking"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"talks","error_code":"CORE_PRESENT_TENSE_CHOICE"}]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"La prima frase è una routine; la seconda descrive un'azione in corso."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","school"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_school_4",
+              "type": "word_order",
+              "title": "Make a question",
+              "prompt": "Put the words in the correct order.",
+              "instructions": "Usa tutte le parti.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "question_form",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a present continuous question about an action in progress.",
+              "difficulty": "standard",
+              "content": {"tokens":["why","is","Tom","wearing","your coat"],"correct_order":["why","is","Tom","wearing","your coat"],"terminal_punctuation":"?"},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Why + is + Tom + wearing...?"},
+              "diagnostics": {"tested_codes":["PRESENT_CONTINUOUS_QUESTION_WORD_ORDER"],"fallback_error_code":"CORE_PRESENT_TENSE_CHOICE"},
+              "tags": ["recovery","present-tense-choice","school"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_school_5",
+              "type": "translation",
+              "title": "Translate",
+              "prompt": "Mia sorella vive a Roma, ma questo mese sta lavorando a Torino.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "translation_contrast",
+              "primary_skill": "grammar",
+              "learning_objective": "Translate a stable situation and a temporary current situation using the appropriate tenses.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["My sister lives in Rome, but this month she is working in Turin.","My sister lives in Rome, but this month she's working in Turin."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Lives = situazione stabile; is working = cambiamento temporaneo di questo mese."},
+              "diagnostics": {"tested_codes":["TRANSLATION_PRESENT_TENSE_CHOICE"],"fallback_error_code":"CORE_PRESENT_TENSE_CHOICE"},
+              "tags": ["recovery","present-tense-choice","school"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_school_6",
+              "type": "multiple_choice",
+              "title": "Choose the correct sentence",
+              "prompt": "Which sentence is correct in standard school-level English?",
+              "instructions": "Scegli una risposta.",
+              "instruction_language": "en",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "basic_state_verbs",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise correct present simple use with a basic state verb.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {"key":"a","text":"I want some water, please.","is_correct":true},
+                  {"key":"b","text":"I'm wanting some water, please.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"},
+                  {"key":"c","text":"I am want some water, please.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Want è un basic state verb: I want."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","school"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery","present-simple-vs-present-continuous","school","wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_present_tense_choice_verify",
+      "title": "Present Simple vs Present Continuous — Mini-verifica",
+      "description": "Controlla se sai scegliere e costruire i due tempi senza spiegazioni o suggerimenti.",
+      "instructions": "Completa in autonomia. Obiettivo consigliato: almeno 80%.",
+      "instruction_language": "it",
+      "level": "A1",
+      "topic": "present-simple-vs-present-continuous",
+      "estimated_minutes": 8,
+      "settings": {"display_mode":"one_at_a_time","feedback_timing":"exercise_end","show_score":true,"show_correct_answers":true,"show_explanations":true,"show_diagnostic_summary":true,"allow_retry":true},
+      "sections": [
+        {
+          "client_key": "recovery_present_tense_choice_verify_section",
+          "title": "Controllo finale",
+          "instructions": "Nessun feedback fino alla fine.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_ptc_verify_1",
+              "type": "multiple_choice",
+              "title": "Scegli dal contesto",
+              "prompt": "Daniel works at a hotel. The hotel is being renovated, so this week he is working at another branch.",
+              "instructions": "Quale spiegazione è corretta?",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "stable_vs_temporary",
+              "primary_skill": "grammar",
+              "learning_objective": "Distinguish a stable work situation from a temporary current change.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {"key":"a","text":"Works è stabile; is working descrive il cambiamento temporaneo.","is_correct":true},
+                  {"key":"b","text":"Entrambi dovrebbero essere Present Continuous perché parlano del presente.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"},
+                  {"key":"c","text":"Entrambi dovrebbero essere Present Simple perché Daniel ha comunque un lavoro.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"La scelta dipende dalla differenza tra situazione stabile e situazione temporanea."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_verify_2",
+              "type": "gap_fill",
+              "title": "Completa il contesto",
+              "prompt": "Usa la forma corretta dei verbi tra parentesi.",
+              "instructions": "Scrivi la forma completa.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "routine_vs_current",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce both present tenses in a routine-versus-current contrast.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Ella normally [[blank_1]] (have) lunch at one, but today she [[blank_2]] (eat) early because she has an appointment.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["has"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_2","accepted_answers":["is eating","'s eating"],"points":1,"feedback":{},"answer_error_mappings":[]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Normally has = routine; today she is eating early = situazione eccezionale di oggi."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE","PRESENT_SIMPLE_THIRD_PERSON","PRESENT_CONTINUOUS_USE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_verify_3",
+              "type": "error_correction",
+              "title": "Correggi la frase",
+              "prompt": "Correggi: We are liking this new teacher.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "basic_state_verbs",
+              "primary_skill": "grammar",
+              "learning_objective": "Use present simple correctly with the state verb like.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["We like this new teacher."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Like è un verbo di stato di base: We like."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_verify_4",
+              "type": "word_order",
+              "title": "Costruisci la domanda",
+              "prompt": "Metti le parti nell'ordine corretto.",
+              "instructions": "Usa tutte le parti.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "question_form",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a present simple question about a regular activity.",
+              "difficulty": "standard",
+              "content": {"tokens":["where","does","your sister","usually study"],"correct_order":["where","does","your sister","usually study"],"terminal_punctuation":"?"},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Where + does + your sister + usually study?"},
+              "diagnostics": {"tested_codes":["PRESENT_SIMPLE_QUESTION_WORD_ORDER"],"fallback_error_code":"CORE_PRESENT_TENSE_CHOICE"},
+              "tags": ["recovery","present-tense-choice","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_verify_5",
+              "type": "select_gap",
+              "title": "Una situazione che cambia per poco",
+              "prompt": "Completa le due frasi.",
+              "instructions": "Scegli la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "stable_vs_temporary",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose present simple for a stable situation and present continuous for a temporary change.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "My aunt [[blank_1]] in Naples, but while her flat is being painted she [[blank_2]] with friends.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["lives"],"options":["lives","is living"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"is living","error_code":"CORE_PRESENT_TENSE_CHOICE"}]},
+                  {"key":"blank_2","accepted_answers":["is staying"],"options":["stays","is staying"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"stays","error_code":"CORE_PRESENT_TENSE_CHOICE"}]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Lives = casa stabile; is staying = sistemazione temporanea durante i lavori."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_verify_6",
+              "type": "translation",
+              "title": "Traduci il contrasto",
+              "prompt": "Di solito andiamo a scuola a piedi, ma oggi stiamo prendendo l'autobus.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "translation_contrast",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce both present tenses in a routine-versus-current translation.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["We usually walk to school, but today we are taking the bus.","We usually walk to school, but today we're taking the bus.","We normally walk to school, but today we are taking the bus.","We normally walk to school, but today we're taking the bus."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Usually/normally walk = routine; today we are taking = situazione di oggi."},
+              "diagnostics": {"tested_codes":["TRANSLATION_PRESENT_TENSE_CHOICE"],"fallback_error_code":"CORE_PRESENT_TENSE_CHOICE"},
+              "tags": ["recovery","present-tense-choice","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_verify_7",
+              "type": "dialogue_choice",
+              "title": "Completa il dialogo",
+              "prompt": "Scegli la risposta più coerente.",
+              "instructions": "Leggi il contesto prima di scegliere.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "dialogue_context",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose appropriate present tense forms in a short dialogue without rule cues.",
+              "difficulty": "standard",
+              "content": {
+                "scenario": "Two colleagues speak during a temporary office move.",
+                "response_prompt": "What should Elena say?",
+                "turns": [
+                  {"key":"turn_1","speaker":"Marco","text":"Do you work on this floor?"},
+                  {"key":"turn_2","speaker":"Elena","text":"Normally, no. My team is on the second floor."}
+                ],
+                "options": [
+                  {"key":"a","text":"But this week we're working here because our office is being painted.","is_correct":true},
+                  {"key":"b","text":"But this week we work here because our office paints.","is_correct":false,"error_code":"DIALOGUE_PRESENT_TENSE_CONTEXT"},
+                  {"key":"c","text":"But normally we're working here this week.","is_correct":false,"error_code":"DIALOGUE_PRESENT_TENSE_CONTEXT"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"This week introduce qui una sede temporanea diversa da quella normale."},
+              "diagnostics": {"tested_codes":["DIALOGUE_PRESENT_TENSE_CONTEXT"],"fallback_error_code":"CORE_PRESENT_TENSE_CHOICE"},
+              "tags": ["recovery","present-tense-choice","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_ptc_verify_8",
+              "type": "multiple_select",
+              "title": "Ultimo controllo",
+              "prompt": "Seleziona tutte le frasi corrette.",
+              "instructions": "Valuta forma e significato.",
+              "instruction_language": "it",
+              "level": "A1",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "mixed_mastery",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise accurate routine, current-action, state-verb and negative forms across both present tenses.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {"key":"a","text":"I don't need any help right now.","is_correct":true},
+                  {"key":"b","text":"They aren't using the computer at the moment.","is_correct":true},
+                  {"key":"c","text":"She is usually going to work by train.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"},
+                  {"key":"d","text":"He doesn't working on Fridays.","is_correct":false,"error_code":"CORE_PRESENT_TENSE_CHOICE"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Need resta al Simple; at the moment descrive qui un'azione non in corso; usually richiede la routine al Simple; dopo doesn't serve il verbo base."},
+              "diagnostics": {"tested_codes":["CORE_PRESENT_TENSE_CHOICE","PRESENT_CONTINUOUS_NEGATIVE"],"fallback_error_code":"A2_PRESENT_SIMPLE_VS_CONTINUOUS"},
+              "tags": ["recovery","present-tense-choice","verify"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery","present-simple-vs-present-continuous","verify","wave-1"],
+      "foundation_links": []
+    }
+  ]
+}
