@@ -8,6 +8,10 @@
 --
 -- This migration is idempotent: if a structured educational version already
 -- exists for Q-00524, it reuses that version instead of creating another one.
+-- It is also safe on schema-only/fresh databases (including migration CI): when
+-- the production content catalog is absent and Q-00524 does not exist, it is a
+-- deliberate no-op. If Q-00524 exists but is internally inconsistent, it still
+-- fails loudly instead of hiding a partial production-data problem.
 
 do $$
 declare
@@ -24,8 +28,13 @@ begin
   from public.exercise_builder_questions question
   where question.public_id = 'Q-00524';
 
-  if v_question_id is null or v_old_version_id is null then
-    raise exception 'Structured Adjectives migration: Q-00524 was not found.';
+  if v_question_id is null then
+    raise notice 'Structured Adjectives migration: Q-00524 is not present; skipping production-reference data migration.';
+    return;
+  end if;
+
+  if v_old_version_id is null then
+    raise exception 'Structured Adjectives migration: Q-00524 exists but has no current version.';
   end if;
 
   select version.id
