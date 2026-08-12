@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const migration = readFileSync('supabase/migrations/20260812144057_recovery_wave_mapping_sync.sql', 'utf8');
-const allWaveMigration = readFileSync('supabase/migrations/20260812214000_recovery_all_wave_mapping_sync.sql', 'utf8');
+const allWaveMigration = readFileSync('supabase/migrations/20260812192912_recovery_all_wave_mapping_sync.sql', 'utf8');
 const page = readFileSync('src/pages/AdminRecoveryContent.jsx', 'utf8');
 const api = readFileSync('src/lib/exerciseBuilderApi.js', 'utf8');
 
@@ -20,10 +20,10 @@ assert.match(migration, /managed\.mapping_source = 'recovery_wave_import'/);
 // Later canonical waves use the same managed sync contract without weakening publication or override guards.
 assert.match(allWaveMigration, /create or replace function public\.admin_sync_recovery_wave_mappings\(\)/);
 assert.match(allWaveMigration, /batch\.source_name ~ '\^recovery-wave-\[0-9\]\+:'/);
-assert.match(allWaveMigration, /exercise\.status = 'published'/);
-assert.match(allWaveMigration, /version\.review_status = 'approved'/);
-assert.match(allWaveMigration, /manual\.mapping_source = 'manual'/);
-assert.match(allWaveMigration, /managed\.mapping_source = 'recovery_wave_import'/);
+assert.match(allWaveMigration, /exercise\.status\s*=\s*'published'/);
+assert.match(allWaveMigration, /version\.review_status\s*=\s*'approved'/);
+assert.match(allWaveMigration, /manual\.mapping_source\s*=\s*'manual'/);
+assert.match(allWaveMigration, /managed\.mapping_source\s*=\s*'recovery_wave_import'/);
 assert.doesNotMatch(allWaveMigration, /batch\.source_name like 'recovery-wave-1:%'/);
 
 // Admin import discovers repository Wave 1 bundles automatically and passes through the real validator/import pipeline.
