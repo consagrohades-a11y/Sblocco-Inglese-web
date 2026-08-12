@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "axes": [
+    {
+      "key": "grammar_sentence_control",
+      "code": "GRAM",
+      "label_it": "Grammatica e controllo della frase",
+      "purpose": "Control sentence structure and grammatical choices accurately enough to understand, manipulate and independently produce school-level English.",
+      "includes": [
+        "grammar structures required by the school programme",
+        "affirmative, negative and interrogative sentence control",
+        "tense and form choice from context",
+        "word order",
+        "agreement and auxiliary choice",
+        "sentence-level editing and correction"
+      ],
+      "does_not_mean": [
+        "completion of isolated grammar lessons",
+        "recognition-only multiple choice performance",
+        "memorising rule labels without successful production"
+      ],
+      "typical_evidence": [
+        "mixed grammar",
+        "sentence transformation",
+        "error correction",
+        "question formation",
+        "controlled sentence production",
+        "Italian-to-English production"
+      ],
+      "readiness_relevance": "core",
+      "blocking_eligible": true
+    },
+    {
+      "key": "lexical_competence",
+      "code": "LEX",
+      "label_it": "Competenza lessicale",
+      "purpose": "Understand and use the high-frequency vocabulary, chunks and collocations needed by the learner's school programme and target level.",
+      "includes": [
+        "high-frequency vocabulary domains",
+        "common collocations and chunks",
+        "word families when programme-appropriate",
+        "contextual word choice",
+        "basic lexical precision needed for reading and writing"
+      ],
+      "does_not_mean": [
+        "isolated word-list memorisation as sufficient evidence",
+        "rare vocabulary used only to make tasks harder"
+      ],
+      "typical_evidence": [
+        "contextual gap fill",
+        "short reading",
+        "sentence production",
+        "writing",
+        "listening",
+        "functional response"
+      ],
+      "readiness_relevance": "core",
+      "blocking_eligible": true
+    },
+    {
+      "key": "reading",
+      "code": "READ",
+      "label_it": "Comprensione scritta",
+      "purpose": "Understand short and progressively longer school-appropriate texts without relying on word-by-word translation.",
+      "includes": [
+        "gist",
+        "explicit detail",
+        "reference and cohesion at level",
+        "sequence and basic inference",
+        "meaning from context",
+        "task-following in reading comprehension formats"
+      ],
+      "does_not_mean": [
+        "grammar recognition inside disconnected sentences",
+        "translation of every word before comprehension"
+      ],
+      "typical_evidence": [
+        "reading comprehension",
+        "matching",
+        "true-false with justification when appropriate",
+        "short-answer comprehension",
+        "integrated reading-to-writing task"
+      ],
+      "readiness_relevance": "core",
+      "blocking_eligible": true
+    },
+    {
+      "key": "writing",
+      "code": "WRITE",
+      "label_it": "Produzione scritta",
+      "purpose": "Produce comprehensible, task-appropriate written English with the organisation, grammar and vocabulary expected at the learner's school-year profile.",
+      "includes": [
+        "sentence linking",
+        "paragraph organisation",
+        "task completion",
+        "appropriate tense selection",
+        "lexical adequacy",
+        "editing for major recurring errors"
+      ],
+      "does_not_mean": [
+        "perfect native-like prose",
+        "sentence translation alone",
+        "accuracy scores that ignore whether the task was actually completed"
+      ],
+      "typical_evidence": [
+        "guided paragraph",
+        "email or message",
+        "short narrative",
+        "description",
+        "opinion or explanation when level-appropriate",
+        "integrated reading/listening-to-writing task"
+      ],
+      "readiness_relevance": "core_when_required_by_school_programme",
+      "blocking_eligible": true
+    },
+    {
+      "key": "listening",
+      "code": "LISTEN",
+      "label_it": "Comprensione orale",
+      "purpose": "Understand level-appropriate spoken English well enough to identify gist, key detail and intended meaning in school-relevant listening tasks.",
+      "includes": [
+        "gist",
+        "specific detail",
+        "speaker or situation identification",
+        "basic inference",
+        "understanding natural but level-controlled delivery"
+      ],
+      "does_not_mean": [
+        "reading a transcript before answering",
+        "artificially slow word-by-word audio as the only evidence"
+      ],
+      "typical_evidence": [
+        "listening comprehension",
+        "dialogue comprehension",
+        "note completion",
+        "short-answer listening",
+        "integrated listening-to-response task"
+      ],
+      "readiness_relevance": "core_when_required_by_school_programme",
+      "blocking_eligible": true
+    },
+    {
+      "key": "functional_communication",
+      "code": "COMM",
+      "label_it": "Comunicazione funzionale",
+      "purpose": "Use English to perform practical communicative functions in written or spoken form when those functions are part of the school programme or recovery assessment.",
+      "includes": [
+        "asking and answering everyday questions",
+        "requests, permission and offers",
+        "describing routines, people, places and plans",
+        "short functional exchanges",
+        "spoken interaction or oral response when required"
+      ],
+      "does_not_mean": [
+        "generic confidence scoring",
+        "speaking being mandatory for every learner regardless of school requirements"
+      ],
+      "typical_evidence": [
+        "functional response",
+        "dialogue completion",
+        "roleplay",
+        "audio response",
+        "short written exchange"
+      ],
+      "readiness_relevance": "programme_dependent",
+      "blocking_eligible": true
+    }
+  ],
+  "cross_axis_rules": [
+    "An assessment task may produce evidence for more than one competence axis, but each evidence claim must identify the primary axis and any secondary axes explicitly.",
+    "Italian-to-English translation is an assessment mode and may provide grammar, lexical and writing evidence; it is not itself a competence axis.",
+    "Mixed school assessment is an assessment mode and may sample several axes; it must not collapse those axes into one undifferentiated score.",
+    "No axis may be declared mastered solely from another axis's score."
+  ]
+}
