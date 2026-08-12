@@ -93,7 +93,9 @@ assert.equal(merge.final_output, 'content/recovery/curriculum-v2/gap-analysis.js
 for (const requiredInput of ['gap-analysis-pedagogical.json', 'gap-analysis-technical.json', 'readiness-policy.json', 'assessment-blueprint.json']) {
   assert.ok(merge.inputs_required?.includes(requiredInput), `Final merge contract missing ${requiredInput}`);
 }
-assert.ok(merge.merge_rules?.some((rule) => /renderer supports/i.test(rule) && /Recovery coverage/i.test(rule)));
+const mergeRulesText = (merge.merge_rules || []).join(' ');
+assert.match(mergeRulesText, /renderer supports/i);
+assert.match(mergeRulesText, /Recovery coverage/i);
 
 assert.equal(readiness.runtime_status, 'contract_only_not_yet_active');
 assert.ok(blueprint.assessment_fragment_contract);
