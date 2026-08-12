@@ -20,7 +20,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base64 -d .wave2-prb.tar.gz.b64 > /tmp/wave2-prb.tar.gz
+          base64 --decode --ignore-garbage .wave2-prb.tar.gz.b64 > /tmp/wave2-prb.tar.gz
           tar -xzf /tmp/wave2-prb.tar.gz -C .
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs';
