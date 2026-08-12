@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "curriculum_id": "recovery-years-1-3-v2",
+  "policy_id": "recovery-readiness-v2",
+  "status": "draft",
+  "runtime_status": "contract_only_not_yet_active",
+  "purpose": "Define when Recovery has enough independent, programme-relevant evidence to describe a learner as READY without allowing strong grammar-topic scores or a single global mock mark to hide a critical weakness in a required competence.",
+  "principles": [
+    "The learner's official school recovery programme determines which outcomes and competence axes are active; the default year profile fills gaps but never overrides explicit school requirements.",
+    "READY is an evidence decision, not a completion badge: finishing topics or reaching a high topic-average score is not sufficient.",
+    "Topic verification is supporting evidence. Every required blocking outcome needs cumulative transfer evidence before it can contribute to READY.",
+    "Required competence axes are evaluated separately before an overall readiness score is calculated.",
+    "Strong performance in one axis cannot fully compensate for a critical weakness in another required blocking axis or outcome.",
+    "Axes that are not required by the learner's programme do not lower readiness because evidence was not collected for them.",
+    "The final mock is a required final transfer sample for READY, but its global score cannot erase disaggregated blocking evidence.",
+    "Repeated attempts on the same or near-identical form do not count as independent evidence; the latest valid attempt supersedes earlier attempts from that form family.",
+    "Recognition-only evidence cannot satisfy an outcome whose Curriculum v2 contract requires controlled production.",
+    "SOS mode may reduce study time and available evidence opportunities, but it does not lower READY thresholds or blocking floors."
+  ],
+  "programme_activation": {
+    "source_of_truth": "required Curriculum v2 outcomes derived from the learner's official school recovery programme",
+    "default_profile_fallback": "Use the school-year Curriculum v2 profile only where the official programme is incomplete, and mark those requirements as inferred until confirmed.",
+    "programme_requirement_rules": {
+      "default_core": "Active by default for the selected school-year profile unless the official programme explicitly excludes or replaces the requirement.",
+      "default_if_assessed": "Active only when the school programme or declared recovery-test format assesses the relevant competence or assessment family.",
+      "programme_dependent": "Inactive unless explicitly required by the official programme, teacher instructions or declared recovery-test profile."
+    },
+    "axis_activation_rule": "An axis is active when at least one required outcome on that axis is active for the learner.",
+    "inactive_axis_rule": "Inactive axes are excluded from evidence-completeness gates, axis scoring and overall readiness weighting.",
+    "school_override_limit": "The school programme may change required outcomes, assessment modes and axis weights, but once an outcome is active it cannot bypass evidence-integrity, independence or anti-compensation rules."
+  },
+  "evidence_eligibility": {
+    "eligible_sources": [
+      "topic_verify",
+      "checkpoint",
+      "mock_intermediate",
+      "mock_final"
+    ],
+    "source_weights": {
+      "topic_verify": 0.55,
+      "checkpoint": 0.8,
+      "mock_intermediate": 0.9,
+      "mock_final": 1.0
+    },
+    "current_plan_scope": "READY evidence must belong to the current Recovery enrollment/plan. Evidence from an older Recovery plan may inform diagnostics but does not satisfy current readiness evidence requirements.",
+    "independent_evidence_definition": "Evidence is independent when it comes from a distinct assessment form or substantially transformed task and is not an exact or near-duplicate reuse of a teaching, verify, checkpoint or prior mock item.",
+    "retry_rule": "Multiple attempts on the same assessment form count as one evidence family; the latest valid attempt supersedes earlier attempts from that form family rather than allowing best-score shopping.",
+    "unseen_context_rule": "At least one cumulative evidence observation used for a required outcome must have unseen_or_mixed_context_flag=true.",
+    "production_rule": "When the outcome requires controlled production, at least one eligible evidence observation must contain genuine scored production for that outcome.",
+    "primary_secondary_rule": "Primary-axis evidence counts fully. Secondary-axis evidence may count only when the fragment explicitly declares the outcome and the task genuinely scores that competence rather than merely containing the language feature.",
+    "minimum_evidence_per_required_blocking_outcome": {
+      "independent_observations": 2,
+      "minimum_cumulative_transfer_observations": 1,
+      "allowed_supporting_observation_sources": [
+        "topic_verify",
+        "checkpoint",
+        "mock_intermediate",
+        "mock_final"
+      ]
+    },
+    "minimum_evidence_per_other_required_outcome": {
+      "independent_observations": 1,
+      "minimum_cumulative_transfer_observations": 1
+    }
+  },
+  "outcome_scoring": {
+    "score_scale": {
+      "minimum": 0,
+      "maximum": 100
+    },
+    "aggregation_method": "Weighted mean of the latest eligible independent evidence observations for the outcome, using evidence source weights. Do not average repeated attempts from the same form family.",
+    "maximum_evidence_observations_used": 3,
+    "blocking_outcome_weight_in_axis": 2,
+    "other_required_outcome_weight_in_axis": 1,
+    "evidence_integrity_caps": {
+      "no_cumulative_transfer_evidence": 69,
+      "missing_required_production_evidence": 69,
+      "no_unseen_or_mixed_context_evidence": 69
+    },
+    "bands": {
+      "secure": {
+        "minimum": 80
+      },
+      "acceptable": {
+        "minimum": 70,
+        "maximum": 79
+      },
+      "fragile": {
+        "minimum": 60,
+        "maximum": 69
+      },
+      "critical": {
+        "maximum": 59
+      }
+    },
+    "interpretation_rule": "A numeric outcome score is valid for READY only after the evidence-integrity requirements for that outcome are satisfied."
+  },
+  "axis_scoring": {
+    "aggregation_method": "Weighted mean of active required outcome scores on the axis, using blocking_outcome_weight_in_axis for blocking candidates and other_required_outcome_weight_in_axis for other required outcomes.",
+    "ready_minimum": 72,
+    "strong_minimum": 85,
+    "blocking_outcome_floor": 65,
+    "maximum_share_of_blocking_outcomes_below_acceptable": 0.2,
+    "critical_rule": "An active axis fails its READY gate if any required blocking outcome is below the blocking_outcome_floor, or if more than the permitted share of required blocking outcomes are below the acceptable outcome band.",
+    "empty_axis_rule": "An inactive axis has no score and is excluded; an active axis with insufficient eligible evidence is marked insufficient_evidence rather than assigned zero."
+  },
+  "overall_scoring": {
+    "aggregation_method": "Weighted mean of active axis scores after all blocking and evidence-completeness gates are evaluated. Default weights are renormalized across active axes.",
+    "default_axis_weights": {
+      "grammar_sentence_control": 0.3,
+      "lexical_competence": 0.15,
+      "reading": 0.2,
+      "writing": 0.2,
+      "listening": 0.1,
+      "functional_communication": 0.05
+    },
+    "default_grammar_weight_ceiling": 0.35,
+    "school_profile_weight_override": "An explicit school-test profile may override default weights and the grammar ceiling when the real recovery assessment is demonstrably grammar-dominant. The override must be stored as programme metadata and the active weights must still sum to 1 after normalization.",
+    "bands": {
+      "strong_ready": {
+        "minimum": 85
+      },
+      "ready": {
+        "minimum": 75,
+        "maximum": 84
+      },
+      "near_ready": {
+        "minimum": 65,
+        "maximum": 74
+      },
+      "not_ready": {
+        "maximum": 64
+      }
+    }
+  },
+  "evidence_completeness_gates": {
+    "required_blocking_outcomes_with_valid_evidence_ratio": 1.0,
+    "all_required_outcomes_with_valid_evidence_ratio": 0.85,
+    "every_active_blocking_axis_requires_cumulative_transfer_evidence": true,
+    "every_active_blocking_axis_must_be_sampled_in_final_mock": true,
+    "missing_evidence_status": "insufficient_evidence",
+    "rule": "A learner cannot be READY while evidence completeness is below these gates, even when available scores are high."
+  },
+  "final_mock_gate": {
+    "required_for_ready": true,
+    "minimum_normalized_score": 70,
+    "strong_ready_minimum_normalized_score": 80,
+    "minimum_distinct_primary_axes_when_available": 3,
+    "must_use_fresh_form": true,
+    "must_sample_all_active_blocking_axes_when_feasible": true,
+    "global_score_role": "Summary and additional gate only; it never overrides an axis or blocking-outcome failure.",
+    "unscorable_global_mark_rule": "If the official school profile uses rubrics that do not produce a meaningful global percentage, normalize the scored rubric dimensions to the 0-100 readiness scale while preserving per-axis evidence."
+  },
+  "ready_decision": {
+    "ready_requires_all": [
+      "overall readiness score >= 75",
+      "every active blocking axis score >= 72",
+      "no required blocking outcome score < 65",
+      "no more than 20% of required blocking outcomes on any active axis below 70",
+      "100% of required blocking outcomes have valid evidence",
+      "at least 85% of all required outcomes have valid evidence",
+      "every active blocking axis has cumulative transfer evidence",
+      "final mock completed with normalized score >= 70",
+      "final mock samples every active blocking axis when feasible within the official school-test profile"
+    ],
+    "strong_ready_requires_all": [
+      "READY conditions are satisfied",
+      "overall readiness score >= 85",
+      "every active blocking axis score >= 80",
+      "no required blocking outcome score < 75",
+      "final mock normalized score >= 80"
+    ],
+    "near_ready_definition": "Evidence completeness is sufficient to make a decision, overall readiness is at least 65, but one or more non-critical READY gates remain unsatisfied.",
+    "not_ready_definition": "Evidence is sufficient for a decision but overall readiness is below 65, a critical blocking weakness exists, or the final mock shows material failure in a required axis.",
+    "insufficient_evidence_definition": "The learner has not yet produced enough valid independent programme-relevant evidence to make a defensible READY/NOT READY decision."
+  },
+  "compensation_rules": {
+    "allowed": [
+      "Within an active axis, stronger required outcomes may offset moderately weaker non-critical outcomes through the weighted axis mean, provided the blocking floor and below-acceptable-share gate are respected.",
+      "Across active axes, stronger scores may influence the overall weighted readiness number only after every blocking axis has passed its own gate."
+    ],
+    "prohibited": [
+      "A high grammar score compensating for a failed required writing, reading, listening or functional-communication blocking axis.",
+      "A high global mock score compensating for a required blocking outcome below 65.",
+      "Topic completion or topic-verify mastery substituting for missing cumulative transfer evidence.",
+      "Repeated retries of the same form inflating evidence count or selecting the best historical attempt instead of the latest valid attempt.",
+      "Removing a required axis merely because no content has yet been authored to assess it. Content gaps must surface as insufficient evidence, not as readiness."
+    ]
+  },
+  "status_model": [
+    {
+      "key": "insufficient_evidence",
+      "label_it": "Evidenza insufficiente",
+      "meaning": "Non abbiamo ancora abbastanza prove indipendenti e pertinenti al programma per stimare seriamente la preparazione."
+    },
+    {
+      "key": "not_ready",
+      "label_it": "Non ancora pronto",
+      "meaning": "Le prove disponibili mostrano una o più debolezze che rendono rischiosa la prova di recupero."
+    },
+    {
+      "key": "near_ready",
+      "label_it": "Quasi pronto",
+      "meaning": "La base è vicina alla soglia, ma resta almeno un requisito concreto da consolidare prima di dichiarare READY."
+    },
+    {
+      "key": "ready",
+      "label_it": "Pronto",
+      "meaning": "Le evidenze richieste dal programma superano le soglie minime senza debolezze bloccanti."
+    },
+    {
+      "key": "strong_ready",
+      "label_it": "Pronto con buon margine",
+      "meaning": "Le evidenze sono solide e distribuite sui requisiti attivi, inclusa la simulazione finale."
+    }
+  ],
+  "reporting_contract": {
+    "required_outputs": [
+      "status",
+      "overall_readiness_score",
+      "active_axes",
+      "axis_scores",
+      "required_outcome_scores",
+      "evidence_completeness",
+      "blocking_outcomes",
+      "blocking_axes",
+      "final_mock_score",
+      "missing_evidence",
+      "next_priority_outcomes"
+    ],
+    "learner_facing_rule": "Show the overall score only together with the specific axes/outcomes that explain the status. Never present a single percentage as if it were the whole readiness judgment.",
+    "inactive_axis_rule": "Clearly mark programme-irrelevant axes as not required rather than displaying them as zero or missing skill."
+  },
+  "runtime_migration": {
+    "legacy_runtime": "src/lib/recoveryPlanEngine.js currently calculates readiness as a simple average of topic mastery/diagnostic scores.",
+    "activation_preconditions": [
+      "Curriculum v2 Year 1-3 outcomes merged and cross-year reviewed",
+      "assessment blueprint merged",
+      "readiness policy merged",
+      "pedagogical and technical gap analysis completed",
+      "required P0 evidence content and assessment fragments available",
+      "runtime evidence storage supports per-outcome and per-axis evidence",
+      "shadow comparison performed between legacy readiness and v2 readiness before learner-facing cutover"
+    ],
+    "cutover_rule": "Do not replace the legacy learner-facing readiness calculation until the activation preconditions are met; otherwise missing skill content would be misrepresented as learner failure."
+  }
+}
