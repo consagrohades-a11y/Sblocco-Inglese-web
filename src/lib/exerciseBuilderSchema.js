@@ -16,6 +16,7 @@ import {
   exerciseBuilderTemplates as baseExerciseBuilderTemplates,
 } from './exerciseBuilderTemplatesV2.js';
 import { educationalContentBlockTemplate } from './educationalContentTemplate.js';
+import { structuredGuidedExerciseTemplate } from './guidedExerciseTemplate.js';
 import { makeSelfContainedExerciseTemplates } from './exerciseAuthoringTemplateContracts.js';
 import {
   isStructuredEducationalContent,
@@ -45,7 +46,7 @@ export function validateExerciseBuilderJson(input) {
 
 // Template exports are composed here so the V2 importer stays stable while
 // authoring/download contracts can evolve independently of database payloads.
-export const EXERCISE_BUILDER_TEMPLATE_VERSION = Math.max(BASE_EXERCISE_BUILDER_TEMPLATE_VERSION, 4);
+export const EXERCISE_BUILDER_TEMPLATE_VERSION = Math.max(BASE_EXERCISE_BUILDER_TEMPLATE_VERSION, 5);
 export const exerciseBuilderQuestionTemplates = baseExerciseBuilderQuestionTemplates;
 
 const educationalManifestItem = {
@@ -62,6 +63,7 @@ export const exerciseBuilderTemplateManifest = [
 
 const composedTemplates = {
   ...baseExerciseBuilderTemplates,
+  guided_exercise: structuredGuidedExerciseTemplate,
   educational_content_block: educationalContentBlockTemplate,
 };
 
