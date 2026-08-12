@@ -6,9 +6,9 @@ export {
   EXERCISE_BUILDER_SCHEMA_VERSION,
   EXERCISE_BUILDER_SKILLS,
   EXERCISE_BUILDER_SUPPORTED_SCHEMA_VERSIONS,
-  validateExerciseBuilderJson,
 } from './exerciseBuilderSchemaV2.js';
 
+import { validateExerciseBuilderJson as validateExerciseBuilderJsonV2 } from './exerciseBuilderSchemaV2.js';
 import {
   EXERCISE_BUILDER_TEMPLATE_VERSION as BASE_EXERCISE_BUILDER_TEMPLATE_VERSION,
   exerciseBuilderQuestionTemplates as baseExerciseBuilderQuestionTemplates,
@@ -16,6 +16,31 @@ import {
   exerciseBuilderTemplates as baseExerciseBuilderTemplates,
 } from './exerciseBuilderTemplatesV2.js';
 import { educationalContentBlockTemplate } from './educationalContentTemplate.js';
+import {
+  isStructuredEducationalContent,
+  validateEducationalContentBlock,
+} from './educationalContentBlock.js';
+
+function applyEducationalContentValidation(result) {
+  if (!result || !Array.isArray(result.items)) return result;
+
+  result.items.forEach((item) => {
+    const payload = item?.payload;
+    if (item?.entityType !== 'question' || payload?.type !== 'content_block' || !isStructuredEducationalContent(payload.content)) return;
+
+    const semantic = validateEducationalContentBlock(payload.content, 'question.content');
+    item.errors = [...(item.errors || []), ...semantic.errors];
+    item.warnings = [...(item.warnings || []), ...semantic.warnings];
+    item.status = item.errors.length ? 'invalid' : item.warnings.length ? 'warning' : 'valid';
+    item.selected = item.status !== 'invalid';
+  });
+
+  return result;
+}
+
+export function validateExerciseBuilderJson(input) {
+  return applyEducationalContentValidation(validateExerciseBuilderJsonV2(input));
+}
 
 // Template exports are composed here so the existing V2 importer stays stable while
 // new authoring templates can evolve independently and remain fully self-contained.
