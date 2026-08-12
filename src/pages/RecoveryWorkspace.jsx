@@ -204,7 +204,7 @@ export default function RecoveryWorkspace({ view }) {
               })}
             </ul>
             {reviewError ? <p className="learner-error" role="alert">{reviewError}</p> : null}
-            <p className="learner-empty" style={{ marginTop: '1rem' }}>“Studia in anticipo” completa una sessione reale del tuo piano e conta nei progressi. “Rivedi tutto” è invece un ripasso volontario e non cambia la priorità dell’argomento.</p>
+            <p className="learner-empty" style={{ marginTop: '1rem' }}>“Studia in anticipo” completa una sessione reale del tuo piano e conta nei progressi. “Rivedi tutto” è un ripasso volontario: non abbassa il livello già consolidato e non cambia la priorità dell’argomento.</p>
           </section>
         ) : null}
 
