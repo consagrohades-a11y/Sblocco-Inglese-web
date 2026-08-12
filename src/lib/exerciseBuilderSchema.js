@@ -42,6 +42,17 @@ export const EXERCISE_BUILDER_QUESTION_TYPES = [
   LISTENING_COMPREHENSION_TEMPLATE_KEY,
 ];
 
+const canonicalListeningComprehensionTemplate = {
+  ...listeningComprehensionTemplate,
+  question: {
+    ...listeningComprehensionTemplate.question,
+    diagnostics: {
+      tested_codes: ['LISTENING_GIST', 'LISTENING_DETAIL'],
+      fallback_error_code: null,
+    },
+  },
+};
+
 function applyEducationalContentValidation(result) {
   if (!result || !Array.isArray(result.items)) return result;
 
@@ -168,7 +179,7 @@ export function validateExerciseBuilderJson(input) {
 export const EXERCISE_BUILDER_TEMPLATE_VERSION = Math.max(BASE_EXERCISE_BUILDER_TEMPLATE_VERSION, 6);
 export const exerciseBuilderQuestionTemplates = {
   ...baseExerciseBuilderQuestionTemplates,
-  [LISTENING_COMPREHENSION_TEMPLATE_KEY]: listeningComprehensionTemplate.question,
+  [LISTENING_COMPREHENSION_TEMPLATE_KEY]: canonicalListeningComprehensionTemplate.question,
 };
 
 const listeningManifestItem = {
@@ -194,7 +205,7 @@ export const exerciseBuilderTemplateManifest = [
 const composedTemplates = {
   ...baseExerciseBuilderTemplates,
   guided_exercise: structuredGuidedExerciseTemplate,
-  [LISTENING_COMPREHENSION_TEMPLATE_KEY]: listeningComprehensionTemplate,
+  [LISTENING_COMPREHENSION_TEMPLATE_KEY]: canonicalListeningComprehensionTemplate,
   educational_content_block: educationalContentBlockTemplate,
 };
 
@@ -210,7 +221,7 @@ const selfContainedTemplates = makeSelfContainedExerciseTemplates(
 // fresh chat: no separate content-block template is required to author stage 1.
 export const exerciseBuilderTemplates = {
   ...selfContainedTemplates,
-  [LISTENING_COMPREHENSION_TEMPLATE_KEY]: listeningComprehensionTemplate,
+  [LISTENING_COMPREHENSION_TEMPLATE_KEY]: canonicalListeningComprehensionTemplate,
   guided_exercise: {
     ...selfContainedTemplates.guided_exercise,
     _template: {
