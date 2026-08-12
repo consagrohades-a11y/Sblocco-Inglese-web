@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const migration = readFileSync('supabase/migrations/20260812152000_recovery_full_topic_review.sql', 'utf8');
+const migration = readFileSync('supabase/migrations/20260812153329_recovery_full_topic_review.sql', 'utf8');
 const workspace = readFileSync('src/pages/RecoveryWorkspace.jsx', 'utf8');
 const standard = JSON.parse(readFileSync('content/recovery/verification-standard-v2.json', 'utf8'));
 
