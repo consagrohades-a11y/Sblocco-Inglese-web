@@ -21,7 +21,9 @@ import {
 } from './educationalContentTemplate.js';
 import { structuredGuidedExerciseTemplate } from './guidedExerciseTemplate.js';
 import { makeSelfContainedExerciseTemplates } from './exerciseAuthoringTemplateContracts.js';
+import { parseExerciseAuthoringInput } from './exerciseAuthoringInput.js';
 import {
+  EDUCATIONAL_CONTENT_SCHEMA_VERSION,
   isStructuredEducationalContent,
   validateEducationalContentBlock,
 } from './educationalContentBlock.js';
@@ -43,8 +45,103 @@ function applyEducationalContentValidation(result) {
   return result;
 }
 
+function addItemWarning(result, message) {
+  (result.items || []).forEach((item) => {
+    item.warnings = [...(item.warnings || []), message];
+    if (!item.errors?.length) item.status = 'warning';
+  });
+}
+
+function canonicalTemplateForAuthoring(authoring) {
+  if (!authoring || typeof authoring !== 'object') return null;
+  if (authoring.template_id === educationalContentBlockAuthoringGuide.template_id) {
+    return { key: 'educational_content_block', template: exerciseBuilderTemplates.educational_content_block };
+  }
+  const key = typeof authoring.template_key === 'string' ? authoring.template_key : '';
+  return key && exerciseBuilderTemplates[key]
+    ? { key, template: exerciseBuilderTemplates[key] }
+    : null;
+}
+
+function applyAuthoringContractValidation(result) {
+  if (!result?.parsed || result.errors?.length) return result;
+  const authoring = result.parsed?._template;
+
+  if (!authoring) {
+    const warning = 'Contratto di authoring assente: import consentito per compatibilità, ma non è possibile verificare che il JSON provenga da un template Sblocco Inglese invariato.';
+    result.authoring = { status: 'unverified', templateKey: null, message: warning };
+    addItemWarning(result, warning);
+    return result;
+  }
+
+  const canonical = canonicalTemplateForAuthoring(authoring);
+  if (!canonical) {
+    result.errors = [...(result.errors || []), '_template non riconosciuto: scarica nuovamente il template dall’Exercise Builder e genera il contenuto senza modificare il contratto iniziale.'];
+    result.authoring = { status: 'invalid', templateKey: null };
+    return result;
+  }
+
+  const canonicalContract = canonical.template?._template || null;
+  if (JSON.stringify(authoring) !== JSON.stringify(canonicalContract)) {
+    result.errors = [...(result.errors || []), `_template modificato per ${canonical.key}: il contratto iniziale deve rimanere identico al template scaricato.`];
+    result.authoring = { status: 'invalid', templateKey: canonical.key };
+    return result;
+  }
+
+  if (result.parsed.schema_version !== canonical.template.schema_version) {
+    result.errors = [...(result.errors || []), `schema_version modificato: il template ${canonical.key} richiede ${canonical.template.schema_version}.`];
+  }
+  if (result.parsed.entity_type !== canonical.template.entity_type) {
+    result.errors = [...(result.errors || []), `entity_type modificato: il template ${canonical.key} richiede ${canonical.template.entity_type}.`];
+  }
+
+  if (canonical.template.entity_type === 'question') {
+    const expectedType = canonical.template.question?.type;
+    const actualType = result.parsed.question?.type;
+    if (expectedType && actualType !== expectedType) {
+      result.errors = [...(result.errors || []), `question.type modificato: il template ${canonical.key} richiede ${expectedType}.`];
+    }
+  }
+
+  if (canonical.key === 'educational_content_block') {
+    const content = result.parsed.question?.content || {};
+    if (content.template_id !== educationalContentBlockAuthoringGuide.template_id) {
+      result.errors = [...(result.errors || []), `question.content.template_id deve restare ${educationalContentBlockAuthoringGuide.template_id}.`];
+    }
+    if (Number(content.educational_schema_version) !== EDUCATIONAL_CONTENT_SCHEMA_VERSION) {
+      result.errors = [...(result.errors || []), `question.content.educational_schema_version deve restare ${EDUCATIONAL_CONTENT_SCHEMA_VERSION}.`];
+    }
+  }
+
+  result.authoring = {
+    status: result.errors.length ? 'invalid' : 'verified',
+    templateKey: canonical.key,
+    templateId: canonicalContract?.template_id || null,
+    templateVersion: canonicalContract?.template_version || null,
+  };
+  return result;
+}
+
 export function validateExerciseBuilderJson(input) {
-  return applyEducationalContentValidation(validateExerciseBuilderJsonV2(input));
+  const source = parseExerciseAuthoringInput(input);
+  if (source.error) {
+    return {
+      parsed: null,
+      entityType: null,
+      schemaVersion: null,
+      items: [],
+      errors: [`JSON non valido: ${source.error.message}`],
+      warnings: [],
+      sourceAdjustments: [],
+      normalizedJson: source.normalizedText,
+      authoring: { status: 'invalid', templateKey: null },
+    };
+  }
+
+  const result = validateExerciseBuilderJsonV2(source.parsed);
+  result.sourceAdjustments = source.adjustments;
+  result.normalizedJson = source.normalizedText;
+  return applyAuthoringContractValidation(applyEducationalContentValidation(result));
 }
 
 // Template exports are composed here so the V2 importer stays stable while
