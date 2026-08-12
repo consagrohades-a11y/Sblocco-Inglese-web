@@ -1,0 +1,37 @@
+name: Build Recovery Curriculum v2 outcome catalog
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/build-recovery-curriculum-v2-outcome-catalog.mjs'
+      - '.github/workflows/build-recovery-curriculum-v2-outcome-catalog.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.head_ref == 'data/recovery-curriculum-v2-outcome-catalog'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Generate reviewed catalog seed
+        run: node scripts/build-recovery-curriculum-v2-outcome-catalog.mjs
+      - name: Commit generated source and migration
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add content/recovery/curriculum-v2/years/year-1.json \
+                  content/recovery/curriculum-v2/years/year-2.json \
+                  content/recovery/curriculum-v2/years/year-3.json \
+                  supabase/migrations/20260813030000_recovery_curriculum_v2_outcome_catalog.sql
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'data: approve and seed Curriculum v2 outcomes'
+          git push origin HEAD:${{ github.head_ref }}
