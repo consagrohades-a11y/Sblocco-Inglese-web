@@ -1,0 +1,22 @@
+name: Recovery Wave 1 artifact
+
+on:
+  push:
+    branches:
+      - ops/recovery-wave1-artifact
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package canonical Wave 1 bundles
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-wave1-bundles
+          path: content/recovery/wave-1/*.bundle.json
+          if-no-files-found: error
+          retention-days: 1
