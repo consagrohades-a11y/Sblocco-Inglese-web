@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 
 const ROOT = 'content/recovery/curriculum-v2';
 const MIGRATION = 'supabase/migrations/20260812232454_recovery_curriculum_v2_runtime_foundation.sql';
-const ENUM_ALIGNMENT = 'supabase/migrations/20260813020000_recovery_curriculum_v2_runtime_enum_alignment.sql';
+const ENUM_ALIGNMENT = 'supabase/migrations/20260812234456_recovery_curriculum_v2_runtime_enum_alignment.sql';
 const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
 
 const sql = readFileSync(MIGRATION, 'utf8');
