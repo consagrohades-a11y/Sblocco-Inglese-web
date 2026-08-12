@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const ROOT = 'content/recovery/curriculum-v2';
-const MIGRATION = 'supabase/migrations/20260813010000_recovery_curriculum_v2_runtime_foundation.sql';
+const MIGRATION = 'supabase/migrations/20260812232454_recovery_curriculum_v2_runtime_foundation.sql';
 const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
 
 const sql = readFileSync(MIGRATION, 'utf8');
