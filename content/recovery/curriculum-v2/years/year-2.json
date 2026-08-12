@@ -1,0 +1,785 @@
+{
+  "schema_version": 1,
+  "curriculum_id": "recovery-years-1-3-v2",
+  "school_year_profile": 2,
+  "outcomes": [
+    {
+      "id": "RY2-GRAM-001",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2+",
+      "label_it": "Gestire riferimenti temporali di base in compiti misti",
+      "observable_outcome_it": "Lo studente sceglie e produce autonomamente forme verbali coerenti con presente, passato e futuro in frasi, brevi dialoghi e testi contestualizzati, distinguendo routine e azioni in corso, eventi conclusi e azioni di sfondo, esperienza o risultato collegato al presente e principali intenzioni, previsioni e accordi futuri quando il programma li richiede.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [],
+      "required_topic_keys": [
+        "present-simple",
+        "present-continuous",
+        "past-simple",
+        "past-continuous",
+        "present-perfect",
+        "future-forms"
+      ],
+      "recommended_topic_keys": [
+        "present-simple-vs-present-continuous",
+        "past-simple-vs-past-continuous",
+        "past-simple-vs-present-perfect",
+        "present-perfect-time-expressions",
+        "irregular-verbs"
+      ],
+      "vocabulary_domains": [],
+      "assessment_modes": [
+        "mixed_grammar",
+        "translation_it_en",
+        "sentence_building",
+        "cumulative_school_test",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_core",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-GRAM-002",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2",
+      "label_it": "Costruire frasi, domande e negative con controllo degli ausiliari",
+      "observable_outcome_it": "Lo studente costruisce e corregge frasi affermative, interrogative e negative con ordine delle parole, soggetto, ausiliare e forma verbale appropriati, senza dipendere da un modello che anticipi la struttura da usare.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [],
+      "required_topic_keys": [
+        "question-formation",
+        "negatives"
+      ],
+      "recommended_topic_keys": [
+        "present-simple",
+        "present-continuous",
+        "past-simple",
+        "present-perfect",
+        "modal-verbs",
+        "adverbs-frequency"
+      ],
+      "vocabulary_domains": [],
+      "assessment_modes": [
+        "sentence_building",
+        "error_correction",
+        "translation_it_en",
+        "mixed_grammar",
+        "cumulative_school_test"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_core",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-GRAM-003",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2+",
+      "label_it": "Esprimere possibilità, obbligo, consiglio e relazioni condizionali semplici",
+      "observable_outcome_it": "Lo studente sceglie forme modali e condizionali di base in funzione del significato, distinguendo capacità o permesso, obbligo o assenza di obbligo, divieto, consiglio e conseguenze reali o probabili in contesti quotidiani e scolastici.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [],
+      "required_topic_keys": [
+        "modal-verbs",
+        "zero-first-conditionals"
+      ],
+      "recommended_topic_keys": [
+        "second-conditional",
+        "future-forms"
+      ],
+      "vocabulary_domains": [],
+      "assessment_modes": [
+        "mixed_grammar",
+        "translation_it_en",
+        "functional_response",
+        "cumulative_school_test",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_core",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-GRAM-004",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2+",
+      "label_it": "Collegare e ampliare informazioni in frasi più complesse",
+      "observable_outcome_it": "Lo studente combina informazioni in frasi comprensibili usando riferimenti pronominali, preposizioni e principali strutture relative o verbali previste dal programma, evitando sequenze frammentarie o calchi italiani che compromettono il significato.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [
+        "RY2-GRAM-002"
+      ],
+      "required_topic_keys": [
+        "pronouns",
+        "prepositions",
+        "relative-clauses"
+      ],
+      "recommended_topic_keys": [
+        "gerunds-infinitives",
+        "articles",
+        "possessives"
+      ],
+      "vocabulary_domains": [],
+      "assessment_modes": [
+        "sentence_building",
+        "sentence_transformation",
+        "error_correction",
+        "translation_it_en",
+        "cumulative_school_test"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_core",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-GRAM-005",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "grammar_sentence_control",
+      "cefr_target": "A2",
+      "label_it": "Controllare quantità, riferimento e confronto nel sintagma nominale",
+      "observable_outcome_it": "Lo studente sceglie e produce articoli, quantificatori e forme di confronto coerenti con il nome e con il significato della frase, distinguendo quantità numerabile e non numerabile e confrontando persone, oggetti o situazioni senza che la regola venga indicata.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [],
+      "required_topic_keys": [
+        "articles",
+        "countable-uncountable",
+        "some-any",
+        "much-many-a-lot-of",
+        "comparatives",
+        "superlatives"
+      ],
+      "recommended_topic_keys": [
+        "pronouns",
+        "possessives",
+        "indefinite-pronouns",
+        "too-enough"
+      ],
+      "vocabulary_domains": [],
+      "assessment_modes": [
+        "mixed_grammar",
+        "translation_it_en",
+        "error_correction",
+        "sentence_building",
+        "cumulative_school_test"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_core",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-LEX-001",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "A2",
+      "label_it": "Usare lessico ad alta utilità nei domini scolastici e quotidiani",
+      "observable_outcome_it": "Lo studente comprende e usa lessico e chunk ad alta frequenza per parlare o scrivere di scuola e studio, vita quotidiana, relazioni, acquisti e servizi, salute di base, viaggi ed esperienze personali in compiti coerenti con il programma.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [],
+      "vocabulary_domains": [
+        "school_and_study",
+        "daily_life",
+        "relationships",
+        "shopping_and_services",
+        "health_and_wellbeing",
+        "travel_and_experiences"
+      ],
+      "assessment_modes": [
+        "reading_comprehension",
+        "guided_writing",
+        "independent_writing",
+        "functional_response",
+        "cumulative_school_test"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_core",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-LEX-002",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "A2+",
+      "label_it": "Scegliere parole e combinazioni frequenti dal contesto",
+      "observable_outcome_it": "Lo studente ricava dal contesto il significato probabile di parole frequenti e sceglie vocaboli, collocazioni e chunk abbastanza precisi da completare frasi, comprendere testi e produrre messaggi senza affidarsi a traduzioni letterali parola per parola.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [
+        "RY2-LEX-001"
+      ],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [],
+      "vocabulary_domains": [
+        "travel_and_experiences",
+        "technology_and_media",
+        "health_and_wellbeing",
+        "work_and_future",
+        "school_and_study"
+      ],
+      "assessment_modes": [
+        "reading_comprehension",
+        "translation_it_en",
+        "guided_writing",
+        "independent_writing",
+        "cumulative_school_test"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_core",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-LEX-003",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "lexical_competence",
+      "cefr_target": "A2+",
+      "label_it": "Mantenere adeguatezza lessicale in una produzione collegata",
+      "observable_outcome_it": "Lo studente seleziona e riutilizza lessico pertinente al compito in una breve produzione collegata, evitando ripetizioni o parole generiche quando il repertorio del livello offre alternative comuni e correggendo scelte lessicali che rendono il messaggio poco chiaro.",
+      "performance_levels_required": [
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [
+        "RY2-LEX-001",
+        "RY2-LEX-002"
+      ],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [],
+      "vocabulary_domains": [
+        "school_and_study",
+        "relationships",
+        "travel_and_experiences",
+        "technology_and_media",
+        "work_and_future"
+      ],
+      "assessment_modes": [
+        "independent_writing",
+        "functional_response",
+        "translation_it_en",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-READ-001",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "reading",
+      "cefr_target": "A2",
+      "label_it": "Comprendere il filo principale e i dettagli di testi collegati",
+      "observable_outcome_it": "Lo studente comprende il senso generale, individua informazioni esplicite e ricostruisce la sequenza essenziale in testi scolastici e quotidiani più lunghi di semplici frasi isolate, senza dover tradurre ogni parola.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [],
+      "vocabulary_domains": [
+        "school_and_study",
+        "daily_life",
+        "travel_and_experiences",
+        "relationships"
+      ],
+      "assessment_modes": [
+        "reading_comprehension",
+        "cumulative_school_test",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": false,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_core",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-READ-002",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "reading",
+      "cefr_target": "A2+",
+      "label_it": "Inferire riferimenti e significati semplici dal contesto",
+      "observable_outcome_it": "Lo studente collega pronomi e riferimenti ai loro antecedenti, ricava il significato probabile di parole o espressioni dal contesto e formula inferenze semplici supportate da informazioni presenti nel testo.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [
+        "RY2-READ-001"
+      ],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [
+        "pronouns",
+        "relative-clauses"
+      ],
+      "vocabulary_domains": [
+        "technology_and_media",
+        "health_and_wellbeing",
+        "travel_and_experiences",
+        "relationships"
+      ],
+      "assessment_modes": [
+        "reading_comprehension",
+        "cumulative_school_test",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": false,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_core",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-READ-003",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "reading",
+      "cefr_target": "B1",
+      "label_it": "Selezionare e collegare informazioni utili per rispondere a un compito",
+      "observable_outcome_it": "Lo studente seleziona informazioni pertinenti distribuite in un testo o in brevi sezioni collegate e le combina per rispondere in modo giustificato a domande di comprensione o a un semplice compito integrato.",
+      "performance_levels_required": [
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [
+        "RY2-READ-001",
+        "RY2-READ-002"
+      ],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [],
+      "vocabulary_domains": [
+        "school_and_study",
+        "technology_and_media",
+        "travel_and_experiences",
+        "work_and_future"
+      ],
+      "assessment_modes": [
+        "reading_comprehension",
+        "cumulative_school_test",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": false,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-WRITE-001",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "writing",
+      "cefr_target": "A2",
+      "label_it": "Scrivere messaggi ed email brevi completando lo scopo comunicativo",
+      "observable_outcome_it": "Lo studente scrive un messaggio o una breve email comprensibile che include le informazioni richieste, usa formule e organizzazione adatte alla situazione e mantiene un controllo sufficiente di grammatica e lessico perché il destinatario capisca senza ricostruire il significato.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [
+        "question-formation",
+        "negatives",
+        "future-forms",
+        "modal-verbs"
+      ],
+      "vocabulary_domains": [
+        "school_and_study",
+        "daily_life",
+        "relationships",
+        "travel_and_experiences"
+      ],
+      "assessment_modes": [
+        "guided_writing",
+        "independent_writing",
+        "functional_response",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-WRITE-002",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "writing",
+      "cefr_target": "A2+",
+      "label_it": "Raccontare un'esperienza o un breve evento in modo ordinato",
+      "observable_outcome_it": "Lo studente produce una breve narrazione collegata con ordine temporale comprensibile, seleziona forme verbali coerenti con eventi e azioni di sfondo previste dal programma e usa connettivi semplici senza limitarsi a una successione di frasi isolate.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "required_topic_keys": [
+        "past-simple"
+      ],
+      "recommended_topic_keys": [
+        "past-continuous",
+        "past-simple-vs-past-continuous",
+        "irregular-verbs"
+      ],
+      "vocabulary_domains": [
+        "travel_and_experiences",
+        "relationships",
+        "school_and_study"
+      ],
+      "assessment_modes": [
+        "guided_writing",
+        "independent_writing",
+        "cumulative_school_test",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-WRITE-003",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "writing",
+      "cefr_target": "A2+",
+      "label_it": "Organizzare una breve descrizione o spiegazione con dettagli pertinenti",
+      "observable_outcome_it": "Lo studente organizza un breve testo descrittivo o esplicativo attorno a un'idea chiara, aggiunge dettagli pertinenti, confronti o semplici motivazioni quando utili e rilegge il testo per correggere errori ricorrenti che ostacolano la comprensione.",
+      "performance_levels_required": [
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [
+        "RY2-GRAM-005",
+        "RY2-LEX-001"
+      ],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [
+        "comparatives",
+        "superlatives",
+        "relative-clauses",
+        "too-enough"
+      ],
+      "vocabulary_domains": [
+        "relationships",
+        "travel_and_experiences",
+        "school_and_study",
+        "technology_and_media"
+      ],
+      "assessment_modes": [
+        "guided_writing",
+        "independent_writing",
+        "error_correction",
+        "cumulative_school_test"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-LISTEN-001",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "listening",
+      "cefr_target": "A2",
+      "label_it": "Cogliere situazione, argomento e informazione principale in audio brevi",
+      "observable_outcome_it": "Lo studente identifica situazione, interlocutori o argomento e comprende il messaggio principale in dialoghi e monologhi brevi a velocità naturale ma controllata per il livello, senza leggere prima la trascrizione.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [],
+      "vocabulary_domains": [
+        "daily_life",
+        "school_and_study",
+        "travel_and_experiences",
+        "shopping_and_services"
+      ],
+      "assessment_modes": [
+        "listening_comprehension",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 1,
+        "requires_controlled_production": false,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-LISTEN-002",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "listening",
+      "cefr_target": "A2+",
+      "label_it": "Ricavare dettagli, sequenza e inferenze semplici da un ascolto",
+      "observable_outcome_it": "Lo studente individua dettagli rilevanti, ordina informazioni o eventi e ricava una semplice intenzione o conclusione implicita da dialoghi e monologhi brevi con lessico e pronuncia coerenti con il livello.",
+      "performance_levels_required": [
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [
+        "RY2-LISTEN-001"
+      ],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [],
+      "vocabulary_domains": [
+        "technology_and_media",
+        "health_and_wellbeing",
+        "travel_and_experiences",
+        "relationships"
+      ],
+      "assessment_modes": [
+        "listening_comprehension",
+        "dialogue_interaction",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 1,
+        "requires_controlled_production": false,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "default_if_assessed",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-COMM-001",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "functional_communication",
+      "cefr_target": "A2",
+      "label_it": "Gestire richieste, offerte, permesso, consiglio e obbligo in scambi brevi",
+      "observable_outcome_it": "Lo studente produce risposte funzionali appropriate in brevi situazioni quotidiane, chiedendo o concedendo permesso, facendo richieste o offerte, dando consigli e comprendendo o esprimendo obblighi senza ricorrere a formule semanticamente inappropriate.",
+      "performance_levels_required": [
+        "knowledge",
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [],
+      "required_topic_keys": [
+        "modal-verbs"
+      ],
+      "recommended_topic_keys": [
+        "some-any",
+        "question-formation"
+      ],
+      "vocabulary_domains": [
+        "school_and_study",
+        "daily_life",
+        "shopping_and_services",
+        "health_and_wellbeing"
+      ],
+      "assessment_modes": [
+        "functional_response",
+        "dialogue_interaction",
+        "oral_response",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-COMM-002",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "functional_communication",
+      "cefr_target": "A2+",
+      "label_it": "Descrivere esperienze, piani e opzioni dando semplici motivazioni",
+      "observable_outcome_it": "Lo studente descrive un'esperienza, un piano o due possibili opzioni e aggiunge semplici ragioni, confronti o preferenze in modo comprensibile, scegliendo autonomamente le forme temporali e il lessico necessari al messaggio.",
+      "performance_levels_required": [
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [
+        "RY2-GRAM-001",
+        "RY2-GRAM-005"
+      ],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [
+        "comparatives",
+        "future-forms",
+        "present-perfect"
+      ],
+      "vocabulary_domains": [
+        "travel_and_experiences",
+        "relationships",
+        "work_and_future",
+        "school_and_study"
+      ],
+      "assessment_modes": [
+        "functional_response",
+        "dialogue_interaction",
+        "oral_response",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true
+    },
+    {
+      "id": "RY2-COMM-003",
+      "status": "draft",
+      "school_year_profile": 2,
+      "competence_axis": "functional_communication",
+      "cefr_target": "B1",
+      "label_it": "Sostenere un breve scambio reagendo a domande e richieste di chiarimento",
+      "observable_outcome_it": "Lo studente mantiene un breve scambio su temi familiari rispondendo in modo pertinente, formulando almeno una domanda o richiesta di chiarimento quando necessario e adattando la risposta alle informazioni ricevute invece di recitare una sequenza memorizzata.",
+      "performance_levels_required": [
+        "controlled_performance",
+        "transfer"
+      ],
+      "prerequisite_outcome_ids": [
+        "RY2-COMM-001",
+        "RY2-COMM-002"
+      ],
+      "required_topic_keys": [],
+      "recommended_topic_keys": [],
+      "vocabulary_domains": [
+        "school_and_study",
+        "relationships",
+        "travel_and_experiences",
+        "technology_and_media"
+      ],
+      "assessment_modes": [
+        "dialogue_interaction",
+        "oral_response",
+        "functional_response",
+        "recovery_mock"
+      ],
+      "evidence_requirements": {
+        "minimum_distinct_assessment_modes": 2,
+        "requires_controlled_production": true,
+        "requires_transfer_evidence": true,
+        "requires_unseen_or_mixed_context": true
+      },
+      "programme_requirement": "programme_dependent",
+      "blocking_candidate": true
+    }
+  ]
+}
