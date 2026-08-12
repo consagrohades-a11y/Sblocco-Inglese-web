@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 
 const migration = readFileSync('supabase/migrations/20260812144057_recovery_wave_mapping_sync.sql', 'utf8');
 const allWaveMigration = readFileSync('supabase/migrations/20260812192912_recovery_all_wave_mapping_sync.sql', 'utf8');
-const versionedVerifyMigration = readFileSync('supabase/migrations/20260812205000_recovery_versioned_verify_mapping_sync.sql', 'utf8');
+const versionedVerifyMigration = readFileSync('supabase/migrations/20260812210558_recovery_versioned_verify_mapping_sync.sql', 'utf8');
 const page = readFileSync('src/pages/AdminRecoveryContent.jsx', 'utf8');
 const api = readFileSync('src/lib/exerciseBuilderApi.js', 'utf8');
 
