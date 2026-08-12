@@ -76,6 +76,30 @@
   box-shadow: none;
 }
 
+/*
+ * Defensive isolation: learner/site footer styles must never recolor the shared
+ * exercise navigation surface, even if a broader global selector is added later.
+ */
+.exercise-experience .exercise-action-bar[role="navigation"] {
+  color: var(--ex-ink) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+.exercise-experience .exercise-action-bar[role="navigation"]::before,
+.exercise-experience .exercise-action-bar[role="navigation"]::after {
+  display: none !important;
+  content: none !important;
+}
+
+.exercise-experience .exercise-action-bar__hint,
+.exercise-experience .exercise-action-bar__actions {
+  background: transparent !important;
+  background-image: none !important;
+}
+
 .exercise-action-bar[data-has-hint="true"],
 .exercise-action-bar[data-has-hint="false"] {
   grid-template-columns: 1fr;
