@@ -68,6 +68,10 @@
   background: transparent;
 }
 
+.exercise-action-bar[data-has-hint="true"] {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
 .exercise-action-bar[data-has-hint="false"] {
   grid-template-columns: 1fr;
 }
@@ -157,6 +161,7 @@
   }
 
   .exercise-action-bar,
+  .exercise-action-bar[data-has-hint="true"],
   .exercise-action-bar[data-has-hint="false"] {
     grid-template-columns: 1fr;
     align-items: stretch;
