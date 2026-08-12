@@ -25,7 +25,8 @@ jobs:
           base64 --decode /tmp/wave2-prb.b64 > /tmp/wave2-prb.tar.gz
           echo 'ba978d2be26f823aa2a1e782a5659506d45d8808c616ce65b67a71382e662df4  /tmp/wave2-prb.tar.gz' | sha256sum -c -
           tar -tzf /tmp/wave2-prb.tar.gz >/dev/null
-          tar -xzf /tmp/wave2-prb.tar.gz -C .
+          mkdir -p content/recovery
+          tar -xzf /tmp/wave2-prb.tar.gz -C content/recovery
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs';
           for (const topic of ['countable-uncountable','some-any','much-many-a-lot-of']) {
