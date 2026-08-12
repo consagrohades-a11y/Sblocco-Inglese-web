@@ -4,6 +4,7 @@ import {
   buildRecoveryPlan,
   buildRecoveryTopicStates,
   recoveryModeForDays,
+  recoveryStudyDates,
 } from '../src/lib/recoveryPlanEngine.js';
 import { validateExerciseBuilderJson } from '../src/lib/exerciseBuilderSchema.js';
 import { RECOVERY_MODE } from '../src/config/recovery.js';
@@ -53,6 +54,32 @@ assert.ok(completePlan.sessions.some((session) => session.sessionType === 'mock_
 assert.equal(completePlan.sessions.at(-1).sessionType, 'mock_final');
 assert.ok(completePlan.sessions.some((session) => session.topicKey === 'comparatives'), 'Strong required topics must not disappear.');
 
+// O: the plan has a real calendar, not only a sequence number.
+assert.deepEqual(recoveryStudyDates('2026-08-14', new Date('2026-08-11T12:00:00')), [
+  '2026-08-11',
+  '2026-08-12',
+  '2026-08-13',
+]);
+assert.equal(completePlan.workload.availableStudyDays, 18);
+assert.ok(completePlan.days.length > 0);
+assert.equal(completePlan.days[0].scheduledFor, '2026-08-11');
+assert.equal(completePlan.days.at(-1).scheduledFor, '2026-08-28', 'The final active study day should stay immediately before the exam.');
+assert.equal(completePlan.sessions.at(-1).scheduledFor, completePlan.days.at(-1).scheduledFor, 'The final mock belongs to the final active study day.');
+for (const session of completePlan.sessions) {
+  assert.ok(session.planDayIndex > 0, 'Every recovery session must belong to a plan day.');
+  assert.ok(session.scheduledFor, 'Every recovery session must have a date.');
+  assert.ok(session.dailyOrder > 0, 'Every recovery session must have a stable order inside its day.');
+}
+for (const day of completePlan.days) {
+  const daySessions = completePlan.sessions.filter((session) => session.planDayIndex === day.dayIndex);
+  assert.ok(daySessions.length > 0, 'An active recovery day must never be empty.');
+  assert.equal(
+    day.targetMinutes,
+    daySessions.reduce((sum, session) => sum + session.estimatedMinutes, 0),
+    'Daily workload must match the sessions assigned to that day.',
+  );
+}
+
 const intensivePlan = buildRecoveryPlan({
   requiredTopicKeys: ['past-simple', 'present-perfect', 'comparatives'],
   examDate: '2026-08-20',
@@ -70,8 +97,10 @@ const sosPlan = buildRecoveryPlan({
 assert.equal(sosPlan.mode, RECOVERY_MODE.SOS);
 assert.ok(sosPlan.sessions.some((session) => session.sessionType === 'error_review'));
 assert.equal(sosPlan.sessions.at(-1).sessionType, 'mock_final');
+assert.ok(sosPlan.days.length <= 4, 'SOS must fit inside the actual days left before the exam.');
+assert.equal(sosPlan.days.at(-1).scheduledFor, '2026-08-14');
 
-// I: the same evidence automatically produces a more urgent plan after missed days.
+// I / P: missed days make the plan more urgent and the new queue starts today, never in the past.
 const beforeMissedDays = buildRecoveryPlan({
   requiredTopicKeys: ['past-simple'],
   examDate: '2026-08-22',
@@ -86,6 +115,9 @@ const afterMissedDays = buildRecoveryPlan({
 });
 assert.equal(beforeMissedDays.mode, RECOVERY_MODE.INTENSIVE);
 assert.equal(afterMissedDays.mode, RECOVERY_MODE.SOS, 'Missed days should automatically change the mode as the exam approaches.');
+assert.equal(afterMissedDays.days[0].scheduledFor, '2026-08-18');
+assert.ok(afterMissedDays.sessions.every((session) => session.scheduledFor >= '2026-08-18'));
+assert.equal(afterMissedDays.days.at(-1).scheduledFor, '2026-08-21');
 
 const app = readFileSync('src/App.jsx', 'utf8');
 const navbar = readFileSync('src/components/Navbar.jsx', 'utf8');
@@ -96,6 +128,7 @@ const recoveryApi = readFileSync('src/lib/recoveryApi.js', 'utf8');
 const recoverySchema = readFileSync('supabase/migrations/20260811010000_recovery_debt_foundation.sql', 'utf8');
 const recoveryBridge = readFileSync('supabase/migrations/20260811011000_recovery_debt_exercise_bridge.sql', 'utf8');
 const hardening = readFileSync('supabase/migrations/20260811014000_recovery_debt_hardening.sql', 'utf8');
+const dailyPlanSchema = readFileSync('supabase/migrations/20260812150000_recovery_daily_plan_foundation.sql', 'utf8');
 const learnerCss = readFileSync('src/styles/learnerEditorial.css', 'utf8');
 
 // A: anonymous diagnostic is public and does not require purchase.
@@ -138,6 +171,18 @@ assert.match(recoveryBridge, /'show_score', not v_is_mock/);
 assert.match(recoveryBridge, /'show_correct_answers', not v_is_mock/);
 assert.match(hardening, /feedback_released = true/);
 
+// Q: daily scheduling is additive, owner-scoped and protects future work from legacy auto-unlock.
+assert.match(dailyPlanSchema, /create table public\.recovery_plan_days/);
+assert.match(dailyPlanSchema, /add column if not exists plan_day_id/);
+assert.match(dailyPlanSchema, /create or replace function public\.activate_due_recovery_plan/);
+assert.match(dailyPlanSchema, /create or replace function public\.get_today_recovery_plan/);
+assert.match(dailyPlanSchema, /create or replace function public\.replace_recovery_plan_v2/);
+assert.match(dailyPlanSchema, /new\.scheduled_for > current_date/);
+assert.match(dailyPlanSchema, /session\.status in \('planned', 'available'\)/);
+assert.match(recoveryApi, /replace_recovery_plan_v2/);
+assert.match(recoveryApi, /activate_due_recovery_plan/);
+assert.match(recoveryApi, /isMissingDailyPlanCapability/);
+
 // K: both theme implementations are intentionally styled.
 assert.match(learnerCss, /\.learner-editorial \{/);
 assert.match(learnerCss, /\.dark \.learner-editorial \{/);
@@ -163,7 +208,7 @@ assert.match(learnerHome, /function GenericDashboard/);
 assert.match(learnerHome, /Il tuo prossimo passo/);
 assert.match(learnerHome, /Ripasso SRS/);
 
-// O: Recovery curriculum and production content are source-controlled and importable.
+// R: Recovery curriculum and production content are source-controlled and importable.
 const recoveryCurriculum = JSON.parse(readFileSync('content/recovery/curriculum-years-1-3.json', 'utf8'));
 assert.equal(recoveryCurriculum.school_programme_is_authoritative, true);
 assert.ok(recoveryCurriculum.topics.length >= 35, 'Years 1-3 curriculum should include core and programme-dependent coverage.');
@@ -199,4 +244,4 @@ for (const exercise of presentSimpleBundle.exercises) {
   }
 }
 
-console.log('Recovery MVP and curriculum-content validation passed.');
+console.log('Recovery MVP, daily-plan and curriculum-content validation passed.');
