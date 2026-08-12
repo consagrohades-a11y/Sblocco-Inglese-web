@@ -1,0 +1,862 @@
+{
+  "schema_version": 2,
+  "entity_type": "bundle",
+  "questions": [],
+  "pools": [],
+  "exercises": [
+    {
+      "client_key": "recovery_past_simple_recover",
+      "title": "Past Simple — Recupera",
+      "description": "Ricostruisci il Past Simple partendo dagli eventi conclusi: affermative, did/didn't, spelling regolare, pochi irregolari essenziali e was/were.",
+      "instructions": "Prima riconosci che il tempo è concluso; poi costruisci la forma corretta.",
+      "instruction_language": "it",
+      "level": "A1-A2",
+      "topic": "past-simple",
+      "estimated_minutes": 12,
+      "settings": {"display_mode":"one_at_a_time","feedback_timing":"question_end","show_score":false,"show_correct_answers":true,"show_explanations":true,"show_diagnostic_summary":true,"allow_retry":true},
+      "sections": [
+        {
+          "client_key": "recovery_past_simple_recover_section",
+          "title": "Capisci il passato concluso",
+          "instructions": "Non partire dalla lista dei verbi: parti da quando l'azione è finita.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_psa_recover_teaching",
+              "type": "content_block",
+              "title": "Past Simple: un passato che è finito",
+              "prompt": "Prima di esercitarti",
+              "instructions": "Osserva significato e struttura, poi passa alla pratica.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "core_form_use",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the past simple for finished past events with correct affirmative forms, did/didn't structures, time expressions and basic was/were support.",
+              "difficulty": "support",
+              "content": {
+                "educational_schema_version": 1,
+                "template_id": "educational-content-block-v1",
+                "variant": "grammar",
+                "body": "Usa il Past Simple per eventi e situazioni conclusi in un tempo passato finito. Nell'affermativa il verbo va al passato; con did e didn't il verbo principale torna alla forma base.",
+                "intro": "La regola più importante non è memorizzare -ed: è distinguere l'affermativa, dove il verbo porta il passato, dalle domande e negative, dove il passato è già espresso da did/didn't.",
+                "sections": [
+                  {
+                    "key": "finished_past",
+                    "type": "rule",
+                    "title": "Un evento concluso",
+                    "body": "Il Past Simple descrive qualcosa che è successo e si è concluso in un tempo passato finito, spesso indicato dal contesto.",
+                    "examples": [
+                      {"text":"I visited my aunt last Sunday.","highlight":["visited","last Sunday"]},
+                      {"text":"We went home after the film.","highlight":["went"]}
+                    ]
+                  },
+                  {
+                    "key": "affirmative_forms",
+                    "type": "rule",
+                    "title": "Nell'affermativa il verbo va al passato",
+                    "body": "I verbi regolari formano il passato con -ed o una variante ortografica. Alcuni verbi molto frequenti sono irregolari e cambiano forma.",
+                    "examples": [
+                      {"text":"work → worked", "highlight":["worked"]},
+                      {"text":"live → lived", "highlight":["lived"]},
+                      {"text":"study → studied", "highlight":["studied"]},
+                      {"text":"go → went", "highlight":["went"]},
+                      {"text":"see → saw", "highlight":["saw"]}
+                    ]
+                  },
+                  {
+                    "key": "did_base",
+                    "type": "pattern",
+                    "title": "Did e didn't prendono il passato al posto del verbo",
+                    "body": "Nelle domande e negative con i verbi normali usa did/didn't + forma base. Non mettere di nuovo il verbo al passato.",
+                    "pattern": "Did + subject + base verb? · subject + didn't + base verb",
+                    "examples": [
+                      {"text":"Did you see Anna?", "highlight":["Did","see"]},
+                      {"text":"I didn't see Anna.", "highlight":["didn't","see"]}
+                    ]
+                  },
+                  {
+                    "key": "double_past",
+                    "type": "mistake",
+                    "title": "Non mettere il passato due volte",
+                    "body": "Dopo did o didn't usa la forma base, anche se il verbo è irregolare nell'affermativa.",
+                    "correct": {"text":"Did she go home?", "highlight":["Did","go"]},
+                    "incorrect": {"text":"Did she went home?", "highlight":["Did","went"]}
+                  },
+                  {
+                    "key": "time_expressions",
+                    "type": "tip",
+                    "title": "Il contesto ti dice che il tempo è finito",
+                    "body": "Yesterday, last weekend, two days ago e in 2024 sono esempi comuni di tempo passato concluso. Non servono in ogni frase: anche il contesto può rendere chiaro che l'evento è finito."
+                  },
+                  {
+                    "key": "past_be",
+                    "type": "rule",
+                    "title": "Con be: was e were, senza did",
+                    "body": "Il passato di be è was/were. Nelle domande inverti was/were e soggetto; nelle negative usa wasn't/weren't. Non usare did con be.",
+                    "examples": [
+                      {"text":"I was tired after the trip.", "highlight":["was"]},
+                      {"text":"Were they at school yesterday?", "highlight":["Were"]},
+                      {"text":"We weren't late.", "highlight":["weren't"]}
+                    ]
+                  },
+                  {
+                    "key": "recap",
+                    "type": "recap",
+                    "title": "Prima di continuare",
+                    "points": [
+                      "Evento concluso in un tempo passato finito → Past Simple.",
+                      "Affermativa: verbo al passato.",
+                      "Did/didn't + verbo base.",
+                      "Impara pochi irregolari frequenti nel contesto; il ripasso sistematico viene nel topic successivo.",
+                      "Be usa was/were e non did."
+                    ]
+                  }
+                ]
+              },
+              "grading": {"mode":"automatic","weight":0,"nearly_correct_multiplier":0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes":[],"fallback_error_code":null},
+              "tags": ["recovery","past-simple","recover","structured-teaching"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_recover_1",
+              "type": "multiple_choice",
+              "title": "Perché usiamo il Past Simple?",
+              "prompt": "I finished the report at six and sent it to my teacher before dinner.",
+              "instructions": "Scegli la spiegazione corretta.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "finished_past",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise a sequence of completed events in a finished past context.",
+              "difficulty": "support",
+              "content": {
+                "options": [
+                  {"key":"a","text":"Entrambe le azioni sono concluse in un momento passato finito.","is_correct":true},
+                  {"key":"b","text":"Le azioni stanno succedendo adesso.","is_correct":false,"error_code":"A2_PAST_SIMPLE"},
+                  {"key":"c","text":"Le azioni sono abitudini presenti.","is_correct":false,"error_code":"A2_PAST_SIMPLE"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Finished e sent raccontano due eventi conclusi prima del momento presente."},
+              "diagnostics": {"tested_codes":["A2_PAST_SIMPLE","PAST_TIME_EXPRESSIONS"],"fallback_error_code":"CORE_PAST_SIMPLE_FORM"},
+              "tags": ["recovery","past-simple","meaning"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_recover_2",
+              "type": "select_gap",
+              "title": "Forma i verbi regolari",
+              "prompt": "Completa le due frasi.",
+              "instructions": "Scegli la grafia corretta del Past Simple.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "regular_spelling",
+              "primary_skill": "spelling",
+              "learning_objective": "Apply common regular past spelling patterns.",
+              "difficulty": "support",
+              "content": {
+                "text_template": "We [[blank_1]] (live) in Parma for a year, and my sister [[blank_2]] (study) there too.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["lived"],"options":["lived","liveed","livied"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"liveed","error_code":"PAST_REGULAR_D"}]},
+                  {"key":"blank_2","accepted_answers":["studied"],"options":["studied","studyed","studyd"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"studyed","error_code":"PAST_REGULAR_Y_IED"}]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Live termina in -e → lived. Study termina in consonante + y → studied."},
+              "diagnostics": {"tested_codes":["PAST_REGULAR_D","PAST_REGULAR_Y_IED","PAST_REGULAR_FORM"],"fallback_error_code":"CORE_PAST_SIMPLE_FORM"},
+              "tags": ["recovery","past-simple","regular-spelling"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_recover_3",
+              "type": "error_correction",
+              "title": "Dopo did cambia il verbo",
+              "prompt": "Correggi: Did you went to the match on Saturday?",
+              "instructions": "Riscrivi la domanda corretta.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "questions",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the base verb after did in a past simple question.",
+              "difficulty": "support",
+              "content": {"accepted_answers":["Did you go to the match on Saturday?"]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Did porta già il passato: dopo did usa go, non went."},
+              "diagnostics": {"tested_codes":["PAST_SIMPLE_QUESTION_DID","PAST_SIMPLE_QUESTION_BASE_FORM","PAST_QUESTION_BASE"],"fallback_error_code":"CORE_PAST_SIMPLE_QNEG"},
+              "tags": ["recovery","past-simple","questions"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_recover_4",
+              "type": "translation",
+              "title": "Affermativa e negativa nello stesso evento",
+              "prompt": "Ieri ho visto Marco, ma non ho parlato con lui.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "affirmative_negative",
+              "primary_skill": "grammar",
+              "learning_objective": "Combine an irregular affirmative past form with a didn't + base verb negative.",
+              "difficulty": "support",
+              "content": {"accepted_answers":["I saw Marco yesterday, but I didn't talk to him.","Yesterday I saw Marco, but I didn't talk to him.","I saw Marco yesterday, but I did not talk to him.","Yesterday I saw Marco, but I did not talk to him."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"See → saw nell'affermativa; dopo didn't torna la forma base talk."},
+              "diagnostics": {"tested_codes":["PAST_IRREGULAR_FORM","PAST_SIMPLE_NEGATIVE_BASE_FORM","PAST_TIME_EXPRESSIONS"],"fallback_error_code":"CORE_PAST_SIMPLE_FORM"},
+              "tags": ["recovery","past-simple","translation"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_recover_5",
+              "type": "multiple_choice",
+              "title": "Con be la struttura è diversa",
+              "prompt": "___ your parents at home last night?",
+              "instructions": "Scegli la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "past_be",
+              "primary_skill": "grammar",
+              "learning_objective": "Form a past question with were rather than did.",
+              "difficulty": "support",
+              "content": {
+                "options": [
+                  {"key":"a","text":"Were","is_correct":true},
+                  {"key":"b","text":"Did","is_correct":false,"error_code":"PAST_SIMPLE_BE_VS_DID"},
+                  {"key":"c","text":"Was","is_correct":false,"error_code":"PAST_BE_WAS_WERE"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Your parents = they → were. Con be non usi did."},
+              "diagnostics": {"tested_codes":["PAST_BE_WAS_WERE","PAST_SIMPLE_BE_QUESTION_INVERSION","PAST_SIMPLE_BE_VS_DID"],"fallback_error_code":"PAST_SIMPLE_BE"},
+              "tags": ["recovery","past-simple","was-were"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery","past-simple","recover","wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_past_simple_practice",
+      "title": "Past Simple — Allenati",
+      "description": "Recupero attivo su eventi conclusi, regolari, irregolari frequenti, did/didn't, domande, negative, was/were e indicatori di tempo.",
+      "instructions": "Lavora dal contesto: scegli la struttura e poi controlla la forma del verbo.",
+      "instruction_language": "it",
+      "level": "A1-A2",
+      "topic": "past-simple",
+      "estimated_minutes": 12,
+      "settings": {"display_mode":"one_at_a_time","feedback_timing":"question_end","show_score":true,"show_correct_answers":true,"show_explanations":true,"show_diagnostic_summary":true,"allow_retry":true},
+      "sections": [
+        {
+          "client_key": "recovery_past_simple_practice_section",
+          "title": "Racconta cosa è successo",
+          "instructions": "Non trasformare tutto in una tabella: usa il verbo dentro una situazione.",
+          "selection_mode": "fixed",
+          "feedback_timing": "question_end",
+          "questions": [
+            {
+              "client_key": "recovery_psa_practice_1",
+              "type": "gap_fill",
+              "title": "Un sabato complicato",
+              "prompt": "Completa il mini-racconto con il Past Simple dei verbi tra parentesi.",
+              "instructions": "Scrivi la forma corretta richiesta dal contesto.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "connected_events",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce regular and high-frequency irregular past forms across a connected sequence.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "On Saturday, we [[blank_1]] (plan) to catch the 9:00 train, but we [[blank_2]] (get) to the station late. We [[blank_3]] (miss) the train, so my dad [[blank_4]] (take) us by car.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["planned"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_2","accepted_answers":["got"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_3","accepted_answers":["missed"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_4","accepted_answers":["took"],"points":1,"feedback":{},"answer_error_mappings":[]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Planned/missed sono regolari; get → got e take → took sono irregolari frequenti."},
+              "diagnostics": {"tested_codes":["PAST_REGULAR_FORM","PAST_IRREGULAR_FORM","PAST_REGULAR_DOUBLE_CONSONANT"],"fallback_error_code":"CORE_PAST_SIMPLE_FORM"},
+              "tags": ["recovery","past-simple","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_practice_2",
+              "type": "error_correction",
+              "title": "Correggi il messaggio",
+              "prompt": "Correggi: Sara didn't studied for the test last night.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "negative",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the base verb after didn't in a finished-past negative.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["Sara didn't study for the test last night.","Sara did not study for the test last night."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Didn't esprime già il passato: il verbo torna a study."},
+              "diagnostics": {"tested_codes":["PAST_SIMPLE_NEGATIVE_DIDNT","PAST_SIMPLE_NEGATIVE_BASE_FORM","PAST_NEGATIVE_BASE"],"fallback_error_code":"CORE_PAST_SIMPLE_QNEG"},
+              "tags": ["recovery","past-simple","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_practice_3",
+              "type": "word_order",
+              "title": "Chiedi un dettaglio sul weekend",
+              "prompt": "Metti le parti nell'ordine corretto.",
+              "instructions": "Costruisci la domanda completa.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "wh_questions",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a past simple wh-question with did and a base verb.",
+              "difficulty": "standard",
+              "content": {"tokens":["where","did","you","have","lunch","on Sunday"],"correct_order":["where","did","you","have","lunch","on Sunday"],"terminal_punctuation":"?"},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Where + did + you + have...? Dopo did resta have."},
+              "diagnostics": {"tested_codes":["PAST_SIMPLE_WH_WORD_ORDER","PAST_SIMPLE_QUESTION_BASE_FORM","PAST_SIMPLE_QUESTION_DID"],"fallback_error_code":"CORE_PAST_SIMPLE_QNEG"},
+              "tags": ["recovery","past-simple","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_practice_4",
+              "type": "multiple_select",
+              "title": "Quali frasi raccontano correttamente ieri?",
+              "prompt": "Yesterday was busy. Seleziona tutte le frasi grammaticalmente corrette.",
+              "instructions": "Può esserci più di una risposta.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "mixed_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise correct regular, irregular, question and negative past simple forms.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {"key":"a","text":"I worked until five.","is_correct":true},
+                  {"key":"b","text":"I went to the supermarket after work.","is_correct":true},
+                  {"key":"c","text":"I didn't bought anything.","is_correct":false,"error_code":"PAST_SIMPLE_NEGATIVE_BASE_FORM"},
+                  {"key":"d","text":"Did you saw Luca there?","is_correct":false,"error_code":"PAST_SIMPLE_QUESTION_BASE_FORM"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Worked/went sono forme affermative corrette; dopo didn't/did servono buy/see."},
+              "diagnostics": {"tested_codes":["CORE_PAST_SIMPLE_FORM","CORE_PAST_SIMPLE_QNEG"],"fallback_error_code":"A2_PAST_SIMPLE"},
+              "tags": ["recovery","past-simple","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_practice_5",
+              "type": "translation",
+              "title": "Spiega perché sei arrivato tardi",
+              "prompt": "Ho perso l'autobus, quindi sono arrivato a scuola alle nove.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "past_sequence",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce two completed past events using natural regular and irregular forms.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["I missed the bus, so I arrived at school at nine.","I missed my bus, so I arrived at school at nine.","I missed the bus, so I got to school at nine.","I missed my bus, so I got to school at nine."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Entrambe le azioni sono concluse: missed + arrived/got."},
+              "diagnostics": {"tested_codes":["CORE_PAST_SIMPLE_FORM","PAST_REGULAR_FORM","PAST_IRREGULAR_FORM"],"fallback_error_code":"A2_PAST_SIMPLE"},
+              "tags": ["recovery","past-simple","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_practice_6",
+              "type": "select_gap",
+              "title": "Il tempo è già finito",
+              "prompt": "Completa le frasi con la forma corretta.",
+              "instructions": "Leggi anche l'espressione di tempo.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "time_expressions",
+              "primary_skill": "grammar",
+              "learning_objective": "Use past simple forms with clearly finished past time expressions.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Two days ago, Marta [[blank_1]] a new laptop. Last night, she [[blank_2]] it for the first time.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["bought"],"options":["bought","buys","is buying"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"buys","error_code":"PAST_TIME_EXPRESSIONS"},{"answer":"is buying","error_code":"PAST_TIME_EXPRESSIONS"}]},
+                  {"key":"blank_2","accepted_answers":["used"],"options":["used","uses","is using"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"uses","error_code":"PAST_TIME_EXPRESSIONS"},{"answer":"is using","error_code":"PAST_TIME_EXPRESSIONS"}]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Two days ago e last night indicano tempi conclusi: bought, used."},
+              "diagnostics": {"tested_codes":["PAST_TIME_EXPRESSIONS","PAST_IRREGULAR_FORM","PAST_REGULAR_FORM"],"fallback_error_code":"CORE_PAST_SIMPLE_FORM"},
+              "tags": ["recovery","past-simple","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_practice_7",
+              "type": "dialogue_choice",
+              "title": "Parlare di un evento finito",
+              "prompt": "Scegli la risposta coerente e grammaticalmente corretta.",
+              "instructions": "Leggi il dialogo completo.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "dialogue_context",
+              "primary_skill": "grammar",
+              "learning_objective": "Use did + base verb and an irregular affirmative naturally in a short past-time dialogue.",
+              "difficulty": "standard",
+              "content": {
+                "scenario": "Two friends talk on Monday about the weekend.",
+                "response_prompt": "What should Alex say next?",
+                "turns": [
+                  {"key":"turn_1","speaker":"Mia","text":"Did you go to Luca's party on Saturday?"},
+                  {"key":"turn_2","speaker":"Alex","text":"Yes, I did."},
+                  {"key":"turn_3","speaker":"Mia","text":"What time did you leave?"}
+                ],
+                "options": [
+                  {"key":"a","text":"I left at about eleven.","is_correct":true},
+                  {"key":"b","text":"I did left at about eleven.","is_correct":false,"error_code":"CORE_PAST_SIMPLE_QNEG"},
+                  {"key":"c","text":"I leave at about eleven last Saturday.","is_correct":false,"error_code":"A2_PAST_SIMPLE"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"La risposta affermativa usa il passato del verbo: left."},
+              "diagnostics": {"tested_codes":["A2_PAST_SIMPLE","PAST_IRREGULAR_FORM"],"fallback_error_code":"CORE_PAST_SIMPLE_FORM"},
+              "tags": ["recovery","past-simple","practice"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_practice_8",
+              "type": "select_gap",
+              "title": "Dove eravate?",
+              "prompt": "Completa le informazioni sul concerto.",
+              "instructions": "Scegli la forma corretta di be al passato.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "past_be",
+              "primary_skill": "grammar",
+              "learning_objective": "Use was/were accurately in affirmative and negative past descriptions.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "The concert [[blank_1]] great, but our seats [[blank_2]] very close to the stage.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["was"],"options":["was","were","did"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"were","error_code":"PAST_BE_WAS_WERE"},{"answer":"did","error_code":"PAST_SIMPLE_BE_VS_DID"}]},
+                  {"key":"blank_2","accepted_answers":["weren't"],"options":["weren't","wasn't","didn't be"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"wasn't","error_code":"PAST_BE_WAS_WERE"},{"answer":"didn't be","error_code":"PAST_SIMPLE_BE_VS_DID"}]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Concert = it → was. Seats = they → weren't."},
+              "diagnostics": {"tested_codes":["PAST_BE_WAS_WERE","PAST_SIMPLE_BE_NEGATIVE_FORM","PAST_SIMPLE_BE_VS_DID"],"fallback_error_code":"PAST_SIMPLE_BE"},
+              "tags": ["recovery","past-simple","practice"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery","past-simple","practice","wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_past_simple_school",
+      "title": "Past Simple — Modalità scuola",
+      "description": "Applica il Past Simple in esercizi tipici di una verifica scolastica, senza correzioni durante lo svolgimento.",
+      "instructions": "Completa tutti gli esercizi prima di vedere feedback e risposte.",
+      "instruction_language": "it",
+      "level": "A1-A2",
+      "topic": "past-simple",
+      "estimated_minutes": 10,
+      "settings": {"display_mode":"one_at_a_time","feedback_timing":"exercise_end","show_score":true,"show_correct_answers":true,"show_explanations":true,"show_diagnostic_summary":true,"allow_retry":true},
+      "sections": [
+        {
+          "client_key": "recovery_past_simple_school_section",
+          "title": "Verifica mista",
+          "instructions": "Nessun feedback fino alla fine.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_psa_school_1",
+              "type": "gap_fill",
+              "title": "Complete the text",
+              "prompt": "Put the verbs in brackets into the Past Simple.",
+              "instructions": "Scrivi la forma completa corretta.",
+              "instruction_language": "en",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "connected_text",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce regular, irregular and negative past simple forms in a connected school-style text.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Last Friday our class [[blank_1]] (visit) a science museum. We [[blank_2]] (leave) school at eight and [[blank_3]] (get) there before ten. I [[blank_4]] (not/buy) anything in the shop, but my friend [[blank_5]] (take) lots of photos.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["visited"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_2","accepted_answers":["left"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_3","accepted_answers":["got"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_4","accepted_answers":["didn't buy","did not buy"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_5","accepted_answers":["took"],"points":1,"feedback":{},"answer_error_mappings":[]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Il testo usa un passato concluso: visited, left, got, didn't buy, took."},
+              "diagnostics": {"tested_codes":["CORE_PAST_SIMPLE_FORM","PAST_IRREGULAR_FORM","PAST_SIMPLE_NEGATIVE_BASE_FORM"],"fallback_error_code":"A2_PAST_SIMPLE"},
+              "tags": ["recovery","past-simple","school"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_school_2",
+              "type": "error_correction",
+              "title": "Correct the mistake",
+              "prompt": "Correct: Did Laura saw the message yesterday?",
+              "instructions": "Riscrivi la domanda corretta.",
+              "instruction_language": "en",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "questions",
+              "primary_skill": "grammar",
+              "learning_objective": "Correct a past simple question containing a double past marker.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["Did Laura see the message yesterday?"]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Dopo did usa see, non saw."},
+              "diagnostics": {"tested_codes":["PAST_SIMPLE_QUESTION_DID","PAST_SIMPLE_QUESTION_BASE_FORM"],"fallback_error_code":"CORE_PAST_SIMPLE_QNEG"},
+              "tags": ["recovery","past-simple","school"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_school_3",
+              "type": "word_order",
+              "title": "Make a question",
+              "prompt": "Put the words in the correct order.",
+              "instructions": "Usa tutte le parti.",
+              "instruction_language": "en",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "wh_questions",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a past simple wh-question with did.",
+              "difficulty": "standard",
+              "content": {"tokens":["when","did","the lesson","finish"],"correct_order":["when","did","the lesson","finish"],"terminal_punctuation":"?"},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"When + did + the lesson + finish?"},
+              "diagnostics": {"tested_codes":["PAST_SIMPLE_WH_WORD_ORDER","PAST_SIMPLE_QUESTION_BASE_FORM"],"fallback_error_code":"CORE_PAST_SIMPLE_QNEG"},
+              "tags": ["recovery","past-simple","school"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_school_4",
+              "type": "translation",
+              "title": "Translate",
+              "prompt": "Non siamo usciti ieri sera perché eravamo stanchi.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "negative_and_be",
+              "primary_skill": "grammar",
+              "learning_objective": "Translate a didn't + base verb negative and a was/were past state accurately.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["We didn't go out last night because we were tired.","We did not go out last night because we were tired.","We didn't go out yesterday evening because we were tired.","We did not go out yesterday evening because we were tired."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Didn't go usa la forma base; we were tired usa be al passato."},
+              "diagnostics": {"tested_codes":["PAST_SIMPLE_NEGATIVE_BASE_FORM","PAST_BE_WAS_WERE"],"fallback_error_code":"CORE_PAST_SIMPLE_QNEG"},
+              "tags": ["recovery","past-simple","school"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_school_5",
+              "type": "multiple_choice",
+              "title": "Choose the correct sentence",
+              "prompt": "Which sentence is correct?",
+              "instructions": "Scegli una risposta.",
+              "instruction_language": "en",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "mixed_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise a correct irregular past affirmative form.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {"key":"a","text":"We made dinner at home last night.","is_correct":true},
+                  {"key":"b","text":"We maked dinner at home last night.","is_correct":false,"error_code":"PAST_IRREGULAR_FORM"},
+                  {"key":"c","text":"We did made dinner at home last night.","is_correct":false,"error_code":"CORE_PAST_SIMPLE_FORM"},
+                  {"key":"d","text":"We make dinner at home last night.","is_correct":false,"error_code":"PAST_TIME_EXPRESSIONS"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Make è irregolare: made."},
+              "diagnostics": {"tested_codes":["PAST_IRREGULAR_FORM","PAST_TIME_EXPRESSIONS"],"fallback_error_code":"CORE_PAST_SIMPLE_FORM"},
+              "tags": ["recovery","past-simple","school"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_school_6",
+              "type": "select_gap",
+              "title": "Complete with was or were",
+              "prompt": "Complete the sentences.",
+              "instructions": "Scegli la forma corretta.",
+              "instruction_language": "en",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "past_be",
+              "primary_skill": "grammar",
+              "learning_objective": "Use was/were accurately in a school-style completion task.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "The weather [[blank_1]] terrible, but the cafés [[blank_2]] open.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["was"],"options":["was","were"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"were","error_code":"PAST_BE_WAS_WERE"}]},
+                  {"key":"blank_2","accepted_answers":["were"],"options":["was","were"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"was","error_code":"PAST_BE_WAS_WERE"}]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Weather = it → was; cafés = they → were."},
+              "diagnostics": {"tested_codes":["PAST_BE_WAS_WERE","PAST_SIMPLE_BE_AFFIRMATIVE_FORM"],"fallback_error_code":"PAST_SIMPLE_BE"},
+              "tags": ["recovery","past-simple","school"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery","past-simple","school","wave-1"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_past_simple_verify",
+      "title": "Past Simple — Mini-verifica",
+      "description": "Controlla se sai riconoscere e produrre il Past Simple in autonomia, incluse domande, negative e un piccolo campione di was/were.",
+      "instructions": "Completa senza aiuti. Obiettivo consigliato: almeno 80%.",
+      "instruction_language": "it",
+      "level": "A1-A2",
+      "topic": "past-simple",
+      "estimated_minutes": 8,
+      "settings": {"display_mode":"one_at_a_time","feedback_timing":"exercise_end","show_score":true,"show_correct_answers":true,"show_explanations":true,"show_diagnostic_summary":true,"allow_retry":true},
+      "sections": [
+        {
+          "client_key": "recovery_past_simple_verify_section",
+          "title": "Controllo finale",
+          "instructions": "Nessun feedback fino alla fine.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "recovery_psa_verify_1",
+              "type": "multiple_choice",
+              "title": "Scegli il tempo corretto",
+              "prompt": "The school trip ended on Friday. We ___ home at six that evening.",
+              "instructions": "Scegli la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "finished_past",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise a finished past context and choose the past simple.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {"key":"a","text":"came","is_correct":true},
+                  {"key":"b","text":"come","is_correct":false,"error_code":"A2_PAST_SIMPLE"},
+                  {"key":"c","text":"are coming","is_correct":false,"error_code":"A2_PAST_SIMPLE"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"The trip ended e that evening rendono il contesto chiaramente concluso: came."},
+              "diagnostics": {"tested_codes":["A2_PAST_SIMPLE","PAST_IRREGULAR_FORM","PAST_TIME_EXPRESSIONS"],"fallback_error_code":"CORE_PAST_SIMPLE_FORM"},
+              "tags": ["recovery","past-simple","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_verify_2",
+              "type": "select_gap",
+              "title": "Spelling regolare",
+              "prompt": "Completa con la forma corretta.",
+              "instructions": "Scegli il Past Simple.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "regular_spelling",
+              "primary_skill": "spelling",
+              "learning_objective": "Apply two common regular past spelling rules independently.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "Yesterday, Mia [[blank_1]] for the test and then [[blank_2]] at her friend's house.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["studied"],"options":["studied","studyed","studies"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"studyed","error_code":"PAST_REGULAR_Y_IED"}]},
+                  {"key":"blank_2","accepted_answers":["stopped"],"options":["stopped","stoped","stopt"],"points":1,"feedback":{},"answer_error_mappings":[{"answer":"stoped","error_code":"PAST_REGULAR_DOUBLE_CONSONANT"}]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Study → studied; stop → stopped."},
+              "diagnostics": {"tested_codes":["PAST_REGULAR_Y_IED","PAST_REGULAR_DOUBLE_CONSONANT"],"fallback_error_code":"PAST_REGULAR_FORM"},
+              "tags": ["recovery","past-simple","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_verify_3",
+              "type": "gap_fill",
+              "title": "Irregolari frequenti in contesto",
+              "prompt": "Completa con il Past Simple dei verbi tra parentesi.",
+              "instructions": "Scrivi una parola per spazio.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "irregular_affirmative",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce two high-frequency irregular past forms in context.",
+              "difficulty": "standard",
+              "content": {
+                "text_template": "We [[blank_1]] (see) the new film and then [[blank_2]] (have) dinner near the cinema.",
+                "blanks": [
+                  {"key":"blank_1","accepted_answers":["saw"],"points":1,"feedback":{},"answer_error_mappings":[]},
+                  {"key":"blank_2","accepted_answers":["had"],"points":1,"feedback":{},"answer_error_mappings":[]}
+                ]
+              },
+              "grading": {"mode":"per_blank","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"See → saw; have → had."},
+              "diagnostics": {"tested_codes":["PAST_IRREGULAR_FORM","PAST_SIMPLE_IRREGULAR_VERB_FORM"],"fallback_error_code":"CORE_PAST_SIMPLE_FORM"},
+              "tags": ["recovery","past-simple","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_verify_4",
+              "type": "error_correction",
+              "title": "Correggi la negativa",
+              "prompt": "Correggi: We didn't went out after dinner.",
+              "instructions": "Riscrivi la frase corretta.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "negative",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the base verb after didn't independently.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["We didn't go out after dinner.","We did not go out after dinner."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Didn't + go, non didn't went."},
+              "diagnostics": {"tested_codes":["PAST_SIMPLE_NEGATIVE_BASE_FORM","PAST_NEGATIVE_BASE"],"fallback_error_code":"CORE_PAST_SIMPLE_QNEG"},
+              "tags": ["recovery","past-simple","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_verify_5",
+              "type": "word_order",
+              "title": "Costruisci la domanda",
+              "prompt": "Metti le parti nell'ordine corretto.",
+              "instructions": "Usa tutte le parti.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "wh_questions",
+              "primary_skill": "word_order",
+              "learning_objective": "Build a correct past simple wh-question independently.",
+              "difficulty": "standard",
+              "content": {"tokens":["why","did","Sara","leave","early"],"correct_order":["why","did","Sara","leave","early"],"terminal_punctuation":"?"},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Why + did + Sara + leave + early?"},
+              "diagnostics": {"tested_codes":["PAST_SIMPLE_WH_WORD_ORDER","PAST_SIMPLE_QUESTION_BASE_FORM"],"fallback_error_code":"CORE_PAST_SIMPLE_QNEG"},
+              "tags": ["recovery","past-simple","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_verify_6",
+              "type": "multiple_choice",
+              "title": "Was o were?",
+              "prompt": "The shops ___ closed when we arrived.",
+              "instructions": "Scegli la forma corretta.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "past_be",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose the correct past form of be with a plural subject.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {"key":"a","text":"were","is_correct":true},
+                  {"key":"b","text":"was","is_correct":false,"error_code":"PAST_BE_WAS_WERE"},
+                  {"key":"c","text":"did","is_correct":false,"error_code":"PAST_SIMPLE_BE_VS_DID"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"The shops = they → were."},
+              "diagnostics": {"tested_codes":["PAST_BE_WAS_WERE","PAST_SIMPLE_BE_AFFIRMATIVE_FORM"],"fallback_error_code":"PAST_SIMPLE_BE"},
+              "tags": ["recovery","past-simple","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_verify_7",
+              "type": "translation",
+              "title": "Domanda e risposta sul passato",
+              "prompt": "Hai visto Giulia ieri? No, non l'ho vista.",
+              "instructions": "Traduci in inglese.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "question_negative",
+              "primary_skill": "grammar",
+              "learning_objective": "Produce did + base verb in a question and didn't + base verb in a negative answer.",
+              "difficulty": "standard",
+              "content": {"accepted_answers":["Did you see Giulia yesterday? No, I didn't see her.","Did you see Giulia yesterday? No, I did not see her.","Did you see Giulia yesterday? No, I didn't.","Did you see Giulia yesterday? No, I did not."]},
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Did you see...? e didn't see / didn't: dopo did/didn't la forma è see."},
+              "diagnostics": {"tested_codes":["PAST_SIMPLE_QUESTION_BASE_FORM","PAST_SIMPLE_NEGATIVE_BASE_FORM","PAST_TIME_EXPRESSIONS"],"fallback_error_code":"CORE_PAST_SIMPLE_QNEG"},
+              "tags": ["recovery","past-simple","verify"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "recovery_psa_verify_8",
+              "type": "multiple_select",
+              "title": "Ultimo controllo",
+              "prompt": "Seleziona tutte le frasi corrette.",
+              "instructions": "Valuta sia il tempo sia la forma.",
+              "instruction_language": "it",
+              "level": "A1-A2",
+              "topic": "past-simple",
+              "subtopic": "mixed_mastery",
+              "primary_skill": "grammar",
+              "learning_objective": "Recognise accurate affirmative, negative, question and time-expression uses of the past simple.",
+              "difficulty": "standard",
+              "content": {
+                "options": [
+                  {"key":"a","text":"I called her two days ago.","is_correct":true},
+                  {"key":"b","text":"Did they come home late?","is_correct":true},
+                  {"key":"c","text":"He didn't took the train.","is_correct":false,"error_code":"PAST_SIMPLE_NEGATIVE_BASE_FORM"},
+                  {"key":"d","text":"We go to Rome last weekend.","is_correct":false,"error_code":"PAST_TIME_EXPRESSIONS"}
+                ]
+              },
+              "grading": {"mode":"automatic","weight":1,"nearly_correct_multiplier":0.5},
+              "feedback": {"explanation":"Called e Did...come sono corretti; dopo didn't serve take; last weekend richiede qui went."},
+              "diagnostics": {"tested_codes":["CORE_PAST_SIMPLE_FORM","CORE_PAST_SIMPLE_QNEG","PAST_TIME_EXPRESSIONS"],"fallback_error_code":"A2_PAST_SIMPLE"},
+              "tags": ["recovery","past-simple","verify"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery","past-simple","verify","wave-1"],
+      "foundation_links": []
+    }
+  ]
+}
