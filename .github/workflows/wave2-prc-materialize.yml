@@ -1,0 +1,50 @@
+name: Temporary Wave 2 PR C materializer
+
+on:
+  push:
+    branches:
+      - content/recovery-wave2-articles-pronouns
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Decode and validate packaged content
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .wave2-prc.part01 .wave2-prc.part02 .wave2-prc.part03 .wave2-prc.part04 .wave2-prc.part05 .wave2-prc.part06 > /tmp/wave2-prc.b64
+          test "$(wc -c < /tmp/wave2-prc.b64)" -eq 20500
+          base64 --decode /tmp/wave2-prc.b64 > /tmp/wave2-prc.tar.gz
+          echo '97accc716bfbad25d6e07cb1dc6016151bc2b59aebbe5a1e07ffde38cd19c97c  /tmp/wave2-prc.tar.gz' | sha256sum -c -
+          tar -tzf /tmp/wave2-prc.tar.gz >/dev/null
+          mkdir -p content/recovery
+          tar -xzf /tmp/wave2-prc.tar.gz -C content/recovery
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          for (const topic of ['articles','pronouns']) {
+            const bundle = JSON.parse(readFileSync(`content/recovery/wave-2/${topic}.bundle.json`, 'utf8'));
+            const brief = JSON.parse(readFileSync(`content/recovery/briefs/${topic}.lesson-brief.json`, 'utf8'));
+            if (bundle.schema_version !== 2 || bundle.entity_type !== 'bundle' || bundle.exercises?.length !== 4) throw new Error(`${topic}: invalid bundle`);
+            if (bundle.exercises.reduce((sum, ex) => sum + ex.estimated_minutes, 0) !== 48) throw new Error(`${topic}: invalid duration`);
+            if (brief.topic_key !== topic) throw new Error(`${topic}: invalid brief`);
+          }
+          NODE
+      - name: Commit only final content
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add content/recovery/briefs content/recovery/wave-2
+          git rm .wave2-prc.part01 .wave2-prc.part02 .wave2-prc.part03 .wave2-prc.part04 .wave2-prc.part05 .wave2-prc.part06
+          git rm .github/workflows/wave2-prc-materialize.yml
+          git commit -m 'content: add Recovery Wave 2 articles and pronouns'
+          git push origin HEAD:content/recovery-wave2-articles-pronouns
