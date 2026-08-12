@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "topic_key": "future-forms",
+  "label": "Future Forms",
+  "wave": 1,
+  "introduced_by_year": 1,
+  "level": "A2",
+  "prerequisites": ["present-continuous"],
+  "outcome": "Lo studente sceglie tra will, be going to e Present Continuous for future partendo dal significato comunicativo: decisione immediata/previsione, piano-intenzione o previsione basata su evidenza, accordo futuro già organizzato.",
+  "must_master": [
+    "will for instant decisions",
+    "will for neutral predictions/opinions at programme level",
+    "be going to for prior plans and intentions",
+    "be going to for evidence-based predictions",
+    "Present Continuous for fixed future arrangements",
+    "choose will / going to / Present Continuous from meaning and degree of organisation",
+    "correct will + base verb structure",
+    "correct am/is/are going to + base verb structure",
+    "correct am/is/are + verb-ing structure for arrangements",
+    "distinguish a Present Continuous future arrangement from an action happening now through future context"
+  ],
+  "scope_boundary": {
+    "present_simple_timetables": "Do not add Present Simple for timetables to this core topic unless a student's school programme explicitly requires it; the curriculum outcome here is will/going to/Present Continuous.",
+    "advanced_future": "Do not introduce Future Continuous, Future Perfect or be about to.",
+    "conditionals": "Do not teach future time clauses or conditional structures here even though a diagnostic code exists for them.",
+    "offers_promises": "A small will offer/promise example is acceptable when useful, but instant decisions and predictions remain the core will meanings.",
+    "arrangements": "Present Continuous future examples must include enough future context to distinguish them from actions happening now."
+  },
+  "decision_model": [
+    "Decision made at the moment of speaking → will.",
+    "Prediction/opinion without present physical evidence → will at this level.",
+    "Plan or intention decided before speaking → be going to.",
+    "Prediction based on visible/current evidence → be going to.",
+    "Fixed personal arrangement with concrete organisation such as time/place/person → Present Continuous for future.",
+    "After choosing the meaning, build the selected form correctly."
+  ],
+  "italian_learner_risks": [
+    {"risk":"using will for every future meaning","example_wrong":"I've already decided: I will study medicine next year.","target":"I'm going to study medicine next year."},
+    {"risk":"omitting be in going to","example_wrong":"I going to call Sara.","target":"I'm going to call Sara."},
+    {"risk":"adding to after will","example_wrong":"I'll to call you.","target":"I'll call you."},
+    {"risk":"using going to without a base verb","example_wrong":"We're going to studying tonight.","target":"We're going to study tonight."},
+    {"risk":"confusing a fixed arrangement with a vague intention","example_wrong":"using the same form regardless of whether a meeting is merely intended or already booked","target":"use Present Continuous when the arrangement is concretely organised"},
+    {"risk":"reading a future Present Continuous as happening now","example_wrong":"interpreting I'm meeting Luca at six tomorrow as a current meeting","target":"use the future time context to identify the arrangement"}
+  ],
+  "context_bank": [
+    "a phone rings and someone decides to answer",
+    "a prediction based on personal opinion",
+    "dark clouds or an obviously unstable object as visible evidence",
+    "a plan chosen before the conversation",
+    "a booked doctor, teacher, train-station or friend meeting",
+    "weekend plans that range from intention to fixed arrangement",
+    "short text-message exchanges where the future meaning changes during the conversation",
+    "school-style mixed future-form completion with unambiguous context"
+  ],
+  "recover_phase": {
+    "minutes": 12,
+    "requirements": [
+      "one structured educational content block",
+      "teach communicative meaning before form labels",
+      "contrast instant decision with prior plan",
+      "contrast opinion prediction with evidence-based prediction",
+      "contrast intention with fixed arrangement",
+      "show the form of all three structures",
+      "five scaffolded graded checks after teaching",
+      "at least one item must require both form choice and correct construction"
+    ]
+  },
+  "practice_phase": {
+    "minutes": 12,
+    "item_target": 8,
+    "requirements": [
+      "at least four exercise formats",
+      "mix all three future forms rather than blocking them into separate mini-worksheets",
+      "include one dialogue with an instant decision",
+      "include one evidence-based prediction",
+      "include one fixed arrangement",
+      "include one Italian-to-English translation",
+      "include one connected mini-context with more than one future form",
+      "do not make tomorrow/next week mechanically determine the answer"
+    ]
+  },
+  "school_phase": {
+    "minutes": 10,
+    "item_target": 6,
+    "feedback_timing": "exercise_end",
+    "requirements": [
+      "connected mixed future-form gap fill",
+      "error correction",
+      "mixed choice task",
+      "question or word-order task",
+      "translation",
+      "fixed-arrangement task",
+      "no teaching or coaching during the task"
+    ]
+  },
+  "verify_phase": {
+    "minutes": 8,
+    "item_target": 8,
+    "feedback_timing": "exercise_end",
+    "recommended_mastery_threshold": 80,
+    "requirements": [
+      "cover instant decision",
+      "cover will prediction",
+      "cover prior plan/intention",
+      "cover evidence-based prediction",
+      "cover fixed arrangement",
+      "cover will + base form",
+      "cover be going to form",
+      "include one controlled production or translation task",
+      "no teaching content"
+    ]
+  },
+  "approved_diagnostic_codes": [
+    "FUTURE_WILL",
+    "FUTURE_WILL_INSTANT_DECISION",
+    "FUTURE_WILL_BASE_FORM",
+    "FUTURE_GOING_TO",
+    "A2_GOING_TO_PLANS",
+    "FUTURE_GOING_TO_BE",
+    "FUTURE_GOING_TO_EVIDENCE",
+    "FUTURE_ARRANGEMENTS",
+    "A2_FUNCTION_MAKING_PLANS",
+    "PRESENT_CONTINUOUS_AUXILIARY",
+    "PRESENT_CONTINUOUS_VERB_ING",
+    "PRESENT_CONTINUOUS_QUESTION_WORD_ORDER"
+  ],
+  "quality_rejections": [
+    "a worksheet where tomorrow automatically means going to",
+    "will used as the default answer for every future sentence",
+    "ambiguous contexts where intention and fixed arrangement are equally defensible",
+    "an arrangement example with no future time or organisational context",
+    "teaching Present Simple timetables, Future Continuous or Future Perfect inside this topic",
+    "conditionals or future time clauses introduced before their own curriculum topic",
+    "more than two consecutive isolated form-only questions",
+    "difficulty created by vocabulary rather than future meaning"
+  ]
+}
