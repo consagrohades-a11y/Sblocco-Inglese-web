@@ -57,21 +57,26 @@
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
 }
 
+/*
+ * Exercise navigation is intentionally not a <footer>: the site footer has its own
+ * navy treatment and must never bleed into the controls at the end of an activity.
+ */
 .exercise-action-bar {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.9rem 1.25rem;
-  margin-top: 1.45rem;
-  padding-top: 1rem;
+  grid-template-columns: 1fr;
+  align-items: stretch;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+  padding: 1rem 0 0;
+  border: 0;
   border-top: 1px solid var(--ex-line);
+  border-radius: 0;
+  color: var(--ex-ink);
   background: transparent;
+  box-shadow: none;
 }
 
-.exercise-action-bar[data-has-hint="true"] {
-  grid-template-columns: minmax(0, 1fr) auto;
-}
-
+.exercise-action-bar[data-has-hint="true"],
 .exercise-action-bar[data-has-hint="false"] {
   grid-template-columns: 1fr;
 }
@@ -79,14 +84,16 @@
 .exercise-action-bar > .exercise-action-bar__hint {
   display: flex;
   min-width: 0;
+  min-height: 1.1rem;
   align-items: center;
-  gap: 0.45rem;
+  justify-content: flex-end;
+  gap: 0.4rem;
   margin: 0;
   color: var(--ex-muted);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 650;
-  line-height: 1.45;
-  text-align: left;
+  line-height: 1.4;
+  text-align: right;
 }
 
 .exercise-action-bar[data-has-hint="false"] > .exercise-action-bar__hint {
@@ -94,23 +101,28 @@
 }
 
 .exercise-action-bar__hint svg {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 0.9rem;
+  height: 0.9rem;
   flex: 0 0 auto;
   color: var(--ex-accent);
   stroke-width: 2;
 }
 
-.exercise-action-bar > .exercise-action-bar__actions {
+.exercise-action-bar > .exercise-action-bar__actions,
+.exercise-action-bar[data-has-hint="false"] > .exercise-action-bar__actions {
   display: flex;
+  width: 100%;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 0.7rem;
 }
 
-.exercise-action-bar[data-has-hint="false"] > .exercise-action-bar__actions {
-  justify-content: space-between;
+.exercise-action-bar .exercise-primary-action,
+.exercise-action-bar .exercise-secondary-action {
+  min-height: 2.7rem;
+  padding: 0.68rem 1rem;
+  border-radius: 999px;
 }
 
 .exercise-primary-action,
@@ -122,12 +134,14 @@
 .exercise-primary-action:disabled,
 .exercise-secondary-action:disabled {
   cursor: not-allowed;
-  opacity: 0.62;
+  opacity: 0.68;
 }
 
 .exercise-primary-action:disabled {
-  color: color-mix(in srgb, #fffaf5 78%, var(--ex-ink));
-  background: color-mix(in srgb, var(--ex-accent) 58%, var(--ex-surface-soft));
+  border: 1px solid var(--ex-line);
+  color: color-mix(in srgb, var(--ex-ink) 48%, transparent);
+  background: color-mix(in srgb, var(--ex-ink) 8%, var(--ex-surface));
+  box-shadow: none;
 }
 
 /* Milestones belong to the same navy/orange system as the rest of the shell. */
@@ -160,11 +174,14 @@
     font-size: clamp(1.75rem, 8vw, 2.35rem);
   }
 
-  .exercise-action-bar,
-  .exercise-action-bar[data-has-hint="true"],
-  .exercise-action-bar[data-has-hint="false"] {
-    grid-template-columns: 1fr;
-    align-items: stretch;
+  .exercise-action-bar {
+    gap: 0.7rem;
+    padding-top: 0.9rem;
+  }
+
+  .exercise-action-bar > .exercise-action-bar__hint {
+    justify-content: flex-start;
+    text-align: left;
   }
 
   .exercise-action-bar > .exercise-action-bar__actions,
