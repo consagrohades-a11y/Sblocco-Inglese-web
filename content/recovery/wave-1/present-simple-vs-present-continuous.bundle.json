@@ -195,7 +195,9 @@
                 "scenario": "Two classmates meet on the way to school.",
                 "response_prompt": "What should Luca say next?",
                 "turns": [
-                  {"key":"turn_1","speaker":"Maya","text":"You usually take the bus. Why are you walking today?"}
+                  {"key":"turn_1","speaker":"Maya","text":"You usually take the bus."},
+                  {"key":"turn_2","speaker":"Luca","text":"Yes, I do."},
+                  {"key":"turn_3","speaker":"Maya","text":"Why are you walking today?"}
                 ],
                 "options": [
                   {"key":"a","text":"The bus isn't running this morning, so I'm walking.","is_correct":true},
@@ -364,9 +366,11 @@
               "difficulty": "standard",
               "content": {
                 "scenario": "A friend calls while Sam is at his grandmother's house.",
-                "response_prompt": "What should Sam say?",
+                "response_prompt": "What should Sam say next?",
                 "turns": [
-                  {"key":"turn_1","speaker":"Eva","text":"Where are you? You normally study at the library on Wednesday."}
+                  {"key":"turn_1","speaker":"Eva","text":"Where are you?"},
+                  {"key":"turn_2","speaker":"Sam","text":"At my grandmother's house."},
+                  {"key":"turn_3","speaker":"Eva","text":"You normally study at the library on Wednesday."}
                 ],
                 "options": [
                   {"key":"a","text":"I do, but this week I'm studying at my grandmother's house.","is_correct":true},
