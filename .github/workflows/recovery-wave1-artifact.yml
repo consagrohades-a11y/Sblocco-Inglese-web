@@ -6,19 +6,34 @@ on:
       - ops/recovery-wave1-artifact
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  package:
+  patch-feature:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Package canonical Wave 1 bundles and admin source
-        uses: actions/upload-artifact@v4
+      - name: Checkout ops helper
+        uses: actions/checkout@v4
         with:
-          name: recovery-wave1-workspace
-          path: |
-            content/recovery/wave-1/*.bundle.json
-            src/pages/AdminRecoveryContent.jsx
-          if-no-files-found: error
-          retention-days: 1
+          path: ops
+      - name: Checkout target feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/recovery-wave1-one-click-publish
+          path: target
+      - name: Apply explicit Wave 1 publish patch
+        run: |
+          cp ops/scripts/ops-patch-recovery-wave1-publish.py target/scripts/ops-patch-recovery-wave1-publish.py
+          cd target
+          python scripts/ops-patch-recovery-wave1-publish.py
+          rm scripts/ops-patch-recovery-wave1-publish.py
+          git diff --check
+          git status --short
+      - name: Commit feature changes
+        working-directory: target
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/pages/AdminRecoveryContent.jsx scripts/validate-recovery-wave-publish.mjs package.json
+          git commit -m "feat: publish validated Recovery Wave 1 from admin"
+          git push origin HEAD:feat/recovery-wave1-one-click-publish
