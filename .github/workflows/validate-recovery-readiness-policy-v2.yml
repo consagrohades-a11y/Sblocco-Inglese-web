@@ -1,0 +1,24 @@
+name: Recovery readiness policy v2
+
+on:
+  pull_request:
+    paths:
+      - 'content/recovery/curriculum-v2/readiness-policy.json'
+      - 'content/recovery/curriculum-v2/assessment-blueprint.json'
+      - 'content/recovery/curriculum-v2/competence-axes.json'
+      - 'scripts/validate-recovery-readiness-policy-v2.mjs'
+      - 'src/lib/recoveryPlanEngine.js'
+      - 'package.json'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run validate:recovery-readiness-policy-v2
