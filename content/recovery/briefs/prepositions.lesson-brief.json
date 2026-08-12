@@ -1,0 +1,22 @@
+{
+  "schema_version":1,
+  "topic_key":"prepositions",
+  "label":"Prepositions",
+  "wave":2,
+  "introduced_by_year":1,
+  "level":"A1",
+  "prerequisites":[],
+  "outcome":"Lo studente sceglie preposizioni scolastiche ad alta frequenza per tempo, luogo e movimento e riconosce alcune combinazioni lessicali essenziali senza tradurre parola per parola dall'italiano.",
+  "must_master":["at/in/on for common time expressions","at/in/on and basic position prepositions for place","movement such as to/into/out of/across/through at programme level","common adjective/verb + preposition combinations at programme level","distinguish position from movement when context requires it"],
+  "do_not_teach_yet":["large idiomatic preposition inventories","phrasal verbs as a separate syllabus","rare spatial distinctions","formal style exceptions"],
+  "italian_learner_risks":[
+    {"risk":"directly translating Italian time prepositions","example_wrong":"in Monday","target":"on Monday"},
+    {"risk":"confusing at/in/on for place","example_wrong":"I live at Bologna.","target":"I live in Bologna."},
+    {"risk":"using a position preposition when movement is meant","example_wrong":"She walked in the room when the intended meaning is entering it.","target":"She walked into the room."},
+    {"risk":"translating common combinations word for word","example_wrong":"good in English","target":"good at English"}
+  ],
+  "context_bank":["school timetable","home and classroom location","directions and movement","transport","appointments","simple everyday collocations"],
+  "phase_requirements":{"recover":["structured teaching grouped by meaning","time/place/movement contrast","5-6 scaffolded checks"],"practice":["8 activities","four formats","connected route or scene","translation"],"school":["6 school-style tasks","exercise-end feedback"],"verify":["verification-standard-v2","10-13 activities","4+ formats","6+ subskills","3+ challenge items"]},
+  "approved_diagnostic_codes":["CORE_PREPOSITIONS_TIME","TIME_PREPOSITIONS","CORE_PREPOSITIONS_PLACE","CORE_PREPOSITIONS_POSITION","PREPOSITIONS_PLACE","PREPOSITIONS_MOVEMENT","COLLOCATIONS_PREPOSITIONS"],
+  "quality_rejections":["a random list of dozens of prepositions","questions with two defensible prepositions","obscure collocations","testing phrasal verbs as if they were spatial prepositions","difficulty based on unknown vocabulary"]
+}
