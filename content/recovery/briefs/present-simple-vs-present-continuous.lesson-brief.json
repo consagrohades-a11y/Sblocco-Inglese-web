@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "topic_key": "present-simple-vs-present-continuous",
+  "label": "Present Simple vs Present Continuous",
+  "wave": 1,
+  "introduced_by_year": 1,
+  "level": "A1",
+  "prerequisites": ["present-simple", "present-continuous"],
+  "outcome": "Lo studente sceglie tra Present Simple e Present Continuous partendo dal significato e dal contesto, poi costruisce correttamente la forma scelta in affermative, negative e domande.",
+  "must_master": [
+    "routine or repeated habit versus action in progress",
+    "stable fact or situation versus temporary current situation",
+    "common time markers as evidence, not as mechanical answer keys",
+    "correct form after choosing the tense",
+    "basic state verbs such as know, like, want and need at programme-appropriate level",
+    "tense choice in short dialogues, translations and connected mini-texts"
+  ],
+  "do_not_teach_yet": [
+    "Present Continuous for future arrangements",
+    "advanced stative/dynamic meaning changes such as think, have, see or taste",
+    "narrative present",
+    "future meaning of Present Simple",
+    "advanced discourse uses of the continuous"
+  ],
+  "core_decision_model": [
+    "First ask what the sentence means: routine/fact or current/temporary situation?",
+    "Use context and time expressions as evidence for that meaning.",
+    "Only after choosing the tense, build the correct grammatical form.",
+    "Do not teach learners to select a tense from one trigger word alone."
+  ],
+  "italian_learner_risks": [
+    {"risk":"overusing Present Continuous because Italian uses the simple present for many current actions","example_wrong":"I study now.","target":"I'm studying now."},
+    {"risk":"overusing Present Continuous with routines after learning -ing","example_wrong":"I am usually going to school by bus.","target":"I usually go to school by bus."},
+    {"risk":"choosing from a time marker without reading the actual meaning","example_wrong":"treating today as an automatic Continuous trigger in every sentence","target":"use the full context to decide whether today describes a current temporary situation"},
+    {"risk":"using -ing with basic state verbs","example_wrong":"I'm knowing the answer.","target":"I know the answer."},
+    {"risk":"choosing the correct tense but building the form incorrectly","example_wrong":"She working now / Does she working?","target":"She is working now / Is she working?"}
+  ],
+  "context_bank": [
+    "school routines versus what is happening in class now",
+    "usual transport versus a temporary change today",
+    "normal workplace versus working somewhere else this week",
+    "family routines versus what people are doing at the moment",
+    "short text-message exchanges about where someone is and what they are doing",
+    "temporary accommodation or study arrangements",
+    "simple state-verb situations with know, like, want and need"
+  ],
+  "recover_phase": {"minutes":12,"requirements":["one structured educational content block","teach meaning contrast before form contrast","include one stable-versus-temporary comparison","include a warning that time markers are evidence rather than automatic rules","include a basic state-verb mistake block","five scaffolded graded checks after the teaching block","at least one item requiring both tense choice and correct form","at least one short translation with both tenses in the same sentence"]},
+  "practice_phase": {"minutes":12,"item_target":8,"requirements":["at least four exercise formats","include routine-versus-current and stable-versus-temporary contrasts","include one connected two-blank or multi-blank context","include one dialogue item","include one state-verb item","include one Italian-to-English translation","do not label each item with the rule being tested"]},
+  "school_phase": {"minutes":10,"item_target":6,"feedback_timing":"exercise_end","requirements":["connected gap-fill text using both tenses","error correction","mixed multiple choice or select gap","word order or question formation","Italian-to-English translation","no teaching block and no coaching before answers"]},
+  "verify_phase": {"minutes":8,"item_target":8,"feedback_timing":"exercise_end","recommended_mastery_threshold":80,"requirements":["cover routine/current contrast","cover stable/temporary contrast","cover a basic state verb","require correct tense form, not recognition only","include a question or negative","include one translation or controlled production item","no teaching content"]},
+  "approved_diagnostic_codes": ["CORE_PRESENT_TENSE_CHOICE","A2_PRESENT_SIMPLE_VS_CONTINUOUS","DIALOGUE_PRESENT_TENSE_CONTEXT","TRANSLATION_PRESENT_TENSE_CHOICE","PRESENT_SIMPLE_USE","PRESENT_SIMPLE_THIRD_PERSON","PRESENT_SIMPLE_QUESTION_WORD_ORDER","PRESENT_CONTINUOUS_USE","PRESENT_CONTINUOUS_AUXILIARY","PRESENT_CONTINUOUS_VERB_ING","PRESENT_CONTINUOUS_NEGATIVE","PRESENT_CONTINUOUS_QUESTION_WORD_ORDER"],
+  "quality_rejections": [
+    "a worksheet where every answer is determined only by usually/now",
+    "more than two consecutive items with the same sentence pattern",
+    "unnatural textbook sentences written only to display a tense",
+    "testing Present Continuous future arrangements in this topic",
+    "advanced state-verb exceptions beyond the school-level brief",
+    "ambiguous contexts where both present tenses are defensible",
+    "translations with only one arbitrarily accepted natural rendering",
+    "difficulty created by obscure vocabulary rather than tense choice"
+  ]
+}
