@@ -61,5 +61,11 @@ for (const [year, path] of Object.entries(files)) {
   console.log(`Aligned Year ${year}: ${path}`);
 }
 
+const planPath = 'content/recovery/curriculum-v2/gap-analysis.json';
+const plan = JSON.parse(fs.readFileSync(planPath, 'utf8'));
+if (!plan.cross_year_prerequisite_alignment) throw new Error('Definitive gap analysis has no cross-year prerequisite block.');
+plan.cross_year_prerequisite_alignment.status = 'applied';
+fs.writeFileSync(planPath, `${JSON.stringify(plan, null, 2)}\n`);
+
 if (Object.keys(additions).length !== 20) throw new Error('Expected exactly 20 prerequisite recommendations.');
-console.log('Applied exactly 20 Curriculum v2 prerequisite recommendations.');
+console.log('Applied exactly 20 Curriculum v2 prerequisite recommendations and marked B0 alignment applied.');
