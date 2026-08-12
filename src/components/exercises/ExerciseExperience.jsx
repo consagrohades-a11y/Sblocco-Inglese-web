@@ -31,6 +31,7 @@ const TYPE_META = {
   dialogue_roleplay: { label: 'Simulazione', icon: MessageCircleMore },
   audio_response: { label: 'Parla', icon: Mic },
   reading_comprehension: { label: 'Leggi e rispondi', icon: BookOpen },
+  listening_comprehension: { label: 'Ascolta e rispondi', icon: Headphones },
   listening: { label: 'Ascolta', icon: Headphones },
   'multiple-choice': { label: 'Scegli', icon: CheckCircle2 },
   'gap-fill': { label: 'Completa', icon: Keyboard },
