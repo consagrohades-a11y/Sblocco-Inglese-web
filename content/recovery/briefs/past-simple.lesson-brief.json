@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "topic_key": "past-simple",
+  "label": "Past Simple",
+  "wave": 1,
+  "introduced_by_year": 1,
+  "level": "A2",
+  "prerequisites": [],
+  "outcome": "Lo studente racconta e riconosce eventi conclusi nel passato usando forme affermative, negative e interrogative corrette, senza mantenere il verbo al passato dopo did o didn't.",
+  "must_master": [
+    "finished actions and situations in a finished past time",
+    "regular affirmative forms and core spelling patterns",
+    "a small set of high-frequency irregular past forms in context",
+    "did questions with the base verb",
+    "didn't negatives with the base verb",
+    "wh-question word order with did",
+    "common finished-past time expressions such as yesterday, last week, two days ago and in 2024",
+    "was/were in common school-level past descriptions, questions and negatives"
+  ],
+  "scope_boundary": {
+    "irregular_verbs": "Use only a small high-frequency set needed for natural Past Simple contexts. Systematic retrieval of larger irregular-verb sets belongs to the next Wave 1 topic: irregular-verbs.",
+    "was_were": "Include as school-relevant Past Simple support, but do not let be replace the main objective of regular/irregular lexical verbs plus did/didn't.",
+    "later_tenses": "Do not contrast with Present Perfect or Past Continuous here; each has its own Recovery topic."
+  },
+  "high_frequency_irregulars_for_this_topic": ["go → went", "have → had", "get → got", "see → saw", "come → came", "do → did", "make → made", "take → took"],
+  "regular_spelling": [
+    "most verbs: +ed (work → worked)",
+    "verbs ending in -e: +d (live → lived)",
+    "consonant + y: y → ied (study → studied)",
+    "selected short stressed CVC verbs: double final consonant + ed (stop → stopped)"
+  ],
+  "italian_learner_risks": [
+    {"risk":"keeping the past form after did","example_wrong":"Did you went out?","target":"Did you go out?"},
+    {"risk":"keeping the past form after didn't","example_wrong":"She didn't studied.","target":"She didn't study."},
+    {"risk":"using do/does instead of did for a finished past question","example_wrong":"Do you see Marco yesterday?","target":"Did you see Marco yesterday?"},
+    {"risk":"regularising common irregular verbs","example_wrong":"I goed home.","target":"I went home."},
+    {"risk":"confusing was/were with did in lexical-verb questions","example_wrong":"Was you go out?","target":"Did you go out?"},
+    {"risk":"missing the finished-time meaning and selecting a present tense","example_wrong":"Yesterday I visit my aunt.","target":"Yesterday I visited my aunt."}
+  ],
+  "context_bank": [
+    "what happened yesterday after school",
+    "a weekend trip or day out",
+    "a missed bus or transport problem",
+    "a short message explaining why someone was late",
+    "a school event or class activity that finished",
+    "a simple sequence of two or three completed events",
+    "a past location or state using was/were",
+    "questions about a finished weekend or holiday"
+  ],
+  "recover_phase": {
+    "minutes": 12,
+    "requirements": [
+      "one structured educational content block",
+      "teach finished-past meaning before form tables",
+      "contrast affirmative past forms with did/didn't + base verb",
+      "include regular spelling without turning the lesson into spelling-only practice",
+      "include a small high-frequency irregular set in context",
+      "include a brief was/were school-support section",
+      "five scaffolded graded checks after teaching",
+      "include at least one question and one negative",
+      "include at least one short contextual production item"
+    ]
+  },
+  "practice_phase": {
+    "minutes": 12,
+    "item_target": 8,
+    "requirements": [
+      "at least four exercise formats",
+      "mix affirmative, negative and interrogative forms",
+      "include regular and high-frequency irregular verbs",
+      "include a connected mini-text or event sequence",
+      "include one did/didn't base-form trap",
+      "include one was/were item",
+      "include one Italian-to-English translation",
+      "avoid isolated verb-table drilling"
+    ]
+  },
+  "school_phase": {
+    "minutes": 10,
+    "item_target": 6,
+    "feedback_timing": "exercise_end",
+    "requirements": [
+      "connected gap-fill text",
+      "error correction",
+      "question formation or word order",
+      "translation",
+      "mixed regular/irregular choice",
+      "one was/were task",
+      "no teaching or answer-revealing labels"
+    ]
+  },
+  "verify_phase": {
+    "minutes": 8,
+    "item_target": 8,
+    "feedback_timing": "exercise_end",
+    "recommended_mastery_threshold": 80,
+    "requirements": [
+      "cover finished-past meaning",
+      "cover a regular affirmative form",
+      "cover at least one high-frequency irregular form",
+      "cover did + base verb",
+      "cover didn't + base verb",
+      "cover wh-question word order",
+      "cover a finished-time expression",
+      "sample was/were without over-weighting it",
+      "no teaching content"
+    ]
+  },
+  "approved_diagnostic_codes": [
+    "A2_PAST_SIMPLE",
+    "CORE_PAST_SIMPLE_FORM",
+    "CORE_PAST_SIMPLE_QNEG",
+    "PAST_REGULAR_FORM",
+    "PAST_REGULAR_ED",
+    "PAST_REGULAR_D",
+    "PAST_REGULAR_Y_IED",
+    "PAST_REGULAR_DOUBLE_CONSONANT",
+    "PAST_IRREGULAR_FORM",
+    "PAST_SIMPLE_IRREGULAR_VERB_FORM",
+    "PAST_NEGATIVE_BASE",
+    "PAST_SIMPLE_NEGATIVE_BASE_FORM",
+    "PAST_SIMPLE_NEGATIVE_DIDNT",
+    "PAST_QUESTION_BASE",
+    "PAST_SIMPLE_QUESTION_BASE_FORM",
+    "PAST_SIMPLE_QUESTION_DID",
+    "PAST_SIMPLE_WH_WORD_ORDER",
+    "PAST_TIME_EXPRESSIONS",
+    "PAST_BE_WAS_WERE",
+    "PAST_SIMPLE_BE",
+    "PAST_SIMPLE_BE_AFFIRMATIVE_FORM",
+    "PAST_SIMPLE_BE_NEGATIVE_FORM",
+    "PAST_SIMPLE_BE_QUESTION_INVERSION",
+    "PAST_SIMPLE_BE_SHORT_ANSWERS",
+    "PAST_SIMPLE_BE_VS_DID"
+  ],
+  "quality_rejections": [
+    "a page dominated by a long irregular-verb list",
+    "more than two consecutive decontextualised verb-form questions",
+    "questions where did is followed by a past form in the answer key",
+    "a Past Simple lesson that silently teaches Present Perfect or Past Continuous contrast",
+    "ambiguous time reference that does not clearly describe a finished past context",
+    "difficulty created by obscure vocabulary",
+    "mechanical conversion-only worksheets with no meaningful context",
+    "translations with an unnecessarily narrow accepted-answer set"
+  ]
+}
