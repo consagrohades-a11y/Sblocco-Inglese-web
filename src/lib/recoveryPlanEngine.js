@@ -10,6 +10,12 @@ const PRIORITY_BANDS = Object.freeze({
   medium: 45,
 });
 
+const PREFERRED_DAILY_MINUTES = Object.freeze({
+  [RECOVERY_MODE.COMPLETE]: 40,
+  [RECOVERY_MODE.INTENSIVE]: 48,
+  [RECOVERY_MODE.SOS]: 60,
+});
+
 function clamp(value, min = 0, max = 100) {
   return Math.max(min, Math.min(max, Number(value)));
 }
@@ -18,6 +24,15 @@ function scoreOrNull(value) {
   if (value === null || value === undefined || value === '') return null;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? clamp(parsed) : null;
+}
+
+function localDateIso(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 export function daysUntilRecoveryExam(examDate, now = new Date()) {
@@ -38,6 +53,21 @@ export function recoveryModeForDays(daysRemaining) {
 
 export function recoveryModeForExamDate(examDate, now = new Date()) {
   return recoveryModeForDays(daysUntilRecoveryExam(examDate, now));
+}
+
+export function recoveryStudyDates(examDate, now = new Date()) {
+  const daysRemaining = daysUntilRecoveryExam(examDate, now);
+  if (!Number.isFinite(daysRemaining) || daysRemaining < 0) return [];
+
+  const start = new Date(now);
+  start.setHours(12, 0, 0, 0);
+  const count = Math.max(1, daysRemaining);
+
+  return Array.from({ length: count }, (_, offset) => {
+    const date = new Date(start);
+    date.setDate(start.getDate() + offset);
+    return localDateIso(date);
+  }).filter(Boolean);
 }
 
 function weightedEvidence(values) {
@@ -170,7 +200,7 @@ function topicSession(topic, sequence, mode) {
     rationale: quick
       ? 'Questo argomento è richiesto dalla scuola ma risulta già abbastanza solido. Lo verifichiamo senza dedicargli una lezione completa.'
       : topic.repeatedErrors > 1
-        ? `Questo argomento è prioritario anche perché alcuni errori si stanno ripetendo.`
+        ? 'Questo argomento è prioritario anche perché alcuni errori si stanno ripetendo.'
         : 'È tra gli argomenti del programma che conviene consolidare prima di passare oltre.',
     estimatedMinutes,
     priorityScore: topic.priorityScore,
@@ -190,6 +220,98 @@ function fixedSession(sequenceIndex, sessionType, title, estimatedMinutes, ratio
     priorityScore: null,
     stages,
     metadata: {},
+  };
+}
+
+function evenlySpacedStudyDates(candidateDates, activeDayCount) {
+  if (!candidateDates.length || activeDayCount <= 0) return [];
+  if (activeDayCount === 1) return [candidateDates[0]];
+  if (activeDayCount >= candidateDates.length) return [...candidateDates];
+
+  const lastIndex = candidateDates.length - 1;
+  const indexes = Array.from({ length: activeDayCount }, (_, index) => (
+    Math.round((index * lastIndex) / (activeDayCount - 1))
+  ));
+  return [...new Set(indexes)].map((index) => candidateDates[index]);
+}
+
+export function buildRecoveryDailyPlan({
+  sessions = [],
+  examDate,
+  now = new Date(),
+  mode = recoveryModeForExamDate(examDate, now),
+}) {
+  const normalized = (sessions || []).map((session) => ({ ...session }));
+  const candidateDates = recoveryStudyDates(examDate, now);
+  const totalMinutes = normalized.reduce((sum, session) => sum + Math.max(0, Number(session.estimatedMinutes) || 0), 0);
+
+  if (!normalized.length || !candidateDates.length) {
+    return {
+      days: [],
+      sessions: normalized.map((session) => ({
+        ...session,
+        planDayIndex: null,
+        scheduledFor: null,
+        dailyOrder: null,
+      })),
+      totalMinutes,
+      availableStudyDays: candidateDates.length,
+      activeStudyDays: 0,
+    };
+  }
+
+  const preferredMinutes = PREFERRED_DAILY_MINUTES[mode] || PREFERRED_DAILY_MINUTES[RECOVERY_MODE.COMPLETE];
+  const desiredActiveDays = Math.max(1, Math.ceil(totalMinutes / preferredMinutes));
+  const activeDayCount = Math.max(1, Math.min(candidateDates.length, normalized.length, desiredActiveDays));
+  const activeDates = evenlySpacedStudyDates(candidateDates, activeDayCount);
+  const scheduledSessions = [];
+  const days = [];
+  let sessionIndex = 0;
+  let remainingMinutes = totalMinutes;
+
+  activeDates.forEach((scheduledFor, dayOffset) => {
+    const remainingDays = activeDates.length - dayOffset;
+    const targetForDay = Math.max(1, Math.ceil(remainingMinutes / remainingDays));
+    const daySessions = [];
+    let dayMinutes = 0;
+
+    while (sessionIndex < normalized.length) {
+      const session = normalized[sessionIndex];
+      const estimatedMinutes = Math.max(0, Number(session.estimatedMinutes) || 0);
+      const dailyOrder = daySessions.length + 1;
+      const scheduled = {
+        ...session,
+        planDayIndex: dayOffset + 1,
+        scheduledFor,
+        dailyOrder,
+      };
+      daySessions.push(scheduled);
+      scheduledSessions.push(scheduled);
+      dayMinutes += estimatedMinutes;
+      remainingMinutes = Math.max(0, remainingMinutes - estimatedMinutes);
+      sessionIndex += 1;
+
+      const sessionsRemaining = normalized.length - sessionIndex;
+      const futureDays = activeDates.length - dayOffset - 1;
+      if (sessionsRemaining <= futureDays) break;
+      if (dayMinutes >= targetForDay) break;
+    }
+
+    days.push({
+      dayIndex: dayOffset + 1,
+      scheduledFor,
+      targetMinutes: Math.max(5, dayMinutes),
+      status: 'planned',
+      sessionSequenceIndexes: daySessions.map((session) => session.sequenceIndex),
+    });
+  });
+
+  return {
+    days,
+    sessions: scheduledSessions,
+    totalMinutes,
+    availableStudyDays: candidateDates.length,
+    activeStudyDays: days.length,
   };
 }
 
@@ -311,12 +433,19 @@ export function buildRecoveryPlan({
     ...session,
     sequenceIndex: Math.max(1, Number(startSequence) || 1) + index,
   }));
+  const dailyPlan = buildRecoveryDailyPlan({ sessions: normalizedSessions, examDate, now, mode });
 
   return {
     mode,
     daysRemaining,
     topics,
-    sessions: normalizedSessions,
+    days: dailyPlan.days,
+    sessions: dailyPlan.sessions,
+    workload: {
+      totalMinutes: dailyPlan.totalMinutes,
+      availableStudyDays: dailyPlan.availableStudyDays,
+      activeStudyDays: dailyPlan.activeStudyDays,
+    },
   };
 }
 

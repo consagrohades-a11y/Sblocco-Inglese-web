@@ -14,6 +14,19 @@ function rpcError(response, fallback) {
   return response?.data;
 }
 
+function isMissingDailyPlanCapability(error) {
+  const code = String(error?.code || '');
+  const message = String(error?.message || '').toLowerCase();
+  return ['42P01', '42703', '42883', 'PGRST202', 'PGRST205'].includes(code)
+    || message.includes('recovery_plan_days')
+    || message.includes('plan_day_id')
+    || message.includes('scheduled_for')
+    || message.includes('daily_order')
+    || message.includes('replace_recovery_plan_v2')
+    || message.includes('activate_due_recovery_plan')
+    || message.includes('get_today_recovery_plan');
+}
+
 export async function submitRecoveryDiagnostic(answers) {
   const data = rpcError(await supabase.rpc('submit_public_recovery_diagnostic', {
     p_answers: answers,
@@ -60,9 +73,26 @@ export async function loadRecoveryEnrollment() {
   return data || null;
 }
 
+async function loadRecoverySessions(enrollmentId) {
+  const dailyResponse = await supabase
+    .from('recovery_plan_sessions')
+    .select('id, sequence_index, session_type, topic_key, title, rationale, estimated_minutes, priority_score, stages, metadata, status, assignment_id, assignment_resource_id, score, completed_at, plan_day_id, scheduled_for, daily_order, created_at, updated_at')
+    .eq('enrollment_id', enrollmentId)
+    .order('sequence_index', { ascending: true });
+
+  if (!dailyResponse.error) return dailyResponse;
+  if (!isMissingDailyPlanCapability(dailyResponse.error)) return dailyResponse;
+
+  return supabase
+    .from('recovery_plan_sessions')
+    .select('id, sequence_index, session_type, topic_key, title, rationale, estimated_minutes, priority_score, stages, metadata, status, assignment_id, assignment_resource_id, score, completed_at, created_at, updated_at')
+    .eq('enrollment_id', enrollmentId)
+    .order('sequence_index', { ascending: true });
+}
+
 export async function loadRecoveryState(enrollmentId) {
-  if (!enrollmentId) return { topics: [], sessions: [], assessments: [], errorEvidence: [] };
-  const [topicResponse, sessionResponse, assessmentResponse, errorResponse] = await Promise.all([
+  if (!enrollmentId) return { topics: [], days: [], sessions: [], assessments: [], errorEvidence: [] };
+  const [topicResponse, dayResponse, sessionResponse, assessmentResponse, errorResponse] = await Promise.all([
     supabase
       .from('recovery_student_topics')
       .select('topic_key, required, diagnostic_score, checkpoint_score, mock_score, mastery_score, repeated_errors, priority_score, priority_band, verification_only, last_evidence_at')
@@ -70,10 +100,12 @@ export async function loadRecoveryState(enrollmentId) {
       .eq('required', true)
       .order('priority_score', { ascending: false }),
     supabase
-      .from('recovery_plan_sessions')
-      .select('id, sequence_index, session_type, topic_key, title, rationale, estimated_minutes, priority_score, stages, metadata, status, assignment_id, assignment_resource_id, score, completed_at, created_at, updated_at')
+      .from('recovery_plan_days')
+      .select('id, plan_version, day_index, scheduled_for, target_minutes, status, created_at, updated_at')
       .eq('enrollment_id', enrollmentId)
-      .order('sequence_index', { ascending: true }),
+      .order('scheduled_for', { ascending: true })
+      .order('day_index', { ascending: true }),
+    loadRecoverySessions(enrollmentId),
     supabase
       .from('recovery_assessment_attempts')
       .select('id, session_id, assessment_type, exercise_attempt_id, score, topic_scores, submitted_at, feedback_released')
@@ -81,10 +113,15 @@ export async function loadRecoveryState(enrollmentId) {
       .order('created_at', { ascending: false }),
     supabase.rpc('get_recovery_error_evidence', { p_enrollment_id: enrollmentId }),
   ]);
-  const firstError = topicResponse.error || sessionResponse.error || assessmentResponse.error || errorResponse.error;
+
+  const dayError = dayResponse.error && !isMissingDailyPlanCapability(dayResponse.error)
+    ? dayResponse.error
+    : null;
+  const firstError = topicResponse.error || dayError || sessionResponse.error || assessmentResponse.error || errorResponse.error;
   if (firstError) throw firstError;
   return {
     topics: topicResponse.data || [],
+    days: dayResponse.error ? [] : (dayResponse.data || []),
     sessions: sessionResponse.data || [],
     assessments: assessmentResponse.data || [],
     errorEvidence: errorResponse.data || [],
@@ -103,12 +140,44 @@ export async function configureRecoveryEnrollment({ classYear, examDate, topicKe
 }
 
 export async function replaceRecoveryPlan({ enrollmentId, plan }) {
+  const v2Response = await supabase.rpc('replace_recovery_plan_v2', {
+    p_enrollment_id: enrollmentId,
+    p_mode: plan.mode,
+    p_topic_states: plan.topics,
+    p_days: plan.days || [],
+    p_sessions: plan.sessions,
+  });
+  if (!v2Response.error) return v2Response.data;
+  if (!isMissingDailyPlanCapability(v2Response.error)) {
+    return rpcError(v2Response, 'Non è stato possibile aggiornare il piano.');
+  }
+
   return rpcError(await supabase.rpc('replace_recovery_plan', {
     p_enrollment_id: enrollmentId,
     p_mode: plan.mode,
     p_topic_states: plan.topics,
     p_sessions: plan.sessions,
   }), 'Non è stato possibile aggiornare il piano.');
+}
+
+export async function activateRecoveryPlan(enrollmentId) {
+  if (!enrollmentId) return null;
+  const response = await supabase.rpc('activate_due_recovery_plan', { p_enrollment_id: enrollmentId });
+  if (response.error) {
+    if (isMissingDailyPlanCapability(response.error)) return null;
+    return rpcError(response, 'Non è stato possibile attivare il piano di oggi.');
+  }
+  return response.data;
+}
+
+export async function loadTodayRecoveryPlan(enrollmentId) {
+  if (!enrollmentId) return null;
+  const response = await supabase.rpc('get_today_recovery_plan', { p_enrollment_id: enrollmentId });
+  if (response.error) {
+    if (isMissingDailyPlanCapability(response.error)) return null;
+    return rpcError(response, 'Non è stato possibile caricare la missione di oggi.');
+  }
+  return response.data;
 }
 
 function objectFromRows(rows, key, value) {
@@ -154,6 +223,9 @@ export async function loadRecoveryAccessState() {
   const entitled = await hasRecoveryEntitlement();
   if (!entitled) return { entitled: false, enrollment: null, state: null };
   const enrollment = await loadRecoveryEnrollment();
+  if (enrollment?.id && enrollment.status === 'active') {
+    await activateRecoveryPlan(enrollment.id);
+  }
   const state = enrollment ? await loadRecoveryState(enrollment.id) : null;
   return { entitled: true, enrollment, state };
 }
