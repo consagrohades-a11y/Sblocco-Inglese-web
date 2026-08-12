@@ -70,11 +70,12 @@
       "production_migration": "20260812232454_recovery_curriculum_v2_runtime_foundation",
       "competence_axes_seeded": 6,
       "assessment_modes_seeded": 15,
-      "curriculum_outcomes_seeded": 0,
+      "curriculum_outcomes_seeded": 63,
       "enrollment_outcomes_created": 0,
       "assessment_fragments_created": 0,
       "outcome_evidence_created": 0,
-      "status": "schema_available_but_inert"
+      "status": "catalog_seeded_scope_inactive",
+      "outcome_catalog_migration": "20260812235354_recovery_curriculum_v2_outcome_catalog"
     },
     "readiness": {
       "v2_policy_defined": true,
@@ -345,16 +346,10 @@
       "Per-enrollment outcome-scope table",
       "Assessment-fragment metadata and outcome/mode junction tables",
       "First-class outcome-evidence table",
-      "Read-only learner RLS boundary"
+      "Read-only learner RLS boundary",
+      "63 reviewed Curriculum v2 outcomes synchronized to the runtime catalogue"
     ],
     "P0_remaining": [
-      {
-        "id": "RUNTIME-P0-001",
-        "title": "Synchronize the 63 source-controlled outcomes into the runtime catalogue",
-        "depends_on": [
-          "cross_year_prerequisite_alignment"
-        ]
-      },
       {
         "id": "RUNTIME-P0-002",
         "title": "Derive and persist enrollment required outcomes from the official programme/year fallback",
@@ -413,7 +408,15 @@
         "Synchronize all 63 corrected outcomes into recovery_curriculum_outcomes",
         "Implement programme/year-profile outcome scoping for enrollments"
       ],
-      "exit_condition": "Runtime can answer exactly which Curriculum v2 outcomes/axes are required for an enrollment without changing legacy readiness."
+      "exit_condition": "Runtime can answer exactly which Curriculum v2 outcomes/axes are required for an enrollment without changing legacy readiness.",
+      "status": "in_progress",
+      "completed_tracks": [
+        "Apply cross-year prerequisite recommendations to Year 2/3 source files",
+        "Synchronize all 63 corrected outcomes into recovery_curriculum_outcomes"
+      ],
+      "remaining_tracks": [
+        "Implement programme/year-profile outcome scoping for enrollments"
+      ]
     },
     {
       "batch": "B1",
@@ -546,10 +549,9 @@
     "important_rule": "Conditional does not mean optional once the learner's official programme requires it; at that point missing content/evidence blocks READY and the programme should not be advertised as fully supported until the content exists."
   },
   "next_execution": [
-    "Apply B0 prerequisite alignment.",
-    "Seed/synchronize the corrected 63 outcomes into the production runtime catalogue without assigning them to existing learners yet.",
+    "Implement programme-scoped enrollment outcome derivation using the 63 approved runtime outcomes.",
     "Split the eight P0 grammar topics and the first cumulative-fragment pool into parallel content workstreams.",
-    "Implement programme-scoped enrollment outcome derivation and outcome evidence capture in parallel with content authoring.",
+    "Implement outcome evidence capture and outcome/axis-first cumulative materialization in parallel with content authoring.",
     "Do not switch learner-facing readiness during these steps."
   ]
 }

@@ -3,7 +3,7 @@ import crypto from 'node:crypto';
 import { readFileSync } from 'node:fs';
 
 const ROOT = 'content/recovery/curriculum-v2';
-const MIGRATION = 'supabase/migrations/20260813030000_recovery_curriculum_v2_outcome_catalog.sql';
+const MIGRATION = 'supabase/migrations/20260812235354_recovery_curriculum_v2_outcome_catalog.sql';
 const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
 
 const years = [1, 2, 3].map((year) => readJson(`${ROOT}/years/year-${year}.json`));
