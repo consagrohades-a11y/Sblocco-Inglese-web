@@ -128,7 +128,10 @@ const recoveryApi = readFileSync('src/lib/recoveryApi.js', 'utf8');
 const recoverySchema = readFileSync('supabase/migrations/20260811010000_recovery_debt_foundation.sql', 'utf8');
 const recoveryBridge = readFileSync('supabase/migrations/20260811011000_recovery_debt_exercise_bridge.sql', 'utf8');
 const hardening = readFileSync('supabase/migrations/20260811014000_recovery_debt_hardening.sql', 'utf8');
-const dailyPlanSchema = readFileSync('supabase/migrations/20260812150000_recovery_daily_plan_foundation.sql', 'utf8');
+const dailyPlanSchema = readFileSync('supabase/migrations/20260812131323_recovery_daily_plan_foundation.sql', 'utf8');
+const dailyPlanHardening = readFileSync('supabase/migrations/20260812131337_recovery_daily_plan_hardening.sql', 'utf8');
+const dailyPlanPrivileges = readFileSync('supabase/migrations/20260812131409_recovery_daily_plan_privilege_lockdown.sql', 'utf8');
+const dailyPlanPolicyCleanup = readFileSync('supabase/migrations/20260812131553_recovery_daily_plan_policy_cleanup.sql', 'utf8');
 const learnerCss = readFileSync('src/styles/learnerEditorial.css', 'utf8');
 
 // A: anonymous diagnostic is public and does not require purchase.
@@ -179,6 +182,10 @@ assert.match(dailyPlanSchema, /create or replace function public\.get_today_reco
 assert.match(dailyPlanSchema, /create or replace function public\.replace_recovery_plan_v2/);
 assert.match(dailyPlanSchema, /new\.scheduled_for > current_date/);
 assert.match(dailyPlanSchema, /session\.status in \('planned', 'available'\)/);
+assert.match(dailyPlanHardening, /p_user_id = auth\.uid\(\) or public\.is_admin\(\)/);
+assert.match(dailyPlanPrivileges, /revoke all privileges on table public\.recovery_plan_days from anon, authenticated/);
+assert.match(dailyPlanPrivileges, /grant select on table public\.recovery_plan_days to authenticated/);
+assert.match(dailyPlanPolicyCleanup, /drop policy if exists recovery_plan_days_admin/);
 assert.match(recoveryApi, /replace_recovery_plan_v2/);
 assert.match(recoveryApi, /activate_due_recovery_plan/);
 assert.match(recoveryApi, /isMissingDailyPlanCapability/);
