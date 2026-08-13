@@ -71,11 +71,13 @@
       "competence_axes_seeded": 6,
       "assessment_modes_seeded": 15,
       "curriculum_outcomes_seeded": 63,
-      "enrollment_outcomes_created": 0,
+      "enrollment_outcomes_created": 9,
       "assessment_fragments_created": 0,
       "outcome_evidence_created": 0,
-      "status": "catalog_seeded_scope_inactive",
-      "outcome_catalog_migration": "20260812235354_recovery_curriculum_v2_outcome_catalog"
+      "status": "catalog_and_scope_available_readiness_inactive",
+      "outcome_catalog_migration": "20260812235354_recovery_curriculum_v2_outcome_catalog",
+      "enrollment_scope_migration": "20260813000437_recovery_curriculum_v2_enrollment_scope",
+      "scope_policy": "default_core year-profile fallback with explicit school_programme/manual_override precedence"
     },
     "readiness": {
       "v2_policy_defined": true,
@@ -347,16 +349,11 @@
       "Assessment-fragment metadata and outcome/mode junction tables",
       "First-class outcome-evidence table",
       "Read-only learner RLS boundary",
-      "63 reviewed Curriculum v2 outcomes synchronized to the runtime catalogue"
+      "63 reviewed Curriculum v2 outcomes synchronized to the runtime catalogue",
+      "Programme-scoped enrollment outcome fallback and explicit override RPCs",
+      "Derived active-axis curriculum scope per enrollment"
     ],
     "P0_remaining": [
-      {
-        "id": "RUNTIME-P0-002",
-        "title": "Derive and persist enrollment required outcomes from the official programme/year fallback",
-        "depends_on": [
-          "RUNTIME-P0-001"
-        ]
-      },
       {
         "id": "RUNTIME-P0-003",
         "title": "Register approved assessment fragments against outcomes/modes/form families",
@@ -409,14 +406,13 @@
         "Implement programme/year-profile outcome scoping for enrollments"
       ],
       "exit_condition": "Runtime can answer exactly which Curriculum v2 outcomes/axes are required for an enrollment without changing legacy readiness.",
-      "status": "in_progress",
+      "status": "completed",
       "completed_tracks": [
         "Apply cross-year prerequisite recommendations to Year 2/3 source files",
-        "Synchronize all 63 corrected outcomes into recovery_curriculum_outcomes"
-      ],
-      "remaining_tracks": [
+        "Synchronize all 63 corrected outcomes into recovery_curriculum_outcomes",
         "Implement programme/year-profile outcome scoping for enrollments"
-      ]
+      ],
+      "remaining_tracks": []
     },
     {
       "batch": "B1",
@@ -549,9 +545,9 @@
     "important_rule": "Conditional does not mean optional once the learner's official programme requires it; at that point missing content/evidence blocks READY and the programme should not be advertised as fully supported until the content exists."
   },
   "next_execution": [
-    "Implement programme-scoped enrollment outcome derivation using the 63 approved runtime outcomes.",
-    "Split the eight P0 grammar topics and the first cumulative-fragment pool into parallel content workstreams.",
-    "Implement outcome evidence capture and outcome/axis-first cumulative materialization in parallel with content authoring.",
+    "Start B1: build the eight P0 grammar systems in parallel content workstreams.",
+    "Start B2 technical track in parallel: assessment-fragment registration, outcome evidence capture and outcome/axis-first cumulative materialization.",
+    "Author the first P0 cumulative fragment pool for mixed grammar, IT→EN and school-task transfer.",
     "Do not switch learner-facing readiness during these steps."
   ]
 }

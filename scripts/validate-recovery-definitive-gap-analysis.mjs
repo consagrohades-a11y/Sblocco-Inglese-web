@@ -58,10 +58,11 @@ assert.equal(plan.current_state.cumulative_assessment_layer.mock_final_fragments
 assert.equal(plan.current_state.runtime_foundation.competence_axes_seeded, 6);
 assert.equal(plan.current_state.runtime_foundation.assessment_modes_seeded, 15);
 assert.equal(plan.current_state.runtime_foundation.curriculum_outcomes_seeded, 63);
-assert.equal(plan.current_state.runtime_foundation.enrollment_outcomes_created, 0);
+assert.equal(plan.current_state.runtime_foundation.enrollment_outcomes_created, 9);
+assert.equal(plan.current_state.runtime_foundation.status, 'catalog_and_scope_available_readiness_inactive');
+assert.equal(plan.current_state.runtime_foundation.enrollment_scope_migration, '20260813000437_recovery_curriculum_v2_enrollment_scope');
 assert.equal(plan.current_state.runtime_foundation.assessment_fragments_created, 0);
 assert.equal(plan.current_state.runtime_foundation.outcome_evidence_created, 0);
-assert.equal(plan.current_state.runtime_foundation.status, 'catalog_seeded_scope_inactive');
 assert.equal(plan.current_state.runtime_foundation.outcome_catalog_migration, '20260812235354_recovery_curriculum_v2_outcome_catalog');
 assert.equal(readiness.runtime_status, 'contract_only_not_yet_active');
 assert.equal(plan.current_state.readiness.v2_runtime_active, false);
@@ -120,7 +121,6 @@ assert.match(functionalFamily.conditional_escalation, /P0/i);
 assert.ok((plan.technical_backlog.completed_foundation || []).length >= 5);
 const runtimeP0 = plan.technical_backlog.P0_remaining || [];
 assert.deepEqual(runtimeP0.map((item) => item.id), [
-  'RUNTIME-P0-002',
   'RUNTIME-P0-003',
   'RUNTIME-P0-004',
   'RUNTIME-P0-005',
