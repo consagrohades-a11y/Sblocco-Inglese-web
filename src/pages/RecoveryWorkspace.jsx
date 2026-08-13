@@ -6,6 +6,7 @@ import RecoveryNav from '../components/recovery/RecoveryNav.jsx';
 import { RECOVERY_MODE_LABELS, recoveryTopicLabel } from '../config/recovery.js';
 import {
   loadRecoveryAccessState,
+  startRecoveryTopicRedo,
   syncMaterializedRecoverySessions,
 } from '../lib/recoveryApi.js';
 import { supabase } from '../lib/supabaseClient.js';
@@ -38,6 +39,13 @@ function canStudyAhead(session) {
 }
 
 function topicSessionActionLabel(session, verificationOnly = false) {
+  if (session?.metadata?.recovery_cycle) {
+    if (session.metadata.remediation_level === 'insufficient') return 'Ricomincia il recupero';
+    if (session.metadata.remediation_level === 'weak') return 'Allenati di nuovo';
+    if (session.metadata.remediation_level === 'almost_recovered') return 'Ripassa e riprova';
+    if (session.metadata.remediation_level === 'needs_recheck') return 'Ripassa e verifica';
+    if (session.metadata.remediation_level === 'full_voluntary') return 'Continua il nuovo ciclo';
+  }
   if (verificationOnly) return 'Verifica rapida';
   if (session?.status === 'planned') return 'Studia in anticipo';
   if (session?.status === 'in_progress') return 'Continua';
@@ -51,6 +59,8 @@ export default function RecoveryWorkspace({ view }) {
   const [reviewAvailability, setReviewAvailability] = useState({});
   const [reviewLaunching, setReviewLaunching] = useState('');
   const [reviewError, setReviewError] = useState('');
+  const [redoLaunching, setRedoLaunching] = useState('');
+  const [redoError, setRedoError] = useState('');
   const [loadError, setLoadError] = useState('');
   const copy = viewCopy[view] || viewCopy.percorso;
 
@@ -60,6 +70,7 @@ export default function RecoveryWorkspace({ view }) {
       setLoading(true);
       setLoadError('');
       setReviewError('');
+      setRedoError('');
       try {
         let loaded = await loadRecoveryAccessState();
         if (!active) return;
@@ -117,6 +128,21 @@ export default function RecoveryWorkspace({ view }) {
     }
   }
 
+  async function launchTopicRedo(topicKey) {
+    if (!access?.enrollment?.id || redoLaunching) return;
+    setRedoLaunching(topicKey);
+    setRedoError('');
+    try {
+      const result = await startRecoveryTopicRedo(access.enrollment.id, topicKey);
+      if (!result?.session_id) throw new Error('Il nuovo ciclo non è ancora disponibile.');
+      window.location.assign(`/recupero-debito/sessione/${result.session_id}`);
+    } catch (error) {
+      setRedoError(error.message || 'Non è stato possibile preparare il nuovo ciclo.');
+    } finally {
+      setRedoLaunching('');
+    }
+  }
+
   if (loading) return <div className="learner-editorial learner-workspace-page"><div className="learner-shell"><p className="learner-empty">Caricamento...</p></div></div>;
   if (loadError) return <div className="learner-editorial learner-workspace-page"><div className="learner-shell"><p className="learner-error">{loadError}</p><Link to="/dashboard" className="learner-secondary-button">Torna alla dashboard</Link></div></div>;
 
@@ -169,7 +195,10 @@ export default function RecoveryWorkspace({ view }) {
             <ul className="learner-list">
               {topics.map((topic, index) => {
                 const score = Math.round(Number(topic.mastery_score ?? topic.diagnostic_score ?? 0));
-                const topicSession = sessions.find((session) => session.topic_key === topic.topic_key && !['completed', 'skipped'].includes(session.status));
+                const activeCycle = sessions.find((session) => session.topic_key === topic.topic_key && session.metadata?.recovery_cycle && !['completed', 'skipped'].includes(session.status));
+                const topicSession = activeCycle || sessions.find((session) => session.topic_key === topic.topic_key && !['completed', 'skipped'].includes(session.status));
+                const hasRealHistory = (state?.masteryEvidence || []).some((item) => item.topic_key === topic.topic_key && item.evidence_type !== 'diagnostic')
+                  || sessions.some((session) => session.topic_key === topic.topic_key && session.status === 'completed');
                 const review = reviewAvailability[topic.topic_key];
                 const showFreeReview = review?.available && (topic.verification_only || !topicSession);
                 return (
@@ -187,6 +216,17 @@ export default function RecoveryWorkspace({ view }) {
                       {topicSession
                         ? <Link to={`/recupero-debito/sessione/${topicSession.id}`} className="learner-text-link">{topicSessionActionLabel(topicSession, topic.verification_only)} <ArrowRight size={14} /></Link>
                         : <span className={`learner-list__status ${topic.priority_band === 'high' ? 'learner-list__status--high' : ''}`}>{priorityLabel(topic)}</span>}
+                      {hasRealHistory ? (
+                        <button
+                          type="button"
+                          className="learner-text-link"
+                          onClick={() => launchTopicRedo(topic.topic_key)}
+                          disabled={Boolean(redoLaunching)}
+                          style={{ border: 0, padding: 0, background: 'transparent', cursor: redoLaunching ? 'wait' : 'pointer' }}
+                        >
+                          {redoLaunching === topic.topic_key ? 'Preparazione...' : 'Rifai il percorso'} <RotateCcw size={14} />
+                        </button>
+                      ) : null}
                       {showFreeReview ? (
                         <button
                           type="button"
@@ -204,7 +244,8 @@ export default function RecoveryWorkspace({ view }) {
               })}
             </ul>
             {reviewError ? <p className="learner-error" role="alert">{reviewError}</p> : null}
-            <p className="learner-empty" style={{ marginTop: '1rem' }}>“Studia in anticipo” completa una sessione reale del tuo piano e conta nei progressi. “Rivedi tutto” è un ripasso volontario: non abbassa il livello già consolidato e non cambia la priorità dell’argomento.</p>
+            {redoError ? <p className="learner-error" role="alert">{redoError}</p> : null}
+            <p className="learner-empty" style={{ marginTop: '1rem' }}>“Studia in anticipo” completa una sessione reale del tuo piano e conta nei progressi. “Rivedi tutto” è un ripasso volontario: non abbassa il livello già consolidato e non cambia la priorità dell’argomento. “Rifai il percorso” crea invece un nuovo ciclo reale con una nuova verifica e nuove evidenze.</p>
           </section>
         ) : null}
 

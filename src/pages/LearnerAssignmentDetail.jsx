@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
+import RecoveryAssignmentFollowup from '../components/recovery/RecoveryAssignmentFollowup.jsx';
 import { loadLearnerAssignmentProgress } from '../lib/assignmentProgressApi.js';
 import { supabase } from '../lib/supabaseClient.js';
 
@@ -225,6 +226,8 @@ export default function LearnerAssignmentDetail() {
                     {assignment.learner_note || 'Completa le attività qui sotto con calma. Tutto ciò che salvi resterà disponibile fino alla prossima lezione.'}
                   </p>
                 </section>
+
+                <RecoveryAssignmentFollowup assignmentId={assignment.id} remainingActivities={remainingActivities} />
 
                 <section className="mt-6 rounded-3xl border border-clay/15 bg-[#fffdf9] p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-6">
                   <p className="text-xs font-black uppercase tracking-[0.14em] text-coral dark:text-[#ff9678]">Oggi</p>
