@@ -360,7 +360,7 @@
 .recovery-plan-today { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1.2rem; margin-top: 1rem; padding: clamp(1.2rem, 4vw, 1.8rem); border-radius: 1.15rem; color: #fffaf5; background: linear-gradient(135deg, #0b3349 0%, #174f61 58%, #2f746f 100%); }
 .recovery-plan-today__copy { min-width: 0; }
 .recovery-plan-today span { color: #f3a180; font-size: 0.7rem; font-weight: 850; letter-spacing: 0.12em; text-transform: uppercase; }
-.recovery-plan-today h2 { max-width: 100%; margin: 0.35rem 0 0; overflow-wrap: anywhere; hyphens: auto; font-family: "Iowan Old Style", Georgia, serif; font-size: clamp(1.55rem, 4vw, 2.15rem); font-weight: 400; line-height: 1.08; }
+.recovery-plan-today h2 { max-width: 100%; margin: 0.35rem 0 0; overflow-wrap: anywhere; hyphens: auto; color: #fffaf5; font-family: "Iowan Old Style", Georgia, serif; font-size: clamp(1.55rem, 4vw, 2.15rem); font-weight: 400; line-height: 1.08; }
 .recovery-plan-today p { margin: 0.4rem 0 0; color: rgba(255, 250, 245, 0.72); font-size: 0.78rem; text-transform: capitalize; }
 .recovery-plan-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; margin-top: 0.8rem; }
 .recovery-view-plan,
