@@ -379,7 +379,7 @@ assert.ok(readingManifest.fragments.every((item) => item.outcome_ids.length === 
 
 assert.match(hardeningSql, /candidate\.primary_axis/, '36a. selector is axis-generic');
 assert.doesNotMatch(hardeningSql, /primary_axis\s+in\s*\(\s*'grammar_sentence_control'\s*,\s*'reading'/i, '36b. selector does not hard-code grammar plus reading');
-assert.equal(fs.existsSync('content/recovery/curriculum-v2/fragments/year-1-lexical-p0.fragments.json'), false, '36c. #227 does not depend on #229 lexical source');
+assert.doesNotMatch(hardeningSql, /year-1-lexical-p0|RY1-LEX-|recovery_v2_ry1_lex/i, '36c. #227 materializer remains axis-generic and does not depend on #229 lexical source');
 
 assert.ok(fs.existsSync('content/recovery/curriculum-v2/planning/b1a-grammar-p0-briefs.json'), '37. #226 B1-A grammar contract remains present');
 const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
