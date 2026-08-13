@@ -53,6 +53,7 @@
     "validate:recovery-wave-publish": "node scripts/validate-recovery-wave-publish.mjs",
     "validate:recovery-import": "node scripts/validate-recovery-import-pipeline.mjs",
     "validate:recovery-assessment-scope": "node scripts/validate-recovery-assessment-scope.mjs",
+    "validate:recovery-onboarding-v2": "node scripts/validate-recovery-onboarding-v2.mjs",
     "validate:editorial": "node scripts/validate-editorial-learning-coverage.mjs",
     "validate:supabase": "node scripts/validate-supabase-config.mjs",
     "validate:srs": "node scripts/validate-srs-cards.mjs"
