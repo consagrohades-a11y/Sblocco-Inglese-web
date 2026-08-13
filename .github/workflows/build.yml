@@ -30,6 +30,9 @@ jobs:
       - name: Validate SRS cards
         run: npm run validate:srs
 
+      - name: Validate Recovery retake freshness
+        run: node scripts/validate-recovery-topic-retake-freshness.mjs
+
       - name: Build site
         run: npm run build
 
