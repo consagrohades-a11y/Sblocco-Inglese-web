@@ -1,26 +1,63 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, CalendarDays, CheckCircle2 } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import {
-  RECOVERY_MODE_LABELS,
-  RECOVERY_TOPICS,
-} from '../config/recovery.js';
+  ClassYearStep,
+  DiagnosticSummaryStep,
+  ExamDateStep,
+  PlanBuildingStep,
+  PlanRevealStep,
+  ProgrammeConfidenceStep,
+  ProgrammeSelectionStep,
+  RecoveryOnboardingShell,
+  WelcomeStep,
+} from '../components/recovery/RecoveryOnboardingFlow.jsx';
 import {
   claimRecoveryDiagnostic,
   configureRecoveryEnrollment,
   hasRecoveryEntitlement,
   loadRecoveryEnrollment,
   loadRecoveryState,
+  materializeRecoverySession,
   recalculateRecoveryPlan,
   storedRecoveryDiagnosticToken,
 } from '../lib/recoveryApi.js';
 import { recoveryModeForExamDate } from '../lib/recoveryPlanEngine.js';
+import {
+  buildRecoveryPlanReveal,
+  clearRecoveryOnboardingDraft,
+  readRecoveryOnboardingDraft,
+  RECOVERY_PROGRAMME_CONFIDENCE,
+  sanitizeRecoveryOnboardingDraft,
+  TYPICAL_RECOVERY_TOPICS_BY_YEAR,
+  writeRecoveryOnboardingDraft,
+} from '../lib/recoveryOnboarding.js';
 import { supabase } from '../lib/supabaseClient.js';
 import '../styles/learnerEditorial.css';
+import '../styles/recoveryOnboarding.css';
 
-function todayIso() {
-  return new Date().toISOString().slice(0, 10);
+const SETUP_STEP = Object.freeze({
+  WELCOME: 0,
+  CLASS_YEAR: 1,
+  EXAM_DATE: 2,
+  PROGRAMME: 3,
+  CONFIDENCE: 4,
+  DIAGNOSTIC: 5,
+  BUILDING: 6,
+  REVEAL: 7,
+});
+
+export const EMPTY_RECOVERY_ONBOARDING_DRAFT = Object.freeze({
+  step: SETUP_STEP.WELCOME,
+  classYear: '',
+  examDate: '',
+  topicKeys: [],
+  programmeConfidence: '',
+});
+
+function sessionStorageSafe() {
+  return typeof window !== 'undefined' ? window.sessionStorage : null;
 }
 
 export default function RecoveryOnboarding() {
@@ -28,12 +65,26 @@ export default function RecoveryOnboarding() {
   const [loading, setLoading] = useState(true);
   const [entitled, setEntitled] = useState(false);
   const [diagnostic, setDiagnostic] = useState(null);
-  const [classYear, setClassYear] = useState('');
-  const [examDate, setExamDate] = useState('');
-  const [topicKeys, setTopicKeys] = useState([]);
+  const [draft, setDraft] = useState(() => readRecoveryOnboardingDraft(sessionStorageSafe()) || EMPTY_RECOVERY_ONBOARDING_DRAFT);
   const [submitting, setSubmitting] = useState(false);
+  const [buildingStage, setBuildingStage] = useState(0);
+  const [reveal, setReveal] = useState(null);
   const [error, setError] = useState('');
-  const mode = useMemo(() => examDate ? recoveryModeForExamDate(examDate) : null, [examDate]);
+  const mountedRef = useRef(true);
+  const submissionRef = useRef(false);
+  const editModeRef = useRef(false);
+
+  const { step, classYear, examDate, topicKeys, programmeConfidence } = draft;
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
+
+  useEffect(() => {
+    if (loading || step > SETUP_STEP.DIAGNOSTIC) return;
+    writeRecoveryOnboardingDraft(sessionStorageSafe(), draft);
+  }, [draft, loading, step]);
 
   useEffect(() => {
     let active = true;
@@ -59,11 +110,21 @@ export default function RecoveryOnboarding() {
         ]);
         if (!active) return;
         setDiagnostic(latestDiagnostic || null);
-        if (existingEnrollment) {
-          setClassYear(existingEnrollment.class_year ? String(existingEnrollment.class_year) : '');
-          setExamDate(existingEnrollment.exam_date || '');
+
+        const storedDraft = readRecoveryOnboardingDraft(sessionStorageSafe());
+        if (storedDraft) {
+          setDraft(storedDraft);
+        } else if (existingEnrollment) {
+          editModeRef.current = true;
           const state = await loadRecoveryState(existingEnrollment.id);
-          if (active) setTopicKeys(state.topics.filter((topic) => topic.required).map((topic) => topic.topic_key));
+          if (!active) return;
+          setDraft(sanitizeRecoveryOnboardingDraft({
+            step: SETUP_STEP.CLASS_YEAR,
+            classYear: existingEnrollment.class_year ? String(existingEnrollment.class_year) : '',
+            examDate: existingEnrollment.exam_date || '',
+            topicKeys: state.topics.filter((topic) => topic.required).map((topic) => topic.topic_key),
+            programmeConfidence: RECOVERY_PROGRAMME_CONFIDENCE.FOLLOWING,
+          }) || EMPTY_RECOVERY_ONBOARDING_DRAFT);
         }
       } catch (loadError) {
         if (active) setError(loadError.message || 'Non è stato possibile caricare il percorso.');
@@ -75,25 +136,45 @@ export default function RecoveryOnboarding() {
     return () => { active = false; };
   }, []);
 
-  function toggleTopic(topicKey) {
-    setTopicKeys((current) => current.includes(topicKey)
-      ? current.filter((key) => key !== topicKey)
-      : [...current, topicKey]);
+  useEffect(() => {
+    if (step !== SETUP_STEP.BUILDING) return undefined;
+    const timer = window.setInterval(() => {
+      setBuildingStage((current) => Math.min(4, current + 1));
+    }, 260);
+    return () => window.clearInterval(timer);
+  }, [step]);
+
+  function updateDraft(patch) {
+    setDraft((current) => sanitizeRecoveryOnboardingDraft({ ...current, ...patch }) || EMPTY_RECOVERY_ONBOARDING_DRAFT);
   }
 
-  async function handleSubmit(event) {
-    event.preventDefault();
+  function goTo(nextStep) {
+    setError('');
+    updateDraft({ step: nextStep });
+  }
+
+  function useTypicalProgramme() {
+    const typical = TYPICAL_RECOVERY_TOPICS_BY_YEAR[Number(classYear)] || [];
+    if (typical.length) updateDraft({ topicKeys: typical });
+  }
+
+  async function handleSubmit() {
+    if (submissionRef.current || submitting) return;
     setError('');
     if (!diagnostic) {
       setError('Completa prima il test diagnostico: il piano usa quel risultato come primo punto di partenza.');
       return;
     }
+    const mode = recoveryModeForExamDate(examDate);
     if (!classYear || !examDate || !topicKeys.length || !mode) {
       setError('Inserisci classe, data della prova e almeno un argomento del programma.');
       return;
     }
 
+    submissionRef.current = true;
     setSubmitting(true);
+    setBuildingStage(0);
+    updateDraft({ step: SETUP_STEP.BUILDING });
     try {
       const enrollmentId = await configureRecoveryEnrollment({
         classYear,
@@ -102,92 +183,90 @@ export default function RecoveryOnboarding() {
         mode,
         diagnosticToken: diagnostic.result_token || storedRecoveryDiagnosticToken(),
       });
+      if (mountedRef.current) setBuildingStage(1);
       const enrollment = await loadRecoveryEnrollment();
+      const initialState = await loadRecoveryState(enrollmentId);
+      if (mountedRef.current) setBuildingStage(2);
+      const plan = await recalculateRecoveryPlan({ enrollment: enrollment || { id: enrollmentId, exam_date: examDate }, state: initialState });
+      if (mountedRef.current) setBuildingStage(3);
       const state = await loadRecoveryState(enrollmentId);
-      await recalculateRecoveryPlan({ enrollment: enrollment || { id: enrollmentId, exam_date: examDate }, state });
-      navigate('/dashboard', { replace: true, state: { recoveryPlanUpdated: true } });
+      if (mountedRef.current) {
+        setBuildingStage(4);
+        setReveal(buildRecoveryPlanReveal({ plan, state }));
+        clearRecoveryOnboardingDraft(sessionStorageSafe());
+        setDraft((current) => ({ ...current, step: SETUP_STEP.REVEAL }));
+      }
     } catch (submitError) {
-      setError(submitError.message || 'Non è stato possibile creare il piano. Riprova.');
+      if (mountedRef.current) {
+        setError(submitError.message || 'Non è stato possibile creare il piano. Riprova.');
+        updateDraft({ step: SETUP_STEP.DIAGNOSTIC });
+      }
     } finally {
-      setSubmitting(false);
+      submissionRef.current = false;
+      if (mountedRef.current) setSubmitting(false);
     }
   }
 
+  async function startFirstSession() {
+    const session = reveal?.today;
+    if (!session) {
+      navigate('/recupero-debito/percorso');
+      return;
+    }
+    const sessionId = session.id;
+    const assignmentId = session.assignment_id;
+    const resourceId = session.assignment_resource_id;
+    if (assignmentId && resourceId) {
+      navigate(`/exercises?assignmentId=${assignmentId}&resourceId=${resourceId}`);
+      return;
+    }
+    if (sessionId) {
+      try {
+        const prepared = await materializeRecoverySession(sessionId);
+        if (prepared?.ready && prepared.assignment_id && prepared.resource_id) {
+          navigate(`/exercises?assignmentId=${prepared.assignment_id}&resourceId=${prepared.resource_id}`);
+          return;
+        }
+      } catch {
+        // The full plan remains available even if content mapping is not ready yet.
+      }
+      navigate(`/recupero-debito/sessione/${sessionId}`);
+      return;
+    }
+    navigate('/recupero-debito/percorso');
+  }
+
   if (loading) {
-    return <div className="learner-editorial learner-form-page"><div className="learner-shell"><div className="learner-form-card"><p className="learner-empty">Preparazione del percorso...</p></div></div></div>;
+    return <RecoveryOnboardingShell step={SETUP_STEP.WELCOME}><div className="recovery-onboarding-loading" role="status">Preparazione del percorso...</div></RecoveryOnboardingShell>;
   }
 
   if (!entitled) {
     return (
-      <div className="learner-editorial learner-form-page">
+      <RecoveryOnboardingShell step={SETUP_STEP.WELCOME}>
         <SEO title="Recupero Debito Inglese | Sblocco Inglese" description="Configura il tuo percorso di recupero." />
-        <div className="learner-shell"><div className="learner-form-card">
-          <p className="learner-kicker">Recupero Debito Inglese</p>
-          <h1 className="learner-display">Questo spazio si apre dopo <em style={{ color: 'var(--learner-orange)', fontStyle: 'normal' }}>l’acquisto.</em></h1>
-          <p className="learner-form-card__intro">Se hai appena completato il pagamento, torna qui dalla pagina di conferma. L’accesso viene assegnato dal webhook Stripe, non dal browser.</p>
-          <div className="learner-form-actions"><Link to="/percorsi/recupero-debito#sblocca" className="learner-primary-button">Vai al percorso <ArrowRight size={16} /></Link></div>
-        </div></div>
-      </div>
+        <section className="recovery-onboarding-step">
+          <div className="recovery-onboarding-step__heading">
+            <p className="learner-kicker">Recupero Debito Inglese</p>
+            <h1 className="learner-display">Questo spazio si apre dopo <em>l’acquisto.</em></h1>
+            <p>Se hai appena completato il pagamento, torna qui dalla pagina di conferma. L’accesso viene assegnato dal webhook Stripe, non dal browser.</p>
+          </div>
+          <div className="recovery-onboarding-actions"><span /><Link to="/percorsi/recupero-debito#sblocca" className="learner-primary-button">Vai al percorso <ArrowRight aria-hidden="true" /></Link></div>
+        </section>
+      </RecoveryOnboardingShell>
     );
   }
 
   return (
-    <div className="learner-editorial learner-form-page">
-      <SEO title="Configura Recupero Debito | Sblocco Inglese" description="Inserisci data, classe e programma della prova di recupero." />
-      <div className="learner-shell">
-        <form className="learner-form-card" onSubmit={handleSubmit}>
-          <p className="learner-kicker">Prima di iniziare</p>
-          <h1 className="learner-display">Dimmi cosa c’è nella tua <em style={{ color: 'var(--learner-orange)', fontStyle: 'normal' }}>prova.</em></h1>
-          <p className="learner-form-card__intro">Non devi scegliere un corso. Queste informazioni servono a decidere cosa mettere prima nel piano e cosa può essere soltanto verificato rapidamente.</p>
-
-          <section className="learner-form-section">
-            <h2>1. Test diagnostico</h2>
-            {diagnostic ? (
-              <div className="learner-plan-update"><CheckCircle2 size={16} aria-hidden="true" /> <strong>Risultato trovato: {Math.round(Number(diagnostic.overall_score || 0))}%.</strong> Verrà riutilizzato, quindi non devi rifare il test.</div>
-            ) : (
-              <div className="learner-plan-update"><strong>Serve un primo punto di partenza.</strong> Completa il test gratuito; poi torna qui e il risultato verrà collegato al tuo account.</div>
-            )}
-            {!diagnostic ? <div className="learner-form-actions"><Link to="/test-recupero-inglese" className="learner-primary-button">Fai il test diagnostico <ArrowRight size={16} /></Link></div> : null}
-          </section>
-
-          <section className="learner-form-section">
-            <h2>2. Classe e data della prova</h2>
-            <div className="learner-choice-grid">
-              {[1, 2, 3, 4, 5].map((year) => (
-                <button key={year} type="button" className={`learner-choice focus-ring ${classYear === String(year) ? 'is-selected' : ''}`} onClick={() => setClassYear(String(year))}>
-                  <span>{classYear === String(year) ? '●' : '○'}</span>{year}ª superiore
-                </button>
-              ))}
-            </div>
-            <div className="learner-field">
-              <label htmlFor="recovery-exam-date">Data della prova</label>
-              <input id="recovery-exam-date" type="date" min={todayIso()} value={examDate} onChange={(event) => setExamDate(event.target.value)} required />
-            </div>
-            {mode ? <div className="learner-plan-update"><CalendarDays size={16} aria-hidden="true" /> Con questa data il piano parte in modalità <strong>{RECOVERY_MODE_LABELS[mode]}</strong>. La modalità si aggiorna automaticamente se il tempo rimasto cambia.</div> : null}
-          </section>
-
-          <section className="learner-form-section">
-            <h2>3. Programma dato dalla scuola</h2>
-            <p className="learner-form-card__intro">Seleziona tutto ciò che compare nel programma di recupero. Un argomento richiesto non verrà eliminato solo perché il test è andato bene.</p>
-            <div className="learner-choice-grid">
-              {RECOVERY_TOPICS.map((topic) => (
-                <label key={topic.key} className={`learner-choice ${topicKeys.includes(topic.key) ? 'is-selected' : ''}`}>
-                  <input type="checkbox" checked={topicKeys.includes(topic.key)} onChange={() => toggleTopic(topic.key)} />
-                  <span>{topic.label}</span>
-                </label>
-              ))}
-            </div>
-          </section>
-
-          {error ? <p className="learner-error" role="alert">{error}</p> : null}
-          <div className="learner-form-actions">
-            <button type="submit" className="learner-primary-button focus-ring" disabled={submitting || !diagnostic}>
-              {submitting ? 'Creazione del piano...' : 'Crea il mio piano'} {!submitting ? <ArrowRight size={16} aria-hidden="true" /> : null}
-            </button>
-            <Link to="/dashboard" className="learner-secondary-button focus-ring">Torna alla dashboard</Link>
-          </div>
-        </form>
-      </div>
-    </div>
+    <RecoveryOnboardingShell step={step}>
+      <SEO title="Configura Recupero Debito | Sblocco Inglese" description="Costruisci il tuo piano di recupero passo dopo passo." />
+      {step === SETUP_STEP.WELCOME ? <WelcomeStep onNext={() => goTo(SETUP_STEP.CLASS_YEAR)} /> : null}
+      {step === SETUP_STEP.CLASS_YEAR ? <ClassYearStep value={classYear} onChange={(value) => updateDraft({ classYear: value })} onBack={() => goTo(SETUP_STEP.WELCOME)} onNext={() => goTo(SETUP_STEP.EXAM_DATE)} /> : null}
+      {step === SETUP_STEP.EXAM_DATE ? <ExamDateStep value={examDate} onChange={(value) => updateDraft({ examDate: value })} onBack={() => goTo(SETUP_STEP.CLASS_YEAR)} onNext={() => goTo(SETUP_STEP.PROGRAMME)} /> : null}
+      {step === SETUP_STEP.PROGRAMME ? <ProgrammeSelectionStep classYear={classYear} topicKeys={topicKeys} onChange={(value) => updateDraft({ topicKeys: value })} onBack={() => goTo(SETUP_STEP.EXAM_DATE)} onNext={() => goTo(SETUP_STEP.CONFIDENCE)} /> : null}
+      {step === SETUP_STEP.CONFIDENCE ? <ProgrammeConfidenceStep value={programmeConfidence} onChange={(value) => updateDraft({ programmeConfidence: value })} onUseTypical={useTypicalProgramme} onBack={() => goTo(SETUP_STEP.PROGRAMME)} onNext={() => goTo(SETUP_STEP.DIAGNOSTIC)} /> : null}
+      {step === SETUP_STEP.DIAGNOSTIC ? <DiagnosticSummaryStep diagnostic={diagnostic} diagnosticAction={<Link to="/test-recupero-inglese" className="learner-primary-button focus-ring">Fai il test diagnostico <ArrowRight aria-hidden="true" /></Link>} onBack={() => goTo(SETUP_STEP.CONFIDENCE)} onSubmit={handleSubmit} submitting={submitting} error={error} editMode={editModeRef.current} /> : null}
+      {step === SETUP_STEP.BUILDING ? <PlanBuildingStep stage={buildingStage} /> : null}
+      {step === SETUP_STEP.REVEAL && reveal ? <PlanRevealStep reveal={reveal} onStart={startFirstSession} onViewPlan={() => navigate('/recupero-debito/percorso')} /> : null}
+    </RecoveryOnboardingShell>
   );
 }

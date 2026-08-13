@@ -95,6 +95,9 @@ const RecoveryOnboarding = lazy(() => import('./pages/RecoveryOnboarding'));
 const RecoveryReadiness = lazy(() => import('./pages/RecoveryReadiness'));
 const RecoverySession = lazy(() => import('./pages/RecoverySession'));
 const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
+const RecoveryOnboardingPreview = import.meta.env.DEV
+  ? lazy(() => import('./pages/RecoveryOnboardingPreview'))
+  : null;
 const PathwayPage = lazy(() => import('./pages/PathwayPage'));
 const InterviewKitPage = lazy(() => import('./pages/InterviewKitPage'));
 const InterviewProductPage = lazy(() => import('./pages/InterviewProductPage'));
@@ -145,12 +148,14 @@ export default function App() {
     || location.pathname.startsWith('/recupero-debito')
     || location.pathname === '/test-recupero-inglese'
     || location.pathname === '/percorsi/recupero-debito';
+  const isStandaloneRecoveryOnboarding = location.pathname === '/recupero-debito/onboarding'
+    || (import.meta.env.DEV && location.pathname === '/__preview/recovery-onboarding');
   const suppressMarketingMobileCta = isRecoveryExperience;
 
   return (
     <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-surface-950 dark:text-white">
       <ScrollManager />
-      {!isAdmin ? <Navbar /> : null}
+      {!isAdmin && !isStandaloneRecoveryOnboarding ? <Navbar /> : null}
       <main className={isAdmin || isHomepage || isColloquioPathway || isRecoveryExperience ? '' : 'pb-24 xl:pb-0'}>
         <Suspense fallback={<PageFallback />}>
           <Routes>
@@ -192,6 +197,7 @@ export default function App() {
             <Route path="/engine-demo" element={<EngineDemo />} />
             {import.meta.env.DEV ? <Route path="/__preview/exercises" element={<ExerciseExperienceGallery />} /> : null}
             {import.meta.env.DEV ? <Route path="/__preview/assignments" element={<LearnerAssignmentsPreview />} /> : null}
+            {import.meta.env.DEV ? <Route path="/__preview/recovery-onboarding" element={<RecoveryOnboardingPreview />} /> : null}
             <Route path="/diagnostic" element={<Navigate to="/assessment" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -279,9 +285,9 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      {!isAdmin ? <Footer /> : null}
-      {!isAdmin && !suppressMarketingMobileCta ? <StickyMobileCTA /> : null}
-      {!isAdmin ? <BackToTopButton /> : null}
+      {!isAdmin && !isStandaloneRecoveryOnboarding ? <Footer /> : null}
+      {!isAdmin && !isStandaloneRecoveryOnboarding && !suppressMarketingMobileCta ? <StickyMobileCTA /> : null}
+      {!isAdmin && !isStandaloneRecoveryOnboarding ? <BackToTopButton /> : null}
     </div>
   );
 }

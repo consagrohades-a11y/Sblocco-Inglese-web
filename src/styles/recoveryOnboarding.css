@@ -1,0 +1,368 @@
+.recovery-onboarding-page {
+  --onboarding-shadow: 0 1.5rem 4rem rgba(14, 48, 69, 0.09);
+  min-height: 100dvh;
+}
+
+.dark .recovery-onboarding-page {
+  --onboarding-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.22);
+}
+
+.recovery-onboarding-header {
+  border-bottom: 1px solid var(--learner-line);
+  background: color-mix(in srgb, var(--learner-paper) 92%, transparent);
+  backdrop-filter: blur(1.2rem);
+}
+
+.recovery-onboarding-header__inner {
+  display: flex;
+  width: min(100% - 2rem, 72rem);
+  min-height: 4.5rem;
+  margin-inline: auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.recovery-onboarding-shell {
+  width: min(100% - 2rem, 72rem);
+  margin-inline: auto;
+  padding: clamp(1.4rem, 4vw, 3rem) 0 clamp(6rem, 9vw, 8rem);
+}
+
+.recovery-onboarding-progress-wrap {
+  width: min(100%, 48rem);
+  margin-inline: auto;
+}
+
+.recovery-onboarding-progress-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.65rem;
+  color: var(--learner-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.recovery-onboarding-progress {
+  height: 0.35rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--learner-navy) 10%, transparent);
+}
+
+.recovery-onboarding-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--learner-orange), #eb7549);
+  transition: width 300ms ease;
+}
+
+.recovery-onboarding-step {
+  width: min(100%, 48rem);
+  margin: clamp(1.6rem, 5vw, 4.8rem) auto 0;
+  overflow: hidden;
+  border: 1px solid var(--learner-line);
+  border-radius: 1.5rem;
+  background: color-mix(in srgb, var(--learner-paper-raised) 96%, transparent);
+  box-shadow: var(--onboarding-shadow);
+}
+
+.recovery-onboarding-step__heading,
+.recovery-onboarding-step__body,
+.recovery-onboarding-actions,
+.recovery-onboarding-live {
+  padding-inline: clamp(1.3rem, 5vw, 3.5rem);
+}
+
+.recovery-onboarding-step__heading {
+  padding-top: clamp(1.8rem, 5vw, 3.6rem);
+}
+
+.recovery-onboarding-step__heading h1 {
+  max-width: 42rem;
+  margin: 0.65rem 0 0;
+  font-size: clamp(2.55rem, 7vw, 4.9rem);
+  line-height: 0.98;
+}
+
+.recovery-onboarding-step__heading h1 em {
+  color: var(--learner-orange);
+  font-style: normal;
+}
+
+.recovery-onboarding-step__heading > p:last-child {
+  max-width: 39rem;
+  margin: 1rem 0 0;
+  color: var(--learner-muted);
+  font-size: clamp(0.96rem, 2.4vw, 1.08rem);
+  line-height: 1.65;
+}
+
+.recovery-onboarding-step__body {
+  padding-top: clamp(1.5rem, 4vw, 2.6rem);
+  padding-bottom: clamp(1.8rem, 4vw, 3rem);
+}
+
+.recovery-onboarding-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--learner-line);
+  background: color-mix(in srgb, var(--learner-paper-raised) 96%, transparent);
+  backdrop-filter: blur(1rem);
+}
+
+.recovery-onboarding-actions .learner-primary-button,
+.recovery-plan-today .learner-primary-button {
+  min-height: 3rem;
+  border: 0;
+}
+
+.recovery-onboarding-actions .learner-primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  transform: none;
+}
+
+.recovery-onboarding-back,
+.recovery-view-plan {
+  display: inline-flex;
+  min-height: 2.8rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  color: var(--learner-muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.recovery-onboarding-back svg,
+.recovery-onboarding-actions svg,
+.recovery-plan-today svg { width: 1rem; height: 1rem; }
+.recovery-onboarding-back:hover,
+.recovery-view-plan:hover { color: var(--learner-orange); }
+
+.recovery-onboarding-live {
+  margin: 0;
+  padding-bottom: 1rem;
+  color: var(--learner-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.recovery-onboarding-note,
+.recovery-onboarding-reassurance,
+.recovery-programme-selection-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--learner-orange) 24%, var(--learner-line));
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--learner-soft-orange) 76%, transparent);
+  line-height: 1.5;
+}
+
+.recovery-onboarding-note svg,
+.recovery-onboarding-reassurance svg,
+.recovery-programme-selection-summary svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  flex: 0 0 auto;
+  color: var(--learner-orange);
+}
+
+.recovery-year-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.recovery-year-option {
+  position: relative;
+  display: grid;
+  min-height: 9.5rem;
+  align-content: center;
+  justify-items: start;
+  padding: 1.25rem;
+  border: 1px solid var(--learner-line);
+  border-radius: 1.15rem;
+  color: var(--learner-navy);
+  background: transparent;
+  text-align: left;
+  transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.recovery-year-option:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--learner-orange) 45%, var(--learner-line)); }
+.recovery-year-option.is-selected { border-color: var(--learner-orange); background: var(--learner-soft-orange); }
+.recovery-year-option > span { font-family: "Iowan Old Style", Georgia, serif; font-size: 2.55rem; line-height: 1; }
+.recovery-year-option small { margin-top: 0.35rem; color: var(--learner-muted); font-weight: 700; }
+.recovery-year-option svg { position: absolute; top: 1rem; right: 1rem; width: 1.2rem; color: var(--learner-orange); opacity: 0; }
+.recovery-year-option.is-selected svg { opacity: 1; }
+
+.recovery-date-field { display: grid; gap: 0.65rem; color: var(--learner-muted); font-size: 0.78rem; font-weight: 800; }
+.recovery-date-field__control {
+  display: flex;
+  min-height: 4.2rem;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0 1.1rem;
+  border: 1px solid var(--learner-line);
+  border-radius: 1rem;
+  color: var(--learner-orange);
+  background: color-mix(in srgb, var(--learner-paper) 55%, var(--learner-paper-raised));
+}
+.recovery-date-field__control input { min-width: 0; flex: 1; border: 0; outline: 0; color: var(--learner-navy); background: transparent; font: inherit; font-size: 1rem; }
+.dark .recovery-date-field__control input { color-scheme: dark; }
+.recovery-date-feedback { margin-top: 1rem; padding-left: 1.1rem; border-left: 3px solid var(--learner-orange); }
+.recovery-date-feedback strong { font-family: "Iowan Old Style", Georgia, serif; font-size: 1.5rem; font-weight: 400; }
+.recovery-date-feedback p { margin: 0.35rem 0 0; color: var(--learner-muted); line-height: 1.55; }
+
+.recovery-programme-selection-summary { flex-wrap: wrap; }
+.recovery-programme-selection-summary span { margin-left: auto; color: var(--learner-muted); font-size: 0.78rem; }
+.recovery-programme-categories { display: grid; gap: 0.65rem; margin-top: 1rem; }
+.recovery-programme-category { overflow: hidden; border: 1px solid var(--learner-line); border-radius: 1rem; }
+.recovery-programme-category.is-open { border-color: color-mix(in srgb, var(--learner-orange) 38%, var(--learner-line)); }
+.recovery-programme-category__toggle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  width: 100%;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  color: var(--learner-navy);
+  text-align: left;
+}
+.recovery-programme-category__toggle > span:first-child { display: grid; gap: 0.2rem; }
+.recovery-programme-category__toggle strong { font-size: 0.9rem; }
+.recovery-programme-category__toggle small { color: var(--learner-muted); font-size: 0.72rem; line-height: 1.4; }
+.recovery-programme-category__toggle > svg { width: 1rem; transition: transform 160ms ease; }
+.recovery-programme-category.is-open .recovery-programme-category__toggle > svg { transform: rotate(180deg); }
+.recovery-programme-category__count { min-width: 2.6rem; padding: 0.35rem 0.55rem; border-radius: 999px; color: var(--learner-orange); background: var(--learner-soft-orange); font-size: 0.7rem; font-weight: 850; text-align: center; }
+.recovery-programme-category__topics { display: grid; gap: 0.45rem; padding: 0 0.75rem 0.75rem; }
+
+.recovery-topic-option {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.35rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--learner-paper) 48%, transparent);
+  cursor: pointer;
+}
+.recovery-topic-option input { width: 1rem; height: 1rem; accent-color: var(--learner-orange); }
+.recovery-topic-option > span { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.recovery-topic-option strong { font-size: 0.8rem; }
+.recovery-topic-option small { padding: 0.22rem 0.45rem; border: 1px solid var(--learner-line); border-radius: 999px; color: var(--learner-muted); font-size: 0.62rem; font-weight: 800; }
+.recovery-topic-option > svg { width: 1rem; color: var(--learner-orange); opacity: 0; }
+.recovery-topic-option.is-selected { background: var(--learner-soft-orange); }
+.recovery-topic-option.is-selected > svg { opacity: 1; }
+
+.recovery-confidence-options { display: grid; gap: 0.7rem; }
+.recovery-confidence-option {
+  display: grid;
+  grid-template-columns: 2.3rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--learner-line);
+  border-radius: 1rem;
+  color: var(--learner-navy);
+  text-align: left;
+}
+.recovery-confidence-option.is-selected { border-color: var(--learner-orange); background: var(--learner-soft-orange); }
+.recovery-confidence-option__mark { display: grid; width: 2.2rem; height: 2.2rem; place-items: center; border: 1px solid var(--learner-line); border-radius: 50%; }
+.recovery-confidence-option.is-selected .recovery-confidence-option__mark { color: white; border-color: var(--learner-orange); background: var(--learner-orange); }
+.recovery-confidence-option__mark svg { width: 1rem; }
+.recovery-confidence-option > span:last-child { display: grid; gap: 0.25rem; }
+.recovery-confidence-option small { color: var(--learner-muted); line-height: 1.45; }
+.recovery-onboarding-reassurance { margin: 1rem 0 0; font-size: 0.82rem; font-weight: 700; }
+
+.recovery-diagnostic-summary-grid,
+.recovery-plan-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+.recovery-diagnostic-summary-grid > div,
+.recovery-plan-summary-grid > div {
+  display: grid;
+  align-content: center;
+  min-height: 7rem;
+  padding: 1rem;
+  border: 1px solid var(--learner-line);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--learner-paper) 50%, transparent);
+}
+.recovery-diagnostic-summary-grid strong { font-family: "Iowan Old Style", Georgia, serif; font-size: 2.15rem; font-weight: 400; }
+.recovery-diagnostic-summary-grid span,
+.recovery-plan-summary-grid span { margin-top: 0.3rem; color: var(--learner-muted); font-size: 0.72rem; font-weight: 750; line-height: 1.35; }
+
+.recovery-building-list { display: grid; gap: 0.7rem; margin: 0; padding: 0; list-style: none; }
+.recovery-building-list li { display: flex; align-items: center; gap: 0.85rem; min-height: 3.4rem; padding: 0.75rem 0.9rem; border: 1px solid var(--learner-line); border-radius: 0.9rem; color: var(--learner-muted); font-weight: 750; }
+.recovery-building-list li > span { display: grid; width: 1.9rem; height: 1.9rem; flex: 0 0 auto; place-items: center; border-radius: 50%; color: var(--learner-muted); background: var(--learner-soft-blue); font-size: 0.72rem; }
+.recovery-building-list li svg { width: 0.95rem; }
+.recovery-building-list li.is-complete { color: var(--learner-navy); border-color: color-mix(in srgb, var(--learner-orange) 28%, var(--learner-line)); }
+.recovery-building-list li.is-complete > span { color: white; background: var(--learner-orange); }
+
+.recovery-plan-summary-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.recovery-plan-summary-grid > div { min-height: 7.5rem; }
+.recovery-plan-summary-grid svg { width: 1.2rem; color: var(--learner-orange); }
+.recovery-plan-summary-grid strong { margin-top: 0.65rem; font-size: 1.1rem; }
+.recovery-plan-today { display: flex; align-items: center; justify-content: space-between; gap: 1.2rem; margin-top: 1rem; padding: clamp(1.2rem, 4vw, 1.8rem); border-radius: 1.15rem; color: #fffaf5; background: linear-gradient(135deg, #0e3045, #17465f); }
+.recovery-plan-today span { color: #f3a180; font-size: 0.7rem; font-weight: 850; letter-spacing: 0.12em; text-transform: uppercase; }
+.recovery-plan-today h2 { margin: 0.35rem 0 0; font-family: "Iowan Old Style", Georgia, serif; font-size: 1.65rem; font-weight: 400; }
+.recovery-plan-today p { margin: 0.4rem 0 0; color: rgba(255, 250, 245, 0.72); font-size: 0.78rem; text-transform: capitalize; }
+.recovery-view-plan { width: 100%; margin-top: 0.8rem; border: 1px solid var(--learner-line); }
+.recovery-onboarding-loading { width: min(100%, 48rem); margin: 4rem auto; padding: 2rem; text-align: center; color: var(--learner-muted); font-weight: 750; }
+.recovery-preview-controls { position: fixed; right: 1rem; bottom: 1rem; z-index: 20; display: flex; align-items: center; gap: 0.65rem; padding: 0.5rem; border: 1px solid var(--learner-line); border-radius: 999px; background: var(--learner-paper-raised); box-shadow: var(--onboarding-shadow); font-size: 0.72rem; font-weight: 800; }
+.recovery-preview-controls button { min-height: 2.2rem; padding: 0 0.8rem; border-radius: 999px; color: #fffaf5; background: var(--learner-orange); }
+.recovery-preview-controls button:disabled { cursor: not-allowed; opacity: 0.4; }
+
+@media (max-width: 760px) {
+  .recovery-onboarding-header__inner,
+  .recovery-onboarding-shell { width: min(100% - 1.2rem, 72rem); }
+  .recovery-onboarding-step { margin-top: 1.3rem; border-radius: 1.15rem; }
+  .recovery-onboarding-step__heading h1 { font-size: clamp(2.45rem, 12vw, 3.5rem); }
+  .recovery-year-options { grid-template-columns: 1fr; }
+  .recovery-year-option { min-height: 5.8rem; }
+  .recovery-year-option > span { font-size: 2rem; }
+  .recovery-diagnostic-summary-grid { grid-template-columns: 1fr; }
+  .recovery-diagnostic-summary-grid > div { min-height: 5.5rem; }
+  .recovery-plan-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .recovery-plan-summary-grid > div:last-child { grid-column: 1 / -1; }
+  .recovery-plan-today { align-items: stretch; flex-direction: column; }
+  .recovery-plan-today .learner-primary-button { width: 100%; }
+  .recovery-programme-selection-summary span { width: 100%; margin-left: 2rem; }
+}
+
+@media (max-width: 390px) {
+  .recovery-onboarding-step__heading,
+  .recovery-onboarding-step__body,
+  .recovery-onboarding-actions,
+  .recovery-onboarding-live { padding-inline: 1rem; }
+  .recovery-onboarding-actions { gap: 0.5rem; }
+  .recovery-onboarding-actions .learner-primary-button { padding-inline: 0.9rem; }
+  .recovery-programme-category__toggle { gap: 0.5rem; padding-inline: 0.8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recovery-onboarding-progress span,
+  .recovery-year-option,
+  .recovery-programme-category__toggle > svg { transition: none; }
+  .recovery-year-option:hover { transform: none; }
+}
