@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const ROOT = 'content/recovery/curriculum-v2';
-const MIGRATION = 'supabase/migrations/20260813003000_recovery_curriculum_v2_fragment_evidence.sql';
+const MIGRATION = 'supabase/migrations/20260813001536_recovery_curriculum_v2_fragment_evidence.sql';
 const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
 
 const contract = readJson(`${ROOT}/fragment-evidence-contract.json`);
