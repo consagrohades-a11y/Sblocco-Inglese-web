@@ -94,5 +94,7 @@ assert.match(guide, /to:\s*'\/attivita\/srs'/);
 assert.match(guideStyles, /@media \(max-width: 560px\)/);
 assert.match(presentation, /sessione guidata/);
 assert.match(styles, /overflow-wrap: anywhere/);
+assert.match(flow, /recovery-plan-today__title/);
+assert.match(styles, /recovery-plan-today__title[^}]+color: #fffaf5 !important/);
 
 console.log('Recovery onboarding v2 validation passed.');

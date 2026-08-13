@@ -353,7 +353,7 @@ export function PlanRevealStep({ reveal, onStart, onViewPlan, onViewGuide }) {
         <div><Sparkles aria-hidden="true" /><strong>{reveal.assessments}</strong><span>verifiche e simulazioni</span></div>
       </div>
       <article className="recovery-plan-today">
-        <div className="recovery-plan-today__copy"><span>Oggi · {sessionKind}</span><h2>{sessionTitle}</h2><p>{stages[0] ? `${String(stages[0]).replaceAll('_', ' ')} · ` : ''}{minutes ? `~${minutes} min` : 'Prima attività'}</p></div>
+        <div className="recovery-plan-today__copy"><span>Oggi · {sessionKind}</span><h2 className="recovery-plan-today__title">{sessionTitle}</h2><p>{stages[0] ? `${String(stages[0]).replaceAll('_', ' ')} · ` : ''}{minutes ? `~${minutes} min` : 'Prima attività'}</p></div>
         <button type="button" className="learner-primary-button focus-ring" onClick={onStart}>Inizia il giorno 1 <ArrowRight aria-hidden="true" /></button>
       </article>
       <div className="recovery-plan-links">
