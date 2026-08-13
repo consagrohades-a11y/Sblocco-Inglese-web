@@ -1,0 +1,850 @@
+{
+  "schema_version": 2,
+  "entity_type": "bundle",
+  "questions": [],
+  "pools": [],
+  "exercises": [
+    {
+      "client_key": "recovery_v2_ry1_read_functional_notice_form_a",
+      "title": "Parte A",
+      "description": "Leggi un breve testo e completa le domande.",
+      "instructions": "Leggi prima il testo completo, poi rispondi usando solo le informazioni disponibili.",
+      "instruction_language": "it",
+      "level": "A1+",
+      "topic": "recovery-cumulative-year1-reading",
+      "estimated_minutes": 6,
+      "settings": {
+        "display_mode": "all_questions",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_v2_ry1_read_functional_notice_form_a_section",
+          "title": "Leggi e rispondi",
+          "instructions": "Cerca lo scopo del messaggio e le informazioni necessarie per agire.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "ry1_read_func_a_1",
+              "type": "reading_comprehension",
+              "title": "Testo e domande",
+              "prompt": "Read the message and answer all four questions.",
+              "instructions": "Puoi tornare al testo mentre rispondi.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "recovery-cumulative-year1-reading",
+              "subtopic": "functional_message",
+              "primary_skill": "reading",
+              "learning_objective": "Identify purpose and main explicit information in a short school message.",
+              "difficulty": "standard",
+              "content": {
+                "title": "Friday Photography Club",
+                "source_note": "Original unseen text created for Recovery Curriculum v2.",
+                "passage": "Hi everyone,\n\nThis Friday, Photography Club will meet in Room 12, not in the library, because the library is closing early. We will start at 3:45 and finish at 5:00. Please bring one photo you would like to discuss. It can be on your phone or on paper. If you need to leave before 5:00, tell Ms Green before lunch on Friday. Students who are not club members can visit once, but they must email Ms Green by Thursday evening.\n\nSee you there!",
+                "items": [
+                  {
+                    "key": "purpose",
+                    "type": "multiple_choice",
+                    "prompt": "Why was this message sent?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "To explain changes and requirements for Friday's club", "is_correct": true},
+                      {"key": "b", "text": "To invite students to work in the library", "is_correct": false},
+                      {"key": "c", "text": "To ask students to take photos before lunch", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "place",
+                    "type": "short_answer",
+                    "prompt": "Where should club members go on Friday?",
+                    "points": 1,
+                    "accepted_answers": ["Room 12", "room 12", "Room twelve", "room twelve"]
+                  },
+                  {
+                    "key": "visitor_action",
+                    "type": "multiple_choice",
+                    "prompt": "What must a student do before visiting the club for the first time?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "Send Ms Green an email by Thursday evening", "is_correct": true},
+                      {"key": "b", "text": "Give Ms Green a paper photo on Friday morning", "is_correct": false},
+                      {"key": "c", "text": "Wait in the library at 3:45", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "photo_format",
+                    "type": "true_false",
+                    "prompt": "Every student must bring a printed photo.",
+                    "points": 1,
+                    "options": [
+                      {"key": "true", "text": "True", "is_correct": false},
+                      {"key": "false", "text": "False", "is_correct": true}
+                    ]
+                  }
+                ]
+              },
+              "grading": {"mode": "per_item", "weight": 1, "nearly_correct_multiplier": 0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes": [], "fallback_error_code": null},
+              "tags": ["recovery", "curriculum-v2", "year-1", "reading", "cumulative", "transfer"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "curriculum-v2", "year-1", "reading", "assessment-fragment", "transfer"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_v2_ry1_read_functional_notice_form_b",
+      "title": "Parte B",
+      "description": "Leggi un breve testo e completa le domande.",
+      "instructions": "Leggi prima il testo completo, poi rispondi usando solo le informazioni disponibili.",
+      "instruction_language": "it",
+      "level": "A1+",
+      "topic": "recovery-cumulative-year1-reading",
+      "estimated_minutes": 6,
+      "settings": {
+        "display_mode": "all_questions",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_v2_ry1_read_functional_notice_form_b_section",
+          "title": "Leggi e rispondi",
+          "instructions": "Cerca lo scopo del messaggio e le informazioni necessarie per agire.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "ry1_read_func_b_1",
+              "type": "reading_comprehension",
+              "title": "Testo e domande",
+              "prompt": "Read the update and answer all four questions.",
+              "instructions": "Puoi tornare al testo mentre rispondi.",
+              "instruction_language": "it",
+              "level": "A1+",
+              "topic": "recovery-cumulative-year1-reading",
+              "subtopic": "functional_update",
+              "primary_skill": "reading",
+              "learning_objective": "Identify purpose and practical information in a short community update.",
+              "difficulty": "standard",
+              "content": {
+                "title": "Saturday Park Project: New Time",
+                "source_note": "Original unseen text created for Recovery Curriculum v2.",
+                "passage": "Hello volunteers,\n\nHeavy rain is expected on Saturday morning, so our park clean-up will begin at 2:00 p.m. instead of 10:00 a.m. Please meet outside the sports centre, not at the park gate. A team leader will walk to the park with you. Bring water and wear old shoes. We will provide gloves, rubbish bags and all the other equipment. If you registered for the morning but cannot come in the afternoon, send us a message before 6:00 p.m. on Friday.\n\nThank you for helping!",
+                "items": [
+                  {
+                    "key": "purpose",
+                    "type": "multiple_choice",
+                    "prompt": "What is the main purpose of the update?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "To give volunteers a new time and meeting place", "is_correct": true},
+                      {"key": "b", "text": "To cancel the park project completely", "is_correct": false},
+                      {"key": "c", "text": "To find a new team leader", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "meeting_place",
+                    "type": "short_answer",
+                    "prompt": "Where will the volunteers meet?",
+                    "points": 1,
+                    "accepted_answers": ["outside the sports centre", "the sports centre", "sports centre"]
+                  },
+                  {
+                    "key": "provided_item",
+                    "type": "multiple_choice",
+                    "prompt": "Which item does a volunteer NOT need to bring?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "Gloves", "is_correct": true},
+                      {"key": "b", "text": "Water", "is_correct": false},
+                      {"key": "c", "text": "Old shoes", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "morning_plan",
+                    "type": "true_false",
+                    "prompt": "The volunteers will start work in the morning.",
+                    "points": 1,
+                    "options": [
+                      {"key": "true", "text": "True", "is_correct": false},
+                      {"key": "false", "text": "False", "is_correct": true}
+                    ]
+                  }
+                ]
+              },
+              "grading": {"mode": "per_item", "weight": 1, "nearly_correct_multiplier": 0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes": [], "fallback_error_code": null},
+              "tags": ["recovery", "curriculum-v2", "year-1", "reading", "cumulative", "transfer"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "curriculum-v2", "year-1", "reading", "assessment-fragment", "transfer"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_v2_ry1_read_personal_narrative_form_a",
+      "title": "Parte A",
+      "description": "Leggi un breve racconto e ricostruisci le informazioni principali.",
+      "instructions": "Leggi l'intero racconto prima di rispondere. Il testo resta visibile.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-cumulative-year1-reading",
+      "estimated_minutes": 8,
+      "settings": {
+        "display_mode": "all_questions",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_v2_ry1_read_personal_narrative_form_a_section",
+          "title": "Leggi e ricostruisci",
+          "instructions": "Individua l'idea generale, i dettagli e l'ordine degli eventi.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "ry1_read_narr_a_1",
+              "type": "reading_comprehension",
+              "title": "Testo e domande",
+              "prompt": "Read Leo's story and answer all four questions.",
+              "instructions": "Puoi tornare al testo mentre rispondi.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "recovery-cumulative-year1-reading",
+              "subtopic": "personal_narrative",
+              "primary_skill": "reading",
+              "learning_objective": "Understand gist, explicit details, and connected events in a short personal narrative.",
+              "difficulty": "standard",
+              "content": {
+                "title": "A Change of Plan",
+                "source_note": "Original unseen text created for Recovery Curriculum v2.",
+                "passage": "Last Sunday, Leo and Amir planned to spend the afternoon at the new skatepark. Their bus stopped two streets early because road workers had closed the main road. After they got off, Leo noticed that his backpack was still on the bus. His phone and wallet were inside it. The boys went into a nearby café and asked the owner for help. She called the bus company and gave them directions to its office. Twenty minutes later, the bus driver returned with the backpack. It was too late for the skatepark, so Leo and Amir walked by the river and took photos instead. Leo was disappointed at first, but he later said the afternoon was still fun.",
+                "items": [
+                  {
+                    "key": "gist",
+                    "type": "multiple_choice",
+                    "prompt": "Which sentence best summarises Leo's afternoon?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "A problem changed the boys' original plan, but the day ended well", "is_correct": true},
+                      {"key": "b", "text": "The boys spent all afternoon waiting in a bus office", "is_correct": false},
+                      {"key": "c", "text": "Road workers showed the boys a better skatepark", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "help",
+                    "type": "short_answer",
+                    "prompt": "Who first helped the boys contact the bus company?",
+                    "points": 1,
+                    "accepted_answers": ["the café owner", "the cafe owner", "a café owner", "a cafe owner", "the owner"]
+                  },
+                  {
+                    "key": "changed_activity",
+                    "type": "multiple_choice",
+                    "prompt": "What did Leo and Amir do after getting the backpack back?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "They walked near the river and took pictures", "is_correct": true},
+                      {"key": "b", "text": "They returned home on the same bus", "is_correct": false},
+                      {"key": "c", "text": "They helped the workers open the road", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "wallet_location",
+                    "type": "true_false",
+                    "prompt": "Leo had his wallet with him when he entered the café.",
+                    "points": 1,
+                    "options": [
+                      {"key": "true", "text": "True", "is_correct": false},
+                      {"key": "false", "text": "False", "is_correct": true}
+                    ]
+                  }
+                ]
+              },
+              "grading": {"mode": "per_item", "weight": 1, "nearly_correct_multiplier": 0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes": [], "fallback_error_code": null},
+              "tags": ["recovery", "curriculum-v2", "year-1", "reading", "cumulative", "transfer"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "ry1_read_narr_a_2",
+              "type": "word_order",
+              "title": "Ordine degli eventi",
+              "prompt": "Put these events in the order in which they happened.",
+              "instructions": "Trascina tutti gli eventi nell'ordine corretto.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "recovery-cumulative-year1-reading",
+              "subtopic": "narrative_sequence",
+              "primary_skill": "reading",
+              "learning_objective": "Reconstruct the essential sequence of a short narrative.",
+              "difficulty": "standard",
+              "content": {
+                "tokens": ["The café owner called for help", "Leo saw that his backpack was missing", "The boys took photos by the river", "The driver brought the backpack back"],
+                "correct_order": ["Leo saw that his backpack was missing", "The café owner called for help", "The driver brought the backpack back", "The boys took photos by the river"],
+                "terminal_punctuation": ""
+              },
+              "grading": {"mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes": [], "fallback_error_code": null},
+              "tags": ["recovery", "curriculum-v2", "year-1", "reading", "sequence", "transfer"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "curriculum-v2", "year-1", "reading", "assessment-fragment", "transfer"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_v2_ry1_read_personal_narrative_form_b",
+      "title": "Parte B",
+      "description": "Leggi un breve racconto e ricostruisci le informazioni principali.",
+      "instructions": "Leggi l'intero racconto prima di rispondere. Il testo resta visibile.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-cumulative-year1-reading",
+      "estimated_minutes": 8,
+      "settings": {
+        "display_mode": "all_questions",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_v2_ry1_read_personal_narrative_form_b_section",
+          "title": "Leggi e ricostruisci",
+          "instructions": "Individua l'idea generale, i dettagli e l'ordine degli eventi.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "ry1_read_narr_b_1",
+              "type": "reading_comprehension",
+              "title": "Testo e domande",
+              "prompt": "Read Nina's story and answer all four questions.",
+              "instructions": "Puoi tornare al testo mentre rispondi.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "recovery-cumulative-year1-reading",
+              "subtopic": "personal_narrative",
+              "primary_skill": "reading",
+              "learning_objective": "Understand gist, explicit details, and connected events in a short personal narrative.",
+              "difficulty": "standard",
+              "content": {
+                "title": "Before the School Show",
+                "source_note": "Original unseen text created for Recovery Curriculum v2.",
+                "passage": "Nina promised to help with the costumes before the school show on Friday. She wanted to arrive at four, but her alarm did not ring and she reached school thirty minutes late. In the hall, the actors were practising, but the costume boxes were locked in the main office. Nina looked for Mr Bell, the caretaker, and found him near the gym. He opened the office, and Nina carried the boxes to the hall with two friends. They quickly checked each costume and discovered that one jacket had no buttons. Nina used safety pins to fix it. The show started on time, and no one in the audience noticed the problem.",
+                "items": [
+                  {
+                    "key": "gist",
+                    "type": "multiple_choice",
+                    "prompt": "What is the story mainly about?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "How Nina solved two problems before a school show", "is_correct": true},
+                      {"key": "b", "text": "Why the actors decided to cancel their show", "is_correct": false},
+                      {"key": "c", "text": "How Mr Bell made new costumes for the actors", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "late_minutes",
+                    "type": "short_answer",
+                    "prompt": "How late was Nina?",
+                    "points": 1,
+                    "accepted_answers": ["30 minutes", "thirty minutes", "half an hour", "30 mins"]
+                  },
+                  {
+                    "key": "jacket_solution",
+                    "type": "multiple_choice",
+                    "prompt": "How did Nina make the jacket usable?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "She closed it with safety pins", "is_correct": true},
+                      {"key": "b", "text": "She borrowed buttons from Mr Bell", "is_correct": false},
+                      {"key": "c", "text": "She replaced it with a gym jacket", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "audience_problem",
+                    "type": "true_false",
+                    "prompt": "The audience could see that there was a problem with a costume.",
+                    "points": 1,
+                    "options": [
+                      {"key": "true", "text": "True", "is_correct": false},
+                      {"key": "false", "text": "False", "is_correct": true}
+                    ]
+                  }
+                ]
+              },
+              "grading": {"mode": "per_item", "weight": 1, "nearly_correct_multiplier": 0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes": [], "fallback_error_code": null},
+              "tags": ["recovery", "curriculum-v2", "year-1", "reading", "cumulative", "transfer"],
+              "foundation_links": []
+            },
+            {
+              "client_key": "ry1_read_narr_b_2",
+              "type": "word_order",
+              "title": "Ordine degli eventi",
+              "prompt": "Put these events in the order in which they happened.",
+              "instructions": "Trascina tutti gli eventi nell'ordine corretto.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "recovery-cumulative-year1-reading",
+              "subtopic": "narrative_sequence",
+              "primary_skill": "reading",
+              "learning_objective": "Reconstruct the essential sequence of a short narrative.",
+              "difficulty": "standard",
+              "content": {
+                "tokens": ["Nina fixed a jacket", "Mr Bell opened the office", "Nina arrived at school", "The show began"],
+                "correct_order": ["Nina arrived at school", "Mr Bell opened the office", "Nina fixed a jacket", "The show began"],
+                "terminal_punctuation": ""
+              },
+              "grading": {"mode": "automatic", "weight": 1, "nearly_correct_multiplier": 0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes": [], "fallback_error_code": null},
+              "tags": ["recovery", "curriculum-v2", "year-1", "reading", "sequence", "transfer"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "curriculum-v2", "year-1", "reading", "assessment-fragment", "transfer"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_v2_ry1_read_context_reference_form_a",
+      "title": "Parte A",
+      "description": "Usa il contesto per capire parole e riferimenti nel testo.",
+      "instructions": "Non fermarti su ogni parola. Cerca gli indizi nelle frasi vicine.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-cumulative-year1-reading",
+      "estimated_minutes": 7,
+      "settings": {
+        "display_mode": "all_questions",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_v2_ry1_read_context_reference_form_a_section",
+          "title": "Leggi e collega",
+          "instructions": "Usa le informazioni prima e dopo la parola o il riferimento.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "ry1_read_context_a_1",
+              "type": "reading_comprehension",
+              "title": "Testo e domande",
+              "prompt": "Read the text and use the context to answer all four questions.",
+              "instructions": "Puoi tornare al testo mentre rispondi.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "recovery-cumulative-year1-reading",
+              "subtopic": "context_and_reference",
+              "primary_skill": "reading",
+              "learning_objective": "Infer a simple word meaning and resolve references using nearby context.",
+              "difficulty": "standard",
+              "content": {
+                "title": "Finding the Outdoor Cinema",
+                "source_note": "Original unseen text created for Recovery Curriculum v2.",
+                "passage": "On Saturday, Elena and Jo used a city app to find an outdoor cinema. The map showed an entrance beside the swimming pool, but the gate was locked. A small sign explained that the film had been relocated to the school hall because of strong wind. The girls followed orange arrows to the new place. Jo's phone had only two per cent battery, so she switched it off until they needed the map again. At the hall, volunteers gave them paper tickets. These allowed visitors to choose seats before entering. Elena kept hers in her jacket pocket because she did not want to lose it.",
+                "items": [
+                  {
+                    "key": "relocated_meaning",
+                    "type": "multiple_choice",
+                    "prompt": "In this text, what does “relocated” most probably mean?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "Moved to a different place", "is_correct": true},
+                      {"key": "b", "text": "Shown at a later time", "is_correct": false},
+                      {"key": "c", "text": "Cancelled because of bad weather", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "it_reference",
+                    "type": "multiple_choice",
+                    "prompt": "What does “it” refer to in “she switched it off”?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "Jo's phone", "is_correct": true},
+                      {"key": "b", "text": "The city app", "is_correct": false},
+                      {"key": "c", "text": "The cinema gate", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "these_reference",
+                    "type": "short_answer",
+                    "prompt": "What does “These” refer to?",
+                    "points": 1,
+                    "accepted_answers": ["the paper tickets", "paper tickets", "the tickets", "tickets"]
+                  },
+                  {
+                    "key": "phone_reason",
+                    "type": "multiple_choice",
+                    "prompt": "Why did Jo save her phone battery?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "She might need directions again", "is_correct": true},
+                      {"key": "b", "text": "Phones were forbidden in the hall", "is_correct": false},
+                      {"key": "c", "text": "She wanted to give the phone to a volunteer", "is_correct": false}
+                    ]
+                  }
+                ]
+              },
+              "grading": {"mode": "per_item", "weight": 1, "nearly_correct_multiplier": 0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes": [], "fallback_error_code": null},
+              "tags": ["recovery", "curriculum-v2", "year-1", "reading", "context", "reference", "transfer"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "curriculum-v2", "year-1", "reading", "assessment-fragment", "transfer"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_v2_ry1_read_context_reference_form_b",
+      "title": "Parte B",
+      "description": "Usa il contesto per capire parole e riferimenti nel testo.",
+      "instructions": "Non fermarti su ogni parola. Cerca gli indizi nelle frasi vicine.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-cumulative-year1-reading",
+      "estimated_minutes": 7,
+      "settings": {
+        "display_mode": "all_questions",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_v2_ry1_read_context_reference_form_b_section",
+          "title": "Leggi e collega",
+          "instructions": "Usa le informazioni prima e dopo la parola o il riferimento.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "ry1_read_context_b_1",
+              "type": "reading_comprehension",
+              "title": "Testo e domande",
+              "prompt": "Read the text and use the context to answer all four questions.",
+              "instructions": "Puoi tornare al testo mentre rispondi.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "recovery-cumulative-year1-reading",
+              "subtopic": "context_and_reference",
+              "primary_skill": "reading",
+              "learning_objective": "Infer a simple word meaning and resolve references using nearby context.",
+              "difficulty": "standard",
+              "content": {
+                "title": "A Second-Hand Find",
+                "source_note": "Original unseen text created for Recovery Curriculum v2.",
+                "passage": "Sam found some second-hand headphones at a weekend market. The seller said the left side was faulty: it played normally for a few minutes and then became silent. Sam still bought the headphones because the price was low and his cousin enjoys repairing electronics. At home, Sam showed them to her. She opened the left side and found a loose wire. After she connected it again, both sides worked perfectly. Sam thanked his cousin and offered to pay her, but she refused. She said fixing the headphones was good practice for her technology course.",
+                "items": [
+                  {
+                    "key": "faulty_meaning",
+                    "type": "multiple_choice",
+                    "prompt": "What does “faulty” most probably mean here?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "Not working correctly", "is_correct": true},
+                      {"key": "b", "text": "Very expensive", "is_correct": false},
+                      {"key": "c", "text": "Difficult to carry", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "it_reference",
+                    "type": "multiple_choice",
+                    "prompt": "What does the first “it” in the text refer to?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "The left side of the headphones", "is_correct": true},
+                      {"key": "b", "text": "The weekend market", "is_correct": false},
+                      {"key": "c", "text": "The low price", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "them_reference",
+                    "type": "short_answer",
+                    "prompt": "What does “them” refer to in “Sam showed them to her”?",
+                    "points": 1,
+                    "accepted_answers": ["the headphones", "headphones", "his headphones", "the second-hand headphones"]
+                  },
+                  {
+                    "key": "refused_reason",
+                    "type": "multiple_choice",
+                    "prompt": "Why did Sam's cousin probably refuse the money?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "The repair also helped her practise", "is_correct": true},
+                      {"key": "b", "text": "She had sold the headphones to Sam", "is_correct": false},
+                      {"key": "c", "text": "The headphones stopped working again", "is_correct": false}
+                    ]
+                  }
+                ]
+              },
+              "grading": {"mode": "per_item", "weight": 1, "nearly_correct_multiplier": 0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes": [], "fallback_error_code": null},
+              "tags": ["recovery", "curriculum-v2", "year-1", "reading", "context", "reference", "transfer"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "curriculum-v2", "year-1", "reading", "assessment-fragment", "transfer"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_v2_ry1_read_short_description_form_a",
+      "title": "Parte A",
+      "description": "Leggi un breve testo descrittivo e collega le informazioni.",
+      "instructions": "Scegli le risposte che rappresentano il significato complessivo del testo.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-cumulative-year1-reading",
+      "estimated_minutes": 7,
+      "settings": {
+        "display_mode": "all_questions",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_v2_ry1_read_short_description_form_a_section",
+          "title": "Leggi e rispondi",
+          "instructions": "Collega l'idea generale ai dettagli presenti in più frasi.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "ry1_read_desc_a_1",
+              "type": "reading_comprehension",
+              "title": "Testo e domande",
+              "prompt": "Read the description and answer all four questions.",
+              "instructions": "Puoi tornare al testo mentre rispondi.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "recovery-cumulative-year1-reading",
+              "subtopic": "short_description",
+              "primary_skill": "reading",
+              "learning_objective": "Understand gist, connected details, and a simple inference in a short descriptive text.",
+              "difficulty": "standard",
+              "content": {
+                "title": "The New Study Corner",
+                "source_note": "Original unseen text created for Recovery Curriculum v2.",
+                "passage": "Our local youth centre has opened a study corner for students aged thirteen to seventeen. It is quieter than the main activity room and has six large desks, a printer and fast internet. Students can use it from Monday to Thursday between 3:30 and 7:00 p.m. There is no charge, but everyone must show a student card at reception. Drinks are allowed only in bottles with a lid, and food must stay in the café area. On Tuesdays, a university student is available to help with maths and science homework. The centre suggests arriving before five because the desks often fill quickly after that time.",
+                "items": [
+                  {
+                    "key": "gist",
+                    "type": "multiple_choice",
+                    "prompt": "Who would find this place most useful?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "A teenager who needs a quiet place for homework", "is_correct": true},
+                      {"key": "b", "text": "A young child who wants an evening meal", "is_correct": false},
+                      {"key": "c", "text": "An adult who needs an office every morning", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "access_requirement",
+                    "type": "short_answer",
+                    "prompt": "What must students show before using the study corner?",
+                    "points": 1,
+                    "accepted_answers": ["a student card", "student card", "their student card", "a school card", "school card"]
+                  },
+                  {
+                    "key": "tuesday_help",
+                    "type": "multiple_choice",
+                    "prompt": "What extra service is available once a week?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "Support with two school subjects", "is_correct": true},
+                      {"key": "b", "text": "Free food in the café area", "is_correct": false},
+                      {"key": "c", "text": "Printing without a student card", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "late_arrival",
+                    "type": "true_false",
+                    "prompt": "A student who arrives at 6:00 p.m. will certainly find a free desk.",
+                    "points": 1,
+                    "options": [
+                      {"key": "true", "text": "True", "is_correct": false},
+                      {"key": "false", "text": "False", "is_correct": true}
+                    ]
+                  }
+                ]
+              },
+              "grading": {"mode": "per_item", "weight": 1, "nearly_correct_multiplier": 0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes": [], "fallback_error_code": null},
+              "tags": ["recovery", "curriculum-v2", "year-1", "reading", "description", "transfer"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "curriculum-v2", "year-1", "reading", "assessment-fragment", "transfer"],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_v2_ry1_read_short_description_form_b",
+      "title": "Parte B",
+      "description": "Leggi un breve testo descrittivo e collega le informazioni.",
+      "instructions": "Scegli le risposte che rappresentano il significato complessivo del testo.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-cumulative-year1-reading",
+      "estimated_minutes": 7,
+      "settings": {
+        "display_mode": "all_questions",
+        "feedback_timing": "exercise_end",
+        "show_score": true,
+        "show_correct_answers": true,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": true
+      },
+      "sections": [
+        {
+          "client_key": "recovery_v2_ry1_read_short_description_form_b_section",
+          "title": "Leggi e rispondi",
+          "instructions": "Collega l'idea generale ai dettagli presenti in più frasi.",
+          "selection_mode": "fixed",
+          "feedback_timing": "exercise_end",
+          "questions": [
+            {
+              "client_key": "ry1_read_desc_b_1",
+              "type": "reading_comprehension",
+              "title": "Testo e domande",
+              "prompt": "Read the description and answer all four questions.",
+              "instructions": "Puoi tornare al testo mentre rispondi.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "recovery-cumulative-year1-reading",
+              "subtopic": "short_description",
+              "primary_skill": "reading",
+              "learning_objective": "Understand gist, connected details, and a simple inference in a short descriptive text.",
+              "difficulty": "standard",
+              "content": {
+                "title": "A Weekend with the Parkers",
+                "source_note": "Original unseen text created for Recovery Curriculum v2.",
+                "passage": "Next month, Maya is staying with the Parker family during a school exchange in York. Their house is small but close to the city centre, so she will walk to school with their daughter, Ellie. Mr Parker works at a museum and usually returns home at six. Mrs Parker works from home and cooks dinner at about seven. The family has a friendly dog called Pepper, but it sleeps downstairs and never goes into the bedrooms. On Saturday, the Parkers plan to take Maya to the railway museum. If the weather is good on Sunday, they will have a picnic by the river; otherwise, they will visit an indoor market.",
+                "items": [
+                  {
+                    "key": "gist",
+                    "type": "multiple_choice",
+                    "prompt": "What information does the text mainly give Maya?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "What daily life and the weekend may be like with her host family", "is_correct": true},
+                      {"key": "b", "text": "How to travel alone from York to her own school", "is_correct": false},
+                      {"key": "c", "text": "Why the Parker family wants to move house", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "school_travel",
+                    "type": "short_answer",
+                    "prompt": "How will Maya get to school?",
+                    "points": 1,
+                    "accepted_answers": ["on foot", "by walking", "she will walk", "walk", "walking"]
+                  },
+                  {
+                    "key": "bad_weather_plan",
+                    "type": "multiple_choice",
+                    "prompt": "What will the family probably do if Sunday is rainy?",
+                    "points": 1,
+                    "options": [
+                      {"key": "a", "text": "Spend time at a covered market", "is_correct": true},
+                      {"key": "b", "text": "Have lunch beside the river", "is_correct": false},
+                      {"key": "c", "text": "Return to the railway museum", "is_correct": false}
+                    ]
+                  },
+                  {
+                    "key": "dog_bedroom",
+                    "type": "true_false",
+                    "prompt": "Maya should expect the dog to sleep in her room.",
+                    "points": 1,
+                    "options": [
+                      {"key": "true", "text": "True", "is_correct": false},
+                      {"key": "false", "text": "False", "is_correct": true}
+                    ]
+                  }
+                ]
+              },
+              "grading": {"mode": "per_item", "weight": 1, "nearly_correct_multiplier": 0.5},
+              "feedback": {},
+              "diagnostics": {"tested_codes": [], "fallback_error_code": null},
+              "tags": ["recovery", "curriculum-v2", "year-1", "reading", "description", "transfer"],
+              "foundation_links": []
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": ["recovery", "curriculum-v2", "year-1", "reading", "assessment-fragment", "transfer"],
+      "foundation_links": []
+    }
+  ]
+}

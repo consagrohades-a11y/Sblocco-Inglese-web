@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "pool_id": "recovery-v2-year1-reading-p0",
+  "status": "draft",
+  "target": {
+    "school_year_profile": 1,
+    "cefr_range": ["A1+", "A2"],
+    "primary_axis": "reading"
+  },
+  "outcome_matrix": [
+    {
+      "outcome_id": "RY1-READ-001",
+      "evidence_required": [
+        "identify the purpose of a short functional text",
+        "retrieve main explicit information from messages, notices, emails, and instructions",
+        "connect practical instructions without translating every word"
+      ],
+      "fragment_ids": ["RAF-RY1-READ-01", "RAF-RY1-READ-02"],
+      "assessment_modes": ["reading_comprehension", "cumulative_school_test"],
+      "coverage_status": "covered"
+    },
+    {
+      "outcome_id": "RY1-READ-002",
+      "evidence_required": [
+        "identify gist in a short A2 narrative or description",
+        "retrieve explicit details across nearby sentences",
+        "reconstruct the essential sequence",
+        "connect time references and nearby information"
+      ],
+      "fragment_ids": ["RAF-RY1-READ-03", "RAF-RY1-READ-04", "RAF-RY1-READ-07", "RAF-RY1-READ-08"],
+      "assessment_modes": ["reading_comprehension", "cumulative_school_test"],
+      "coverage_status": "covered"
+    },
+    {
+      "outcome_id": "RY1-READ-003",
+      "evidence_required": [
+        "infer the probable meaning of a simple unfamiliar word from sufficient context",
+        "identify the referent of a pronoun or short expression",
+        "continue understanding despite a limited unfamiliar element"
+      ],
+      "fragment_ids": ["RAF-RY1-READ-05", "RAF-RY1-READ-06"],
+      "assessment_modes": ["reading_comprehension", "cumulative_school_test"],
+      "coverage_status": "covered"
+    }
+  ],
+  "form_families": [
+    {
+      "family_key": "ry1-reading-functional-notice",
+      "forms": ["RAF-RY1-READ-01", "RAF-RY1-READ-02"],
+      "school_task_family": "functional_text",
+      "task_demand": "purpose, explicit information, and practical instructions"
+    },
+    {
+      "family_key": "ry1-reading-personal-narrative",
+      "forms": ["RAF-RY1-READ-03", "RAF-RY1-READ-04"],
+      "school_task_family": "reading_text",
+      "task_demand": "gist, detail, and essential sequence in a short personal narrative"
+    },
+    {
+      "family_key": "ry1-reading-context-reference",
+      "forms": ["RAF-RY1-READ-05", "RAF-RY1-READ-06"],
+      "school_task_family": "reading_text",
+      "task_demand": "contextual meaning and reference resolution"
+    },
+    {
+      "family_key": "ry1-reading-short-description",
+      "forms": ["RAF-RY1-READ-07", "RAF-RY1-READ-08"],
+      "school_task_family": "reading_text",
+      "task_demand": "gist, connected details, and simple inference in a short description"
+    }
+  ],
+  "mapping_note": "The current Exercise Builder reading renderer stores each passage and its items as one versioned question. Each reading container in this pool therefore targets one outcome only. Standalone sequence tasks are independently versioned and mapped. Inner item skills are validated by the content-specific validator but cannot yet receive separate runtime outcome mappings."
+}
