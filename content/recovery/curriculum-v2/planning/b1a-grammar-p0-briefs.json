@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "plan_id": "recovery-v2-b1a-grammar-p0",
+  "status": "authoring_contract",
+  "shared_contract": {
+    "topic_total_minutes": 48,
+    "phases": [
+      {"phase":"recover","minutes":12,"purpose":"teach_and_guided_checks"},
+      {"phase":"practice","minutes":12,"purpose":"controlled_to_independent_practice"},
+      {"phase":"school","minutes":10,"purpose":"italian_school_task_formats","feedback_timing":"exercise_end"},
+      {"phase":"verify","minutes":14,"purpose":"recovery-topic-verification-v2","feedback_timing":"exercise_end"}
+    ],
+    "verify_requirements": {
+      "activities_min": 10,
+      "activities_target": 11,
+      "scored_decisions_min": 12,
+      "formats_min": 4,
+      "integrative_items_min": 2,
+      "connected_context_required": true,
+      "controlled_production_required": true,
+      "mastery_threshold": 80,
+      "strong_threshold": 90
+    },
+    "authoring_rules": [
+      "Use natural contemporary English and level-appropriate vocabulary.",
+      "Target plausible Italian-learner errors rather than artificial distractors.",
+      "Do not reveal the tested grammar in school/verify titles or prompts.",
+      "Difficulty must come from form-meaning choice and transfer, not obscure vocabulary.",
+      "Every topic must support later cumulative unseen assessment without copying its verify items."
+    ]
+  },
+  "topics": [
+    {
+      "topic_key": "be-have-got-there-is-are",
+      "priority": "P0",
+      "default_year_profile": 1,
+      "cefr_band": "A1-A2",
+      "supports_outcomes": ["RY1-GRAM-001","RY1-GRAM-005","RY2-GRAM-002"],
+      "outcome": "Lo studente sceglie autonomamente la struttura di base corretta per identità/stato, possesso e presenza/esistenza, costruendo anche domande e negative senza trasferire direttamente la sintassi italiana.",
+      "must_master": [
+        "be: affirmative, negative, inversion questions and short answers",
+        "have got/has got: possession, negatives, questions and short answers",
+        "there is/there are: singular/plural presence and absence",
+        "there is/are questions with any where appropriate",
+        "choice between be, have got and there is/are from meaning",
+        "basic contraction recognition and production"
+      ],
+      "italian_transfer_risks": [
+        "using have for age or temporary state",
+        "using is/are to express possession",
+        "omitting there in existential structures",
+        "using there is with plural nouns",
+        "double auxiliaries in questions such as Do you are / Do you have got",
+        "Italian-style word order in negatives/questions"
+      ],
+      "exclude_for_now": [
+        "have as a full lexical verb in advanced tense contrasts",
+        "there has/have been",
+        "complex existential quantifier systems",
+        "present perfect uses of have"
+      ],
+      "recover_content": [
+        "meaning-first comparison: who/what something is vs what someone possesses vs what exists in a place",
+        "compact form tables only after meaning distinction",
+        "Italian learner mistake comparison",
+        "5-6 guided recognition/production checks"
+      ],
+      "practice_formats": ["select_gap","gap_fill","word_order","translation","error_correction"],
+      "school_formats": ["gap_fill","transformation","translation","question_formation","error_correction"],
+      "verify_must_sample": [
+        "meaning-based be vs have got vs there is/are choice",
+        "questions",
+        "negatives",
+        "singular/plural agreement",
+        "short connected room/family context",
+        "IT→EN production"
+      ],
+      "cumulative_ready_metadata": {
+        "primary_outcomes": ["RY1-GRAM-001","RY1-GRAM-005"],
+        "supporting_outcomes": ["RY2-GRAM-002"],
+        "preferred_modes": ["mixed_grammar","translation_it_en","sentence_building","error_correction"]
+      }
+    },
+    {
+      "topic_key": "past-simple-vs-past-continuous",
+      "priority": "P0",
+      "default_year_profile": 2,
+      "cefr_band": "A2-A2+",
+      "supports_outcomes": ["RY2-GRAM-001"],
+      "outcome": "Lo studente sceglie Past Simple o Past Continuous in base alla funzione narrativa: evento concluso/che avanza la sequenza, azione in corso o sfondo, e interruzione di un'azione in progresso.",
+      "must_master": [
+        "completed event/sequence -> Past Simple",
+        "action in progress around a past reference point -> Past Continuous",
+        "background scene vs foreground event",
+        "interrupted action pattern without reducing the choice to when/while signal words",
+        "affirmative/negative/question form inside mixed contexts",
+        "simultaneous ongoing actions where appropriate"
+      ],
+      "italian_transfer_risks": [
+        "using Imperfetto mechanically as Past Continuous in every case",
+        "choosing from when/while alone",
+        "using Past Continuous for a completed sequence event",
+        "forgetting was/were or -ing",
+        "using did + past form in mixed questions/negatives"
+      ],
+      "exclude_for_now": [
+        "Past Perfect",
+        "full narrative tense system",
+        "advanced stative-verb treatment beyond common high-frequency cases"
+      ],
+      "recover_content": [
+        "timeline/scene model with background vs event progression",
+        "contrast examples that share the same vocabulary but change viewpoint",
+        "Italian Imperfetto caution",
+        "5-6 guided choices with explanation after response"
+      ],
+      "practice_formats": ["multiple_choice","select_gap","error_correction","translation","sentence_building"],
+      "school_formats": ["gap_fill","verb_choice_in_context","translation","transformation","error_correction"],
+      "verify_must_sample": [
+        "background vs foreground",
+        "interrupted ongoing action",
+        "sequence of completed events",
+        "negative/question control",
+        "connected mini-narrative",
+        "IT→EN narrative sentence production"
+      ],
+      "cumulative_ready_metadata": {
+        "primary_outcomes": ["RY2-GRAM-001"],
+        "preferred_modes": ["mixed_grammar","translation_it_en","error_correction","cumulative_school_test"],
+        "fresh_form_requirement": "Cumulative fragments must use unseen narrative contexts, not verify rewrites."
+      }
+    },
+    {
+      "topic_key": "present-perfect-time-expressions",
+      "priority": "P0",
+      "default_year_profile": 2,
+      "cefr_band": "A2-A2+",
+      "supports_outcomes": ["RY2-GRAM-001"],
+      "outcome": "Lo studente interpreta e usa le principali espressioni temporali del Present Perfect in base al significato, distinguendo esperienza, risultato recente, durata e periodo non concluso senza applicare regole meccaniche di parola-segnale.",
+      "must_master": [
+        "ever/never for experience",
+        "just for a recent completed event with present relevance",
+        "already/yet in level-appropriate affirmative/question/negative patterns",
+        "for/since for duration from a starting point or period",
+        "unfinished-time expressions such as today/this week where context requires Present Perfect",
+        "placement of core adverbs in the clause",
+        "interaction with Past Simple when a finished past time is explicitly supplied"
+      ],
+      "italian_transfer_risks": [
+        "using Present Perfect with yesterday/last year/ago",
+        "confusing for and since",
+        "placing yet/already/just mechanically in Italian order",
+        "treating every today/this week sentence as Present Perfect regardless of meaning",
+        "using been/gone interchangeably if the curriculum example requires the distinction"
+      ],
+      "exclude_for_now": [
+        "Present Perfect Continuous",
+        "complex been vs gone taxonomy beyond core use",
+        "advanced since clauses",
+        "formal recently/lately nuances"
+      ],
+      "recover_content": [
+        "meaning groups rather than a signal-word list",
+        "timeline for for/since",
+        "position patterns for just/already/yet/ever/never",
+        "explicit finished-time contrast with Past Simple",
+        "5-6 guided checks"
+      ],
+      "practice_formats": ["select_gap","multiple_choice","translation","error_correction","sentence_building"],
+      "school_formats": ["gap_fill","verb_tense_choice","translation","transformation","error_correction"],
+      "verify_must_sample": [
+        "ever/never",
+        "just/already/yet",
+        "for/since",
+        "unfinished vs finished time",
+        "adverb placement",
+        "connected dialogue or personal-experience context",
+        "IT→EN production"
+      ],
+      "cumulative_ready_metadata": {
+        "primary_outcomes": ["RY2-GRAM-001"],
+        "preferred_modes": ["mixed_grammar","translation_it_en","sentence_building","error_correction"]
+      }
+    },
+    {
+      "topic_key": "zero-first-conditionals",
+      "priority": "P0",
+      "default_year_profile": 2,
+      "cefr_band": "A2-A2+",
+      "supports_outcomes": ["RY2-GRAM-003"],
+      "outcome": "Lo studente sceglie e produce Zero o First Conditional in base al significato: regola/risultato generalmente vero rispetto a una condizione futura reale o probabile, mantenendo il controllo della forma verbale nelle due proposizioni.",
+      "must_master": [
+        "zero conditional for general truths, routines and predictable repeated results",
+        "first conditional for real/possible future condition and consequence",
+        "present form in the if-clause rather than will",
+        "will + base form in the main clause for the canonical first-conditional target",
+        "clause order and punctuation",
+        "meaning choice between zero and first conditional from context"
+      ],
+      "italian_transfer_risks": [
+        "using will in the if-clause",
+        "using future forms in both clauses",
+        "choosing zero vs first solely from the word if",
+        "confusing general rule with one future possibility",
+        "wrong third-person -s or base-form control inside the condition"
+      ],
+      "exclude_for_now": [
+        "second conditional",
+        "third conditional",
+        "mixed conditionals",
+        "unless/provided/as long as except where explicitly required by a school programme",
+        "modal alternatives in the result clause as core teaching target"
+      ],
+      "recover_content": [
+        "meaning contrast: every time/general consequence vs one realistic future possibility",
+        "same-situation paired examples showing how meaning changes",
+        "form pattern after meaning",
+        "Italian future-in-if warning",
+        "5-6 guided checks"
+      ],
+      "practice_formats": ["multiple_choice","select_gap","sentence_building","translation","error_correction"],
+      "school_formats": ["gap_fill","sentence_completion","translation","transformation","error_correction"],
+      "verify_must_sample": [
+        "zero vs first meaning decision",
+        "if-clause verb form",
+        "result-clause form",
+        "clause reversal",
+        "short scenario chain",
+        "IT→EN production"
+      ],
+      "cumulative_ready_metadata": {
+        "primary_outcomes": ["RY2-GRAM-003"],
+        "preferred_modes": ["mixed_grammar","translation_it_en","functional_response","cumulative_school_test"],
+        "fresh_form_requirement": "Cumulative evidence must hide the conditional label and require meaning-based choice."
+      }
+    }
+  ]
+}
