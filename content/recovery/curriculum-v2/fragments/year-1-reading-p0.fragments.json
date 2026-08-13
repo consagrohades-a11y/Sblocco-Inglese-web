@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "manifest_id": "recovery-v2-year1-reading-p0",
+  "status": "draft",
+  "fragments": [
+    {
+      "fragment_id": "RAF-RY1-READ-01",
+      "status": "draft",
+      "exercise_client_key": "recovery_v2_ry1_read_functional_notice_form_a",
+      "year_profiles": [1],
+      "primary_axis": "reading",
+      "secondary_axes": [],
+      "outcome_ids": ["RY1-READ-001"],
+      "assessment_modes": ["reading_comprehension"],
+      "estimated_minutes": 6,
+      "difficulty_band": "A1+/A2",
+      "school_task_family": "functional_text",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_v2_cumulative",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "ry1-reading-functional-notice-a",
+      "question_mappings": [
+        {"question_client_key": "ry1_read_func_a_1", "outcome_id": "RY1-READ-001", "assessment_mode": "reading_comprehension", "evidence_role": "primary", "production_evidence": false, "evidence_weight": 1}
+      ]
+    },
+    {
+      "fragment_id": "RAF-RY1-READ-02",
+      "status": "draft",
+      "exercise_client_key": "recovery_v2_ry1_read_functional_notice_form_b",
+      "year_profiles": [1],
+      "primary_axis": "reading",
+      "secondary_axes": [],
+      "outcome_ids": ["RY1-READ-001"],
+      "assessment_modes": ["cumulative_school_test"],
+      "estimated_minutes": 6,
+      "difficulty_band": "A1+/A2",
+      "school_task_family": "functional_text",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_v2_cumulative",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "ry1-reading-functional-notice-b",
+      "question_mappings": [
+        {"question_client_key": "ry1_read_func_b_1", "outcome_id": "RY1-READ-001", "assessment_mode": "cumulative_school_test", "evidence_role": "primary", "production_evidence": false, "evidence_weight": 1}
+      ]
+    },
+    {
+      "fragment_id": "RAF-RY1-READ-03",
+      "status": "draft",
+      "exercise_client_key": "recovery_v2_ry1_read_personal_narrative_form_a",
+      "year_profiles": [1],
+      "primary_axis": "reading",
+      "secondary_axes": [],
+      "outcome_ids": ["RY1-READ-002"],
+      "assessment_modes": ["reading_comprehension"],
+      "estimated_minutes": 8,
+      "difficulty_band": "A2",
+      "school_task_family": "reading_text",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_v2_cumulative",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "ry1-reading-personal-narrative-a",
+      "question_mappings": [
+        {"question_client_key": "ry1_read_narr_a_1", "outcome_id": "RY1-READ-002", "assessment_mode": "reading_comprehension", "evidence_role": "primary", "production_evidence": false, "evidence_weight": 0.8},
+        {"question_client_key": "ry1_read_narr_a_2", "outcome_id": "RY1-READ-002", "assessment_mode": "reading_comprehension", "evidence_role": "primary", "production_evidence": false, "evidence_weight": 0.2}
+      ]
+    },
+    {
+      "fragment_id": "RAF-RY1-READ-04",
+      "status": "draft",
+      "exercise_client_key": "recovery_v2_ry1_read_personal_narrative_form_b",
+      "year_profiles": [1],
+      "primary_axis": "reading",
+      "secondary_axes": [],
+      "outcome_ids": ["RY1-READ-002"],
+      "assessment_modes": ["cumulative_school_test"],
+      "estimated_minutes": 8,
+      "difficulty_band": "A2",
+      "school_task_family": "reading_text",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_v2_cumulative",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "ry1-reading-personal-narrative-b",
+      "question_mappings": [
+        {"question_client_key": "ry1_read_narr_b_1", "outcome_id": "RY1-READ-002", "assessment_mode": "cumulative_school_test", "evidence_role": "primary", "production_evidence": false, "evidence_weight": 0.8},
+        {"question_client_key": "ry1_read_narr_b_2", "outcome_id": "RY1-READ-002", "assessment_mode": "cumulative_school_test", "evidence_role": "primary", "production_evidence": false, "evidence_weight": 0.2}
+      ]
+    },
+    {
+      "fragment_id": "RAF-RY1-READ-05",
+      "status": "draft",
+      "exercise_client_key": "recovery_v2_ry1_read_context_reference_form_a",
+      "year_profiles": [1],
+      "primary_axis": "reading",
+      "secondary_axes": [],
+      "outcome_ids": ["RY1-READ-003"],
+      "assessment_modes": ["reading_comprehension"],
+      "estimated_minutes": 7,
+      "difficulty_band": "A2",
+      "school_task_family": "reading_text",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_v2_cumulative",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "ry1-reading-context-reference-a",
+      "question_mappings": [
+        {"question_client_key": "ry1_read_context_a_1", "outcome_id": "RY1-READ-003", "assessment_mode": "reading_comprehension", "evidence_role": "primary", "production_evidence": false, "evidence_weight": 1}
+      ]
+    },
+    {
+      "fragment_id": "RAF-RY1-READ-06",
+      "status": "draft",
+      "exercise_client_key": "recovery_v2_ry1_read_context_reference_form_b",
+      "year_profiles": [1],
+      "primary_axis": "reading",
+      "secondary_axes": [],
+      "outcome_ids": ["RY1-READ-003"],
+      "assessment_modes": ["cumulative_school_test"],
+      "estimated_minutes": 7,
+      "difficulty_band": "A2",
+      "school_task_family": "reading_text",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_v2_cumulative",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "ry1-reading-context-reference-b",
+      "question_mappings": [
+        {"question_client_key": "ry1_read_context_b_1", "outcome_id": "RY1-READ-003", "assessment_mode": "cumulative_school_test", "evidence_role": "primary", "production_evidence": false, "evidence_weight": 1}
+      ]
+    },
+    {
+      "fragment_id": "RAF-RY1-READ-07",
+      "status": "draft",
+      "exercise_client_key": "recovery_v2_ry1_read_short_description_form_a",
+      "year_profiles": [1],
+      "primary_axis": "reading",
+      "secondary_axes": [],
+      "outcome_ids": ["RY1-READ-002"],
+      "assessment_modes": ["reading_comprehension"],
+      "estimated_minutes": 7,
+      "difficulty_band": "A2",
+      "school_task_family": "reading_text",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_v2_cumulative",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "ry1-reading-short-description-a",
+      "question_mappings": [
+        {"question_client_key": "ry1_read_desc_a_1", "outcome_id": "RY1-READ-002", "assessment_mode": "reading_comprehension", "evidence_role": "primary", "production_evidence": false, "evidence_weight": 1}
+      ]
+    },
+    {
+      "fragment_id": "RAF-RY1-READ-08",
+      "status": "draft",
+      "exercise_client_key": "recovery_v2_ry1_read_short_description_form_b",
+      "year_profiles": [1],
+      "primary_axis": "reading",
+      "secondary_axes": [],
+      "outcome_ids": ["RY1-READ-002"],
+      "assessment_modes": ["cumulative_school_test"],
+      "estimated_minutes": 7,
+      "difficulty_band": "A2",
+      "school_task_family": "reading_text",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_v2_cumulative",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "ry1-reading-short-description-b",
+      "question_mappings": [
+        {"question_client_key": "ry1_read_desc_b_1", "outcome_id": "RY1-READ-002", "assessment_mode": "cumulative_school_test", "evidence_role": "primary", "production_evidence": false, "evidence_weight": 1}
+      ]
+    }
+  ]
+}
