@@ -1,0 +1,93 @@
+name: Align Recovery Curriculum v2 enrollment scope
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/align-recovery-v2-enrollment-scope.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  align:
+    if: github.head_ref == 'feat/recovery-curriculum-v2-enrollment-scope'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Align migration and roadmap state
+        run: |
+          git mv supabase/migrations/20260813010000_recovery_curriculum_v2_enrollment_scope.sql \
+                 supabase/migrations/20260813000437_recovery_curriculum_v2_enrollment_scope.sql
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const scopeValidatorPath = 'scripts/validate-recovery-curriculum-v2-enrollment-scope.mjs';
+          let scopeValidator = fs.readFileSync(scopeValidatorPath, 'utf8');
+          scopeValidator = scopeValidator.replace(
+            'supabase/migrations/20260813010000_recovery_curriculum_v2_enrollment_scope.sql',
+            'supabase/migrations/20260813000437_recovery_curriculum_v2_enrollment_scope.sql'
+          );
+          fs.writeFileSync(scopeValidatorPath, scopeValidator);
+
+          const planPath = 'content/recovery/curriculum-v2/gap-analysis.json';
+          const plan = JSON.parse(fs.readFileSync(planPath, 'utf8'));
+          const runtime = plan.current_state.runtime_foundation;
+          runtime.enrollment_scope_migration = '20260813000437_recovery_curriculum_v2_enrollment_scope';
+          runtime.enrollment_outcomes_created = 9;
+          runtime.status = 'catalog_and_scope_available_readiness_inactive';
+          runtime.scope_policy = 'default_core year-profile fallback with explicit school_programme/manual_override precedence';
+
+          const completed = plan.technical_backlog.completed_foundation;
+          for (const item of [
+            'Programme-scoped enrollment outcome fallback and explicit override RPCs',
+            'Derived active-axis curriculum scope per enrollment'
+          ]) if (!completed.includes(item)) completed.push(item);
+          plan.technical_backlog.P0_remaining = plan.technical_backlog.P0_remaining.filter((item) => item.id !== 'RUNTIME-P0-002');
+
+          const b0 = plan.implementation_sequence.find((batch) => batch.batch === 'B0');
+          b0.status = 'completed';
+          b0.completed_tracks = [
+            'Apply cross-year prerequisite recommendations to Year 2/3 source files',
+            'Synchronize all 63 corrected outcomes into recovery_curriculum_outcomes',
+            'Implement programme/year-profile outcome scoping for enrollments'
+          ];
+          b0.remaining_tracks = [];
+
+          plan.next_execution = [
+            'Start B1: build the eight P0 grammar systems in parallel content workstreams.',
+            'Start B2 technical track in parallel: assessment-fragment registration, outcome evidence capture and outcome/axis-first cumulative materialization.',
+            'Author the first P0 cumulative fragment pool for mixed grammar, IT→EN and school-task transfer.',
+            'Do not switch learner-facing readiness during these steps.'
+          ];
+          fs.writeFileSync(planPath, `${JSON.stringify(plan, null, 2)}\n`);
+
+          const definitivePath = 'scripts/validate-recovery-definitive-gap-analysis.mjs';
+          let definitive = fs.readFileSync(definitivePath, 'utf8');
+          definitive = definitive.replace(
+            "assert.equal(plan.current_state.runtime_foundation.enrollment_outcomes_created, 0);",
+            "assert.equal(plan.current_state.runtime_foundation.enrollment_outcomes_created, 9);\nassert.equal(plan.current_state.runtime_foundation.status, 'catalog_and_scope_available_readiness_inactive');\nassert.equal(plan.current_state.runtime_foundation.enrollment_scope_migration, '20260813000437_recovery_curriculum_v2_enrollment_scope');"
+          );
+          definitive = definitive.replace(
+            "assert.equal(plan.current_state.runtime_foundation.status, 'catalog_seeded_scope_inactive');\n",
+            ''
+          );
+          definitive = definitive.replace("  'RUNTIME-P0-002',\n", '');
+          fs.writeFileSync(definitivePath, definitive);
+          NODE
+      - name: Commit aligned state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A supabase/migrations \
+                     scripts/validate-recovery-curriculum-v2-enrollment-scope.mjs \
+                     scripts/validate-recovery-definitive-gap-analysis.mjs \
+                     content/recovery/curriculum-v2/gap-analysis.json
+          git commit -m 'plan: mark Curriculum v2 B0 scope complete'
+          git push origin HEAD:${{ github.head_ref }}
