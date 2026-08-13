@@ -110,7 +110,7 @@ begin
       count(*)::integer,
       min(source.section_ordinality - 1)::integer,
       min(source.question_ordinality - 1)::integer,
-      min(source.question) filter (where source.question ->> 'client_key' = v_question_client_key)
+      (jsonb_agg(source.question order by source.section_ordinality, source.question_ordinality) -> 0)
       into v_match_count, v_section_index, v_question_index, v_source_question
     from (
       select
