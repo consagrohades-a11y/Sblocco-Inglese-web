@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 
-const migrationPath = 'supabase/migrations/20260813110000_recovery_curriculum_v2_fragment_import_resolver.sql';
+const migrationPath = 'supabase/migrations/20260813084734_recovery_curriculum_v2_fragment_import_resolver.sql';
 const sql = fs.readFileSync(migrationPath, 'utf8');
 
 for (const marker of [
@@ -33,25 +33,20 @@ for (const marker of [
   assert.ok(sql.includes(marker), `Missing resolver contract marker: ${marker}`);
 }
 
-// Client-key resolution must be position/provenance based, never fuzzy learner-copy matching.
 assert.ok(!/question_version\.prompt\s*=|question_version\.title\s*=|ilike\s+[^;]*(prompt|title)/i.test(sql), 'Resolver must never match immutable questions by prompt/title text.');
 assert.ok(!/levenshtein|similarity\s*\(/i.test(sql), 'Resolver must not use fuzzy text matching.');
 
-// First version is deliberately fixed-question-only and fails closed for pools/question refs.
 assert.match(sql, /Pool\/question_ref resolution is intentionally unsupported/);
 assert.ok(sql.includes('exercise_builder_section_fixed_questions'));
 assert.ok(!sql.includes('exercise_builder_pool_questions'));
 assert.ok(!sql.includes('exercise_builder_section_pool_rules'));
 
-// Source ordinality is converted to the 0-based indexes preserved by Exercise Builder promotion.
 assert.match(sql, /section_ordinality\s*-\s*1/);
 assert.match(sql, /question_ordinality\s*-\s*1/);
 
-// Registration lifecycle stays delegated to the existing guarded fragment registrar.
 assert.equal((sql.match(/public\.admin_register_recovery_assessment_fragment\(v_resolved\)/g) || []).length, 1);
 assert.ok(!/insert\s+into\s+public\.recovery_assessment_fragments/i.test(sql), 'Resolver must not bypass the canonical guarded fragment registrar.');
 
-// No learner-facing readiness cutover or cumulative materializer changes belong here.
 assert.ok(!/create or replace function public\.get_recovery_readiness\s*\(/i.test(sql));
 assert.ok(!/create or replace function public\.materialize_recovery_session\s*\(/i.test(sql));
 
