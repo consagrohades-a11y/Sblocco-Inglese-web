@@ -77,7 +77,10 @@
       "status": "catalog_and_scope_available_readiness_inactive",
       "outcome_catalog_migration": "20260812235354_recovery_curriculum_v2_outcome_catalog",
       "enrollment_scope_migration": "20260813000437_recovery_curriculum_v2_enrollment_scope",
-      "scope_policy": "default_core year-profile fallback with explicit school_programme/manual_override precedence"
+      "scope_policy": "default_core year-profile fallback with explicit school_programme/manual_override precedence",
+      "fragment_evidence_migration": "20260813001536_recovery_curriculum_v2_fragment_evidence",
+      "fragment_registration_available": true,
+      "question_level_outcome_evidence_capture_available": true
     },
     "readiness": {
       "v2_policy_defined": true,
@@ -351,29 +354,16 @@
       "Read-only learner RLS boundary",
       "63 reviewed Curriculum v2 outcomes synchronized to the runtime catalogue",
       "Programme-scoped enrollment outcome fallback and explicit override RPCs",
-      "Derived active-axis curriculum scope per enrollment"
+      "Derived active-axis curriculum scope per enrollment",
+      "Admin-validated assessment-fragment registration with question→outcome mappings",
+      "Automatic/pending-review question-level outcome evidence capture for cumulative attempts"
     ],
     "P0_remaining": [
-      {
-        "id": "RUNTIME-P0-003",
-        "title": "Register approved assessment fragments against outcomes/modes/form families",
-        "depends_on": [
-          "content fragment authoring",
-          "RUNTIME-P0-001"
-        ]
-      },
       {
         "id": "RUNTIME-P0-004",
         "title": "Upgrade cumulative materialization to choose under-evidenced outcomes and satisfy active-axis coverage within time budget",
         "depends_on": [
           "RUNTIME-P0-002",
-          "RUNTIME-P0-003"
-        ]
-      },
-      {
-        "id": "RUNTIME-P0-005",
-        "title": "Capture automatic and manually reviewed fragment results into recovery_outcome_evidence",
-        "depends_on": [
           "RUNTIME-P0-003"
         ]
       },
@@ -434,7 +424,16 @@
         "Implement outcome/axis-first materialization",
         "Implement result-to-outcome evidence capture"
       ],
-      "exit_condition": "Checkpoint and mock sessions can be generated from unseen fragments and record disaggregated Curriculum v2 evidence."
+      "exit_condition": "Checkpoint and mock sessions can be generated from unseen fragments and record disaggregated Curriculum v2 evidence.",
+      "status": "in_progress",
+      "completed_tracks": [
+        "Implement assessment-fragment registration",
+        "Implement result-to-outcome evidence capture"
+      ],
+      "remaining_tracks": [
+        "Build mixed grammar, IT→EN, sentence production, transformation, error-correction and school-format fragments",
+        "Implement outcome/axis-first materialization"
+      ]
     },
     {
       "batch": "B3",
@@ -545,9 +544,9 @@
     "important_rule": "Conditional does not mean optional once the learner's official programme requires it; at that point missing content/evidence blocks READY and the programme should not be advertised as fully supported until the content exists."
   },
   "next_execution": [
-    "Start B1: build the eight P0 grammar systems in parallel content workstreams.",
-    "Start B2 technical track in parallel: assessment-fragment registration, outcome evidence capture and outcome/axis-first cumulative materialization.",
-    "Author the first P0 cumulative fragment pool for mixed grammar, IT→EN and school-task transfer.",
+    "Start B1 content: build the eight P0 grammar systems in parallel workstreams.",
+    "Continue B2 runtime: implement outcome/axis-first cumulative materialization using approved registered fragments.",
+    "Author and register the first P0 cumulative fragment pool for mixed grammar, IT→EN and school-task transfer.",
     "Do not switch learner-facing readiness during these steps."
   ]
 }

@@ -121,9 +121,7 @@ assert.match(functionalFamily.conditional_escalation, /P0/i);
 assert.ok((plan.technical_backlog.completed_foundation || []).length >= 5);
 const runtimeP0 = plan.technical_backlog.P0_remaining || [];
 assert.deepEqual(runtimeP0.map((item) => item.id), [
-  'RUNTIME-P0-003',
   'RUNTIME-P0-004',
-  'RUNTIME-P0-005',
   'RUNTIME-P0-006',
 ]);
 assert.match(runtimeP0.find((item) => item.id === 'RUNTIME-P0-006')?.title || '', /shadow mode/i);
