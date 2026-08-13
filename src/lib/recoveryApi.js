@@ -268,6 +268,21 @@ export async function syncRecoverySession(sessionId) {
   return rpcError(await supabase.rpc('sync_recovery_session', { p_session_id: sessionId }), 'Non è stato possibile aggiornare la sessione.');
 }
 
+export async function startRecoveryTopicCycleSession(sessionId) {
+  return rpcError(await supabase.rpc('start_recovery_topic_cycle_session', { p_session_id: sessionId }), 'Non è stato possibile avviare il nuovo ciclo di recupero.');
+}
+
+export async function startRecoveryTopicRedo(enrollmentId, topicKey) {
+  return rpcError(await supabase.rpc('start_recovery_topic_redo', {
+    p_enrollment_id: enrollmentId,
+    p_topic_key: topicKey,
+  }), 'Non è stato possibile preparare il nuovo ciclo completo.');
+}
+
+export async function loadRecoveryTopicFollowup(sessionId) {
+  return rpcError(await supabase.rpc('get_recovery_topic_followup', { p_session_id: sessionId }), 'Non è stato possibile caricare il passo successivo.');
+}
+
 export async function syncMaterializedRecoverySessions(sessions = []) {
   const active = sessions.filter((session) => session.assignment_id && !['completed', 'skipped'].includes(session.status));
   if (!active.length) return [];
