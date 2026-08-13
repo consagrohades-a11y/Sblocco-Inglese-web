@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "contract_id": "recovery-curriculum-v2-fragment-evidence-v1",
+  "status": "draft",
+  "purpose": "Define how an approved cumulative assessment fragment maps individual Exercise Builder question versions to Curriculum v2 outcomes and how submitted/reviewed answers become first-class outcome evidence.",
+  "principles": [
+    "Fragment-level metadata determines the assessment form, primary axis, transfer level, independence family and programme compatibility; question-level mappings determine which scored answer may provide evidence for which outcome.",
+    "Do not copy an entire exercise score onto every declared outcome. Evidence is captured from mapped scored questions.",
+    "A question may support more than one outcome only when each mapping is explicit and pedagogically defensible.",
+    "Primary question evidence must target an outcome on the fragment primary axis; supporting evidence may target declared secondary axes.",
+    "Only outcomes required in the learner's active enrollment scope produce readiness evidence.",
+    "Manual-production answers remain pending_review until a teacher review produces a score; pending evidence is never converted to zero.",
+    "The same attempt-question/outcome/mode combination has one stable evidence key so teacher review updates the observation instead of duplicating it.",
+    "Evidence from repeated attempts keeps the fragment form_family_key so the future readiness calculator can prevent best-score shopping and count independent forms correctly.",
+    "This contract captures evidence only. It does not itself select fragments, calculate readiness or change learner-facing readiness."
+  ],
+  "fragment_registration": {
+    "required_top_level_fields": [
+      "fragment_id",
+      "status",
+      "exercise_id",
+      "exercise_version_id",
+      "year_profiles",
+      "primary_axis",
+      "secondary_axes",
+      "estimated_minutes",
+      "difficulty_band",
+      "school_task_family",
+      "transfer_level",
+      "content_source_policy",
+      "unseen_or_mixed_context",
+      "form_family_key",
+      "outcome_ids",
+      "assessment_modes",
+      "question_mappings"
+    ],
+    "approved_fragment_gate": "status=approved requires a published Exercise Builder exercise, approved exercise version and approved mapped question versions.",
+    "question_membership_gate": "Every mapped question_version_id must belong to the registered exercise_version_id through a fixed section question or the exact pool version used by that exercise version.",
+    "outcome_axis_gate": "Every declared outcome must belong to the fragment primary axis or a declared secondary axis, and at least one declared outcome must belong to the primary axis.",
+    "mutation_policy": "Only admin RPCs may register/update fragments; authenticated users have read-only table access."
+  },
+  "question_mapping_fields": [
+    "question_version_id",
+    "outcome_id",
+    "assessment_mode",
+    "evidence_role",
+    "production_evidence",
+    "evidence_weight"
+  ],
+  "question_mapping_rules": [
+    "outcome_id must be declared by the fragment and approved in Curriculum v2.",
+    "assessment_mode must be declared by the fragment and active in the canonical assessment-mode catalogue.",
+    "evidence_role is primary or supporting.",
+    "Primary evidence may only target the fragment primary axis.",
+    "Every declared outcome and every declared assessment mode must appear in at least one question mapping.",
+    "evidence_weight is greater than zero and at most one."
+  ],
+  "evidence_capture": {
+    "supported_sources": [
+      "checkpoint",
+      "mock_intermediate",
+      "mock_final"
+    ],
+    "scope_gate": "The mapped outcome must exist as required=true in recovery_enrollment_outcomes for the Recovery session enrollment.",
+    "automatic_answer": "A scored grading_result with max_points > 0 creates/updates a valid 0-100 evidence observation.",
+    "manual_answer": "A missing/pending grading_result creates/updates pending_review evidence with score=null; a later teacher review updates the same evidence key to valid.",
+    "evidence_key": "recovery-v2:<attempt_question_id>:<outcome_id>:<assessment_mode>",
+    "axis_rule": "The outcome's own competence axis is stored on the evidence row; fragment primary/supporting role is retained in rubric metadata.",
+    "independence_rule": "The fragment form_family_key is preserved unchanged on all question-level observations from that form.",
+    "readiness_runtime_active": false
+  }
+}
