@@ -90,3 +90,6 @@ jobs:
             echo "Applying ${migration}"
             psql -v ON_ERROR_STOP=1 -f "${migration}"
           done
+
+      - name: Run Recovery remediation DB canary
+        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/recovery-topic-remediation-canary.sql
