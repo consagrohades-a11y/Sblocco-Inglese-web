@@ -9,6 +9,23 @@
     "after_activation": "Once an enrollment has used Curriculum v2 cumulative fragments, inability to find fresh independent forms is a content gap and must never fall back to reused or weaker legacy evidence.",
     "readiness_v2_active": false
   },
+  "minimum_composition_gate": {
+    "checkpoint": {
+      "minimum_fragment_count": 3,
+      "minimum_distinct_primary_axes_when_available": 2
+    },
+    "mock_intermediate": {
+      "minimum_fragment_count": 4,
+      "minimum_distinct_primary_axes_when_available": 3,
+      "blocking_axis_policy": "Include every active blocking-candidate axis for which at least one valid fresh composition exists under the session count, breadth, freshness, family, budget and grammar-ceiling gates. A feasible omission is an invalid selector result; an infeasible axis is a content-pool insufficiency."
+    },
+    "mock_final": {
+      "minimum_fragment_count": 4,
+      "minimum_distinct_primary_axes_when_available": 3,
+      "blocking_axis_policy": "Every programme-required blocking axis with a compatible fresh transfer fragment that fits the final school-test profile must be present. Otherwise return explicit insufficient pool/evidence and never compensate with grammar items."
+    },
+    "rule": "The rollout gate evaluates the fresh selected composition, not only the existence of compatible fragments in the catalogue."
+  },
   "compatibility_rules": [
     "Fragment status is approved and active.",
     "Exercise is published and its registered version is approved.",
@@ -34,17 +51,29 @@
     "checkpoint": {
       "rollout_minimum_distinct_axes_when_available": 2,
       "coverage_target_distinct_axes": 3,
-      "grammar_time_share_ceiling": 0.6
+      "grammar_time_share_ceiling": 0.6,
+      "grammar_ceiling_exceptions": [
+        "the canonical required programme scope is grammar-only",
+        "grammar_sentence_control is the only active axis"
+      ]
     },
     "mock_intermediate": {
       "rollout_minimum_distinct_axes_when_available": 3,
       "coverage_target": "all active axes that fit the session budget, prioritizing blocking and under-evidenced axes",
-      "grammar_time_share_ceiling": 0.55
+      "grammar_time_share_ceiling": 0.55,
+      "grammar_ceiling_exceptions": [
+        "fewer than three active axes",
+        "a real stored school assessment profile explicitly establishes grammar dominance"
+      ]
     },
     "mock_final": {
       "rollout_minimum_distinct_axes_when_available": 3,
       "coverage_target": "all active blocking axes",
       "grammar_time_share_ceiling": 0.5,
+      "grammar_ceiling_exceptions": [
+        "a real stored school assessment profile explicitly establishes grammar dominance",
+        "the canonical required outcome set genuinely requires a grammar-only composition"
+      ],
       "hard_gate": "If any active blocking axis has no fresh selected primary-axis fragment, the final mock is returned as a content gap rather than materialized incompletely."
     }
   },
@@ -52,8 +81,14 @@
     "Selected Curriculum v2 fragments must fit within the declared Recovery session budget.",
     "The rollout gate includes a minimum-budget feasibility check so a technically present but unusable pool does not take over early.",
     "Non-grammar axes are considered before grammar during the first coverage pass so required skill tasks cannot be crowded out by short grammar items.",
-    "When multiple axes are active, additional grammar selection cannot exceed the session-specific grammar ceiling."
+    "Grammar selection cannot exceed the session-specific ceiling unless a documented canonical exception applies.",
+    "No ad-hoc grammar-dominance boolean is accepted. If the runtime lacks stored school-profile provenance, the exception fails closed and the diagnostic reports missing provenance."
   ],
+  "blocking_axis_feasibility": {
+    "selector_omission": "A valid fresh composition exists under every gate and includes the blocking axis, but the deterministic selector omitted it. The composition is invalid and the diagnostic reason is blocking_axis_selector_omission.",
+    "pool_insufficient": "No valid fresh composition can include the blocking axis under count, breadth, unique-family, budget, grammar-ceiling and session-mode gates. The result is CONTENT POOL INSUFFICIENT with semantic diagnostic blocking_axis_not_feasible_with_current_pool.",
+    "final_strictness": "Final mocks require every feasible programme blocking axis and never replace missing skill evidence with additional grammar fragments."
+  },
   "assignment_policy": {
     "visible_labels": "Use neutral Parte labels and never reveal the tested outcome, grammar rule or competence axis.",
     "exercise_config_metadata": [
@@ -67,5 +102,28 @@
     ],
     "mock_feedback": "Intermediate and final mocks continue to suppress score, correct-answer, explanation and diagnostic feedback during the attempt.",
     "legacy_non_cumulative_behavior": "Topic, quick-review and error-review materialization remains on the existing recovery_exercise_map path."
+  },
+  "diagnostic_output": {
+    "required_fields": [
+      "engine",
+      "session_type",
+      "active_axes",
+      "active_blocking_axes",
+      "required_outcomes",
+      "selected_axes",
+      "selected_fragments",
+      "coverage",
+      "session_budget_minutes",
+      "estimated_minutes",
+      "grammar_share",
+      "grammar_ceiling",
+      "freshness",
+      "warnings",
+      "blocking_axis_feasibility",
+      "rollout_reason",
+      "readiness_v2_active"
+    ],
+    "admin_preview": "An admin-only RPC returns the rollout decision and the ordered fragment details without creating an assignment.",
+    "learner_visibility": "The diagnostic preview is not granted to anon or ordinary learners."
   }
 }
