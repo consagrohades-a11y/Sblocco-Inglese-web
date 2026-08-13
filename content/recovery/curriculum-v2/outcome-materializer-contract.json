@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "contract_id": "recovery-curriculum-v2-outcome-materializer-v1",
+  "status": "draft",
+  "purpose": "Define rollout-safe outcome/axis-first selection of approved cumulative assessment fragments inside the existing Recovery session materializer.",
+  "rollout_policy": {
+    "partial_pool": "A partially authored Curriculum v2 fragment pool must not silently take over from the legacy cumulative mapping path.",
+    "activation_gate": "The v2 fragment path activates per enrollment/session only when approved compatible fragments meet the minimum axis-coverage gate for that session type.",
+    "after_activation": "Once the v2 pool is sufficient, inability to find fresh independent forms is a content gap and must not fall back to reused or weaker legacy evidence.",
+    "readiness_v2_active": false
+  },
+  "compatibility_rules": [
+    "Fragment status is approved and active.",
+    "Exercise is published and its registered version is approved.",
+    "Enrollment school year is included in fragment year_profiles.",
+    "Mocks require transfer fragments; checkpoint may use transfer or controlled_performance fragments.",
+    "Every primary fragment outcome is required in the learner's active Curriculum v2 scope.",
+    "The fragment has at least one required primary outcome."
+  ],
+  "freshness_rules": [
+    "A form_family_key already present in cumulative outcome evidence for the enrollment is not fresh.",
+    "A form_family_key already assigned in an earlier Recovery session is not fresh even if the learner abandoned the attempt.",
+    "The same form_family_key cannot be selected twice inside one cumulative session."
+  ],
+  "selection_priority": [
+    "blocking outcomes with missing or weak cumulative evidence",
+    "outcomes with no cumulative evidence",
+    "other under-evidenced required outcomes",
+    "breadth across active primary axes",
+    "transfer fragments before controlled-performance fragments when otherwise equivalent",
+    "smaller fragments when evidence priority is equivalent so session time can cover more required axes"
+  ],
+  "axis_coverage": {
+    "checkpoint": {
+      "rollout_minimum_distinct_axes_when_available": 2,
+      "coverage_target_distinct_axes": 3,
+      "grammar_time_share_ceiling": 0.60
+    },
+    "mock_intermediate": {
+      "rollout_minimum_distinct_axes_when_available": 3,
+      "coverage_target": "all active axes that fit the session budget, prioritizing blocking/under-evidenced axes",
+      "grammar_time_share_ceiling": 0.55
+    },
+    "mock_final": {
+      "rollout_minimum_distinct_axes_when_available": 3,
+      "coverage_target": "all active blocking axes",
+      "grammar_time_share_ceiling": 0.50,
+      "hard_gate": "If any active blocking axis has no fresh selected fragment, the final mock is blocked as a content gap."
+    }
+  },
+  "budget_policy": [
+    "Selected Curriculum v2 fragments must fit within the declared Recovery session budget.",
+    "Non-grammar axes are considered before grammar during the first coverage pass so required skill tasks cannot be crowded out by short grammar items.",
+    "When multiple axes are active, additional grammar selection cannot exceed the session-specific grammar ceiling."
+  ],
+  "assignment_policy": {
+    "visible_labels": "Use neutral Parte labels and never reveal the tested outcome, grammar rule or competence axis.",
+    "exercise_config_metadata": [
+      "recovery_fragment_id",
+      "recovery_form_family_key",
+      "recovery_primary_axis",
+      "recovery_outcome_ids",
+      "recovery_assessment_modes",
+      "recovery_selection_reason",
+      "recovery_materializer"
+    ],
+    "mock_feedback": "Intermediate and final mocks continue to suppress score/correct-answer/explanation/diagnostic feedback during the attempt.",
+    "legacy_non_cumulative_behavior": "Topic, quick-review and error-review materialization remains on the existing recovery_exercise_map path."
+  }
+}
