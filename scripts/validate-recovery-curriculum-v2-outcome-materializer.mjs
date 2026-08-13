@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 
 const contractPath = 'content/recovery/curriculum-v2/outcome-materializer-contract.json';
-const migrationPath = 'supabase/migrations/20260813090000_recovery_curriculum_v2_outcome_materializer.sql';
+const migrationPath = 'supabase/migrations/20260813081530_recovery_curriculum_v2_outcome_materializer.sql';
 
 const contract = JSON.parse(fs.readFileSync(contractPath, 'utf8'));
 const sql = fs.readFileSync(migrationPath, 'utf8');
@@ -40,22 +40,17 @@ for (const expected of [
   assert.ok(sql.includes(expected), `Missing materializer contract marker: ${expected}`);
 }
 
-// Rollout may fall back only before v2 has started. Once started, v2 remains authoritative.
 assert.match(sql, /v_use_v2_fragments\s*:=\s*coalesce\(\(v_pool_status ->> 'ready'\)::boolean, false\) or v_v2_started/);
 assert.match(sql, /resource\.exercise_config ->> 'recovery_materializer' = 'curriculum_v2_fragments'/);
-
-// The final mock must hard-gate fresh primary-axis coverage for blocking axes.
 assert.match(sql, /v_required_blocking_axes/);
 assert.match(sql, /v_missing_blocking_axes/);
 assert.match(sql, /mock_final[\s\S]*final_mock_missing_blocking_axis_coverage/);
 
-// Cumulative v2 resources must be neutral to avoid leaking the tested rule/outcome.
 assert.ok(sql.includes("'Verifica di percorso · Parte '"));
 assert.ok(sql.includes("'Simulazione · Parte '"));
 assert.ok(sql.includes("'Simulazione finale · Parte '"));
 assert.ok(!sql.includes('recovery_outcome_label'));
 
-// Guard against the stale draft schema that does not exist in production.
 for (const forbidden of [
   'display_label',
   'estimated_duration',
@@ -67,7 +62,6 @@ for (const forbidden of [
   assert.ok(!sql.includes(forbidden), `Stale schema marker must not be used: ${forbidden}`);
 }
 
-// Current assignment/resource schema markers must stay explicit.
 for (const required of [
   'learner_note',
   'deadline_at',
@@ -78,7 +72,6 @@ for (const required of [
   assert.ok(sql.includes(required), `Current production schema marker missing: ${required}`);
 }
 
-// Readiness cutover is intentionally outside this migration.
 assert.ok(!/create or replace function public\.get_recovery_readiness\s*\(/i.test(sql));
 assert.ok(!/recovery_readiness_snapshots/i.test(sql));
 
