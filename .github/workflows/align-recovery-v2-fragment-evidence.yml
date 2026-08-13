@@ -1,0 +1,92 @@
+name: Align Recovery Curriculum v2 fragment evidence
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/align-recovery-v2-fragment-evidence.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  align:
+    if: github.head_ref == 'feat/recovery-curriculum-v2-fragment-evidence'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Align migration and roadmap state
+        run: |
+          git mv supabase/migrations/20260813003000_recovery_curriculum_v2_fragment_evidence.sql \
+                 supabase/migrations/20260813001536_recovery_curriculum_v2_fragment_evidence.sql
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const validatorPath = 'scripts/validate-recovery-curriculum-v2-fragment-evidence.mjs';
+          let validator = fs.readFileSync(validatorPath, 'utf8');
+          validator = validator.replace(
+            'supabase/migrations/20260813003000_recovery_curriculum_v2_fragment_evidence.sql',
+            'supabase/migrations/20260813001536_recovery_curriculum_v2_fragment_evidence.sql'
+          );
+          fs.writeFileSync(validatorPath, validator);
+
+          const planPath = 'content/recovery/curriculum-v2/gap-analysis.json';
+          const plan = JSON.parse(fs.readFileSync(planPath, 'utf8'));
+          const runtime = plan.current_state.runtime_foundation;
+          runtime.fragment_evidence_migration = '20260813001536_recovery_curriculum_v2_fragment_evidence';
+          runtime.fragment_registration_available = true;
+          runtime.question_level_outcome_evidence_capture_available = true;
+          runtime.assessment_fragments_created = 0;
+          runtime.outcome_evidence_created = 0;
+
+          const completed = plan.technical_backlog.completed_foundation;
+          for (const item of [
+            'Admin-validated assessment-fragment registration with question→outcome mappings',
+            'Automatic/pending-review question-level outcome evidence capture for cumulative attempts'
+          ]) if (!completed.includes(item)) completed.push(item);
+          plan.technical_backlog.P0_remaining = plan.technical_backlog.P0_remaining.filter(
+            (item) => !['RUNTIME-P0-003', 'RUNTIME-P0-005'].includes(item.id)
+          );
+
+          const b2 = plan.implementation_sequence.find((batch) => batch.batch === 'B2');
+          b2.status = 'in_progress';
+          b2.completed_tracks = [
+            'Implement assessment-fragment registration',
+            'Implement result-to-outcome evidence capture'
+          ];
+          b2.remaining_tracks = [
+            'Build mixed grammar, IT→EN, sentence production, transformation, error-correction and school-format fragments',
+            'Implement outcome/axis-first materialization'
+          ];
+
+          plan.next_execution = [
+            'Start B1 content: build the eight P0 grammar systems in parallel workstreams.',
+            'Continue B2 runtime: implement outcome/axis-first cumulative materialization using approved registered fragments.',
+            'Author and register the first P0 cumulative fragment pool for mixed grammar, IT→EN and school-task transfer.',
+            'Do not switch learner-facing readiness during these steps.'
+          ];
+          fs.writeFileSync(planPath, `${JSON.stringify(plan, null, 2)}\n`);
+
+          const definitivePath = 'scripts/validate-recovery-definitive-gap-analysis.mjs';
+          let definitive = fs.readFileSync(definitivePath, 'utf8');
+          for (const id of ['RUNTIME-P0-003', 'RUNTIME-P0-005']) {
+            definitive = definitive.replace(`  '${id}',\n`, '');
+          }
+          fs.writeFileSync(definitivePath, definitive);
+          NODE
+      - name: Commit aligned state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A supabase/migrations \
+                     scripts/validate-recovery-curriculum-v2-fragment-evidence.mjs \
+                     scripts/validate-recovery-definitive-gap-analysis.mjs \
+                     content/recovery/curriculum-v2/gap-analysis.json
+          git commit -m 'plan: mark Curriculum v2 fragment evidence capability available'
+          git push origin HEAD:${{ github.head_ref }}
