@@ -8,6 +8,7 @@ import {
   EditorialLearningShell,
 } from '../components/learning/EditorialLearning.jsx';
 import RecoveryNav from '../components/recovery/RecoveryNav.jsx';
+import { recoverySessionDisplayTitle } from '../lib/recoveryPresentation.js';
 import { recoveryTopicLabel } from '../config/recovery.js';
 import {
   loadRecoveryTopicFollowup,
@@ -163,7 +164,7 @@ export default function RecoverySession() {
             <div style={{ marginTop: '1rem' }}>
               <EditorialLessonHero
                 eyebrow={sessionEyebrow(session, mock, checkpoint)}
-                title={session.title}
+                title={recoverySessionDisplayTitle(session.title)}
                 intro={session.rationale}
                 compact
                 meta={[

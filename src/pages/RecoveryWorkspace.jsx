@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, Clock3, LockKeyhole, RotateCcw } from 'lucide
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import RecoveryNav from '../components/recovery/RecoveryNav.jsx';
+import { recoverySessionDisplayTitle, recoverySessionKind } from '../lib/recoveryPresentation.js';
 import { RECOVERY_MODE_LABELS, recoveryTopicLabel } from '../config/recovery.js';
 import {
   loadRecoveryAccessState,
@@ -174,7 +175,7 @@ export default function RecoveryWorkspace({ view }) {
               {sessions.map((session) => (
                 <li className="learner-list__row" key={session.id}>
                   <span className="learner-list__index">{session.sequence_index}</span>
-                  <div><strong>{session.title}</strong><p>{session.rationale || `${session.estimated_minutes} minuti circa.`}</p></div>
+                  <div><small className="learner-session-kind">{recoverySessionKind(session.title, session.session_type)}</small><strong>{recoverySessionDisplayTitle(session.title)}</strong><p>{session.rationale || `${session.estimated_minutes} minuti circa.`}</p></div>
                   {session.status === 'completed'
                     ? <span className="learner-list__status"><CheckCircle2 size={14} style={{ display: 'inline' }} /> {sessionStatus(session)}</span>
                     : session.status === 'available' || session.status === 'in_progress'
@@ -268,7 +269,7 @@ export default function RecoveryWorkspace({ view }) {
                 return (
                   <li className="learner-list__row" key={session.id}>
                     <span className="learner-list__index">{index + 1}</span>
-                    <div><strong>{session.title}</strong><p><Clock3 size={13} style={{ display: 'inline' }} /> ~{session.estimated_minutes} min{attempt?.score != null ? ` · risultato ${Math.round(Number(attempt.score))}%` : ''}</p>{attempt?.topic_scores && Object.keys(attempt.topic_scores).length ? <p>{Object.entries(attempt.topic_scores).slice(0, 6).map(([topic, score]) => `${recoveryTopicLabel(topic)}: ${Math.round(Number(score))}%`).join(' · ')}</p> : null}</div>
+                    <div><small className="learner-session-kind">{recoverySessionKind(session.title, session.session_type)}</small><strong>{recoverySessionDisplayTitle(session.title)}</strong><p><Clock3 size={13} style={{ display: 'inline' }} /> ~{session.estimated_minutes} min{attempt?.score != null ? ` · risultato ${Math.round(Number(attempt.score))}%` : ''}</p>{attempt?.topic_scores && Object.keys(attempt.topic_scores).length ? <p>{Object.entries(attempt.topic_scores).slice(0, 6).map(([topic, score]) => `${recoveryTopicLabel(topic)}: ${Math.round(Number(score))}%`).join(' · ')}</p> : null}</div>
                     {attempt?.feedback_released
                       ? <span className="learner-list__status">Risultato disponibile</span>
                       : session.status === 'available' || session.status === 'in_progress'

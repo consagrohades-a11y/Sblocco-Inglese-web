@@ -25,6 +25,7 @@ import {
   SUPPORTED_RECOVERY_CLASS_YEARS,
   TYPICAL_RECOVERY_TOPICS_BY_YEAR,
 } from '../../lib/recoveryOnboarding.js';
+import { recoverySessionDisplayTitle, recoverySessionKind } from '../../lib/recoveryPresentation.js';
 
 const TOTAL_SETUP_STEPS = 6;
 
@@ -184,12 +185,13 @@ export function ExamDateStep({ value, onChange, onBack, onNext, now }) {
   );
 }
 
-function ProgrammeCategory({ category, selectedKeys, classYear, onToggle }) {
+function ProgrammeCategory({ category, selectedKeys, classYear, onToggle, onToggleAll }) {
   const [open, setOpen] = useState(false);
   const topics = category.topicKeys
     .map((topicKey) => RECOVERY_TOPICS.find((topic) => topic.key === topicKey))
     .filter(Boolean);
   const selectedCount = topics.filter((topic) => selectedKeys.includes(topic.key)).length;
+  const allSelected = topics.length > 0 && selectedCount === topics.length;
   const typicalKeys = TYPICAL_RECOVERY_TOPICS_BY_YEAR[Number(classYear)] || [];
   return (
     <article className={`recovery-programme-category ${open ? 'is-open' : ''}`}>
@@ -205,6 +207,16 @@ function ProgrammeCategory({ category, selectedKeys, classYear, onToggle }) {
       </button>
       {open ? (
         <div className="recovery-programme-category__topics">
+          <div className="recovery-programme-category__bulk">
+            <span>{allSelected ? 'Categoria completa' : `${topics.length - selectedCount} ancora da selezionare`}</span>
+            <button
+              type="button"
+              className="focus-ring"
+              onClick={() => onToggleAll(topics.map((topic) => topic.key), !allSelected)}
+            >
+              {allSelected ? 'Deseleziona tutti' : 'Seleziona tutti'}
+            </button>
+          </div>
           {topics.map((topic) => {
             const selected = selectedKeys.includes(topic.key);
             const typical = typicalKeys.includes(topic.key);
@@ -226,6 +238,14 @@ export function ProgrammeSelectionStep({ classYear, topicKeys, onChange, onBack,
   function toggleTopic(topicKey) {
     onChange(topicKeys.includes(topicKey) ? topicKeys.filter((key) => key !== topicKey) : [...topicKeys, topicKey]);
   }
+  function toggleCategory(categoryKeys, shouldSelect) {
+    const nextKeys = new Set(topicKeys);
+    categoryKeys.forEach((key) => {
+      if (shouldSelect) nextKeys.add(key);
+      else nextKeys.delete(key);
+    });
+    onChange([...nextKeys]);
+  }
   return (
     <OnboardingStepCard
       eyebrow="Il programma della scuola"
@@ -237,7 +257,14 @@ export function ProgrammeSelectionStep({ classYear, topicKeys, onChange, onBack,
       <div className="recovery-programme-selection-summary"><BookOpenCheck aria-hidden="true" /><strong>{topicKeys.length} {topicKeys.length === 1 ? 'argomento selezionato' : 'argomenti selezionati'}</strong><span>Il programma reale resta la guida.</span></div>
       <div className="recovery-programme-categories">
         {RECOVERY_PROGRAMME_CATEGORIES.map((category) => (
-          <ProgrammeCategory key={category.key} category={category} selectedKeys={topicKeys} classYear={classYear} onToggle={toggleTopic} />
+          <ProgrammeCategory
+            key={category.key}
+            category={category}
+            selectedKeys={topicKeys}
+            classYear={classYear}
+            onToggle={toggleTopic}
+            onToggleAll={toggleCategory}
+          />
         ))}
       </div>
     </OnboardingStepCard>
@@ -309,9 +336,11 @@ export function PlanBuildingStep({ stage }) {
   );
 }
 
-export function PlanRevealStep({ reveal, onStart, onViewPlan }) {
+export function PlanRevealStep({ reveal, onStart, onViewPlan, onViewGuide }) {
   const today = reveal.today;
-  const sessionTitle = today?.title || 'La prima sessione del tuo piano';
+  const rawSessionTitle = today?.title || 'La prima sessione del tuo piano';
+  const sessionTitle = recoverySessionDisplayTitle(rawSessionTitle, 'La prima sessione del tuo piano');
+  const sessionKind = recoverySessionKind(rawSessionTitle, today?.session_type || today?.sessionType);
   const minutes = Number(today?.estimated_minutes || today?.estimatedMinutes || 0);
   const stages = today?.stages || [];
   return (
@@ -324,10 +353,13 @@ export function PlanRevealStep({ reveal, onStart, onViewPlan }) {
         <div><Sparkles aria-hidden="true" /><strong>{reveal.assessments}</strong><span>verifiche e simulazioni</span></div>
       </div>
       <article className="recovery-plan-today">
-        <div><span>Oggi</span><h2>{sessionTitle}</h2><p>{stages[0] ? `${String(stages[0]).replaceAll('_', ' ')} · ` : ''}{minutes ? `~${minutes} min` : 'Prima attività'}</p></div>
+        <div className="recovery-plan-today__copy"><span>Oggi · {sessionKind}</span><h2>{sessionTitle}</h2><p>{stages[0] ? `${String(stages[0]).replaceAll('_', ' ')} · ` : ''}{minutes ? `~${minutes} min` : 'Prima attività'}</p></div>
         <button type="button" className="learner-primary-button focus-ring" onClick={onStart}>Inizia il giorno 1 <ArrowRight aria-hidden="true" /></button>
       </article>
-      <button type="button" className="recovery-view-plan focus-ring" onClick={onViewPlan}>Vedi il piano completo</button>
+      <div className="recovery-plan-links">
+        <button type="button" className="recovery-view-plan focus-ring" onClick={onViewPlan}>Vedi il piano completo</button>
+        {onViewGuide ? <button type="button" className="recovery-view-guide focus-ring" onClick={onViewGuide}>Come usare il percorso</button> : null}
+      </div>
     </OnboardingStepCard>
   );
 }

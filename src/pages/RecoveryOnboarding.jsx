@@ -266,7 +266,7 @@ export default function RecoveryOnboarding() {
       {step === SETUP_STEP.CONFIDENCE ? <ProgrammeConfidenceStep value={programmeConfidence} onChange={(value) => updateDraft({ programmeConfidence: value })} onUseTypical={useTypicalProgramme} onBack={() => goTo(SETUP_STEP.PROGRAMME)} onNext={() => goTo(SETUP_STEP.DIAGNOSTIC)} /> : null}
       {step === SETUP_STEP.DIAGNOSTIC ? <DiagnosticSummaryStep diagnostic={diagnostic} diagnosticAction={<Link to="/test-recupero-inglese" className="learner-primary-button focus-ring">Fai il test diagnostico <ArrowRight aria-hidden="true" /></Link>} onBack={() => goTo(SETUP_STEP.CONFIDENCE)} onSubmit={handleSubmit} submitting={submitting} error={error} editMode={editModeRef.current} /> : null}
       {step === SETUP_STEP.BUILDING ? <PlanBuildingStep stage={buildingStage} /> : null}
-      {step === SETUP_STEP.REVEAL && reveal ? <PlanRevealStep reveal={reveal} onStart={startFirstSession} onViewPlan={() => navigate('/recupero-debito/percorso')} /> : null}
+      {step === SETUP_STEP.REVEAL && reveal ? <PlanRevealStep reveal={reveal} onStart={startFirstSession} onViewPlan={() => navigate('/recupero-debito/percorso')} onViewGuide={() => navigate('/recupero-debito/come-funziona')} /> : null}
     </RecoveryOnboardingShell>
   );
 }

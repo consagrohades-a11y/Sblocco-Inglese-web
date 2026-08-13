@@ -17,6 +17,9 @@ const onboardingPage = fs.readFileSync(path.join(root, 'src/pages/RecoveryOnboar
 const flow = fs.readFileSync(path.join(root, 'src/components/recovery/RecoveryOnboardingFlow.jsx'), 'utf8');
 const styles = fs.readFileSync(path.join(root, 'src/styles/recoveryOnboarding.css'), 'utf8');
 const app = fs.readFileSync(path.join(root, 'src/App.jsx'), 'utf8');
+const guide = fs.readFileSync(path.join(root, 'src/pages/RecoveryGuide.jsx'), 'utf8');
+const guideStyles = fs.readFileSync(path.join(root, 'src/styles/recoveryGuide.css'), 'utf8');
+const presentation = fs.readFileSync(path.join(root, 'src/lib/recoveryPresentation.js'), 'utf8');
 
 assert.deepEqual(SUPPORTED_RECOVERY_CLASS_YEARS, [1, 2, 3]);
 assert.equal(RECOVERY_PROGRAMME_CATEGORIES.length, 8);
@@ -73,11 +76,23 @@ assert.match(flow, /role="progressbar"/);
 assert.match(flow, /role="radiogroup"/);
 assert.match(flow, /aria-checked/);
 assert.match(flow, /to="\/test-recupero-inglese"/);
+assert.match(flow, /Seleziona tutti/);
+assert.match(flow, /Deseleziona tutti/);
 assert.match(app, /!isStandaloneRecoveryOnboarding \? <Navbar/);
 assert.match(app, /!isStandaloneRecoveryOnboarding \? <Footer/);
 assert.match(flow, /Il tuo piano è pronto/);
 assert.match(styles, /@media \(max-width: 390px\)/);
 assert.match(styles, /prefers-reduced-motion/);
 assert.doesNotMatch(styles, /purple|violet/i);
+assert.match(app, /\/recupero-debito\/come-funziona/);
+assert.match(app, /\/__preview\/recovery-guide/);
+assert.match(guide, /Vocabolario e Ripasso SRS/);
+assert.match(guide, /Esercizi e sessioni guidate/);
+assert.match(guide, /Errori da ripassare/);
+assert.match(guide, /Checkpoint e simulazioni/);
+assert.match(guide, /to:\s*'\/attivita\/srs'/);
+assert.match(guideStyles, /@media \(max-width: 560px\)/);
+assert.match(presentation, /sessione guidata/);
+assert.match(styles, /overflow-wrap: anywhere/);
 
 console.log('Recovery onboarding v2 validation passed.');

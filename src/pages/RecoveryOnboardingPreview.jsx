@@ -33,7 +33,7 @@ const reveal = {
   totalMinutes: 440,
   priorities: 4,
   assessments: 2,
-  today: { title: 'Present Simple', stages: ['allenati'], estimatedMinutes: 10 },
+  today: { title: 'Countable and uncountable — sessione guidata', stages: ['recupera'], estimatedMinutes: 34 },
 };
 
 export default function RecoveryOnboardingPreview() {
@@ -54,7 +54,7 @@ export default function RecoveryOnboardingPreview() {
       {step === 4 ? <ProgrammeConfidenceStep value={confidence} onChange={setConfidence} onUseTypical={() => setTopicKeys(TYPICAL_RECOVERY_TOPICS_BY_YEAR[Number(classYear)] || [])} onBack={back} onNext={next} /> : null}
       {step === 5 ? <DiagnosticSummaryStep diagnostic={diagnostic} onBack={back} onSubmit={next} /> : null}
       {step === 6 ? <PlanBuildingStep stage={4} /> : null}
-      {step === 7 ? <PlanRevealStep reveal={reveal} onStart={() => {}} onViewPlan={() => {}} /> : null}
+      {step === 7 ? <PlanRevealStep reveal={reveal} onStart={() => {}} onViewPlan={() => {}} onViewGuide={() => {}} /> : null}
       <div className="recovery-preview-controls" aria-label="Controlli anteprima">
         <button type="button" onClick={back} disabled={step === 0}>Precedente</button>
         <span>Step {step + 1}/8</span>

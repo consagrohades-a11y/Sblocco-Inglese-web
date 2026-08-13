@@ -13,6 +13,7 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import RecoveryNav from '../components/recovery/RecoveryNav.jsx';
+import { recoverySessionDisplayTitle, recoverySessionKind } from '../lib/recoveryPresentation.js';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { RECOVERY_MODE_LABELS, recoveryTopicLabel } from '../config/recovery.js';
 import {
@@ -258,8 +259,8 @@ function RecoveryDashboard({ firstName, access }) {
           <div className="learner-panel__heading"><div><span className="learner-panel__eyebrow">Oggi</span><h2>Il tuo prossimo passo</h2></div><Link to="/recupero-debito/percorso" className="learner-text-link">Vedi il percorso <ArrowRight /></Link></div>
           {next && !postExam ? (
             <article className="learner-next-card">
-              <div className="learner-next-card__topline"><span className="learner-next-card__number">{next.sequence_index}</span><span className="learner-next-card__type">{next.session_type.startsWith('mock_') ? 'Simulazione' : next.session_type === 'checkpoint' ? 'Verifica di percorso' : next.session_type === 'error_review' ? 'Ripasso errori' : 'Sessione'}</span></div>
-              <h3>{next.title}</h3>
+              <div className="learner-next-card__topline"><span className="learner-next-card__number">{next.sequence_index}</span><span className="learner-next-card__type">{next.session_type === 'error_review' ? 'Ripasso errori' : recoverySessionKind(next.title, next.session_type)}</span></div>
+              <h3>{recoverySessionDisplayTitle(next.title)}</h3>
               <p className="learner-next-card__reason">{next.rationale || 'Continua da qui: il piano mette questa attività prima delle altre in base ai dati disponibili.'}</p>
               <div className="learner-next-card__meta"><span><Clock3 aria-hidden="true" />~ {next.estimated_minutes} min</span>{next.topic_key ? <span><BookOpen aria-hidden="true" />{recoveryTopicLabel(next.topic_key)}</span> : null}</div>
               <div className="learner-next-card__action"><Link to={`/recupero-debito/sessione/${next.id}`} className="learner-primary-button">{next.status === 'in_progress' ? 'Continua la sessione' : 'Inizia la sessione'} <ArrowRight size={16} /></Link></div>
