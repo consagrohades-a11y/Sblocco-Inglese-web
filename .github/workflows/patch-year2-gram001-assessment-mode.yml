@@ -1,0 +1,41 @@
+name: Patch Year 2 GRAM-001 fragment modes
+
+on:
+  push:
+    branches: [content/recovery-v2-year2-grammar-fragments-a]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: content/recovery-v2-year2-grammar-fragments-a
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Align manifest to approved outcome modes
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const path = 'content/recovery/curriculum-v2/fragments/year-2-grammar-a.fragments.json';
+          const manifest = JSON.parse(fs.readFileSync(path, 'utf8'));
+          for (const fragment of manifest.fragments.filter((item) => item.outcome_ids.includes('RY2-GRAM-001'))) {
+            fragment.assessment_modes = fragment.assessment_modes.map((mode) => mode === 'error_correction' ? 'cumulative_school_test' : mode).sort();
+            for (const mapping of fragment.question_mappings) {
+              if (mapping.assessment_mode === 'error_correction') mapping.assessment_mode = 'cumulative_school_test';
+            }
+          }
+          fs.writeFileSync(path, `${JSON.stringify(manifest)}\n`);
+          NODE
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add content/recovery/curriculum-v2/fragments/year-2-grammar-a.fragments.json
+          git commit -m 'content: align GRAM-001 fragment assessment modes'
+          git push origin HEAD:content/recovery-v2-year2-grammar-fragments-a
