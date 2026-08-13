@@ -1,0 +1,156 @@
+.recovery-guide-page {
+  --recovery-guide-teal: #2f746f;
+  --recovery-guide-gold: #c88a2e;
+}
+
+.recovery-guide-hero {
+  max-width: 64rem;
+  padding: clamp(2.4rem, 7vw, 5.8rem) 0 clamp(2.7rem, 7vw, 5.4rem);
+}
+
+.recovery-guide-hero h1 {
+  max-width: 58rem;
+  overflow-wrap: anywhere;
+}
+
+.recovery-guide-hero h1 em {
+  color: var(--learner-orange);
+  font-style: normal;
+}
+
+.recovery-guide-hero > p:last-of-type {
+  max-width: 47rem;
+  margin: 1.2rem 0 0;
+  color: var(--learner-muted);
+  font-size: clamp(1rem, 2vw, 1.12rem);
+  line-height: 1.7;
+}
+
+.recovery-guide-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.7rem;
+}
+
+.recovery-guide-daily {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.75fr) minmax(0, 1.8fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  padding: clamp(1.8rem, 5vw, 3.5rem);
+  border-block: 1px solid color-mix(in srgb, var(--recovery-guide-teal) 38%, var(--learner-line));
+  background: linear-gradient(115deg, color-mix(in srgb, var(--recovery-guide-teal) 10%, var(--learner-paper-raised)), color-mix(in srgb, var(--recovery-guide-gold) 8%, var(--learner-paper-raised)));
+}
+
+.recovery-guide-daily__heading > span,
+.recovery-guide-shortcut span {
+  color: var(--learner-orange);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.recovery-guide-daily__heading h2,
+.recovery-guide-chapters__intro h2,
+.recovery-guide-shortcut h2 {
+  margin: 0.55rem 0 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+.recovery-guide-daily__heading p,
+.recovery-guide-shortcut p {
+  margin: 0.9rem 0 0;
+  color: var(--learner-muted);
+  line-height: 1.65;
+}
+
+.recovery-guide-daily ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recovery-guide-daily li {
+  position: relative;
+  min-width: 0;
+  padding: 1.3rem 1.5rem;
+  border-left: 1px solid var(--learner-line);
+}
+
+.recovery-guide-daily li:nth-child(n + 3) { border-top: 1px solid var(--learner-line); }
+.recovery-guide-daily li svg { width: 1.4rem; height: 1.4rem; color: var(--recovery-guide-teal); }
+.recovery-guide-daily li strong { display: block; margin-top: 0.75rem; overflow-wrap: anywhere; font-size: 0.94rem; }
+.recovery-guide-daily li p { margin: 0.35rem 0 0; color: var(--learner-muted); font-size: 0.78rem; line-height: 1.55; }
+.recovery-guide-daily__number { position: absolute; top: 1.25rem; right: 1.4rem; color: var(--learner-orange); font-size: 0.65rem; font-weight: 850; }
+
+.recovery-guide-chapters { padding: clamp(4rem, 9vw, 7rem) 0; }
+.recovery-guide-chapters__intro { max-width: 42rem; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+
+.recovery-guide-chapter {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 3.5rem);
+  min-width: 0;
+  padding: clamp(1.5rem, 4vw, 2.5rem) 0;
+  border-top: 1px solid var(--learner-line);
+}
+
+.recovery-guide-chapter:last-child { border-bottom: 1px solid var(--learner-line); }
+.recovery-guide-chapter__marker { display: flex; align-items: center; gap: 0.8rem; color: var(--learner-orange); }
+.recovery-guide-chapter__marker span { font-family: "Iowan Old Style", Georgia, serif; font-size: 2rem; }
+.recovery-guide-chapter__marker svg { width: 1.25rem; }
+.recovery-guide-chapter__copy { min-width: 0; }
+.recovery-guide-chapter h3 { margin: 0; overflow-wrap: anywhere; font-family: "Iowan Old Style", Georgia, serif; font-size: clamp(1.55rem, 3vw, 2.2rem); font-weight: 400; }
+.recovery-guide-chapter p { max-width: 52rem; margin: 0.55rem 0 0; color: var(--learner-muted); line-height: 1.65; }
+.recovery-guide-chapter small { display: block; margin-top: 0.65rem; color: color-mix(in srgb, var(--recovery-guide-teal) 85%, var(--learner-navy)); font-weight: 750; line-height: 1.5; }
+.recovery-guide-chapter .learner-text-link { justify-self: end; white-space: nowrap; }
+
+.recovery-guide-shortcut {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(1.5rem, 5vw, 4rem);
+  margin-bottom: 2rem;
+  padding: clamp(1.6rem, 5vw, 3.5rem);
+  color: #fffaf5;
+  background: linear-gradient(135deg, #0b3349 0%, #174f61 55%, #2f746f 100%);
+}
+
+.recovery-guide-shortcut > div { max-width: 48rem; min-width: 0; }
+.recovery-guide-shortcut h2 { overflow-wrap: anywhere; }
+.recovery-guide-shortcut p { color: rgba(255, 250, 245, 0.76); }
+.recovery-guide-shortcut .learner-primary-button { flex: 0 0 auto; background: #e45b2a; }
+
+.dark .recovery-guide-page { --recovery-guide-teal: #69aaa1; --recovery-guide-gold: #dba64b; }
+.dark .recovery-guide-daily { background: linear-gradient(115deg, rgba(35, 101, 95, 0.23), rgba(157, 103, 31, 0.12)); }
+.dark .recovery-guide-chapter small { color: #91c8c0; }
+
+@media (max-width: 840px) {
+  .recovery-guide-daily { grid-template-columns: 1fr; }
+  .recovery-guide-chapter { grid-template-columns: 4.8rem minmax(0, 1fr); }
+  .recovery-guide-chapter .learner-text-link { grid-column: 2; justify-self: start; }
+  .recovery-guide-shortcut { align-items: flex-start; flex-direction: column; }
+}
+
+@media (max-width: 560px) {
+  .recovery-guide-hero { padding-top: 2rem; }
+  .recovery-guide-hero h1 { font-size: clamp(2.75rem, 15vw, 4rem); }
+  .recovery-guide-hero__actions > * { width: 100%; }
+  .recovery-guide-daily { margin-inline: -0.6rem; padding-inline: 1.15rem; }
+  .recovery-guide-daily ol { grid-template-columns: 1fr; }
+  .recovery-guide-daily li { padding-inline: 0.25rem; border-left: 0; }
+  .recovery-guide-daily li + li { border-top: 1px solid var(--learner-line); }
+  .recovery-guide-chapter { grid-template-columns: 1fr; gap: 0.8rem; }
+  .recovery-guide-chapter .learner-text-link { grid-column: 1; }
+  .recovery-guide-shortcut { margin-inline: -0.6rem; }
+  .recovery-guide-shortcut .learner-primary-button { width: 100%; }
+}

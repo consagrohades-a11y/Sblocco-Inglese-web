@@ -95,6 +95,7 @@ const RecoveryOnboarding = lazy(() => import('./pages/RecoveryOnboarding'));
 const RecoveryReadiness = lazy(() => import('./pages/RecoveryReadiness'));
 const RecoverySession = lazy(() => import('./pages/RecoverySession'));
 const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
+const RecoveryGuide = lazy(() => import('./pages/RecoveryGuide'));
 const RecoveryOnboardingPreview = import.meta.env.DEV
   ? lazy(() => import('./pages/RecoveryOnboardingPreview'))
   : null;
@@ -147,7 +148,8 @@ export default function App() {
   const isRecoveryExperience = location.pathname === '/dashboard'
     || location.pathname.startsWith('/recupero-debito')
     || location.pathname === '/test-recupero-inglese'
-    || location.pathname === '/percorsi/recupero-debito';
+    || location.pathname === '/percorsi/recupero-debito'
+    || (import.meta.env.DEV && location.pathname.startsWith('/__preview/recovery'));
   const isStandaloneRecoveryOnboarding = location.pathname === '/recupero-debito/onboarding'
     || (import.meta.env.DEV && location.pathname === '/__preview/recovery-onboarding');
   const suppressMarketingMobileCta = isRecoveryExperience;
@@ -198,6 +200,7 @@ export default function App() {
             {import.meta.env.DEV ? <Route path="/__preview/exercises" element={<ExerciseExperienceGallery />} /> : null}
             {import.meta.env.DEV ? <Route path="/__preview/assignments" element={<LearnerAssignmentsPreview />} /> : null}
             {import.meta.env.DEV ? <Route path="/__preview/recovery-onboarding" element={<RecoveryOnboardingPreview />} /> : null}
+            {import.meta.env.DEV ? <Route path="/__preview/recovery-guide" element={<RecoveryGuide />} /> : null}
             <Route path="/diagnostic" element={<Navigate to="/assessment" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -215,6 +218,7 @@ export default function App() {
             <Route path="/recupero-debito/argomenti" element={<ProtectedRoute><RecoveryWorkspace view="argomenti" /></ProtectedRoute>} />
             <Route path="/recupero-debito/errori" element={<ProtectedRoute><RecoveryWorkspace view="errori" /></ProtectedRoute>} />
             <Route path="/recupero-debito/simulazioni" element={<ProtectedRoute><RecoveryWorkspace view="simulazioni" /></ProtectedRoute>} />
+            <Route path="/recupero-debito/come-funziona" element={<ProtectedRoute><RecoveryGuide /></ProtectedRoute>} />
             <Route path="/recupero-debito/preparazione" element={<ProtectedRoute><RecoveryReadiness /></ProtectedRoute>} />
             <Route path="/assignments" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
             <Route path="/attivita/esercizi" element={<ProtectedRoute><LearnerAssignments initialArea="exercises" /></ProtectedRoute>} />

@@ -7,6 +7,7 @@ const items = [
   { to: '/recupero-debito/argomenti', label: 'Argomenti' },
   { to: '/recupero-debito/errori', label: 'Ripassa errori' },
   { to: '/recupero-debito/simulazioni', label: 'Simulazioni' },
+  { to: '/recupero-debito/come-funziona', label: 'Come funziona' },
 ];
 
 export default function RecoveryNav() {
