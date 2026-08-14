@@ -52,7 +52,7 @@ Scope: product/runtime launch safety only
 3. Confirm the deployed client reports new plan metadata `runtimeProfile: h30_launch`.
 4. Run the clean-learner acceptance checklist from diagnostic through one completed topic session and one failed-verify remediation cycle.
 5. Re-run the exact cumulative selector SQL call and confirm it returns rows or an empty result without `42702`.
-6. Verify Stripe test-mode checkout grants access only after the signed webhook completes.
+6. Optionally use Stripe test mode as a preliminary check, then complete one real live EUR 39 production transaction and confirm entitlement appears only after the signed webhook. Refund the live transaction afterward if desired.
 
 ## Post-H30 backlog
 
