@@ -419,6 +419,7 @@ export default function ExercisePlayerV2() {
   const [error, setError] = useState("");
   const [saveStatus, setSaveStatus] = useState("");
   const saveTimers = useRef(new Map());
+  const submitInFlight = useRef(false);
 
   useEffect(() => {
     let active = true;
@@ -596,6 +597,8 @@ export default function ExercisePlayerV2() {
   }
 
   async function submit() {
+    if (submitInFlight.current || busy || !payload?.attempt?.id) return;
+    submitInFlight.current = true;
     setBusy(true);
     setError("");
     try {
@@ -603,6 +606,7 @@ export default function ExercisePlayerV2() {
     } catch (submitError) {
       setError(submitError.message || "Non è stato possibile consegnare.");
     } finally {
+      submitInFlight.current = false;
       setBusy(false);
     }
   }

@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import {
   buildRecoveryPlan,
   buildRecoveryTopicStates,
+  RECOVERY_PLAN_RUNTIME_PROFILE,
   recoveryModeForDays,
   recoveryStudyDates,
 } from '../src/lib/recoveryPlanEngine.js';
@@ -49,10 +50,19 @@ const completePlan = buildRecoveryPlan({
   },
 });
 assert.equal(completePlan.mode, RECOVERY_MODE.COMPLETE);
-assert.ok(completePlan.sessions.some((session) => session.sessionType === 'checkpoint'));
-assert.ok(completePlan.sessions.some((session) => session.sessionType === 'mock_intermediate'));
-assert.equal(completePlan.sessions.at(-1).sessionType, 'mock_final');
+assert.equal(completePlan.runtimeProfile, RECOVERY_PLAN_RUNTIME_PROFILE.H30_LAUNCH);
+assert.ok(completePlan.sessions.every((session) => ['topic', 'quick_review'].includes(session.sessionType)));
 assert.ok(completePlan.sessions.some((session) => session.topicKey === 'comparatives'), 'Strong required topics must not disappear.');
+
+const fullCurriculumPlan = buildRecoveryPlan({
+  requiredTopicKeys: ['past-simple', 'present-perfect', 'comparatives'],
+  examDate: '2026-08-29',
+  now: new Date('2026-08-11T12:00:00'),
+  runtimeProfile: RECOVERY_PLAN_RUNTIME_PROFILE.FULL_CURRICULUM,
+});
+assert.ok(fullCurriculumPlan.sessions.some((session) => session.sessionType === 'checkpoint'));
+assert.ok(fullCurriculumPlan.sessions.some((session) => session.sessionType === 'mock_intermediate'));
+assert.equal(fullCurriculumPlan.sessions.at(-1).sessionType, 'mock_final', 'The deferred cumulative architecture must remain available behind an explicit profile.');
 
 // O: the plan has a real calendar, not only a sequence number.
 assert.deepEqual(recoveryStudyDates('2026-08-14', new Date('2026-08-11T12:00:00')), [
@@ -64,7 +74,7 @@ assert.equal(completePlan.workload.availableStudyDays, 18);
 assert.ok(completePlan.days.length > 0);
 assert.equal(completePlan.days[0].scheduledFor, '2026-08-11');
 assert.equal(completePlan.days.at(-1).scheduledFor, '2026-08-28', 'The final active study day should stay immediately before the exam.');
-assert.equal(completePlan.sessions.at(-1).scheduledFor, completePlan.days.at(-1).scheduledFor, 'The final mock belongs to the final active study day.');
+assert.equal(completePlan.sessions.at(-1).scheduledFor, completePlan.days.at(-1).scheduledFor, 'The final launch-safe session belongs to the final active study day.');
 for (const session of completePlan.sessions) {
   assert.ok(session.planDayIndex > 0, 'Every recovery session must belong to a plan day.');
   assert.ok(session.scheduledFor, 'Every recovery session must have a date.');
@@ -95,8 +105,7 @@ const sosPlan = buildRecoveryPlan({
   diagnosticScores: { 'past-simple': 45, 'present-perfect': 62, 'comparatives-superlatives': 88 },
 });
 assert.equal(sosPlan.mode, RECOVERY_MODE.SOS);
-assert.ok(sosPlan.sessions.some((session) => session.sessionType === 'error_review'));
-assert.equal(sosPlan.sessions.at(-1).sessionType, 'mock_final');
+assert.ok(sosPlan.sessions.every((session) => ['topic', 'quick_review'].includes(session.sessionType)));
 assert.ok(sosPlan.days.length <= 4, 'SOS must fit inside the actual days left before the exam.');
 assert.equal(sosPlan.days.at(-1).scheduledFor, '2026-08-14');
 
@@ -117,7 +126,7 @@ assert.equal(beforeMissedDays.mode, RECOVERY_MODE.INTENSIVE);
 assert.equal(afterMissedDays.mode, RECOVERY_MODE.SOS, 'Missed days should automatically change the mode as the exam approaches.');
 assert.equal(afterMissedDays.days[0].scheduledFor, '2026-08-18');
 assert.ok(afterMissedDays.sessions.every((session) => session.scheduledFor >= '2026-08-18'));
-assert.equal(afterMissedDays.days.at(-1).scheduledFor, '2026-08-21');
+assert.equal(afterMissedDays.days.at(-1).scheduledFor, '2026-08-18', 'A single remaining topic should be actionable today, not delayed to exam eve.');
 
 const app = readFileSync('src/App.jsx', 'utf8');
 const navbar = readFileSync('src/components/Navbar.jsx', 'utf8');

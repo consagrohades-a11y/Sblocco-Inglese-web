@@ -16,6 +16,33 @@ const PREFERRED_DAILY_MINUTES = Object.freeze({
   [RECOVERY_MODE.SOS]: 60,
 });
 
+export const RECOVERY_PLAN_RUNTIME_PROFILE = Object.freeze({
+  H30_LAUNCH: 'h30_launch',
+  FULL_CURRICULUM: 'full_curriculum',
+});
+
+const RECOVERY_PLAN_CAPABILITIES = Object.freeze({
+  [RECOVERY_PLAN_RUNTIME_PROFILE.H30_LAUNCH]: Object.freeze({
+    standaloneErrorReview: false,
+    checkpoint: false,
+    intermediateMock: false,
+    finalMock: false,
+  }),
+  [RECOVERY_PLAN_RUNTIME_PROFILE.FULL_CURRICULUM]: Object.freeze({
+    standaloneErrorReview: true,
+    checkpoint: true,
+    intermediateMock: true,
+    finalMock: true,
+  }),
+});
+
+export function recoveryPlanCapabilities(
+  runtimeProfile = RECOVERY_PLAN_RUNTIME_PROFILE.H30_LAUNCH,
+) {
+  return RECOVERY_PLAN_CAPABILITIES[runtimeProfile]
+    || RECOVERY_PLAN_CAPABILITIES[RECOVERY_PLAN_RUNTIME_PROFILE.H30_LAUNCH];
+}
+
 function clamp(value, min = 0, max = 100) {
   return Math.max(min, Math.min(max, Number(value)));
 }
@@ -325,6 +352,7 @@ export function buildRecoveryPlan({
   masteryScores = {},
   repeatedErrors = {},
   startSequence = 1,
+  runtimeProfile = RECOVERY_PLAN_RUNTIME_PROFILE.H30_LAUNCH,
 }) {
   const daysRemaining = daysUntilRecoveryExam(examDate, now);
   const mode = recoveryModeForDays(daysRemaining);
@@ -338,6 +366,10 @@ export function buildRecoveryPlan({
     mode,
   });
   const sessions = [];
+  const effectiveRuntimeProfile = RECOVERY_PLAN_CAPABILITIES[runtimeProfile]
+    ? runtimeProfile
+    : RECOVERY_PLAN_RUNTIME_PROFILE.H30_LAUNCH;
+  const capabilities = recoveryPlanCapabilities(effectiveRuntimeProfile);
   let sequence = Math.max(1, Number(startSequence) || 1);
   let topicsSinceReview = 0;
 
@@ -351,11 +383,11 @@ export function buildRecoveryPlan({
     sequence += 1;
     topicsSinceReview += 1;
 
-    const shouldReview = mode === RECOVERY_MODE.COMPLETE
+    const shouldReview = capabilities.standaloneErrorReview && (mode === RECOVERY_MODE.COMPLETE
       ? topicsSinceReview >= 3 && index < topics.length - 1
       : mode === RECOVERY_MODE.INTENSIVE
         ? topicsSinceReview >= 4 && index < topics.length - 1
-        : false;
+        : false);
     if (shouldReview) {
       pushFixed(
         'error_review',
@@ -368,7 +400,7 @@ export function buildRecoveryPlan({
     }
   });
 
-  if (mode === RECOVERY_MODE.COMPLETE) {
+  if (capabilities.checkpoint && mode === RECOVERY_MODE.COMPLETE) {
     const insertAt = Math.max(1, Math.min(sessions.length, Math.ceil(sessions.length * 0.55)));
     sessions.splice(insertAt, 0, fixedSession(
       0,
@@ -378,15 +410,17 @@ export function buildRecoveryPlan({
       'Una verifica mista serve a capire quali priorità devono cambiare.',
       ['verifica_mista'],
     ));
-    sessions.splice(Math.min(sessions.length, insertAt + 2), 0, fixedSession(
-      0,
-      'mock_intermediate',
-      'Simulazione prova di recupero #1',
-      50,
-      'Prima simulazione completa: niente suggerimenti durante la prova, risultati solo dopo la consegna.',
-      ['simulazione'],
-    ));
-  } else if (mode === RECOVERY_MODE.INTENSIVE) {
+    if (capabilities.intermediateMock) {
+      sessions.splice(Math.min(sessions.length, insertAt + 2), 0, fixedSession(
+        0,
+        'mock_intermediate',
+        'Simulazione prova di recupero #1',
+        50,
+        'Prima simulazione completa: niente suggerimenti durante la prova, risultati solo dopo la consegna.',
+        ['simulazione'],
+      ));
+    }
+  } else if (capabilities.checkpoint && mode === RECOVERY_MODE.INTENSIVE) {
     const insertAt = Math.max(1, Math.ceil(sessions.length * 0.6));
     sessions.splice(insertAt, 0, fixedSession(
       0,
@@ -396,47 +430,61 @@ export function buildRecoveryPlan({
       'Controlliamo le strutture insieme, senza anticipare quale regola serve in ogni domanda.',
       ['verifica_mista'],
     ));
-    sessions.splice(Math.min(sessions.length, insertAt + 1), 0, fixedSession(
-      0,
-      'mock_intermediate',
-      'Simulazione prova di recupero #1',
-      45,
-      'La simulazione ci serve per decidere cosa mantenere nel piano finale.',
-      ['simulazione'],
-    ));
-  } else {
-    pushFixed(
-      'error_review',
-      'Ripasso errori ad alta priorità',
-      15,
-      'Con poco tempo rimasto riprendiamo solo gli errori che incidono di più sul programma della scuola.',
-      ['errori_ricorrenti', 'pratica_mista'],
-    );
-    pushFixed(
-      'checkpoint',
-      'Verifica mista rapida',
-      20,
-      'Una verifica breve ci aiuta a evitare di spendere tempo su parti già solide.',
-      ['verifica_mista'],
-    );
+    if (capabilities.intermediateMock) {
+      sessions.splice(Math.min(sessions.length, insertAt + 1), 0, fixedSession(
+        0,
+        'mock_intermediate',
+        'Simulazione prova di recupero #1',
+        45,
+        'La simulazione ci serve per decidere cosa mantenere nel piano finale.',
+        ['simulazione'],
+      ));
+    }
+  } else if (mode === RECOVERY_MODE.SOS && (capabilities.standaloneErrorReview || capabilities.checkpoint)) {
+    if (capabilities.standaloneErrorReview) {
+      pushFixed(
+        'error_review',
+        'Ripasso errori ad alta priorità',
+        15,
+        'Con poco tempo rimasto riprendiamo solo gli errori che incidono di più sul programma della scuola.',
+        ['errori_ricorrenti', 'pratica_mista'],
+      );
+    }
+    if (capabilities.checkpoint) {
+      pushFixed(
+        'checkpoint',
+        'Verifica mista rapida',
+        20,
+        'Una verifica breve ci aiuta a evitare di spendere tempo su parti già solide.',
+        ['verifica_mista'],
+      );
+    }
   }
 
-  pushFixed(
-    'mock_final',
-    'Simulazione finale',
-    mode === RECOVERY_MODE.SOS ? 40 : 55,
-    'Ultima simulazione sul programma selezionato. Il risultato aggiorna la preparazione attuale, non predice il voto della scuola.',
-    ['simulazione'],
-  );
+  if (capabilities.finalMock) {
+    pushFixed(
+      'mock_final',
+      'Simulazione finale',
+      mode === RECOVERY_MODE.SOS ? 40 : 55,
+      'Ultima simulazione sul programma selezionato. Il risultato aggiorna la preparazione attuale, non predice il voto della scuola.',
+      ['simulazione'],
+    );
+  }
 
   const normalizedSessions = sessions.map((session, index) => ({
     ...session,
     sequenceIndex: Math.max(1, Number(startSequence) || 1) + index,
+    metadata: {
+      ...(session.metadata || {}),
+      runtimeProfile: effectiveRuntimeProfile,
+    },
   }));
   const dailyPlan = buildRecoveryDailyPlan({ sessions: normalizedSessions, examDate, now, mode });
 
   return {
     mode,
+    runtimeProfile: effectiveRuntimeProfile,
+    capabilities,
     daysRemaining,
     topics,
     days: dailyPlan.days,

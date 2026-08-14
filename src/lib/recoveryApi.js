@@ -3,7 +3,10 @@ import {
   RECOVERY_DIAGNOSTIC_STORAGE_KEY,
   RECOVERY_OFFER_ID,
 } from '../config/recovery.js';
-import { buildRecoveryPlan } from './recoveryPlanEngine.js';
+import {
+  buildRecoveryPlan,
+  RECOVERY_PLAN_RUNTIME_PROFILE,
+} from './recoveryPlanEngine.js';
 
 function rpcError(response, fallback) {
   if (response?.error) {
@@ -255,6 +258,7 @@ export async function recalculateRecoveryPlan({ enrollment, state, now = new Dat
     masteryScores: objectFromRows(state.topics, 'topic_key', 'mastery_score'),
     repeatedErrors,
     startSequence: Math.max(0, ...preservedSequenceIndexes) + 1,
+    runtimeProfile: RECOVERY_PLAN_RUNTIME_PROFILE.H30_LAUNCH,
   });
   await replaceRecoveryPlan({ enrollmentId: enrollment.id, plan });
   return plan;
