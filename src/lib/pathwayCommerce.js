@@ -21,14 +21,14 @@ export async function loadPathwayOffers({ pathway, accessToken, signal } = {}) {
   return readJson(response);
 }
 
-export async function createCheckout({ offerId, accessToken }) {
+export async function createCheckout({ offerId, accessToken, consent, attribution }) {
   const response = await fetch('/api/stripe/checkout', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       ...authHeaders(accessToken),
     },
-    body: JSON.stringify({ offerId }),
+    body: JSON.stringify({ offerId, consent, attribution }),
   });
   return readJson(response);
 }
@@ -40,4 +40,3 @@ export async function loadCheckoutStatus({ sessionId, accessToken, signal }) {
   });
   return readJson(response);
 }
-

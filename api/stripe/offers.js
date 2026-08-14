@@ -20,12 +20,17 @@ export default async function handler(request, response) {
     if (user && offers.length) {
       const { data, error } = await getSupabaseAdmin()
         .from('user_entitlements')
-        .select('offer_id')
+        .select('offer_id, expires_at')
         .eq('user_id', user.id)
         .eq('status', 'active')
         .in('offer_id', offers.map((offer) => offer.id));
       if (error) throw error;
-      ownedIds = new Set((data || []).map((item) => item.offer_id));
+      const now = Date.now();
+      ownedIds = new Set(
+        (data || [])
+          .filter((item) => !item.expires_at || new Date(item.expires_at).getTime() > now)
+          .map((item) => item.offer_id),
+      );
     }
 
     return sendJson(response, 200, { offers: offers.map((offer) => publicOfferState(offer, ownedIds.has(offer.id))) });
@@ -37,4 +42,3 @@ export default async function handler(request, response) {
     });
   }
 }
-
