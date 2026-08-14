@@ -12,11 +12,8 @@ import RecoveryGuidancePanel from '../components/recovery/RecoveryGuidancePanel.
 import { recoverySessionDisplayTitle } from '../lib/recoveryPresentation.js';
 import { recoveryTopicLabel } from '../config/recovery.js';
 import {
-  loadRecoveryAccessState,
   loadRecoveryTopicFollowup,
-  markRecoveryCheckpointPlanUpdate,
   materializeRecoverySession,
-  recalculateRecoveryPlan,
   startRecoveryTopicCycleSession,
   startRecoveryTopicRedo,
   syncRecoverySession,
@@ -49,20 +46,18 @@ const stageDescriptions = {
   verifica_mista: 'Argomenti e strutture sono mescolati: devi scegliere autonomamente la regola adatta al contesto.',
 };
 
-function checkpointSummary(attempt, plan) {
+function checkpointSummary(attempt) {
   const topicScores = Object.entries(attempt?.topic_scores || {})
     .filter(([, score]) => Number.isFinite(Number(score)))
     .map(([topicKey, score]) => ({ topicKey, label: recoveryTopicLabel(topicKey), score: Math.round(Number(score)) }));
   const stable = topicScores.filter((item) => item.score >= 85);
   const consolidate = topicScores.filter((item) => item.score >= 70 && item.score < 85);
   const priority = topicScores.filter((item) => item.score < 70);
-  const futurePriorities = new Map((plan?.topics || []).map((topic) => [topic.topicKey, topic.priorityBand]));
-  const returnedToPriority = priority.filter((item) => futurePriorities.get(item.topicKey) === 'high');
-  const changedMessage = returnedToPriority.length
-    ? `Abbiamo aggiornato il piano perché nella verifica mista ${returnedToPriority.map((item) => item.label).join(', ')} ${returnedToPriority.length === 1 ? 'è risultato ancora instabile' : 'sono risultati ancora instabili'}.`
-    : priority.length
-      ? `Il piano mantiene ${priority.map((item) => item.label).join(', ')} tra gli argomenti da consolidare, in base al risultato della verifica mista.`
-      : 'La verifica mista non ha aggiunto nuove priorità alte. Il piano continua con il lavoro già previsto.';
+  const changedMessage = priority.length
+    ? `Il piano è già stato aggiornato: ${priority.map((item) => item.label).join(', ')} ${priority.length === 1 ? 'torna' : 'tornano'} tra le priorità con lavoro nuovo.`
+    : consolidate.length
+      ? 'Il piano è già stato aggiornato: gli argomenti da consolidare restano nel lavoro futuro, mentre quelli stabili non vengono ripetuti subito.'
+      : 'Il piano è già stato aggiornato: gli argomenti stabili non vengono ripetuti subito e il percorso continua con il lavoro ancora necessario.';
   return {
     overallScore: attempt?.score == null ? null : Math.round(Number(attempt.score)),
     stable,
@@ -134,18 +129,10 @@ export default function RecoverySession() {
               .limit(1);
             if (attemptError) throw attemptError;
             const attempt = attempts?.[0] || null;
-            let summary = resolved.metadata?.checkpoint_plan_update_summary || null;
-            if (!summary && attempt) {
-              const access = await loadRecoveryAccessState();
-              if (access?.enrollment && access?.state) {
-                const plan = await recalculateRecoveryPlan({ enrollment: access.enrollment, state: access.state });
-                summary = checkpointSummary(attempt, plan);
-                await markRecoveryCheckpointPlanUpdate(resolved.id, summary);
-              }
-            }
-            setCheckpointResult({ attempt, summary: summary || checkpointSummary(attempt, null) });
+            const summary = resolved.metadata?.checkpoint_plan_update_summary || checkpointSummary(attempt);
+            setCheckpointResult({ attempt, summary });
           } catch (checkpointError) {
-            setError(checkpointError.message || 'Il risultato è stato salvato, ma il piano non è ancora stato aggiornato.');
+            setError(checkpointError.message || 'Il risultato è stato salvato, ma non siamo riusciti a caricare il riepilogo.');
           } finally {
             setCheckpointUpdating(false);
           }
@@ -292,7 +279,7 @@ export default function RecoverySession() {
               <EditorialContinuation
                 eyebrow={checkpointResult?.summary?.overallScore == null ? 'Verifica mista completata' : `Verifica mista · ${checkpointResult.summary.overallScore}%`}
                 title="Che cosa cambia nel tuo piano?"
-                body={checkpointUpdating ? 'Stiamo usando il risultato per aggiornare soltanto il lavoro futuro.' : checkpointResult?.summary?.changedMessage || 'Il risultato è stato salvato. Il piano mostrerà il prossimo passo disponibile.'}
+                body={checkpointUpdating ? 'Caricamento del piano già aggiornato...' : checkpointResult?.summary?.changedMessage || 'Il risultato è stato salvato. Il piano mostrerà il prossimo passo disponibile.'}
               >
                 {checkpointResult?.summary ? (
                   <div className="learner-checkpoint-breakdown">
