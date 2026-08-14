@@ -1801,3 +1801,51 @@
     justify-content: center;
   }
 }
+.learner-guidance-dismiss {
+  align-items: center;
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 2rem;
+  justify-content: center;
+  opacity: 0.72;
+  width: 2rem;
+}
+
+.learner-guidance-dismiss:hover,
+.learner-guidance-dismiss:focus-visible {
+  opacity: 1;
+}
+
+.learner-checkpoint-breakdown {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 1rem 0;
+}
+
+.learner-checkpoint-breakdown > div {
+  border: 1px solid var(--learner-border, rgba(13, 52, 72, 0.16));
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.learner-checkpoint-breakdown strong,
+.learner-checkpoint-breakdown span {
+  display: block;
+}
+
+.learner-checkpoint-breakdown span {
+  font-size: 0.9rem;
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 720px) {
+  .learner-checkpoint-breakdown {
+    grid-template-columns: 1fr;
+  }
+}

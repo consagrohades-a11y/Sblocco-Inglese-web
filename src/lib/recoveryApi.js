@@ -48,6 +48,13 @@ function isMissingReadinessCapability(error) {
     || message.includes('recovery_readiness_snapshots');
 }
 
+function isMissingCheckpointCapability(error) {
+  const code = String(error?.code || '');
+  const message = String(error?.message || '').toLowerCase();
+  return ['42883', 'PGRST202'].includes(code)
+    || message.includes('get_recovery_checkpoint_capability');
+}
+
 export async function submitRecoveryDiagnostic(answers) {
   const data = rpcError(await supabase.rpc('submit_public_recovery_diagnostic', {
     p_answers: answers,
@@ -244,6 +251,17 @@ function objectFromRows(rows, key, value) {
 
 export async function recalculateRecoveryPlan({ enrollment, state, now = new Date() }) {
   if (!enrollment?.id || !enrollment.exam_date) return null;
+  const checkpointResponse = await supabase.rpc('get_recovery_checkpoint_capability', {
+    p_enrollment_id: enrollment.id,
+    p_budget_minutes: 24,
+  });
+  if (checkpointResponse.error && !isMissingCheckpointCapability(checkpointResponse.error)) {
+    throw checkpointResponse.error;
+  }
+  const checkpointCapability = checkpointResponse.error ? null : checkpointResponse.data;
+  const checkpointCompleted = state.sessions.some(
+    (session) => session.session_type === 'checkpoint' && session.status === 'completed',
+  );
   const repeatedErrors = objectFromRows(state.errorEvidence, 'topic_key', 'repeated_errors');
   const preservedSequenceIndexes = state.sessions
     .filter((session) => !['planned', 'available'].includes(session.status))
@@ -258,8 +276,16 @@ export async function recalculateRecoveryPlan({ enrollment, state, now = new Dat
     masteryScores: objectFromRows(state.topics, 'topic_key', 'mastery_score'),
     repeatedErrors,
     startSequence: Math.max(0, ...preservedSequenceIndexes) + 1,
-    runtimeProfile: RECOVERY_PLAN_RUNTIME_PROFILE.H30_LAUNCH,
+    runtimeProfile: checkpointCapability?.ready
+      ? RECOVERY_PLAN_RUNTIME_PROFILE.H30_CHECKPOINT_V1
+      : RECOVERY_PLAN_RUNTIME_PROFILE.H30_LAUNCH,
+    checkpointCompleted,
   });
+  plan.checkpointCapability = checkpointCapability || {
+    ready: false,
+    status: 'INSUFFICIENT',
+    reason: checkpointResponse.error ? 'checkpoint_migration_not_available' : 'pool_not_ready',
+  };
   await replaceRecoveryPlan({ enrollmentId: enrollment.id, plan });
   return plan;
 }
@@ -270,6 +296,13 @@ export async function materializeRecoverySession(sessionId) {
 
 export async function syncRecoverySession(sessionId) {
   return rpcError(await supabase.rpc('sync_recovery_session', { p_session_id: sessionId }), 'Non è stato possibile aggiornare la sessione.');
+}
+
+export async function markRecoveryCheckpointPlanUpdate(sessionId, summary) {
+  return rpcError(await supabase.rpc('mark_recovery_checkpoint_plan_update', {
+    p_session_id: sessionId,
+    p_summary: summary,
+  }), 'Non è stato possibile registrare l’aggiornamento del piano.');
 }
 
 export async function startRecoveryTopicCycleSession(sessionId) {

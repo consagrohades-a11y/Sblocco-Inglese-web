@@ -1,0 +1,3651 @@
+{
+  "schema_version": 1,
+  "manifest_id": "recovery-mixed-checkpoint-v1",
+  "status": "approved",
+  "fragments": [
+    {
+      "fragment_id": "RAF-RCPV1-01-ARTICLES-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_articles_a",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-001",
+        "RY1-GRAM-005",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY3-GRAM-005",
+        "RY3-GRAM-007"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-articles-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_a_question",
+          "outcome_id": "RY1-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_a_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_a_question",
+          "outcome_id": "RY2-GRAM-004",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_a_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_a_question",
+          "outcome_id": "RY3-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_a_question",
+          "outcome_id": "RY3-GRAM-007",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "articles"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "first_mention",
+          "specific_reference"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-02-ARTICLES-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_articles_b",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-001",
+        "RY1-GRAM-005",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY3-GRAM-005",
+        "RY3-GRAM-007"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-articles-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_b_question",
+          "outcome_id": "RY1-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_b_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_b_question",
+          "outcome_id": "RY2-GRAM-004",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_b_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_b_question",
+          "outcome_id": "RY3-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_articles_b_question",
+          "outcome_id": "RY3-GRAM-007",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "articles"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "zero_article_institution"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-03-COMPARATIVES-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_comparatives_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-006",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-comparatives-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_comparatives_a_question",
+          "outcome_id": "RY1-GRAM-006",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_comparatives_a_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "comparatives"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "short_adjective_form",
+          "long_adjective_form"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-04-COMPARATIVES-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_comparatives_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-006",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-comparatives-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_comparatives_b_question",
+          "outcome_id": "RY1-GRAM-006",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_comparatives_b_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "comparatives"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "irregular_comparative"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-05-COUNTABLE-UNCOUNTABLE-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_countable_uncountable_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-005",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-countable-uncountable-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_countable_uncountable_a_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_countable_uncountable_a_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "countable-uncountable"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "countable_plural",
+          "uncountable_noun"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-06-COUNTABLE-UNCOUNTABLE-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_countable_uncountable_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-005",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-countable-uncountable-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_countable_uncountable_b_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_countable_uncountable_b_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "countable-uncountable"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "article_quantifier_compatibility"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-07-FUTURE-FORMS-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_future_forms_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-004",
+        "RY2-GRAM-001",
+        "RY2-GRAM-003"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-future-forms-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_future_forms_a_question",
+          "outcome_id": "RY1-GRAM-004",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_future_forms_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_future_forms_a_question",
+          "outcome_id": "RY2-GRAM-003",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "future-forms"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 3,
+        "subskill_keys": [
+          "instant_decision",
+          "evidence_prediction",
+          "fixed_arrangement"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-08-FUTURE-FORMS-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_future_forms_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-004",
+        "RY2-GRAM-001",
+        "RY2-GRAM-003"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-future-forms-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_future_forms_b_question",
+          "outcome_id": "RY1-GRAM-004",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_future_forms_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_future_forms_b_question",
+          "outcome_id": "RY2-GRAM-003",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "future-forms"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "arrangement_form"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-09-GOING-TO-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_going_to_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-004",
+        "RY2-GRAM-001",
+        "RY2-GRAM-003"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-going-to-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_going_to_a_question",
+          "outcome_id": "RY1-GRAM-004",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_going_to_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_going_to_a_question",
+          "outcome_id": "RY2-GRAM-003",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "going-to"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "prior_intention",
+          "evidence_prediction"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-10-GOING-TO-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_going_to_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-004",
+        "RY2-GRAM-001",
+        "RY2-GRAM-003"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-going-to-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_going_to_b_question",
+          "outcome_id": "RY1-GRAM-004",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_going_to_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_going_to_b_question",
+          "outcome_id": "RY2-GRAM-003",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "going-to"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "be_going_to_form"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-11-IRREGULAR-VERBS-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_irregular_verbs_a",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-003",
+        "RY2-GRAM-001",
+        "RY3-GRAM-001",
+        "RY3-GRAM-003"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-irregular-verbs-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_irregular_verbs_a_question",
+          "outcome_id": "RY1-GRAM-003",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_irregular_verbs_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_irregular_verbs_a_question",
+          "outcome_id": "RY3-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_irregular_verbs_a_question",
+          "outcome_id": "RY3-GRAM-003",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "irregular-verbs"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "irregular_past",
+          "irregular_participle"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-12-IRREGULAR-VERBS-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_irregular_verbs_b",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-003",
+        "RY2-GRAM-001",
+        "RY3-GRAM-001",
+        "RY3-GRAM-003"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-irregular-verbs-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_irregular_verbs_b_question",
+          "outcome_id": "RY1-GRAM-003",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_irregular_verbs_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_irregular_verbs_b_question",
+          "outcome_id": "RY3-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_irregular_verbs_b_question",
+          "outcome_id": "RY3-GRAM-003",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "irregular-verbs"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "past_vs_participle"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-13-MODAL-VERBS-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_modal_verbs_a",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-007",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY3-GRAM-004"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-modal-verbs-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_modal_verbs_a_question",
+          "outcome_id": "RY1-GRAM-007",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_modal_verbs_a_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_modal_verbs_a_question",
+          "outcome_id": "RY2-GRAM-003",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_modal_verbs_a_question",
+          "outcome_id": "RY3-GRAM-004",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "modal-verbs"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 3,
+        "subskill_keys": [
+          "obligation",
+          "advice",
+          "possibility"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-14-MODAL-VERBS-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_modal_verbs_b",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-007",
+        "RY2-GRAM-002",
+        "RY2-GRAM-003",
+        "RY3-GRAM-004"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-modal-verbs-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_modal_verbs_b_question",
+          "outcome_id": "RY1-GRAM-007",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_modal_verbs_b_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_modal_verbs_b_question",
+          "outcome_id": "RY2-GRAM-003",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_modal_verbs_b_question",
+          "outcome_id": "RY3-GRAM-004",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "modal-verbs"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "modal_plus_base"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-15-MUCH-MANY-A-LOT-OF-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_much_many_a_lot_of_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-005",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-much-many-a-lot-of-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_much_many_a_lot_of_a_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_much_many_a_lot_of_a_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "much-many-a-lot-of"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "many_plural_countable",
+          "much_uncountable"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-16-MUCH-MANY-A-LOT-OF-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_much_many_a_lot_of_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-005",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-much-many-a-lot-of-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_much_many_a_lot_of_b_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_much_many_a_lot_of_b_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "much-many-a-lot-of"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "question_quantifier_compatibility"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-17-NEGATIVES-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_negatives_a",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-001",
+        "RY2-GRAM-002",
+        "RY3-GRAM-007"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-negatives-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_negatives_a_question",
+          "outcome_id": "RY1-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_negatives_a_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_negatives_a_question",
+          "outcome_id": "RY3-GRAM-007",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "negatives"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "do_negative",
+          "be_negative"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-18-NEGATIVES-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_negatives_b",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-001",
+        "RY2-GRAM-002",
+        "RY3-GRAM-007"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-negatives-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_negatives_b_question",
+          "outcome_id": "RY1-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_negatives_b_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_negatives_b_question",
+          "outcome_id": "RY3-GRAM-007",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "negatives"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "not_placement"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-19-PAST-CONTINUOUS-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_past_continuous_a",
+      "year_profiles": [
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001",
+        "RY3-GRAM-001"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-past-continuous-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_continuous_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_continuous_a_question",
+          "outcome_id": "RY3-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "past-continuous"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "action_in_progress_at_past_time",
+          "background_action"
+        ],
+        "class_years": [
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-20-PAST-CONTINUOUS-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_past_continuous_b",
+      "year_profiles": [
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001",
+        "RY3-GRAM-001"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-past-continuous-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_continuous_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_continuous_b_question",
+          "outcome_id": "RY3-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "past-continuous"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "negative_ing_form"
+        ],
+        "class_years": [
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-21-PAST-SIMPLE-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_past_simple_a",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY3-GRAM-001",
+        "RY3-GRAM-006"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-past-simple-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_a_question",
+          "outcome_id": "RY1-GRAM-003",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_a_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_a_question",
+          "outcome_id": "RY3-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_a_question",
+          "outcome_id": "RY3-GRAM-006",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "past-simple"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "completed_past",
+          "past_question_auxiliary"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-22-PAST-SIMPLE-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_past_simple_b",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-003",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY3-GRAM-001",
+        "RY3-GRAM-006"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-past-simple-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_b_question",
+          "outcome_id": "RY1-GRAM-003",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_b_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_b_question",
+          "outcome_id": "RY3-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_b_question",
+          "outcome_id": "RY3-GRAM-006",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "past-simple"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "negative_base_form"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-23-PAST-SIMPLE-VS-PRESENT-PERFECT-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_a",
+      "year_profiles": [
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001",
+        "RY3-GRAM-003"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-past-simple-vs-present-perfect-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_a_question",
+          "outcome_id": "RY3-GRAM-003",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "past-simple-vs-present-perfect"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "finished_time",
+          "experience_without_finished_time"
+        ],
+        "class_years": [
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-24-PAST-SIMPLE-VS-PRESENT-PERFECT-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_b",
+      "year_profiles": [
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001",
+        "RY3-GRAM-003"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-past-simple-vs-present-perfect-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_b_question",
+          "outcome_id": "RY3-GRAM-003",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "past-simple-vs-present-perfect"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "finished_time_marker"
+        ],
+        "class_years": [
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-25-POSSESSIVES-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_possessives_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-001",
+        "RY1-GRAM-005",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-possessives-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_possessives_a_question",
+          "outcome_id": "RY1-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_possessives_a_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_possessives_a_question",
+          "outcome_id": "RY2-GRAM-004",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_possessives_a_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "possessives"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "possessive_adjective",
+          "possessive_pronoun"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-26-POSSESSIVES-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_possessives_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-001",
+        "RY1-GRAM-005",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-possessives-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_possessives_b_question",
+          "outcome_id": "RY1-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_possessives_b_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_possessives_b_question",
+          "outcome_id": "RY2-GRAM-004",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_possessives_b_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "possessives"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "possessive_s"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-27-PREPOSITIONS-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_prepositions_a",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-006",
+        "RY2-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-007"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-prepositions-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_prepositions_a_question",
+          "outcome_id": "RY1-GRAM-006",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_prepositions_a_question",
+          "outcome_id": "RY2-GRAM-004",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_prepositions_a_question",
+          "outcome_id": "RY3-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_prepositions_a_question",
+          "outcome_id": "RY3-GRAM-007",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "prepositions"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "time_preposition",
+          "place_preposition"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-28-PREPOSITIONS-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_prepositions_b",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-006",
+        "RY2-GRAM-004",
+        "RY3-GRAM-005",
+        "RY3-GRAM-007"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-prepositions-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_prepositions_b_question",
+          "outcome_id": "RY1-GRAM-006",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_prepositions_b_question",
+          "outcome_id": "RY2-GRAM-004",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_prepositions_b_question",
+          "outcome_id": "RY3-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_prepositions_b_question",
+          "outcome_id": "RY3-GRAM-007",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "prepositions"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "verb_preposition_combination"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-29-PRESENT-CONTINUOUS-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_continuous_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-002",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-continuous-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_continuous_a_question",
+          "outcome_id": "RY1-GRAM-002",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_continuous_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_continuous_a_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "present-continuous"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "action_now",
+          "temporary_situation"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-30-PRESENT-CONTINUOUS-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_continuous_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-002",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-continuous-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_continuous_b_question",
+          "outcome_id": "RY1-GRAM-002",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_continuous_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_continuous_b_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "present-continuous"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "question_word_order"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-31-PRESENT-CONTINUOUS-FUTURE-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_continuous_future_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-004",
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-continuous-future-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_continuous_future_a_question",
+          "outcome_id": "RY1-GRAM-004",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_continuous_future_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "present-continuous-future"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "travel_arrangement",
+          "appointment_arrangement"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-32-PRESENT-CONTINUOUS-FUTURE-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_continuous_future_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-004",
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-continuous-future-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_continuous_future_b_question",
+          "outcome_id": "RY1-GRAM-004",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_continuous_future_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "present-continuous-future"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "arrangement_question_order"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-33-PRESENT-PERFECT-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_perfect_a",
+      "year_profiles": [
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY3-GRAM-003"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-perfect-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_perfect_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_perfect_a_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_perfect_a_question",
+          "outcome_id": "RY3-GRAM-003",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "present-perfect"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 3,
+        "subskill_keys": [
+          "life_experience",
+          "recent_result",
+          "unfinished_time"
+        ],
+        "class_years": [
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-34-PRESENT-PERFECT-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_perfect_b",
+      "year_profiles": [
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001",
+        "RY2-GRAM-002",
+        "RY3-GRAM-003"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-perfect-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_perfect_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_perfect_b_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_perfect_b_question",
+          "outcome_id": "RY3-GRAM-003",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "present-perfect"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "participle_form"
+        ],
+        "class_years": [
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-35-PRESENT-SIMPLE-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_simple_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-002",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-simple-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_a_question",
+          "outcome_id": "RY1-GRAM-002",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_a_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "present-simple"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "routine_fact",
+          "third_person_singular"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-36-PRESENT-SIMPLE-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_simple_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-002",
+        "RY2-GRAM-001",
+        "RY2-GRAM-002"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-simple-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_b_question",
+          "outcome_id": "RY1-GRAM-002",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_b_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "present-simple"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "auxiliary_base_form"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-37-PRESENT-SIMPLE-VS-PRESENT-CONTINUOUS-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-002",
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-simple-vs-present-continuous-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_a_question",
+          "outcome_id": "RY1-GRAM-002",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "present-simple-vs-present-continuous"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "routine_vs_now",
+          "contextual_form_choice"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-38-PRESENT-SIMPLE-VS-PRESENT-CONTINUOUS-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-002",
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-simple-vs-present-continuous-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_b_question",
+          "outcome_id": "RY1-GRAM-002",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "present-simple-vs-present-continuous"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "permanent_vs_temporary"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-39-PRONOUNS-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_pronouns_a",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-001",
+        "RY1-GRAM-005",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-pronouns-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_a_question",
+          "outcome_id": "RY1-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_a_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_a_question",
+          "outcome_id": "RY2-GRAM-004",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_a_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_a_question",
+          "outcome_id": "RY3-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_a_question",
+          "outcome_id": "RY3-GRAM-006",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_a_question",
+          "outcome_id": "RY3-GRAM-007",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "pronouns"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "object_pronoun",
+          "subject_pronoun"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-40-PRONOUNS-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_pronouns_b",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-001",
+        "RY1-GRAM-005",
+        "RY2-GRAM-004",
+        "RY2-GRAM-005",
+        "RY3-GRAM-005",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-pronouns-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_b_question",
+          "outcome_id": "RY1-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_b_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_b_question",
+          "outcome_id": "RY2-GRAM-004",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_b_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_b_question",
+          "outcome_id": "RY3-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_b_question",
+          "outcome_id": "RY3-GRAM-006",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_pronouns_b_question",
+          "outcome_id": "RY3-GRAM-007",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "pronouns"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "reflexive_reference"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-41-QUESTION-FORMATION-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_question_formation_a",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-001",
+        "RY2-GRAM-002",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-question-formation-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_question_formation_a_question",
+          "outcome_id": "RY1-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_question_formation_a_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_question_formation_a_question",
+          "outcome_id": "RY3-GRAM-006",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_question_formation_a_question",
+          "outcome_id": "RY3-GRAM-007",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "question-formation"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "auxiliary_choice",
+          "be_question"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-42-QUESTION-FORMATION-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_question_formation_b",
+      "year_profiles": [
+        1,
+        2,
+        3
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-001",
+        "RY2-GRAM-002",
+        "RY3-GRAM-006",
+        "RY3-GRAM-007"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-question-formation-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_question_formation_b_question",
+          "outcome_id": "RY1-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_question_formation_b_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_question_formation_b_question",
+          "outcome_id": "RY3-GRAM-006",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_question_formation_b_question",
+          "outcome_id": "RY3-GRAM-007",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "question-formation"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "did_base_form_order"
+        ],
+        "class_years": [
+          1,
+          2,
+          3
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-43-SOME-ANY-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_some_any_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-005",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-some-any-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_some_any_a_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_some_any_a_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "some-any"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "affirmative_some",
+          "negative_any"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-44-SOME-ANY-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_some_any_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-005",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-some-any-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_some_any_b_question",
+          "outcome_id": "RY1-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_some_any_b_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "some-any"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "negative_any_control"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-45-SUPERLATIVES-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_superlatives_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-006",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-superlatives-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_superlatives_a_question",
+          "outcome_id": "RY1-GRAM-006",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_superlatives_a_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "superlatives"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "short_adjective_superlative",
+          "long_adjective_superlative"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-46-SUPERLATIVES-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_superlatives_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-006",
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-superlatives-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_superlatives_b_question",
+          "outcome_id": "RY1-GRAM-006",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_superlatives_b_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "superlatives"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "irregular_superlative"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-47-WILL-A",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_will_a",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-004",
+        "RY2-GRAM-001",
+        "RY2-GRAM-003"
+      ],
+      "assessment_modes": [
+        "mixed_grammar"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "gap_or_open_cloze",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-will-a",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_will_a_question",
+          "outcome_id": "RY1-GRAM-004",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_will_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_will_a_question",
+          "outcome_id": "RY2-GRAM-003",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "will"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 2,
+        "subskill_keys": [
+          "prediction",
+          "offer"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    },
+    {
+      "fragment_id": "RAF-RCPV1-48-WILL-B",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_will_b",
+      "year_profiles": [
+        1,
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY1-GRAM-004",
+        "RY2-GRAM-001",
+        "RY2-GRAM-003"
+      ],
+      "assessment_modes": [
+        "error_correction"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A1+/B1",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "unseen_original_for_recovery_mixed_checkpoint_v1",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-will-b",
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_will_b_question",
+          "outcome_id": "RY1-GRAM-004",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_will_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        },
+        {
+          "question_client_key": "recovery_checkpoint_v1_will_b_question",
+          "outcome_id": "RY2-GRAM-003",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1
+        }
+      ],
+      "metadata": {
+        "launch_profile": "h30_checkpoint_v1",
+        "runtime_profile": "h30_checkpoint_v1",
+        "topic_keys": [
+          "will"
+        ],
+        "required_distinct_topics": 4,
+        "forms_per_topic": 2,
+        "scored_decisions": 1,
+        "subskill_keys": [
+          "modal_base_form"
+        ],
+        "class_years": [
+          1,
+          2
+        ],
+        "normal_budget_minutes": 24,
+        "feedback_policy": "hidden_until_checkpoint_completion",
+        "target_rule_labels_visible": false
+      }
+    }
+  ],
+  "metadata": {
+    "launch_profile": "h30_checkpoint_v1",
+    "live_topic_count": 24,
+    "supported_topic_count": 24,
+    "supported_topic_keys": [
+      "articles",
+      "comparatives",
+      "countable-uncountable",
+      "future-forms",
+      "going-to",
+      "irregular-verbs",
+      "modal-verbs",
+      "much-many-a-lot-of",
+      "negatives",
+      "past-continuous",
+      "past-simple",
+      "past-simple-vs-present-perfect",
+      "possessives",
+      "prepositions",
+      "present-continuous",
+      "present-continuous-future",
+      "present-perfect",
+      "present-simple",
+      "present-simple-vs-present-continuous",
+      "pronouns",
+      "question-formation",
+      "some-any",
+      "superlatives",
+      "will"
+    ],
+    "resource_count_per_checkpoint": 8,
+    "selected_topic_count": 4,
+    "forms_per_selected_topic": 2,
+    "scored_decisions_per_selected_topic_min": 3,
+    "scored_decisions_per_checkpoint_min": 12,
+    "scored_decisions_per_checkpoint_max": 16,
+    "estimated_minutes": 24,
+    "generated_from_current_live_recovery_catalogue": true
+  }
+}

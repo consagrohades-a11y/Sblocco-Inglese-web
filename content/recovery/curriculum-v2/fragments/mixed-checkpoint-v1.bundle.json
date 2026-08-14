@@ -1,0 +1,4278 @@
+{
+  "schema_version": 2,
+  "entity_type": "bundle",
+  "questions": [],
+  "pools": [],
+  "exercises": [
+    {
+      "client_key": "recovery_checkpoint_v1_articles_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_articles_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_articles_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "articles",
+              "subtopic": "first_mention__specific_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Distinguish first mention from an already identified noun.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "I saw [[blank_1]] dog outside the station. [[blank_2]] dog was waiting by the gate.",
+              "content": {
+                "text_template": "I saw [[blank_1]] dog outside the station. [[blank_2]] dog was waiting by the gate.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "a"
+                    ],
+                    "options": [
+                      "a",
+                      "an",
+                      "the"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "The"
+                    ],
+                    "options": [
+                      "A",
+                      "The",
+                      "—"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_articles_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_articles_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_articles_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "articles",
+              "subtopic": "zero_article_institution",
+              "primary_skill": "grammar",
+              "learning_objective": "Use zero article for school as the normal institution/activity.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «She is a student and she goes to the school every weekday.»",
+              "content": {
+                "accepted_answers": [
+                  "She is a student and she goes to school every weekday."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_comparatives_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_comparatives_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_comparatives_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "comparatives",
+              "subtopic": "short_adjective_form__long_adjective_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Build short- and long-adjective comparisons from context.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) This test is [[blank_1]] than the last one. 2) My new phone is [[blank_2]] than the old one.",
+              "content": {
+                "text_template": "1) This test is [[blank_1]] than the last one. 2) My new phone is [[blank_2]] than the old one.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "easier"
+                    ],
+                    "options": [
+                      "easier",
+                      "more easy",
+                      "easiest"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "more reliable"
+                    ],
+                    "options": [
+                      "reliabler",
+                      "more reliable",
+                      "most reliable"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_comparatives_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_comparatives_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_comparatives_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "comparatives",
+              "subtopic": "irregular_comparative",
+              "primary_skill": "grammar",
+              "learning_objective": "Use an irregular comparative form.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «This result is gooder than the last one.»",
+              "content": {
+                "accepted_answers": [
+                  "This result is better than the last one."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_countable_uncountable_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_countable_uncountable_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_countable_uncountable_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "countable-uncountable",
+              "subtopic": "countable_plural__uncountable_noun",
+              "primary_skill": "grammar",
+              "learning_objective": "Distinguish common countable and uncountable nouns.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) There are three [[blank_1]] in the waiting room. 2) There isn’t much [[blank_2]] on the notice.",
+              "content": {
+                "text_template": "1) There are three [[blank_1]] in the waiting room. 2) There isn’t much [[blank_2]] on the notice.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "chairs"
+                    ],
+                    "options": [
+                      "chair",
+                      "chairs",
+                      "furniture"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "information"
+                    ],
+                    "options": [
+                      "informations",
+                      "information",
+                      "messages"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_countable_uncountable_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_countable_uncountable_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_countable_uncountable_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "countable-uncountable",
+              "subtopic": "article_quantifier_compatibility",
+              "primary_skill": "grammar",
+              "learning_objective": "Avoid an indefinite article directly before an uncountable noun.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «I need an advice about the exam.»",
+              "content": {
+                "accepted_answers": [
+                  "I need some advice about the exam.",
+                  "I need a piece of advice about the exam."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_future_forms_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_future_forms_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_future_forms_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "future-forms",
+              "subtopic": "instant_decision__evidence_prediction__fixed_arrangement",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose a future form from the meaning of the context.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) The phone’s ringing — I [[blank_1]] it. 2) Look at those black clouds. It [[blank_2]]. 3) We [[blank_3]] the teacher at 4; the appointment is in the calendar.",
+              "content": {
+                "text_template": "1) The phone’s ringing — I [[blank_1]] it. 2) Look at those black clouds. It [[blank_2]]. 3) We [[blank_3]] the teacher at 4; the appointment is in the calendar.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "will answer"
+                    ],
+                    "options": [
+                      "will answer",
+                      "am going to answer",
+                      "am answering"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "is going to rain"
+                    ],
+                    "options": [
+                      "will rain",
+                      "is going to rain",
+                      "is raining"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_3",
+                    "accepted_answers": [
+                      "are meeting"
+                    ],
+                    "options": [
+                      "will meet",
+                      "are going to meet",
+                      "are meeting"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_future_forms_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_future_forms_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_future_forms_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "future-forms",
+              "subtopic": "arrangement_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Build a fixed-arrangement form correctly.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «We are meet Sara at six tomorrow; it’s in the calendar.»",
+              "content": {
+                "accepted_answers": [
+                  "We are meeting Sara at six tomorrow; it's in the calendar.",
+                  "We are meeting Sara at six tomorrow; it is in the calendar."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_going_to_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_going_to_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_going_to_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "going-to",
+              "subtopic": "prior_intention__evidence_prediction",
+              "primary_skill": "grammar",
+              "learning_objective": "Use an intention already formed and an evidence-based prediction.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) I bought the paint yesterday. I [[blank_1]] my room this weekend. 2) Look at that glass! It [[blank_2]].",
+              "content": {
+                "text_template": "1) I bought the paint yesterday. I [[blank_1]] my room this weekend. 2) Look at that glass! It [[blank_2]].",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "am going to repaint"
+                    ],
+                    "options": [
+                      "will repaint",
+                      "am going to repaint",
+                      "repainted"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "is going to fall"
+                    ],
+                    "options": [
+                      "will fall",
+                      "is going to fall",
+                      "falls"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_going_to_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_going_to_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_going_to_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "going-to",
+              "subtopic": "be_going_to_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Include the correct form of be.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «She going to apply for the course next week.»",
+              "content": {
+                "accepted_answers": [
+                  "She is going to apply for the course next week."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_irregular_verbs_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_irregular_verbs_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_irregular_verbs_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "irregular-verbs",
+              "subtopic": "irregular_past__irregular_participle",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose high-frequency irregular past and participle forms from context.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) Last Saturday Maya [[blank_1]] a new jacket. 2) She has already [[blank_2]] it twice.",
+              "content": {
+                "text_template": "1) Last Saturday Maya [[blank_1]] a new jacket. 2) She has already [[blank_2]] it twice.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "bought"
+                    ],
+                    "options": [
+                      "bought",
+                      "buyed",
+                      "buy"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "worn"
+                    ],
+                    "options": [
+                      "wore",
+                      "worn",
+                      "wear"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_irregular_verbs_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_irregular_verbs_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_irregular_verbs_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "irregular-verbs",
+              "subtopic": "past_vs_participle",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the irregular participle after have.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «Have you ever saw snow in August?»",
+              "content": {
+                "accepted_answers": [
+                  "Have you ever seen snow in August?"
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_modal_verbs_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_modal_verbs_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_modal_verbs_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "modal-verbs",
+              "subtopic": "obligation__advice__possibility",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose a modal from obligation, advice and possibility meanings.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) You [[blank_1]] wear a helmet here — it’s compulsory. 2) You [[blank_2]] talk to your teacher if you’re worried. 3) It [[blank_3]] rain later, so take a jacket.",
+              "content": {
+                "text_template": "1) You [[blank_1]] wear a helmet here — it’s compulsory. 2) You [[blank_2]] talk to your teacher if you’re worried. 3) It [[blank_3]] rain later, so take a jacket.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "must"
+                    ],
+                    "options": [
+                      "must",
+                      "should",
+                      "might"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "should"
+                    ],
+                    "options": [
+                      "must",
+                      "should",
+                      "might"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_3",
+                    "accepted_answers": [
+                      "might"
+                    ],
+                    "options": [
+                      "must",
+                      "should",
+                      "might"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_modal_verbs_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_modal_verbs_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_modal_verbs_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "modal-verbs",
+              "subtopic": "modal_plus_base",
+              "primary_skill": "grammar",
+              "learning_objective": "Keep the base verb after a modal.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «She can to swim very well.»",
+              "content": {
+                "accepted_answers": [
+                  "She can swim very well."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_much_many_a_lot_of_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_much_many_a_lot_of_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_much_many_a_lot_of_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "much-many-a-lot-of",
+              "subtopic": "many_plural_countable__much_uncountable",
+              "primary_skill": "grammar",
+              "learning_objective": "Match quantity words to plural countable and uncountable nouns.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) How [[blank_1]] students are in your class? 2) We don’t have [[blank_2]] time before the bus leaves.",
+              "content": {
+                "text_template": "1) How [[blank_1]] students are in your class? 2) We don’t have [[blank_2]] time before the bus leaves.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "many"
+                    ],
+                    "options": [
+                      "much",
+                      "many",
+                      "a lot"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "much"
+                    ],
+                    "options": [
+                      "much",
+                      "many",
+                      "a lot"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_much_many_a_lot_of_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_much_many_a_lot_of_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_much_many_a_lot_of_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "much-many-a-lot-of",
+              "subtopic": "question_quantifier_compatibility",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the countable quantity form in a question.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «How much students are absent today?»",
+              "content": {
+                "accepted_answers": [
+                  "How many students are absent today?"
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_negatives_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_negatives_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_negatives_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "negatives",
+              "subtopic": "do_negative__be_negative",
+              "primary_skill": "grammar",
+              "learning_objective": "Build negatives with do-support and with be.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) She [[blank_1]] coffee. 2) They [[blank_2]] at home today.",
+              "content": {
+                "text_template": "1) She [[blank_1]] coffee. 2) They [[blank_2]] at home today.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "doesn't like"
+                    ],
+                    "options": [
+                      "doesn't like",
+                      "isn't like",
+                      "doesn't likes"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "aren't"
+                    ],
+                    "options": [
+                      "don't",
+                      "aren't",
+                      "doesn't"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_negatives_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_negatives_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_negatives_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "negatives",
+              "subtopic": "not_placement",
+              "primary_skill": "grammar",
+              "learning_objective": "Place not correctly with be.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «She not is ready for the test.»",
+              "content": {
+                "accepted_answers": [
+                  "She is not ready for the test.",
+                  "She isn't ready for the test."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_past_continuous_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_past_continuous_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_past_continuous_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "past-continuous",
+              "subtopic": "action_in_progress_at_past_time__background_action",
+              "primary_skill": "grammar",
+              "learning_objective": "Use an action-in-progress form for a past time and background action.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) At 8 last night I [[blank_1]] my homework. 2) When the lights went out, my parents [[blank_2]] dinner.",
+              "content": {
+                "text_template": "1) At 8 last night I [[blank_1]] my homework. 2) When the lights went out, my parents [[blank_2]] dinner.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "was doing"
+                    ],
+                    "options": [
+                      "did",
+                      "was doing",
+                      "have done"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "were cooking"
+                    ],
+                    "options": [
+                      "cooked",
+                      "were cooking",
+                      "are cooking"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_past_continuous_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_past_continuous_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_past_continuous_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "past-continuous",
+              "subtopic": "negative_ing_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Build the negative ongoing-past form correctly.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «She wasn’t listen when the teacher explained the task.»",
+              "content": {
+                "accepted_answers": [
+                  "She wasn't listening when the teacher explained the task.",
+                  "She was not listening when the teacher explained the task."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_past_simple_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_past_simple_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_past_simple_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "past-simple",
+              "subtopic": "completed_past__past_question_auxiliary",
+              "primary_skill": "grammar",
+              "learning_objective": "Use a completed-past form and did in a past question.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) Yesterday we [[blank_1]] the new film after school. 2) What time [[blank_2]] the film start?",
+              "content": {
+                "text_template": "1) Yesterday we [[blank_1]] the new film after school. 2) What time [[blank_2]] the film start?",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "saw"
+                    ],
+                    "options": [
+                      "saw",
+                      "seen",
+                      "see"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "did"
+                    ],
+                    "options": [
+                      "did",
+                      "was",
+                      "has"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_past_simple_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_past_simple_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_past_simple_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "past-simple",
+              "subtopic": "negative_base_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Keep the base verb after did not.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «I didn’t went to training last night.»",
+              "content": {
+                "accepted_answers": [
+                  "I didn't go to training last night.",
+                  "I did not go to training last night."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "past-simple-vs-present-perfect",
+              "subtopic": "finished_time__experience_without_finished_time",
+              "primary_skill": "grammar",
+              "learning_objective": "Distinguish a finished past time from experience without a finished time.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) I [[blank_1]] London in 2024. 2) I [[blank_2]] London three times.",
+              "content": {
+                "text_template": "1) I [[blank_1]] London in 2024. 2) I [[blank_2]] London three times.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "visited"
+                    ],
+                    "options": [
+                      "visited",
+                      "have visited",
+                      "visit"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "have visited"
+                    ],
+                    "options": [
+                      "visited",
+                      "have visited",
+                      "am visiting"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_past_simple_vs_present_perfect_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "past-simple-vs-present-perfect",
+              "subtopic": "finished_time_marker",
+              "primary_skill": "grammar",
+              "learning_objective": "Use a finished-past form with yesterday.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «Have you seen Marco yesterday?»",
+              "content": {
+                "accepted_answers": [
+                  "Did you see Marco yesterday?"
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_possessives_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_possessives_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_possessives_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "possessives",
+              "subtopic": "possessive_adjective__possessive_pronoun",
+              "primary_skill": "grammar",
+              "learning_objective": "Distinguish a possessive determiner from a standalone possessive pronoun.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) This is [[blank_1]] notebook. 2) The blue notebook is [[blank_2]].",
+              "content": {
+                "text_template": "1) This is [[blank_1]] notebook. 2) The blue notebook is [[blank_2]].",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "my"
+                    ],
+                    "options": [
+                      "me",
+                      "my",
+                      "mine"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "hers"
+                    ],
+                    "options": [
+                      "her",
+                      "hers",
+                      "she"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_possessives_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_possessives_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_possessives_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "possessives",
+              "subtopic": "possessive_s",
+              "primary_skill": "grammar",
+              "learning_objective": "Mark possession with apostrophe-s.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «This is Maria bag.»",
+              "content": {
+                "accepted_answers": [
+                  "This is Maria's bag."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_prepositions_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_prepositions_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_prepositions_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "prepositions",
+              "subtopic": "time_preposition__place_preposition",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose common prepositions of time and place.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) The lesson starts [[blank_1]] nine. 2) Your keys are [[blank_2]] the desk, next to the laptop.",
+              "content": {
+                "text_template": "1) The lesson starts [[blank_1]] nine. 2) Your keys are [[blank_2]] the desk, next to the laptop.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "at"
+                    ],
+                    "options": [
+                      "at",
+                      "on",
+                      "in"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "on"
+                    ],
+                    "options": [
+                      "at",
+                      "on",
+                      "in"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_prepositions_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_prepositions_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_prepositions_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "prepositions",
+              "subtopic": "verb_preposition_combination",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the normal preposition after arrive with a place.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «We arrived to school at eight.»",
+              "content": {
+                "accepted_answers": [
+                  "We arrived at school at eight."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_present_continuous_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_present_continuous_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_present_continuous_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "present-continuous",
+              "subtopic": "action_now__temporary_situation",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the ongoing form for actions now and temporary situations.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) Be quiet — Tom [[blank_1]] for his test right now. 2) This month, we [[blank_2]] with my aunt while our flat is being repaired.",
+              "content": {
+                "text_template": "1) Be quiet — Tom [[blank_1]] for his test right now. 2) This month, we [[blank_2]] with my aunt while our flat is being repaired.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "is studying"
+                    ],
+                    "options": [
+                      "studies",
+                      "is studying",
+                      "studied"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "are staying"
+                    ],
+                    "options": [
+                      "stay",
+                      "are staying",
+                      "stayed"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_present_continuous_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_present_continuous_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_present_continuous_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "present-continuous",
+              "subtopic": "question_word_order",
+              "primary_skill": "grammar",
+              "learning_objective": "Build an ongoing-action question with correct auxiliary order.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «What you are doing at the moment?»",
+              "content": {
+                "accepted_answers": [
+                  "What are you doing at the moment?"
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_present_continuous_future_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_present_continuous_future_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_present_continuous_future_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "present-continuous-future",
+              "subtopic": "travel_arrangement__appointment_arrangement",
+              "primary_skill": "grammar",
+              "learning_objective": "Use fixed arrangements with explicit future time.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) We [[blank_1]] to Paris on Friday; the tickets are booked. 2) I [[blank_2]] the dentist at three tomorrow; it’s in my calendar.",
+              "content": {
+                "text_template": "1) We [[blank_1]] to Paris on Friday; the tickets are booked. 2) I [[blank_2]] the dentist at three tomorrow; it’s in my calendar.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "are flying"
+                    ],
+                    "options": [
+                      "will fly",
+                      "are flying",
+                      "fly"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "am seeing"
+                    ],
+                    "options": [
+                      "will see",
+                      "am seeing",
+                      "see"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_present_continuous_future_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_present_continuous_future_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_present_continuous_future_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "present-continuous-future",
+              "subtopic": "arrangement_question_order",
+              "primary_skill": "grammar",
+              "learning_objective": "Build a question about a fixed arrangement.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «What time you are meeting Luca tomorrow?»",
+              "content": {
+                "accepted_answers": [
+                  "What time are you meeting Luca tomorrow?"
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_present_perfect_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_present_perfect_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_present_perfect_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "present-perfect",
+              "subtopic": "life_experience__recent_result__unfinished_time",
+              "primary_skill": "grammar",
+              "learning_objective": "Use experience, present result and unfinished-time meanings from context.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) [[blank_1]] you ever tried sushi? 2) I [[blank_2]] my keys, so I can’t open the door. 3) We [[blank_3]] here since 2022.",
+              "content": {
+                "text_template": "1) [[blank_1]] you ever tried sushi? 2) I [[blank_2]] my keys, so I can’t open the door. 3) We [[blank_3]] here since 2022.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "Have"
+                    ],
+                    "options": [
+                      "Have",
+                      "Did",
+                      "Do"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "have lost"
+                    ],
+                    "options": [
+                      "lost",
+                      "have lost",
+                      "am losing"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_3",
+                    "accepted_answers": [
+                      "have lived"
+                    ],
+                    "options": [
+                      "lived",
+                      "have lived",
+                      "are living"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_present_perfect_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_present_perfect_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_present_perfect_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "present-perfect",
+              "subtopic": "participle_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the participle after has.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «She has went home, so she isn’t here now.»",
+              "content": {
+                "accepted_answers": [
+                  "She has gone home, so she isn't here now.",
+                  "She has gone home, so she is not here now."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_present_simple_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_present_simple_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_present_simple_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "present-simple",
+              "subtopic": "routine_fact__third_person_singular",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the base form and third-person singular in stable routines and facts.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) My parents [[blank_1]] in Modena. 2) My brother [[blank_2]] to school there every day.",
+              "content": {
+                "text_template": "1) My parents [[blank_1]] in Modena. 2) My brother [[blank_2]] to school there every day.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "live"
+                    ],
+                    "options": [
+                      "live",
+                      "are living",
+                      "lived"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "goes"
+                    ],
+                    "options": [
+                      "goes",
+                      "is going",
+                      "went"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_present_simple_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_present_simple_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_present_simple_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "present-simple",
+              "subtopic": "auxiliary_base_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Keep the base verb after does.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «Does Marta walks to school every day?»",
+              "content": {
+                "accepted_answers": [
+                  "Does Marta walk to school every day?"
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "routine_vs_now__contextual_form_choice",
+              "primary_skill": "grammar",
+              "learning_objective": "Distinguish a routine from what is happening today.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "Marta usually [[blank_1]] to school by bus, but today she [[blank_2]] because the buses are on strike.",
+              "content": {
+                "text_template": "Marta usually [[blank_1]] to school by bus, but today she [[blank_2]] because the buses are on strike.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "goes"
+                    ],
+                    "options": [
+                      "goes",
+                      "is going",
+                      "went"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "is cycling"
+                    ],
+                    "options": [
+                      "cycles",
+                      "is cycling",
+                      "cycled"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "present-simple-vs-present-continuous",
+              "subtopic": "permanent_vs_temporary",
+              "primary_skill": "grammar",
+              "learning_objective": "Distinguish a stable situation from a temporary one.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «My uncle works in Rome, but this month he works in Milan for a project.»",
+              "content": {
+                "accepted_answers": [
+                  "My uncle works in Rome, but this month he is working in Milan for a project."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_pronouns_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_pronouns_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_pronouns_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "pronouns",
+              "subtopic": "object_pronoun__subject_pronoun",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose subject and object pronouns from sentence position.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) Marta called [[blank_1]] after class. 2) [[blank_2]] are waiting for the bus outside.",
+              "content": {
+                "text_template": "1) Marta called [[blank_1]] after class. 2) [[blank_2]] are waiting for the bus outside.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "me"
+                    ],
+                    "options": [
+                      "I",
+                      "me",
+                      "my"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "They"
+                    ],
+                    "options": [
+                      "Them",
+                      "They",
+                      "Their"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_pronouns_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_pronouns_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_pronouns_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "pronouns",
+              "subtopic": "reflexive_reference",
+              "primary_skill": "grammar",
+              "learning_objective": "Use a reflexive form when subject and object refer to the same person.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Nessuno ha insegnato a Luca. Correggi: «He taught him to play the guitar.»",
+              "content": {
+                "accepted_answers": [
+                  "He taught himself to play the guitar."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_question_formation_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_question_formation_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_question_formation_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "question-formation",
+              "subtopic": "auxiliary_choice__be_question",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose the correct auxiliary and distinguish be questions from do-support.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) Where [[blank_1]] your sister work? 2) [[blank_2]] you ready to leave?",
+              "content": {
+                "text_template": "1) Where [[blank_1]] your sister work? 2) [[blank_2]] you ready to leave?",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "does"
+                    ],
+                    "options": [
+                      "does",
+                      "is",
+                      "did"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "Are"
+                    ],
+                    "options": [
+                      "Do",
+                      "Are",
+                      "Does"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_question_formation_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_question_formation_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_question_formation_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "question-formation",
+              "subtopic": "did_base_form_order",
+              "primary_skill": "grammar",
+              "learning_objective": "Keep correct question order and the base verb after did.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «What time did you arrived home?»",
+              "content": {
+                "accepted_answers": [
+                  "What time did you arrive home?"
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_some_any_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_some_any_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_some_any_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "some-any",
+              "subtopic": "affirmative_some__negative_any",
+              "primary_skill": "grammar",
+              "learning_objective": "Choose basic quantity words in affirmative and negative contexts.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) There are [[blank_1]] biscuits on the table. 2) We don’t have [[blank_2]] milk.",
+              "content": {
+                "text_template": "1) There are [[blank_1]] biscuits on the table. 2) We don’t have [[blank_2]] milk.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "some"
+                    ],
+                    "options": [
+                      "some",
+                      "any",
+                      "much"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "any"
+                    ],
+                    "options": [
+                      "some",
+                      "any",
+                      "many"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_some_any_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_some_any_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_some_any_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "some-any",
+              "subtopic": "negative_any_control",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the normal negative quantity form.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «We don’t have some clean glasses.»",
+              "content": {
+                "accepted_answers": [
+                  "We don't have any clean glasses.",
+                  "We do not have any clean glasses."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_superlatives_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_superlatives_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_superlatives_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "superlatives",
+              "subtopic": "short_adjective_superlative__long_adjective_superlative",
+              "primary_skill": "grammar",
+              "learning_objective": "Build superlatives with the correct form and article.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) Mount Everest is [[blank_1]] mountain in the world. 2) This is [[blank_2]] book in the series.",
+              "content": {
+                "text_template": "1) Mount Everest is [[blank_1]] mountain in the world. 2) This is [[blank_2]] book in the series.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "the highest"
+                    ],
+                    "options": [
+                      "higher",
+                      "the highest",
+                      "the most high"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "the most interesting"
+                    ],
+                    "options": [
+                      "more interesting",
+                      "the most interesting",
+                      "the interestingest"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_superlatives_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_superlatives_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_superlatives_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "superlatives",
+              "subtopic": "irregular_superlative",
+              "primary_skill": "grammar",
+              "learning_objective": "Use an irregular superlative form.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «It was the goodest day of the holiday.»",
+              "content": {
+                "accepted_answers": [
+                  "It was the best day of the holiday."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_will_a",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_will_a_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_will_a_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "will",
+              "subtopic": "prediction__offer",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the form for a prediction and an immediate offer.",
+              "difficulty": "standard",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "select_gap",
+              "prompt": "1) I think our team [[blank_1]] tomorrow. 2) Don’t worry, I [[blank_2]] you with those bags.",
+              "content": {
+                "text_template": "1) I think our team [[blank_1]] tomorrow. 2) Don’t worry, I [[blank_2]] you with those bags.",
+                "blanks": [
+                  {
+                    "key": "blank_1",
+                    "accepted_answers": [
+                      "will win"
+                    ],
+                    "options": [
+                      "will win",
+                      "is winning",
+                      "won"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  },
+                  {
+                    "key": "blank_2",
+                    "accepted_answers": [
+                      "will help"
+                    ],
+                    "options": [
+                      "will help",
+                      "am helping",
+                      "helped"
+                    ],
+                    "points": 1,
+                    "feedback": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    },
+    {
+      "client_key": "recovery_checkpoint_v1_will_b",
+      "title": "Verifica mista · Parte",
+      "description": "Una breve parte della verifica mista, senza indicazioni sulla regola da usare.",
+      "instructions": "Completa la parte senza cercare il nome della regola. Le correzioni saranno disponibili solo dopo la consegna finale.",
+      "instruction_language": "it",
+      "level": "A2",
+      "topic": "recovery-mixed-checkpoint-v1",
+      "estimated_minutes": 3,
+      "settings": {
+        "display_mode": "one_at_a_time",
+        "feedback_timing": "hidden",
+        "show_score": false,
+        "show_correct_answers": false,
+        "show_explanations": false,
+        "show_diagnostic_summary": false,
+        "allow_retry": false
+      },
+      "sections": [
+        {
+          "client_key": "recovery_checkpoint_v1_will_b_section",
+          "title": "Completa la parte",
+          "instructions": "Decidi tu quale struttura è adatta al contesto.",
+          "selection_mode": "fixed",
+          "feedback_timing": "hidden",
+          "questions": [
+            {
+              "client_key": "recovery_checkpoint_v1_will_b_question",
+              "title": "Parte",
+              "instructions": "Leggi il contesto e scegli o produci la risposta più naturale.",
+              "instruction_language": "it",
+              "level": "A2",
+              "topic": "will",
+              "subtopic": "modal_base_form",
+              "primary_skill": "grammar",
+              "learning_objective": "Use the base verb after will.",
+              "difficulty": "challenge",
+              "grading": {
+                "mode": "automatic",
+                "weight": 1,
+                "nearly_correct_multiplier": 0.5
+              },
+              "feedback": {},
+              "diagnostics": {
+                "tested_codes": [],
+                "fallback_error_code": null
+              },
+              "tags": [
+                "recovery",
+                "mixed-checkpoint-v1",
+                "transfer",
+                "unlabelled"
+              ],
+              "foundation_links": [],
+              "type": "error_correction",
+              "prompt": "Correggi: «I will to call you after class.»",
+              "content": {
+                "accepted_answers": [
+                  "I will call you after class."
+                ]
+              }
+            }
+          ],
+          "question_refs": [],
+          "pool_rules": []
+        }
+      ],
+      "tags": [
+        "recovery",
+        "mixed-checkpoint-v1",
+        "assessment-fragment",
+        "transfer"
+      ],
+      "foundation_links": []
+    }
+  ]
+}
