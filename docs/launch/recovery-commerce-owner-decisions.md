@@ -1,11 +1,22 @@
-# DECISIONS REQUIRED FROM OWNER — Recupero Debito launch
+# OWNER DECISIONS — Recupero Debito launch
 
-These items are merchant/business decisions. Engineering must not invent them. They must be resolved before the commerce branch is approved for production.
+This file records the merchant/business decisions confirmed for the launch branch. Engineering must not invent unresolved legal or fiscal facts.
 
-- **Legal seller identity** — confirm the legal person/entity that contracts with the buyer and the complete disclosure to show in Terms/Privacy.
-- **Partita IVA / fiscal status** — confirm the seller's current fiscal position and the invoice/receipt wording/process with a qualified Italian tax professional.
-- **Access duration** — define exactly how long the €39 one-time purchase grants access.
-- **Refund / withdrawal policy** — define the commercial policy without reducing statutory consumer rights; have the immediate-access/recesso wording reviewed for the actual classification of the Recovery product.
-- **Support email** — current site copy uses `consagrohades@gmail.com`; confirm it as the launch support/privacy contact or provide a replacement.
-- **Minor / guardian contracting model** — decide who is the contracting buyer when the learner is a minor and what guardian acknowledgement is required.
-- **Immediate digital access wording** — legal confirmation is required before launch. The branch uses deliberately cautious wording and records the buyer's positive action; engineering does not assert that the right of withdrawal is automatically lost in every case.
+## RESOLVED FOR LAUNCH
+
+- **Access duration** — €39 one-time purchase grants **90 days of access from first successful fulfillment**. No subscription and no automatic renewal. The commerce migration enforces `expires_at`; webhook retries for the same purchase must not extend the window.
+- **Launch refund policy** — **full refund when requested within 14 days from conclusion of the contract**, without reducing any mandatory consumer rights. Refund/recesso detail remains subject to final professional legal review for the product's exact classification.
+- **Immediate access** — buyer positively requests that access start immediately after payment, without waiting for the withdrawal period to expire, and confirms they have read the recesso/refund information. The implementation does not assert an automatic loss of statutory withdrawal rights in every case.
+- **Minor / guardian contracting model** — the contracting purchaser must be **18+**. If the learner is under 18, the purchaser must be the learner's **parent or legal guardian**. Checkout records a separate positive confirmation.
+- **Support/privacy email target** — approved target addresses are `assistenza@sbloccoinglese.com` and `privacy@sbloccoinglese.com`. **Do not publish them until the mailboxes/aliases are actually activated and tested.** Until then, the current operational contact remains `consagrohades@gmail.com`.
+
+## STILL REQUIRES OWNER / PROFESSIONAL COMPLETION BEFORE LIVE SALE
+
+1. **Legal seller identity and geographic address disclosure** — the actual contracting seller must be completed in the legal pages. Personal privacy is a hard constraint: do not casually publish a residential address or expose the seller identity in marketing surfaces. Resolve a lawful disclosure setup before live sale.
+2. **Fiscal status and fiscal-document process** — current facts supplied by the owner: Sblocco Inglese presently sells no other product; Recupero Debito is the only paid offer; checkout will be available for a maximum of 20 days; there is no subscription or continuing paid catalogue at present. The owner currently has no Partita IVA. The intended treatment is a genuinely temporary/non-habitual commercial initiative, but the legal tax classification and the exact receipt/declaration/document process must be confirmed with a qualified Italian tax professional. There is no engineering assumption that “under 30 days” is automatically occasional.
+
+## IMPLEMENTATION BOUNDARY
+
+- Do not add a fake Partita IVA, fiscal code, seller name, address, or inactive email alias.
+- Do not describe the activity to customers as “occasionale” unless a qualified professional specifically instructs that wording.
+- Do not enable another paid Sblocco Inglese product or extend Recovery sales beyond the stated temporary window without reopening the fiscal-status analysis.
