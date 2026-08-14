@@ -13,7 +13,7 @@ import SEO from '../components/SEO.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { authPath } from '../lib/safeReturnTo.js';
 import { createCheckout, loadPathwayOffers } from '../lib/pathwayCommerce.js';
-import { captureCommerceAttribution, readCommerceAttribution } from '../lib/commerceAttribution.js';
+import { readCommerceAttribution, withCommerceAttribution } from '../lib/commerceAttribution.js';
 import { RECOVERY_OFFER_ID, RECOVERY_PATHWAY } from '../config/recovery.js';
 import '../styles/learnerEditorial.css';
 
@@ -68,10 +68,8 @@ export default function RecoveryLandingPage() {
     immediateAccess: false,
   });
   const consentReady = consent.terms && consent.privacy && consent.immediateAccess;
-
-  useEffect(() => {
-    captureCommerceAttribution(location.search);
-  }, [location.search]);
+  const attribution = readCommerceAttribution(location.search);
+  const diagnosticHref = withCommerceAttribution('/test-recupero-inglese', attribution);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -89,7 +87,7 @@ export default function RecoveryLandingPage() {
 
   async function handleCheckout() {
     setError('');
-    const returnTo = `${location.pathname}#sblocca`;
+    const returnTo = withCommerceAttribution(`${location.pathname}#sblocca`, attribution);
     if (!user || !session?.access_token) {
       navigate(authPath('/login', returnTo), { state: { from: returnTo, message: 'Accedi o crea un account per continuare verso il pagamento.' } });
       return;
@@ -108,7 +106,7 @@ export default function RecoveryLandingPage() {
         offerId: RECOVERY_OFFER_ID,
         accessToken: session.access_token,
         consent: { ...consent, version: CONSENT_VERSION },
-        attribution: readCommerceAttribution(),
+        attribution,
       });
       if (!payload.url) throw new Error('Checkout non disponibile.');
       window.location.assign(payload.url);
@@ -142,7 +140,7 @@ export default function RecoveryLandingPage() {
               Inserisci la data dell’esame e il programma dato dalla scuola. Sblocco mette prima gli argomenti più importanti, riprende gli errori che si ripetono e aggiorna le priorità mentre procedi.
             </p>
             <div className="learner-form-actions">
-              <Link to="/test-recupero-inglese" className="learner-primary-button focus-ring">Fai il test gratuito <ArrowRight aria-hidden="true" size={16} /></Link>
+              <Link to={diagnosticHref} className="learner-primary-button focus-ring">Fai il test gratuito <ArrowRight aria-hidden="true" size={16} /></Link>
               <a href="#sblocca" className="learner-secondary-button focus-ring">Vedi cosa include</a>
             </div>
             <p className="recovery-sales-hero__principle"><span>Una priorità chiara, ogni volta che studi.</span> Il percorso si adatta ai risultati e ai giorni che restano.</p>
@@ -208,7 +206,7 @@ export default function RecoveryLandingPage() {
                   <p className="text-lg font-black text-ink dark:text-white">€39 — pagamento unico</p>
                   <p className="mt-1 text-sm font-bold text-ink/65 dark:text-white/65">Nessun abbonamento</p>
                 </div>
-                <Link to="/test-recupero-inglese" className="learner-primary-button focus-ring">Fai il test gratuito <ArrowRight aria-hidden="true" size={16} /></Link>
+                <Link to={diagnosticHref} className="learner-primary-button focus-ring">Fai il test gratuito <ArrowRight aria-hidden="true" size={16} /></Link>
                 {!offer?.owned ? (
                   <fieldset className="grid gap-3 rounded-2xl border border-ink/10 bg-white/60 p-4 text-left text-sm leading-6 dark:border-white/10 dark:bg-white/[0.04]">
                     <legend className="px-1 font-black text-ink dark:text-white">Conferme prima del pagamento</legend>
