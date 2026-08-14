@@ -84,15 +84,15 @@ export function recoveryFollowupCopy(score, masteryState = '') {
   }
   if (policy.band === 'insufficient') {
     return {
-      title: 'Da recuperare ancora',
-      body: 'Questa parte non è ancora abbastanza stabile. Facciamo un altro giro guidato prima di riprovare.',
+      title: 'Questa parte torna tra le priorità',
+      body: 'La regola o il tipo di errore non è ancora stabile. Il prossimo ciclo riparte con attività nuove e mirate, poi potrai verificarlo di nuovo.',
       primaryAction: policy.primaryAction,
     };
   }
   if (policy.band === 'weak') {
     return {
-      title: 'Serve ancora un po’ di lavoro',
-      body: 'La base c’è, ma il risultato non è ancora sufficiente per considerare l’argomento recuperato.',
+      title: 'Da consolidare',
+      body: 'La base c’è, ma alcuni passaggi restano instabili. Il prossimo ciclo usa pratica nuova prima di un altro controllo.',
       primaryAction: policy.primaryAction,
     };
   }
@@ -105,15 +105,15 @@ export function recoveryFollowupCopy(score, masteryState = '') {
   }
   if (policy.band === 'recovered') {
     return {
-      title: 'Argomento recuperato',
-      body: 'La verifica supera la soglia di recupero. Non serve un nuovo ciclo obbligatorio.',
+      title: 'Stabile per ora',
+      body: 'La verifica mostra che l’argomento è sufficientemente stabile. Non serve un nuovo ciclo obbligatorio, ma potrà ricomparire in controlli misti.',
       primaryAction: null,
     };
   }
   if (policy.band === 'strong') {
     return {
       title: 'Argomento consolidato',
-      body: 'Il risultato mostra un controllo forte dell’argomento. Non serve remediation.',
+      body: 'Il risultato mostra un controllo forte dell’argomento. Non serve altro lavoro obbligatorio, ma potrà ricomparire in controlli misti.',
       primaryAction: null,
     };
   }

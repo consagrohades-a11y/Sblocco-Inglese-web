@@ -11,6 +11,8 @@ import {
 import { validateExerciseBuilderJson } from '../lib/exerciseBuilderSchema.js';
 import { supabase } from '../lib/supabaseClient.js';
 import { adminButton, adminSurface } from '../styles/adminUi.js';
+import checkpointBundle from '../../content/recovery/curriculum-v2/fragments/mixed-checkpoint-v1.bundle.json';
+import checkpointManifest from '../../content/recovery/curriculum-v2/fragments/mixed-checkpoint-v1.fragments.json';
 
 const recoveryBundleModules = import.meta.glob(
   '../../content/recovery/wave-1/*.bundle.json',
@@ -372,6 +374,88 @@ export default function AdminRecoveryContent() {
     }
   }
 
+  async function publishMixedCheckpointV1() {
+    if (waveBusy) return;
+    const confirmed = window.confirm(
+      'Pubblicare il pool Verifica mista v1? Verranno pubblicate 16 micro-attività e registrati i frammenti approvati collegati alle versioni correnti.',
+    );
+    if (!confirmed) return;
+
+    setWaveBusy(true);
+    setMessage('');
+    setError('');
+    try {
+      const validation = validateExerciseBuilderJson(checkpointBundle);
+      const invalidItems = (validation.items || []).filter((item) => item.status === 'invalid');
+      if (validation.errors?.length || invalidItems.length) {
+        const detail = [...(validation.errors || []), ...invalidItems.flatMap((item) => item.errors || [])].slice(0, 5).join(' · ');
+        throw new Error(`Pool checkpoint non importabile. ${detail}`);
+      }
+
+      const hash = await contentHash({ bundle: checkpointBundle, manifest: checkpointManifest });
+      const sourceName = `recovery-mixed-checkpoint-v1:${hash}`;
+      let batch = await findExistingBatch(sourceName);
+      if (!batch) {
+        batch = await createExerciseBuilderImportBatch({
+          validation,
+          rawPayload: checkpointBundle,
+          sourceName,
+          selectedIndexes: (validation.items || [])
+            .filter((item) => ['valid', 'warning'].includes(item.status))
+            .map((item) => item.index),
+          createdBy: user?.id || null,
+        });
+      }
+
+      let items = await listExerciseBuilderImportItems(batch.id);
+      const pendingIds = items
+        .filter((item) => ['valid', 'warning'].includes(item.validation_status) && !item.promoted_entity_id)
+        .map((item) => item.id);
+      if (pendingIds.length) {
+        await promoteExerciseBuilderImportItems(batch.id, pendingIds);
+        items = await listExerciseBuilderImportItems(batch.id);
+      }
+
+      const exerciseItems = items.filter(
+        (item) => item.entity_type === 'exercise'
+          && ['valid', 'warning'].includes(item.validation_status)
+          && item.promoted_entity_id,
+      );
+      if (exerciseItems.length !== checkpointManifest.fragments.length) {
+        throw new Error(`Attesi ${checkpointManifest.fragments.length} esercizi promossi, trovati ${exerciseItems.length}.`);
+      }
+
+      for (const item of exerciseItems) {
+        const { data: exercise, error: exerciseError } = await supabase
+          .from('exercise_builder_exercises')
+          .select('status')
+          .eq('id', item.promoted_entity_id)
+          .single();
+        if (exerciseError) throw exerciseError;
+        if (exercise.status !== 'published') {
+          const { error: publishError } = await supabase.rpc('admin_set_exercise_builder_status', {
+            p_entity_type: 'exercise',
+            p_entity_id: item.promoted_entity_id,
+            p_next_status: 'published',
+          });
+          if (publishError) throw publishError;
+        }
+      }
+
+      const { data: registration, error: registrationError } = await supabase.rpc(
+        'admin_register_recovery_assessment_fragment_manifest_from_import',
+        { p_batch_id: batch.id, p_manifest: checkpointManifest },
+      );
+      if (registrationError) throw registrationError;
+
+      setMessage(`Verifica mista v1 pubblicata: ${registration?.fragment_count || 0} frammenti approvati e registrati. Il planner la userà soltanto quando il programma dello studente supera il gate di copertura.`);
+    } catch (publishError) {
+      setError(publishError.message || 'Non è stato possibile pubblicare il pool Verifica mista v1.');
+    } finally {
+      setWaveBusy(false);
+    }
+  }
+
   async function addMapping(event) {
     event.preventDefault();
     setMessage('');
@@ -487,6 +571,24 @@ export default function AdminRecoveryContent() {
 
             {error ? <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-200" role="alert">{error}</p> : null}
             {message ? <p className="mt-4 rounded-xl border border-coral/20 bg-coral/8 px-4 py-3 text-sm font-bold text-ink dark:border-[#ff8b6c]/25 dark:bg-[#ff8b6c]/8 dark:text-white">{message}</p> : null}
+          </section>
+
+          <section className={`${adminSurface.panel} mt-6 p-6`}>
+            <div className="flex flex-wrap items-start justify-between gap-5">
+              <div className="max-w-3xl">
+                <p className="text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ffad93]">Verifica mista v1</p>
+                <h2 className="mt-2 text-xl font-black text-ink dark:text-white">Pubblica il pool checkpoint approvato</h2>
+                <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">
+                  Il pool contiene 16 micro-frammenti neutrali, due forme per ciascuno di 8 argomenti. La pubblicazione usa l’Exercise Builder e registra gli ID immutabili dal manifest. Il planner crea un checkpoint solo quando almeno 4 argomenti richiesti hanno due forme fresche disponibili.
+                </p>
+              </div>
+              <button type="button" disabled={waveBusy || loading} onClick={publishMixedCheckpointV1} className={adminButton.primary}>
+                {waveBusy ? 'Operazione in corso...' : 'Pubblica Verifica mista v1'}
+              </button>
+            </div>
+            <div className="mt-4 rounded-xl border border-ink/10 bg-white/70 p-4 text-sm text-ink/70 dark:border-white/10 dark:bg-white/5 dark:text-white/65">
+              <strong className="text-ink dark:text-white">Comportamento previsto:</strong> 8 parti intercalate, 4 argomenti, circa 24 minuti, nessun feedback durante la prova, un solo tentativo e aggiornamento delle sole sessioni future.
+            </div>
           </section>
 
           <section className={`${adminSurface.panel} mt-6 p-6`}>

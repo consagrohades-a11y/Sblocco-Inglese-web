@@ -18,6 +18,7 @@ const PREFERRED_DAILY_MINUTES = Object.freeze({
 
 export const RECOVERY_PLAN_RUNTIME_PROFILE = Object.freeze({
   H30_LAUNCH: 'h30_launch',
+  H30_CHECKPOINT_V1: 'h30_checkpoint_v1',
   FULL_CURRICULUM: 'full_curriculum',
 });
 
@@ -25,6 +26,12 @@ const RECOVERY_PLAN_CAPABILITIES = Object.freeze({
   [RECOVERY_PLAN_RUNTIME_PROFILE.H30_LAUNCH]: Object.freeze({
     standaloneErrorReview: false,
     checkpoint: false,
+    intermediateMock: false,
+    finalMock: false,
+  }),
+  [RECOVERY_PLAN_RUNTIME_PROFILE.H30_CHECKPOINT_V1]: Object.freeze({
+    standaloneErrorReview: false,
+    checkpoint: true,
     intermediateMock: false,
     finalMock: false,
   }),
@@ -353,6 +360,7 @@ export function buildRecoveryPlan({
   repeatedErrors = {},
   startSequence = 1,
   runtimeProfile = RECOVERY_PLAN_RUNTIME_PROFILE.H30_LAUNCH,
+  checkpointCompleted = false,
 }) {
   const daysRemaining = daysUntilRecoveryExam(examDate, now);
   const mode = recoveryModeForDays(daysRemaining);
@@ -400,14 +408,14 @@ export function buildRecoveryPlan({
     }
   });
 
-  if (capabilities.checkpoint && mode === RECOVERY_MODE.COMPLETE) {
+  if (capabilities.checkpoint && !checkpointCompleted && mode === RECOVERY_MODE.COMPLETE) {
     const insertAt = Math.max(1, Math.min(sessions.length, Math.ceil(sessions.length * 0.55)));
     sessions.splice(insertAt, 0, fixedSession(
       0,
       'checkpoint',
       'Verifica di percorso',
-      28,
-      'Una verifica mista serve a capire quali priorità devono cambiare.',
+      24,
+      'Mescoliamo quattro argomenti del tuo programma per capire quali sono stabili e quali devono tornare tra le priorità.',
       ['verifica_mista'],
     ));
     if (capabilities.intermediateMock) {
@@ -420,14 +428,14 @@ export function buildRecoveryPlan({
         ['simulazione'],
       ));
     }
-  } else if (capabilities.checkpoint && mode === RECOVERY_MODE.INTENSIVE) {
+  } else if (capabilities.checkpoint && !checkpointCompleted && mode === RECOVERY_MODE.INTENSIVE) {
     const insertAt = Math.max(1, Math.ceil(sessions.length * 0.6));
     sessions.splice(insertAt, 0, fixedSession(
       0,
       'checkpoint',
       'Verifica di percorso',
       24,
-      'Controlliamo le strutture insieme, senza anticipare quale regola serve in ogni domanda.',
+      'Controlliamo quattro argomenti insieme, senza anticipare quale regola serve in ogni domanda.',
       ['verifica_mista'],
     ));
     if (capabilities.intermediateMock) {
@@ -440,7 +448,7 @@ export function buildRecoveryPlan({
         ['simulazione'],
       ));
     }
-  } else if (mode === RECOVERY_MODE.SOS && (capabilities.standaloneErrorReview || capabilities.checkpoint)) {
+  } else if (mode === RECOVERY_MODE.SOS && capabilities.standaloneErrorReview) {
     if (capabilities.standaloneErrorReview) {
       pushFixed(
         'error_review',
@@ -448,15 +456,6 @@ export function buildRecoveryPlan({
         15,
         'Con poco tempo rimasto riprendiamo solo gli errori che incidono di più sul programma della scuola.',
         ['errori_ricorrenti', 'pratica_mista'],
-      );
-    }
-    if (capabilities.checkpoint) {
-      pushFixed(
-        'checkpoint',
-        'Verifica mista rapida',
-        20,
-        'Una verifica breve ci aiuta a evitare di spendere tempo su parti già solide.',
-        ['verifica_mista'],
       );
     }
   }

@@ -1,0 +1,735 @@
+{
+  "schema_version": 1,
+  "manifest_id": "recovery-mixed-checkpoint-v1",
+  "status": "approved",
+  "metadata": {
+    "launch_profile": "h30_checkpoint_v1",
+    "required_distinct_topics": 4,
+    "forms_per_topic": 2,
+    "normal_budget_minutes": 24
+  },
+  "fragments": [
+    {
+      "fragment_id": "RAF-H30-CHK-01",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_a",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "cumulative_school_test",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "select_gap",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-simple-vs-present-continuous-a",
+      "metadata": {
+        "topic_keys": [
+          "present-simple-vs-present-continuous"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g1_a_1"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "present-simple-vs-present-continuous"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-02",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_b",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "cumulative_school_test",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-simple-vs-present-continuous-b",
+      "metadata": {
+        "topic_keys": [
+          "present-simple-vs-present-continuous"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g1_b_2"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_simple_vs_present_continuous_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "cumulative_school_test",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "present-simple-vs-present-continuous"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-03",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_past_continuous_a",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "cumulative_school_test",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "select_gap",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-past-continuous-a",
+      "metadata": {
+        "topic_keys": [
+          "past-continuous"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g1_b_1"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_continuous_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "past-continuous"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-04",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_past_continuous_b",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "cumulative_school_test",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "translation",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-past-continuous-b",
+      "metadata": {
+        "topic_keys": [
+          "past-continuous"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g1_b_4"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_past_continuous_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "translation_it_en",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "past-continuous"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-05",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_future_forms_a",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "cumulative_school_test",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "multiple_choice",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-future-forms-a",
+      "metadata": {
+        "topic_keys": [
+          "future-forms"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g1_a_3"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_future_forms_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "future-forms"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-06",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_future_forms_b",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "cumulative_school_test",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "multiple_choice",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-future-forms-b",
+      "metadata": {
+        "topic_keys": [
+          "future-forms"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g1_b_3"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_future_forms_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "future-forms"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-07",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_perfect_a",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "cumulative_school_test",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "translation",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-perfect-a",
+      "metadata": {
+        "topic_keys": [
+          "present-perfect"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g1_a_5"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_perfect_a_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "translation_it_en",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "present-perfect"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-08",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_present_perfect_b",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-001"
+      ],
+      "assessment_modes": [
+        "cumulative_school_test",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "translation",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-present-perfect-b",
+      "metadata": {
+        "topic_keys": [
+          "present-perfect"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g1_b_5"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_present_perfect_b_question",
+          "outcome_id": "RY2-GRAM-001",
+          "assessment_mode": "translation_it_en",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "present-perfect"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-09",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_question_formation_a",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-002"
+      ],
+      "assessment_modes": [
+        "error_correction",
+        "mixed_grammar",
+        "sentence_building",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "word_order",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-question-formation-a",
+      "metadata": {
+        "topic_keys": [
+          "question-formation"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g2_a_1"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_question_formation_a_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "sentence_building",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "question-formation"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-10",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_question_formation_b",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-002"
+      ],
+      "assessment_modes": [
+        "error_correction",
+        "mixed_grammar",
+        "sentence_building",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-question-formation-b",
+      "metadata": {
+        "topic_keys": [
+          "question-formation"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g2_b_5"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_question_formation_b_question",
+          "outcome_id": "RY2-GRAM-002",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "question-formation"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-11",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_countable_uncountable_a",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-countable-uncountable-a",
+      "metadata": {
+        "topic_keys": [
+          "countable-uncountable"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g5_a_3"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_countable_uncountable_a_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "countable-uncountable"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-12",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_countable_uncountable_b",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-countable-uncountable-b",
+      "metadata": {
+        "topic_keys": [
+          "countable-uncountable"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g5_b_5"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_countable_uncountable_b_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "countable-uncountable"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-13",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_comparatives_a",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "multiple_choice",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-comparatives-a",
+      "metadata": {
+        "topic_keys": [
+          "comparatives"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g5_a_2"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_comparatives_a_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "comparatives"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-14",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_comparatives_b",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "error_correction",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-comparatives-b",
+      "metadata": {
+        "topic_keys": [
+          "comparatives"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g5_b_2"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_comparatives_b_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "error_correction",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "comparatives"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-15",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_superlatives_a",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "translation",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-superlatives-a",
+      "metadata": {
+        "topic_keys": [
+          "superlatives"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g5_a_4"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_superlatives_a_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "translation_it_en",
+          "evidence_role": "primary",
+          "production_evidence": true,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "superlatives"
+          }
+        }
+      ]
+    },
+    {
+      "fragment_id": "RAF-H30-CHK-16",
+      "status": "approved",
+      "exercise_client_key": "recovery_checkpoint_v1_superlatives_b",
+      "year_profiles": [
+        2
+      ],
+      "primary_axis": "grammar_sentence_control",
+      "secondary_axes": [],
+      "outcome_ids": [
+        "RY2-GRAM-005"
+      ],
+      "assessment_modes": [
+        "error_correction",
+        "mixed_grammar",
+        "translation_it_en"
+      ],
+      "estimated_minutes": 3,
+      "difficulty_band": "A2/A2+",
+      "school_task_family": "multiple_choice",
+      "transfer_level": "transfer",
+      "content_source_policy": "curated_from_recovery_v2_unseen_original",
+      "unseen_or_mixed_context": true,
+      "form_family_key": "checkpoint-v1-superlatives-b",
+      "metadata": {
+        "topic_keys": [
+          "superlatives"
+        ],
+        "launch_profile": "h30_checkpoint_v1",
+        "source_question_client_key": "ry2_g5_b_3"
+      },
+      "question_mappings": [
+        {
+          "question_client_key": "recovery_checkpoint_v1_superlatives_b_question",
+          "outcome_id": "RY2-GRAM-005",
+          "assessment_mode": "mixed_grammar",
+          "evidence_role": "primary",
+          "production_evidence": false,
+          "evidence_weight": 1,
+          "metadata": {
+            "recovery_topic_key": "superlatives"
+          }
+        }
+      ]
+    }
+  ]
+}

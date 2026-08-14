@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, Clock3, LockKeyhole, RotateCcw } from 'lucide
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import RecoveryNav from '../components/recovery/RecoveryNav.jsx';
+import RecoveryGuidancePanel from '../components/recovery/RecoveryGuidancePanel.jsx';
 import { recoverySessionDisplayTitle, recoverySessionKind } from '../lib/recoveryPresentation.js';
 import { RECOVERY_MODE_LABELS, recoveryTopicLabel } from '../config/recovery.js';
 import {
@@ -156,6 +157,12 @@ export default function RecoveryWorkspace({ view }) {
   const topics = state?.topics || [];
   const mockSessions = sessions.filter((session) => session.session_type.startsWith('mock_'));
   const errorSession = sessions.find((session) => session.session_type === 'error_review' && !['completed', 'skipped'].includes(session.status));
+  const nextSession = sessions.find((session) => session.status === 'in_progress')
+    || sessions.find((session) => session.status === 'available');
+  const latestCheckpointUpdate = [...sessions]
+    .reverse()
+    .find((session) => session.session_type === 'checkpoint' && session.metadata?.checkpoint_plan_update_summary);
+  const hasDiagnosticEvidence = topics.some((topic) => topic.diagnostic_score != null);
 
   return (
     <div className="learner-editorial learner-workspace-page">
@@ -171,6 +178,24 @@ export default function RecoveryWorkspace({ view }) {
         {view === 'percorso' ? (
           <section className="learner-panel learner-panel--main">
             <div className="learner-panel__heading"><div><span className="learner-panel__eyebrow">Piano attuale</span><h2>{sessions.length} sessioni</h2></div></div>
+            <RecoveryGuidancePanel concept="plan-reveal" title="Come abbiamo costruito il piano?">
+              <p>Abbiamo incrociato {hasDiagnosticEvidence ? 'il risultato della diagnostica, ' : ''}gli argomenti indicati nel programma scolastico e la data della prova. L’ordine può cambiare soltanto quando nuovi risultati mostrano una priorità diversa.</p>
+            </RecoveryGuidancePanel>
+            <div className="learner-plan-update">
+              <CheckCircle2 size={17} aria-hidden="true" />
+              <span><strong>Che cosa mostra:</strong> l’ordine consigliato del lavoro futuro. <strong>Perché:</strong> combina {hasDiagnosticEvidence ? 'diagnostica, ' : ''}programma scolastico e tempo rimasto. <strong>Dopo:</strong> ogni verifica può confermare l’ordine o aggiornarlo con una spiegazione.</span>
+            </div>
+            {latestCheckpointUpdate ? (
+              <div className="learner-plan-update" role="status">
+                <RotateCcw size={17} aria-hidden="true" />
+                <span><strong>Piano aggiornato dopo la verifica mista.</strong> {latestCheckpointUpdate.metadata.checkpoint_plan_update_summary.changedMessage}</span>
+              </div>
+            ) : null}
+            {nextSession ? (
+              <div className="learner-form-actions" style={{ margin: '1rem 0' }}>
+                <Link to={`/recupero-debito/sessione/${nextSession.id}`} className="sblocco-learning-action focus-ring">Continua da dove avevi lasciato <ArrowRight size={16} /></Link>
+              </div>
+            ) : null}
             <ol className="learner-list">
               {sessions.map((session) => (
                 <li className="learner-list__row" key={session.id}>
