@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const migration = readFileSync('supabase/migrations/20260812134712_recovery_readiness_v2.sql', 'utf8');
+const migration = readFileSync('supabase/migrations/20260812134712_recovery_readiness_v2.sql', 'utf8')
+  .replace(/\r\n/g, '\n');
 const api = readFileSync('src/lib/recoveryApi.js', 'utf8');
 const report = readFileSync('src/pages/RecoveryReadiness.jsx', 'utf8');
 const dashboard = readFileSync('src/pages/LearnerHome.jsx', 'utf8');

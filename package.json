@@ -26,7 +26,7 @@
     "validate:pathways": "node scripts/validate-pathway-system.mjs",
     "validate:interview": "node scripts/validate-interview-landing.mjs",
     "validate:commerce": "node scripts/validate-stripe-commerce.mjs",
-    "validate:recovery": "node scripts/validate-recovery-plan.mjs",
+    "validate:recovery": "node scripts/validate-recovery-plan.mjs && node scripts/validate-recovery-launch-runtime-p0.mjs",
     "validate:recovery-mastery": "node scripts/validate-recovery-mastery.mjs",
     "validate:recovery-remediation": "node scripts/validate-recovery-topic-remediation.mjs",
     "validate:recovery-readiness": "node scripts/validate-recovery-readiness.mjs",
