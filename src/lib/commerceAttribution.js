@@ -1,4 +1,3 @@
-const STORAGE_KEY = 'sblocco_commerce_attribution_v1';
 const ATTRIBUTION_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
 const MAX_VALUE_LENGTH = 100;
 
@@ -17,34 +16,28 @@ export function sanitizeCommerceAttribution(value) {
   }, {});
 }
 
-export function readCommerceAttribution() {
-  if (typeof window === 'undefined') return {};
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    return stored ? sanitizeCommerceAttribution(JSON.parse(stored)) : {};
-  } catch {
-    return {};
-  }
+export function readCommerceAttribution(search = '') {
+  const params = new URLSearchParams(search);
+  return ATTRIBUTION_KEYS.reduce((result, key) => {
+    const sanitized = sanitizeAttributionValue(params.get(key));
+    if (sanitized) result[key] = sanitized;
+    return result;
+  }, {});
 }
 
-export function captureCommerceAttribution(search = '') {
-  if (typeof window === 'undefined') return {};
-  const current = readCommerceAttribution();
-  const params = new URLSearchParams(search || window.location.search);
-  const next = { ...current };
+export function withCommerceAttribution(path, attribution) {
+  const safe = sanitizeCommerceAttribution(attribution);
+  if (!Object.keys(safe).length) return path;
 
-  for (const key of ATTRIBUTION_KEYS) {
-    if (!params.has(key)) continue;
-    const sanitized = sanitizeAttributionValue(params.get(key));
-    if (sanitized) next[key] = sanitized;
-  }
-
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-  } catch {
-    // Attribution is optional and must never interrupt the buyer journey.
-  }
-  return next;
+  const hashIndex = path.indexOf('#');
+  const hash = hashIndex >= 0 ? path.slice(hashIndex) : '';
+  const withoutHash = hashIndex >= 0 ? path.slice(0, hashIndex) : path;
+  const queryIndex = withoutHash.indexOf('?');
+  const pathname = queryIndex >= 0 ? withoutHash.slice(0, queryIndex) : withoutHash;
+  const params = new URLSearchParams(queryIndex >= 0 ? withoutHash.slice(queryIndex + 1) : '');
+  for (const [key, value] of Object.entries(safe)) params.set(key, value);
+  const query = params.toString();
+  return `${pathname}${query ? `?${query}` : ''}${hash}`;
 }
 
 export const COMMERCE_ATTRIBUTION_MAX_LENGTH = MAX_VALUE_LENGTH;
