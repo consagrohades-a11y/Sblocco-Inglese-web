@@ -3,7 +3,7 @@ import { authenticateRequest, getSupabaseAdmin, ServerConfigurationError } from 
 import { getStripe } from '../../server/stripe/client.js';
 import { resolveOffer } from '../../server/stripe/offers.js';
 
-const RECOVERY_CONSENT_VERSION = 'recovery-checkout-2026-08-14-v1';
+const RECOVERY_CONSENT_VERSION = 'recovery-checkout-2026-08-14-v2';
 const ATTRIBUTION_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
 const ATTRIBUTION_MAX_LENGTH = 100;
 
@@ -22,6 +22,7 @@ function validateRecoveryConsent(input) {
   return input.terms === true
     && input.privacy === true
     && input.immediateAccess === true
+    && input.adultPurchaser === true
     && input.version === RECOVERY_CONSENT_VERSION;
 }
 
@@ -54,13 +55,15 @@ export default async function handler(request, response) {
     const supabase = getSupabaseAdmin();
     const { data: entitlement, error: entitlementError } = await supabase
       .from('user_entitlements')
-      .select('id')
+      .select('id, expires_at')
       .eq('user_id', auth.user.id)
       .eq('offer_id', offer.id)
       .eq('status', 'active')
       .maybeSingle();
     if (entitlementError) throw entitlementError;
-    if (entitlement) return sendJson(response, 409, { error: 'Possiedi già questo percorso.', code: 'already_owned' });
+    const ownsActiveEntitlement = entitlement
+      && (!entitlement.expires_at || new Date(entitlement.expires_at).getTime() > Date.now());
+    if (ownsActiveEntitlement) return sendJson(response, 409, { error: 'Possiedi già questo percorso.', code: 'already_owned' });
 
     const origin = requestOrigin(request);
     const stripe = getStripe();
@@ -89,6 +92,7 @@ export default async function handler(request, response) {
               consent_terms: 'true',
               consent_privacy: 'true',
               consent_immediate_access: 'true',
+              consent_adult_purchaser: 'true',
               consent_version: RECOVERY_CONSENT_VERSION,
               consent_recorded_at: consentRecordedAt,
               ...attribution,
