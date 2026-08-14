@@ -446,7 +446,7 @@ export default function AdminRecoveryContent() {
       }
 
       const { data: registration, error: registrationError } = await supabase.rpc(
-        'admin_register_recovery_assessment_fragment_manifest_from_import',
+        'admin_register_recovery_checkpoint_manifest',
         { p_batch_id: batch.id, p_manifest: checkpointManifest },
       );
       if (registrationError) throw registrationError;
