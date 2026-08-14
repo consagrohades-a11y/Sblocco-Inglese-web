@@ -208,26 +208,18 @@ const topicSpecs = {
   },
 };
 
-function collectReadyTopics(value, out = new Set()) {
-  if (Array.isArray(value)) {
-    value.forEach((item) => collectReadyTopics(item, out));
-    return out;
-  }
-  if (!value || typeof value !== 'object') return out;
-  if (typeof value.topic_key === 'string' && value.runtime_status === 'ready-for-content') out.add(value.topic_key);
-  Object.values(value).forEach((item) => collectReadyTopics(item, out));
-  return out;
-}
-
 const liveCurriculum = JSON.parse(fs.readFileSync(curriculumPath, 'utf8'));
-const liveTopics = [...collectReadyTopics(liveCurriculum)].sort();
+const liveTopics = (liveCurriculum.topics || [])
+  .filter((topic) => topic?.runtime_status === 'ready-for-content')
+  .map((topic) => topic.key)
+  .filter(Boolean)
+  .sort();
 const supportedTopics = Object.keys(topicSpecs).sort();
 assert.deepEqual(supportedTopics, liveTopics, 'Checkpoint topic specs must exactly cover the current live Recovery topic catalogue.');
 assert.deepEqual(Object.keys(outcomeMap).sort(), liveTopics, 'Every live topic needs an existing Curriculum-v2 evidence mapping.');
 
 function genericQuestionBase(topicKey, formKey, spec) {
-  const suffix = formKey.toLowerCase();
-  const clientKey = `recovery_checkpoint_v1_${topicKey.replaceAll('-', '_')}_${suffix}_question`;
+  const clientKey = `recovery_checkpoint_v1_${topicKey.replaceAll('-', '_')}_${formKey.toLowerCase()}_question`;
   const common = {
     client_key: clientKey,
     title: 'Parte',
