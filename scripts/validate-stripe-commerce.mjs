@@ -158,6 +158,7 @@ assert.match(recoveryAccessMigration, /grant execute on function public\.fulfill
 
 assert.match(recoveryLanding, /€39 — pagamento unico/);
 assert.match(recoveryLanding, /Nessun abbonamento · Accesso per 90 giorni dall’acquisto/);
+assert.match(recoveryLanding, /recovery-checkout-2026-08-14-v2/);
 assert.match(recoveryLanding, /Conferme prima del pagamento/);
 assert.match(recoveryLanding, /adultPurchaser/);
 assert.match(recoveryLanding, /genitore o tutore legale/);
