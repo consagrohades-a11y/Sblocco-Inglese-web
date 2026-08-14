@@ -5,9 +5,10 @@ const lastUpdated = '14 agosto 2026';
 
 const ownerDetails = [
   brand,
-  `Email attualmente indicata: ${contactEmail}`,
+  `Contatto operativo attuale: ${contactEmail}`,
   `Sito web: ${siteUrl}`,
-  'DECISIONE RICHIESTA PRIMA DELLA PUBBLICAZIONE: completare identità legale del venditore/titolare e dati fiscali applicabili.',
+  'DA COMPLETARE PRIMA DELLA MESSA IN VENDITA: identità legale del venditore/titolare e indirizzo geografico da pubblicare, con la privacy personale come vincolo operativo.',
+  'DA CONFERMARE CON UN PROFESSIONISTA FISCALE: inquadramento dell’iniziativa commerciale temporanea e processo di documentazione/dichiarazione dei corrispettivi.',
 ];
 
 export const legalPages = {
@@ -16,7 +17,7 @@ export const legalPages = {
     description: 'Termini e condizioni per i prodotti e servizi digitali di Sblocco Inglese.',
     updated: lastUpdated,
     intro: [
-      'Questa versione descrive il flusso digitale attuale di Sblocco Inglese e, in particolare, Recupero Debito Inglese. Le parti contrassegnate come decisioni richieste devono essere completate dal titolare prima della pubblicazione in produzione.',
+      'Questa versione descrive il flusso digitale attuale di Sblocco Inglese e, in particolare, Recupero Debito Inglese. Restano da completare prima della messa in vendita i dati identificativi del venditore e l’inquadramento fiscale/documentale applicabile.',
       'Prima di completare un acquisto, l’utente deve poter leggere questi Termini, la Privacy Policy e le informazioni sul diritto di recesso applicabili al prodotto acquistato.',
     ],
     sections: [
@@ -24,7 +25,7 @@ export const legalPages = {
         title: '1. Venditore e contatti',
         paragraphs: [
           'Il sito e il prodotto sono presentati con il marchio Sblocco Inglese.',
-          'L’identità legale completa del soggetto che conclude il contratto con il cliente e i dati fiscali applicabili non vengono inventati in questa bozza tecnica e devono essere confermati prima della messa in vendita.',
+          'L’identità legale completa del soggetto che conclude il contratto con il cliente, l’indirizzo geografico da pubblicare e i dati fiscali applicabili non vengono inventati in questa bozza tecnica e devono essere completati prima della messa in vendita.',
         ],
         details: ownerDetails,
       },
@@ -46,7 +47,7 @@ export const legalPages = {
       {
         title: '4. Prezzo e pagamento',
         paragraphs: [
-          'Il prezzo di lancio mostrato per Recupero Debito Inglese è €39 con pagamento unico. Non è un abbonamento.',
+          'Il prezzo di lancio mostrato per Recupero Debito Inglese è €39 con pagamento unico. Non è un abbonamento e non prevede rinnovo automatico.',
           'Il pagamento viene effettuato tramite Stripe Hosted Checkout. I dati completi della carta non vengono raccolti dal modulo di pagamento di Sblocco Inglese; il pagamento è gestito da Stripe secondo le condizioni applicabili al suo servizio.',
           'Il browser non determina il prezzo o il tipo di accesso: l’offerta e il prezzo utilizzati dal Checkout vengono risolti dal server.',
         ],
@@ -59,29 +60,32 @@ export const legalPages = {
         ],
       },
       {
-        title: '6. Durata dell’accesso — decisione richiesta',
+        title: '6. Durata dell’accesso',
         paragraphs: [
-          'La durata esatta dell’accesso acquistato con €39 deve essere definita dal titolare e indicata chiaramente prima dell’acquisto. Questa bozza non stabilisce una durata per conto del venditore.',
+          'L’acquisto di Recupero Debito Inglese concede accesso al percorso per 90 giorni dalla prima attivazione conseguente al pagamento riuscito.',
+          'Il pagamento è una tantum: allo scadere dei 90 giorni l’accesso termina senza rinnovo automatico e senza nuovi addebiti.',
         ],
       },
       {
-        title: '7. Accesso immediato e diritto di recesso — conferma legale richiesta',
+        title: '7. Accesso immediato e diritto di recesso',
         paragraphs: [
-          'Il flusso di acquisto richiede una scelta positiva e separata con cui il cliente chiede l’avvio dell’accesso digitale subito dopo il pagamento e conferma di aver compreso che l’avvio immediato può incidere sul diritto di recesso nei casi e nei limiti previsti dalla legge.',
-          'La qualificazione giuridica esatta del prodotto e la formulazione definitiva sulle conseguenze del recesso devono essere confermate dal titolare con un professionista competente prima della pubblicazione. Questa pagina non presume che il diritto di recesso venga automaticamente meno in ogni caso.',
+          'Prima del Checkout, il cliente deve chiedere espressamente che l’accesso digitale inizi subito dopo il pagamento, senza attendere la scadenza del periodo di recesso, e confermare di aver letto le informazioni sul recesso e sulla politica di rimborso.',
+          'La politica commerciale di rimborso prevista per questo lancio non limita eventuali diritti inderogabili riconosciuti al consumatore dalla normativa applicabile. La qualificazione giuridica definitiva del servizio e la formulazione di dettaglio sul recesso devono comunque essere verificate prima della messa in vendita.',
         ],
       },
       {
-        title: '8. Rimborsi — decisione richiesta',
+        title: '8. Politica di rimborso di lancio',
         paragraphs: [
-          'La politica commerciale sui rimborsi non è definita in questa bozza. Deve essere stabilita dal titolare senza limitare i diritti inderogabili riconosciuti al consumatore dalla normativa applicabile.',
+          'Per Recupero Debito Inglese viene riconosciuto un rimborso integrale del prezzo pagato quando la richiesta viene inviata entro 14 giorni dalla conclusione del contratto.',
+          `La richiesta può essere inviata a ${contactEmail}, indicando l’indirizzo email dell’account usato per l’acquisto e le informazioni necessarie a identificare l’ordine. Questa politica commerciale non limita eventuali diritti inderogabili previsti dalla legge.`,
         ],
       },
       {
-        title: '9. Studenti minorenni — decisione richiesta',
+        title: '9. Studenti minorenni e acquirente',
         paragraphs: [
-          'Recupero Debito Inglese è rivolto anche a studenti delle scuole superiori e può quindi essere utilizzato da persone minorenni.',
-          'Prima della vendita deve essere definito chi conclude il contratto quando lo studente è minorenne e quale conferma del genitore o di chi esercita la responsabilità genitoriale è richiesta. Questa bozza non sostituisce tale decisione.',
+          'Recupero Debito Inglese può essere utilizzato da studenti delle scuole superiori, inclusi studenti minorenni.',
+          'Il soggetto che conclude l’acquisto deve avere almeno 18 anni. Se il percorso è destinato a uno studente minorenne, l’acquirente deve essere il genitore o tutore legale che effettua l’acquisto per il minore.',
+          'Prima del Checkout viene richiesta una conferma positiva separata relativa alla maggiore età dell’acquirente e, quando applicabile, al ruolo di genitore o tutore legale.',
         ],
       },
       {
@@ -101,7 +105,7 @@ export const legalPages = {
       {
         title: '12. Contatti',
         paragraphs: [
-          `L’indirizzo attualmente indicato per le richieste relative al servizio è ${contactEmail}. Il titolare deve confermare che questo sia l’indirizzo di assistenza da pubblicare al lancio.`,
+          `L’indirizzo operativo attualmente utilizzato per assistenza, richieste di rimborso e comunicazioni relative al servizio è ${contactEmail}. Gli indirizzi di dominio dedicati verranno pubblicati solo dopo la loro effettiva attivazione.`,
         ],
       },
     ],
@@ -111,13 +115,13 @@ export const legalPages = {
     description: 'Informativa privacy per il sito e la piattaforma Sblocco Inglese.',
     updated: lastUpdated,
     intro: [
-      'Questa informativa descrive le categorie di dati trattate dal flusso digitale attuale di Sblocco Inglese. L’identità legale completa del titolare del trattamento e i relativi dati di contatto devono essere confermati prima della pubblicazione in produzione.',
+      'Questa informativa descrive le categorie di dati trattate dal flusso digitale attuale di Sblocco Inglese. L’identità legale completa del titolare del trattamento e l’indirizzo geografico da pubblicare devono essere completati prima della messa in vendita.',
     ],
     sections: [
       {
         title: '1. Titolare del trattamento',
         paragraphs: [
-          'Il servizio è presentato con il marchio Sblocco Inglese. La denominazione legale completa del titolare del trattamento deve essere inserita e verificata dal titolare prima del lancio.',
+          'Il servizio è presentato con il marchio Sblocco Inglese. La denominazione legale completa del titolare del trattamento e gli ulteriori dati identificativi richiesti devono essere inseriti e verificati prima del lancio commerciale.',
         ],
         details: ownerDetails,
       },
@@ -130,6 +134,7 @@ export const legalPages = {
           'informazioni inserite per organizzare il percorso, come anno scolastico, data dell’esame e argomenti del programma della scuola',
           'stato del percorso, attività svolte, risultati delle verifiche ed errori necessari a fornire la funzione didattica richiesta',
           'dati relativi all’ordine e allo stato del pagamento, come identificativi Stripe, importo, valuta e stato di fulfillment',
+          'conferme registrate al momento del Checkout, inclusa la versione delle condizioni accettate e l’orario della registrazione',
           'parametri di campagna UTM limitati a source, medium, campaign e content quando presenti nel percorso di acquisto',
           'dati tecnici e di sicurezza necessari a fornire il sito, autenticare l’utente e diagnosticare errori del servizio',
         ],
@@ -146,7 +151,8 @@ export const legalPages = {
           'costruire e mostrare il percorso richiesto sulla base delle informazioni scolastiche inserite',
           'erogare esercizi, verifiche e recupero mirato',
           'gestire il pagamento, registrare l’acquisto e attribuire l’accesso',
-          'assistere l’utente e gestire problemi tecnici o contestazioni',
+          'registrare le conferme precontrattuali richieste nel flusso di acquisto',
+          'assistere l’utente e gestire rimborsi, problemi tecnici o contestazioni',
           'proteggere il servizio da abusi e garantire sicurezza e integrità',
           'misurare, in forma limitata, la provenienza commerciale di un acquisto tramite i parametri UTM conservati con l’ordine',
           'adempiere agli obblighi legali, contabili o fiscali applicabili al titolare',
@@ -182,7 +188,8 @@ export const legalPages = {
         title: '7. Conservazione',
         paragraphs: [
           'I dati vengono conservati per il tempo necessario alle finalità per cui sono trattati e, quando applicabile, per rispettare obblighi legali, fiscali, contabili, di sicurezza o di tutela dei diritti.',
-          'Questa bozza non inventa periodi di conservazione specifici non ancora formalizzati dal titolare. I periodi applicabili alle diverse categorie devono essere definiti e documentati prima del lancio.',
+          'La durata di accesso al prodotto è di 90 giorni, ma questo non determina automaticamente la cancellazione di ogni dato allo scadere dell’accesso: alcuni dati possono dover essere conservati più a lungo per finalità legali, fiscali, contabili, di sicurezza o di tutela dei diritti.',
+          'I periodi di conservazione applicabili alle diverse categorie devono essere definiti e documentati in modo coerente con le finalità effettive del trattamento.',
         ],
       },
       {
@@ -196,14 +203,15 @@ export const legalPages = {
         title: '9. Diritti dell’interessato',
         paragraphs: [
           'L’interessato può esercitare, quando applicabili, i diritti previsti dalla normativa sulla protezione dei dati, inclusi accesso, rettifica, cancellazione, limitazione, opposizione, portabilità e revoca del consenso per i trattamenti basati sul consenso.',
-          `L’indirizzo attualmente indicato per le richieste privacy è ${contactEmail}; il titolare deve confermarlo prima del lancio. È inoltre possibile proporre reclamo al Garante per la protezione dei dati personali nei casi previsti dalla legge.`,
+          `L’indirizzo operativo attualmente utilizzato per le richieste privacy è ${contactEmail}. È inoltre possibile proporre reclamo al Garante per la protezione dei dati personali nei casi previsti dalla legge.`,
         ],
       },
       {
         title: '10. Minori',
         paragraphs: [
           'Il prodotto può essere utilizzato da studenti minorenni. Le informative destinate a minori devono essere comprensibili e proporzionate alla loro età.',
-          'Le regole sul consenso privacy dei minori non risolvono da sole la validità o formazione del contratto. Il modello contrattuale con genitore o tutore deve essere definito dal titolare prima della vendita a minorenni.',
+          'Quando lo studente è minorenne, il contratto di acquisto viene concluso dal genitore o tutore legale maggiorenne. I dati dell’acquirente e quelli dello studente possono quindi riferirsi a persone diverse e vengono trattati soltanto per le finalità pertinenti al rispettivo ruolo.',
+          'Le regole sul consenso privacy dei minori e quelle sulla formazione del contratto restano distinte e devono essere applicate in base alla specifica operazione di trattamento.',
         ],
       },
       {
@@ -247,7 +255,7 @@ export const legalPages = {
       },
       {
         title: '5. Contatti',
-        paragraphs: [`Per domande su cookie e privacy, l’indirizzo attualmente indicato è ${contactEmail}. Il titolare deve confermarlo prima del lancio.`],
+        paragraphs: [`Per domande su cookie e privacy, l’indirizzo operativo attualmente utilizzato è ${contactEmail}. Gli indirizzi di dominio dedicati verranno pubblicati solo dopo la loro effettiva attivazione.`],
       },
     ],
   },
