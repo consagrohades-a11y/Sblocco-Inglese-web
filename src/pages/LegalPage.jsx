@@ -49,7 +49,7 @@ export default function LegalPage({ page }) {
         </p>
         <div className="mt-6 max-w-4xl rounded-lg border border-coral/20 bg-blush p-5 shadow-sm">
           <p className="text-sm font-semibold leading-6 text-ink/75">
-            Queste informazioni descrivono l’uso del sito e dei servizi online di Sblocco Inglese. Per dubbi specifici, contatta l’assistenza prima di prenotare.
+            Queste informazioni descrivono l’uso del sito e dei prodotti o servizi online di Sblocco Inglese. Per dubbi specifici, contatta l’assistenza prima di completare un acquisto.
           </p>
         </div>
         <Paragraphs items={page.intro} />
@@ -77,8 +77,8 @@ export default function LegalPage({ page }) {
           ))}
         </div>
         <div className="mt-8">
-          <CTAButton href="/prenota" variant="secondary">
-            Torna alla prenotazione
+          <CTAButton href="/percorsi" variant="secondary">
+            Torna ai percorsi
           </CTAButton>
         </div>
       </section>
