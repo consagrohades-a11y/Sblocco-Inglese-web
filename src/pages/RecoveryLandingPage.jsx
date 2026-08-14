@@ -17,7 +17,7 @@ import { readCommerceAttribution, withCommerceAttribution } from '../lib/commerc
 import { RECOVERY_OFFER_ID, RECOVERY_PATHWAY } from '../config/recovery.js';
 import '../styles/learnerEditorial.css';
 
-const CONSENT_VERSION = 'recovery-checkout-2026-08-14-v1';
+const CONSENT_VERSION = 'recovery-checkout-2026-08-14-v2';
 
 const steps = [
   {
@@ -66,8 +66,9 @@ export default function RecoveryLandingPage() {
     terms: false,
     privacy: false,
     immediateAccess: false,
+    adultPurchaser: false,
   });
-  const consentReady = consent.terms && consent.privacy && consent.immediateAccess;
+  const consentReady = consent.terms && consent.privacy && consent.immediateAccess && consent.adultPurchaser;
   const attribution = readCommerceAttribution(location.search);
   const diagnosticHref = withCommerceAttribution('/test-recupero-inglese', attribution);
 
@@ -97,7 +98,7 @@ export default function RecoveryLandingPage() {
       return;
     }
     if (!consentReady) {
-      setError('Prima di continuare, conferma i tre punti richiesti per l’acquisto digitale.');
+      setError('Prima di continuare, conferma i quattro punti richiesti per l’acquisto digitale.');
       return;
     }
     setCheckoutLoading(true);
@@ -115,7 +116,7 @@ export default function RecoveryLandingPage() {
         checkoutError.code === 'already_owned'
           ? 'Hai già accesso a Recupero Debito Inglese.'
           : checkoutError.code === 'consent_required'
-            ? 'Prima di continuare, conferma i tre punti richiesti per l’acquisto digitale.'
+            ? 'Prima di continuare, conferma i quattro punti richiesti per l’acquisto digitale.'
             : checkoutError.code === 'offer_not_configured' || checkoutError.code === 'configuration_required'
               ? 'Il pagamento non è ancora configurato.'
               : 'Non è stato possibile aprire il pagamento. Riprova tra poco.',
@@ -204,7 +205,7 @@ export default function RecoveryLandingPage() {
               <div className="recovery-offer-band__closing-actions">
                 <div className="rounded-2xl border border-ink/10 bg-white/70 p-4 text-left dark:border-white/10 dark:bg-white/[0.05]">
                   <p className="text-lg font-black text-ink dark:text-white">€39 — pagamento unico</p>
-                  <p className="mt-1 text-sm font-bold text-ink/65 dark:text-white/65">Nessun abbonamento</p>
+                  <p className="mt-1 text-sm font-bold text-ink/65 dark:text-white/65">Nessun abbonamento · Accesso per 90 giorni dall’acquisto</p>
                 </div>
                 <Link to={diagnosticHref} className="learner-primary-button focus-ring">Fai il test gratuito <ArrowRight aria-hidden="true" size={16} /></Link>
                 {!offer?.owned ? (
@@ -220,7 +221,11 @@ export default function RecoveryLandingPage() {
                     </label>
                     <label className="flex items-start gap-3">
                       <input type="checkbox" checked={consent.immediateAccess} onChange={() => updateConsent('immediateAccess')} className="mt-1 h-4 w-4" />
-                      <span>Chiedo che l’accesso digitale inizi subito dopo il pagamento, prima della scadenza dell’eventuale periodo di recesso, e dichiaro di aver compreso che l’avvio immediato può incidere sul diritto di recesso nei casi e nei limiti previsti dalla legge.</span>
+                      <span>Chiedo che l’accesso digitale inizi subito dopo il pagamento, senza attendere la scadenza del periodo di recesso. Ho letto le informazioni sul diritto di recesso e sulla politica di rimborso.</span>
+                    </label>
+                    <label className="flex items-start gap-3">
+                      <input type="checkbox" checked={consent.adultPurchaser} onChange={() => updateConsent('adultPurchaser')} className="mt-1 h-4 w-4" />
+                      <span>Confermo di avere almeno 18 anni. Se il percorso è destinato a uno studente minorenne, confermo di essere il genitore o tutore legale che effettua l’acquisto.</span>
                     </label>
                   </fieldset>
                 ) : null}
@@ -237,7 +242,7 @@ export default function RecoveryLandingPage() {
                 ) : (
                   <span className="recovery-offer-band__payment-status">Pagamento in configurazione</span>
                 )}
-                <p>Pagamento unico tramite Stripe Checkout. L’accesso viene assegnato dopo la conferma del pagamento.</p>
+                <p>Pagamento unico tramite Stripe Checkout. L’accesso viene assegnato dopo la conferma del pagamento e dura 90 giorni.</p>
               </div>
               {error ? <p className="learner-error" role="alert">{error}</p> : null}
             </div>
