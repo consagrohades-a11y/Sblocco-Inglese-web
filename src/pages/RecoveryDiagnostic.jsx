@@ -1,12 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, CheckCircle2, CircleHelp, Clock3 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import {
   classifyRecoveryDiagnosticScores,
   recoveryDiagnosticQuestions,
 } from '../data/recoveryDiagnostic.js';
 import { submitRecoveryDiagnostic } from '../lib/recoveryApi.js';
+import { captureCommerceAttribution } from '../lib/commerceAttribution.js';
 import '../styles/learnerEditorial.css';
 
 const UNKNOWN_ANSWER = 'unknown';
@@ -23,6 +24,7 @@ function ResultGroup({ title, items }) {
 }
 
 export default function RecoveryDiagnostic() {
+  const location = useLocation();
   const [started, setStarted] = useState(false);
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -32,6 +34,10 @@ export default function RecoveryDiagnostic() {
   const question = recoveryDiagnosticQuestions[index];
   const selected = question ? answers[question.id] : null;
   const progress = result ? 100 : (index / recoveryDiagnosticQuestions.length) * 100;
+
+  useEffect(() => {
+    captureCommerceAttribution(location.search);
+  }, [location.search]);
 
   const groups = useMemo(() => classifyRecoveryDiagnosticScores(result?.topic_scores || {}), [result]);
   const recommended = useMemo(() => [
