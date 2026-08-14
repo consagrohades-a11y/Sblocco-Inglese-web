@@ -20,3 +20,4 @@ This file records the merchant/business decisions confirmed for the launch branc
 - Do not add a fake Partita IVA, fiscal code, seller name, address, or inactive email alias.
 - Do not describe the activity to customers as “occasionale” unless a qualified professional specifically instructs that wording.
 - Do not enable another paid Sblocco Inglese product or extend Recovery sales beyond the stated temporary window without reopening the fiscal-status analysis.
+- Before any production gate, validate the complete branch head after all policy, checkout, entitlement and regression-test changes are present together.
