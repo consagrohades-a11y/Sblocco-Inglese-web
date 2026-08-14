@@ -79,10 +79,12 @@ assert.equal(
 
 const stripeClient = readFileSync('server/stripe/client.js', 'utf8');
 const checkout = readFileSync('api/stripe/checkout.js', 'utf8');
+const offersApi = readFileSync('api/stripe/offers.js', 'utf8');
 const webhook = readFileSync('api/stripe/webhook.js', 'utf8');
 const migration = readFileSync('supabase/migrations/20260809140000_stripe_pathway_commerce.sql', 'utf8');
 const recoveryMigration = readFileSync('supabase/migrations/20260811010000_recovery_debt_foundation.sql', 'utf8');
 const checkoutContextMigration = readFileSync('supabase/migrations/20260814082000_recovery_commerce_checkout_context.sql', 'utf8');
+const recoveryAccessMigration = readFileSync('supabase/migrations/20260814173000_recovery_access_90_days.sql', 'utf8');
 const recoveryLanding = readFileSync('src/pages/RecoveryLandingPage.jsx', 'utf8');
 const recoveryDiagnostic = readFileSync('src/pages/RecoveryDiagnostic.jsx', 'utf8');
 const checkoutCancel = readFileSync('src/pages/CheckoutCancel.jsx', 'utf8');
@@ -99,7 +101,11 @@ assert.match(checkout, /consent_required/);
 assert.match(checkout, /input\.terms === true/);
 assert.match(checkout, /input\.privacy === true/);
 assert.match(checkout, /input\.immediateAccess === true/);
-assert.match(checkout, /recovery-checkout-2026-08-14-v1/);
+assert.match(checkout, /input\.adultPurchaser === true/);
+assert.match(checkout, /recovery-checkout-2026-08-14-v2/);
+assert.match(checkout, /consent_adult_purchaser: 'true'/);
+assert.match(checkout, /select\('id, expires_at'\)/);
+assert.match(checkout, /entitlement\.expires_at/);
 assert.match(checkout, /ATTRIBUTION_KEYS = \['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'\]/);
 assert.match(checkout, /slice\(0, ATTRIBUTION_MAX_LENGTH\)/);
 assert.doesNotMatch(checkout, /body\.(amount|currency|price|priceId|accessTarget)/);
@@ -111,6 +117,9 @@ assert.match(checkout, /wallet_options: \{ link: \{ display: 'never' \} \}/);
 assert.equal((checkout.match(/payment_method_types/g) || []).length, 1);
 assert.equal((checkout.match(/wallet_options/g) || []).length, 1);
 assert.equal((checkout.match(/adaptive_pricing/g) || []).length, 1);
+
+assert.match(offersApi, /select\('offer_id, expires_at'\)/);
+assert.match(offersApi, /item\.expires_at/);
 
 assert.match(webhook, /bodyParser: false/);
 assert.match(webhook, /webhooks\.constructEvent/);
@@ -141,10 +150,17 @@ assert.match(checkoutContextMigration, /add column consent_version text/);
 assert.match(checkoutContextMigration, /record_stripe_checkout_context/);
 assert.match(checkoutContextMigration, /revoke all on function public\.record_stripe_checkout_context/);
 assert.match(checkoutContextMigration, /grant execute on function public\.record_stripe_checkout_context[\s\S]*to service_role/);
+assert.match(recoveryAccessMigration, /interval '90 days'/);
+assert.match(recoveryAccessMigration, /p_offer_id = 'recupero-debito'/);
+assert.match(recoveryAccessMigration, /public\.user_entitlements\.purchase_id = excluded\.purchase_id/);
+assert.match(recoveryAccessMigration, /then public\.user_entitlements\.expires_at/);
+assert.match(recoveryAccessMigration, /grant execute on function public\.fulfill_stripe_checkout[\s\S]*to service_role/);
 
 assert.match(recoveryLanding, /€39 — pagamento unico/);
-assert.match(recoveryLanding, /Nessun abbonamento/);
+assert.match(recoveryLanding, /Nessun abbonamento · Accesso per 90 giorni dall’acquisto/);
 assert.match(recoveryLanding, /Conferme prima del pagamento/);
+assert.match(recoveryLanding, /adultPurchaser/);
+assert.match(recoveryLanding, /genitore o tutore legale/);
 assert.match(recoveryLanding, /type="checkbox"/);
 assert.match(recoveryLanding, /withCommerceAttribution/);
 assert.doesNotMatch(recoveryLanding, /due simulazioni|checkpoint misti|final readiness/i);
@@ -153,7 +169,10 @@ assert.match(checkoutCancel, /requestedPathway === 'recupero-debito'/);
 assert.match(checkoutCancel, /\/percorsi\/recupero-debito#sblocca/);
 assert.doesNotMatch(legalPages, /PayPal|Calendly|no-show|mancata presenza|slot disponibile/i);
 assert.match(legalPages, /Stripe Hosted Checkout/);
-assert.match(legalPages, /DECISIONE RICHIESTA/);
+assert.match(legalPages, /90 giorni/);
+assert.match(legalPages, /rimborso integrale/);
+assert.match(legalPages, /genitore o tutore legale/);
+assert.match(legalPages, /DA COMPLETARE PRIMA DELLA MESSA IN VENDITA/);
 
 const stripe = new Stripe('sk_test_static_validation');
 const secret = 'whsec_static_validation';
