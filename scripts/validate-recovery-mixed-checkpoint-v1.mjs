@@ -19,6 +19,27 @@ const masteryMigration = fs.readFileSync('supabase/migrations/20260812133100_rec
 const sessionPage = fs.readFileSync('src/pages/RecoverySession.jsx', 'utf8');
 const workspacePage = fs.readFileSync('src/pages/RecoveryWorkspace.jsx', 'utf8');
 
+function collectDiagnosticSourceFiles(rootPath) {
+  return fs.readdirSync(rootPath, { withFileTypes: true }).flatMap((entry) => {
+    const path = `${rootPath}/${entry.name}`;
+    if (entry.isDirectory()) return collectDiagnosticSourceFiles(path);
+    return /\.(?:json|sql)$/.test(entry.name) ? [path] : [];
+  });
+}
+
+const diagnosticTaxonomySource = [
+  ...fs.readdirSync('supabase/migrations')
+    .filter((name) => name.endsWith('.sql'))
+    .map((name) => `supabase/migrations/${name}`),
+  ...collectDiagnosticSourceFiles('content/recovery'),
+].map((path) => fs.readFileSync(path, 'utf8')).join('\n');
+
+function assertKnownDiagnosticCode(code, context) {
+  assert.equal(typeof code, 'string', `${context}: diagnostic code must be a string.`);
+  assert.ok(code.length > 0, `${context}: diagnostic code must not be empty.`);
+  assert.ok(diagnosticTaxonomySource.includes(`'${code}'`) || diagnosticTaxonomySource.includes(`\"${code}\"`), `${context}: ${code} is not present in the canonical Exercise Builder diagnostic taxonomy migrations.`);
+}
+
 const liveTopics = (curriculum.topics || [])
   .filter((topic) => topic.runtime_status === 'ready-for-content')
   .map((topic) => topic.key)
@@ -72,6 +93,14 @@ for (const fragment of manifest.fragments) {
   assert.equal(exercise.sections[0].questions.length, 1);
   const question = exercise.sections[0].questions[0];
   assert.equal(question.topic, topicKey);
+  const isGradedQuestion = question.type !== 'content_block' && question.grading?.mode !== 'none';
+  if (isGradedQuestion) {
+    const testedCodes = question.diagnostics?.tested_codes;
+    assert.ok(Array.isArray(testedCodes) && testedCodes.length >= 1, `${question.client_key}: every graded checkpoint question needs at least one tested diagnostic code.`);
+    for (const code of testedCodes) assertKnownDiagnosticCode(code, question.client_key);
+    const fallbackCode = question.diagnostics?.fallback_error_code;
+    if (fallbackCode != null) assertKnownDiagnosticCode(fallbackCode, question.client_key);
+  }
   assert.equal(decisionCount(question), fragment.metadata.scored_decisions);
   assert.ok(Array.isArray(fragment.metadata.subskill_keys) && fragment.metadata.subskill_keys.length >= 1);
   assert.doesNotMatch([

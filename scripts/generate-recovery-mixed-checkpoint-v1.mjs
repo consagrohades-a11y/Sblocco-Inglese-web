@@ -34,6 +34,45 @@ const outcomeMap = {
 const sg = (text, blanks, subskills, objective) => ({ kind: 'select_gap', text, blanks, subskills, objective });
 const ec = (prompt, answers, subskill, objective) => ({ kind: 'error_correction', prompt, answers, subskills: [subskill], objective });
 
+
+const diagnosticCodesBySubskill = {
+  'present-simple': { routine_fact: ['PRESENT_SIMPLE_USE'], third_person_singular: ['PRESENT_SIMPLE_THIRD_PERSON'], auxiliary_base_form: ['PRESENT_SIMPLE_QUESTION_AUXILIARY', 'PRESENT_SIMPLE_BASE_FORM'] },
+  'present-continuous': { action_now: ['PRESENT_CONTINUOUS_USE'], temporary_situation: ['PRESENT_CONTINUOUS_USE'], question_word_order: ['PRESENT_CONTINUOUS_QUESTION_AUXILIARY'] },
+  'present-simple-vs-present-continuous': { routine_vs_now: ['CORE_PRESENT_TENSE_CHOICE'], contextual_form_choice: ['A2_PRESENT_SIMPLE_VS_CONTINUOUS'], permanent_vs_temporary: ['TENSE_CHOICE_TEMPORARY_SITUATION'] },
+  'past-simple': { completed_past: ['A2_PAST_SIMPLE'], past_question_auxiliary: ['PAST_SIMPLE_QUESTION_DID'], negative_base_form: ['PAST_SIMPLE_NEGATIVE_BASE_FORM'] },
+  'irregular-verbs': { irregular_past: ['PAST_IRREGULAR_FORM'], irregular_participle: ['IRREGULAR_PAST_PARTICIPLE_FORM'], past_vs_participle: ['IRREGULAR_PAST_VS_PARTICIPLE'] },
+  'past-continuous': { action_in_progress_at_past_time: ['PAST_CONTINUOUS_USE'], background_action: ['PAST_CONTINUOUS_BACKGROUND'], negative_ing_form: ['PAST_CONTINUOUS_VERB_ING'] },
+  'present-perfect': { life_experience: ['PRESENT_PERFECT_EXPERIENCE'], recent_result: ['PRESENT_PERFECT_RECENT_RESULT'], unfinished_time: ['PRESENT_PERFECT_UNFINISHED_TIME'], participle_form: ['PRESENT_PERFECT_PARTICIPLE_FORM'] },
+  'past-simple-vs-present-perfect': { finished_time: ['PAST_TIME_EXPRESSIONS'], experience_without_finished_time: ['PRESENT_PERFECT_VS_PAST_SIMPLE'], finished_time_marker: ['PAST_TIME_EXPRESSIONS', 'PRESENT_PERFECT_VS_PAST_SIMPLE'] },
+  'future-forms': { instant_decision: ['FUTURE_WILL_INSTANT_DECISION'], evidence_prediction: ['FUTURE_GOING_TO_EVIDENCE'], fixed_arrangement: ['FUTURE_ARRANGEMENTS'], arrangement_form: ['FUTURE_ARRANGEMENTS', 'PRESENT_CONTINUOUS_VERB_ING'] },
+  will: { prediction: ['FUTURE_WILL'], offer: ['FUTURE_WILL'], modal_base_form: ['FUTURE_WILL_BASE_FORM'] },
+  'going-to': { prior_intention: ['FUTURE_GOING_TO'], evidence_prediction: ['FUTURE_GOING_TO_EVIDENCE'], be_going_to_form: ['FUTURE_GOING_TO_BE'] },
+  'present-continuous-future': { travel_arrangement: ['FUTURE_ARRANGEMENTS'], appointment_arrangement: ['FUTURE_ARRANGEMENTS'], arrangement_question_order: ['FUTURE_ARRANGEMENTS', 'PRESENT_CONTINUOUS_AUXILIARY'] },
+  comparatives: { short_adjective_form: ['COMPARATIVE_ER'], long_adjective_form: ['COMPARATIVE_MORE'], irregular_comparative: ['COMPARATIVE_IRREGULAR'] },
+  superlatives: { short_adjective_superlative: ['SUPERLATIVE_EST', 'SUPERLATIVE_THE'], long_adjective_superlative: ['SUPERLATIVE_MOST', 'SUPERLATIVE_THE'], irregular_superlative: ['SUPERLATIVE_IRREGULAR'] },
+  'modal-verbs': { obligation: ['MODALS_OBLIGATION_PROHIBITION'], advice: ['A2_MODALS_OBLIGATION_ADVICE'], possibility: ['MODALS_DEDUCTION'], modal_plus_base: ['CORE_CAN'] },
+  'countable-uncountable': { countable_plural: ['COUNTABILITY_BASIC'], uncountable_noun: ['COUNTABILITY'], article_quantifier_compatibility: ['COUNTABILITY_QUANTIFIERS'] },
+  'some-any': { affirmative_some: ['SOME_ANY_AFFIRMATIVE'], negative_any: ['SOME_ANY_NEGATIVE'], negative_any_control: ['SOME_ANY_NEGATIVE'] },
+  'much-many-a-lot-of': { many_plural_countable: ['MUCH_MANY'], much_uncountable: ['QUANTIFIERS_MUCH_MANY'], question_quantifier_compatibility: ['MUCH_MANY'] },
+  articles: { first_mention: ['ARTICLES_A_AN'], specific_reference: ['CORE_ARTICLES'], zero_article_institution: ['CORE_ARTICLES'] },
+  pronouns: { object_pronoun: ['CORE_OBJECT_PRONOUNS'], subject_pronoun: ['SUBJECT_PRONOUNS'], reflexive_reference: ['PRONOUN_GENERAL'] },
+  possessives: { possessive_adjective: ['POSSESSIVE_ADJECTIVES'], possessive_pronoun: ['POSSESSIVE_PRONOUN_CHOICE'], possessive_s: ['SAXON_GENITIVE'] },
+  prepositions: { time_preposition: ['TIME_PREPOSITIONS'], place_preposition: ['PREPOSITIONS_PLACE'], verb_preposition_combination: ['COLLOCATIONS_PREPOSITIONS'] },
+  'question-formation': { auxiliary_choice: ['PRESENT_SIMPLE_QUESTION_AUXILIARY'], be_question: ['BE_QUESTION_ORDER'], did_base_form_order: ['PAST_SIMPLE_QUESTION_DID'] },
+  negatives: { do_negative: ['PRESENT_SIMPLE_NEGATIVE_AUXILIARY'], be_negative: ['BE_NEGATIVE'], not_placement: ['BE_NEGATIVE'] },
+};
+
+function diagnosticCodesFor(topicKey, spec) {
+  const topicMap = diagnosticCodesBySubskill[topicKey] || {};
+  const codes = [...new Set(spec.subskills.flatMap((subskill) => {
+    const mapped = topicMap[subskill];
+    assert.ok(mapped?.length, `Missing checkpoint diagnostic mapping for ${topicKey}/${subskill}.`);
+    return mapped;
+  }))];
+  assert.ok(codes.length, `Checkpoint question ${topicKey} must test at least one diagnostic code.`);
+  return codes;
+}
+
 const topicSpecs = {
   'present-simple': {
     a: sg('1) My parents [[blank_1]] in Modena. 2) My brother [[blank_2]] to school there every day.', [
@@ -233,7 +272,7 @@ function genericQuestionBase(topicKey, formKey, spec) {
     difficulty: formKey === 'A' ? 'standard' : 'challenge',
     grading: { mode: 'automatic', weight: 1, nearly_correct_multiplier: 0.5 },
     feedback: {},
-    diagnostics: { tested_codes: [], fallback_error_code: null },
+    diagnostics: { tested_codes: diagnosticCodesFor(topicKey, spec), fallback_error_code: null },
     tags: ['recovery', 'mixed-checkpoint-v1', 'transfer', 'unlabelled'],
     foundation_links: [],
   };

@@ -28,6 +28,9 @@ const recoveryWaveBundles = Object.entries(recoveryBundleModules)
   }))
   .sort((a, b) => a.fileName.localeCompare(b.fileName, 'en'));
 
+const checkpointFragmentCount = checkpointManifest.fragments?.length || 0;
+const checkpointTopicCount = new Set((checkpointManifest.fragments || []).flatMap((fragment) => fragment.metadata?.topic_keys || [])).size;
+
 const phases = [
   ['recover', 'Recupera'],
   ['practice', 'Allenati'],
@@ -377,7 +380,7 @@ export default function AdminRecoveryContent() {
   async function publishMixedCheckpointV1() {
     if (waveBusy) return;
     const confirmed = window.confirm(
-      'Pubblicare il pool Verifica mista v1? Verranno pubblicate 16 micro-attività e registrati i frammenti approvati collegati alle versioni correnti.',
+      `Pubblicare il pool Verifica mista v1? Verranno pubblicate ${checkpointFragmentCount} micro-attività su ${checkpointTopicCount} argomenti e registrati i frammenti approvati collegati alle versioni correnti.`,
     );
     if (!confirmed) return;
 
@@ -579,7 +582,7 @@ export default function AdminRecoveryContent() {
                 <p className="text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ffad93]">Verifica mista v1</p>
                 <h2 className="mt-2 text-xl font-black text-ink dark:text-white">Pubblica il pool checkpoint approvato</h2>
                 <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">
-                  Il pool contiene 16 micro-frammenti neutrali, due forme per ciascuno di 8 argomenti. La pubblicazione usa l’Exercise Builder e registra gli ID immutabili dal manifest. Il planner crea un checkpoint solo quando almeno 4 argomenti richiesti hanno due forme fresche disponibili.
+                  Il pool contiene {checkpointFragmentCount} micro-frammenti neutrali, due forme per ciascuno di {checkpointTopicCount} argomenti. La pubblicazione usa l’Exercise Builder e registra gli ID immutabili dal manifest. Il planner crea un checkpoint solo quando almeno 4 argomenti richiesti hanno due forme fresche disponibili.
                 </p>
               </div>
               <button type="button" disabled={waveBusy || loading} onClick={publishMixedCheckpointV1} className={adminButton.primary}>
