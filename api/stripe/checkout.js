@@ -3,6 +3,28 @@ import { authenticateRequest, getSupabaseAdmin, ServerConfigurationError } from 
 import { getStripe } from '../../server/stripe/client.js';
 import { resolveOffer } from '../../server/stripe/offers.js';
 
+const RECOVERY_CONSENT_VERSION = 'recovery-checkout-2026-08-14-v1';
+const ATTRIBUTION_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
+const ATTRIBUTION_MAX_LENGTH = 100;
+
+function sanitizeAttribution(input) {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return {};
+  return ATTRIBUTION_KEYS.reduce((result, key) => {
+    if (typeof input[key] !== 'string') return result;
+    const value = input[key].replace(/[\u0000-\u001F\u007F]/g, '').trim().slice(0, ATTRIBUTION_MAX_LENGTH);
+    if (value) result[key] = value;
+    return result;
+  }, {});
+}
+
+function validateRecoveryConsent(input) {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return false;
+  return input.terms === true
+    && input.privacy === true
+    && input.immediateAccess === true
+    && input.version === RECOVERY_CONSENT_VERSION;
+}
+
 export default async function handler(request, response) {
   if (!allowMethods(request, response, ['POST'])) return;
 
@@ -18,6 +40,16 @@ export default async function handler(request, response) {
     if (!offer.configured) {
       return sendJson(response, 409, { error: 'Questo percorso non è ancora disponibile per l’acquisto.', code: 'offer_not_configured' });
     }
+
+    const recoveryConsent = offer.id === 'recupero-debito' ? body.consent : null;
+    if (offer.id === 'recupero-debito' && !validateRecoveryConsent(recoveryConsent)) {
+      return sendJson(response, 400, {
+        error: 'Le conferme richieste per l’acquisto digitale non sono complete.',
+        code: 'consent_required',
+      });
+    }
+    const attribution = offer.id === 'recupero-debito' ? sanitizeAttribution(body.attribution) : {};
+    const consentRecordedAt = offer.id === 'recupero-debito' ? new Date().toISOString() : null;
 
     const supabase = getSupabaseAdmin();
     const { data: entitlement, error: entitlementError } = await supabase
@@ -52,6 +84,16 @@ export default async function handler(request, response) {
         access_type: offer.accessType,
         access_target: offer.accessTarget,
         user_id: auth.user.id,
+        ...(offer.id === 'recupero-debito'
+          ? {
+              consent_terms: 'true',
+              consent_privacy: 'true',
+              consent_immediate_access: 'true',
+              consent_version: RECOVERY_CONSENT_VERSION,
+              consent_recorded_at: consentRecordedAt,
+              ...attribution,
+            }
+          : {}),
       },
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel?pathway=${encodeURIComponent(offer.pathway)}&offer=${encodeURIComponent(offer.id)}`,
