@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, CheckCircle2, CircleHelp, Clock3 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
@@ -7,7 +7,7 @@ import {
   recoveryDiagnosticQuestions,
 } from '../data/recoveryDiagnostic.js';
 import { submitRecoveryDiagnostic } from '../lib/recoveryApi.js';
-import { captureCommerceAttribution } from '../lib/commerceAttribution.js';
+import { readCommerceAttribution, withCommerceAttribution } from '../lib/commerceAttribution.js';
 import '../styles/learnerEditorial.css';
 
 const UNKNOWN_ANSWER = 'unknown';
@@ -34,10 +34,9 @@ export default function RecoveryDiagnostic() {
   const question = recoveryDiagnosticQuestions[index];
   const selected = question ? answers[question.id] : null;
   const progress = result ? 100 : (index / recoveryDiagnosticQuestions.length) * 100;
-
-  useEffect(() => {
-    captureCommerceAttribution(location.search);
-  }, [location.search]);
+  const attribution = readCommerceAttribution(location.search);
+  const recoveryHref = withCommerceAttribution('/percorsi/recupero-debito', attribution);
+  const recoveryCheckoutHref = withCommerceAttribution('/percorsi/recupero-debito#sblocca', attribution);
 
   const groups = useMemo(() => classifyRecoveryDiagnosticScores(result?.topic_scores || {}), [result]);
   const recommended = useMemo(() => [
@@ -101,7 +100,7 @@ export default function RecoveryDiagnostic() {
                 <button type="button" className="learner-primary-button focus-ring" onClick={() => setStarted(true)}>
                   Inizia il test <ArrowRight aria-hidden="true" size={16} />
                 </button>
-                <Link to="/percorsi/recupero-debito" className="learner-secondary-button focus-ring">Come funziona il percorso</Link>
+                <Link to={recoveryHref} className="learner-secondary-button focus-ring">Come funziona il percorso</Link>
               </div>
             </>
           ) : result ? (
@@ -130,7 +129,7 @@ export default function RecoveryDiagnostic() {
                 <CheckCircle2 aria-hidden="true" size={16} /> Il risultato è stato salvato. Se acquisti il percorso su questo dispositivo, non dovrai rifare il test.
               </div>
               <div className="learner-form-actions">
-                <Link to="/percorsi/recupero-debito#sblocca" className="learner-primary-button focus-ring">Sblocca il percorso <ArrowRight aria-hidden="true" size={16} /></Link>
+                <Link to={recoveryCheckoutHref} className="learner-primary-button focus-ring">Sblocca il percorso <ArrowRight aria-hidden="true" size={16} /></Link>
                 <Link to="/" className="learner-secondary-button focus-ring">Torna a Sblocco</Link>
               </div>
             </>
