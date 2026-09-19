@@ -538,5 +538,6 @@ export default function ExerciseQuestionRendererV2({
     return <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">Tipologia non supportata: {type || 'sconosciuta'}.</p>;
   }, [type, question, answer, onChange, disabled, attemptId, item?.id, item?.teacher_turn_reviews, result, showCorrectAnswers, showExplanations]);
 
-  return <div><ExercisePrompt type={type} prompt={question.prompt} instructions={question.instructions} />{input}<ResultPanel question={question} result={result} teacherComment={item?.teacher_comment} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} /></div>;
+  const displayType = question.content?.presentation === 'choice_set' ? 'multiple_choice_set' : type;
+  return <div><ExercisePrompt type={displayType} prompt={question.prompt} instructions={question.instructions} />{input}<ResultPanel question={question} result={result} teacherComment={item?.teacher_comment} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} /></div>;
 }
