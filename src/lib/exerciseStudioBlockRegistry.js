@@ -417,9 +417,12 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       prompt: text(block.prompt),
       instructions: text(block.instructions),
       items: (Array.isArray(block.items) ? block.items : []).map((item, index) => ({
-        key: text(item?.key) || 'item_' + (index + 1),
+        key: 'item_' + (index + 1),
         prompt: text(item?.prompt),
-        options: optionList(item?.options),
+        options: optionList(item?.options).map((option, optionIndex) => ({
+          ...option,
+          key: 'option_' + (optionIndex + 1),
+        })),
         feedback: text(item?.feedback),
       })),
     }),
@@ -452,11 +455,14 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
         title: text(block.title) || null,
         source_note: null,
         items: (block.items || []).map((item, index) => ({
-          key: text(item.key) || 'item_' + (index + 1),
+          key: 'item_' + (index + 1),
           type: 'multiple_choice',
           prompt: text(item.prompt),
           points: 1,
-          options: optionList(item.options),
+          options: optionList(item.options).map((option, optionIndex) => ({
+            ...option,
+            key: 'option_' + (optionIndex + 1),
+          })),
           feedback: text(item.feedback) || null,
         })),
       },
