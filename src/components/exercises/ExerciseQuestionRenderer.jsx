@@ -14,7 +14,7 @@ export default function ExerciseQuestionRenderer(props) {
   const question = props.item?.question || {};
 
   if (question.type === 'content_block' && question.content?.presentation === 'media') {
-    return <ExerciseMediaBlock content={question.content || {}} disabled={props.disabled} />;
+    return <ExerciseMediaBlock content={question.content || {}} prompt={question.prompt || ''} instructions={question.instructions || ''} disabled={props.disabled} />;
   }
 
   if (question.type === 'content_block' && !isStructuredEducationalContent(question.content)) {
