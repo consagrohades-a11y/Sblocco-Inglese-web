@@ -19,10 +19,18 @@ const slug = (value, fallback = 'item') => text(value)
 
 function optionList(value) {
   const source = Array.isArray(value) ? value : [];
+  const usedKeys = new Set();
   return source.map((item, index) => {
-    if (typeof item === 'string') return { key: 'option_' + (index + 1), text: item.trim(), is_correct: false };
+    const fallbackKey = 'option_' + (index + 1);
+    const requestedKey = typeof item === 'string' ? '' : text(item?.key);
+    let key = requestedKey || fallbackKey;
+    if (usedKeys.has(key)) key = fallbackKey;
+    while (usedKeys.has(key)) key += '_';
+    usedKeys.add(key);
+
+    if (typeof item === 'string') return { key, text: item.trim(), is_correct: false };
     return {
-      key: text(item?.key) || 'option_' + (index + 1),
+      key,
       text: text(item?.text),
       is_correct: Boolean(item?.is_correct),
       feedback: text(item?.feedback) || null,
@@ -311,7 +319,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       title: text(block.title), prompt: text(block.prompt), instructions: text(block.instructions),
       text_template: text(block.text_template),
       blanks: (Array.isArray(block.blanks) ? block.blanks : []).map((blank, index) => ({
-        key: text(blank?.key) || 'blank_' + (index + 1),
+        key: 'blank_' + (index + 1),
         accepted_answers: list(blank?.accepted_answers),
         points: Number(blank?.points) > 0 ? Number(blank.points) : 1,
       })),
