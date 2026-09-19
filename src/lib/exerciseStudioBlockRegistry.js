@@ -38,6 +38,27 @@ function optionList(value) {
   }).filter((item) => item.text);
 }
 
+function practiceSelectionOptionList(value) {
+  const source = Array.isArray(value) ? value : [];
+  return source.map((item, index) => {
+    if (typeof item === 'string') {
+      return {
+        key: 'option_' + (index + 1),
+        text: item.trim(),
+        vocab_bank: false,
+        vocab_kind: null,
+      };
+    }
+    const vocabBank = Boolean(item?.vocab_bank);
+    return {
+      key: text(item?.key) || 'option_' + (index + 1),
+      text: text(item?.text),
+      vocab_bank: vocabBank,
+      vocab_kind: vocabBank && ['word', 'chunk'].includes(item?.vocab_kind) ? item.vocab_kind : null,
+    };
+  }).filter((item) => item.text);
+}
+
 function normalizeRubric(value) {
   const source = Array.isArray(value) && value.length ? value : [
     { key: 'task', label: 'Consegna', max_points: 4 },
@@ -304,12 +325,18 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       prompt: text(block.prompt),
       instructions: text(block.instructions),
       selection_mode: ['single', 'multiple'].includes(block.selection_mode) ? block.selection_mode : 'multiple',
-      options: list(block.options),
+      options: practiceSelectionOptionList(block.options),
     }),
     validate: (block) => {
+      const options = practiceSelectionOptionList(block.options);
       const issues = [];
       if (!text(block.prompt)) issues.push(issue('required', 'Selection prompt is required.', 'prompt'));
-      if (list(block.options).length < 2) issues.push(issue('minimum', 'Add at least two selectable options.', 'options'));
+      if (options.length < 2) issues.push(issue('minimum', 'Add at least two selectable options.', 'options'));
+      options.forEach((option, index) => {
+        if (option.vocab_bank && !option.vocab_kind) {
+          issues.push(issue('vocab_kind', 'Choose Word or Chunk for vocab-bank item ' + (index + 1) + '.', 'options.' + index + '.vocab_kind'));
+        }
+      });
       return issues;
     },
     compile: (block, context) => commonQuestion(block, context, {
@@ -317,10 +344,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       primary_skill: text(block.primary_skill) || 'vocabulary',
       content: {
         selection_mode: block.selection_mode,
-        options: list(block.options).map((option, index) => ({
-          key: 'option_' + (index + 1),
-          text: option,
-        })),
+        options: practiceSelectionOptionList(block.options),
       },
       grading: { mode: 'ungraded', weight: 0, nearly_correct_multiplier: 0 },
     }),
