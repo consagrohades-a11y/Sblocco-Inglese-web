@@ -286,6 +286,32 @@ assert.equal(hostileTechnicalFields.document.blocks[0].sequence_index, 1);
 assert.equal(hostileTechnicalFields.document.blocks[0].options[0].key, 'option_1');
 assert.ok(hostileTechnicalFields.repairs.some((repair) => repair.code === 'removed_ai_diagnostics'));
 
+const longTranscript = Array.from({ length: 240 }, (_, index) => `Line ${index + 1}: This is a deliberately long transcript segment that must survive Studio import and normalization intact.`).join('\n\n');
+const longTranscriptImport = parseStudioImport(JSON.stringify({
+  _template: {
+    template_id: 'sblocco-listening-lesson',
+    template_version: 1,
+    authoring_contract_version: 1,
+  },
+  activity: {
+    internal_title: 'Long transcript preservation',
+    learner_title: 'Long transcript preservation',
+    level: 'B1',
+    topic: 'listening',
+    activity_type: 'listening_lesson',
+    blocks: [{
+      type: 'media',
+      title: 'Long audio',
+      source_type: 'audio',
+      url: 'https://example.com/long-audio.mp3',
+      transcript: longTranscript,
+      transcript_visibility: 'after_submit',
+    }],
+  },
+}));
+assert.equal(longTranscriptImport.document.blocks[0].transcript.length, longTranscript.length, 'Studio import must never truncate long transcripts.');
+assert.equal(longTranscriptImport.document.blocks[0].transcript, longTranscript, 'Studio transcript content must survive normalization byte-for-byte apart from surrounding whitespace.');
+
 const mediaImport = parseStudioImport(JSON.stringify({
   _template: {
     template_id: 'sblocco-listening-lesson',
