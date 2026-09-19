@@ -165,9 +165,17 @@ function sanitizeBlock(rawBlock, index, repairs) {
 
   if (type === 'practice_selection' && Array.isArray(block.options)) {
     block.options = block.options
-      .map((option) => typeof option === 'string' ? option : option?.text)
-      .filter((option) => typeof option === 'string' && option.trim())
-      .map((option) => option.trim());
+      .map((option) => {
+        if (typeof option === 'string') {
+          return { text: option.trim(), vocab_bank: false, vocab_kind: null };
+        }
+        return {
+          text: typeof option?.text === 'string' ? option.text.trim() : '',
+          vocab_bank: Boolean(option?.vocab_bank),
+          vocab_kind: option?.vocab_kind === 'chunk' ? 'chunk' : option?.vocab_kind === 'word' ? 'word' : null,
+        };
+      })
+      .filter((option) => option.text);
   }
 
   return block;
