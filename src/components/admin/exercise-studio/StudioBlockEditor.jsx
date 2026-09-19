@@ -228,18 +228,16 @@ function MediaEditor({ block, patch, activityId }) {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
 
-  async function removeUploadedFile({ clearBlock = true } = {}) {
+  async function removeUploadedFile() {
     const bucket = block.storage_bucket;
     const path = block.storage_path;
-    if (clearBlock) {
-      patch({
-        storage_bucket: '',
-        storage_path: '',
-        uploaded_file_name: '',
-        uploaded_mime_type: '',
-        uploaded_size_bytes: null,
-      });
-    }
+    patch({
+      storage_bucket: '',
+      storage_path: '',
+      uploaded_file_name: '',
+      uploaded_mime_type: '',
+      uploaded_size_bytes: null,
+    });
     if (bucket && path) {
       try {
         await deleteStudioContentMedia(bucket, path);
@@ -283,16 +281,24 @@ function MediaEditor({ block, patch, activityId }) {
   }
 
   function changeSourceType(value) {
-    if (value === 'youtube' && block.storage_path) {
-      removeUploadedFile();
+    const hadUpload = Boolean(block.storage_bucket && block.storage_path);
+    patch({
+      source_type: value,
+      ...(value === 'youtube' ? {
+        storage_bucket: '',
+        storage_path: '',
+        uploaded_file_name: '',
+        uploaded_mime_type: '',
+        uploaded_size_bytes: null,
+      } : {}),
+    });
+    if (value === 'youtube' && hadUpload) {
+      deleteStudioContentMedia(block.storage_bucket, block.storage_path).catch(() => undefined);
     }
-    patch({ source_type: value });
   }
 
   function changeUrl(value) {
-    if (value && block.storage_path) {
-      removeUploadedFile({ clearBlock: false });
-    }
+    const hadUpload = Boolean(value && block.storage_bucket && block.storage_path);
     patch({
       url: value,
       storage_bucket: value ? '' : block.storage_bucket,
@@ -301,6 +307,9 @@ function MediaEditor({ block, patch, activityId }) {
       uploaded_mime_type: value ? '' : block.uploaded_mime_type,
       uploaded_size_bytes: value ? null : block.uploaded_size_bytes,
     });
+    if (hadUpload) {
+      deleteStudioContentMedia(block.storage_bucket, block.storage_path).catch(() => undefined);
+    }
   }
 
   const hasUpload = Boolean(block.storage_path);
