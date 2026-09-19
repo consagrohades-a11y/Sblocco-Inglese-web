@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AlertTriangle,
   ArrowDown,
@@ -9,8 +9,10 @@ import {
   ChevronUp,
   Eye,
   Plus,
+  Loader2,
   Sparkles,
 } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import StudioBlockEditor from '../components/admin/exercise-studio/StudioBlockEditor.jsx';
 import StudioBlockPalette from '../components/admin/exercise-studio/StudioBlockPalette.jsx';
@@ -30,6 +32,11 @@ import {
   normalizeStudioBlock,
 } from '../lib/exerciseStudioBlockRegistry.js';
 import { preflightStudioDocument } from '../lib/exerciseStudioCompiler.js';
+import {
+  createStudioDraft,
+  loadStudioDraft,
+  saveStudioDraft,
+} from '../lib/exerciseStudioDraftApi.js';
 
 const LEVELS = ['A0', 'A1', 'A1+', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2', 'Mixed'];
 const ACTIVITY_TYPES = [
@@ -136,11 +143,20 @@ function EmptyCanvas({ onAdd }) {
 }
 
 export default function AdminExerciseStudio() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlDraftId = searchParams.get('draft');
   const [document, setDocument] = useState(starterDocument);
   const [selectedBlockId, setSelectedBlockId] = useState(null);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [metadataOpen, setMetadataOpen] = useState(true);
   const [preflightVisible, setPreflightVisible] = useState(false);
+  const [hydrated, setHydrated] = useState(!urlDraftId);
+  const [saveState, setSaveState] = useState(urlDraftId ? 'loading' : 'idle');
+  const [saveError, setSaveError] = useState('');
+  const draftIdRef = useRef(null);
+  const lastSavedRef = useRef('');
+  const saveTimerRef = useRef(null);
+  const saveChainRef = useRef(Promise.resolve());
 
   const normalized = useMemo(() => normalizeStudioDocument(document).document, [document]);
   const preflight = useMemo(() => preflightStudioDocument(document), [document]);
@@ -149,6 +165,86 @@ export default function AdminExerciseStudio() {
   const selectedIssues = selectedBlock
     ? preflight.issues.filter((item) => item.block_id === selectedBlock.id)
     : [];
+
+  useEffect(() => {
+    if (!urlDraftId) {
+      setHydrated(true);
+      return undefined;
+    }
+    if (draftIdRef.current === urlDraftId && hydrated) return undefined;
+
+    let active = true;
+    setHydrated(false);
+    setSaveState('loading');
+    setSaveError('');
+
+    loadStudioDraft(urlDraftId)
+      .then((draft) => {
+        if (!active) return;
+        draftIdRef.current = draft.id;
+        lastSavedRef.current = JSON.stringify(draft.document);
+        setDocument(draft.document);
+        setSelectedBlockId(null);
+        setHydrated(true);
+        setSaveState('saved');
+      })
+      .catch((error) => {
+        if (!active) return;
+        setSaveError(error.message || 'Could not load this draft.');
+        setHydrated(true);
+        setSaveState('error');
+      });
+
+    return () => { active = false; };
+  }, [urlDraftId]);
+
+  useEffect(() => {
+    if (!hydrated) return undefined;
+    const meaningful = Boolean(
+      document.internal_title?.trim()
+      || document.learner_title?.trim()
+      || document.topic?.trim()
+      || document.blocks?.length
+    );
+    if (!meaningful) return undefined;
+
+    if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = window.setTimeout(() => {
+      const snapshot = normalizeStudioDocument(document).document;
+      const serialized = JSON.stringify(snapshot);
+      if (serialized === lastSavedRef.current) {
+        setSaveState('saved');
+        return;
+      }
+
+      setSaveState('saving');
+      setSaveError('');
+
+      saveChainRef.current = saveChainRef.current
+        .catch(() => undefined)
+        .then(async () => {
+          let draftId = draftIdRef.current;
+          if (!draftId) {
+            const created = await createStudioDraft(snapshot);
+            draftId = created.id;
+            draftIdRef.current = draftId;
+            setSearchParams({ draft: draftId }, { replace: true });
+          } else {
+            await saveStudioDraft(draftId, snapshot);
+          }
+          lastSavedRef.current = serialized;
+          setSaveState('saved');
+        })
+        .catch((error) => {
+          setSaveError(error.message || 'Autosave failed.');
+          setSaveState('error');
+        });
+    }, 800);
+
+    return () => {
+      if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
+    };
+  }, [document, hydrated, setSearchParams]);
 
   function patchDocument(patch) {
     setDocument((current) => ({ ...current, ...patch }));
@@ -191,10 +287,17 @@ export default function AdminExerciseStudio() {
   }
 
   function startNew() {
+    if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
+    draftIdRef.current = null;
+    lastSavedRef.current = '';
+    setSearchParams({}, { replace: true });
     setDocument(starterDocument());
     setSelectedBlockId(null);
     setPaletteOpen(false);
     setPreflightVisible(false);
+    setHydrated(true);
+    setSaveState('idle');
+    setSaveError('');
   }
 
   return (
@@ -205,6 +308,11 @@ export default function AdminExerciseStudio() {
       />
 
       <div className="min-h-screen bg-[#f7f3eb] dark:bg-surface-950">
+        {saveError ? (
+          <div className="border-b border-red-200 bg-red-50 px-4 py-2 text-center text-xs font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">
+            {saveError}
+          </div>
+        ) : null}
         <header className="sticky top-0 z-30 border-b border-ink/10 bg-[#f7f3eb]/95 backdrop-blur dark:border-white/10 dark:bg-surface-950/95">
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 xl:px-6">
             <div className="flex min-w-0 items-center gap-3">
@@ -218,6 +326,14 @@ export default function AdminExerciseStudio() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
+              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-black ${
+                saveState === 'error'
+                  ? 'bg-red-100 text-red-800 dark:bg-red-300/10 dark:text-red-200'
+                  : 'bg-white text-ink/55 dark:bg-white/[0.05] dark:text-white/55'
+              }`} title={saveError || 'Draft autosave'}>
+                {saveState === 'saving' || saveState === 'loading' ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                {saveState === 'loading' ? 'Loading' : saveState === 'saving' ? 'Saving' : saveState === 'saved' ? 'Saved' : saveState === 'error' ? 'Save failed' : 'Not saved yet'}
+              </span>
               <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-black ${preflight.valid ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200' : 'bg-amber-100 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100'}`}>
                 {preflight.valid ? <CheckCircle2 className="h-3.5 w-3.5" /> : <AlertTriangle className="h-3.5 w-3.5" />}
                 {preflight.valid ? 'Ready to publish' : `${preflight.errors.length} to fix`}
