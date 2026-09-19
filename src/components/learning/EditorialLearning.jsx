@@ -189,7 +189,7 @@ export function EditorialTeachingBlock({ content = {}, prompt = '', instructions
 
       {body || content.body ? <div className="sblocco-teaching-block__body">{body || content.body}</div> : null}
 
-      {type === 'examples' && examples.length ? (
+      {['examples', 'rule', 'pattern'].includes(type) && examples.length ? (
         <div className="sblocco-teaching-examples">
           {examples.map((example, index) => <p key={`${example}-${index}`}>{example}</p>)}
         </div>
