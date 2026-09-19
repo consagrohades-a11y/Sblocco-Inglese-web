@@ -19,6 +19,7 @@ import {
 
 const TYPE_META = {
   multiple_choice: { label: 'Scegli', icon: CheckCircle2 },
+  multiple_choice_set: { label: 'Scegli', icon: ListChecks },
   multiple_select: { label: 'Scegli più risposte', icon: ListChecks },
   practice_selection: { label: 'Scegli per te', icon: ListChecks },
   gap_fill: { label: 'Completa', icon: Keyboard },
