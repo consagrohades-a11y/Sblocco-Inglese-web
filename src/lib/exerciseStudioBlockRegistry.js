@@ -219,7 +219,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
     validate: (block) => (block.turns || []).length >= 2 ? [] : [issue('required', 'Dialogue needs at least two turns.', 'turns')],
     compile: (block, context) => theoryQuestion({
       ...block,
-      body: text(block.body) || (block.turns || []).map((turn) => turn.speaker + ': ' + turn.text).join('\n'),
+      body: text(block.body),
     }, context, 'dialogue', { turns: block.turns || [] }),
   }),
   tip: definition({
