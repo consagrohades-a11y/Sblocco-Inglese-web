@@ -11,13 +11,15 @@ $$;
 insert into auth.users (id, email)
 values
   ('00000000-0000-0000-0000-000000000001', 'studio-admin@example.test'),
-  ('00000000-0000-0000-0000-000000000002', 'studio-learner@example.test')
+  ('00000000-0000-0000-0000-000000000002', 'studio-learner@example.test'),
+  ('00000000-0000-0000-0000-000000000003', 'studio-learner-2@example.test')
 on conflict (id) do nothing;
 
 insert into public.profiles (id, display_name, role, status)
 values
   ('00000000-0000-0000-0000-000000000001', 'Studio CI Admin', 'admin', 'active'),
-  ('00000000-0000-0000-0000-000000000002', 'Studio CI Learner', 'learner', 'active')
+  ('00000000-0000-0000-0000-000000000002', 'Studio CI Learner', 'learner', 'active'),
+  ('00000000-0000-0000-0000-000000000003', 'Studio CI Learner Two', 'learner', 'active')
 on conflict (id) do update
 set role = excluded.role,
     status = excluded.status,
@@ -40,6 +42,9 @@ declare
   v_mcq_id uuid;
   v_writing_id uuid;
   v_review jsonb;
+  v_group_id uuid := gen_random_uuid();
+  v_group_assign jsonb;
+  v_group_batch_id uuid;
 begin
   v_document := jsonb_build_object(
     'schema_version', 1,
@@ -382,6 +387,53 @@ begin
       and status = 'completed'
   ) then
     raise exception 'Reviewed passing Studio assignment was not completed.';
+  end if;
+
+  insert into public.learner_groups (
+    id, name, slug, status, group_type, created_by
+  ) values (
+    v_group_id, 'Studio CI Group', 'studio-ci-group', 'active', 'cohort', auth.uid()
+  );
+
+  insert into public.learner_group_members (
+    group_id, learner_id, membership_status, joined_at
+  ) values
+    (v_group_id, '00000000-0000-0000-0000-000000000002'::uuid, 'active', now()),
+    (v_group_id, '00000000-0000-0000-0000-000000000003'::uuid, 'active', now());
+
+  v_group_assign := public.admin_quick_assign_exercise_group(
+    v_group_id,
+    v_exercise_id,
+    'Studio group smoke',
+    null,
+    true,
+    'passed',
+    70,
+    1,
+    true,
+    true,
+    true,
+    true,
+    true
+  );
+
+  v_group_batch_id := (v_group_assign ->> 'batch_id')::uuid;
+
+  if coalesce((v_group_assign ->> 'assignment_count')::integer, 0) <> 2 then
+    raise exception 'Studio group Quick Assign did not create one assignment per active member.';
+  end if;
+
+  if (
+    select count(*)
+    from public.assignments assignment
+    join public.assignment_resources resource on resource.assignment_id = assignment.id
+    where assignment.group_batch_id = v_group_batch_id
+      and assignment.status = 'published'
+      and resource.resource_type = 'custom_exercise'
+      and resource.exercise_config ->> 'exercise_id' = v_exercise_id::text
+      and resource.exercise_config ->> 'exercise_version_id' = v_publish ->> 'version_id'
+  ) <> 2 then
+    raise exception 'Studio group Quick Assign did not pin the same published version for each learner.';
   end if;
 end;
 $$;
