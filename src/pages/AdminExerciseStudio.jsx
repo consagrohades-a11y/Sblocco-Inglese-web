@@ -149,6 +149,7 @@ function EmptyCanvas({ onAdd }) {
 export default function AdminExerciseStudio() {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlDraftId = searchParams.get('draft');
+  const importRequested = searchParams.get('import') === '1';
   const [document, setDocument] = useState(starterDocument);
   const [selectedBlockId, setSelectedBlockId] = useState(null);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -178,6 +179,13 @@ export default function AdminExerciseStudio() {
   const selectedIssues = selectedBlock
     ? preflight.issues.filter((item) => item.block_id === selectedBlock.id)
     : [];
+
+  useEffect(() => {
+    if (importRequested && !urlDraftId) {
+      setImportOpen(true);
+      setSearchParams({}, { replace: true });
+    }
+  }, [importRequested, urlDraftId, setSearchParams]);
 
   useEffect(() => {
     if (!urlDraftId) {
