@@ -290,10 +290,77 @@ function DialogueRoleplay({ question, answer, onChange, disabled, attemptId, att
   </div>;
 }
 
-function ReadingComprehension({ question, answer, onChange, disabled }) {
+function ReadingComprehension({
+  question,
+  answer,
+  onChange,
+  disabled,
+  result = null,
+  showCorrectAnswers = false,
+  showExplanations = false,
+}) {
   const content = question.content || {};
   const values = answer && typeof answer === 'object' && !Array.isArray(answer) ? answer : {};
+  const itemResults = Array.isArray(result?.correct_answer)
+    ? Object.fromEntries(result.correct_answer.map((item) => [item?.key, item]))
+    : {};
+
   function update(key, value) { onChange({ ...values, [key]: value }); }
+
+  if (content.presentation === 'choice_set') {
+    return (
+      <div className="grid gap-5">
+        {(content.items || []).map((choiceItem, index) => {
+          const itemResult = itemResults[choiceItem.key] || null;
+          const selectedKey = values[choiceItem.key];
+          const correctKey = typeof itemResult?.correct_answer === 'string' ? itemResult.correct_answer : null;
+
+          return (
+            <section key={choiceItem.key} className="border-t border-ink/10 pt-5 first:border-t-0 first:pt-0 dark:border-white/10">
+              <p className="text-[0.7rem] font-black uppercase tracking-[0.1em] text-orange-500">Example {index + 1}</p>
+              <p className="mt-2 text-base font-black leading-7 text-ink dark:text-white">{choiceItem.prompt}</p>
+              <div className="mt-3 grid gap-2">
+                {(choiceItem.options || []).map((option, optionIndex) => {
+                  const selected = selectedKey === option.key;
+                  const correct = disabled && showCorrectAnswers && correctKey === option.key;
+                  const incorrectSelection = disabled && itemResult && selected && correctKey && correctKey !== option.key;
+                  return (
+                    <button
+                      key={option.key}
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => update(choiceItem.key, option.key)}
+                      className={`focus-ring flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold leading-6 transition ${
+                        correct
+                          ? 'border-emerald-400 bg-emerald-50 text-emerald-950 dark:border-emerald-300/40 dark:bg-emerald-300/10 dark:text-emerald-100'
+                          : incorrectSelection
+                            ? 'border-red-300 bg-red-50 text-red-950 dark:border-red-300/30 dark:bg-red-300/10 dark:text-red-100'
+                            : selected
+                              ? 'border-orange-400 bg-orange-50 text-ink dark:border-orange-300/40 dark:bg-orange-300/10 dark:text-white'
+                              : 'border-ink/10 bg-white text-ink/80 hover:border-orange-300 dark:border-white/10 dark:bg-white/[0.035] dark:text-white/80'
+                      }`}
+                    >
+                      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-current/20 text-xs font-black">
+                        {String.fromCharCode(65 + optionIndex)}
+                      </span>
+                      <span className="min-w-0 flex-1">{option.text}</span>
+                      {correct ? <span className="shrink-0 font-black text-emerald-600 dark:text-emerald-300">✓</span> : null}
+                    </button>
+                  );
+                })}
+              </div>
+              {showExplanations && itemResult?.explanation ? (
+                <p className="mt-3 rounded-xl bg-linen/70 px-3 py-2 text-xs font-semibold leading-5 text-ink/70 dark:bg-white/[0.05] dark:text-white/70">
+                  {itemResult.explanation}
+                </p>
+              ) : null}
+            </section>
+          );
+        })}
+      </div>
+    );
+  }
+
   return <div className="grid gap-6">
     <article className="exercise-reading">
       <div className="exercise-reading__label"><BookOpen /><span>Testo di lettura</span></div>
@@ -435,7 +502,9 @@ function ResultPanel({ question, result, teacherComment, showScore, showCorrectA
     );
   }
   const status = result.status || 'unanswered';
-  const correctAnswer = formatExerciseCorrectAnswer(question, result.correct_answer);
+  const correctAnswer = question.content?.presentation === 'choice_set'
+    ? ''
+    : formatExerciseCorrectAnswer(question, result.correct_answer);
   return <ExerciseFeedbackPanel status={status} title={resultLabels[status] || status}>{status === 'pending_review' ? <p>La risposta è stata consegnata. Riceverai la valutazione dell’insegnante nella tua area studente.</p> : null}{showScore && result.max_points !== undefined && status !== 'pending_review' ? <p>Punti: <strong>{Number(result.earned_points || 0).toFixed(1)} / {Number(result.max_points || 0).toFixed(1)}</strong></p> : null}{showCorrectAnswers && correctAnswer ? <p>Risposta giusta: <strong>{correctAnswer}</strong></p> : null}{showExplanations && result.explanation ? <p>{typeof result.explanation === 'string' ? result.explanation : JSON.stringify(result.explanation)}</p> : null}{teacherComment ? <div className="mt-3 border-t border-current/15 pt-3"><p className="text-xs font-bold uppercase tracking-wide opacity-60">Commento dell’insegnante</p><p className="mt-1 whitespace-pre-wrap font-semibold">{teacherComment}</p></div> : null}</ExerciseFeedbackPanel>;
 }
 
@@ -465,9 +534,9 @@ export default function ExerciseQuestionRendererV2({
     if (type === 'written_response') return <div className="grid gap-4"><WrittenResponse question={question} answer={answer} onChange={onChange} disabled={disabled} /><RubricPreview rubric={question.content?.rubric} /></div>;
     if (type === 'dialogue_roleplay') return <DialogueRoleplay question={question} answer={answer} onChange={onChange} disabled={disabled} attemptId={attemptId} attemptQuestionId={item?.id} teacherTurnReviews={item?.teacher_turn_reviews} />;
     if (type === 'audio_response') return <AudioRecorder question={question} answer={answer} onChange={onChange} disabled={disabled} attemptId={attemptId} attemptQuestionId={item?.id} />;
-    if (type === 'reading_comprehension') return <ReadingComprehension question={question} answer={answer} onChange={onChange} disabled={disabled} />;
+    if (type === 'reading_comprehension') return <ReadingComprehension question={question} answer={answer} onChange={onChange} disabled={disabled} result={result} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} />;
     return <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">Tipologia non supportata: {type || 'sconosciuta'}.</p>;
-  }, [type, question, answer, onChange, disabled, attemptId, item?.id, item?.teacher_turn_reviews]);
+  }, [type, question, answer, onChange, disabled, attemptId, item?.id, item?.teacher_turn_reviews, result, showCorrectAnswers, showExplanations]);
 
   return <div><ExercisePrompt type={type} prompt={question.prompt} instructions={question.instructions} />{input}<ResultPanel question={question} result={result} teacherComment={item?.teacher_comment} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} /></div>;
 }
