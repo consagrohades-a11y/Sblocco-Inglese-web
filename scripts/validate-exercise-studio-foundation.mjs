@@ -236,6 +236,34 @@ assert.equal(hostileTechnicalFields.document.blocks[0].sequence_index, 1);
 assert.equal(hostileTechnicalFields.document.blocks[0].options[0].key, 'option_1');
 assert.ok(hostileTechnicalFields.repairs.some((repair) => repair.code === 'removed_ai_diagnostics'));
 
+const mediaImport = parseStudioImport(JSON.stringify({
+  _template: {
+    template_id: 'sblocco-listening-lesson',
+    template_version: 1,
+    authoring_contract_version: 1,
+  },
+  activity: {
+    internal_title: 'Media import safety',
+    learner_title: 'Media import safety',
+    level: 'A2',
+    topic: 'listening',
+    activity_type: 'listening_lesson',
+    blocks: [{
+      type: 'media',
+      title: 'Listen',
+      source_type: 'audio',
+      url: 'https://example.com/listen.mp3',
+      storage_bucket: 'ai-invented-bucket',
+      storage_path: 'ai/invented/path.mp3',
+      uploaded_file_name: 'fake.mp3',
+    }],
+  },
+}));
+assert.equal(mediaImport.document.blocks[0].url, 'https://example.com/listen.mp3');
+assert.equal(mediaImport.document.blocks[0].storage_bucket, '');
+assert.equal(mediaImport.document.blocks[0].storage_path, '');
+assert.ok(mediaImport.repairs.some((repair) => repair.field === 'blocks.0.storage_path'));
+
 const partialImport = parseStudioImport(JSON.stringify({
   _template: {
     template_id: 'sblocco-grammar-mini-course',
