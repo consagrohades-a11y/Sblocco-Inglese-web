@@ -78,6 +78,34 @@ function ListeningResult({ result, showScore, showCorrectAnswers, showExplanatio
   );
 }
 
+function youtubeVideoId(url) {
+  const value = String(url || '').trim();
+  if (!value) return '';
+  try {
+    const parsed = new URL(value);
+    if (parsed.hostname.includes('youtu.be')) return parsed.pathname.split('/').filter(Boolean)[0] || '';
+    if (parsed.hostname.includes('youtube.com')) {
+      if (parsed.pathname.startsWith('/embed/')) return parsed.pathname.split('/')[2] || '';
+      if (parsed.pathname.startsWith('/shorts/')) return parsed.pathname.split('/')[2] || '';
+      return parsed.searchParams.get('v') || '';
+    }
+  } catch {
+    return '';
+  }
+  return '';
+}
+
+function youtubeEmbedUrl(url, startSeconds, endSeconds) {
+  const id = youtubeVideoId(url);
+  if (!id) return '';
+  const params = new URLSearchParams({ rel: '0', modestbranding: '1' });
+  const start = Math.max(0, Number(startSeconds) || 0);
+  const end = Number(endSeconds) || 0;
+  if (start) params.set('start', String(Math.floor(start)));
+  if (end > start) params.set('end', String(Math.floor(end)));
+  return `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`;
+}
+
 function ListeningAudio({ audio, revealTranscript }) {
   const ref = useRef(null);
   const [signedUrl, setSignedUrl] = useState(null);
@@ -85,6 +113,10 @@ function ListeningAudio({ audio, revealTranscript }) {
   const [playCount, setPlayCount] = useState(0);
   const cycleRef = useRef(false);
   const directUrl = String(audio?.url || '').trim();
+  const mediaType = audio?.media_type || (youtubeVideoId(directUrl) ? 'youtube' : 'audio');
+  const youtubeUrl = mediaType === 'youtube'
+    ? youtubeEmbedUrl(directUrl, audio?.start_seconds, audio?.end_seconds)
+    : '';
   const maxPlays = Number.isInteger(Number(audio?.max_plays)) && Number(audio.max_plays) > 0
     ? Number(audio.max_plays)
     : null;
@@ -125,7 +157,29 @@ function ListeningAudio({ audio, revealTranscript }) {
     <section className="exercise-reading">
       <div className="exercise-reading__label"><Headphones /><span>Audio</span></div>
       {audio?.title ? <h3>{audio.title}</h3> : null}
-      {source ? (
+      {youtubeUrl ? (
+        <div className="mt-4 overflow-hidden rounded-xl border border-ink/10 bg-black dark:border-white/10">
+          <div className="aspect-video">
+            <iframe
+              src={youtubeUrl}
+              title={audio?.title || 'Listening video'}
+              className="h-full w-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      ) : source && mediaType === 'video' ? (
+        <video
+          ref={ref}
+          controls
+          preload="metadata"
+          src={source}
+          onPlay={handlePlay}
+          onEnded={handleEnded}
+          className="mt-4 w-full rounded-xl bg-black"
+        />
+      ) : source ? (
         <audio
           ref={ref}
           controls
@@ -142,7 +196,7 @@ function ListeningAudio({ audio, revealTranscript }) {
       )}
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs font-bold text-ink/60 dark:text-white/60">
         {Number(audio?.duration_seconds) > 0 ? <span>Durata: ~{Math.round(Number(audio.duration_seconds))} s</span> : null}
-        {remaining != null ? <span>Ascolti rimasti: {remaining}</span> : <span>Riascolto libero</span>}
+        {youtubeUrl ? <span>Video incorporato</span> : remaining != null ? <span>Ascolti rimasti: {remaining}</span> : <span>Riascolto libero</span>}
       </div>
       {error ? <p className="mt-3 text-xs font-bold text-red-700 dark:text-red-300">{error}</p> : null}
       {revealTranscript && audio?.transcript ? (
