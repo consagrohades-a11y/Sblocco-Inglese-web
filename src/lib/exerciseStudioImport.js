@@ -107,6 +107,11 @@ function sanitizeBlock(rawBlock, index, repairs) {
     'version_number',
     'internal_code',
     'public_id',
+    'storage_bucket',
+    'storage_path',
+    'uploaded_file_name',
+    'uploaded_mime_type',
+    'uploaded_size_bytes',
   ]) {
     if (Object.prototype.hasOwnProperty.call(block, key)) {
       delete block[key];
