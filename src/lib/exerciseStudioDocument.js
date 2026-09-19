@@ -97,10 +97,17 @@ export function normalizeStudioDocument(raw) {
   if (!text(source.slug)) repairs.push({ code: 'generated_slug', field: 'slug' });
 
   const sourceBlocks = Array.isArray(source.blocks) ? source.blocks : [];
+  const seenBlockIds = new Set();
   const blocks = sourceBlocks.map((rawBlock, index) => {
     const sourceBlock = rawBlock && typeof rawBlock === 'object' && !Array.isArray(rawBlock) ? rawBlock : {};
-    const blockId = text(sourceBlock.id) || createStudioSystemId('block');
-    if (!text(sourceBlock.id)) repairs.push({ code: 'generated_block_id', field: 'blocks.' + index + '.id' });
+    const requestedBlockId = text(sourceBlock.id);
+    let blockId = requestedBlockId || createStudioSystemId('block');
+    if (!requestedBlockId) repairs.push({ code: 'generated_block_id', field: 'blocks.' + index + '.id' });
+    if (seenBlockIds.has(blockId)) {
+      blockId = createStudioSystemId('block');
+      repairs.push({ code: 'repaired_duplicate_block_id', field: 'blocks.' + index + '.id', value: blockId });
+    }
+    seenBlockIds.add(blockId);
 
     const definition = getStudioBlockDefinition(sourceBlock.type);
     if (!definition) {
