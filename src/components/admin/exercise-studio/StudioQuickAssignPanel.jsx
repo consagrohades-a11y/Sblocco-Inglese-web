@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { CheckCircle2, Loader2, Search, X } from 'lucide-react';
 import {
+  listQuickAssignGroups,
   listQuickAssignLearners,
   quickAssignStudioExercise,
+  quickAssignStudioExerciseGroup,
 } from '../../../lib/exerciseStudioAssignmentApi.js';
 
 function toIso(localValue) {
@@ -17,10 +19,13 @@ export default function StudioQuickAssignPanel({
   onClose,
   onAssigned,
 }) {
+  const [mode, setMode] = useState('learner');
   const [learners, setLearners] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedLearnerId, setSelectedLearnerId] = useState('');
+  const [selectedGroupId, setSelectedGroupId] = useState('');
   const [deadline, setDeadline] = useState('');
   const [required, setRequired] = useState(true);
   const [completionRule, setCompletionRule] = useState('passed');
@@ -37,14 +42,15 @@ export default function StudioQuickAssignPanel({
 
   useEffect(() => {
     let active = true;
-    listQuickAssignLearners()
-      .then((items) => {
+    Promise.all([listQuickAssignLearners(), listQuickAssignGroups()])
+      .then(([learnerItems, groupItems]) => {
         if (!active) return;
-        setLearners(items);
+        setLearners(learnerItems);
+        setGroups(groupItems);
       })
       .catch((nextError) => {
         if (!active) return;
-        setError(nextError.message || 'Could not load learners.');
+        setError(nextError.message || 'Could not load assignment targets.');
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -52,46 +58,71 @@ export default function StudioQuickAssignPanel({
     return () => { active = false; };
   }, []);
 
-  const filtered = useMemo(() => {
+  const filteredLearners = useMemo(() => {
     const needle = search.trim().toLocaleLowerCase();
     if (!needle) return learners;
-    return learners.filter((learner) => {
-      const haystack = [
-        learner.display_name,
-        learner.email,
-      ].filter(Boolean).join(' ').toLocaleLowerCase();
-      return haystack.includes(needle);
-    });
+    return learners.filter((learner) => [learner.display_name, learner.email]
+      .filter(Boolean)
+      .join(' ')
+      .toLocaleLowerCase()
+      .includes(needle));
   }, [learners, search]);
 
+  const filteredGroups = useMemo(() => {
+    const needle = search.trim().toLocaleLowerCase();
+    if (!needle) return groups;
+    return groups.filter((group) => [group.name, group.description]
+      .filter(Boolean)
+      .join(' ')
+      .toLocaleLowerCase()
+      .includes(needle));
+  }, [groups, search]);
+
   const selectedLearner = learners.find((learner) => learner.id === selectedLearnerId) || null;
+  const selectedGroup = groups.find((group) => group.id === selectedGroupId) || null;
+  const hasTarget = mode === 'group' ? Boolean(selectedGroupId) : Boolean(selectedLearnerId);
+
+  function commonPayload() {
+    return {
+      exerciseId,
+      assignmentTitle: activityTitle,
+      deadlineAt: toIso(deadline),
+      required,
+      completionRule,
+      requiredScore,
+      requiredAttempts,
+      allowRetry,
+      showScore,
+      showCorrectAnswers,
+      showExplanations,
+      showDiagnosticSummary,
+    };
+  }
 
   async function assign() {
-    if (!selectedLearnerId || submitting) return;
+    if (!hasTarget || submitting) return;
     setSubmitting(true);
     setError('');
     setSuccess(null);
 
     try {
-      const result = await quickAssignStudioExercise({
-        learnerId: selectedLearnerId,
-        exerciseId,
-        assignmentTitle: activityTitle,
-        deadlineAt: toIso(deadline),
-        required,
-        completionRule,
-        requiredScore,
-        requiredAttempts,
-        allowRetry,
-        showScore,
-        showCorrectAnswers,
-        showExplanations,
-        showDiagnosticSummary,
-      });
-
-      const payload = { result, learner: selectedLearner };
-      setSuccess(payload);
-      onAssigned?.(payload);
+      if (mode === 'group') {
+        const result = await quickAssignStudioExerciseGroup({
+          ...commonPayload(),
+          groupId: selectedGroupId,
+        });
+        const payload = { result, group: selectedGroup, mode: 'group' };
+        setSuccess(payload);
+        onAssigned?.(payload);
+      } else {
+        const result = await quickAssignStudioExercise({
+          ...commonPayload(),
+          learnerId: selectedLearnerId,
+        });
+        const payload = { result, learner: selectedLearner, mode: 'learner' };
+        setSuccess(payload);
+        onAssigned?.(payload);
+      }
     } catch (nextError) {
       setError(nextError.message || 'Could not assign this activity.');
     } finally {
@@ -121,39 +152,73 @@ export default function StudioQuickAssignPanel({
               <CheckCircle2 className="h-7 w-7 text-emerald-700 dark:text-emerald-300" />
               <h3 className="mt-3 text-lg font-black text-emerald-950 dark:text-emerald-100">Assigned</h3>
               <p className="mt-1 text-sm font-semibold leading-6 text-emerald-900/75 dark:text-emerald-100/70">
-                {activityTitle} is now published in {success.learner?.display_name || success.learner?.email || 'the learner'}'s assignments.
+                {success.mode === 'group'
+                  ? `${activityTitle} was assigned to ${success.result?.assignment_count || 0} learners in ${success.group?.name || 'the group'}.`
+                  : `${activityTitle} is now in ${success.learner?.display_name || success.learner?.email || 'the learner'}'s assignments.`}
               </p>
-              <a
-                href={`/admin/learners/${success.learner?.id}/assignments/${success.result?.assignment_id}`}
-                className="focus-ring mt-4 inline-flex rounded-full bg-emerald-700 px-4 py-2.5 text-xs font-black text-white dark:bg-emerald-300 dark:text-surface-950"
-              >
-                Open assignment
-              </a>
+              {success.mode === 'learner' ? (
+                <a
+                  href={`/admin/learners/${success.learner?.id}/assignments/${success.result?.assignment_id}`}
+                  className="focus-ring mt-4 inline-flex rounded-full bg-emerald-700 px-4 py-2.5 text-xs font-black text-white dark:bg-emerald-300 dark:text-surface-950"
+                >
+                  Open assignment
+                </a>
+              ) : null}
             </div>
           ) : (
             <>
-              <section>
-                <label className="text-xs font-black uppercase tracking-[0.1em] text-ink/55 dark:text-white/55">Learner</label>
+              <div className="grid grid-cols-2 gap-1 rounded-full bg-linen p-1 dark:bg-white/[0.05]">
+                {[
+                  ['learner', 'Learner'],
+                  ['group', 'Group'],
+                ].map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => {
+                      setMode(value);
+                      setSearch('');
+                      setError('');
+                    }}
+                    className={`focus-ring rounded-full px-4 py-2 text-xs font-black transition ${
+                      mode === value
+                        ? 'bg-white text-ink shadow-sm dark:bg-orange-400 dark:text-surface-950'
+                        : 'text-ink/50 dark:text-white/50'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              <section className="mt-5">
+                <label className="text-xs font-black uppercase tracking-[0.1em] text-ink/55 dark:text-white/55">
+                  {mode === 'group' ? 'Group' : 'Learner'}
+                </label>
                 <div className="relative mt-2">
                   <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35 dark:text-white/35" />
                   <input
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
-                    placeholder="Search name or email"
+                    placeholder={mode === 'group' ? 'Search group' : 'Search name or email'}
                     className={`${inputClass} pl-9`}
                   />
                 </div>
 
                 <div className="mt-3 max-h-72 overflow-y-auto rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.03]">
                   {loading ? (
-                    <div className="flex items-center gap-2 p-4 text-sm font-bold text-ink/55 dark:text-white/55"><Loader2 className="h-4 w-4 animate-spin" /> Loading learners</div>
+                    <div className="flex items-center gap-2 p-4 text-sm font-bold text-ink/55 dark:text-white/55"><Loader2 className="h-4 w-4 animate-spin" /> Loading</div>
                   ) : null}
 
-                  {!loading && filtered.length === 0 ? (
+                  {!loading && mode === 'learner' && filteredLearners.length === 0 ? (
                     <p className="p-4 text-sm font-semibold text-ink/55 dark:text-white/55">No matching learners.</p>
                   ) : null}
 
-                  {!loading ? filtered.map((learner) => {
+                  {!loading && mode === 'group' && filteredGroups.length === 0 ? (
+                    <p className="p-4 text-sm font-semibold text-ink/55 dark:text-white/55">No active groups with learners.</p>
+                  ) : null}
+
+                  {!loading && mode === 'learner' ? filteredLearners.map((learner) => {
                     const active = learner.id === selectedLearnerId;
                     return (
                       <button
@@ -166,9 +231,25 @@ export default function StudioQuickAssignPanel({
                           <span className="block truncate text-sm font-black text-ink dark:text-white">{learner.display_name || learner.email || 'Learner'}</span>
                           {learner.email && learner.display_name ? <span className="mt-0.5 block truncate text-xs font-semibold text-ink/45 dark:text-white/45">{learner.email}</span> : null}
                         </span>
-                        <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border ${active ? 'border-orange-500 bg-orange-500 text-white' : 'border-ink/15 dark:border-white/15'}`}>
-                          {active ? '✓' : ''}
+                        <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border ${active ? 'border-orange-500 bg-orange-500 text-white' : 'border-ink/15 dark:border-white/15'}`}>{active ? '✓' : ''}</span>
+                      </button>
+                    );
+                  }) : null}
+
+                  {!loading && mode === 'group' ? filteredGroups.map((group) => {
+                    const active = group.id === selectedGroupId;
+                    return (
+                      <button
+                        key={group.id}
+                        type="button"
+                        onClick={() => setSelectedGroupId(group.id)}
+                        className={`focus-ring flex w-full items-center justify-between gap-3 border-b border-ink/5 px-4 py-3 text-left last:border-b-0 dark:border-white/5 ${active ? 'bg-orange-50 dark:bg-orange-300/[0.07]' : 'hover:bg-linen/50 dark:hover:bg-white/[0.04]'}`}
+                      >
+                        <span className="min-w-0">
+                          <span className="block truncate text-sm font-black text-ink dark:text-white">{group.name}</span>
+                          <span className="mt-0.5 block text-xs font-semibold text-ink/45 dark:text-white/45">{group.active_member_count} active learner{Number(group.active_member_count) === 1 ? '' : 's'}</span>
                         </span>
+                        <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border ${active ? 'border-orange-500 bg-orange-500 text-white' : 'border-ink/15 dark:border-white/15'}`}>{active ? '✓' : ''}</span>
                       </button>
                     );
                   }) : null}
@@ -181,7 +262,6 @@ export default function StudioQuickAssignPanel({
                   <input type="datetime-local" value={deadline} onChange={(event) => setDeadline(event.target.value)} className={inputClass} />
                   <span className="normal-case tracking-normal font-semibold text-ink/40 dark:text-white/40">Optional.</span>
                 </label>
-
                 <label className="flex items-center gap-3 text-sm font-black text-ink dark:text-white">
                   <input type="checkbox" checked={required} onChange={(event) => setRequired(event.target.checked)} />
                   Required activity
@@ -226,23 +306,19 @@ export default function StudioQuickAssignPanel({
                 </div>
               </details>
 
-              {error ? (
-                <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">{error}</div>
-              ) : null}
+              {error ? <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">{error}</div> : null}
             </>
           )}
         </div>
 
         <footer className="border-t border-ink/10 bg-white px-5 py-4 dark:border-white/10 dark:bg-surface-900">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-semibold text-ink/45 dark:text-white/45">
-              The currently published immutable version is pinned automatically.
-            </p>
+            <p className="text-xs font-semibold text-ink/45 dark:text-white/45">The currently published immutable version is pinned automatically.</p>
             {!success ? (
               <button
                 type="button"
                 onClick={assign}
-                disabled={!selectedLearnerId || submitting}
+                disabled={!hasTarget || submitting}
                 className="focus-ring inline-flex shrink-0 items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-xs font-black text-white disabled:opacity-30 dark:bg-orange-400 dark:text-surface-950"
               >
                 {submitting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
