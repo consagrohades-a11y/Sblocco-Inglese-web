@@ -125,7 +125,10 @@ export const listeningComprehensionAuthoringGuide = {
   audio_contract: {
     required: ['url or storage_path'],
     fields: {
-      url: 'Direct HTTPS audio URL. Use this for a hosted ElevenLabs export or another stable hosted file.',
+      media_type: 'audio, youtube, or video. Defaults to audio for backwards compatibility.',
+      url: 'Stable HTTPS media URL. May be a direct audio/video file or a normal YouTube watch/share URL.',
+      start_seconds: 'Optional clip start time in seconds, especially useful for curated YouTube/video excerpts.',
+      end_seconds: 'Optional clip end time in seconds. Omit/null to continue to the end.',
       storage_bucket: 'Optional Supabase Storage bucket when the audio is stored privately.',
       storage_path: 'Optional Supabase Storage path. When present, the learner renderer creates a signed URL.',
       title: 'Short learner-facing audio label.',
@@ -186,7 +189,10 @@ export const listeningComprehensionTemplate = {
     content: {
       title: 'When can we meet?',
       audio: {
+        media_type: 'audio',
         url: 'https://example.com/replace-with-stable-audio.mp3',
+        start_seconds: 0,
+        end_seconds: null,
         storage_bucket: null,
         storage_path: null,
         title: 'Short conversation · two colleagues',
