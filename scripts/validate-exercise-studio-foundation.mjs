@@ -29,6 +29,8 @@ const requiredTypes = [
   'recap',
   'media',
   'multiple_choice',
+  'practice_selection',
+  'translation',
   'gap_fill',
   'word_order',
   'written_response',
@@ -76,6 +78,22 @@ const raw = {
         { text: 'go', is_correct: false },
       ],
       feedback: { explanation: 'After have, use the past participle: been.' },
+    },
+    {
+      type: 'practice_selection',
+      prompt: 'Which expressions would you like to remember?',
+      selection_mode: 'multiple',
+      options: [
+        { text: 'once in a lifetime', vocab_bank: true, vocab_kind: 'chunk' },
+        { text: 'memorable', vocab_bank: true, vocab_kind: 'word' },
+        { text: 'worth visiting', vocab_bank: false, vocab_kind: null },
+      ],
+    },
+    {
+      type: 'translation',
+      prompt: 'Traduci: Non sono mai stato in Scozia.',
+      accepted_answers: ["I've never been to Scotland.", 'I have never been to Scotland.'],
+      learning_objective: 'Translate a present perfect life-experience sentence.',
     },
     {
       type: 'word_order',
@@ -137,17 +155,31 @@ assert.deepEqual(questionTypes, [
   'content_block',
   'content_block',
   'multiple_choice',
+  'practice_selection',
+  'translation',
   'word_order',
   'content_block',
   'written_response',
 ]);
 
-const mediaQuestion = preflight.runtime.exercise.sections[0].questions[4];
+const selectionQuestion = preflight.runtime.exercise.sections[0].questions[3];
+assert.equal(selectionQuestion.grading.mode, 'ungraded');
+assert.equal(selectionQuestion.grading.weight, 0);
+assert.deepEqual(selectionQuestion.diagnostics.tested_codes, []);
+assert.equal(selectionQuestion.content.options[0].vocab_bank, true);
+assert.equal(selectionQuestion.content.options[0].vocab_kind, 'chunk');
+assert.equal(selectionQuestion.content.options[1].vocab_kind, 'word');
+
+const translationQuestion = preflight.runtime.exercise.sections[0].questions[4];
+assert.equal(translationQuestion.type, 'translation');
+assert.equal(translationQuestion.content.accepted_answers.length, 2);
+
+const mediaQuestion = preflight.runtime.exercise.sections[0].questions[6];
 assert.equal(mediaQuestion.content.presentation, 'media');
 assert.equal(mediaQuestion.content.media.source_type, 'audio');
 assert.equal(mediaQuestion.content.media.url, 'https://example.com/audio.mp3');
 
-const wordOrderQuestion = preflight.runtime.exercise.sections[0].questions[3];
+const wordOrderQuestion = preflight.runtime.exercise.sections[0].questions[5];
 assert.equal(wordOrderQuestion.content.shuffle_strategy, 'stable_attempt');
 assert.deepEqual(wordOrderQuestion.content.tokens, ['Where', 'have', 'you', 'been']);
 assert.deepEqual(wordOrderQuestion.content.correct_order, ['Where', 'have', 'you', 'been']);
@@ -181,6 +213,24 @@ const invalidTeachingDecision = preflightStudioDocument({
 assert.equal(invalidTeachingDecision.valid, false);
 assert.ok(invalidTeachingDecision.errors.some((item) => item.code === 'correct_answer'));
 assert.equal(invalidTeachingDecision.runtime, null, 'Compiler must not publish through unresolved teaching decisions.');
+
+const invalidVocabBankTag = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'Broken vocab-bank tag',
+  level: 'B1',
+  topic: 'vocabulary',
+  blocks: [{
+    type: 'practice_selection',
+    prompt: 'Choose.',
+    options: [
+      { text: 'frazzled', vocab_bank: true },
+      { text: 'busy', vocab_bank: false },
+    ],
+  }],
+});
+assert.equal(invalidVocabBankTag.valid, false);
+assert.ok(invalidVocabBankTag.errors.some((item) => item.code === 'vocab_kind'));
 
 const unsupported = preflightStudioDocument({
   schema_version: 1,
