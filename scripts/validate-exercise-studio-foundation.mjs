@@ -11,6 +11,7 @@ import {
   compileStudioDocument,
   preflightStudioDocument,
 } from '../src/lib/exerciseStudioCompiler.js';
+import { stableShuffleWordOrderTokenInstances } from '../src/lib/wordOrderShuffle.js';
 
 const requiredTypes = [
   'explanation',
@@ -116,6 +117,13 @@ assert.ok(repairCodes.has('generated_slug'));
 assert.ok(repairCodes.has('generated_block_id'));
 assert.ok(repairCodes.has('reindexed_block'));
 
+const duplicateIdRepair = normalizeStudioDocument({
+  ...raw,
+  blocks: raw.blocks.slice(0, 2).map((block) => ({ ...block, id: 'duplicate_block' })),
+});
+assert.notEqual(duplicateIdRepair.document.blocks[0].id, duplicateIdRepair.document.blocks[1].id);
+assert.ok(duplicateIdRepair.repairs.some((repair) => repair.code === 'repaired_duplicate_block_id'));
+
 const preflight = preflightStudioDocument(raw);
 assert.equal(preflight.valid, true, preflight.errors.map((item) => item.message).join('\n'));
 assert.ok(preflight.runtime, 'Valid Studio documents must compile to a runtime exercise.');
@@ -141,6 +149,14 @@ const wordOrderQuestion = preflight.runtime.exercise.sections[0].questions[3];
 assert.equal(wordOrderQuestion.content.shuffle_strategy, 'stable_attempt');
 assert.deepEqual(wordOrderQuestion.content.tokens, ['Where', 'have', 'you', 'been']);
 assert.deepEqual(wordOrderQuestion.content.correct_order, ['Where', 'have', 'you', 'been']);
+
+const tokenInstances = wordOrderQuestion.content.tokens.map((token, index) => ({ text: token, instanceKey: token + '-' + index }));
+const shuffleA = stableShuffleWordOrderTokenInstances(tokenInstances, 'stable_attempt', 'attempt-1:question-1');
+const shuffleARepeat = stableShuffleWordOrderTokenInstances(tokenInstances, 'stable_attempt', 'attempt-1:question-1');
+const shuffleB = stableShuffleWordOrderTokenInstances(tokenInstances, 'stable_attempt', 'attempt-2:question-1');
+assert.deepEqual(shuffleA, shuffleARepeat, 'Word-order shuffle must stay stable within the same attempt.');
+assert.notDeepEqual(shuffleA, tokenInstances, 'Studio word-order should not reveal authored correct order.');
+assert.ok(shuffleB.length === tokenInstances.length, 'A new attempt must retain the same token multiset.');
 
 const compiledAgain = compileStudioDocument(preflight.document);
 assert.equal(compiledAgain.exercise.client_key, preflight.runtime.exercise.client_key, 'Compilation should use stable generated identity.');
