@@ -50,7 +50,9 @@ export function compileStudioDocument(document) {
       client_key: 'exercise_' + studioSlug(document.internal_code || document.id, 'studio_activity'),
       title: text(document.learner_title) || text(document.internal_title) || 'Untitled activity',
       description: text(document.description),
-      instructions: text(document.instructions),
+      instructions: text(document.instructions) || (document.settings?.instruction_language === 'en'
+        ? 'Complete the activities in the order shown.'
+        : 'Completa le attività nell’ordine proposto.'),
       instruction_language: document.settings?.instruction_language === 'en' ? 'en' : 'it',
       level: document.level,
       topic: text(document.topic) || 'general_english',
@@ -59,7 +61,9 @@ export function compileStudioDocument(document) {
       sections: [{
         client_key: 'section_main',
         title: text(document.learner_title) || text(document.internal_title) || 'Activity',
-        instructions: '',
+        instructions: document.settings?.instruction_language === 'en'
+          ? 'Work through each block in order.'
+          : 'Segui i blocchi nell’ordine proposto.',
         selection_mode: 'fixed',
         feedback_timing: runtimeSettings(document).feedback_timing,
         questions,
