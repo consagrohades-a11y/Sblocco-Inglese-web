@@ -18,6 +18,7 @@ import SEO from '../components/SEO.jsx';
 import StudioBlockEditor from '../components/admin/exercise-studio/StudioBlockEditor.jsx';
 import StudioBlockPalette from '../components/admin/exercise-studio/StudioBlockPalette.jsx';
 import StudioJsonImportPanel from '../components/admin/exercise-studio/StudioJsonImportPanel.jsx';
+import StudioQuickAssignPanel from '../components/admin/exercise-studio/StudioQuickAssignPanel.jsx';
 import ExerciseQuestionRenderer from '../components/exercises/ExerciseQuestionRenderer.jsx';
 import {
   ExerciseActivity,
@@ -161,6 +162,9 @@ export default function AdminExerciseStudio() {
   const [importOpen, setImportOpen] = useState(false);
   const [importNotice, setImportNotice] = useState('');
   const [draftOrigin, setDraftOrigin] = useState('manual');
+  const [publishedExerciseId, setPublishedExerciseId] = useState(null);
+  const [assignOpen, setAssignOpen] = useState(false);
+  const [assignmentNotice, setAssignmentNotice] = useState('');
   const draftIdRef = useRef(null);
   const lastSavedRef = useRef('');
   const saveTimerRef = useRef(null);
@@ -192,6 +196,7 @@ export default function AdminExerciseStudio() {
         if (!active) return;
         draftIdRef.current = draft.id;
         setDraftOrigin(draft.origin || 'manual');
+        setPublishedExerciseId(draft.exercise_id || null);
         lastSavedRef.current = JSON.stringify(draft.document);
         setDocument(draft.document);
         setSelectedBlockId(null);
@@ -271,12 +276,14 @@ export default function AdminExerciseStudio() {
   function patchDocument(patch) {
     setPublishNotice('');
     setImportNotice('');
+    setAssignmentNotice('');
     setDocument((current) => changedDraft(current, patch));
   }
 
   function addBlock(type) {
     setPublishNotice('');
     setImportNotice('');
+    setAssignmentNotice('');
     setDocument((current) => {
       const next = addStudioBlock(current, type);
       const block = next.blocks[next.blocks.length - 1];
@@ -289,6 +296,7 @@ export default function AdminExerciseStudio() {
   function replaceBlock(nextBlock) {
     setPublishNotice('');
     setImportNotice('');
+    setAssignmentNotice('');
     setDocument((current) => changedDraft(current, {
       blocks: current.blocks.map((block) => block.id === nextBlock.id ? nextBlock : block),
     }));
@@ -297,6 +305,7 @@ export default function AdminExerciseStudio() {
   function deleteBlock(blockId) {
     setPublishNotice('');
     setImportNotice('');
+    setAssignmentNotice('');
     setDocument((current) => changedDraft(current, {
       blocks: current.blocks.filter((block) => block.id !== blockId),
     }));
@@ -306,6 +315,7 @@ export default function AdminExerciseStudio() {
   function moveBlock(blockId, direction) {
     setPublishNotice('');
     setImportNotice('');
+    setAssignmentNotice('');
     setDocument((current) => {
       const blocks = [...current.blocks];
       const index = blocks.findIndex((block) => block.id === blockId);
@@ -343,6 +353,7 @@ export default function AdminExerciseStudio() {
       lastSavedRef.current = JSON.stringify(publishedDocument);
       setDocument(publishedDocument);
       setSaveState('saved');
+      setPublishedExerciseId(result.exercise_id || null);
       setPublishState('published');
       setPublishNotice(`${result.public_id || 'Exercise'} published and ready to assign.`);
     } catch (error) {
@@ -362,6 +373,9 @@ export default function AdminExerciseStudio() {
     setSaveError('');
     setPublishState('idle');
     setPublishNotice('');
+    setPublishedExerciseId(null);
+    setAssignOpen(false);
+    setAssignmentNotice('');
   }
 
   function startNew() {
@@ -371,6 +385,9 @@ export default function AdminExerciseStudio() {
     setPaletteOpen(false);
     setPreflightVisible(false);
     setImportOpen(false);
+    setAssignOpen(false);
+    setPublishedExerciseId(null);
+    setAssignmentNotice('');
     setImportNotice('');
     setHydrated(true);
   }
@@ -440,6 +457,15 @@ export default function AdminExerciseStudio() {
               </button>
               <button
                 type="button"
+                onClick={() => setAssignOpen(true)}
+                disabled={document.status !== 'published' || !publishedExerciseId}
+                title={document.status === 'published' ? 'Assign this published activity' : 'Publish the current draft before assigning'}
+                className="focus-ring rounded-full border border-orange-300 bg-orange-50 px-4 py-2.5 text-xs font-black text-orange-900 disabled:cursor-not-allowed disabled:opacity-30 dark:border-orange-300/30 dark:bg-orange-300/[0.07] dark:text-orange-100"
+              >
+                Assign
+              </button>
+              <button
+                type="button"
                 onClick={publishCurrentDraft}
                 disabled={!preflight.valid || publishState === 'publishing'}
                 className="focus-ring inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-xs font-black text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-35 dark:bg-orange-400 dark:text-surface-950"
@@ -449,6 +475,12 @@ export default function AdminExerciseStudio() {
               </button>
             </div>
           </div>
+
+          {assignmentNotice ? (
+            <div className="border-t border-emerald-200 bg-emerald-50 px-4 py-2 text-center text-xs font-black text-emerald-950 dark:border-emerald-300/20 dark:bg-emerald-300/10 dark:text-emerald-100 xl:px-6">
+              {assignmentNotice}
+            </div>
+          ) : null}
 
           {importNotice ? (
             <div className="border-t border-orange-200 bg-orange-50 px-4 py-2 text-center text-xs font-black text-orange-950 dark:border-orange-300/20 dark:bg-orange-300/[0.07] dark:text-orange-100 xl:px-6">
@@ -633,6 +665,17 @@ export default function AdminExerciseStudio() {
         <StudioJsonImportPanel
           onClose={() => setImportOpen(false)}
           onImport={importIntoStudio}
+        />
+      ) : null}
+
+      {assignOpen && publishedExerciseId ? (
+        <StudioQuickAssignPanel
+          exerciseId={publishedExerciseId}
+          activityTitle={document.learner_title || document.internal_title || 'Sblocco activity'}
+          onClose={() => setAssignOpen(false)}
+          onAssigned={({ learner }) => {
+            setAssignmentNotice(`Assigned to ${learner?.display_name || learner?.email || 'learner'}.`);
+          }}
         />
       ) : null}
     </>
