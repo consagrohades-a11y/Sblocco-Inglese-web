@@ -681,8 +681,12 @@ export default function AdminExerciseStudio() {
           exerciseId={publishedExerciseId}
           activityTitle={document.learner_title || document.internal_title || 'Sblocco activity'}
           onClose={() => setAssignOpen(false)}
-          onAssigned={({ learner }) => {
-            setAssignmentNotice(`Assigned to ${learner?.display_name || learner?.email || 'learner'}.`);
+          onAssigned={({ learner, group, result, mode }) => {
+            setAssignmentNotice(
+              mode === 'group'
+                ? `Assigned to ${group?.name || 'group'} · ${result?.assignment_count || 0} learner assignments created.`
+                : `Assigned to ${learner?.display_name || learner?.email || 'learner'}.`
+            );
           }}
         />
       ) : null}
