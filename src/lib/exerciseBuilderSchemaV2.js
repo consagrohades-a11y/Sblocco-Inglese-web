@@ -5,6 +5,7 @@ export const EXERCISE_BUILDER_LEVELS = ['A0', 'A1', 'A1+', 'A2', 'B1', 'B1+', 'B
 export const EXERCISE_BUILDER_QUESTION_TYPES = [
   'multiple_choice',
   'multiple_select',
+  'practice_selection',
   'gap_fill',
   'select_gap',
   'translation',
@@ -195,13 +196,30 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
   else validateLevel(level, errors, `${path}.level`);
   if (!['it', 'en'].includes(instructionLanguage)) errors.push(pathMessage(path, 'instruction_language deve essere "it" oppure "en".'));
 
-  const isEvaluated = questionType && questionType !== 'content_block';
+  const isEvaluated = questionType && !['content_block', 'practice_selection'].includes(questionType);
   if (isEvaluated) {
     if (!primarySkill) errors.push(pathMessage(path, 'primary_skill obbligatorio.'));
     else if (!EXERCISE_BUILDER_SKILLS.includes(primarySkill)) errors.push(pathMessage(path, `primary_skill non valido. Usa ${EXERCISE_BUILDER_SKILLS.join(', ')}.`));
     if (!topic) errors.push(pathMessage(path, 'topic obbligatorio per la diagnostica.'));
     if (!learningObjective) errors.push(pathMessage(path, 'learning_objective obbligatorio.'));
     if (!stringArray(diagnostics.tested_codes).length) warnings.push(pathMessage(path, 'aggiungi almeno un diagnostics.tested_codes prima della pubblicazione.'));
+  }
+
+  if (questionType === 'practice_selection') {
+    const rawOptions = Array.isArray(source.options) ? source.options : Array.isArray(content.options) ? content.options : [];
+    content.options = rawOptions
+      .map((option, index) => ({
+        key: text(option?.key) || `option_${index + 1}`,
+        text: typeof option === 'string' ? text(option) : text(option?.text),
+      }))
+      .filter((option) => option.text);
+    content.selection_mode = ['single', 'multiple'].includes(source.selection_mode || content.selection_mode)
+      ? (source.selection_mode || content.selection_mode)
+      : 'multiple';
+    if (content.options.length < 2) errors.push(pathMessage(path, 'practice_selection richiede almeno due opzioni.'));
+    grading.mode = 'ungraded';
+    grading.weight = 0;
+    grading.nearly_correct_multiplier = 0;
   }
 
   if (questionType === 'multiple_choice' || questionType === 'multiple_select' || questionType === 'dialogue_choice') {
@@ -306,6 +324,13 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
     if (!minWords || minWords < 1) errors.push(pathMessage(path, 'min_words deve essere maggiore di zero.'));
     if (!maxWords || maxWords < minWords) errors.push(pathMessage(path, 'max_words deve essere almeno min_words.'));
     content.context = text(source.context || content.context) || null;
+    const contextSectionsSource = isObject(source.context_sections) ? source.context_sections : isObject(content.context_sections) ? content.context_sections : {};
+    content.context_sections = {
+      situation: text(source.context_situation || contextSectionsSource.situation || content.context) || null,
+      role: text(source.context_role || contextSectionsSource.role) || null,
+      audience: text(source.context_audience || contextSectionsSource.audience) || null,
+      goal: text(source.context_goal || contextSectionsSource.goal) || null,
+    };
     content.min_words = minWords;
     content.max_words = maxWords;
     content.required_points = stringArray(source.required_points || content.required_points);
@@ -409,9 +434,15 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
     grading.mode = grading.mode || 'per_item';
   }
 
-  grading.weight = positiveNumber(grading.weight, 1);
-  grading.nearly_correct_multiplier = Math.max(0, Math.min(1, number(grading.nearly_correct_multiplier, 0.5)));
-  if (MANUAL_TYPES.has(questionType)) grading.mode = 'manual_review';
+  if (questionType === 'practice_selection') {
+    grading.mode = 'ungraded';
+    grading.weight = 0;
+    grading.nearly_correct_multiplier = 0;
+  } else {
+    grading.weight = positiveNumber(grading.weight, 1);
+    grading.nearly_correct_multiplier = Math.max(0, Math.min(1, number(grading.nearly_correct_multiplier, 0.5)));
+    if (MANUAL_TYPES.has(questionType)) grading.mode = 'manual_review';
+  }
 
   return {
     payload: {
@@ -425,8 +456,12 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
       level,
       topic,
       subtopic: text(source.subtopic) || null,
-      primary_skill: primarySkill || (questionType === 'content_block' || questionType === 'reading_comprehension' ? 'reading' : ''),
-      learning_objective: learningObjective || (questionType === 'content_block' ? 'Read the information provided.' : ''),
+      primary_skill: primarySkill || (questionType === 'content_block' || questionType === 'reading_comprehension' ? 'reading' : questionType === 'practice_selection' ? 'vocabulary' : ''),
+      learning_objective: learningObjective || (questionType === 'content_block'
+        ? 'Read the information provided.'
+        : questionType === 'practice_selection'
+          ? 'Notice and select useful language without right-or-wrong grading.'
+          : ''),
       difficulty: ['support', 'standard', 'challenge'].includes(source.difficulty) ? source.difficulty : 'standard',
       content,
       grading,
