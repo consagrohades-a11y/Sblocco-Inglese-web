@@ -101,13 +101,9 @@ const navigationGroups = [
     description: 'Creazione, pubblicazione e risultati',
     icon: Blocks,
     items: [
-      { label: 'Panoramica esercizi', to: '/admin/content/exercises', icon: LayoutDashboard, end: true },
-      { label: 'Importa e revisiona', to: '/admin/content/exercises/review', icon: FileCheck2 },
-      { label: 'Componi esercizi', to: '/admin/content/exercises/composer', icon: ClipboardList },
-      { label: 'Libreria esercizi', to: '/admin/content/exercises/library', icon: BookOpen },
-      { label: 'Raccolte di esercizi', to: '/admin/content/exercises/collections', icon: Blocks },
+      { label: 'Learning Studio', to: '/admin/content/exercises/studio', icon: Blocks },
+      { label: 'Libreria', to: '/admin/content/exercises/library', icon: BookOpen },
       { label: 'Risultati studenti', to: '/admin/content/exercises/results', icon: BarChart3 },
-      { label: 'Archivio e pulizia', to: '/admin/content/exercises/maintenance', icon: FileCheck2 },
     ],
   },
   {
