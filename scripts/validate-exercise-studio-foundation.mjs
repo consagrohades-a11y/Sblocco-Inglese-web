@@ -29,6 +29,7 @@ const requiredTypes = [
   'recap',
   'media',
   'multiple_choice',
+  'multiple_choice_set',
   'practice_selection',
   'translation',
   'gap_fill',
@@ -78,6 +79,32 @@ const raw = {
         { text: 'go', is_correct: false },
       ],
       feedback: { explanation: 'After have, use the past participle: been.' },
+    },
+    {
+      type: 'multiple_choice_set',
+      title: 'Which sounds natural?',
+      prompt: 'Choose the most natural sentence in each example.',
+      instructions: 'Choose one answer for every example.',
+      items: [
+        {
+          key: 'ai_should_not_keep_this',
+          prompt: 'Example 1',
+          options: [
+            { key: 'ai_a', text: 'I have visited Rome last year.', is_correct: false },
+            { key: 'ai_b', text: 'I visited Rome last year.', is_correct: true },
+            { key: 'ai_c', text: 'I have visit Rome last year.', is_correct: false },
+          ],
+          feedback: 'Use the past simple with a finished time expression.',
+        },
+        {
+          prompt: 'Example 2',
+          options: [
+            { text: 'Have you ever been abroad?', is_correct: true },
+            { text: 'Did you ever been abroad?', is_correct: false },
+            { text: 'Have you ever went abroad?', is_correct: false },
+          ],
+        },
+      ],
     },
     {
       type: 'practice_selection',
@@ -155,6 +182,7 @@ assert.deepEqual(questionTypes, [
   'content_block',
   'content_block',
   'multiple_choice',
+  'reading_comprehension',
   'practice_selection',
   'translation',
   'word_order',
@@ -162,7 +190,15 @@ assert.deepEqual(questionTypes, [
   'written_response',
 ]);
 
-const selectionQuestion = preflight.runtime.exercise.sections[0].questions[3];
+const groupedChoiceQuestion = preflight.runtime.exercise.sections[0].questions[3];
+assert.equal(groupedChoiceQuestion.content.presentation, 'choice_set');
+assert.equal(groupedChoiceQuestion.grading.mode, 'per_item');
+assert.equal(groupedChoiceQuestion.content.items.length, 2);
+assert.equal(groupedChoiceQuestion.content.items[0].key, 'item_1');
+assert.equal(groupedChoiceQuestion.content.items[0].options[0].key, 'option_1');
+assert.equal(groupedChoiceQuestion.content.items[0].feedback, 'Use the past simple with a finished time expression.');
+
+const selectionQuestion = preflight.runtime.exercise.sections[0].questions[4];
 assert.equal(selectionQuestion.grading.mode, 'ungraded');
 assert.equal(selectionQuestion.grading.weight, 0);
 assert.deepEqual(selectionQuestion.diagnostics.tested_codes, []);
@@ -170,16 +206,16 @@ assert.equal(selectionQuestion.content.options[0].vocab_bank, true);
 assert.equal(selectionQuestion.content.options[0].vocab_kind, 'chunk');
 assert.equal(selectionQuestion.content.options[1].vocab_kind, 'word');
 
-const translationQuestion = preflight.runtime.exercise.sections[0].questions[4];
+const translationQuestion = preflight.runtime.exercise.sections[0].questions[5];
 assert.equal(translationQuestion.type, 'translation');
 assert.equal(translationQuestion.content.accepted_answers.length, 2);
 
-const mediaQuestion = preflight.runtime.exercise.sections[0].questions[6];
+const mediaQuestion = preflight.runtime.exercise.sections[0].questions[7];
 assert.equal(mediaQuestion.content.presentation, 'media');
 assert.equal(mediaQuestion.content.media.source_type, 'audio');
 assert.equal(mediaQuestion.content.media.url, 'https://example.com/audio.mp3');
 
-const wordOrderQuestion = preflight.runtime.exercise.sections[0].questions[5];
+const wordOrderQuestion = preflight.runtime.exercise.sections[0].questions[6];
 assert.equal(wordOrderQuestion.content.shuffle_strategy, 'stable_attempt');
 assert.deepEqual(wordOrderQuestion.content.tokens, ['Where', 'have', 'you', 'been']);
 assert.deepEqual(wordOrderQuestion.content.correct_order, ['Where', 'have', 'you', 'been']);
@@ -213,6 +249,77 @@ const invalidTeachingDecision = preflightStudioDocument({
 assert.equal(invalidTeachingDecision.valid, false);
 assert.ok(invalidTeachingDecision.errors.some((item) => item.code === 'correct_answer'));
 assert.equal(invalidTeachingDecision.runtime, null, 'Compiler must not publish through unresolved teaching decisions.');
+
+const invalidChoiceSet = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'Broken grouped choice',
+  level: 'B1',
+  topic: 'natural_language',
+  blocks: [{
+    type: 'multiple_choice_set',
+    prompt: 'Which sounds natural?',
+    items: [
+      {
+        prompt: 'Example 1',
+        options: [
+          { text: 'A', is_correct: false },
+          { text: 'B', is_correct: false },
+        ],
+      },
+      {
+        prompt: 'Example 2',
+        options: [
+          { text: 'A', is_correct: true },
+          { text: 'B', is_correct: false },
+        ],
+      },
+    ],
+  }],
+});
+assert.equal(invalidChoiceSet.valid, false);
+assert.ok(invalidChoiceSet.errors.some((item) => item.code === 'correct_answer'));
+
+const importedChoiceSet = parseStudioImport(JSON.stringify({
+  _template: {
+    template_id: 'sblocco-grammar-mini-course',
+    template_version: 1,
+    authoring_contract_version: 1,
+  },
+  activity: {
+    internal_title: 'Grouped choices',
+    learner_title: 'Which sounds natural?',
+    level: 'B1',
+    topic: 'natural_language',
+    activity_type: 'exercise',
+    blocks: [{
+      type: 'mcq_set',
+      prompt: 'Which sentence sounds most natural?',
+      instructions: 'Choose one answer in each example.',
+      items: [
+        {
+          key: 'ai_item',
+          prompt: 'Example 1',
+          options: [
+            { key: 'ai_a', text: 'in response to', is_correct: true },
+            { key: 'ai_b', text: 'in response of', is_correct: false },
+          ],
+        },
+        {
+          prompt: 'Example 2',
+          options: [
+            { text: 'more likely to become', is_correct: true },
+            { text: 'more likely becoming', is_correct: false },
+          ],
+        },
+      ],
+    }],
+  },
+}));
+assert.equal(importedChoiceSet.publishable, true, importedChoiceSet.errors.map((item) => item.message).join('\n'));
+assert.equal(importedChoiceSet.document.blocks[0].type, 'multiple_choice_set');
+assert.equal(importedChoiceSet.document.blocks[0].items[0].key, 'item_1');
+assert.equal(importedChoiceSet.document.blocks[0].items[0].options[0].key, 'option_1');
 
 const invalidVocabBankTag = preflightStudioDocument({
   schema_version: 1,
