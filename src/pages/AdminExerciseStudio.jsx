@@ -19,6 +19,7 @@ import StudioBlockEditor from '../components/admin/exercise-studio/StudioBlockEd
 import StudioBlockPalette from '../components/admin/exercise-studio/StudioBlockPalette.jsx';
 import StudioJsonImportPanel from '../components/admin/exercise-studio/StudioJsonImportPanel.jsx';
 import StudioQuickAssignPanel from '../components/admin/exercise-studio/StudioQuickAssignPanel.jsx';
+import StudioSelect from '../components/admin/exercise-studio/StudioSelect.jsx';
 import ExerciseQuestionRenderer from '../components/exercises/ExerciseQuestionRenderer.jsx';
 import {
   ExerciseActivity,
@@ -538,7 +539,7 @@ export default function AdminExerciseStudio() {
           ) : null}
         </header>
 
-        <div className="grid min-h-[calc(100vh-66px)] xl:grid-cols-[250px_minmax(0,1fr)_360px]">
+        <div className="grid min-h-[calc(100vh-66px)] xl:grid-cols-[250px_minmax(0,1fr)_390px] 2xl:grid-cols-[260px_minmax(0,1fr)_420px]">
           <aside className="border-b border-ink/10 bg-[#fbf8f1] p-4 dark:border-white/10 dark:bg-white/[0.02] xl:border-b-0 xl:border-r xl:p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
@@ -608,14 +609,24 @@ export default function AdminExerciseStudio() {
                     Learner title
                     <input value={document.learner_title || ''} onChange={(event) => patchDocument({ learner_title: event.target.value })} placeholder="Talking about your experiences" className={metadataInputClass()} />
                   </label>
-                  <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">
-                    Level
-                    <select value={document.level} onChange={(event) => patchDocument({ level: event.target.value })} className={metadataInputClass()}>{LEVELS.map((level) => <option key={level} value={level}>{level}</option>)}</select>
-                  </label>
-                  <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">
-                    Type
-                    <select value={document.activity_type} onChange={(event) => patchDocument({ activity_type: event.target.value })} className={metadataInputClass()}>{ACTIVITY_TYPES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
-                  </label>
+                  <div className="grid min-w-0 gap-1 text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">
+                    <span>Level</span>
+                    <StudioSelect
+                      value={document.level}
+                      onChange={(value) => patchDocument({ level: value })}
+                      options={LEVELS}
+                      ariaLabel="Activity level"
+                    />
+                  </div>
+                  <div className="grid min-w-0 gap-1 text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">
+                    <span>Type</span>
+                    <StudioSelect
+                      value={document.activity_type}
+                      onChange={(value) => patchDocument({ activity_type: value })}
+                      options={ACTIVITY_TYPES}
+                      ariaLabel="Activity type"
+                    />
+                  </div>
                   <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">
                     Topic
                     <input value={document.topic || ''} onChange={(event) => patchDocument({ topic: event.target.value })} placeholder="present_perfect" className={metadataInputClass()} />
@@ -652,8 +663,8 @@ export default function AdminExerciseStudio() {
             </div>
           </main>
 
-          <aside className="border-t border-ink/10 bg-[#fbf8f1] dark:border-white/10 dark:bg-white/[0.02] xl:border-l xl:border-t-0">
-            <div className="sticky top-[66px] max-h-[calc(100vh-66px)] overflow-y-auto p-4 xl:p-5">
+          <aside className="min-w-0 overflow-x-hidden border-t border-ink/10 bg-[#fbf8f1] dark:border-white/10 dark:bg-white/[0.02] xl:border-l xl:border-t-0">
+            <div className="sticky top-[66px] max-h-[calc(100vh-66px)] min-w-0 overflow-x-hidden overflow-y-auto p-4 xl:p-5">
               {selectedBlock ? (
                 <StudioBlockEditor
                   block={selectedBlock}
