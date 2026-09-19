@@ -17,6 +17,7 @@ import {
   wordOrderDisplayToken,
   wordOrderTerminalPunctuation,
 } from '../../lib/wordOrderPresentation.js';
+import { stableShuffleWordOrderTokenInstances } from '../../lib/wordOrderShuffle.js';
 import EducationalContentBlock from './EducationalContentBlock.jsx';
 import SbloccoSelect from './SbloccoSelect.jsx';
 import {
@@ -99,19 +100,24 @@ function GapFill({ question, answer, onChange, disabled, select = false }) {
   return <div className="grid gap-4">{blanks.map((blank, index) => <div key={blank.key} className="grid gap-2"><span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Spazio {index + 1}</span>{select ? <SbloccoSelect value={values[blank.key] || ''} options={blank.options || []} onChange={(nextValue) => onChange({ ...values, [blank.key]: nextValue })} disabled={disabled} ariaLabel={`Spazio ${index + 1}`} /> : <TextAnswer value={values[blank.key] || ''} onChange={(value) => onChange({ ...values, [blank.key]: value })} disabled={disabled} />}</div>)}</div>;
 }
 
-function WordOrder({ question, answer, onChange, disabled }) {
+function WordOrder({ question, answer, onChange, disabled, shuffleSeed }) {
   const tokenInstances = (question.content?.tokens || []).map((token, index) => {
     const text = typeof token === 'string' ? token : token.text;
     return { ...(typeof token === 'object' ? token : {}), text, instanceKey: `${token.key || text}-${index}` };
   });
+  const bankTokenInstances = stableShuffleWordOrderTokenInstances(
+    tokenInstances,
+    question.content?.shuffle_strategy,
+    shuffleSeed,
+  );
   const selectedValues = Array.isArray(answer) ? answer.map((token) => typeof token === 'string' ? token : token?.text).filter(Boolean) : [];
   const usedKeys = new Set();
   const selected = selectedValues.map((value, index) => {
-    const match = tokenInstances.find((token) => token.text === value && !usedKeys.has(token.instanceKey));
+    const match = bankTokenInstances.find((token) => token.text === value && !usedKeys.has(token.instanceKey));
     if (match) { usedKeys.add(match.instanceKey); return match; }
     return { text: value, instanceKey: `saved-${index}-${value}` };
   });
-  const remaining = tokenInstances.filter((token) => !usedKeys.has(token.instanceKey));
+  const remaining = bankTokenInstances.filter((token) => !usedKeys.has(token.instanceKey));
   const dragRef = useRef(null);
   const [draggingKey, setDraggingKey] = useState(null);
   const terminalPunctuation = wordOrderTerminalPunctuation(question.content);
@@ -391,7 +397,7 @@ export default function ExerciseQuestionRendererV2({
     if (type === 'gap_fill') return <GapFill question={question} answer={answer} onChange={onChange} disabled={disabled} />;
     if (type === 'select_gap') return <GapFill question={question} answer={answer} onChange={onChange} disabled={disabled} select />;
     if (type === 'translation' || type === 'error_correction') return <TextAnswer multiline={type === 'error_correction'} value={answer || ''} onChange={onChange} disabled={disabled} />;
-    if (type === 'word_order') return <WordOrder question={question} answer={answer} onChange={onChange} disabled={disabled} />;
+    if (type === 'word_order') return <WordOrder question={question} answer={answer} onChange={onChange} disabled={disabled} shuffleSeed={`${attemptId || 'preview'}:${item?.question_version_id || item?.id || question.client_key || 'word_order'}`} />;
     if (type === 'content_block') return <EducationalContentBlock content={question.content} fallback={question.prompt} />;
     if (type === 'written_response') return <div className="grid gap-4"><WrittenResponse question={question} answer={answer} onChange={onChange} disabled={disabled} /><RubricPreview rubric={question.content?.rubric} /></div>;
     if (type === 'dialogue_roleplay') return <DialogueRoleplay question={question} answer={answer} onChange={onChange} disabled={disabled} attemptId={attemptId} attemptQuestionId={item?.id} teacherTurnReviews={item?.teacher_turn_reviews} />;
