@@ -165,11 +165,52 @@ function PracticeSelectionOptionsEditor({ options = [], onChange }) {
 
   return (
     <div className="grid min-w-0 gap-3">
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Options</p>
-        <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
-          Mark useful lexical items now so a separate vocabulary bank can use them later without re-editing the activity.
-        </p>
+      <div className="grid gap-2">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Options</p>
+          <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
+            Mark useful lexical items now so a separate vocabulary bank can use them later without re-editing the activity.
+          </p>
+        </div>
+        {values.length ? (
+          <div className="grid gap-2 rounded-2xl border border-orange-200/70 bg-orange-50/45 p-3 dark:border-orange-300/15 dark:bg-orange-300/[0.04]">
+            <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-orange-800 dark:text-orange-200">Bulk vocab controls</p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => onChange(values.map((option) => ({
+                  ...option,
+                  vocab_bank: true,
+                  vocab_kind: option.vocab_kind || 'word',
+                })))}
+                className="focus-ring rounded-full border border-orange-300 bg-white px-3 py-2 text-[0.7rem] font-black text-orange-900 dark:border-orange-300/30 dark:bg-white/[0.04] dark:text-orange-100"
+              >
+                Add all to Vocab bank
+              </button>
+              <button
+                type="button"
+                onClick={() => onChange(values.map((option) => ({ ...option, vocab_bank: false, vocab_kind: null })))}
+                className="focus-ring rounded-full border border-ink/10 bg-white px-3 py-2 text-[0.7rem] font-black text-ink/60 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/60"
+              >
+                Remove all
+              </button>
+              <button
+                type="button"
+                onClick={() => onChange(values.map((option) => ({ ...option, vocab_bank: true, vocab_kind: 'word' })))}
+                className="focus-ring rounded-full border border-ink/10 bg-white px-3 py-2 text-[0.7rem] font-black text-ink dark:border-white/10 dark:bg-white/[0.04] dark:text-white"
+              >
+                All → Word
+              </button>
+              <button
+                type="button"
+                onClick={() => onChange(values.map((option) => ({ ...option, vocab_bank: true, vocab_kind: 'chunk' })))}
+                className="focus-ring rounded-full border border-ink/10 bg-white px-3 py-2 text-[0.7rem] font-black text-ink dark:border-white/10 dark:bg-white/[0.04] dark:text-white"
+              >
+                All → Chunk
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
 
       {values.map((option, index) => (
@@ -681,27 +722,32 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
   }
 
   return (
-    <div className="grid gap-5">
-      <div className="border-b border-ink/10 pb-4 dark:border-white/10">
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="shrink-0 border-b border-ink/10 bg-[#fbf8f1] px-4 py-4 dark:border-white/10 dark:bg-[#121a17] xl:px-5">
         <p className="text-xs font-black uppercase tracking-[0.14em] text-orange-700 dark:text-orange-300">{definition.category}</p>
-        <h2 className="mt-1 text-xl font-black text-ink dark:text-white">{definition.label}</h2>
+        <div className="mt-1 flex items-start justify-between gap-3">
+          <h2 className="min-w-0 text-xl font-black leading-tight text-ink dark:text-white">{definition.label}</h2>
+          <span className="shrink-0 rounded-full bg-linen px-2.5 py-1 text-[0.65rem] font-black text-ink/45 dark:bg-white/[0.06] dark:text-white/45">Editor</span>
+        </div>
       </div>
 
-      {issues.length ? (
-        <div className="grid gap-2">
-          {issues.map((item, index) => (
-            <button
-              key={index}
-              type="button"
-              className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-left text-xs font-bold leading-5 text-amber-900 dark:border-amber-300/20 dark:bg-amber-300/10 dark:text-amber-100"
-            >
-              {item.message}
-            </button>
-          ))}
-        </div>
-      ) : null}
+      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-4 py-4 xl:px-5">
+        <div className="grid min-w-0 gap-5">
+          {issues.length ? (
+            <div className="grid gap-2">
+              {issues.map((item, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-left text-xs font-bold leading-5 text-amber-900 dark:border-amber-300/20 dark:bg-amber-300/10 dark:text-amber-100"
+                >
+                  {item.message}
+                </button>
+              ))}
+            </div>
+          ) : null}
 
-      <div className="grid gap-4">
+          <div className="grid min-w-0 gap-4">
         {block.type === 'multiple_choice' ? <MultipleChoiceEditor block={block} patch={patch} /> : null}
         {block.type === 'gap_fill' ? <GapFillEditor block={block} patch={patch} /> : null}
         {block.type === 'word_order' ? (
@@ -727,9 +773,11 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
         </div>
       </details>
 
-      <button type="button" onClick={onDelete} className="focus-ring inline-flex w-fit items-center gap-2 text-xs font-black text-red-700 dark:text-red-200">
-        <Trash2 className="h-4 w-4" /> Delete block
-      </button>
+          <button type="button" onClick={onDelete} className="focus-ring inline-flex w-fit items-center gap-2 text-xs font-black text-red-700 dark:text-red-200">
+            <Trash2 className="h-4 w-4" /> Delete block
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
