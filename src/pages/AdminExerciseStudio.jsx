@@ -357,8 +357,7 @@ export default function AdminExerciseStudio() {
       if (sourceIndex < 0 || targetIndex < 0) return current;
 
       const [moved] = blocks.splice(sourceIndex, 1);
-      const adjustedTarget = sourceIndex < targetIndex ? targetIndex - 1 : targetIndex;
-      blocks.splice(adjustedTarget, 0, moved);
+      blocks.splice(targetIndex, 0, moved);
       return changedDraft(current, { blocks });
     });
   }
@@ -591,13 +590,6 @@ export default function AdminExerciseStudio() {
                   return (
                     <div
                       key={block.id}
-                      draggable
-                      onDragStart={(event) => {
-                        setDraggedBlockId(block.id);
-                        setDragOverBlockId(null);
-                        event.dataTransfer.effectAllowed = 'move';
-                        event.dataTransfer.setData('text/plain', block.id);
-                      }}
                       onDragOver={(event) => {
                         event.preventDefault();
                         event.dataTransfer.dropEffect = 'move';
@@ -614,14 +606,23 @@ export default function AdminExerciseStudio() {
                         reorderBlock(sourceId, block.id);
                         finishBlockDrag();
                       }}
-                      onDragEnd={finishBlockDrag}
                       className={`group rounded-xl border transition ${draggedBlockId === block.id ? 'opacity-45' : ''} ${dragOverBlockId === block.id ? 'border-orange-500 ring-2 ring-orange-200 dark:ring-orange-300/20' : active ? 'border-orange-300 bg-orange-50 dark:border-orange-300/30 dark:bg-orange-300/[0.07]' : 'border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.035]'}`}
                     >
                       <div className="flex items-stretch">
                         <div
+                          draggable
+                          onDragStart={(event) => {
+                            setDraggedBlockId(block.id);
+                            setDragOverBlockId(null);
+                            event.dataTransfer.effectAllowed = 'move';
+                            event.dataTransfer.setData('text/plain', block.id);
+                          }}
+                          onDragEnd={finishBlockDrag}
                           className="flex w-9 shrink-0 cursor-grab items-center justify-center border-r border-ink/5 text-ink/25 active:cursor-grabbing group-hover:text-orange-600 dark:border-white/5 dark:text-white/25 dark:group-hover:text-orange-300"
                           title="Drag to reorder"
-                          aria-hidden="true"
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Drag block ${index + 1} to reorder`}
                         >
                           <GripVertical className="h-4 w-4" />
                         </div>
