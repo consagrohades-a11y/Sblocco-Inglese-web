@@ -20,6 +20,7 @@ import {
 const TYPE_META = {
   multiple_choice: { label: 'Scegli', icon: CheckCircle2 },
   multiple_select: { label: 'Scegli più risposte', icon: ListChecks },
+  practice_selection: { label: 'Scegli per te', icon: ListChecks },
   gap_fill: { label: 'Completa', icon: Keyboard },
   select_gap: { label: 'Completa dal menu', icon: Puzzle },
   translation: { label: 'Traduci', icon: Languages },
