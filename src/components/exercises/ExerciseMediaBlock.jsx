@@ -24,7 +24,7 @@ function withMediaFragment(url, startSeconds, endSeconds) {
   return url + '#t=' + start + (end ? ',' + end : '');
 }
 
-export default function ExerciseMediaBlock({ content = {}, disabled = false }) {
+export default function ExerciseMediaBlock({ content = {}, prompt = '', instructions = '', disabled = false }) {
   const media = content.media || {};
   const [signedUrl, setSignedUrl] = useState('');
   const [error, setError] = useState('');
@@ -72,6 +72,12 @@ export default function ExerciseMediaBlock({ content = {}, disabled = false }) {
 
   return (
     <div className="grid gap-4">
+      {(content.heading || prompt || instructions) ? (
+        <div>
+          {content.heading || prompt ? <h2 className="text-xl font-black text-ink dark:text-white">{content.heading || prompt}</h2> : null}
+          {instructions ? <p className="mt-2 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">{instructions}</p> : null}
+        </div>
+      ) : null}
       {sourceType === 'youtube' && ytId ? (
         <div className="overflow-hidden rounded-2xl border border-ink/10 bg-black shadow-sm dark:border-white/10">
           <div className="aspect-video">
