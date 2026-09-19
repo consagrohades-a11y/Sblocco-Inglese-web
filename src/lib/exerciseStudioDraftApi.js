@@ -119,3 +119,19 @@ export async function deleteStudioDraft(draftId) {
 
   if (error) throw error;
 }
+
+
+export async function publishStudioDraft(draftId, runtime) {
+  if (!draftId) throw new Error('Save the Studio draft before publishing.');
+  if (!runtime || runtime.entity_type !== 'exercise') {
+    throw new Error('Studio runtime is not publishable.');
+  }
+
+  const { data, error } = await supabase.rpc('admin_publish_exercise_studio_draft', {
+    p_draft_id: draftId,
+    p_runtime: runtime,
+  });
+
+  if (error) throw error;
+  return data;
+}
