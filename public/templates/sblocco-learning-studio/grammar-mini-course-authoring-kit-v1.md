@@ -352,7 +352,49 @@ Rules:
 
 ---
 
-## 13. gap_fill
+## 13. multiple_choice_set
+
+Use when several multiple-choice questions share the same instruction. This avoids repeating the same learner direction in separate blocks.
+
+```json
+{
+  "type": "multiple_choice_set",
+  "title": "Which sounds natural?",
+  "prompt": "Which sentence sounds most natural in each example?",
+  "instructions": "Choose the best answer.",
+  "items": [
+    {
+      "prompt": "Example 1",
+      "options": [
+        { "text": "Stress can have the effect to make people less patient.", "is_correct": false },
+        { "text": "Stress can have the effect of making people less patient.", "is_correct": true },
+        { "text": "Stress can make the effect of people being less patient.", "is_correct": false }
+      ],
+      "feedback": "Use have the effect of + -ing."
+    },
+    {
+      "prompt": "Example 2",
+      "options": [
+        { "text": "People are more probable to become rude when stressed.", "is_correct": false },
+        { "text": "People are more likely becoming rude when stressed.", "is_correct": false },
+        { "text": "People are more likely to become rude when stressed.", "is_correct": true }
+      ]
+    }
+  ]
+}
+```
+
+Rules:
+- use one shared task/instruction for the whole set;
+- include at least two questions;
+- every question needs at least two options and exactly one correct answer;
+- do not add item keys or option keys;
+- use optional item-level `feedback` only when a short explanation adds teaching value;
+- prefer this block over several separate multiple-choice blocks when the learner is doing the same task repeatedly.
+
+---
+
+## 14. gap_fill
 
 Use `[[blank_1]]`, `[[blank_2]]`, etc. inside `text_template`.
 Do not create gap IDs/keys separately; Sblocco will generate them in order.
@@ -373,7 +415,7 @@ Every blank needs at least one accepted answer.
 
 ---
 
-## 14. word_order
+## 15. word_order
 
 Provide chunks in the **correct order**. Sblocco randomises their learner-facing starting order and keeps it stable within an attempt.
 
@@ -397,7 +439,7 @@ Keep multiword units together when pedagogically useful.
 
 ---
 
-## 15. written_response
+## 16. written_response
 
 This is manually reviewed. Do not pretend there is one exact automatic answer.
 
@@ -419,7 +461,7 @@ This is manually reviewed. Do not pretend there is one exact automatic answer.
 
 ---
 
-## 16. media
+## 17. media
 
 Use for audio, direct video or YouTube.
 
@@ -457,6 +499,7 @@ Before returning the JSON, silently check:
 - no system-owned fields;
 - no diagnostic codes;
 - every multiple-choice block has exactly one correct answer;
+- every multiple-choice set has one shared task and every item has exactly one correct answer;
 - every gap has accepted answers;
 - every word-order task has at least two chunks in correct order;
 - every writing task has a meaningful open prompt;
