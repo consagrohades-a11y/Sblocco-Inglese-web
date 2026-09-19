@@ -9,6 +9,7 @@ import {
   ChevronUp,
   Eye,
   FileJson2,
+  GripVertical,
   Plus,
   Loader2,
   Sparkles,
@@ -168,6 +169,8 @@ export default function AdminExerciseStudio() {
   const [publishedExerciseId, setPublishedExerciseId] = useState(null);
   const [assignOpen, setAssignOpen] = useState(false);
   const [assignmentNotice, setAssignmentNotice] = useState('');
+  const [draggedBlockId, setDraggedBlockId] = useState(null);
+  const [dragOverBlockId, setDragOverBlockId] = useState(null);
   const draftIdRef = useRef(null);
   const lastSavedRef = useRef('');
   const saveTimerRef = useRef(null);
@@ -341,6 +344,30 @@ export default function AdminExerciseStudio() {
     });
   }
 
+
+  function reorderBlock(sourceBlockId, targetBlockId) {
+    if (!sourceBlockId || !targetBlockId || sourceBlockId === targetBlockId) return;
+    setPublishNotice('');
+    setImportNotice('');
+    setAssignmentNotice('');
+    setDocument((current) => {
+      const blocks = [...current.blocks];
+      const sourceIndex = blocks.findIndex((block) => block.id === sourceBlockId);
+      const targetIndex = blocks.findIndex((block) => block.id === targetBlockId);
+      if (sourceIndex < 0 || targetIndex < 0) return current;
+
+      const [moved] = blocks.splice(sourceIndex, 1);
+      const adjustedTarget = sourceIndex < targetIndex ? targetIndex - 1 : targetIndex;
+      blocks.splice(adjustedTarget, 0, moved);
+      return changedDraft(current, { blocks });
+    });
+  }
+
+  function finishBlockDrag() {
+    setDraggedBlockId(null);
+    setDragOverBlockId(null);
+  }
+
   async function publishCurrentDraft() {
     if (!preflight.valid || publishState === 'publishing') return;
 
@@ -430,13 +457,13 @@ export default function AdminExerciseStudio() {
         description="Create, preview and publish Sblocco learning activities."
       />
 
-      <div className="min-h-screen bg-[#f7f3eb] dark:bg-surface-950">
+      <div className="min-h-screen bg-[#f7f3eb] dark:bg-surface-950 xl:flex xl:h-[100dvh] xl:min-h-0 xl:flex-col xl:overflow-hidden">
         {saveError ? (
           <div className="border-b border-red-200 bg-red-50 px-4 py-2 text-center text-xs font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">
             {saveError}
           </div>
         ) : null}
-        <header className="sticky top-0 z-30 border-b border-ink/10 bg-[#f7f3eb]/95 backdrop-blur dark:border-white/10 dark:bg-surface-950/95">
+        <header className="sticky top-0 z-30 shrink-0 border-b border-ink/10 bg-[#f7f3eb]/95 backdrop-blur dark:border-white/10 dark:bg-surface-950/95 xl:static">
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 xl:px-6">
             <div className="flex min-w-0 items-center gap-3">
               <a href="/admin/content/exercises/library" className="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-full border border-ink/10 bg-white text-ink/65 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/65" aria-label="Back to library">
@@ -539,8 +566,8 @@ export default function AdminExerciseStudio() {
           ) : null}
         </header>
 
-        <div className="grid min-h-[calc(100vh-66px)] xl:grid-cols-[250px_minmax(0,1fr)_390px] 2xl:grid-cols-[260px_minmax(0,1fr)_420px]">
-          <aside className="border-b border-ink/10 bg-[#fbf8f1] p-4 dark:border-white/10 dark:bg-white/[0.02] xl:border-b-0 xl:border-r xl:p-5">
+        <div className="grid min-h-[calc(100vh-66px)] xl:min-h-0 xl:flex-1 xl:grid-cols-[260px_minmax(0,1fr)_410px] 2xl:grid-cols-[280px_minmax(0,1fr)_440px]">
+          <aside className="border-b border-ink/10 bg-[#fbf8f1] p-4 dark:border-white/10 dark:bg-white/[0.02] xl:min-h-0 xl:overflow-y-auto xl:overscroll-contain xl:border-b-0 xl:border-r xl:p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-ink/45 dark:text-white/45">Structure</p>
@@ -562,21 +589,60 @@ export default function AdminExerciseStudio() {
                   const issues = preflight.issues.filter((item) => item.block_id === block.id && item.severity === 'error');
                   const active = block.id === selectedBlockId;
                   return (
-                    <div key={block.id} className={`group rounded-xl border transition ${active ? 'border-orange-300 bg-orange-50 dark:border-orange-300/30 dark:bg-orange-300/[0.07]' : 'border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.035]'}`}>
-                      <button type="button" onClick={() => setSelectedBlockId(block.id)} className="focus-ring w-full px-3 py-3 text-left">
-                        <div className="flex items-start gap-2">
-                          <span className="mt-0.5 text-[0.65rem] font-black text-ink/35 dark:text-white/35">{String(index + 1).padStart(2, '0')}</span>
-                          <span className="min-w-0 flex-1">
-                            <span className="block text-[0.65rem] font-black uppercase tracking-wide text-orange-700 dark:text-orange-300">{definition?.label || block.type}</span>
-                            <span className="mt-1 block truncate text-xs font-bold text-ink/70 dark:text-white/70">{blockSummary(block)}</span>
-                          </span>
-                          {issues.length ? <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" /> : null}
+                    <div
+                      key={block.id}
+                      draggable
+                      onDragStart={(event) => {
+                        setDraggedBlockId(block.id);
+                        setDragOverBlockId(null);
+                        event.dataTransfer.effectAllowed = 'move';
+                        event.dataTransfer.setData('text/plain', block.id);
+                      }}
+                      onDragOver={(event) => {
+                        event.preventDefault();
+                        event.dataTransfer.dropEffect = 'move';
+                        if (draggedBlockId && draggedBlockId !== block.id) setDragOverBlockId(block.id);
+                      }}
+                      onDragLeave={(event) => {
+                        if (!event.currentTarget.contains(event.relatedTarget)) {
+                          setDragOverBlockId((current) => current === block.id ? null : current);
+                        }
+                      }}
+                      onDrop={(event) => {
+                        event.preventDefault();
+                        const sourceId = draggedBlockId || event.dataTransfer.getData('text/plain');
+                        reorderBlock(sourceId, block.id);
+                        finishBlockDrag();
+                      }}
+                      onDragEnd={finishBlockDrag}
+                      className={`group rounded-xl border transition ${draggedBlockId === block.id ? 'opacity-45' : ''} ${dragOverBlockId === block.id ? 'border-orange-500 ring-2 ring-orange-200 dark:ring-orange-300/20' : active ? 'border-orange-300 bg-orange-50 dark:border-orange-300/30 dark:bg-orange-300/[0.07]' : 'border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.035]'}`}
+                    >
+                      <div className="flex items-stretch">
+                        <div
+                          className="flex w-9 shrink-0 cursor-grab items-center justify-center border-r border-ink/5 text-ink/25 active:cursor-grabbing group-hover:text-orange-600 dark:border-white/5 dark:text-white/25 dark:group-hover:text-orange-300"
+                          title="Drag to reorder"
+                          aria-hidden="true"
+                        >
+                          <GripVertical className="h-4 w-4" />
                         </div>
-                      </button>
+                        <button type="button" onClick={() => setSelectedBlockId(block.id)} className="focus-ring min-w-0 flex-1 px-3 py-3 text-left">
+                          <div className="flex items-start gap-2">
+                            <span className="mt-0.5 text-[0.65rem] font-black text-ink/35 dark:text-white/35">{String(index + 1).padStart(2, '0')}</span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-[0.65rem] font-black uppercase tracking-wide text-orange-700 dark:text-orange-300">{definition?.label || block.type}</span>
+                              <span className="mt-1 block truncate text-xs font-bold text-ink/70 dark:text-white/70">{blockSummary(block)}</span>
+                            </span>
+                            {issues.length ? <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" /> : null}
+                          </div>
+                        </button>
+                      </div>
                       {active ? (
-                        <div className="flex justify-end gap-1 border-t border-orange-200 px-2 py-1.5 dark:border-orange-300/10">
-                          <button type="button" disabled={index === 0} onClick={() => moveBlock(block.id, -1)} className="focus-ring grid h-7 w-7 place-items-center rounded-lg text-ink/45 disabled:opacity-20 dark:text-white/45" aria-label="Move block up"><ArrowUp className="h-3.5 w-3.5" /></button>
-                          <button type="button" disabled={index === document.blocks.length - 1} onClick={() => moveBlock(block.id, 1)} className="focus-ring grid h-7 w-7 place-items-center rounded-lg text-ink/45 disabled:opacity-20 dark:text-white/45" aria-label="Move block down"><ArrowDown className="h-3.5 w-3.5" /></button>
+                        <div className="flex items-center justify-between border-t border-orange-200 px-2 py-1.5 dark:border-orange-300/10">
+                          <span className="px-1 text-[0.62rem] font-bold text-ink/35 dark:text-white/35">Drag to reorder</span>
+                          <span className="flex gap-1">
+                            <button type="button" disabled={index === 0} onClick={() => moveBlock(block.id, -1)} className="focus-ring grid h-7 w-7 place-items-center rounded-lg text-ink/45 disabled:opacity-20 dark:text-white/45" aria-label="Move block up"><ArrowUp className="h-3.5 w-3.5" /></button>
+                            <button type="button" disabled={index === document.blocks.length - 1} onClick={() => moveBlock(block.id, 1)} className="focus-ring grid h-7 w-7 place-items-center rounded-lg text-ink/45 disabled:opacity-20 dark:text-white/45" aria-label="Move block down"><ArrowDown className="h-3.5 w-3.5" /></button>
+                          </span>
                         </div>
                       ) : null}
                     </div>
@@ -589,7 +655,7 @@ export default function AdminExerciseStudio() {
             )}
           </aside>
 
-          <main className="min-w-0 bg-[#f7f3eb] px-4 py-5 dark:bg-surface-950 sm:px-6 xl:px-8 xl:py-7">
+          <main className="min-w-0 bg-[#f7f3eb] px-4 py-5 dark:bg-surface-950 sm:px-6 xl:min-h-0 xl:overflow-y-auto xl:overscroll-contain xl:px-8 xl:py-7">
             <div className="mx-auto max-w-4xl">
               <button type="button" onClick={() => setMetadataOpen((value) => !value)} className="focus-ring mb-4 flex w-full items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white px-4 py-3 text-left dark:border-white/10 dark:bg-white/[0.035]">
                 <span>
@@ -663,8 +729,8 @@ export default function AdminExerciseStudio() {
             </div>
           </main>
 
-          <aside className="min-w-0 overflow-x-hidden border-t border-ink/10 bg-[#fbf8f1] dark:border-white/10 dark:bg-white/[0.02] xl:border-l xl:border-t-0">
-            <div className="sticky top-[66px] max-h-[calc(100vh-66px)] min-w-0 overflow-x-hidden overflow-y-auto p-4 xl:p-5">
+          <aside className="min-w-0 overflow-x-hidden border-t border-ink/10 bg-[#fbf8f1] dark:border-white/10 dark:bg-white/[0.02] xl:min-h-0 xl:overflow-y-auto xl:overscroll-contain xl:border-l xl:border-t-0">
+            <div className="min-w-0 p-4 xl:p-5">
               {selectedBlock ? (
                 <StudioBlockEditor
                   block={selectedBlock}
