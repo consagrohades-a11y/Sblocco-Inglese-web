@@ -381,6 +381,88 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       grading: { mode: 'automatic', weight: 1, nearly_correct_multiplier: 0.5 },
     }),
   }),
+  multiple_choice_set: definition({
+    type: 'multiple_choice_set', label: 'Multiple Choice Set', category: 'practice',
+    capabilities: { automaticGrading: true },
+    createDefault: () => ({
+      title: '',
+      prompt: 'Which sounds most natural?',
+      instructions: 'Choose the best answer for each example.',
+      primary_skill: 'grammar',
+      learning_objective: '',
+      items: [
+        {
+          prompt: '',
+          options: [
+            { key: 'option_1', text: '', is_correct: true },
+            { key: 'option_2', text: '', is_correct: false },
+            { key: 'option_3', text: '', is_correct: false },
+          ],
+          feedback: '',
+        },
+        {
+          prompt: '',
+          options: [
+            { key: 'option_1', text: '', is_correct: true },
+            { key: 'option_2', text: '', is_correct: false },
+            { key: 'option_3', text: '', is_correct: false },
+          ],
+          feedback: '',
+        },
+      ],
+    }),
+    normalize: (block) => ({
+      ...block,
+      title: text(block.title),
+      prompt: text(block.prompt),
+      instructions: text(block.instructions),
+      items: (Array.isArray(block.items) ? block.items : []).map((item, index) => ({
+        key: text(item?.key) || 'item_' + (index + 1),
+        prompt: text(item?.prompt),
+        options: optionList(item?.options),
+        feedback: text(item?.feedback),
+      })),
+    }),
+    validate: (block) => {
+      const items = Array.isArray(block.items) ? block.items : [];
+      const issues = [];
+      if (!text(block.prompt) && !text(block.instructions)) {
+        issues.push(issue('required', 'Add the shared task or instruction.', 'instructions'));
+      }
+      if (items.length < 2) issues.push(issue('minimum', 'A Multiple Choice Set needs at least two questions.', 'items'));
+      items.forEach((item, index) => {
+        const options = optionList(item?.options);
+        if (!text(item?.prompt)) issues.push(issue('required', 'Question ' + (index + 1) + ' needs a prompt.', 'items.' + index + '.prompt'));
+        if (options.length < 2) issues.push(issue('minimum', 'Question ' + (index + 1) + ' needs at least two answers.', 'items.' + index + '.options'));
+        if (options.filter((option) => option.is_correct).length !== 1) {
+          issues.push(issue('correct_answer', 'Question ' + (index + 1) + ' needs exactly one correct answer.', 'items.' + index + '.options'));
+        }
+      });
+      return issues;
+    },
+    compile: (block, context) => commonQuestion(block, context, {
+      type: 'reading_comprehension',
+      title: text(block.title) || 'Multiple choice set',
+      primary_skill: text(block.primary_skill) || 'grammar',
+      prompt: text(block.prompt) || text(block.title) || 'Choose the best answer.',
+      instructions: text(block.instructions),
+      content: {
+        presentation: 'choice_set',
+        passage: text(block.instructions) || text(block.prompt) || 'Complete the grouped multiple-choice practice.',
+        title: text(block.title) || null,
+        source_note: null,
+        items: (block.items || []).map((item, index) => ({
+          key: text(item.key) || 'item_' + (index + 1),
+          type: 'multiple_choice',
+          prompt: text(item.prompt),
+          points: 1,
+          options: optionList(item.options),
+          feedback: text(item.feedback) || null,
+        })),
+      },
+      grading: { mode: 'per_item', weight: 1, nearly_correct_multiplier: 0.5 },
+    }),
+  }),
   multiple_choice: definition({
     type: 'multiple_choice', label: 'Multiple Choice', category: 'practice',
     capabilities: { automaticGrading: true },
