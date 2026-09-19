@@ -229,8 +229,12 @@ export default function AdminExerciseBuilderLibrary() {
           exerciseId={assignItem.exercise_id}
           activityTitle={assignItem.learner_title || assignItem.internal_title || 'Sblocco activity'}
           onClose={() => setAssignItem(null)}
-          onAssigned={({ learner }) => {
-            setNotice(`Assigned ${assignItem.internal_title || 'activity'} to ${learner?.display_name || learner?.email || 'learner'}.`);
+          onAssigned={({ learner, group, result, mode }) => {
+            setNotice(
+              mode === 'group'
+                ? `Assigned ${assignItem.internal_title || 'activity'} to ${group?.name || 'group'} · ${result?.assignment_count || 0} learner assignments created.`
+                : `Assigned ${assignItem.internal_title || 'activity'} to ${learner?.display_name || learner?.email || 'learner'}.`
+            );
           }}
         />
       ) : null}
