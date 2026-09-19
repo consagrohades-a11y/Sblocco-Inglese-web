@@ -2,6 +2,7 @@ import React from 'react';
 import { isStructuredEducationalContent } from '../../lib/educationalContentBlock.js';
 import { EditorialTeachingBlock } from '../learning/EditorialLearning.jsx';
 import ExerciseQuestionRendererV2 from './ExerciseQuestionRendererV2.jsx';
+import ExerciseMediaBlock from './ExerciseMediaBlock.jsx';
 import ListeningComprehensionQuestion from './ListeningComprehensionQuestion.jsx';
 import SafeTeachingContent from './SafeTeachingContent.jsx';
 
@@ -11,6 +12,10 @@ import SafeTeachingContent from './SafeTeachingContent.jsx';
 // semantic renderers so admin preview and learner delivery stay aligned.
 export default function ExerciseQuestionRenderer(props) {
   const question = props.item?.question || {};
+
+  if (question.type === 'content_block' && question.content?.presentation === 'media') {
+    return <ExerciseMediaBlock content={question.content || {}} disabled={props.disabled} />;
+  }
 
   if (question.type === 'content_block' && !isStructuredEducationalContent(question.content)) {
     return (
