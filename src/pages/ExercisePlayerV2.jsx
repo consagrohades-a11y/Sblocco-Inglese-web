@@ -367,7 +367,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                   {section.questions.map((item, index) => (
                     <ExerciseActivity
                       key={item.id}
-                      type={item.question.type}
+                      type={activityDisplayType(item.question)}
                       index={index + 1}
                       total={section.questions.length}
                     >
@@ -404,6 +404,10 @@ function FinalResult({ payload, assignmentId, resourceId }) {
       </ExerciseCanvas>
     </section>
   );
+}
+
+function activityDisplayType(question) {
+  return question?.content?.presentation === 'choice_set' ? 'multiple_choice_set' : question?.type;
 }
 
 export default function ExercisePlayerV2() {
@@ -827,7 +831,7 @@ export default function ExercisePlayerV2() {
                   {currentSection.questions.map((item, index) => (
                     <ExerciseActivity
                       key={item.id}
-                      type={item.question.type}
+                      type={activityDisplayType(item.question)}
                       index={index + 1}
                       total={currentSection.questions.length}
                     >
@@ -855,7 +859,7 @@ export default function ExercisePlayerV2() {
               {currentSection.questions.map((item, index) => (
                 <ExerciseActivity
                   key={item.id}
-                  type={item.question.type}
+                  type={activityDisplayType(item.question)}
                   index={index + 1}
                   total={currentSection.questions.length}
                 >
@@ -881,7 +885,7 @@ export default function ExercisePlayerV2() {
           ) : currentQuestion ? (
             <ExerciseActivity
               className="mt-5"
-              type={currentQuestion.question.type}
+              type={activityDisplayType(currentQuestion.question)}
               index={questionIndex + 1}
               total={currentSection.questions.length}
             >
