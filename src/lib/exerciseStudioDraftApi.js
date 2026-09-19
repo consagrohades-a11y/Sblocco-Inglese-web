@@ -95,18 +95,9 @@ export async function saveStudioDraft(draftId, rawDocument) {
 }
 
 export async function archiveStudioDraft(draftId) {
-  const userId = await currentUserId();
-  const { data, error } = await supabase
-    .from('exercise_studio_drafts')
-    .update({
-      status: 'archived',
-      updated_by: userId,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', draftId)
-    .select('*')
-    .single();
-
+  const { data, error } = await supabase.rpc('admin_archive_exercise_studio_draft', {
+    p_draft_id: draftId,
+  });
   if (error) throw error;
   return data;
 }
