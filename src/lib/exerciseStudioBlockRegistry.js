@@ -108,6 +108,7 @@ function requiredText(block, field, label) {
 
 function definition(config) {
   return Object.freeze({
+    ...config,
     capabilities: {
       automaticGrading: false,
       manualReview: false,
@@ -115,7 +116,6 @@ function definition(config) {
       learnerRenderer: 'exercise_question',
       ...config.capabilities,
     },
-    ...config,
   });
 }
 
