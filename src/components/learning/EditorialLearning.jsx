@@ -215,6 +215,17 @@ export function EditorialTeachingBlock({ content = {}, prompt = '', instructions
         </div>
       ) : null}
 
+      {type === 'dialogue' && Array.isArray(content.turns) && content.turns.length ? (
+        <div className="mt-4 grid gap-3">
+          {content.turns.map((turn, index) => (
+            <div key={`${turn?.speaker || 'turn'}-${index}`} className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3 rounded-2xl bg-linen/55 px-4 py-3 dark:bg-white/[0.05]">
+              <span className="rounded-full bg-orange-100 px-2.5 py-1 text-xs font-black text-orange-800 dark:bg-orange-300/10 dark:text-orange-100">{turn?.speaker || '—'}</span>
+              <p className="pt-0.5 text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">{turn?.text || ''}</p>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
       {type === 'recap' && items.length ? (
         <ul className="sblocco-teaching-recap">
           {items.map((item, index) => <li key={`${item}-${index}`}><Check aria-hidden="true" />{item}</li>)}
