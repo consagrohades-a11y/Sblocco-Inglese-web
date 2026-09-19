@@ -118,7 +118,7 @@ function StructuredContextEditor({ block, patch }) {
         rows={4}
         placeholder="What is happening? What does the learner need to know before answering?"
       />
-      <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+      <div className="grid min-w-0 gap-3">
         <TextInput label="Learner role" value={block.context_role || ''} onChange={(value) => patch({ context_role: value })} placeholder="e.g. You are a hotel receptionist" />
         <TextInput label="Audience / recipient" value={block.context_audience || ''} onChange={(value) => patch({ context_audience: value })} placeholder="e.g. A dissatisfied guest" />
       </div>
