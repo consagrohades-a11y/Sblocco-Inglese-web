@@ -160,7 +160,14 @@ function normalizeReadingItem(rawItem, index, errors, path) {
     if (options.length < 2) errors.push(pathMessage(path, 'servono almeno due opzioni.'));
     if (type !== 'multiple_select' && correctCount !== 1) errors.push(pathMessage(path, 'serve esattamente una risposta corretta.'));
     if (type === 'multiple_select' && correctCount < 1) errors.push(pathMessage(path, 'serve almeno una risposta corretta.'));
-    return { key, type, prompt, points, options };
+    return {
+      key,
+      type,
+      prompt,
+      points,
+      options,
+      feedback: text(rawItem?.feedback) || null,
+    };
   }
 
   const acceptedAnswers = stringArray(rawItem?.accepted_answers || rawItem?.answers);
