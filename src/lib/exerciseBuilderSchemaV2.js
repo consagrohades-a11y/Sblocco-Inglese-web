@@ -208,10 +208,19 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
   if (questionType === 'practice_selection') {
     const rawOptions = Array.isArray(source.options) ? source.options : Array.isArray(content.options) ? content.options : [];
     content.options = rawOptions
-      .map((option, index) => ({
-        key: text(option?.key) || `option_${index + 1}`,
-        text: typeof option === 'string' ? text(option) : text(option?.text),
-      }))
+      .map((option, index) => {
+        const vocabBank = Boolean(option?.vocab_bank);
+        const vocabKind = vocabBank && ['word', 'chunk'].includes(option?.vocab_kind) ? option.vocab_kind : null;
+        if (vocabBank && !vocabKind) {
+          errors.push(pathMessage(`${path}.options[${index}]`, 'vocab_kind deve essere "word" oppure "chunk" quando vocab_bank è attivo.'));
+        }
+        return {
+          key: text(option?.key) || `option_${index + 1}`,
+          text: typeof option === 'string' ? text(option) : text(option?.text),
+          vocab_bank: vocabBank,
+          vocab_kind: vocabKind,
+        };
+      })
       .filter((option) => option.text);
     content.selection_mode = ['single', 'multiple'].includes(source.selection_mode || content.selection_mode)
       ? (source.selection_mode || content.selection_mode)
