@@ -6,6 +6,7 @@ import {
   quickAssignStudioExercise,
   quickAssignStudioExerciseGroup,
 } from '../../../lib/exerciseStudioAssignmentApi.js';
+import StudioSelect from './StudioSelect.jsx';
 
 function toIso(localValue) {
   if (!localValue) return null;
@@ -271,14 +272,19 @@ export default function StudioQuickAssignPanel({
               <details className="mt-5 rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-white/[0.03]">
                 <summary className="cursor-pointer text-xs font-black uppercase tracking-[0.1em] text-ink/55 dark:text-white/55">Advanced assignment settings</summary>
                 <div className="mt-4 grid gap-4">
-                  <label className="grid gap-1.5 text-xs font-black uppercase tracking-[0.08em] text-ink/55 dark:text-white/55">
-                    Completion
-                    <select value={completionRule} onChange={(event) => setCompletionRule(event.target.value)} className={inputClass}>
-                      <option value="passed">Minimum score</option>
-                      <option value="submitted">First submission</option>
-                      <option value="attempts">Number of attempts</option>
-                    </select>
-                  </label>
+                  <div className="grid min-w-0 gap-1.5 text-xs font-black uppercase tracking-[0.08em] text-ink/55 dark:text-white/55">
+                    <span>Completion</span>
+                    <StudioSelect
+                      value={completionRule}
+                      onChange={setCompletionRule}
+                      options={[
+                        ['passed', 'Minimum score'],
+                        ['submitted', 'First submission'],
+                        ['attempts', 'Number of attempts'],
+                      ]}
+                      ariaLabel="Assignment completion rule"
+                    />
+                  </div>
 
                   {completionRule === 'attempts' ? (
                     <label className="grid gap-1.5 text-xs font-black uppercase tracking-[0.08em] text-ink/55 dark:text-white/55">
