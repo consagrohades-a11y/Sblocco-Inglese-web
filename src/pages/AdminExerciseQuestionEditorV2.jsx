@@ -30,6 +30,7 @@ const TYPE_GROUPS = [
     [
       ["content_block", "Blocco informativo"],
       ["reading_comprehension", "Lettura e comprensione"],
+      ["listening_comprehension", "Ascolto / video e comprensione"],
     ],
   ],
   [
@@ -225,6 +226,35 @@ function defaultContent(type) {
       rubric: defaultRubric("speaking"),
       model_transcript: "",
     };
+  if (type === "listening_comprehension")
+    return {
+      title: "",
+      audio: {
+        media_type: "youtube",
+        url: "",
+        storage_bucket: null,
+        storage_path: null,
+        title: "",
+        duration_seconds: null,
+        start_seconds: 0,
+        end_seconds: null,
+        transcript: "",
+        transcript_visibility: "after_submit",
+        max_plays: null,
+      },
+      items: [
+        {
+          key: "item_1",
+          type: "multiple_choice",
+          prompt: "",
+          points: 1,
+          options: [
+            { key: "a", text: "", is_correct: true },
+            { key: "b", text: "", is_correct: false },
+          ],
+        },
+      ],
+    };
   if (type === "reading_comprehension")
     return {
       title: "",
@@ -251,6 +281,7 @@ function defaultSkill(type) {
   if (type === "written_response") return "writing";
   if (type === "dialogue_roleplay") return "interaction";
   if (type === "audio_response") return "speaking";
+  if (type === "listening_comprehension") return "listening";
   if (type === "reading_comprehension" || type === "content_block")
     return "reading";
   return "grammar";
@@ -1612,6 +1643,205 @@ function ReadingEditor({ question, setQuestion }) {
   );
 }
 
+
+function ListeningEditor({ question, setQuestion }) {
+  const content = question.content || {};
+  const audio = content.audio || {};
+  const items = content.items || [];
+  const updateContent = (patch) =>
+    setQuestion({ ...question, content: { ...content, ...patch } });
+  const updateAudio = (patch) =>
+    updateContent({ audio: { ...audio, ...patch } });
+
+  return (
+    <div className="grid gap-5">
+      <div className="rounded-xl border border-cyan-200 bg-cyan-50/35 p-4 dark:border-cyan-300/20 dark:bg-cyan-300/[0.04]">
+        <p className="text-xs font-bold uppercase tracking-wide text-cyan-800 dark:text-cyan-200">
+          Sorgente di ascolto
+        </p>
+        <div className="mt-3 grid gap-4 sm:grid-cols-2">
+          <label className="text-xs font-black">
+            Tipo di media
+            <select
+              value={audio.media_type || "audio"}
+              onChange={(event) => updateAudio({ media_type: event.target.value })}
+              className={fieldClass}
+            >
+              <option value="youtube">YouTube</option>
+              <option value="video">Video diretto</option>
+              <option value="audio">Audio</option>
+            </select>
+          </label>
+          <label className="text-xs font-black">
+            Titolo learner-facing
+            <input
+              value={audio.title || ""}
+              onChange={(event) => updateAudio({ title: event.target.value })}
+              className={fieldClass}
+              placeholder="Es. A day at work · clip 1"
+            />
+          </label>
+        </div>
+        <label className="mt-4 block text-xs font-black">
+          URL del video / audio
+          <input
+            value={audio.url || ""}
+            onChange={(event) => updateAudio({ url: event.target.value })}
+            className={fieldClass}
+            placeholder={
+              (audio.media_type || "audio") === "youtube"
+                ? "https://www.youtube.com/watch?v=..."
+                : "https://..."
+            }
+          />
+        </label>
+        <div className="mt-4 grid gap-4 sm:grid-cols-4">
+          <label className="text-xs font-black">
+            Inizio clip (s)
+            <input
+              type="number"
+              min="0"
+              value={audio.start_seconds ?? 0}
+              onChange={(event) =>
+                updateAudio({ start_seconds: Number(event.target.value) || 0 })
+              }
+              className={fieldClass}
+            />
+          </label>
+          <label className="text-xs font-black">
+            Fine clip (s)
+            <input
+              type="number"
+              min="0"
+              value={audio.end_seconds ?? ""}
+              onChange={(event) =>
+                updateAudio({
+                  end_seconds:
+                    event.target.value === "" ? null : Number(event.target.value),
+                })
+              }
+              className={fieldClass}
+            />
+          </label>
+          <label className="text-xs font-black">
+            Durata indicativa (s)
+            <input
+              type="number"
+              min="1"
+              value={audio.duration_seconds ?? ""}
+              onChange={(event) =>
+                updateAudio({
+                  duration_seconds:
+                    event.target.value === "" ? null : Number(event.target.value),
+                })
+              }
+              className={fieldClass}
+            />
+          </label>
+          <label className="text-xs font-black">
+            Max riproduzioni
+            <input
+              type="number"
+              min="1"
+              value={audio.max_plays ?? ""}
+              onChange={(event) =>
+                updateAudio({
+                  max_plays:
+                    event.target.value === "" ? null : Number(event.target.value),
+                })
+              }
+              className={fieldClass}
+              placeholder="Illimitate"
+            />
+          </label>
+        </div>
+        <label className="mt-4 block text-xs font-black">
+          Trascrizione
+          <textarea
+            rows={7}
+            value={audio.transcript || ""}
+            onChange={(event) => updateAudio({ transcript: event.target.value })}
+            className={fieldClass}
+            placeholder="Trascrizione fedele del clip, opzionale."
+          />
+        </label>
+        <label className="mt-4 block text-xs font-black">
+          Quando mostrare la trascrizione
+          <select
+            value={audio.transcript_visibility || "after_submit"}
+            onChange={(event) =>
+              updateAudio({ transcript_visibility: event.target.value })
+            }
+            className={fieldClass}
+          >
+            <option value="after_submit">Dopo la consegna</option>
+            <option value="always">Sempre</option>
+            <option value="never">Mai</option>
+          </select>
+        </label>
+      </div>
+
+      <section>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wide text-cyan-800 dark:text-cyan-200">
+              Domande sul clip
+            </p>
+            <p className="mt-1 text-xs font-semibold text-ink/55 dark:text-white/55">
+              Puoi testare gist, dettagli, intenzione, inferenza e lessico in contesto.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() =>
+              updateContent({
+                items: [
+                  ...items,
+                  {
+                    key: `item_${items.length + 1}`,
+                    type: "multiple_choice",
+                    prompt: "",
+                    points: 1,
+                    options: [
+                      { key: "a", text: "", is_correct: true },
+                      { key: "b", text: "", is_correct: false },
+                    ],
+                  },
+                ],
+              })
+            }
+            className="text-xs font-black text-cyan-800 underline dark:text-cyan-200"
+          >
+            Aggiungi
+          </button>
+        </div>
+        <div className="mt-3 grid gap-4">
+          {items.map((item, index) => (
+            <ReadingItemEditor
+              key={`${item.key}-${index}`}
+              item={item}
+              index={index}
+              onChange={(next) =>
+                updateContent({
+                  items: items.map((current, position) =>
+                    position === index ? next : current,
+                  ),
+                })
+              }
+              onRemove={() =>
+                updateContent({
+                  items: items.filter((_, position) => position !== index),
+                })
+              }
+              removable={items.length > 1}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function DiagnosticPatterns({ question, setQuestion, codes }) {
   const mappings = question.diagnostics.answer_error_mappings || [];
   return (
@@ -1893,7 +2123,7 @@ export default function AdminExerciseQuestionEditorV2() {
         ...question.grading,
         mode: manual
           ? "manual_review"
-          : type === "reading_comprehension"
+          : ["reading_comprehension", "listening_comprehension"].includes(type)
             ? "per_item"
             : "automatic",
         weight: manual ? rubricTotal(content.rubric) : 1,
@@ -2030,7 +2260,7 @@ export default function AdminExerciseQuestionEditorV2() {
     <>
       <SEO
         title="Question Editor v2 | Exercise Builder"
-        description="Crea domande automatiche, letture e produzioni revisionate."
+        description="Crea, modifica e prova domande automatiche, listening/video, letture e produzioni come le vede lo studente."
       />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-[1700px]">
@@ -2042,8 +2272,7 @@ export default function AdminExerciseQuestionEditorV2() {
                   Editor domande
                 </h1>
                 <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
-                  Domande automatiche, lettura, scrittura, dialoghi e
-                  registrazioni nello stesso sistema versionato.
+                  Crea e modifica attività direttamente accanto alla vera anteprima learner: domande automatiche, listening/video, lettura, scrittura, dialoghi e registrazioni nello stesso sistema versionato.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -2489,6 +2718,12 @@ export default function AdminExerciseQuestionEditorV2() {
                       setQuestion={setQuestion}
                     />
                   ) : null}
+                  {question.questionType === "listening_comprehension" ? (
+                    <ListeningEditor
+                      question={question}
+                      setQuestion={setQuestion}
+                    />
+                  ) : null}
                   {question.questionType === "reading_comprehension" ? (
                     <ReadingEditor
                       question={question}
@@ -2610,7 +2845,7 @@ export default function AdminExerciseQuestionEditorV2() {
                     </select>
                   </label>
                   {!manual &&
-                  !["reading_comprehension"].includes(question.questionType) ? (
+                  !["reading_comprehension", "listening_comprehension"].includes(question.questionType) ? (
                     <div className="mt-5">
                       <DiagnosticPatterns
                         question={question}
