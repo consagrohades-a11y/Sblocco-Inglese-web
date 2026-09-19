@@ -286,6 +286,77 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       },
     }),
   }),
+  practice_selection: definition({
+    type: 'practice_selection', label: 'Selection · no correct answer', category: 'practice',
+    capabilities: { automaticGrading: false },
+    createDefault: () => ({
+      title: '',
+      prompt: '',
+      instructions: 'Seleziona ciò che ti rappresenta.',
+      primary_skill: 'vocabulary',
+      learning_objective: 'Notice and select useful language without right-or-wrong grading.',
+      selection_mode: 'multiple',
+      options: [],
+    }),
+    normalize: (block) => ({
+      ...block,
+      title: text(block.title),
+      prompt: text(block.prompt),
+      instructions: text(block.instructions),
+      selection_mode: ['single', 'multiple'].includes(block.selection_mode) ? block.selection_mode : 'multiple',
+      options: list(block.options),
+    }),
+    validate: (block) => {
+      const issues = [];
+      if (!text(block.prompt)) issues.push(issue('required', 'Selection prompt is required.', 'prompt'));
+      if (list(block.options).length < 2) issues.push(issue('minimum', 'Add at least two selectable options.', 'options'));
+      return issues;
+    },
+    compile: (block, context) => commonQuestion(block, context, {
+      type: 'practice_selection',
+      primary_skill: text(block.primary_skill) || 'vocabulary',
+      content: {
+        selection_mode: block.selection_mode,
+        options: list(block.options).map((option, index) => ({
+          key: 'option_' + (index + 1),
+          text: option,
+        })),
+      },
+      grading: { mode: 'ungraded', weight: 0, nearly_correct_multiplier: 0 },
+    }),
+  }),
+  translation: definition({
+    type: 'translation', label: 'Open Answer / Translation', category: 'practice',
+    capabilities: { automaticGrading: true },
+    createDefault: () => ({
+      title: '',
+      prompt: '',
+      instructions: 'Traduci o rispondi con una frase naturale.',
+      primary_skill: 'grammar',
+      learning_objective: '',
+      accepted_answers: [],
+      feedback: { explanation: '' },
+    }),
+    normalize: (block) => ({
+      ...block,
+      title: text(block.title),
+      prompt: text(block.prompt),
+      instructions: text(block.instructions),
+      accepted_answers: list(block.accepted_answers),
+      feedback: { explanation: text(block.feedback?.explanation) },
+    }),
+    validate: (block) => {
+      const issues = [];
+      if (!text(block.prompt)) issues.push(issue('required', 'Open-answer prompt is required.', 'prompt'));
+      if (!list(block.accepted_answers).length) issues.push(issue('accepted_answer', 'Add at least one accepted answer.', 'accepted_answers'));
+      return issues;
+    },
+    compile: (block, context) => commonQuestion(block, context, {
+      type: 'translation',
+      content: { accepted_answers: list(block.accepted_answers) },
+      grading: { mode: 'automatic', weight: 1, nearly_correct_multiplier: 0.5 },
+    }),
+  }),
   multiple_choice: definition({
     type: 'multiple_choice', label: 'Multiple Choice', category: 'practice',
     capabilities: { automaticGrading: true },
@@ -384,14 +455,20 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
     capabilities: { manualReview: true },
     createDefault: () => ({
       title: '', prompt: '', instructions: 'Scrivi la tua risposta.', primary_skill: 'writing', learning_objective: '',
-      context: '', min_words: 40, max_words: 120, required_points: [], rubric: normalizeRubric([]),
+      context: '', context_situation: '', context_role: '', context_audience: '', context_goal: '',
+      min_words: 40, max_words: 120, required_points: [], rubric: normalizeRubric([]),
     }),
     normalize: (block) => {
       const minWords = positiveInteger(block.min_words, 40);
+      const contextSituation = text(block.context_situation || block.context);
       return {
         ...block,
         title: text(block.title), prompt: text(block.prompt), instructions: text(block.instructions),
-        context: text(block.context),
+        context: contextSituation,
+        context_situation: contextSituation,
+        context_role: text(block.context_role),
+        context_audience: text(block.context_audience),
+        context_goal: text(block.context_goal),
         min_words: minWords,
         max_words: Math.max(minWords, positiveInteger(block.max_words, Math.max(80, minWords))),
         required_points: list(block.required_points),
@@ -408,7 +485,13 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       type: 'written_response',
       primary_skill: 'writing',
       content: {
-        context: block.context || null,
+        context: block.context_situation || block.context || null,
+        context_sections: {
+          situation: block.context_situation || block.context || null,
+          role: block.context_role || null,
+          audience: block.context_audience || null,
+          goal: block.context_goal || null,
+        },
         min_words: block.min_words,
         max_words: block.max_words,
         required_points: block.required_points,
