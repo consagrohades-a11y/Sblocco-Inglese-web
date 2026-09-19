@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {
   STUDIO_BLOCK_REGISTRY,
   STUDIO_BLOCK_TYPES,
@@ -12,6 +13,7 @@ import {
   preflightStudioDocument,
 } from '../src/lib/exerciseStudioCompiler.js';
 import { stableShuffleWordOrderTokenInstances } from '../src/lib/wordOrderShuffle.js';
+import { parseStudioImport } from '../src/lib/exerciseStudioImport.js';
 
 const requiredTypes = [
   'explanation',
@@ -191,4 +193,85 @@ const unsupported = preflightStudioDocument({
 assert.equal(unsupported.valid, false);
 assert.ok(unsupported.errors.some((item) => item.code === 'unsupported_block'));
 
-console.log('Learning Studio foundation validated: canonical registry, automatic technical repair, compiler contract and publish preflight are coherent.');
+const authoringExample = fs.readFileSync(
+  new URL('../public/templates/sblocco-learning-studio/grammar-mini-course-example-v1.json', import.meta.url),
+  'utf8',
+);
+const importedExample = parseStudioImport(authoringExample);
+assert.equal(importedExample.publishable, true, importedExample.errors.map((item) => item.message).join('\n'));
+assert.equal(importedExample.needs_attention_blocks, 0);
+assert.ok(importedExample.ready_blocks >= 1);
+
+const hostileTechnicalFields = parseStudioImport(JSON.stringify({
+  _template: {
+    template_id: 'sblocco-grammar-mini-course',
+    template_version: 1,
+    authoring_contract_version: 1,
+  },
+  activity: {
+    id: 'ai_should_not_control_this',
+    internal_code: 'BREAK_RUNTIME',
+    internal_title: 'AI technical field test',
+    learner_title: 'Technical field test',
+    level: 'A2',
+    topic: 'present_simple',
+    activity_type: 'lesson',
+    blocks: [{
+      id: 'ai_block',
+      sequence_index: 999,
+      type: 'multiple_choice',
+      prompt: 'She ___ in Bologna.',
+      options: [
+        { key: 'evil_a', text: 'lives', is_correct: true },
+        { key: 'evil_b', text: 'live', is_correct: false },
+      ],
+      diagnostics: { tested_codes: ['AI_INVENTED_CODE'] },
+    }],
+  },
+}));
+assert.notEqual(hostileTechnicalFields.document.id, 'ai_should_not_control_this');
+assert.notEqual(hostileTechnicalFields.document.internal_code, 'BREAK_RUNTIME');
+assert.notEqual(hostileTechnicalFields.document.blocks[0].id, 'ai_block');
+assert.equal(hostileTechnicalFields.document.blocks[0].sequence_index, 1);
+assert.equal(hostileTechnicalFields.document.blocks[0].options[0].key, 'option_1');
+assert.ok(hostileTechnicalFields.repairs.some((repair) => repair.code === 'removed_ai_diagnostics'));
+
+const partialImport = parseStudioImport(JSON.stringify({
+  _template: {
+    template_id: 'sblocco-grammar-mini-course',
+    template_version: 1,
+    authoring_contract_version: 1,
+  },
+  activity: {
+    internal_title: 'Partial import',
+    learner_title: 'Partial import',
+    level: 'A2',
+    topic: 'past_simple',
+    activity_type: 'mini_course',
+    blocks: [
+      {
+        type: 'explanation',
+        body: 'Use the past simple for finished past events.',
+      },
+      {
+        type: 'multiple_choice',
+        prompt: 'Yesterday I ___ home early.',
+        options: [
+          { text: 'went', is_correct: false },
+          { text: 'go', is_correct: false },
+        ],
+      },
+      {
+        type: 'recap',
+        items: ['Finished past time normally uses the past simple.'],
+      },
+    ],
+  },
+}));
+assert.equal(partialImport.document.blocks.length, 3, 'A bad block must not reject the whole import.');
+assert.equal(partialImport.ready_blocks, 2);
+assert.equal(partialImport.needs_attention_blocks, 1);
+assert.equal(partialImport.publishable, false);
+assert.ok(partialImport.errors.some((item) => item.code === 'correct_answer'));
+
+console.log('Learning Studio foundation validated: registry, compiler, safe JSON import, automatic technical repair and publish preflight are coherent.');
