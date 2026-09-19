@@ -110,7 +110,7 @@ function PreviewBlock({ block, document, index, total, selected, onSelect }) {
         </span>
       ) : null}
       {question ? (
-        <ExerciseActivity type={question.type} index={index + 1} total={total}>
+        <ExerciseActivity type={question.content?.presentation === 'choice_set' ? 'multiple_choice_set' : question.type} index={index + 1} total={total}>
           <ExerciseQuestionRenderer
             item={{ id: block.id, question, result: null }}
             answer={null}
