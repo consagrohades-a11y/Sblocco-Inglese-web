@@ -9,38 +9,31 @@ const CATEGORY_LABELS = {
   media: 'Media',
 };
 
-const CATEGORY_DESCRIPTIONS = {
-  theory: 'Explain, model and support.',
-  practice: 'Checks, choices and low-friction practice.',
-  production: 'Learner-created responses.',
-  media: 'Audio and video input.',
-};
-
 export default function StudioBlockPalette({ onAdd }) {
   const groups = listStudioBlocksByCategory();
 
   return (
-    <div className="grid gap-5">
+    <div className="grid min-w-0 gap-4">
       {Object.entries(groups).map(([category, blocks]) => (
-        <section key={category}>
-          <div className="mb-2">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-orange-700 dark:text-orange-300">
+        <section key={category} className="min-w-0">
+          <div className="mb-2 flex items-baseline justify-between gap-3">
+            <p className="text-[0.7rem] font-black uppercase tracking-[0.14em] text-orange-700 dark:text-orange-300">
               {CATEGORY_LABELS[category] || category}
             </p>
-            <p className="mt-1 text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">
-              {CATEGORY_DESCRIPTIONS[category] || ''}
-            </p>
+            <span className="shrink-0 text-[0.65rem] font-bold text-ink/30 dark:text-white/30">{blocks.length}</span>
           </div>
-          <div className="grid gap-1.5">
+          <div className="grid min-w-0 gap-2">
             {blocks.map((block) => (
               <button
                 key={block.type}
                 type="button"
                 onClick={() => onAdd(block.type)}
-                className="focus-ring flex w-full items-center justify-between gap-3 rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-left text-sm font-black text-ink transition hover:border-orange-300 hover:bg-orange-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-white dark:hover:border-orange-300/30 dark:hover:bg-orange-300/[0.07]"
+                className="focus-ring group flex w-full min-w-0 items-center gap-3 rounded-2xl border border-ink/10 bg-white px-3.5 py-3 text-left text-sm font-black leading-5 text-ink transition hover:border-orange-300 hover:bg-orange-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-white dark:hover:border-orange-300/30 dark:hover:bg-orange-300/[0.07]"
               >
-                <span>{block.label}</span>
-                <Plus className="h-4 w-4 shrink-0 text-orange-600 dark:text-orange-300" aria-hidden="true" />
+                <span className="min-w-0 flex-1 whitespace-normal break-words">{block.label}</span>
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-orange-50 text-orange-600 transition group-hover:bg-orange-500 group-hover:text-white dark:bg-orange-300/10 dark:text-orange-300">
+                  <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                </span>
               </button>
             ))}
           </div>
