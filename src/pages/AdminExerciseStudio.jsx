@@ -41,6 +41,7 @@ import {
   publishStudioDraft,
   saveStudioDraft,
 } from '../lib/exerciseStudioDraftApi.js';
+import { deleteStudioContentMedia } from '../lib/exerciseStudioMediaApi.js';
 
 const LEVELS = ['A0', 'A1', 'A1+', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2', 'Mixed'];
 const ACTIVITY_TYPES = [
@@ -311,13 +312,18 @@ export default function AdminExerciseStudio() {
   }
 
   function deleteBlock(blockId) {
+    const block = document.blocks.find((item) => item.id === blockId);
     setPublishNotice('');
     setImportNotice('');
     setAssignmentNotice('');
     setDocument((current) => changedDraft(current, {
-      blocks: current.blocks.filter((block) => block.id !== blockId),
+      blocks: current.blocks.filter((item) => item.id !== blockId),
     }));
     setSelectedBlockId(null);
+
+    if (block?.storage_bucket && block?.storage_path) {
+      deleteStudioContentMedia(block.storage_bucket, block.storage_path).catch(() => undefined);
+    }
   }
 
   function moveBlock(blockId, direction) {
@@ -652,6 +658,7 @@ export default function AdminExerciseStudio() {
                 <StudioBlockEditor
                   block={selectedBlock}
                   issues={selectedIssues}
+                  activityId={document.id}
                   onChange={replaceBlock}
                   onDelete={() => deleteBlock(selectedBlock.id)}
                 />
