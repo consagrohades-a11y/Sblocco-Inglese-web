@@ -54,6 +54,24 @@ function MultipleChoice({ question, answer, onChange, disabled, multiple = false
   return <div className="exercise-choice-grid is-two-column">{options.map((option) => <ExerciseChoice key={option.key} disabled={disabled} selected={selected.has(option.key)} multiple={multiple} onClick={() => choose(option.key)}>{option.text}</ExerciseChoice>)}</div>;
 }
 
+function PracticeSelection({ question, answer, onChange, disabled }) {
+  const multiple = question.content?.selection_mode !== 'single';
+  return (
+    <div className="grid gap-3">
+      <p className="text-xs font-semibold leading-5 text-ink/60 dark:text-white/60">
+        Non c’è una risposta giusta o sbagliata: la selezione viene semplicemente salvata.
+      </p>
+      <MultipleChoice
+        question={question}
+        answer={answer}
+        onChange={onChange}
+        disabled={disabled}
+        multiple={multiple}
+      />
+    </div>
+  );
+}
+
 function DialogueChoice({ question, answer, onChange, disabled }) {
   const content = question.content || {};
   return (
@@ -171,11 +189,48 @@ function WordOrder({ question, answer, onChange, disabled, shuffleSeed }) {
 
 function WrittenResponse({ question, answer, onChange, disabled }) {
   const content = question.content || {};
+  const contextSections = content.context_sections && typeof content.context_sections === 'object'
+    ? content.context_sections
+    : {};
+  const structuredContext = [
+    ['Situazione', contextSections.situation || content.context],
+    ['Il tuo ruolo', contextSections.role],
+    ['A chi stai scrivendo', contextSections.audience],
+    ['Obiettivo', contextSections.goal],
+  ].filter(([, value]) => value);
   const count = wordCount(answer);
   const min = Number(content.min_words || 0);
   const max = Number(content.max_words || 0);
   const validRange = (!min || count >= min) && (!max || count <= max);
-  return <div className="grid gap-4">{content.context ? <div className="exercise-scenario">{content.context}</div> : null}{content.required_points?.length ? <div className="exercise-guidance"><p className="text-xs font-bold uppercase tracking-wide">Punti da includere</p><ul className="mt-2 grid gap-1 text-sm font-semibold">{content.required_points.map((point) => <li key={point}>• {point}</li>)}</ul></div> : null}<TextAnswer multiline value={answer || ''} onChange={onChange} disabled={disabled} placeholder="Scrivi qui la tua produzione..." /><div className="flex flex-wrap items-center justify-between gap-2 text-xs font-black"><span className={validRange ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-200'}>{count} parole</span><span className="text-ink/60 dark:text-white/60">Richieste: {min || 0}{max ? `–${max}` : '+'}</span></div></div>;
+
+  return (
+    <div className="grid gap-4">
+      {structuredContext.length ? (
+        <section className="grid gap-3 rounded-2xl border border-orange-200/70 bg-orange-50/60 p-4 dark:border-orange-300/15 dark:bg-orange-300/[0.05]">
+          <p className="text-xs font-black uppercase tracking-[0.1em] text-orange-800 dark:text-orange-200">Contesto</p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {structuredContext.map(([label, value]) => (
+              <div key={label} className="rounded-xl bg-white/75 p-3 dark:bg-white/[0.04]">
+                <p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">{label}</p>
+                <p className="mt-1 whitespace-pre-wrap text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">{value}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+      {content.required_points?.length ? (
+        <div className="exercise-guidance">
+          <p className="text-xs font-bold uppercase tracking-wide">Punti da includere</p>
+          <ul className="mt-2 grid gap-1 text-sm font-semibold">{content.required_points.map((point) => <li key={point}>• {point}</li>)}</ul>
+        </div>
+      ) : null}
+      <TextAnswer multiline value={answer || ''} onChange={onChange} disabled={disabled} placeholder="Scrivi qui la tua produzione..." />
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-black">
+        <span className={validRange ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-200'}>{count} parole</span>
+        <span className="text-ink/60 dark:text-white/60">Richieste: {min || 0}{max ? `–${max}` : '+'}</span>
+      </div>
+    </div>
+  );
 }
 
 function RubricPreview({ rubric }) {
@@ -372,6 +427,13 @@ function AudioRecorder({ question, answer, onChange, disabled, attemptId, attemp
 
 function ResultPanel({ question, result, teacherComment, showScore, showCorrectAnswers, showExplanations }) {
   if (!result) return null;
+  if (result.ungraded) {
+    return (
+      <div className="mt-4 rounded-xl border border-orange-200/70 bg-orange-50/55 p-4 text-sm font-semibold text-orange-950 dark:border-orange-300/15 dark:bg-orange-300/[0.05] dark:text-orange-100">
+        <strong>Scelta salvata.</strong> Questa attività non ha una risposta giusta o sbagliata e non influisce sul punteggio.
+      </div>
+    );
+  }
   const status = result.status || 'unanswered';
   const correctAnswer = formatExerciseCorrectAnswer(question, result.correct_answer);
   return <ExerciseFeedbackPanel status={status} title={resultLabels[status] || status}>{status === 'pending_review' ? <p>La risposta è stata consegnata. Riceverai la valutazione dell’insegnante nella tua area studente.</p> : null}{showScore && result.max_points !== undefined && status !== 'pending_review' ? <p>Punti: <strong>{Number(result.earned_points || 0).toFixed(1)} / {Number(result.max_points || 0).toFixed(1)}</strong></p> : null}{showCorrectAnswers && correctAnswer ? <p>Risposta giusta: <strong>{correctAnswer}</strong></p> : null}{showExplanations && result.explanation ? <p>{typeof result.explanation === 'string' ? result.explanation : JSON.stringify(result.explanation)}</p> : null}{teacherComment ? <div className="mt-3 border-t border-current/15 pt-3"><p className="text-xs font-bold uppercase tracking-wide opacity-60">Commento dell’insegnante</p><p className="mt-1 whitespace-pre-wrap font-semibold">{teacherComment}</p></div> : null}</ExerciseFeedbackPanel>;
@@ -392,6 +454,7 @@ export default function ExerciseQuestionRendererV2({
   const result = item?.result || null;
   const input = useMemo(() => {
     if (type === 'multiple_choice') return <MultipleChoice question={question} answer={answer} onChange={onChange} disabled={disabled} />;
+    if (type === 'practice_selection') return <PracticeSelection question={question} answer={answer} onChange={onChange} disabled={disabled} />;
     if (type === 'dialogue_choice') return <DialogueChoice question={question} answer={answer} onChange={onChange} disabled={disabled} />;
     if (type === 'multiple_select') return <MultipleChoice question={question} answer={answer} onChange={onChange} disabled={disabled} multiple />;
     if (type === 'gap_fill') return <GapFill question={question} answer={answer} onChange={onChange} disabled={disabled} />;
