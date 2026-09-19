@@ -266,6 +266,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
     validate: (block) => {
       const issues = [];
       if (!text(block.url) && !text(block.storage_path)) issues.push(issue('required', 'Add a media URL or uploaded Storage path.', 'url'));
+      if (text(block.storage_path) && !text(block.storage_bucket)) issues.push(issue('required', 'Storage bucket is required for an uploaded media file.', 'storage_bucket'));
       if (text(block.url) && !/^https:\/\//i.test(text(block.url))) issues.push(issue('invalid_url', 'Media URL must use HTTPS.', 'url'));
       if (block.end_seconds != null && Number(block.end_seconds) <= Number(block.start_seconds || 0)) {
         issues.push(issue('invalid_range', 'Clip end must come after clip start.', 'end_seconds'));
