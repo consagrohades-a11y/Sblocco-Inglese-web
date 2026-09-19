@@ -150,6 +150,82 @@ function TranslationEditor({ block, patch }) {
   );
 }
 
+function PracticeSelectionOptionsEditor({ options = [], onChange }) {
+  const values = Array.isArray(options) ? options.map((option) => typeof option === 'string'
+    ? { text: option, vocab_bank: false, vocab_kind: null }
+    : option) : [];
+
+  function patchOption(index, optionPatch) {
+    onChange(values.map((option, current) => current === index ? { ...option, ...optionPatch } : option));
+  }
+
+  function remove(index) {
+    onChange(values.filter((_, current) => current !== index));
+  }
+
+  return (
+    <div className="grid min-w-0 gap-3">
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Options</p>
+        <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
+          Mark useful lexical items now so a separate vocabulary bank can use them later without re-editing the activity.
+        </p>
+      </div>
+
+      {values.map((option, index) => (
+        <div key={option.key || index} className="grid min-w-0 gap-2 rounded-2xl border border-ink/10 bg-linen/25 p-3 dark:border-white/10 dark:bg-white/[0.03]">
+          <div className="flex min-w-0 items-center gap-2">
+            <input
+              value={option.text || ''}
+              onChange={(event) => patchOption(index, { text: event.target.value })}
+              placeholder={`Option ${index + 1}`}
+              className="focus-ring min-w-0 flex-1 rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+            />
+            <button type="button" onClick={() => remove(index)} className="focus-ring grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-ink/10 text-ink/55 hover:bg-red-50 hover:text-red-700 dark:border-white/10 dark:text-white/55 dark:hover:bg-red-300/10 dark:hover:text-red-200" aria-label="Remove option">
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-ink/5 bg-white/65 px-3 py-2.5 dark:border-white/5 dark:bg-white/[0.025]">
+            <label className="flex cursor-pointer items-center gap-2 text-xs font-black text-ink/70 dark:text-white/70">
+              <input
+                type="checkbox"
+                checked={Boolean(option.vocab_bank)}
+                onChange={(event) => patchOption(index, {
+                  vocab_bank: event.target.checked,
+                  vocab_kind: event.target.checked ? (option.vocab_kind || 'word') : null,
+                })}
+              />
+              Vocab bank
+            </label>
+
+            {option.vocab_bank ? (
+              <div className="min-w-36 flex-1">
+                <StudioSelect
+                  value={option.vocab_kind || 'word'}
+                  onChange={(value) => patchOption(index, { vocab_kind: value })}
+                  options={[['word', 'Word'], ['chunk', 'Chunk']]}
+                  ariaLabel={`Vocabulary bank type for option ${index + 1}`}
+                />
+              </div>
+            ) : (
+              <span className="text-[0.7rem] font-semibold text-ink/40 dark:text-white/40">Not saved for the future vocabulary bank.</span>
+            )}
+          </div>
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={() => onChange([...values, { text: '', vocab_bank: false, vocab_kind: null }])}
+        className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 hover:bg-orange-50 dark:border-orange-300/30 dark:text-orange-200 dark:hover:bg-orange-300/[0.08]"
+      >
+        <Plus className="h-3.5 w-3.5" /> Add option
+      </button>
+    </div>
+  );
+}
+
 function PracticeSelectionEditor({ block, patch }) {
   return (
     <>
@@ -162,12 +238,9 @@ function PracticeSelectionEditor({ block, patch }) {
         options={[['single', 'Choose one'], ['multiple', 'Choose one or more']]}
         hint="There is no correct answer. The learner’s selection is simply saved."
       />
-      <StringListEditor
-        label="Options"
-        items={block.options || []}
+      <PracticeSelectionOptionsEditor
+        options={block.options || []}
         onChange={(options) => patch({ options })}
-        placeholder="Option"
-        hint="Useful for vocabulary preference, familiarity, self-selection or discussion warm-ups."
       />
     </>
   );
