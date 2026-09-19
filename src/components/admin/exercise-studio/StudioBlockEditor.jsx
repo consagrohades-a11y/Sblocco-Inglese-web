@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { FileAudio2, FileVideo2, Loader2, Plus, Trash2, Upload } from 'lucide-react';
 import { getStudioBlockDefinition } from '../../../lib/exerciseStudioBlockRegistry.js';
+import StudioSelect from './StudioSelect.jsx';
 import {
   deleteStudioContentMedia,
   uploadStudioContentMedia,
@@ -8,7 +9,7 @@ import {
 
 function Label({ children, hint }) {
   return (
-    <label className="grid gap-1.5 text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">
+    <label className="flex w-full min-w-0 flex-col gap-1.5 text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">
       <span>{children}</span>
       {hint ? <span className="normal-case tracking-normal font-semibold text-ink/45 dark:text-white/45">{hint}</span> : null}
     </label>
@@ -23,7 +24,7 @@ function TextInput({ label, value, onChange, placeholder = '', hint = '' }) {
         value={value || ''}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="focus-ring rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-semibold normal-case tracking-normal text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+        className="focus-ring w-full min-w-0 rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-semibold normal-case tracking-normal text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
       />
     </Label>
   );
@@ -38,7 +39,7 @@ function TextArea({ label, value, onChange, placeholder = '', rows = 5, hint = '
         value={value || ''}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="focus-ring resize-y rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-semibold leading-6 normal-case tracking-normal text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+        className="focus-ring w-full min-w-0 resize-y rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-semibold leading-6 normal-case tracking-normal text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
       />
     </Label>
   );
@@ -48,15 +49,12 @@ function SelectInput({ label, value, onChange, options, hint = '' }) {
   return (
     <Label hint={hint}>
       {label}
-      <select
+      <StudioSelect
         value={value || ''}
-        onChange={(event) => onChange(event.target.value)}
-        className="focus-ring rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-semibold normal-case tracking-normal text-ink shadow-sm dark:border-white/10 dark:bg-surface-900 dark:text-white"
-      >
-        {options.map(([optionValue, optionLabel]) => (
-          <option key={optionValue} value={optionValue}>{optionLabel}</option>
-        ))}
-      </select>
+        onChange={onChange}
+        options={options}
+        ariaLabel={label}
+      />
     </Label>
   );
 }
@@ -70,9 +68,108 @@ function NumberInput({ label, value, onChange, min = 0, hint = '' }) {
         min={min}
         value={value ?? ''}
         onChange={(event) => onChange(event.target.value === '' ? null : Number(event.target.value))}
-        className="focus-ring rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-semibold normal-case tracking-normal text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+        className="focus-ring w-full min-w-0 rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-semibold normal-case tracking-normal text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
       />
     </Label>
+  );
+}
+
+
+function LongTextEditor({ label, value, onChange, hint = '', placeholder = '' }) {
+  const [expanded, setExpanded] = useState(false);
+  const textValue = value || '';
+  return (
+    <div className="grid min-w-0 gap-2">
+      <div className="flex flex-wrap items-end justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">{label}</p>
+          {hint ? <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">{hint}</p> : null}
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[0.68rem] font-bold tabular-nums text-ink/40 dark:text-white/40">{textValue.length.toLocaleString()} characters</span>
+          <button type="button" onClick={() => setExpanded((current) => !current)} className="focus-ring rounded-full border border-ink/10 px-2.5 py-1.5 text-[0.68rem] font-black text-ink/60 dark:border-white/10 dark:text-white/60">
+            {expanded ? 'Compact' : 'Expand'}
+          </button>
+        </div>
+      </div>
+      <textarea
+        value={textValue}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        rows={expanded ? 24 : 10}
+        className={`focus-ring w-full min-w-0 resize-y rounded-2xl border border-ink/10 bg-white px-3.5 py-3 text-sm font-semibold leading-6 normal-case tracking-normal text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-white ${expanded ? 'min-h-[34rem]' : 'min-h-56'}`}
+      />
+      <p className="text-[0.7rem] font-semibold leading-5 text-ink/40 dark:text-white/40">The full text is stored. The editor never intentionally shortens the transcript.</p>
+    </div>
+  );
+}
+
+function StructuredContextEditor({ block, patch }) {
+  return (
+    <section className="grid min-w-0 gap-3 rounded-2xl border border-orange-200/70 bg-orange-50/45 p-4 dark:border-orange-300/15 dark:bg-orange-300/[0.04]">
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.1em] text-orange-800 dark:text-orange-200">Context</p>
+        <p className="mt-1 text-xs font-semibold leading-5 text-ink/50 dark:text-white/50">Separate the situation from the learner’s role and goal so the task is easier to understand.</p>
+      </div>
+      <TextArea
+        label="Situation / background"
+        value={block.context_situation ?? block.context ?? ''}
+        onChange={(value) => patch({ context_situation: value, context: value })}
+        rows={4}
+        placeholder="What is happening? What does the learner need to know before answering?"
+      />
+      <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+        <TextInput label="Learner role" value={block.context_role || ''} onChange={(value) => patch({ context_role: value })} placeholder="e.g. You are a hotel receptionist" />
+        <TextInput label="Audience / recipient" value={block.context_audience || ''} onChange={(value) => patch({ context_audience: value })} placeholder="e.g. A dissatisfied guest" />
+      </div>
+      <TextArea
+        label="Goal / outcome"
+        value={block.context_goal || ''}
+        onChange={(value) => patch({ context_goal: value })}
+        rows={3}
+        placeholder="What should the learner achieve with the response?"
+      />
+    </section>
+  );
+}
+
+function TranslationEditor({ block, patch }) {
+  return (
+    <>
+      <TextArea label="Prompt / source text" value={block.prompt} onChange={(value) => patch({ prompt: value })} rows={4} />
+      <TextInput label="Learner instruction" value={block.instructions} onChange={(value) => patch({ instructions: value })} placeholder="Translate naturally into English." />
+      <StringListEditor
+        label="Accepted answers"
+        items={block.accepted_answers || []}
+        onChange={(accepted_answers) => patch({ accepted_answers })}
+        placeholder="One valid answer"
+        hint="Add the natural alternatives you want automatic grading to accept."
+      />
+      <TextArea label="Feedback explanation" value={block.feedback?.explanation || ''} onChange={(value) => patch({ feedback: { ...(block.feedback || {}), explanation: value } })} rows={3} />
+    </>
+  );
+}
+
+function PracticeSelectionEditor({ block, patch }) {
+  return (
+    <>
+      <TextArea label="Prompt" value={block.prompt} onChange={(value) => patch({ prompt: value })} rows={3} />
+      <TextInput label="Learner instruction" value={block.instructions} onChange={(value) => patch({ instructions: value })} placeholder="Select the expressions you would use." />
+      <SelectInput
+        label="Selection behaviour"
+        value={block.selection_mode || 'multiple'}
+        onChange={(value) => patch({ selection_mode: value })}
+        options={[['single', 'Choose one'], ['multiple', 'Choose one or more']]}
+        hint="There is no correct answer. The learner’s selection is simply saved."
+      />
+      <StringListEditor
+        label="Options"
+        items={block.options || []}
+        onChange={(options) => patch({ options })}
+        placeholder="Option"
+        hint="Useful for vocabulary preference, familiarity, self-selection or discussion warm-ups."
+      />
+    </>
   );
 }
 
@@ -390,7 +487,13 @@ function MediaEditor({ block, patch, activityId }) {
           <NumberInput label="End seconds" value={block.end_seconds} onChange={(value) => patch({ end_seconds: value })} />
         </div>
       </details>
-      <TextArea label="Transcript" value={block.transcript} onChange={(value) => patch({ transcript: value })} rows={6} />
+      <LongTextEditor
+        label="Transcript"
+        value={block.transcript}
+        onChange={(value) => patch({ transcript: value })}
+        hint="Paste the complete transcript here. Long transcripts are preserved in full."
+        placeholder="Paste or write the full transcript…"
+      />
       <SelectInput
         label="Transcript visibility"
         value={block.transcript_visibility || 'after_submit'}
@@ -405,9 +508,9 @@ function WritingEditor({ block, patch }) {
   return (
     <>
       <TextArea label="Writing prompt" value={block.prompt} onChange={(value) => patch({ prompt: value })} rows={4} />
-      <TextArea label="Context" value={block.context} onChange={(value) => patch({ context: value })} rows={3} />
-      <StringListEditor label="Required points" items={block.required_points || []} onChange={(required_points) => patch({ required_points })} />
-      <div className="grid grid-cols-2 gap-2">
+      <StructuredContextEditor block={block} patch={patch} />
+      <StringListEditor label="Required points" items={block.required_points || []} onChange={(required_points) => patch({ required_points })} hint="Concrete content the learner should include." />
+      <div className="grid min-w-0 grid-cols-2 gap-2">
         <NumberInput label="Min words" value={block.min_words} min={1} onChange={(value) => patch({ min_words: value })} />
         <NumberInput label="Max words" value={block.max_words} min={1} onChange={(value) => patch({ max_words: value })} />
       </div>
@@ -535,6 +638,8 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
             <TextInput label="Final punctuation" value={block.terminal_punctuation} onChange={(value) => patch({ terminal_punctuation: value })} placeholder="?" />
           </>
         ) : null}
+        {block.type === 'practice_selection' ? <PracticeSelectionEditor block={block} patch={patch} /> : null}
+        {block.type === 'translation' ? <TranslationEditor block={block} patch={patch} /> : null}
         {block.type === 'written_response' ? <WritingEditor block={block} patch={patch} /> : null}
         {block.type === 'media' ? <MediaEditor block={block} patch={patch} activityId={activityId} /> : null}
         {definition.category === 'theory' ? <TheoryEditor block={block} patch={patch} /> : null}
