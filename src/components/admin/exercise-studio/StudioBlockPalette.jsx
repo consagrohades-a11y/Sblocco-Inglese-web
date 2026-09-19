@@ -11,7 +11,7 @@ const CATEGORY_LABELS = {
 
 const CATEGORY_DESCRIPTIONS = {
   theory: 'Explain, model and support.',
-  practice: 'Automatically graded practice.',
+  practice: 'Checks, choices and low-friction practice.',
   production: 'Learner-created responses.',
   media: 'Audio and video input.',
 };
