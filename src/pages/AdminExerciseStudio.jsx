@@ -35,6 +35,7 @@ import { preflightStudioDocument } from '../lib/exerciseStudioCompiler.js';
 import {
   createStudioDraft,
   loadStudioDraft,
+  publishStudioDraft,
   saveStudioDraft,
 } from '../lib/exerciseStudioDraftApi.js';
 
@@ -153,6 +154,8 @@ export default function AdminExerciseStudio() {
   const [hydrated, setHydrated] = useState(!urlDraftId);
   const [saveState, setSaveState] = useState(urlDraftId ? 'loading' : 'idle');
   const [saveError, setSaveError] = useState('');
+  const [publishState, setPublishState] = useState('idle');
+  const [publishNotice, setPublishNotice] = useState('');
   const draftIdRef = useRef(null);
   const lastSavedRef = useRef('');
   const saveTimerRef = useRef(null);
@@ -246,44 +249,88 @@ export default function AdminExerciseStudio() {
     };
   }, [document, hydrated, setSearchParams]);
 
+  function changedDraft(current, patch) {
+    return {
+      ...current,
+      ...patch,
+      status: current.status === 'published' ? 'draft' : current.status,
+    };
+  }
+
   function patchDocument(patch) {
-    setDocument((current) => ({ ...current, ...patch }));
+    setPublishNotice('');
+    setDocument((current) => changedDraft(current, patch));
   }
 
   function addBlock(type) {
+    setPublishNotice('');
     setDocument((current) => {
       const next = addStudioBlock(current, type);
       const block = next.blocks[next.blocks.length - 1];
       setSelectedBlockId(block.id);
-      return next;
+      return { ...next, status: current.status === 'published' ? 'draft' : current.status };
     });
     setPaletteOpen(false);
   }
 
   function replaceBlock(nextBlock) {
-    setDocument((current) => ({
-      ...current,
+    setPublishNotice('');
+    setDocument((current) => changedDraft(current, {
       blocks: current.blocks.map((block) => block.id === nextBlock.id ? nextBlock : block),
     }));
   }
 
   function deleteBlock(blockId) {
-    setDocument((current) => ({
-      ...current,
+    setPublishNotice('');
+    setDocument((current) => changedDraft(current, {
       blocks: current.blocks.filter((block) => block.id !== blockId),
     }));
     setSelectedBlockId(null);
   }
 
   function moveBlock(blockId, direction) {
+    setPublishNotice('');
     setDocument((current) => {
       const blocks = [...current.blocks];
       const index = blocks.findIndex((block) => block.id === blockId);
       const target = index + direction;
       if (index < 0 || target < 0 || target >= blocks.length) return current;
       [blocks[index], blocks[target]] = [blocks[target], blocks[index]];
-      return { ...current, blocks };
+      return changedDraft(current, { blocks });
     });
+  }
+
+  async function publishCurrentDraft() {
+    if (!preflight.valid || publishState === 'publishing') return;
+
+    setPublishState('publishing');
+    setPublishNotice('');
+    setSaveError('');
+
+    try {
+      const snapshot = preflight.document;
+      let draftId = draftIdRef.current;
+
+      if (!draftId) {
+        const created = await createStudioDraft(snapshot);
+        draftId = created.id;
+        draftIdRef.current = draftId;
+        setSearchParams({ draft: draftId }, { replace: true });
+      } else {
+        await saveStudioDraft(draftId, snapshot);
+      }
+
+      const result = await publishStudioDraft(draftId, preflight.runtime);
+      const publishedDocument = { ...snapshot, status: 'published' };
+      lastSavedRef.current = JSON.stringify(publishedDocument);
+      setDocument(publishedDocument);
+      setSaveState('saved');
+      setPublishState('published');
+      setPublishNotice(`${result.public_id || 'Exercise'} published and ready to assign.`);
+    } catch (error) {
+      setPublishState('error');
+      setPublishNotice(error.message || 'Publishing failed.');
+    }
   }
 
   function startNew() {
@@ -298,6 +345,8 @@ export default function AdminExerciseStudio() {
     setHydrated(true);
     setSaveState('idle');
     setSaveError('');
+    setPublishState('idle');
+    setPublishNotice('');
   }
 
   return (
@@ -344,11 +393,27 @@ export default function AdminExerciseStudio() {
               <button type="button" onClick={startNew} className="focus-ring rounded-full border border-ink/10 px-4 py-2 text-xs font-black text-ink/65 dark:border-white/10 dark:text-white/65">
                 New
               </button>
-              <button type="button" disabled={!preflight.valid} title="Publishing will be connected after draft persistence" className="focus-ring rounded-full bg-ink px-5 py-2.5 text-xs font-black text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-35 dark:bg-orange-400 dark:text-surface-950">
-                Publish
+              <button
+                type="button"
+                onClick={publishCurrentDraft}
+                disabled={!preflight.valid || publishState === 'publishing'}
+                className="focus-ring inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-xs font-black text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-35 dark:bg-orange-400 dark:text-surface-950"
+              >
+                {publishState === 'publishing' ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+                {publishState === 'publishing' ? 'Publishing' : document.status === 'published' ? 'Published' : 'Publish'}
               </button>
             </div>
           </div>
+
+          {publishNotice ? (
+            <div className={`border-t px-4 py-2 text-center text-xs font-black xl:px-6 ${
+              publishState === 'error'
+                ? 'border-red-200 bg-red-50 text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100'
+                : 'border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-300/20 dark:bg-emerald-300/10 dark:text-emerald-100'
+            }`}>
+              {publishNotice}
+            </div>
+          ) : null}
 
           {preflightVisible ? (
             <div className="border-t border-ink/10 bg-white px-4 py-3 dark:border-white/10 dark:bg-surface-900 xl:px-6">
