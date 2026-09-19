@@ -42,6 +42,10 @@ const BLOCK_ALIASES = Object.freeze({
   sentence_order: 'word_order',
   writing: 'written_response',
   free_writing: 'written_response',
+  open_answer: 'translation',
+  translation_open: 'translation',
+  selection: 'practice_selection',
+  ungraded_selection: 'practice_selection',
 });
 
 function object(value) {
@@ -157,6 +161,13 @@ function sanitizeBlock(rawBlock, index, repairs) {
   if (type === 'media') {
     if (!block.source_type && requestedType === 'video') block.source_type = 'video';
     if (!block.source_type && requestedType === 'audio') block.source_type = 'audio';
+  }
+
+  if (type === 'practice_selection' && Array.isArray(block.options)) {
+    block.options = block.options
+      .map((option) => typeof option === 'string' ? option : option?.text)
+      .filter((option) => typeof option === 'string' && option.trim())
+      .map((option) => option.trim());
   }
 
   return block;
