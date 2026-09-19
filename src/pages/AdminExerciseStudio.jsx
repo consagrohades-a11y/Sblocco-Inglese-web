@@ -1,0 +1,401 @@
+import React, { useMemo, useState } from 'react';
+import {
+  AlertTriangle,
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  Eye,
+  Plus,
+  Sparkles,
+} from 'lucide-react';
+import SEO from '../components/SEO.jsx';
+import StudioBlockEditor from '../components/admin/exercise-studio/StudioBlockEditor.jsx';
+import StudioBlockPalette from '../components/admin/exercise-studio/StudioBlockPalette.jsx';
+import ExerciseQuestionRenderer from '../components/exercises/ExerciseQuestionRenderer.jsx';
+import {
+  ExerciseActivity,
+  ExerciseCanvas,
+} from '../components/exercises/ExerciseExperience.jsx';
+import {
+  addStudioBlock,
+  createStudioDocument,
+  normalizeStudioDocument,
+} from '../lib/exerciseStudioDocument.js';
+import {
+  compileStudioBlock,
+  getStudioBlockDefinition,
+  normalizeStudioBlock,
+} from '../lib/exerciseStudioBlockRegistry.js';
+import { preflightStudioDocument } from '../lib/exerciseStudioCompiler.js';
+
+const LEVELS = ['A0', 'A1', 'A1+', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2', 'Mixed'];
+const ACTIVITY_TYPES = [
+  ['exercise', 'Exercise'],
+  ['lesson', 'Lesson'],
+  ['mini_course', 'Mini-course'],
+  ['listening_lesson', 'Listening lesson'],
+  ['assessment', 'Assessment'],
+];
+
+function starterDocument() {
+  return createStudioDocument({
+    internal_title: '',
+    learner_title: '',
+    level: 'A2',
+    topic: '',
+    activity_type: 'lesson',
+  });
+}
+
+function metadataInputClass() {
+  return 'focus-ring w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-bold text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-white';
+}
+
+function blockSummary(block) {
+  if (block.title) return block.title;
+  if (block.prompt) return block.prompt;
+  if (block.body) return block.body.slice(0, 60);
+  if (block.type === 'word_order' && block.chunks?.length) return block.chunks.join(' ');
+  return 'Untitled block';
+}
+
+function PreviewBlock({ block, document, index, total, selected, onSelect }) {
+  let question = null;
+  let previewError = '';
+
+  try {
+    const normalized = normalizeStudioBlock(block);
+    question = compileStudioBlock(normalized, {
+      document,
+      blockIndex: index,
+      clientKey: 'studio_preview_' + (block.id || index),
+    });
+  } catch (error) {
+    previewError = error instanceof Error ? error.message : String(error);
+  }
+
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onSelect}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onSelect();
+        }
+      }}
+      className={`group relative rounded-[1.75rem] border-2 transition ${selected ? 'border-orange-400 shadow-[0_0_0_4px_rgba(249,115,22,0.08)]' : 'border-transparent hover:border-orange-200 dark:hover:border-orange-300/20'}`}
+    >
+      {selected ? (
+        <span className="absolute -right-2 -top-2 z-10 rounded-full bg-orange-500 px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-wide text-white shadow-sm">
+          Editing
+        </span>
+      ) : null}
+      {question ? (
+        <ExerciseActivity type={question.type} index={index + 1} total={total}>
+          <ExerciseQuestionRenderer
+            item={{ id: block.id, question, result: null }}
+            answer={null}
+            onChange={() => {}}
+            disabled
+            showScore={false}
+            showCorrectAnswers={false}
+            showExplanations={false}
+          />
+        </ExerciseActivity>
+      ) : (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">
+          {previewError || 'This block cannot be previewed yet.'}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function EmptyCanvas({ onAdd }) {
+  return (
+    <div className="grid min-h-[48vh] place-items-center rounded-[2rem] border border-dashed border-ink/15 bg-white/70 p-8 text-center dark:border-white/15 dark:bg-white/[0.025]">
+      <div className="max-w-md">
+        <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-orange-100 text-orange-700 dark:bg-orange-300/10 dark:text-orange-200">
+          <Sparkles className="h-6 w-6" />
+        </span>
+        <h2 className="mt-5 text-2xl font-black text-ink dark:text-white">Start with what you want to teach.</h2>
+        <p className="mt-2 text-sm font-semibold leading-6 text-ink/60 dark:text-white/60">
+          Add an explanation, rule, activity, media source or production task. Sblocco will handle the technical structure underneath.
+        </p>
+        <button type="button" onClick={onAdd} className="focus-ring mt-5 inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-orange-600">
+          <Plus className="h-4 w-4" /> Add first block
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default function AdminExerciseStudio() {
+  const [document, setDocument] = useState(starterDocument);
+  const [selectedBlockId, setSelectedBlockId] = useState(null);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [metadataOpen, setMetadataOpen] = useState(true);
+  const [preflightVisible, setPreflightVisible] = useState(false);
+
+  const normalized = useMemo(() => normalizeStudioDocument(document).document, [document]);
+  const preflight = useMemo(() => preflightStudioDocument(document), [document]);
+  const selectedIndex = document.blocks.findIndex((block) => block.id === selectedBlockId);
+  const selectedBlock = selectedIndex >= 0 ? document.blocks[selectedIndex] : null;
+  const selectedIssues = selectedBlock
+    ? preflight.issues.filter((item) => item.block_id === selectedBlock.id)
+    : [];
+
+  function patchDocument(patch) {
+    setDocument((current) => ({ ...current, ...patch }));
+  }
+
+  function addBlock(type) {
+    setDocument((current) => {
+      const next = addStudioBlock(current, type);
+      const block = next.blocks[next.blocks.length - 1];
+      setSelectedBlockId(block.id);
+      return next;
+    });
+    setPaletteOpen(false);
+  }
+
+  function replaceBlock(nextBlock) {
+    setDocument((current) => ({
+      ...current,
+      blocks: current.blocks.map((block) => block.id === nextBlock.id ? nextBlock : block),
+    }));
+  }
+
+  function deleteBlock(blockId) {
+    setDocument((current) => ({
+      ...current,
+      blocks: current.blocks.filter((block) => block.id !== blockId),
+    }));
+    setSelectedBlockId(null);
+  }
+
+  function moveBlock(blockId, direction) {
+    setDocument((current) => {
+      const blocks = [...current.blocks];
+      const index = blocks.findIndex((block) => block.id === blockId);
+      const target = index + direction;
+      if (index < 0 || target < 0 || target >= blocks.length) return current;
+      [blocks[index], blocks[target]] = [blocks[target], blocks[index]];
+      return { ...current, blocks };
+    });
+  }
+
+  function startNew() {
+    setDocument(starterDocument());
+    setSelectedBlockId(null);
+    setPaletteOpen(false);
+    setPreflightVisible(false);
+  }
+
+  return (
+    <>
+      <SEO
+        title="Learning Studio | Sblocco Inglese"
+        description="Create, preview and publish Sblocco learning activities."
+      />
+
+      <div className="min-h-screen bg-[#f7f3eb] dark:bg-surface-950">
+        <header className="sticky top-0 z-30 border-b border-ink/10 bg-[#f7f3eb]/95 backdrop-blur dark:border-white/10 dark:bg-surface-950/95">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 xl:px-6">
+            <div className="flex min-w-0 items-center gap-3">
+              <a href="/admin/content/exercises/library" className="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-full border border-ink/10 bg-white text-ink/65 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/65" aria-label="Back to library">
+                <ArrowLeft className="h-4 w-4" />
+              </a>
+              <div className="min-w-0">
+                <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">Sblocco Learning Studio</p>
+                <h1 className="truncate text-lg font-black text-ink dark:text-white">{document.internal_title || 'Untitled activity'}</h1>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-black ${preflight.valid ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200' : 'bg-amber-100 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100'}`}>
+                {preflight.valid ? <CheckCircle2 className="h-3.5 w-3.5" /> : <AlertTriangle className="h-3.5 w-3.5" />}
+                {preflight.valid ? 'Ready to publish' : `${preflight.errors.length} to fix`}
+              </span>
+              <button type="button" onClick={() => setPreflightVisible((value) => !value)} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-xs font-black text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white">
+                <Eye className="h-3.5 w-3.5" /> Preflight
+              </button>
+              <button type="button" onClick={startNew} className="focus-ring rounded-full border border-ink/10 px-4 py-2 text-xs font-black text-ink/65 dark:border-white/10 dark:text-white/65">
+                New
+              </button>
+              <button type="button" disabled={!preflight.valid} title="Publishing will be connected after draft persistence" className="focus-ring rounded-full bg-ink px-5 py-2.5 text-xs font-black text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-35 dark:bg-orange-400 dark:text-surface-950">
+                Publish
+              </button>
+            </div>
+          </div>
+
+          {preflightVisible ? (
+            <div className="border-t border-ink/10 bg-white px-4 py-3 dark:border-white/10 dark:bg-surface-900 xl:px-6">
+              <div className="mx-auto flex max-w-7xl flex-wrap items-start gap-3">
+                <div className="min-w-[12rem] flex-1">
+                  <p className="text-xs font-black uppercase tracking-[0.1em] text-ink/50 dark:text-white/50">Automatic repairs</p>
+                  <p className="mt-1 text-sm font-semibold text-ink/65 dark:text-white/65">
+                    {preflight.repairs.length ? `${preflight.repairs.length} technical detail${preflight.repairs.length === 1 ? '' : 's'} generated or normalized automatically.` : 'No technical repairs needed.'}
+                  </p>
+                </div>
+                <div className="min-w-[16rem] flex-[2]">
+                  <p className="text-xs font-black uppercase tracking-[0.1em] text-ink/50 dark:text-white/50">Teaching decisions</p>
+                  {preflight.errors.length ? (
+                    <div className="mt-1 flex flex-wrap gap-2">
+                      {preflight.errors.slice(0, 6).map((item, index) => (
+                        <button key={index} type="button" onClick={() => item.block_id && setSelectedBlockId(item.block_id)} className="rounded-full bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-200 dark:bg-amber-300/10 dark:text-amber-100">
+                          {item.message}
+                        </button>
+                      ))}
+                    </div>
+                  ) : <p className="mt-1 text-sm font-bold text-emerald-700 dark:text-emerald-300">No unresolved teaching decisions.</p>}
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </header>
+
+        <div className="grid min-h-[calc(100vh-66px)] xl:grid-cols-[250px_minmax(0,1fr)_360px]">
+          <aside className="border-b border-ink/10 bg-[#fbf8f1] p-4 dark:border-white/10 dark:bg-white/[0.02] xl:border-b-0 xl:border-r xl:p-5">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-ink/45 dark:text-white/45">Structure</p>
+                <p className="mt-1 text-sm font-black text-ink dark:text-white">{document.blocks.length} block{document.blocks.length === 1 ? '' : 's'}</p>
+              </div>
+              <button type="button" onClick={() => setPaletteOpen((value) => !value)} className="focus-ring grid h-9 w-9 place-items-center rounded-full bg-orange-500 text-white" aria-label="Add block">
+                <Plus className="h-4 w-4" />
+              </button>
+            </div>
+
+            {paletteOpen ? (
+              <div className="mt-4 max-h-[58vh] overflow-y-auto pr-1">
+                <StudioBlockPalette onAdd={addBlock} />
+              </div>
+            ) : (
+              <div className="mt-4 grid gap-2">
+                {document.blocks.map((block, index) => {
+                  const definition = getStudioBlockDefinition(block.type);
+                  const issues = preflight.issues.filter((item) => item.block_id === block.id && item.severity === 'error');
+                  const active = block.id === selectedBlockId;
+                  return (
+                    <div key={block.id} className={`group rounded-xl border transition ${active ? 'border-orange-300 bg-orange-50 dark:border-orange-300/30 dark:bg-orange-300/[0.07]' : 'border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.035]'}`}>
+                      <button type="button" onClick={() => setSelectedBlockId(block.id)} className="focus-ring w-full px-3 py-3 text-left">
+                        <div className="flex items-start gap-2">
+                          <span className="mt-0.5 text-[0.65rem] font-black text-ink/35 dark:text-white/35">{String(index + 1).padStart(2, '0')}</span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block text-[0.65rem] font-black uppercase tracking-wide text-orange-700 dark:text-orange-300">{definition?.label || block.type}</span>
+                            <span className="mt-1 block truncate text-xs font-bold text-ink/70 dark:text-white/70">{blockSummary(block)}</span>
+                          </span>
+                          {issues.length ? <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" /> : null}
+                        </div>
+                      </button>
+                      {active ? (
+                        <div className="flex justify-end gap-1 border-t border-orange-200 px-2 py-1.5 dark:border-orange-300/10">
+                          <button type="button" disabled={index === 0} onClick={() => moveBlock(block.id, -1)} className="focus-ring grid h-7 w-7 place-items-center rounded-lg text-ink/45 disabled:opacity-20 dark:text-white/45" aria-label="Move block up"><ArrowUp className="h-3.5 w-3.5" /></button>
+                          <button type="button" disabled={index === document.blocks.length - 1} onClick={() => moveBlock(block.id, 1)} className="focus-ring grid h-7 w-7 place-items-center rounded-lg text-ink/45 disabled:opacity-20 dark:text-white/45" aria-label="Move block down"><ArrowDown className="h-3.5 w-3.5" /></button>
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })}
+                <button type="button" onClick={() => setPaletteOpen(true)} className="focus-ring mt-2 flex items-center justify-center gap-2 rounded-xl border border-dashed border-ink/15 px-3 py-3 text-xs font-black text-ink/50 hover:border-orange-300 hover:text-orange-700 dark:border-white/15 dark:text-white/50 dark:hover:border-orange-300/30 dark:hover:text-orange-200">
+                  <Plus className="h-3.5 w-3.5" /> Add block
+                </button>
+              </div>
+            )}
+          </aside>
+
+          <main className="min-w-0 bg-[#f7f3eb] px-4 py-5 dark:bg-surface-950 sm:px-6 xl:px-8 xl:py-7">
+            <div className="mx-auto max-w-4xl">
+              <button type="button" onClick={() => setMetadataOpen((value) => !value)} className="focus-ring mb-4 flex w-full items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white px-4 py-3 text-left dark:border-white/10 dark:bg-white/[0.035]">
+                <span>
+                  <span className="block text-[0.65rem] font-black uppercase tracking-[0.14em] text-orange-700 dark:text-orange-300">Activity</span>
+                  <span className="mt-0.5 block text-sm font-black text-ink dark:text-white">{document.learner_title || document.internal_title || 'Name this activity'}</span>
+                </span>
+                {metadataOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </button>
+
+              {metadataOpen ? (
+                <div className="mb-6 grid gap-3 rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-white/[0.035] sm:grid-cols-2">
+                  <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">
+                    Internal title
+                    <input value={document.internal_title || ''} onChange={(event) => patchDocument({ internal_title: event.target.value })} placeholder="A2 — Present Perfect — Experiences" className={metadataInputClass()} />
+                  </label>
+                  <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">
+                    Learner title
+                    <input value={document.learner_title || ''} onChange={(event) => patchDocument({ learner_title: event.target.value })} placeholder="Talking about your experiences" className={metadataInputClass()} />
+                  </label>
+                  <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">
+                    Level
+                    <select value={document.level} onChange={(event) => patchDocument({ level: event.target.value })} className={metadataInputClass()}>{LEVELS.map((level) => <option key={level} value={level}>{level}</option>)}</select>
+                  </label>
+                  <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">
+                    Type
+                    <select value={document.activity_type} onChange={(event) => patchDocument({ activity_type: event.target.value })} className={metadataInputClass()}>{ACTIVITY_TYPES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
+                  </label>
+                  <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">
+                    Topic
+                    <input value={document.topic || ''} onChange={(event) => patchDocument({ topic: event.target.value })} placeholder="present_perfect" className={metadataInputClass()} />
+                  </label>
+                  <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">
+                    Estimated minutes
+                    <input type="number" min="1" value={document.estimated_minutes || ''} onChange={(event) => patchDocument({ estimated_minutes: event.target.value ? Number(event.target.value) : null })} placeholder="Automatic" className={metadataInputClass()} />
+                  </label>
+                </div>
+              ) : null}
+
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.16em] text-ink/40 dark:text-white/40">Learner canvas</p>
+                  <p className="mt-1 text-xs font-semibold text-ink/50 dark:text-white/50">This uses the real learner renderer. Click a block to edit it.</p>
+                </div>
+              </div>
+
+              {document.blocks.length ? (
+                <ExerciseCanvas className="grid gap-4">
+                  {document.blocks.map((block, index) => (
+                    <PreviewBlock
+                      key={block.id}
+                      block={block}
+                      document={normalized}
+                      index={index}
+                      total={document.blocks.length}
+                      selected={block.id === selectedBlockId}
+                      onSelect={() => setSelectedBlockId(block.id)}
+                    />
+                  ))}
+                </ExerciseCanvas>
+              ) : <EmptyCanvas onAdd={() => setPaletteOpen(true)} />}
+            </div>
+          </main>
+
+          <aside className="border-t border-ink/10 bg-[#fbf8f1] dark:border-white/10 dark:bg-white/[0.02] xl:border-l xl:border-t-0">
+            <div className="sticky top-[66px] max-h-[calc(100vh-66px)] overflow-y-auto p-4 xl:p-5">
+              {selectedBlock ? (
+                <StudioBlockEditor
+                  block={selectedBlock}
+                  issues={selectedIssues}
+                  onChange={replaceBlock}
+                  onDelete={() => deleteBlock(selectedBlock.id)}
+                />
+              ) : (
+                <div className="grid min-h-64 place-items-center text-center">
+                  <div className="max-w-xs">
+                    <p className="text-xs font-black uppercase tracking-[0.14em] text-orange-700 dark:text-orange-300">Contextual editor</p>
+                    <h2 className="mt-2 text-xl font-black text-ink dark:text-white">Select a block.</h2>
+                    <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">Only the teaching controls relevant to that block appear here. Technical IDs and database fields stay hidden.</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </aside>
+        </div>
+      </div>
+    </>
+  );
+}
