@@ -1,6 +1,10 @@
-import React from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { FileAudio2, FileVideo2, Loader2, Plus, Trash2, Upload } from 'lucide-react';
 import { getStudioBlockDefinition } from '../../../lib/exerciseStudioBlockRegistry.js';
+import {
+  deleteStudioContentMedia,
+  uploadStudioContentMedia,
+} from '../../../lib/exerciseStudioMediaApi.js';
 
 function Label({ children, hint }) {
   return (
@@ -219,7 +223,89 @@ function GapFillEditor({ block, patch }) {
   );
 }
 
-function MediaEditor({ block, patch }) {
+function MediaEditor({ block, patch, activityId }) {
+  const fileRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+
+  async function removeUploadedFile({ clearBlock = true } = {}) {
+    const bucket = block.storage_bucket;
+    const path = block.storage_path;
+    if (clearBlock) {
+      patch({
+        storage_bucket: '',
+        storage_path: '',
+        uploaded_file_name: '',
+        uploaded_mime_type: '',
+        uploaded_size_bytes: null,
+      });
+    }
+    if (bucket && path) {
+      try {
+        await deleteStudioContentMedia(bucket, path);
+      } catch {
+        // Do not block authoring if best-effort Storage cleanup fails.
+      }
+    }
+  }
+
+  async function uploadFile(file) {
+    if (!file || uploading) return;
+    setUploading(true);
+    setUploadError('');
+
+    const previous = {
+      bucket: block.storage_bucket,
+      path: block.storage_path,
+    };
+
+    try {
+      const uploaded = await uploadStudioContentMedia({
+        file,
+        activityId,
+        blockId: block.id,
+      });
+
+      patch({
+        ...uploaded,
+        url: '',
+      });
+
+      if (previous.bucket && previous.path && previous.path !== uploaded.storage_path) {
+        deleteStudioContentMedia(previous.bucket, previous.path).catch(() => undefined);
+      }
+    } catch (error) {
+      setUploadError(error.message || 'Could not upload this media file.');
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = '';
+    }
+  }
+
+  function changeSourceType(value) {
+    if (value === 'youtube' && block.storage_path) {
+      removeUploadedFile();
+    }
+    patch({ source_type: value });
+  }
+
+  function changeUrl(value) {
+    if (value && block.storage_path) {
+      removeUploadedFile({ clearBlock: false });
+    }
+    patch({
+      url: value,
+      storage_bucket: value ? '' : block.storage_bucket,
+      storage_path: value ? '' : block.storage_path,
+      uploaded_file_name: value ? '' : block.uploaded_file_name,
+      uploaded_mime_type: value ? '' : block.uploaded_mime_type,
+      uploaded_size_bytes: value ? null : block.uploaded_size_bytes,
+    });
+  }
+
+  const hasUpload = Boolean(block.storage_path);
+  const UploadedIcon = block.source_type === 'video' ? FileVideo2 : FileAudio2;
+
   return (
     <>
       <TextInput label="Title" value={block.title} onChange={(value) => patch({ title: value })} />
@@ -227,19 +313,72 @@ function MediaEditor({ block, patch }) {
       <SelectInput
         label="Media type"
         value={block.source_type || 'audio'}
-        onChange={(value) => patch({ source_type: value })}
-        options={[['audio', 'Audio'], ['video', 'Direct video'], ['youtube', 'YouTube']]}
+        onChange={changeSourceType}
+        options={[['audio', 'Audio'], ['video', 'Video'], ['youtube', 'YouTube']]}
       />
-      <TextInput label="Media URL" value={block.url} onChange={(value) => patch({ url: value })} placeholder="https://..." />
-      <details className="rounded-xl border border-ink/10 p-3 dark:border-white/10">
-        <summary className="cursor-pointer text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Private Storage / clip settings</summary>
-        <div className="mt-3 grid gap-3">
-          <TextInput label="Storage bucket" value={block.storage_bucket} onChange={(value) => patch({ storage_bucket: value })} />
-          <TextInput label="Storage path" value={block.storage_path} onChange={(value) => patch({ storage_path: value })} />
-          <div className="grid grid-cols-2 gap-2">
-            <NumberInput label="Start seconds" value={block.start_seconds} onChange={(value) => patch({ start_seconds: value })} />
-            <NumberInput label="End seconds" value={block.end_seconds} onChange={(value) => patch({ end_seconds: value })} />
+
+      {block.source_type === 'youtube' ? (
+        <TextInput label="YouTube URL" value={block.url} onChange={changeUrl} placeholder="https://www.youtube.com/watch?v=..." />
+      ) : (
+        <div className="grid gap-3 rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-white/[0.03]">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Media file</p>
+            <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
+              Choose the file. Sblocco manages the private Storage location automatically.
+            </p>
           </div>
+
+          {hasUpload ? (
+            <div className="flex items-center gap-3 rounded-xl bg-linen/60 p-3 dark:bg-white/[0.05]">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-orange-100 text-orange-700 dark:bg-orange-300/10 dark:text-orange-200">
+                <UploadedIcon className="h-5 w-5" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-sm font-black text-ink dark:text-white">{block.uploaded_file_name || 'Uploaded media'}</span>
+                <span className="mt-0.5 block text-xs font-semibold text-ink/45 dark:text-white/45">
+                  {block.uploaded_size_bytes ? `${(Number(block.uploaded_size_bytes) / (1024 * 1024)).toFixed(1)} MB` : 'Stored privately'}
+                </span>
+              </span>
+              <button type="button" onClick={() => removeUploadedFile()} className="focus-ring text-xs font-black text-red-700 dark:text-red-200">Remove</button>
+            </div>
+          ) : null}
+
+          <input
+            ref={fileRef}
+            type="file"
+            accept={block.source_type === 'video' ? 'video/*' : 'audio/*'}
+            className="hidden"
+            onChange={(event) => uploadFile(event.target.files?.[0])}
+          />
+          <button
+            type="button"
+            disabled={uploading}
+            onClick={() => fileRef.current?.click()}
+            className="focus-ring inline-flex w-fit items-center gap-2 rounded-full bg-orange-500 px-4 py-2.5 text-xs font-black text-white disabled:opacity-40"
+          >
+            {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+            {uploading ? 'Uploading' : hasUpload ? 'Replace file' : 'Upload file'}
+          </button>
+
+          {uploadError ? <p className="text-xs font-bold leading-5 text-red-700 dark:text-red-200">{uploadError}</p> : null}
+
+          {!hasUpload ? (
+            <TextInput
+              label="Or use a direct media URL"
+              value={block.url}
+              onChange={changeUrl}
+              placeholder="https://..."
+              hint="Optional. Uploading is usually safer for lesson media you control."
+            />
+          ) : null}
+        </div>
+      )}
+
+      <details className="rounded-xl border border-ink/10 p-3 dark:border-white/10">
+        <summary className="cursor-pointer text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Clip settings</summary>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <NumberInput label="Start seconds" value={block.start_seconds} onChange={(value) => patch({ start_seconds: value })} />
+          <NumberInput label="End seconds" value={block.end_seconds} onChange={(value) => patch({ end_seconds: value })} />
         </div>
       </details>
       <TextArea label="Transcript" value={block.transcript} onChange={(value) => patch({ transcript: value })} rows={6} />
@@ -346,7 +485,7 @@ function TheoryEditor({ block, patch }) {
   );
 }
 
-export default function StudioBlockEditor({ block, issues = [], onChange, onDelete }) {
+export default function StudioBlockEditor({ block, issues = [], onChange, onDelete, activityId }) {
   const definition = getStudioBlockDefinition(block?.type);
   if (!block || !definition) {
     return <div className="p-5 text-sm font-semibold text-ink/60 dark:text-white/60">Select a supported block to edit it.</div>;
@@ -388,7 +527,7 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
           </>
         ) : null}
         {block.type === 'written_response' ? <WritingEditor block={block} patch={patch} /> : null}
-        {block.type === 'media' ? <MediaEditor block={block} patch={patch} /> : null}
+        {block.type === 'media' ? <MediaEditor block={block} patch={patch} activityId={activityId} /> : null}
         {definition.category === 'theory' ? <TheoryEditor block={block} patch={patch} /> : null}
       </div>
 
