@@ -8,6 +8,7 @@ import {
   ChevronDown,
   ChevronUp,
   Eye,
+  FileJson2,
   Plus,
   Loader2,
   Sparkles,
@@ -16,6 +17,7 @@ import { useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import StudioBlockEditor from '../components/admin/exercise-studio/StudioBlockEditor.jsx';
 import StudioBlockPalette from '../components/admin/exercise-studio/StudioBlockPalette.jsx';
+import StudioJsonImportPanel from '../components/admin/exercise-studio/StudioJsonImportPanel.jsx';
 import ExerciseQuestionRenderer from '../components/exercises/ExerciseQuestionRenderer.jsx';
 import {
   ExerciseActivity,
@@ -156,10 +158,14 @@ export default function AdminExerciseStudio() {
   const [saveError, setSaveError] = useState('');
   const [publishState, setPublishState] = useState('idle');
   const [publishNotice, setPublishNotice] = useState('');
+  const [importOpen, setImportOpen] = useState(false);
+  const [importNotice, setImportNotice] = useState('');
+  const [draftOrigin, setDraftOrigin] = useState('manual');
   const draftIdRef = useRef(null);
   const lastSavedRef = useRef('');
   const saveTimerRef = useRef(null);
   const saveChainRef = useRef(Promise.resolve());
+  const documentGenerationRef = useRef(0);
 
   const normalized = useMemo(() => normalizeStudioDocument(document).document, [document]);
   const preflight = useMemo(() => preflightStudioDocument(document), [document]);
@@ -185,6 +191,7 @@ export default function AdminExerciseStudio() {
       .then((draft) => {
         if (!active) return;
         draftIdRef.current = draft.id;
+        setDraftOrigin(draft.origin || 'manual');
         lastSavedRef.current = JSON.stringify(draft.document);
         setDocument(draft.document);
         setSelectedBlockId(null);
@@ -223,22 +230,26 @@ export default function AdminExerciseStudio() {
       setSaveState('saving');
       setSaveError('');
 
+      const generation = documentGenerationRef.current;
       saveChainRef.current = saveChainRef.current
         .catch(() => undefined)
         .then(async () => {
           let draftId = draftIdRef.current;
           if (!draftId) {
-            const created = await createStudioDraft(snapshot);
+            const created = await createStudioDraft(snapshot, { origin: draftOrigin });
+            if (generation !== documentGenerationRef.current) return;
             draftId = created.id;
             draftIdRef.current = draftId;
             setSearchParams({ draft: draftId }, { replace: true });
           } else {
             await saveStudioDraft(draftId, snapshot);
           }
+          if (generation !== documentGenerationRef.current) return;
           lastSavedRef.current = serialized;
           setSaveState('saved');
         })
         .catch((error) => {
+          if (generation !== documentGenerationRef.current) return;
           setSaveError(error.message || 'Autosave failed.');
           setSaveState('error');
         });
@@ -247,7 +258,7 @@ export default function AdminExerciseStudio() {
     return () => {
       if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
     };
-  }, [document, hydrated, setSearchParams]);
+  }, [document, draftOrigin, hydrated, setSearchParams]);
 
   function changedDraft(current, patch) {
     return {
@@ -259,11 +270,13 @@ export default function AdminExerciseStudio() {
 
   function patchDocument(patch) {
     setPublishNotice('');
+    setImportNotice('');
     setDocument((current) => changedDraft(current, patch));
   }
 
   function addBlock(type) {
     setPublishNotice('');
+    setImportNotice('');
     setDocument((current) => {
       const next = addStudioBlock(current, type);
       const block = next.blocks[next.blocks.length - 1];
@@ -275,6 +288,7 @@ export default function AdminExerciseStudio() {
 
   function replaceBlock(nextBlock) {
     setPublishNotice('');
+    setImportNotice('');
     setDocument((current) => changedDraft(current, {
       blocks: current.blocks.map((block) => block.id === nextBlock.id ? nextBlock : block),
     }));
@@ -282,6 +296,7 @@ export default function AdminExerciseStudio() {
 
   function deleteBlock(blockId) {
     setPublishNotice('');
+    setImportNotice('');
     setDocument((current) => changedDraft(current, {
       blocks: current.blocks.filter((block) => block.id !== blockId),
     }));
@@ -290,6 +305,7 @@ export default function AdminExerciseStudio() {
 
   function moveBlock(blockId, direction) {
     setPublishNotice('');
+    setImportNotice('');
     setDocument((current) => {
       const blocks = [...current.blocks];
       const index = blocks.findIndex((block) => block.id === blockId);
@@ -308,11 +324,13 @@ export default function AdminExerciseStudio() {
     setSaveError('');
 
     try {
+      if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
+      await saveChainRef.current.catch(() => undefined);
       const snapshot = preflight.document;
       let draftId = draftIdRef.current;
 
       if (!draftId) {
-        const created = await createStudioDraft(snapshot);
+        const created = await createStudioDraft(snapshot, { origin: draftOrigin });
         draftId = created.id;
         draftIdRef.current = draftId;
         setSearchParams({ draft: draftId }, { replace: true });
@@ -333,20 +351,44 @@ export default function AdminExerciseStudio() {
     }
   }
 
-  function startNew() {
+  function resetDraftIdentity(origin = 'manual') {
+    documentGenerationRef.current += 1;
     if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
     draftIdRef.current = null;
     lastSavedRef.current = '';
     setSearchParams({}, { replace: true });
-    setDocument(starterDocument());
-    setSelectedBlockId(null);
-    setPaletteOpen(false);
-    setPreflightVisible(false);
-    setHydrated(true);
+    setDraftOrigin(origin);
     setSaveState('idle');
     setSaveError('');
     setPublishState('idle');
     setPublishNotice('');
+  }
+
+  function startNew() {
+    resetDraftIdentity('manual');
+    setDocument(starterDocument());
+    setSelectedBlockId(null);
+    setPaletteOpen(false);
+    setPreflightVisible(false);
+    setImportOpen(false);
+    setImportNotice('');
+    setHydrated(true);
+  }
+
+  function importIntoStudio(result) {
+    resetDraftIdentity('ai_import');
+    setDocument({ ...result.document, status: 'draft' });
+    const firstProblem = result.errors.find((item) => item.block_id)?.block_id;
+    setSelectedBlockId(firstProblem || result.document.blocks[0]?.id || null);
+    setPaletteOpen(false);
+    setPreflightVisible(result.errors.length > 0);
+    setImportOpen(false);
+    setImportNotice(
+      result.needs_attention_blocks
+        ? `Imported: ${result.ready_blocks} blocks ready, ${result.needs_attention_blocks} need attention.`
+        : `Imported: all ${result.ready_blocks} blocks are ready.`
+    );
+    setHydrated(true);
   }
 
   return (
@@ -387,6 +429,9 @@ export default function AdminExerciseStudio() {
                 {preflight.valid ? <CheckCircle2 className="h-3.5 w-3.5" /> : <AlertTriangle className="h-3.5 w-3.5" />}
                 {preflight.valid ? 'Ready to publish' : `${preflight.errors.length} to fix`}
               </span>
+              <button type="button" onClick={() => setImportOpen(true)} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-xs font-black text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white">
+                <FileJson2 className="h-3.5 w-3.5" /> Import JSON
+              </button>
               <button type="button" onClick={() => setPreflightVisible((value) => !value)} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-xs font-black text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white">
                 <Eye className="h-3.5 w-3.5" /> Preflight
               </button>
@@ -404,6 +449,12 @@ export default function AdminExerciseStudio() {
               </button>
             </div>
           </div>
+
+          {importNotice ? (
+            <div className="border-t border-orange-200 bg-orange-50 px-4 py-2 text-center text-xs font-black text-orange-950 dark:border-orange-300/20 dark:bg-orange-300/[0.07] dark:text-orange-100 xl:px-6">
+              {importNotice}
+            </div>
+          ) : null}
 
           {publishNotice ? (
             <div className={`border-t px-4 py-2 text-center text-xs font-black xl:px-6 ${
@@ -577,6 +628,13 @@ export default function AdminExerciseStudio() {
           </aside>
         </div>
       </div>
+
+      {importOpen ? (
+        <StudioJsonImportPanel
+          onClose={() => setImportOpen(false)}
+          onImport={importIntoStudio}
+        />
+      ) : null}
     </>
   );
 }
