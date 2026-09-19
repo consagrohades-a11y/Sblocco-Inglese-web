@@ -351,6 +351,162 @@ function VocabularyEditor({ items = [], onChange }) {
   );
 }
 
+function MultipleChoiceSetEditor({ block, patch }) {
+  const items = Array.isArray(block.items) ? block.items : [];
+
+  function patchItem(index, itemPatch) {
+    patch({ items: items.map((item, current) => current === index ? { ...item, ...itemPatch } : item) });
+  }
+
+  function patchOption(itemIndex, optionIndex, optionPatch) {
+    const item = items[itemIndex] || {};
+    const options = Array.isArray(item.options) ? item.options : [];
+    patchItem(itemIndex, {
+      options: options.map((option, current) => current === optionIndex ? { ...option, ...optionPatch } : option),
+    });
+  }
+
+  function chooseCorrect(itemIndex, optionIndex) {
+    const item = items[itemIndex] || {};
+    const options = Array.isArray(item.options) ? item.options : [];
+    patchItem(itemIndex, {
+      options: options.map((option, current) => ({ ...option, is_correct: current === optionIndex })),
+    });
+  }
+
+  function addQuestion() {
+    patch({
+      items: [...items, {
+        prompt: '',
+        options: [
+          { text: '', is_correct: true },
+          { text: '', is_correct: false },
+          { text: '', is_correct: false },
+        ],
+        feedback: '',
+      }],
+    });
+  }
+
+  function duplicateQuestion(index) {
+    const source = items[index];
+    if (!source) return;
+    patch({
+      items: [
+        ...items.slice(0, index + 1),
+        {
+          ...source,
+          key: undefined,
+          options: (source.options || []).map((option) => ({ ...option, key: undefined })),
+        },
+        ...items.slice(index + 1),
+      ],
+    });
+  }
+
+  return (
+    <>
+      <TextInput label="Set title" value={block.title} onChange={(value) => patch({ title: value })} placeholder="Which sounds natural?" />
+      <TextArea
+        label="Shared task"
+        value={block.prompt}
+        onChange={(value) => patch({ prompt: value })}
+        rows={2}
+        hint="Shown once above the whole set."
+      />
+      <TextInput
+        label="Shared learner instruction"
+        value={block.instructions}
+        onChange={(value) => patch({ instructions: value })}
+        placeholder="Choose the most natural sentence in each example."
+        hint="Write this once instead of repeating it for every question."
+      />
+
+      <div className="grid min-w-0 gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Questions</p>
+            <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">Each question is graded independently inside the set.</p>
+          </div>
+          <button type="button" onClick={addQuestion} className="focus-ring inline-flex items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200">
+            <Plus className="h-3.5 w-3.5" /> Add question
+          </button>
+        </div>
+
+        {items.map((item, itemIndex) => {
+          const options = Array.isArray(item.options) ? item.options : [];
+          return (
+            <section key={item.key || itemIndex} className="grid min-w-0 gap-3 rounded-2xl border border-ink/10 bg-white/65 p-3 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="flex items-center justify-between gap-2">
+                <span className="rounded-full bg-orange-100 px-2.5 py-1 text-[0.68rem] font-black text-orange-900 dark:bg-orange-300/10 dark:text-orange-100">Example {itemIndex + 1}</span>
+                <div className="flex items-center gap-2">
+                  <button type="button" onClick={() => duplicateQuestion(itemIndex)} className="focus-ring text-[0.68rem] font-black text-ink/55 dark:text-white/55">Duplicate</button>
+                  <button type="button" onClick={() => patch({ items: items.filter((_, current) => current !== itemIndex) })} className="focus-ring grid h-8 w-8 place-items-center rounded-lg text-ink/45 hover:bg-red-50 hover:text-red-700 dark:text-white/45 dark:hover:bg-red-300/10 dark:hover:text-red-200" aria-label={`Remove question ${itemIndex + 1}`}>
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              <textarea
+                rows={2}
+                value={item.prompt || ''}
+                onChange={(event) => patchItem(itemIndex, { prompt: event.target.value })}
+                placeholder="Question or sentence stem"
+                className="focus-ring w-full min-w-0 resize-y rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-semibold leading-6 text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+              />
+
+              <div className="grid gap-2">
+                {options.map((option, optionIndex) => (
+                  <div key={option.key || optionIndex} className="flex min-w-0 items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => chooseCorrect(itemIndex, optionIndex)}
+                      className={`focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-full border text-xs font-black ${option.is_correct ? 'border-orange-500 bg-orange-500 text-white' : 'border-ink/15 text-ink/45 dark:border-white/15 dark:text-white/45'}`}
+                      aria-label={option.is_correct ? 'Correct answer' : 'Mark as correct'}
+                      title={option.is_correct ? 'Correct answer' : 'Mark as correct'}
+                    >
+                      {String.fromCharCode(65 + optionIndex)}
+                    </button>
+                    <input
+                      value={option.text || ''}
+                      onChange={(event) => patchOption(itemIndex, optionIndex, { text: event.target.value })}
+                      placeholder={`Answer ${String.fromCharCode(65 + optionIndex)}`}
+                      className="focus-ring min-w-0 flex-1 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => patchItem(itemIndex, { options: options.filter((_, current) => current !== optionIndex) })}
+                      className="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-xl text-ink/45 hover:bg-red-50 hover:text-red-700 dark:text-white/45 dark:hover:bg-red-300/10 dark:hover:text-red-200"
+                      aria-label="Remove answer"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => patchItem(itemIndex, { options: [...options, { text: '', is_correct: false }] })}
+                  className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-ink/10 px-3 py-1.5 text-[0.7rem] font-black text-ink/60 dark:border-white/10 dark:text-white/60"
+                >
+                  <Plus className="h-3.5 w-3.5" /> Answer
+                </button>
+              </div>
+
+              <TextArea
+                label="Optional feedback"
+                value={item.feedback || ''}
+                onChange={(value) => patchItem(itemIndex, { feedback: value })}
+                rows={2}
+                hint="Useful when this item needs a short explanation after grading."
+              />
+            </section>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
 function MultipleChoiceEditor({ block, patch }) {
   const options = Array.isArray(block.options) ? block.options : [];
   function patchOption(index, optionPatch) {
@@ -748,6 +904,7 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
           ) : null}
 
           <div className="grid min-w-0 gap-4">
+        {block.type === 'multiple_choice_set' ? <MultipleChoiceSetEditor block={block} patch={patch} /> : null}
         {block.type === 'multiple_choice' ? <MultipleChoiceEditor block={block} patch={patch} /> : null}
         {block.type === 'gap_fill' ? <GapFillEditor block={block} patch={patch} /> : null}
         {block.type === 'word_order' ? (
