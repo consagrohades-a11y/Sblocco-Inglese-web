@@ -198,7 +198,7 @@ begin
     where id = v_draft_id
       and status = 'published'
       and exercise_id = v_exercise_id
-      and jsonb_object_length(publication_map) = 2
+      and (select count(*) from jsonb_object_keys(publication_map)) = 2
   ) then
     raise exception 'Studio publish did not link the immutable runtime back to the draft.';
   end if;
