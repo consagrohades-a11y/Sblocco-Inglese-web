@@ -249,13 +249,19 @@ function AdminNavigation({ onNavigate, collapsed = false, pathname }) {
 export default function AdminShell() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(getInitialSidebarState);
+  const [studioNavExpanded, setStudioNavExpanded] = useState(false);
   const location = useLocation();
+  const studioWorkspace = location.pathname.startsWith('/admin/content/exercises/studio');
+  const effectiveSidebarCollapsed = studioWorkspace ? !studioNavExpanded : sidebarCollapsed;
   const { profile, user } = useAuth();
   const displayName = profile?.display_name || user?.user_metadata?.display_name || 'Admin';
   const email = user?.email || '';
 
   useEffect(() => {
     setMobileOpen(false);
+    if (location.pathname.startsWith('/admin/content/exercises/studio')) {
+      setStudioNavExpanded(false);
+    }
   }, [location.pathname]);
 
   useEffect(() => {
@@ -280,7 +286,7 @@ export default function AdminShell() {
             {!collapsed ? (
               <button
                 type="button"
-                onClick={() => setSidebarCollapsed(true)}
+                onClick={() => studioWorkspace ? setStudioNavExpanded(false) : setSidebarCollapsed(true)}
                 className="focus-ring inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.08] text-white/70 transition hover:bg-white/15 hover:text-white"
                 aria-label="Riduci barra laterale"
                 title="Riduci barra laterale"
@@ -292,7 +298,7 @@ export default function AdminShell() {
           {collapsed ? (
             <button
               type="button"
-              onClick={() => setSidebarCollapsed(false)}
+              onClick={() => studioWorkspace ? setStudioNavExpanded(true) : setSidebarCollapsed(false)}
               className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/[0.08] text-white/70 transition hover:bg-white/15 hover:text-white"
               aria-label="Espandi barra laterale"
               title="Espandi barra laterale"
@@ -344,13 +350,13 @@ export default function AdminShell() {
   return (
     <div
       className="min-h-screen bg-paper text-ink dark:bg-surface-950 dark:text-white"
-      style={{ '--admin-sidebar-width': sidebarCollapsed ? '5rem' : '18rem' }}
+      style={{ '--admin-sidebar-width': effectiveSidebarCollapsed ? '5rem' : '18rem' }}
     >
       <aside
         aria-label="Workspace amministrazione"
-        className={`fixed inset-y-0 left-0 z-50 hidden flex-col overflow-hidden bg-ink shadow-2xl transition-[width] duration-200 lg:flex ${sidebarCollapsed ? 'w-20' : 'w-72'}`}
+        className={`fixed inset-y-0 left-0 z-50 hidden flex-col overflow-hidden bg-ink shadow-2xl transition-[width] duration-200 lg:flex ${effectiveSidebarCollapsed ? 'w-20' : 'w-72'}`}
       >
-        {renderSidebarContent(sidebarCollapsed)}
+        {renderSidebarContent(effectiveSidebarCollapsed)}
       </aside>
 
       <header className="sticky top-0 z-40 flex min-h-16 items-center justify-between border-b border-ink/10 bg-paper/95 px-4 backdrop-blur-xl dark:border-white/10 dark:bg-surface-950/95 lg:hidden">
@@ -388,7 +394,7 @@ export default function AdminShell() {
         </div>
       ) : null}
 
-      <div className={`min-w-0 overflow-x-clip transition-[padding] duration-200 ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
+      <div className={`min-w-0 overflow-x-clip transition-[padding] duration-200 ${effectiveSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
         <Outlet />
       </div>
     </div>
