@@ -204,43 +204,36 @@ function WrittenResponse({ question, answer, onChange, disabled }) {
   const validRange = (!min || count >= min) && (!max || count <= max);
 
   return (
-    <div className="grid gap-5">
+    <div className="grid gap-6">
       {(situation || compactContext.length) ? (
-        <section className="overflow-hidden rounded-2xl border border-orange-200/70 bg-orange-50/40 dark:border-orange-300/15 dark:bg-orange-300/[0.04]">
-          <div className="border-b border-orange-200/60 px-4 py-3 dark:border-orange-300/10">
-            <p className="text-[0.7rem] font-black uppercase tracking-[0.12em] text-orange-800 dark:text-orange-200">Task brief</p>
-          </div>
-          <div className="grid gap-4 p-4">
-            {situation ? (
-              <div>
-                <p className="text-[0.65rem] font-black uppercase tracking-[0.1em] text-ink/40 dark:text-white/40">Situation</p>
-                <p className="mt-1.5 whitespace-pre-wrap text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">{situation}</p>
-              </div>
-            ) : null}
-            {compactContext.length ? (
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 border-t border-ink/5 pt-4 dark:border-white/5">
-                {compactContext.map(([label, value]) => (
-                  <div key={label} className="min-w-0">
-                    <p className="text-[0.65rem] font-black uppercase tracking-[0.08em] text-ink/40 dark:text-white/40">{label}</p>
-                    <p className="mt-1 text-sm font-bold leading-5 text-ink/75 dark:text-white/75">{value}</p>
-                  </div>
-                ))}
-              </div>
-            ) : null}
-          </div>
+        <section className="border-l-2 border-orange-400 pl-4">
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">Context</p>
+          {situation ? (
+            <p className="mt-2 max-w-3xl whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/78 dark:text-white/78">{situation}</p>
+          ) : null}
+          {compactContext.length ? (
+            <dl className="mt-4 grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-x-6 gap-y-3 border-t border-ink/10 pt-4 dark:border-white/10">
+              {compactContext.map(([label, value]) => (
+                <div key={label} className="min-w-0">
+                  <dt className="text-[0.62rem] font-black uppercase tracking-[0.08em] text-ink/40 dark:text-white/40">{label}</dt>
+                  <dd className="mt-1 text-sm font-bold leading-5 text-ink/75 dark:text-white/75">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
         </section>
       ) : null}
 
       {content.required_points?.length ? (
-        <section className="rounded-2xl border border-ink/10 bg-white/55 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+        <section>
           <div className="flex items-baseline justify-between gap-3">
-            <p className="text-[0.7rem] font-black uppercase tracking-[0.1em] text-ink/55 dark:text-white/55">Include these points</p>
-            <span className="text-[0.68rem] font-bold text-ink/35 dark:text-white/35">{content.required_points.length} required</span>
+            <p className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-ink/55 dark:text-white/55">Include</p>
+            <span className="text-[0.66rem] font-bold text-ink/35 dark:text-white/35">{content.required_points.length} required</span>
           </div>
-          <ol className="mt-3 grid gap-2">
+          <ol className="mt-3 grid gap-2.5">
             {content.required_points.map((point, index) => (
               <li key={point + index} className="flex items-start gap-3 text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">
-                <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-orange-100 text-[0.65rem] font-black text-orange-800 dark:bg-orange-300/10 dark:text-orange-200">
+                <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full border border-orange-300/50 text-[0.65rem] font-black text-orange-700 dark:border-orange-300/25 dark:text-orange-300">
                   {index + 1}
                 </span>
                 <span>{point}</span>
@@ -250,19 +243,19 @@ function WrittenResponse({ question, answer, onChange, disabled }) {
         </section>
       ) : null}
 
-      <section className="overflow-hidden rounded-2xl border border-ink/10 bg-white/55 dark:border-white/10 dark:bg-white/[0.025]">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink/10 px-4 py-3 dark:border-white/10">
+      <section className="border-t border-ink/10 pt-5 dark:border-white/10">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-[0.7rem] font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">Your response</p>
-            <p className="mt-0.5 text-xs font-semibold text-ink/45 dark:text-white/45">Write naturally. You can edit before submitting.</p>
+            <p className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">Your response</p>
+            <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">Write naturally. You can edit before submitting.</p>
           </div>
           {(min || max) ? (
-            <span className="rounded-full bg-linen px-3 py-1.5 text-[0.68rem] font-black text-ink/55 dark:bg-white/[0.06] dark:text-white/55">
+            <span className="text-[0.68rem] font-black text-ink/45 dark:text-white/45">
               {min || 0}{max ? `–${max}` : '+'} words
             </span>
           ) : null}
         </div>
-        <div className="p-4">
+        <div className="mt-3">
           <TextAnswer
             multiline
             rows={10}
@@ -271,11 +264,11 @@ function WrittenResponse({ question, answer, onChange, disabled }) {
             disabled={disabled}
             placeholder="Scrivi qui la tua produzione..."
           />
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs font-black">
-            <span className={validRange ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-200'}>
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs font-black">
+            <span className={validRange ? 'text-ink/50 dark:text-white/50' : 'text-orange-700 dark:text-orange-300'}>
               {count} {count === 1 ? 'parola' : 'parole'}
             </span>
-            {!validRange ? <span className="text-amber-700 dark:text-amber-200">Raggiungi il range richiesto prima di consegnare.</span> : null}
+            {!validRange ? <span className="text-orange-700 dark:text-orange-300">Raggiungi il range richiesto prima di consegnare.</span> : null}
           </div>
         </div>
       </section>
