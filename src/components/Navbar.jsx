@@ -33,10 +33,10 @@ const publicItems = [
 
 const learnerItems = [
   { label: 'Home', to: '/dashboard', icon: LayoutDashboard },
-  { label: 'Learn', to: '/attivita/esercizi', icon: BookOpen, activePrefixes: ['/assignments', '/exercises', '/percorsi'] },
-  { label: 'Review', to: '/attivita/srs', icon: Dumbbell, activePrefixes: ['/attivita/pratica-mirata'] },
-  { label: 'Vocabulary', to: '/vocab-bank', icon: BookMarked },
-  { label: 'Progress', to: '/progressi', icon: BarChart3 },
+  { label: 'Impara', to: '/attivita/esercizi', icon: BookOpen, activePrefixes: ['/assignments', '/exercises', '/percorsi'] },
+  { label: 'Ripassa', to: '/attivita/srs', icon: Dumbbell, activePrefixes: ['/attivita/pratica-mirata'] },
+  { label: 'Vocabolario', to: '/vocab-bank', icon: BookMarked },
+  { label: 'Progressi', to: '/progressi', icon: BarChart3 },
 ];
 
 const editorialHomeItems = [
