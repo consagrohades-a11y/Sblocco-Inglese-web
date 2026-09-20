@@ -53,12 +53,13 @@ export async function loadStudioDraft(draftId) {
   };
 }
 
-export async function createStudioDraft(rawDocument, { origin = 'manual' } = {}) {
+export async function createStudioDraft(rawDocument, { origin = 'manual', folderId = null } = {}) {
   const userId = await currentUserId();
   const normalized = normalizeStudioDocument(rawDocument).document;
   const payload = {
     ...metadataFromDocument(normalized),
     origin,
+    folder_id: folderId || null,
     created_by: userId,
     updated_by: userId,
     updated_at: new Date().toISOString(),
