@@ -38,6 +38,7 @@ const GRADING_RULES = [
   'Do not mark more than one option correct in single-answer multiple_choice or dialogue_choice tasks.',
   'For nearly-correct matching, preserve the template multiplier unless the user explicitly requests different scoring behaviour.',
   'Do not add hidden scoring rules outside the supported grading fields shown in the template.',
+  'practice_selection is deliberately ungraded: preserve grading.mode = ungraded, weight = 0 and empty diagnostics.',
 ];
 
 const QUESTION_CONTRACTS = {
@@ -60,6 +61,18 @@ const QUESTION_CONTRACTS = {
       'Use more than one correct option; otherwise use multiple_choice.',
       'Make the selection criterion explicit in the prompt.',
       'Each option must be independently judgeable as correct or incorrect.',
+    ],
+  },
+  practice_selection: {
+    purpose: 'Let the learner select useful, familiar or personally relevant language without right-or-wrong grading.',
+    required_content: ['selection_mode', 'options'],
+    rules: [
+      'There is no correct answer: never add is_correct or diagnostic error codes to these options.',
+      'Use selection_mode = single when exactly one choice is pedagogically useful; otherwise use multiple.',
+      'Each option needs a stable key and learner-facing text.',
+      'If an option should later be available to a vocabulary bank, set vocab_bank = true and vocab_kind to word or chunk.',
+      'Use vocab_kind = word for a single lexical item and chunk for a multiword expression, collocation, phrase or reusable sentence frame.',
+      'Do not mark every option for the vocabulary bank automatically; only mark language worth deliberate later retrieval.',
     ],
   },
   gap_fill: {

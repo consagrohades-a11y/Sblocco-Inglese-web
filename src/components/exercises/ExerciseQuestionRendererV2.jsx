@@ -17,6 +17,7 @@ import {
   wordOrderDisplayToken,
   wordOrderTerminalPunctuation,
 } from '../../lib/wordOrderPresentation.js';
+import { stableShuffleWordOrderTokenInstances } from '../../lib/wordOrderShuffle.js';
 import EducationalContentBlock from './EducationalContentBlock.jsx';
 import SbloccoSelect from './SbloccoSelect.jsx';
 import {
@@ -37,9 +38,9 @@ function wordCount(value) {
   return String(value || '').trim().split(/\s+/).filter(Boolean).length;
 }
 
-function TextAnswer({ value, onChange, disabled, multiline = false, placeholder = 'Scrivi la risposta...' }) {
+function TextAnswer({ value, onChange, disabled, multiline = false, placeholder = 'Scrivi la risposta...', rows = 7 }) {
   const shared = 'focus-ring exercise-text-field w-full px-4 py-3 text-base font-semibold';
-  if (multiline) return <textarea rows={7} value={value || ''} onChange={(event) => onChange(event.target.value)} disabled={disabled} placeholder={placeholder} className={shared} />;
+  if (multiline) return <textarea rows={rows} value={value || ''} onChange={(event) => onChange(event.target.value)} disabled={disabled} placeholder={placeholder} className={shared} />;
   return <input value={value || ''} onChange={(event) => onChange(event.target.value)} disabled={disabled} placeholder={placeholder} className={shared} />;
 }
 
@@ -51,6 +52,24 @@ function MultipleChoice({ question, answer, onChange, disabled, multiple = false
     else onChange(selected.has(key) ? [...selected].filter((item) => item !== key) : [...selected, key]);
   }
   return <div className="exercise-choice-grid is-two-column">{options.map((option) => <ExerciseChoice key={option.key} disabled={disabled} selected={selected.has(option.key)} multiple={multiple} onClick={() => choose(option.key)}>{option.text}</ExerciseChoice>)}</div>;
+}
+
+function PracticeSelection({ question, answer, onChange, disabled }) {
+  const multiple = question.content?.selection_mode !== 'single';
+  return (
+    <div className="grid gap-3">
+      <p className="text-xs font-semibold leading-5 text-ink/60 dark:text-white/60">
+        Non c’è una risposta giusta o sbagliata: la selezione viene semplicemente salvata.
+      </p>
+      <MultipleChoice
+        question={question}
+        answer={answer}
+        onChange={onChange}
+        disabled={disabled}
+        multiple={multiple}
+      />
+    </div>
+  );
 }
 
 function DialogueChoice({ question, answer, onChange, disabled }) {
@@ -99,19 +118,24 @@ function GapFill({ question, answer, onChange, disabled, select = false }) {
   return <div className="grid gap-4">{blanks.map((blank, index) => <div key={blank.key} className="grid gap-2"><span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Spazio {index + 1}</span>{select ? <SbloccoSelect value={values[blank.key] || ''} options={blank.options || []} onChange={(nextValue) => onChange({ ...values, [blank.key]: nextValue })} disabled={disabled} ariaLabel={`Spazio ${index + 1}`} /> : <TextAnswer value={values[blank.key] || ''} onChange={(value) => onChange({ ...values, [blank.key]: value })} disabled={disabled} />}</div>)}</div>;
 }
 
-function WordOrder({ question, answer, onChange, disabled }) {
+function WordOrder({ question, answer, onChange, disabled, shuffleSeed }) {
   const tokenInstances = (question.content?.tokens || []).map((token, index) => {
     const text = typeof token === 'string' ? token : token.text;
     return { ...(typeof token === 'object' ? token : {}), text, instanceKey: `${token.key || text}-${index}` };
   });
+  const bankTokenInstances = stableShuffleWordOrderTokenInstances(
+    tokenInstances,
+    question.content?.shuffle_strategy,
+    shuffleSeed,
+  );
   const selectedValues = Array.isArray(answer) ? answer.map((token) => typeof token === 'string' ? token : token?.text).filter(Boolean) : [];
   const usedKeys = new Set();
   const selected = selectedValues.map((value, index) => {
-    const match = tokenInstances.find((token) => token.text === value && !usedKeys.has(token.instanceKey));
+    const match = bankTokenInstances.find((token) => token.text === value && !usedKeys.has(token.instanceKey));
     if (match) { usedKeys.add(match.instanceKey); return match; }
     return { text: value, instanceKey: `saved-${index}-${value}` };
   });
-  const remaining = tokenInstances.filter((token) => !usedKeys.has(token.instanceKey));
+  const remaining = bankTokenInstances.filter((token) => !usedKeys.has(token.instanceKey));
   const dragRef = useRef(null);
   const [draggingKey, setDraggingKey] = useState(null);
   const terminalPunctuation = wordOrderTerminalPunctuation(question.content);
@@ -165,11 +189,98 @@ function WordOrder({ question, answer, onChange, disabled }) {
 
 function WrittenResponse({ question, answer, onChange, disabled }) {
   const content = question.content || {};
+  const contextSections = content.context_sections && typeof content.context_sections === 'object'
+    ? content.context_sections
+    : {};
+  const situation = contextSections.situation || content.context || '';
+  const compactContext = [
+    ['Il tuo ruolo', contextSections.role],
+    ['Destinatario', contextSections.audience],
+    ['Obiettivo', contextSections.goal],
+  ].filter(([, value]) => value);
   const count = wordCount(answer);
   const min = Number(content.min_words || 0);
   const max = Number(content.max_words || 0);
   const validRange = (!min || count >= min) && (!max || count <= max);
-  return <div className="grid gap-4">{content.context ? <div className="exercise-scenario">{content.context}</div> : null}{content.required_points?.length ? <div className="exercise-guidance"><p className="text-xs font-bold uppercase tracking-wide">Punti da includere</p><ul className="mt-2 grid gap-1 text-sm font-semibold">{content.required_points.map((point) => <li key={point}>• {point}</li>)}</ul></div> : null}<TextAnswer multiline value={answer || ''} onChange={onChange} disabled={disabled} placeholder="Scrivi qui la tua produzione..." /><div className="flex flex-wrap items-center justify-between gap-2 text-xs font-black"><span className={validRange ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-200'}>{count} parole</span><span className="text-ink/60 dark:text-white/60">Richieste: {min || 0}{max ? `–${max}` : '+'}</span></div></div>;
+
+  return (
+    <div className="grid gap-5">
+      {(situation || compactContext.length) ? (
+        <section className="overflow-hidden rounded-2xl border border-orange-200/70 bg-orange-50/40 dark:border-orange-300/15 dark:bg-orange-300/[0.04]">
+          <div className="border-b border-orange-200/60 px-4 py-3 dark:border-orange-300/10">
+            <p className="text-[0.7rem] font-black uppercase tracking-[0.12em] text-orange-800 dark:text-orange-200">Task brief</p>
+          </div>
+          <div className="grid gap-4 p-4">
+            {situation ? (
+              <div>
+                <p className="text-[0.65rem] font-black uppercase tracking-[0.1em] text-ink/40 dark:text-white/40">Situation</p>
+                <p className="mt-1.5 whitespace-pre-wrap text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">{situation}</p>
+              </div>
+            ) : null}
+            {compactContext.length ? (
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 border-t border-ink/5 pt-4 dark:border-white/5">
+                {compactContext.map(([label, value]) => (
+                  <div key={label} className="min-w-0">
+                    <p className="text-[0.65rem] font-black uppercase tracking-[0.08em] text-ink/40 dark:text-white/40">{label}</p>
+                    <p className="mt-1 text-sm font-bold leading-5 text-ink/75 dark:text-white/75">{value}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
+      {content.required_points?.length ? (
+        <section className="rounded-2xl border border-ink/10 bg-white/55 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="text-[0.7rem] font-black uppercase tracking-[0.1em] text-ink/55 dark:text-white/55">Include these points</p>
+            <span className="text-[0.68rem] font-bold text-ink/35 dark:text-white/35">{content.required_points.length} required</span>
+          </div>
+          <ol className="mt-3 grid gap-2">
+            {content.required_points.map((point, index) => (
+              <li key={point + index} className="flex items-start gap-3 text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">
+                <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-orange-100 text-[0.65rem] font-black text-orange-800 dark:bg-orange-300/10 dark:text-orange-200">
+                  {index + 1}
+                </span>
+                <span>{point}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
+
+      <section className="overflow-hidden rounded-2xl border border-ink/10 bg-white/55 dark:border-white/10 dark:bg-white/[0.025]">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink/10 px-4 py-3 dark:border-white/10">
+          <div>
+            <p className="text-[0.7rem] font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">Your response</p>
+            <p className="mt-0.5 text-xs font-semibold text-ink/45 dark:text-white/45">Write naturally. You can edit before submitting.</p>
+          </div>
+          {(min || max) ? (
+            <span className="rounded-full bg-linen px-3 py-1.5 text-[0.68rem] font-black text-ink/55 dark:bg-white/[0.06] dark:text-white/55">
+              {min || 0}{max ? `–${max}` : '+'} words
+            </span>
+          ) : null}
+        </div>
+        <div className="p-4">
+          <TextAnswer
+            multiline
+            rows={10}
+            value={answer || ''}
+            onChange={onChange}
+            disabled={disabled}
+            placeholder="Scrivi qui la tua produzione..."
+          />
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs font-black">
+            <span className={validRange ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-200'}>
+              {count} {count === 1 ? 'parola' : 'parole'}
+            </span>
+            {!validRange ? <span className="text-amber-700 dark:text-amber-200">Raggiungi il range richiesto prima di consegnare.</span> : null}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }
 
 function RubricPreview({ rubric }) {
@@ -229,10 +340,127 @@ function DialogueRoleplay({ question, answer, onChange, disabled, attemptId, att
   </div>;
 }
 
-function ReadingComprehension({ question, answer, onChange, disabled }) {
+function ReadingComprehension({
+  question,
+  answer,
+  onChange,
+  disabled,
+  result = null,
+  showCorrectAnswers = false,
+  showExplanations = false,
+}) {
   const content = question.content || {};
   const values = answer && typeof answer === 'object' && !Array.isArray(answer) ? answer : {};
+  const itemResults = Array.isArray(result?.correct_answer)
+    ? Object.fromEntries(result.correct_answer.map((item) => [item?.key, item]))
+    : {};
+
   function update(key, value) { onChange({ ...values, [key]: value }); }
+
+  if (content.presentation === 'open_answer_set') {
+    return (
+      <div className="grid gap-5">
+        {(content.items || []).map((openItem, index) => {
+          const itemResult = itemResults[openItem.key] || null;
+          const accepted = Array.isArray(itemResult?.correct_answer) ? itemResult.correct_answer : [];
+          const status = itemResult?.status || null;
+
+          return (
+            <section key={openItem.key} className="border-t border-ink/10 pt-5 first:border-t-0 first:pt-0 dark:border-white/10">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-[0.7rem] font-black uppercase tracking-[0.1em] text-orange-500">Item {index + 1}</p>
+                {status ? (
+                  <span className={`rounded-full px-2.5 py-1 text-[0.65rem] font-black ${
+                    status === 'correct'
+                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200'
+                      : status === 'nearly_correct'
+                        ? 'bg-amber-100 text-amber-800 dark:bg-amber-300/10 dark:text-amber-200'
+                        : 'bg-red-100 text-red-800 dark:bg-red-300/10 dark:text-red-200'
+                  }`}>
+                    {resultLabels[status] || status}
+                  </span>
+                ) : null}
+              </div>
+              <p className="mt-2 text-base font-black leading-7 text-ink dark:text-white">{openItem.prompt}</p>
+              <div className="mt-3">
+                <TextAnswer
+                  value={values[openItem.key] || ''}
+                  onChange={(value) => update(openItem.key, value)}
+                  disabled={disabled}
+                  placeholder="Scrivi una risposta..."
+                />
+              </div>
+              {disabled && showCorrectAnswers && accepted.length ? (
+                <div className="mt-3 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold leading-5 text-emerald-900 dark:bg-emerald-300/[0.08] dark:text-emerald-100">
+                  <span className="font-black">Risposta accettata:</span> {accepted.join(' / ')}
+                </div>
+              ) : null}
+              {showExplanations && itemResult?.explanation ? (
+                <p className="mt-2 rounded-xl bg-linen/70 px-3 py-2 text-xs font-semibold leading-5 text-ink/70 dark:bg-white/[0.05] dark:text-white/70">
+                  {itemResult.explanation}
+                </p>
+              ) : null}
+            </section>
+          );
+        })}
+      </div>
+    );
+  }
+
+  if (content.presentation === 'choice_set') {
+    return (
+      <div className="grid gap-5">
+        {(content.items || []).map((choiceItem, index) => {
+          const itemResult = itemResults[choiceItem.key] || null;
+          const selectedKey = values[choiceItem.key];
+          const correctKey = typeof itemResult?.correct_answer === 'string' ? itemResult.correct_answer : null;
+
+          return (
+            <section key={choiceItem.key} className="border-t border-ink/10 pt-5 first:border-t-0 first:pt-0 dark:border-white/10">
+              <p className="text-[0.7rem] font-black uppercase tracking-[0.1em] text-orange-500">Example {index + 1}</p>
+              <p className="mt-2 text-base font-black leading-7 text-ink dark:text-white">{choiceItem.prompt}</p>
+              <div className="mt-3 grid gap-2">
+                {(choiceItem.options || []).map((option, optionIndex) => {
+                  const selected = selectedKey === option.key;
+                  const correct = disabled && showCorrectAnswers && correctKey === option.key;
+                  const incorrectSelection = disabled && itemResult && selected && correctKey && correctKey !== option.key;
+                  return (
+                    <button
+                      key={option.key}
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => update(choiceItem.key, option.key)}
+                      className={`focus-ring flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold leading-6 transition ${
+                        correct
+                          ? 'border-emerald-400 bg-emerald-50 text-emerald-950 dark:border-emerald-300/40 dark:bg-emerald-300/10 dark:text-emerald-100'
+                          : incorrectSelection
+                            ? 'border-red-300 bg-red-50 text-red-950 dark:border-red-300/30 dark:bg-red-300/10 dark:text-red-100'
+                            : selected
+                              ? 'border-orange-400 bg-orange-50 text-ink dark:border-orange-300/40 dark:bg-orange-300/10 dark:text-white'
+                              : 'border-ink/10 bg-white text-ink/80 hover:border-orange-300 dark:border-white/10 dark:bg-white/[0.035] dark:text-white/80'
+                      }`}
+                    >
+                      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-current/20 text-xs font-black">
+                        {String.fromCharCode(65 + optionIndex)}
+                      </span>
+                      <span className="min-w-0 flex-1">{option.text}</span>
+                      {correct ? <span className="shrink-0 font-black text-emerald-600 dark:text-emerald-300">✓</span> : null}
+                    </button>
+                  );
+                })}
+              </div>
+              {showExplanations && itemResult?.explanation ? (
+                <p className="mt-3 rounded-xl bg-linen/70 px-3 py-2 text-xs font-semibold leading-5 text-ink/70 dark:bg-white/[0.05] dark:text-white/70">
+                  {itemResult.explanation}
+                </p>
+              ) : null}
+            </section>
+          );
+        })}
+      </div>
+    );
+  }
+
   return <div className="grid gap-6">
     <article className="exercise-reading">
       <div className="exercise-reading__label"><BookOpen /><span>Testo di lettura</span></div>
@@ -366,8 +594,16 @@ function AudioRecorder({ question, answer, onChange, disabled, attemptId, attemp
 
 function ResultPanel({ question, result, teacherComment, showScore, showCorrectAnswers, showExplanations }) {
   if (!result) return null;
+  if (result.ungraded) {
+    return (
+      <div className="mt-4 rounded-xl border border-orange-200/70 bg-orange-50/55 p-4 text-sm font-semibold text-orange-950 dark:border-orange-300/15 dark:bg-orange-300/[0.05] dark:text-orange-100">
+        <strong>Scelta salvata.</strong> Questa attività non ha una risposta giusta o sbagliata e non influisce sul punteggio.
+      </div>
+    );
+  }
   const status = result.status || 'unanswered';
-  const correctAnswer = formatExerciseCorrectAnswer(question, result.correct_answer);
+  const isCompositeSet = ['choice_set', 'open_answer_set'].includes(question.content?.presentation);
+  const correctAnswer = isCompositeSet ? '' : formatExerciseCorrectAnswer(question, result.correct_answer);
   return <ExerciseFeedbackPanel status={status} title={resultLabels[status] || status}>{status === 'pending_review' ? <p>La risposta è stata consegnata. Riceverai la valutazione dell’insegnante nella tua area studente.</p> : null}{showScore && result.max_points !== undefined && status !== 'pending_review' ? <p>Punti: <strong>{Number(result.earned_points || 0).toFixed(1)} / {Number(result.max_points || 0).toFixed(1)}</strong></p> : null}{showCorrectAnswers && correctAnswer ? <p>Risposta giusta: <strong>{correctAnswer}</strong></p> : null}{showExplanations && result.explanation ? <p>{typeof result.explanation === 'string' ? result.explanation : JSON.stringify(result.explanation)}</p> : null}{teacherComment ? <div className="mt-3 border-t border-current/15 pt-3"><p className="text-xs font-bold uppercase tracking-wide opacity-60">Commento dell’insegnante</p><p className="mt-1 whitespace-pre-wrap font-semibold">{teacherComment}</p></div> : null}</ExerciseFeedbackPanel>;
 }
 
@@ -386,19 +622,25 @@ export default function ExerciseQuestionRendererV2({
   const result = item?.result || null;
   const input = useMemo(() => {
     if (type === 'multiple_choice') return <MultipleChoice question={question} answer={answer} onChange={onChange} disabled={disabled} />;
+    if (type === 'practice_selection') return <PracticeSelection question={question} answer={answer} onChange={onChange} disabled={disabled} />;
     if (type === 'dialogue_choice') return <DialogueChoice question={question} answer={answer} onChange={onChange} disabled={disabled} />;
     if (type === 'multiple_select') return <MultipleChoice question={question} answer={answer} onChange={onChange} disabled={disabled} multiple />;
     if (type === 'gap_fill') return <GapFill question={question} answer={answer} onChange={onChange} disabled={disabled} />;
     if (type === 'select_gap') return <GapFill question={question} answer={answer} onChange={onChange} disabled={disabled} select />;
     if (type === 'translation' || type === 'error_correction') return <TextAnswer multiline={type === 'error_correction'} value={answer || ''} onChange={onChange} disabled={disabled} />;
-    if (type === 'word_order') return <WordOrder question={question} answer={answer} onChange={onChange} disabled={disabled} />;
+    if (type === 'word_order') return <WordOrder question={question} answer={answer} onChange={onChange} disabled={disabled} shuffleSeed={`${attemptId || 'preview'}:${item?.question_version_id || item?.id || question.client_key || 'word_order'}`} />;
     if (type === 'content_block') return <EducationalContentBlock content={question.content} fallback={question.prompt} />;
     if (type === 'written_response') return <div className="grid gap-4"><WrittenResponse question={question} answer={answer} onChange={onChange} disabled={disabled} /><RubricPreview rubric={question.content?.rubric} /></div>;
     if (type === 'dialogue_roleplay') return <DialogueRoleplay question={question} answer={answer} onChange={onChange} disabled={disabled} attemptId={attemptId} attemptQuestionId={item?.id} teacherTurnReviews={item?.teacher_turn_reviews} />;
     if (type === 'audio_response') return <AudioRecorder question={question} answer={answer} onChange={onChange} disabled={disabled} attemptId={attemptId} attemptQuestionId={item?.id} />;
-    if (type === 'reading_comprehension') return <ReadingComprehension question={question} answer={answer} onChange={onChange} disabled={disabled} />;
+    if (type === 'reading_comprehension') return <ReadingComprehension question={question} answer={answer} onChange={onChange} disabled={disabled} result={result} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} />;
     return <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">Tipologia non supportata: {type || 'sconosciuta'}.</p>;
-  }, [type, question, answer, onChange, disabled, attemptId, item?.id, item?.teacher_turn_reviews]);
+  }, [type, question, answer, onChange, disabled, attemptId, item?.id, item?.teacher_turn_reviews, result, showCorrectAnswers, showExplanations]);
 
-  return <div><ExercisePrompt type={type} prompt={question.prompt} instructions={question.instructions} />{input}<ResultPanel question={question} result={result} teacherComment={item?.teacher_comment} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} /></div>;
+  const displayType = question.content?.presentation === 'choice_set'
+    ? 'multiple_choice_set'
+    : question.content?.presentation === 'open_answer_set'
+      ? 'open_answer_set'
+      : type;
+  return <div><ExercisePrompt type={displayType} prompt={question.prompt} instructions={question.instructions} />{input}<ResultPanel question={question} result={result} teacherComment={item?.teacher_comment} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} /></div>;
 }

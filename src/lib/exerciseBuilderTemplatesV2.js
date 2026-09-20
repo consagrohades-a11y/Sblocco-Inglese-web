@@ -13,7 +13,7 @@ const q = (type, fields) => ({
   ...common,
   client_key: `question_${type}`,
   type,
-  tags: [type, fields.grading?.mode === 'manual_review' ? 'manual-review' : 'automatic'],
+  tags: [type, fields.grading?.mode === 'manual_review' ? 'manual-review' : fields.grading?.mode === 'ungraded' ? 'ungraded' : 'automatic'],
   ...fields,
 });
 const rubric = (items) => items.map(([key, label, max_points, description = '']) => ({ key, label, description, max_points }));
@@ -37,6 +37,20 @@ const questions = {
       { key: 'b', text: 'She has never visited Rome.', is_correct: true },
       { key: 'c', text: 'We have went home.', is_correct: false, error_code: 'PAST_PARTICIPLE_FORM' },
     ] }, grading: automatic(), diagnostics: diagnostics(['PRESENT_PERFECT_FORM'], 'PRESENT_PERFECT_GENERAL'),
+  }),
+  practice_selection: q('practice_selection', {
+    title: 'Vocabulary selection', prompt: 'Which expressions would you like to remember and use?', instructions: 'Seleziona una o più espressioni.',
+    level: 'B1', topic: 'workplace_communication', primary_skill: 'vocabulary', learning_objective: 'Notice and select useful language without right-or-wrong grading.',
+    content: {
+      selection_mode: 'multiple',
+      options: [
+        { key: 'option_1', text: 'get something off my plate', vocab_bank: true, vocab_kind: 'chunk' },
+        { key: 'option_2', text: 'frazzled', vocab_bank: true, vocab_kind: 'word' },
+        { key: 'option_3', text: 'push back on something', vocab_bank: false, vocab_kind: null },
+      ],
+    },
+    grading: { mode: 'ungraded', weight: 0, nearly_correct_multiplier: 0 },
+    diagnostics: diagnostics([], null),
   }),
   gap_fill: q('gap_fill', {
     title: 'Open gap fill', prompt: 'Complete the sentence.', instructions: 'Scrivi la parola mancante.',
@@ -187,7 +201,7 @@ const audioPerTurnRoleplay = q('dialogue_roleplay', {
 });
 
 const order = [
-  'content_block', 'multiple_choice', 'multiple_select', 'gap_fill', 'select_gap', 'translation', 'error_correction', 'word_order',
+  'content_block', 'multiple_choice', 'multiple_select', 'practice_selection', 'gap_fill', 'select_gap', 'translation', 'error_correction', 'word_order',
   'dialogue_choice', 'reading_comprehension', 'written_response', 'dialogue_roleplay', 'audio_response',
 ];
 const manualTypes = new Set(['written_response', 'dialogue_roleplay', 'audio_response']);

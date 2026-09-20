@@ -96,3 +96,6 @@ jobs:
 
       - name: Run Recovery remediation DB canary
         run: psql -v ON_ERROR_STOP=1 -f scripts/sql/recovery-topic-remediation-canary.sql
+
+      - name: Run Learning Studio vertical DB smoke
+        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/exercise-studio-vertical-smoke.sql
