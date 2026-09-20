@@ -30,6 +30,7 @@ const requiredTypes = [
   'media',
   'multiple_choice',
   'multiple_choice_set',
+  'open_answer_set',
   'practice_selection',
   'translation',
   'gap_fill',
@@ -320,6 +321,91 @@ assert.equal(importedChoiceSet.publishable, true, importedChoiceSet.errors.map((
 assert.equal(importedChoiceSet.document.blocks[0].type, 'multiple_choice_set');
 assert.equal(importedChoiceSet.document.blocks[0].items[0].key, 'item_1');
 assert.equal(importedChoiceSet.document.blocks[0].items[0].options[0].key, 'option_1');
+
+const openAnswerSet = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'Grouped translations',
+  level: 'B1',
+  topic: 'workplace_language',
+  blocks: [{
+    type: 'open_answer_set',
+    prompt: 'Translate each sentence naturally.',
+    instructions: 'Write one answer for every item.',
+    items: [
+      {
+        key: 'ai_item_1',
+        prompt: 'Non posso rimandarlo ancora.',
+        accepted_answers: ["I can't put it off any longer.", 'I cannot put it off any longer.'],
+        feedback: 'Put off means postpone.',
+      },
+      {
+        prompt: 'È più probabile che succeda sotto pressione.',
+        accepted_answers: ["It's more likely to happen under pressure.", 'It is more likely to happen under pressure.'],
+      },
+    ],
+  }],
+});
+assert.equal(openAnswerSet.valid, true, openAnswerSet.errors.map((item) => item.message).join('\n'));
+const openSetQuestion = openAnswerSet.runtime.exercise.sections[0].questions[0];
+assert.equal(openSetQuestion.type, 'reading_comprehension');
+assert.equal(openSetQuestion.content.presentation, 'open_answer_set');
+assert.equal(openSetQuestion.grading.mode, 'per_item');
+assert.equal(openSetQuestion.content.items[0].key, 'item_1');
+assert.equal(openSetQuestion.content.items[0].type, 'short_answer');
+assert.deepEqual(openSetQuestion.content.items[0].accepted_answers, ["I can't put it off any longer.", 'I cannot put it off any longer.']);
+assert.equal(openSetQuestion.content.items[0].feedback, 'Put off means postpone.');
+
+const importedOpenAnswerSet = parseStudioImport(JSON.stringify({
+  _template: {
+    template_id: 'sblocco-grammar-mini-course',
+    template_version: 1,
+    authoring_contract_version: 1,
+  },
+  activity: {
+    internal_title: 'Imported grouped translations',
+    learner_title: 'Translate naturally',
+    level: 'B1',
+    topic: 'workplace_language',
+    activity_type: 'exercise',
+    blocks: [{
+      type: 'translation_set',
+      prompt: 'Translate each sentence naturally.',
+      items: [
+        {
+          key: 'ai_owned_key',
+          prompt: 'Non posso rimandarlo ancora.',
+          accepted_answers: ["I can't put it off any longer."],
+        },
+        {
+          prompt: 'È più probabile che succeda.',
+          accepted_answers: ["It's more likely to happen."],
+        },
+      ],
+    }],
+  },
+}));
+assert.equal(importedOpenAnswerSet.publishable, true, importedOpenAnswerSet.errors.map((item) => item.message).join('\n'));
+assert.equal(importedOpenAnswerSet.document.blocks[0].type, 'open_answer_set');
+assert.equal(importedOpenAnswerSet.document.blocks[0].items[0].key, 'item_1');
+
+const invalidOpenAnswerSet = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'Broken open-answer set',
+  level: 'B1',
+  topic: 'test',
+  blocks: [{
+    type: 'open_answer_set',
+    prompt: 'Answer each item.',
+    items: [
+      { prompt: 'One', accepted_answers: [] },
+      { prompt: 'Two', accepted_answers: ['Two'] },
+    ],
+  }],
+});
+assert.equal(invalidOpenAnswerSet.valid, false);
+assert.ok(invalidOpenAnswerSet.errors.some((item) => item.code === 'accepted_answer'));
 
 const invalidVocabBankTag = preflightStudioDocument({
   schema_version: 1,
