@@ -124,6 +124,8 @@ function GenericDashboard({ firstName }) {
       detail: open.length ? `${open.length} ${open.length === 1 ? 'attività da continuare' : 'attività da continuare'}` : 'Tutto completato per ora.',
       to: '/attivita/esercizi',
       action: 'Apri',
+      secondaryTo: '/percorsi',
+      secondaryLabel: 'Corsi',
     },
     {
       key: 'review',
