@@ -56,7 +56,7 @@ expect(main.includes("import './styles/learnerExperience.css'"), 'main.js does n
 expect(css.includes('html.sblocco-learner-experience {'), 'Light-mode learner tokens are missing.');
 expect(css.includes('html.dark.sblocco-learner-experience {'), 'Dark-mode learner tokens are missing.');
 expect(css.includes('--lx-paper: #f9f0e8'), 'Editorial warm-paper light token is missing.');
-expect(css.includes('--lx-paper: #07263a'), 'Editorial deep-navy dark token is missing.');
+expect(css.includes('--lx-paper: #111513'), 'Calm neutral dark learner canvas token is missing.');
 expect(css.includes('--lx-orange: #d34c1a'), 'Editorial orange light token is missing.');
 expect(css.includes('--lx-orange: #ef5b28'), 'Editorial orange dark token is missing.');
 expect(css.includes('data-learning-surface="progress"') && css.includes(':not(.dark)[data-learning-surface="progress"]'), 'Progress does not have an explicit light-mode correction for its legacy dark-first markup.');
