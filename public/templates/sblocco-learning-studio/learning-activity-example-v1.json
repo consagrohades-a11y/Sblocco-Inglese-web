@@ -1,0 +1,231 @@
+{
+  "_template": {
+    "template_id": "sblocco-learning-activity",
+    "template_version": 1,
+    "authoring_contract_version": 1
+  },
+  "activity": {
+    "internal_title": "B1 — Grammar + Vocabulary — Future Arrangements and Changing Plans",
+    "learner_title": "Plans change: talk about arrangements naturally",
+    "description": "A mixed B1 lesson on scheduling language and forming present-continuous questions/statements for fixed future arrangements.",
+    "instructions": "Learn key scheduling vocabulary, notice how the present continuous is formed for fixed future arrangements, then use the language in realistic tasks.",
+    "level": "B1",
+    "topic": "future_plans_and_arrangements",
+    "subtopic": "present_continuous_future_arrangements_rescheduling",
+    "skills": ["grammar", "vocabulary", "functional_language", "writing", "interaction", "word_order"],
+    "tags": ["arrangements", "present continuous", "rescheduling", "work", "appointments"],
+    "activity_type": "lesson",
+    "estimated_minutes": 28,
+    "blocks": [
+      {
+        "type": "dialogue",
+        "title": "Tomorrow is already busy",
+        "body": "Nina and Paolo talk about fixed arrangements and a change of plan.",
+        "turns": [
+          {"speaker": "Nina", "text": "I'm meeting the client at 3 tomorrow. The appointment is already confirmed."},
+          {"speaker": "Paolo", "text": "I'm calling the supplier in the morning."},
+          {"speaker": "Nina", "text": "Actually, I may need to reschedule my client meeting. Something came up."},
+          {"speaker": "Paolo", "text": "Are you moving it to Friday?"},
+          {"speaker": "Nina", "text": "Maybe. I'm checking their availability now."},
+          {"speaker": "Paolo", "text": "Let me know when the new arrangement is confirmed."}
+        ]
+      },
+      {
+        "type": "vocabulary",
+        "title": "Core scheduling vocabulary",
+        "body": "Learn these words directly. You will reuse them in the grammar and communication tasks that follow.",
+        "items": [
+          {"term": "appointment", "meaning": "an arranged time to meet someone", "translation": "appuntamento", "example": "I have a dentist's appointment at 11."},
+          {"term": "arrangement", "meaning": "a plan organised with another person", "translation": "accordo / organizzazione", "example": "Our travel arrangements are already fixed."},
+          {"term": "available", "meaning": "free and able to do something at a particular time", "translation": "disponibile", "example": "Are you available on Thursday afternoon?"},
+          {"term": "reschedule", "meaning": "arrange something for a different time or date", "translation": "riprogrammare / spostare", "example": "We need to reschedule the meeting."},
+          {"term": "postpone", "meaning": "move something to a later time or date", "translation": "rimandare / posticipare", "example": "They postponed the launch until Monday."},
+          {"term": "cancel", "meaning": "decide that a planned event will not happen", "translation": "annullare", "example": "We had to cancel the appointment."},
+          {"term": "confirm", "meaning": "say or show that an arrangement is definite", "translation": "confermare", "example": "Can you confirm the time by this evening?"},
+          {"term": "deadline", "meaning": "the latest time or date by which something must be completed", "translation": "scadenza", "example": "The deadline is Friday at 5 p.m."},
+          {"term": "flexible", "meaning": "able or willing to change according to the situation", "translation": "flessibile", "example": "I'm flexible about the meeting time."},
+          {"term": "inconvenient", "meaning": "causing difficulty or not suitable for someone's plans", "translation": "scomodo / poco conveniente", "example": "Nine o'clock is a little inconvenient for me."}
+        ]
+      },
+      {
+        "type": "explanation",
+        "title": "Talking about an arrangement",
+        "body": "When a future meeting or appointment has already been arranged, English often uses the present continuous: am/is/are + -ing. The same form also needs normal present-continuous word order."
+      },
+      {
+        "type": "rule",
+        "title": "The arrangement pattern",
+        "body": "Statement: subject + am/is/are + verb-ing. Question: question word + am/is/are + subject + verb-ing?",
+        "examples": [
+          "We are meeting the client at 3 tomorrow.",
+          "What time are you meeting Sara on Friday?",
+          "Is Luca joining us for lunch?"
+        ]
+      },
+      {
+        "type": "contrast",
+        "title": "Statement vs question",
+        "left_label": "Statement",
+        "left_body": "You are meeting the client at 3.",
+        "right_label": "Question",
+        "right_body": "What time are you meeting the client?",
+        "body": "In questions, move am/is/are before the subject. Keep the -ing form of the main verb."
+      },
+      {
+        "type": "multiple_choice_set",
+        "title": "Build the arrangement correctly",
+        "prompt": "Choose the sentence with the correct present-continuous form or word order.",
+        "instructions": "Focus on the structure used for fixed future arrangements.",
+        "primary_skill": "grammar",
+        "learning_objective": "Form statements and questions with the present continuous for future arrangements.",
+        "items": [
+          {
+            "prompt": "You and Marta have a fixed meeting tomorrow at 9. Which sentence is correctly formed?",
+            "options": [
+              {"text": "Marta and I are meeting at 9 tomorrow.", "is_correct": true},
+              {"text": "Marta and I meeting at 9 tomorrow.", "is_correct": false},
+              {"text": "Marta and I are meet at 9 tomorrow.", "is_correct": false}
+            ],
+            "feedback": "Use are + verb-ing: are meeting."
+          },
+          {
+            "prompt": "Ask Luca about the time of his arranged call with Anna.",
+            "options": [
+              {"text": "What time is Luca calling Anna?", "is_correct": true},
+              {"text": "What time Luca is calling Anna?", "is_correct": false},
+              {"text": "What time is calling Luca Anna?", "is_correct": false}
+            ],
+            "feedback": "In a question, put is before the subject: is Luca calling."
+          },
+          {
+            "prompt": "Ask your colleague whether she is joining the arranged lunch.",
+            "options": [
+              {"text": "Are you joining us for lunch?", "is_correct": true},
+              {"text": "You are joining us for lunch?", "is_correct": false},
+              {"text": "Are you join us for lunch?", "is_correct": false}
+            ],
+            "feedback": "Yes/no questions use are + subject + verb-ing."
+          },
+          {
+            "prompt": "The client appointment is fixed for Friday. Which sentence is correctly formed?",
+            "options": [
+              {"text": "We are seeing the client on Friday.", "is_correct": true},
+              {"text": "We seeing the client on Friday.", "is_correct": false},
+              {"text": "We are see the client on Friday.", "is_correct": false}
+            ],
+            "feedback": "Use are + seeing for the arranged future event."
+          }
+        ]
+      },
+      {
+        "type": "language_bank",
+        "title": "Useful language when an arrangement changes",
+        "body": "Use these expressions to explain the problem and suggest a new arrangement.",
+        "items": [
+          "Something came up.",
+          "I'm afraid I can't make it at 3.",
+          "Could we move it to Friday?",
+          "Could we reschedule for next week?",
+          "Would 5 p.m. work for you?",
+          "Are you available tomorrow morning?",
+          "I'm flexible about the time."
+        ]
+      },
+      {
+        "type": "gap_fill",
+        "title": "Use the arrangement form in a real message",
+        "prompt": "Complete the message with the correct present-continuous forms.",
+        "instructions": "Write the missing words.",
+        "primary_skill": "grammar",
+        "learning_objective": "Retrieve be + -ing forms for arranged future events.",
+        "text_template": "I [[blank_1]] the client at 3 tomorrow, and we [[blank_2]] the final details. What time [[blank_3]] you [[blank_4]] Marta afterwards?",
+        "blanks": [
+          {"accepted_answers": ["am meeting", "'m meeting"]},
+          {"accepted_answers": ["are discussing", "'re discussing"]},
+          {"accepted_answers": ["are"]},
+          {"accepted_answers": ["seeing", "meeting"]}
+        ]
+      },
+      {
+        "type": "open_answer_set",
+        "title": "Retrieve the scheduling words",
+        "prompt": "Translate each sentence naturally.",
+        "instructions": "Use the target vocabulary from the lesson.",
+        "primary_skill": "vocabulary",
+        "learning_objective": "Retrieve core scheduling vocabulary in short realistic sentences.",
+        "items": [
+          {
+            "prompt": "Devo spostare l'appuntamento.",
+            "accepted_answers": ["I need to reschedule the appointment.", "I have to reschedule the appointment."],
+            "feedback": "Reschedule = arrange it for a different time."
+          },
+          {
+            "prompt": "Sei disponibile venerdì pomeriggio?",
+            "accepted_answers": ["Are you available on Friday afternoon?", "Are you available Friday afternoon?"],
+            "feedback": "Available means free and able to do something at that time."
+          },
+          {
+            "prompt": "Possiamo confermare l'orario domani?",
+            "accepted_answers": ["Can we confirm the time tomorrow?", "Could we confirm the time tomorrow?"],
+            "feedback": "Confirm makes an arrangement definite."
+          },
+          {
+            "prompt": "La scadenza è stata posticipata a lunedì.",
+            "accepted_answers": ["The deadline was postponed until Monday.", "The deadline has been postponed until Monday."],
+            "feedback": "Postpone means move something to a later time or date."
+          }
+        ]
+      },
+      {
+        "type": "word_order",
+        "title": "Build the arrangement question",
+        "prompt": "Put the chunks in order.",
+        "instructions": "Build a natural question about a fixed future arrangement.",
+        "primary_skill": "word_order",
+        "learning_objective": "Form a present-continuous question about an arrangement.",
+        "chunks": ["What time", "are you meeting", "the client", "tomorrow"],
+        "terminal_punctuation": "?"
+      },
+      {
+        "type": "practice_selection",
+        "title": "Choose what you want in your vocabulary bank",
+        "prompt": "Which words and expressions would be useful for your own work or daily life?",
+        "instructions": "Select as many as you genuinely want to remember.",
+        "primary_skill": "vocabulary",
+        "learning_objective": "Select useful target vocabulary and chunks for later review.",
+        "selection_mode": "multiple",
+        "options": [
+          {"text": "appointment", "vocab_bank": true, "vocab_kind": "word"},
+          {"text": "reschedule", "vocab_bank": true, "vocab_kind": "word"},
+          {"text": "postpone", "vocab_bank": true, "vocab_kind": "word"},
+          {"text": "confirm", "vocab_bank": true, "vocab_kind": "word"},
+          {"text": "deadline", "vocab_bank": true, "vocab_kind": "word"},
+          {"text": "flexible", "vocab_bank": true, "vocab_kind": "word"},
+          {"text": "Something came up.", "vocab_bank": true, "vocab_kind": "chunk"},
+          {"text": "Could we move it to Friday?", "vocab_bank": true, "vocab_kind": "chunk"},
+          {"text": "Would 5 p.m. work for you?", "vocab_bank": true, "vocab_kind": "chunk"},
+          {"text": "Are you available tomorrow morning?", "vocab_bank": true, "vocab_kind": "chunk"}
+        ]
+      },
+      {
+        "type": "written_response",
+        "title": "Change the plan",
+        "prompt": "Write a short message to a colleague. Refer to the fixed arrangement you need to change, explain the problem briefly, and suggest a new time.",
+        "instructions": "Write naturally. Use the target grammar and some of the scheduling vocabulary, but do not force every item into the message.",
+        "learning_objective": "Use scheduling vocabulary and accurate present-continuous arrangement forms in a realistic message.",
+        "context_situation": "You are meeting a colleague tomorrow at 3 p.m., but something unexpected has happened and you cannot attend then.",
+        "context_role": "You are the person who needs to change the arrangement.",
+        "context_audience": "A colleague you know but still speak to professionally.",
+        "context_goal": "Refer to the fixed arrangement, explain that it must change, and propose another time.",
+        "min_words": 65,
+        "max_words": 110,
+        "required_points": [
+          "Refer to the existing arrangement",
+          "Explain briefly that it must change",
+          "Suggest a new day or time",
+          "Use at least two useful scheduling words or expressions"
+        ]
+      }
+    ]
+  }
+}

@@ -58,22 +58,29 @@ export default function StudioJsonImportPanel({ onClose, onImport }) {
           <div className="rounded-2xl border border-orange-200 bg-orange-50 p-4 dark:border-orange-300/20 dark:bg-orange-300/[0.07]">
             <p className="text-sm font-black text-orange-950 dark:text-orange-100">Generate with AI first</p>
             <p className="mt-1 text-xs font-semibold leading-5 text-orange-900/75 dark:text-orange-100/70">
-              Give the authoring kit to ChatGPT/Claude and ask for a topic + level. The kit already contains the technical and pedagogical rules.
+              Download the universal Sblocco kit and give it to ChatGPT/Claude with your topic, level and source material. It covers grammar, vocabulary, listening, writing, mixed lessons, assessments and quick practice.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <a
-                href="/templates/sblocco-learning-studio/grammar-mini-course-authoring-kit-v1.md"
+                href="/templates/sblocco-learning-studio/universal-ai-authoring-kit-v1.md"
                 download
                 className="focus-ring rounded-full bg-orange-500 px-3.5 py-2 text-xs font-black text-white"
               >
-                Download AI authoring kit
+                Download universal AI kit
               </a>
               <a
-                href="/templates/sblocco-learning-studio/grammar-mini-course-example-v1.json"
+                href="/templates/sblocco-learning-studio/learning-activity-example-v1.json"
                 download
                 className="focus-ring rounded-full border border-orange-300 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:text-orange-100"
               >
-                Download example JSON
+                Example JSON
+              </a>
+              <a
+                href="/templates/sblocco-learning-studio/learning-activity-template-v1.json"
+                download
+                className="focus-ring rounded-full border border-ink/10 bg-white/70 px-3.5 py-2 text-xs font-black text-ink/70 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/70"
+              >
+                Blank JSON
               </a>
             </div>
           </div>

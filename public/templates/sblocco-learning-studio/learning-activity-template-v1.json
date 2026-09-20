@@ -1,0 +1,21 @@
+{
+  "_template": {
+    "template_id": "sblocco-learning-activity",
+    "template_version": 1,
+    "authoring_contract_version": 1
+  },
+  "activity": {
+    "internal_title": "",
+    "learner_title": "",
+    "description": "",
+    "instructions": "",
+    "level": "A2",
+    "topic": "",
+    "subtopic": "",
+    "skills": [],
+    "tags": [],
+    "activity_type": "lesson",
+    "estimated_minutes": 15,
+    "blocks": []
+  }
+}
