@@ -47,6 +47,9 @@ const BLOCK_ALIASES = Object.freeze({
   free_writing: 'written_response',
   open_answer: 'translation',
   translation_open: 'translation',
+  open_answer_group: 'open_answer_set',
+  grouped_open_answer: 'open_answer_set',
+  translation_set: 'open_answer_set',
   selection: 'practice_selection',
   ungraded_selection: 'practice_selection',
 });
