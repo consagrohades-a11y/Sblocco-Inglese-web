@@ -11,14 +11,14 @@
 }
 
 .dark {
-  --sblocco-brand-navy: #f8f1e9;
-  --sblocco-brand-navy-soft: #cbd9df;
+  --sblocco-brand-navy: #f3eee7;
+  --sblocco-brand-navy-soft: #d3ccc2;
   --sblocco-brand-orange: #ef5b28;
-  --sblocco-brand-paper: #08283d;
-  --sblocco-brand-paper-raised: #0d334b;
-  --sblocco-brand-paper-deep: #0a2d44;
-  --sblocco-brand-line: rgba(231, 241, 246, 0.11);
-  --sblocco-brand-muted: rgba(231, 241, 246, 0.68);
+  --sblocco-brand-paper: #111513;
+  --sblocco-brand-paper-raised: #181d1a;
+  --sblocco-brand-paper-deep: #202521;
+  --sblocco-brand-line: rgba(243, 238, 231, 0.10);
+  --sblocco-brand-muted: rgba(243, 238, 231, 0.62);
 }
 
 .sblocco-learning-surface {
@@ -30,9 +30,8 @@
 
 .dark .sblocco-learning-surface {
   background:
-    radial-gradient(circle at 86% 4%, rgba(55, 113, 143, 0.2), transparent 29rem),
-    radial-gradient(circle at 10% 18%, rgba(239, 91, 40, 0.045), transparent 25rem),
-    linear-gradient(180deg, #07263a 0%, #082b40 58%, #07263a 100%);
+    radial-gradient(circle at 86% -4%, rgba(239, 91, 40, 0.045), transparent 27rem),
+    linear-gradient(180deg, #101411 0%, #121714 58%, #0f1311 100%);
 }
 
 .sblocco-learning-display {
@@ -197,7 +196,8 @@
 .dark .sblocco-teaching-block--useful_phrases,
 .dark .sblocco-teaching-block--pronunciation,
 .dark .sblocco-teaching-block--dialogue {
-  background: color-mix(in srgb, #176884 12%, var(--sblocco-brand-paper-raised));
+  border-left-color: var(--sblocco-brand-orange);
+  background: color-mix(in srgb, var(--sblocco-brand-paper-deep) 42%, var(--sblocco-brand-paper-raised));
 }
 
 .sblocco-teaching-block--teacher_tip,
@@ -210,7 +210,8 @@
 .dark .sblocco-teaching-block--teacher_tip,
 .dark .sblocco-teaching-block--reflection,
 .dark .sblocco-teaching-block--scenario {
-  background: color-mix(in srgb, #9c6717 13%, var(--sblocco-brand-paper-raised));
+  border-left-color: var(--sblocco-brand-orange);
+  background: color-mix(in srgb, var(--sblocco-brand-paper-deep) 38%, var(--sblocco-brand-paper-raised));
 }
 
 .sblocco-teaching-block--warning {
