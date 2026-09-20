@@ -623,9 +623,12 @@ export default function AdminExerciseStudio() {
                         reorderBlock(sourceId, block.id);
                         finishBlockDrag();
                       }}
-                      className={`group rounded-xl border transition ${draggedBlockId === block.id ? 'opacity-45' : ''} ${dragOverBlockId === block.id ? 'border-orange-500 ring-2 ring-orange-200 dark:ring-orange-300/20' : active ? 'border-orange-300 bg-orange-50 dark:border-orange-300/30 dark:bg-orange-300/[0.07]' : 'border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.035]'}`}
+                      className={`group relative overflow-hidden rounded-2xl border transition-all ${draggedBlockId === block.id ? 'opacity-40' : ''} ${dragOverBlockId === block.id ? 'border-orange-500 bg-orange-50/80 ring-2 ring-orange-200 dark:bg-orange-300/[0.06] dark:ring-orange-300/20' : active ? 'border-orange-300 bg-orange-50/75 shadow-[inset_3px_0_0_#f97316] dark:border-orange-300/30 dark:bg-orange-300/[0.06]' : 'border-ink/10 bg-white/85 hover:border-ink/20 hover:bg-white dark:border-white/10 dark:bg-white/[0.035] dark:hover:border-white/20 dark:hover:bg-white/[0.055]'}`}
                     >
-                      <div className="flex items-stretch">
+                      {dragOverBlockId === block.id ? (
+                        <span className="pointer-events-none absolute inset-x-3 top-0 h-0.5 rounded-full bg-orange-500" />
+                      ) : null}
+                      <div className="flex min-w-0 items-stretch">
                         <div
                           draggable
                           onDragStart={(event) => {
@@ -635,7 +638,7 @@ export default function AdminExerciseStudio() {
                             event.dataTransfer.setData('text/plain', block.id);
                           }}
                           onDragEnd={finishBlockDrag}
-                          className="flex w-9 shrink-0 cursor-grab items-center justify-center border-r border-ink/5 text-ink/25 active:cursor-grabbing group-hover:text-orange-600 dark:border-white/5 dark:text-white/25 dark:group-hover:text-orange-300"
+                          className="flex w-8 shrink-0 cursor-grab items-center justify-center text-ink/20 transition active:cursor-grabbing group-hover:text-orange-600 dark:text-white/20 dark:group-hover:text-orange-300"
                           title="Drag to reorder"
                           role="button"
                           tabIndex={0}
@@ -643,26 +646,51 @@ export default function AdminExerciseStudio() {
                         >
                           <GripVertical className="h-4 w-4" />
                         </div>
-                        <button type="button" onClick={() => setSelectedBlockId(block.id)} className="focus-ring min-w-0 flex-1 px-3 py-3 text-left">
-                          <div className="flex items-start gap-2">
-                            <span className="mt-0.5 text-[0.65rem] font-black text-ink/35 dark:text-white/35">{String(index + 1).padStart(2, '0')}</span>
-                            <span className="min-w-0 flex-1">
-                              <span className="block text-[0.65rem] font-black uppercase tracking-wide text-orange-700 dark:text-orange-300">{definition?.label || block.type}</span>
-                              <span className="mt-1 block truncate text-xs font-bold text-ink/70 dark:text-white/70">{blockSummary(block)}</span>
+
+                        <button
+                          type="button"
+                          onClick={() => setSelectedBlockId(block.id)}
+                          className="focus-ring min-w-0 flex-1 py-3 pr-2 text-left"
+                        >
+                          <div className="flex min-w-0 items-start gap-2.5">
+                            <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[0.62rem] font-black tabular-nums ${active ? 'bg-orange-500 text-white' : 'bg-linen text-ink/45 dark:bg-white/[0.06] dark:text-white/45'}`}>
+                              {index + 1}
                             </span>
-                            {issues.length ? <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" /> : null}
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-[0.62rem] font-black uppercase leading-4 tracking-[0.08em] text-orange-700 dark:text-orange-300">
+                                {definition?.label || block.type}
+                              </span>
+                              <span className="mt-0.5 block overflow-hidden text-[0.72rem] font-bold leading-[1.15rem] text-ink/70 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] dark:text-white/70">
+                                {blockSummary(block)}
+                              </span>
+                            </span>
+                            {issues.length ? <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" /> : null}
                           </div>
                         </button>
-                      </div>
-                      {active ? (
-                        <div className="flex items-center justify-between border-t border-orange-200 px-2 py-1.5 dark:border-orange-300/10">
-                          <span className="px-1 text-[0.62rem] font-bold text-ink/35 dark:text-white/35">Drag to reorder</span>
-                          <span className="flex gap-1">
-                            <button type="button" disabled={index === 0} onClick={() => moveBlock(block.id, -1)} className="focus-ring grid h-7 w-7 place-items-center rounded-lg text-ink/45 disabled:opacity-20 dark:text-white/45" aria-label="Move block up"><ArrowUp className="h-3.5 w-3.5" /></button>
-                            <button type="button" disabled={index === document.blocks.length - 1} onClick={() => moveBlock(block.id, 1)} className="focus-ring grid h-7 w-7 place-items-center rounded-lg text-ink/45 disabled:opacity-20 dark:text-white/45" aria-label="Move block down"><ArrowDown className="h-3.5 w-3.5" /></button>
-                          </span>
+
+                        <div className={`flex w-8 shrink-0 flex-col items-center justify-center gap-0.5 pr-1 transition-opacity ${active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                          <button
+                            type="button"
+                            disabled={index === 0}
+                            onClick={() => moveBlock(block.id, -1)}
+                            className="focus-ring grid h-6 w-6 place-items-center rounded-md text-ink/35 transition hover:bg-orange-100 hover:text-orange-700 disabled:opacity-15 dark:text-white/35 dark:hover:bg-orange-300/10 dark:hover:text-orange-200"
+                            aria-label="Move block up"
+                            title="Move up"
+                          >
+                            <ArrowUp className="h-3 w-3" />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={index === document.blocks.length - 1}
+                            onClick={() => moveBlock(block.id, 1)}
+                            className="focus-ring grid h-6 w-6 place-items-center rounded-md text-ink/35 transition hover:bg-orange-100 hover:text-orange-700 disabled:opacity-15 dark:text-white/35 dark:hover:bg-orange-300/10 dark:hover:text-orange-200"
+                            aria-label="Move block down"
+                            title="Move down"
+                          >
+                            <ArrowDown className="h-3 w-3" />
+                          </button>
                         </div>
-                      ) : null}
+                      </div>
                     </div>
                   );
                 })}
