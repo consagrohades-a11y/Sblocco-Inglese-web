@@ -2,17 +2,17 @@
 
 This document is the acceptance matrix for the Sblocco Editorial Learning System.
 
-The learner product must feel like one Sblocco Inglese experience in both light and dark modes. Individual tools may remain more functional than marketing/theory pages, but they must use the same typography hierarchy, navy/orange identity, paper/deep-navy surfaces, spacing logic, borders, controls, feedback framing and navigation language.
+The learner product must feel like one Sblocco Inglese experience in both light and dark modes. Individual tools may remain more functional than marketing/theory pages, but they must use the same typography hierarchy, navy/orange identity, paper/charcoal surfaces, spacing logic, borders, controls, feedback framing and navigation language.
 
 ## Theme contract
 
 | Token | Light | Dark |
 | --- | --- | --- |
-| Canvas | warm paper `#f9f0e8` | deep navy `#07263a` |
-| Raised surface | `#fffaf5` | `#0d334b` |
-| Primary text | navy `#0e3045` | warm paper `#f8f1e9` |
+| Canvas | warm paper `#f9f0e8` | calm charcoal `#111513` |
+| Raised surface | `#fffaf5` | soft charcoal `#181d1a` |
+| Primary text | navy `#0e3045` | warm paper `#f3eee7` |
 | Accent | orange `#d34c1a` | bright orange `#ef5b28` |
-| Dark-mode rule | n/a | never use pure black as the primary learner canvas |
+| Dark-mode rule | n/a | use layered neutral charcoal surfaces; avoid saturated full-screen navy and pure black |
 
 Theme state is controlled by the existing global `ThemeToggle` / `sblocco_theme` mechanism. The editorial learner layer reads the same root `.dark` class; there is no second theme state.
 
