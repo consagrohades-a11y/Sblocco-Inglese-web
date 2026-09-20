@@ -43,6 +43,16 @@ grant select, delete on table public.learner_vocab_bank_items to authenticated;
 create index if not exists learner_vocab_bank_learner_kind_seen_idx
 on public.learner_vocab_bank_items (learner_id, bank_kind, last_seen_at desc);
 
+
+create index if not exists learner_vocab_bank_source_attempt_idx
+on public.learner_vocab_bank_items (source_attempt_id);
+
+create index if not exists learner_vocab_bank_source_exercise_idx
+on public.learner_vocab_bank_items (source_exercise_id);
+
+create index if not exists learner_vocab_bank_source_version_idx
+on public.learner_vocab_bank_items (source_exercise_version_id);
+
 create or replace function public.exercise_builder_collect_vocab_bank(p_attempt_id uuid)
 returns integer
 language plpgsql
@@ -165,7 +175,7 @@ end;
 $$;
 
 revoke all on function public.exercise_builder_collect_vocab_bank(uuid) from public;
-grant execute on function public.exercise_builder_collect_vocab_bank(uuid) to authenticated;
+revoke execute on function public.exercise_builder_collect_vocab_bank(uuid) from authenticated;
 
 create or replace function public.exercise_builder_collect_vocab_bank_on_submit()
 returns trigger
