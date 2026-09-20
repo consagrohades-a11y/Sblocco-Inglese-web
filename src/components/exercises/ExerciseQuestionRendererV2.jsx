@@ -209,7 +209,7 @@ function WrittenResponse({ question, answer, onChange, disabled }) {
         <section className="border-l-2 border-orange-400 pl-4">
           <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">Context</p>
           {situation ? (
-            <p className="mt-2 max-w-3xl whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/78 dark:text-white/78">{situation}</p>
+            <p className="mt-2 max-w-3xl whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/80 dark:text-white/80">{situation}</p>
           ) : null}
           {compactContext.length ? (
             <dl className="mt-4 grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-x-6 gap-y-3 border-t border-ink/10 pt-4 dark:border-white/10">
