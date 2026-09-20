@@ -13,7 +13,6 @@ import {
   Menu,
   Settings,
   Sparkles,
-  Target,
   X,
 } from 'lucide-react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
