@@ -582,7 +582,7 @@ export default function AdminExerciseStudio() {
           ) : null}
         </header>
 
-        <div className="grid min-h-[calc(100vh-66px)] xl:min-h-0 xl:flex-1 xl:grid-cols-[280px_minmax(0,1fr)_440px] 2xl:grid-cols-[300px_minmax(0,1fr)_480px]">
+        <div className="grid min-h-[calc(100vh-66px)] xl:min-h-0 xl:flex-1 xl:grid-cols-[260px_minmax(0,1fr)_400px] 2xl:grid-cols-[280px_minmax(0,1fr)_430px]">
           <aside className="min-w-0 overflow-x-hidden border-b border-ink/10 bg-[#fbf8f1] p-4 dark:border-white/10 dark:bg-white/[0.02] xl:min-h-0 xl:overflow-y-auto xl:overscroll-contain xl:border-b-0 xl:border-r xl:p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
