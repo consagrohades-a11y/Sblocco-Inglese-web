@@ -351,6 +351,12 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                 Nuovo tentativo
               </Link>
             ) : null}
+            <Link
+              to="/vocab-bank"
+              className="rounded-full border border-clay/20 bg-white px-5 py-3 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"
+            >
+              Word & Chunk Bank
+            </Link>
           </div>
         </article>
         <div className="mt-6 grid gap-5">
