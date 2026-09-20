@@ -17,6 +17,24 @@ const slug = (value, fallback = 'item') => text(value)
   .replace(/^_+|_+$/g, '')
   .slice(0, 64) || fallback;
 
+
+function referencesTranscript(block) {
+  const learnerFacing = [
+    block?.title,
+    block?.prompt,
+    block?.instructions,
+    block?.body,
+    block?.context,
+    block?.context_situation,
+    block?.context_role,
+    block?.context_audience,
+    block?.context_goal,
+    ...(Array.isArray(block?.required_points) ? block.required_points : []),
+    ...(Array.isArray(block?.items) ? block.items.flatMap((item) => [item?.prompt, item?.text]) : []),
+  ];
+  return learnerFacing.some((value) => /\btranscript\b|\btrascrizion\w*\b/i.test(String(value || '')));
+}
+
 function optionList(value) {
   const source = Array.isArray(value) ? value : [];
   const usedKeys = new Set();
@@ -89,7 +107,10 @@ function commonQuestion(block, context, overrides = {}) {
     primary_skill: primarySkill,
     learning_objective: text(block.learning_objective) || overrides.learning_objective || 'Practise the target language accurately in context.',
     difficulty: text(block.difficulty) || 'standard',
-    content: overrides.content || {},
+    content: {
+      ...(overrides.content || {}),
+      ...(referencesTranscript(block) && block.type !== 'media' ? { transcript_reference: true } : {}),
+    },
     grading: overrides.grading || { mode: 'automatic', weight: 1, nearly_correct_multiplier: 0.5 },
     feedback: {
       explanation: text(block.feedback?.explanation || block.explanation) || null,

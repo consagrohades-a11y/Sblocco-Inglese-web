@@ -6,6 +6,7 @@ import LearnerDiagnosticPanel from '../components/admin/LearnerDiagnosticPanel.j
 import LearnerNextLessonPanel from '../components/admin/LearnerNextLessonPanel.jsx';
 import LearnerNotesPanel from '../components/admin/LearnerNotesPanel.jsx';
 import LearnerRecoveryPanel from '../components/admin/LearnerRecoveryPanel.jsx';
+import LearnerVocabularyBankPanel from '../components/admin/learner/LearnerVocabularyBankPanel.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 
 const languageLabels = { it: 'Italiano', en: 'English' };
@@ -236,6 +237,10 @@ export default function AdminLearnerDetail() {
               )}
             </section>
           </div>
+          <LearnerVocabularyBankPanel
+            learnerId={learnerId}
+            learnerName={learner.display_name || learner.email}
+          />
           <LearnerNotesPanel
             learnerId={learnerId}
             learnerName={learner.display_name || learner.email}

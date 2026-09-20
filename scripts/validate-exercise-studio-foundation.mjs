@@ -135,11 +135,12 @@ const raw = {
       title: 'Listen first',
       source_type: 'audio',
       url: 'https://example.com/audio.mp3',
+      transcript: 'This is the activity transcript used later in the lesson.',
       transcript_visibility: 'after_submit',
     },
     {
       type: 'written_response',
-      prompt: 'Write about one place you have visited and say when you went there.',
+      prompt: 'Read the transcript, then write about one place you have visited and say when you went there.',
       min_words: 40,
       max_words: 90,
       required_points: ['Name the place', 'Describe the experience', 'Say when you went'],
@@ -216,6 +217,13 @@ assert.equal(mediaQuestion.content.presentation, 'media');
 assert.equal(mediaQuestion.content.media.source_type, 'audio');
 assert.equal(mediaQuestion.content.media.url, 'https://example.com/audio.mp3');
 
+const transcriptReferencedWriting = preflight.runtime.exercise.sections[0].questions[8];
+assert.equal(
+  transcriptReferencedWriting.content.transcript_reference,
+  true,
+  'Blocks that explicitly reference the transcript must compile with contextual transcript access.',
+);
+
 const wordOrderQuestion = preflight.runtime.exercise.sections[0].questions[6];
 assert.equal(wordOrderQuestion.content.shuffle_strategy, 'stable_attempt');
 assert.deepEqual(wordOrderQuestion.content.tokens, ['Where', 'have', 'you', 'been']);
@@ -231,6 +239,25 @@ assert.ok(shuffleB.length === tokenInstances.length, 'A new attempt must retain 
 
 const compiledAgain = compileStudioDocument(preflight.document);
 assert.equal(compiledAgain.exercise.client_key, preflight.runtime.exercise.client_key, 'Compilation should use stable generated identity.');
+
+const missingTranscriptReference = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'Transcript reference without source',
+  level: 'B1',
+  topic: 'listening',
+  blocks: [{
+    type: 'written_response',
+    prompt: 'Read the transcript and summarise the speaker’s point.',
+    min_words: 20,
+    max_words: 60,
+  }],
+});
+assert.equal(missingTranscriptReference.valid, false);
+assert.ok(
+  missingTranscriptReference.errors.some((item) => item.code === 'missing_referenced_transcript'),
+  'Studio must stop publish when a learner task references a transcript that does not exist.',
+);
 
 const invalidTeachingDecision = preflightStudioDocument({
   schema_version: 1,

@@ -33,20 +33,20 @@ html.sblocco-learner-experience {
 }
 
 html.dark.sblocco-learner-experience {
-  --lx-navy: #f8f1e9;
-  --lx-navy-soft: #cbd9df;
+  --lx-navy: #f3eee7;
+  --lx-navy-soft: #d3ccc2;
   --lx-orange: #ef5b28;
   --lx-orange-strong: #ff6b35;
-  --lx-paper: #07263a;
-  --lx-paper-top: #08283d;
-  --lx-raised: #0d334b;
-  --lx-deep: #0a2d44;
-  --lx-line: rgba(231, 241, 246, 0.11);
-  --lx-line-strong: rgba(231, 241, 246, 0.18);
-  --lx-muted: rgba(231, 241, 246, 0.68);
-  --lx-soft-orange: rgba(239, 91, 40, 0.12);
-  --lx-soft-navy: rgba(95, 167, 190, 0.09);
-  --lx-shadow: 0 22px 60px rgba(0, 0, 0, 0.14);
+  --lx-paper: #111513;
+  --lx-paper-top: #121714;
+  --lx-raised: #181d1a;
+  --lx-deep: #202521;
+  --lx-line: rgba(243, 238, 231, 0.10);
+  --lx-line-strong: rgba(243, 238, 231, 0.17);
+  --lx-muted: rgba(243, 238, 231, 0.62);
+  --lx-soft-orange: rgba(239, 91, 40, 0.10);
+  --lx-soft-navy: rgba(243, 238, 231, 0.055);
+  --lx-shadow: 0 16px 48px rgba(0, 0, 0, 0.11);
   color-scheme: dark;
 }
 
@@ -65,9 +65,8 @@ html.dark.sblocco-learner-experience #root,
 html.dark.sblocco-learner-experience #root > div,
 html.dark.sblocco-learner-experience main {
   background:
-    radial-gradient(circle at 86% 3%, rgba(55, 113, 143, 0.19), transparent 30rem),
-    radial-gradient(circle at 10% 20%, rgba(239, 91, 40, 0.04), transparent 26rem),
-    linear-gradient(180deg, #07263a 0%, #082b40 56%, #07263a 100%);
+    radial-gradient(circle at 88% -5%, rgba(239, 91, 40, 0.05), transparent 28rem),
+    linear-gradient(180deg, #101411 0%, #121714 58%, #0f1311 100%);
 }
 
 /* Global learner typography ------------------------------------------------ */
@@ -180,8 +179,8 @@ html.sblocco-learner-experience #root > div > header.sticky {
 }
 
 html.dark.sblocco-learner-experience #root > div > header.sticky {
-  background: color-mix(in srgb, #07263a 95%, transparent) !important;
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.13) !important;
+  background: color-mix(in srgb, #111513 96%, transparent) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
 }
 
 html.sblocco-learner-experience #root > div > header.sticky nav a[aria-current="page"]::after {

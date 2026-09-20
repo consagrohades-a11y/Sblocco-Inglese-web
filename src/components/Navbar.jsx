@@ -3,9 +3,9 @@ import {
   ArrowLeft,
   ArrowRight,
   BarChart3,
+  BookMarked,
   BookOpen,
   ChevronDown,
-  ClipboardList,
   Dumbbell,
   GraduationCap,
   LayoutDashboard,
@@ -13,7 +13,6 @@ import {
   Menu,
   Settings,
   Sparkles,
-  Target,
   X,
 } from 'lucide-react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
@@ -32,11 +31,10 @@ const publicItems = [
 ];
 
 const learnerItems = [
-  { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
-  { label: 'Esercizi', to: '/attivita/esercizi', icon: ClipboardList },
-  { label: 'Ripasso SRS', to: '/attivita/srs', icon: Dumbbell },
-  { label: 'Pratica mirata', to: '/attivita/pratica-mirata', icon: Target },
-  { label: 'Corsi', to: '/percorsi', icon: BookOpen },
+  { label: 'Home', to: '/dashboard', icon: LayoutDashboard },
+  { label: 'Impara', to: '/attivita/esercizi', icon: BookOpen, activePrefixes: ['/assignments', '/exercises', '/percorsi'] },
+  { label: 'Ripassa', to: '/attivita/srs', icon: Dumbbell, activePrefixes: ['/attivita/pratica-mirata'] },
+  { label: 'Vocabolario', to: '/vocab-bank', icon: BookMarked },
   { label: 'Progressi', to: '/progressi', icon: BarChart3 },
 ];
 
@@ -94,17 +92,17 @@ function AccountMenu({ displayName, isAdmin, isLearner, onSignOut }) {
           </div>
           {isLearner ? (
             <Link role="menuitem" to="/dashboard" onClick={() => setOpen(false)} className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-ink/80 transition hover:bg-linen/70 hover:text-ink dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white">
-              <LayoutDashboard aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />
+              <LayoutDashboard aria-hidden="true" className="h-4 w-4 text-clay dark:text-[#f0a27d]" />
               Dashboard
             </Link>
           ) : null}
           <Link role="menuitem" to="/account/settings" onClick={() => setOpen(false)} className={`${isLearner ? '' : 'mt-2'} flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-ink/80 transition hover:bg-linen/70 hover:text-ink dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white`}>
-            <Settings aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />
+            <Settings aria-hidden="true" className="h-4 w-4 text-clay dark:text-[#f0a27d]" />
             Account e impostazioni
           </Link>
           {isAdmin ? (
             <Link role="menuitem" to="/admin" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-ink/80 transition hover:bg-linen/70 hover:text-ink dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white">
-              <GraduationCap aria-hidden="true" className="h-4 w-4 text-moss dark:text-mint" />
+              <GraduationCap aria-hidden="true" className="h-4 w-4 text-clay dark:text-[#f0a27d]" />
               Pannello admin
             </Link>
           ) : null}
@@ -238,7 +236,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-ink/10 bg-paper/[0.96] text-ink shadow-[0_10px_32px_rgba(24,34,31,0.08)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-surface-950/[0.97] dark:text-white dark:shadow-[0_10px_32px_rgba(3,8,7,0.20)]">
+    <header className="sticky top-0 z-50 border-b border-ink/10 bg-paper/[0.96] text-ink shadow-[0_10px_32px_rgba(24,34,31,0.08)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-[#111513]/[0.97] dark:text-[#f3eee7] dark:shadow-[0_10px_32px_rgba(0,0,0,0.16)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -right-20 -top-24 h-44 w-44 rounded-full bg-coral/[0.055] blur-3xl" />
         <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-moss/10 via-mint/40 to-coral/25" />
@@ -249,11 +247,12 @@ export default function Navbar() {
 
         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex" aria-label={isLearner ? 'Navigazione studente' : 'Navigazione principale'}>
           {items.map((item) => {
-            const active = isRouteActive(location.pathname, item.to);
+            const active = isRouteActive(location.pathname, item.to)
+              || item.activePrefixes?.some((prefix) => location.pathname === prefix || location.pathname.startsWith(`${prefix}/`));
             return (
-              <NavLink key={item.to} to={item.to} className={`focus-ring relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'text-ink dark:text-white' : 'text-ink/70 hover:bg-ink/[0.05] hover:text-ink dark:text-white/80 dark:hover:bg-white/[0.05] dark:hover:text-white'}`}>
+              <NavLink key={item.to} to={item.to} className={`focus-ring relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'text-ink dark:text-[#f3eee7]' : 'text-ink/65 hover:bg-ink/[0.04] hover:text-ink dark:text-white/65 dark:hover:bg-white/[0.045] dark:hover:text-[#f3eee7]'}`}>
                 {item.label}
-                {active ? <span aria-hidden="true" className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-mint via-coral to-butter" /> : null}
+                {active ? <span aria-hidden="true" className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-coral" /> : null}
               </NavLink>
             );
           })}
@@ -262,7 +261,7 @@ export default function Navbar() {
         <div className="hidden shrink-0 items-center gap-2 xl:flex">
           {isLearner ? (
             learnerAction.to ? (
-              <Link to={learnerAction.to} className="focus-ring inline-flex h-10 items-center gap-2 rounded-full bg-moss px-4 text-sm font-extrabold text-white transition hover:-translate-y-px hover:bg-[#19947b]">
+              <Link to={learnerAction.to} className="focus-ring inline-flex h-10 items-center gap-2 rounded-full border border-ink/12 bg-white/70 px-4 text-sm font-extrabold text-ink transition hover:bg-white dark:border-white/10 dark:bg-white/[0.055] dark:text-[#f3eee7] dark:hover:bg-white/[0.09]">
                 <ArrowLeft aria-hidden="true" className="h-4 w-4" />
                 {learnerAction.label}
               </Link>
@@ -305,11 +304,11 @@ export default function Navbar() {
       </div>
 
       {mobileOpen ? (
-        <div className="relative border-t border-ink/10 bg-paper/[0.98] px-5 pb-6 pt-4 shadow-[0_24px_50px_rgba(24,34,31,0.14)] dark:border-white/10 dark:bg-surface-950 dark:shadow-[0_24px_50px_rgba(0,0,0,0.38)] xl:hidden">
+        <div className="relative border-t border-ink/10 bg-paper/[0.98] px-5 pb-6 pt-4 shadow-[0_24px_50px_rgba(24,34,31,0.14)] dark:border-white/10 dark:bg-[#111513] dark:shadow-[0_24px_50px_rgba(0,0,0,0.28)] xl:hidden">
           <nav className="mx-auto grid max-w-lg gap-2" aria-label={isLearner ? 'Navigazione studente mobile' : 'Navigazione mobile'}>
             {isLearner ? (
               learnerAction.to ? (
-                <Link to={learnerAction.to} className="focus-ring mb-2 flex min-h-12 items-center gap-2 rounded-2xl bg-moss px-4 py-3 text-base font-black text-white">
+                <Link to={learnerAction.to} className="focus-ring mb-2 flex min-h-12 items-center gap-2 rounded-2xl border border-ink/12 bg-white px-4 py-3 text-base font-black text-ink dark:border-white/10 dark:bg-white/[0.06] dark:text-[#f3eee7]">
                   <ArrowLeft aria-hidden="true" className="h-5 w-5" />
                   {learnerAction.label}
                 </Link>
@@ -326,7 +325,7 @@ export default function Navbar() {
               const active = isRouteActive(location.pathname, item.to);
               return (
                 <NavLink key={item.to} to={item.to} className={`focus-ring flex min-h-12 items-center gap-3 rounded-2xl px-4 py-3 text-base font-extrabold transition ${active ? 'bg-mint text-ink' : 'bg-ink/[0.04] text-ink/80 hover:bg-ink/[0.08] hover:text-ink dark:bg-white/[0.05] dark:text-white/80 dark:hover:bg-white/[0.10] dark:hover:text-white'}`}>
-                  {Icon ? <Icon aria-hidden="true" className={`h-5 w-5 ${active ? 'text-moss' : 'text-moss dark:text-mint'}`} /> : null}
+                  {Icon ? <Icon aria-hidden="true" className={`h-5 w-5 ${active ? 'text-moss' : 'text-clay dark:text-[#f0a27d]'}`} /> : null}
                   {item.label}
                 </NavLink>
               );
@@ -349,7 +348,7 @@ export default function Navbar() {
                 </Link>
                 {isAdmin ? (
                   <Link to="/admin" className="focus-ring flex min-h-12 items-center gap-3 rounded-2xl bg-ink/[0.04] px-4 py-3 text-base font-extrabold text-ink/80 dark:bg-white/[0.05] dark:text-white/80">
-                    <GraduationCap aria-hidden="true" className="h-5 w-5 text-moss dark:text-mint" />
+                    <GraduationCap aria-hidden="true" className="h-5 w-5 text-clay dark:text-[#f0a27d]" />
                     Pannello admin
                   </Link>
                 ) : null}

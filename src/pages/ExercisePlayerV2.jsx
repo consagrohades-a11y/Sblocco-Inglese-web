@@ -86,6 +86,24 @@ function answerIsEmpty(answer, question) {
   return !hasMeaningfulValue(answer);
 }
 
+function transcriptBeforeQuestion(payload, targetSectionIndex, targetQuestionIndex) {
+  let transcript = '';
+  const sections = payload?.sections || [];
+
+  for (let sectionIndex = 0; sectionIndex <= targetSectionIndex; sectionIndex += 1) {
+    const questions = sections[sectionIndex]?.questions || [];
+    const lastIndex = sectionIndex === targetSectionIndex ? targetQuestionIndex - 1 : questions.length - 1;
+    for (let questionIndex = 0; questionIndex <= lastIndex; questionIndex += 1) {
+      const content = questions[questionIndex]?.question?.content;
+      if (content?.presentation === 'media' && String(content?.media?.transcript || '').trim()) {
+        transcript = content.media.transcript;
+      }
+    }
+  }
+
+  return transcript;
+}
+
 function getProgressMilestone(previousCount, completedCount, sectionTitle) {
   if (previousCount < 50 && completedCount >= 50) return { title: '50 attività completate', body: 'Hai costruito una pratica davvero solida. Fermati un momento e riconosci quanta strada hai fatto.' };
   if (previousCount < 25 && completedCount >= 25) return { title: '25 attività completate', body: 'Ottimo ritmo. Le strutture stanno diventando più familiari e più facili da usare.' };
@@ -110,80 +128,55 @@ function Intro({ payload, assignmentId, onStart }) {
     0,
   );
   return (
-    <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
+    <section className="learner-exercise-page section-shell py-10 lg:py-14">
       <ExerciseCanvas>
       <div className="mx-auto max-w-4xl">
         <Link
           to={`/assignments/${assignmentId}`}
-          className="inline-flex items-center gap-2 text-sm font-black text-clay underline dark:text-[#f7a98d]"
+          className="inline-flex items-center gap-2 text-sm font-black text-clay underline underline-offset-4 dark:text-[#f0a27d]"
         >
           <ArrowLeft className="h-4 w-4" />
           Torna all’attività
         </Link>
-        <article className="exercise-activity mt-5 overflow-hidden">
-          <div className="relative p-7 sm:p-10">
-            <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-blush blur-3xl dark:bg-coral/10" />
-            <div className="relative">
-              <span className="inline-flex items-center gap-2 rounded-full border border-coral/20 bg-blush px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-clay dark:bg-coral/10 dark:text-[#f7a98d]">
-                <Coffee className="h-4 w-4" />
-                Esercizio assegnato
-              </span>
-              <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-5xl">
-                {payload.exercise.title}
-              </h1>
-              {payload.exercise.description ? (
-                <p className="mt-4 max-w-3xl text-base leading-7 text-ink/65 dark:text-white/65">
-                  {payload.exercise.description}
-                </p>
+        <article className="exercise-activity exercise-intro mt-5 overflow-hidden">
+          <div className="p-7 sm:p-10">
+            <p className="exercise-eyebrow text-[0.7rem] font-black uppercase tracking-[0.12em] text-clay dark:text-[#f0a27d]">
+              <Coffee className="h-4 w-4" />
+              Esercizio assegnato
+            </p>
+            <h1 className="mt-3 max-w-3xl text-3xl font-black leading-tight text-ink dark:text-[#f3eee7] sm:text-5xl">
+              {payload.exercise.title}
+            </h1>
+            {payload.exercise.description ? (
+              <p className="mt-4 max-w-3xl text-base leading-7 text-ink/62 dark:text-white/60">
+                {payload.exercise.description}
+              </p>
+            ) : null}
+
+            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 border-y border-ink/10 py-3 text-xs font-bold text-ink/55 dark:border-white/10 dark:text-white/55">
+              <span>{payload.exercise.level}</span>
+              <span>{total} attività</span>
+              {payload.exercise.estimated_minutes ? <span>~ {payload.exercise.estimated_minutes} min</span> : null}
+              {manual ? <span>{manual} da valutare dall’insegnante</span> : null}
+              {payload.attempt?.completion?.rule === "passed" && payload.attempt.completion.required_score != null ? (
+                <span>Obiettivo {Math.round(Number(payload.attempt.completion.required_score))}%</span>
               ) : null}
-              <div className="mt-6 flex flex-wrap gap-2 text-xs font-black">
-                <span className="rounded-full bg-linen px-3 py-2 dark:bg-white/10">
-                  {payload.exercise.level}
-                </span>
-                <span className="rounded-full bg-linen px-3 py-2 dark:bg-white/10">
-                  {total} attività
-                </span>
-                {payload.exercise.estimated_minutes ? (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-butter/60 px-3 py-2 dark:bg-butter/10">
-                    <Clock3 className="h-4 w-4" />
-                    {payload.exercise.estimated_minutes} min
-                  </span>
-                ) : null}
-                {manual ? (
-                  <span className="rounded-full bg-sky-100 px-3 py-2 text-sky-800 dark:bg-sky-300/10 dark:text-sky-200">
-                    {manual} da valutare dall’insegnante
-                  </span>
-                ) : null}
-                {payload.attempt?.completion?.rule === "passed" &&
-                payload.attempt.completion.required_score != null ? (
-                  <span className="rounded-full bg-mint/70 px-3 py-2 text-moss dark:bg-emerald-300/10 dark:text-emerald-200">
-                    Obiettivo:{" "}
-                    {Math.round(
-                      Number(payload.attempt.completion.required_score),
-                    )}
-                    %
-                  </span>
-                ) : null}
-              </div>
-              <div className="mt-7 rounded-2xl border border-coral/20 bg-blush/55 p-5 dark:bg-coral/[0.07]">
-                <p className="whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/75 dark:text-white/75">
-                  {payload.exercise.instructions ||
-                    "Completa tutte le sezioni. Le risposte vengono salvate automaticamente."}
-                </p>
-                <p className="mt-3 inline-flex items-center gap-2 text-xs font-black text-ink/65 dark:text-white/65">
-                  <Save className="h-4 w-4" />
-                  Autosave attivo
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={onStart}
-                className="exercise-primary-action mt-7"
-              >
-                <BookOpenCheck className="h-4 w-4" />
-                Inizia o riprendi
-              </button>
             </div>
+
+            <div className="mt-6 border-l-2 border-orange-400 pl-4">
+              <p className="whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/72 dark:text-white/70">
+                {payload.exercise.instructions || "Completa tutte le sezioni. Le risposte vengono salvate automaticamente."}
+              </p>
+              <p className="mt-2 inline-flex items-center gap-2 text-xs font-bold text-ink/45 dark:text-white/45">
+                <Save className="h-4 w-4" />
+                Autosave attivo
+              </p>
+            </div>
+
+            <button type="button" onClick={onStart} className="exercise-primary-action mt-7">
+              <BookOpenCheck className="h-4 w-4" />
+              Inizia o riprendi
+            </button>
           </div>
         </article>
       </div>
@@ -231,7 +224,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
       : null;
 
   return (
-    <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
+    <section className="learner-exercise-page section-shell py-10 lg:py-14">
       <ExerciseCanvas>
       <div className="mx-auto max-w-4xl">
         <article className="exercise-activity p-7 sm:p-10">
@@ -333,10 +326,16 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                 Nuovo tentativo
               </Link>
             ) : null}
+            <Link
+              to="/vocab-bank"
+              className="rounded-full border border-clay/20 bg-white px-5 py-3 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"
+            >
+              Word & Chunk Bank
+            </Link>
           </div>
         </article>
         <div className="mt-6 grid gap-5">
-          {payload.sections.map((section) => {
+          {payload.sections.map((section, sectionIndex) => {
             const feedbackHidden = section.feedback_timing === "hidden";
             return (
               <section
@@ -392,6 +391,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                           settings.show_explanations !== false
                         }
                         attemptId={attempt.id}
+                        referencedTranscript={transcriptBeforeQuestion(payload, sectionIndex, index)}
                       />
                     </ExerciseActivity>
                   ))}
@@ -774,14 +774,14 @@ export default function ExercisePlayerV2() {
         title={`${payload.exercise.title} | Sblocco Inglese`}
         description="Completa esercizio"
       />
-      <section className="section-shell py-7 dark:bg-surface-950 lg:py-10">
+      <section className="learner-exercise-page section-shell py-7 lg:py-10">
         <ExerciseCanvas>
         <div className="mx-auto max-w-5xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <button
               type="button"
               onClick={() => setShowIntro(true)}
-              className="inline-flex items-center gap-2 text-sm font-black text-clay underline dark:text-[#f7a98d]"
+              className="inline-flex items-center gap-2 text-sm font-black text-clay underline underline-offset-4 dark:text-[#f0a27d]"
             >
               <ArrowLeft className="h-4 w-4" />
               Panoramica
@@ -850,6 +850,7 @@ export default function ExercisePlayerV2() {
                           exerciseSettings.show_explanations !== false
                         }
                         attemptId={payload.attempt.id}
+                        referencedTranscript={transcriptBeforeQuestion(payload, sectionIndex, index)}
                       />
                     </ExerciseActivity>
                   ))}
@@ -872,6 +873,7 @@ export default function ExercisePlayerV2() {
                       changeAnswer(item, answer, sectionIndex, index)
                     }
                     attemptId={payload.attempt.id}
+                    referencedTranscript={transcriptBeforeQuestion(payload, sectionIndex, index)}
                   />
                 </ExerciseActivity>
               ))}
@@ -914,6 +916,7 @@ export default function ExercisePlayerV2() {
                     Boolean(currentQuestion.result) &&
                     payload.exercise.settings?.show_explanations !== false
                   }
+                  referencedTranscript={transcriptBeforeQuestion(payload, sectionIndex, questionIndex)}
                 />
               </div>
               <ExerciseActionBar hint={!currentQuestionAnswered ? "Seleziona o inserisci una risposta per continuare." : null}>

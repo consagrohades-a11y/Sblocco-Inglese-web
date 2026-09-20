@@ -57,6 +57,7 @@ begin
     'activity_type', 'lesson',
     'blocks', jsonb_build_array(
       jsonb_build_object('id', 'block_mcq', 'type', 'multiple_choice'),
+      jsonb_build_object('id', 'block_vocab', 'type', 'vocabulary'),
       jsonb_build_object('id', 'block_writing', 'type', 'written_response')
     )
   );
@@ -152,6 +153,47 @@ begin
               'tags', jsonb_build_array('studio-smoke')
             ),
             jsonb_build_object(
+              'client_key', 'studio_block_vocab',
+              'type', 'content_block',
+              'title', 'Vocabulary',
+              'prompt', 'Language worth keeping',
+              'instructions', '',
+              'instruction_language', 'it',
+              'level', 'A2',
+              'topic', 'studio_smoke',
+              'subtopic', null,
+              'primary_skill', 'vocabulary',
+              'learning_objective', 'Notice useful language before production.',
+              'difficulty', 'standard',
+              'content', jsonb_build_object(
+                'presentation', 'vocabulary',
+                'heading', 'Language worth keeping',
+                'body', '',
+                'entries', jsonb_build_array(
+                  jsonb_build_object(
+                    'term', 'deadline',
+                    'meaning', 'the latest time something must be finished',
+                    'translation', 'scadenza',
+                    'example', 'We are working to a tight deadline.'
+                  ),
+                  jsonb_build_object(
+                    'term', 'get something off my plate',
+                    'meaning', 'remove a task or responsibility from your workload',
+                    'translation', 'togliersi qualcosa da fare',
+                    'example', 'I need to get this report off my plate today.'
+                  )
+                )
+              ),
+              'grading', jsonb_build_object(
+                'mode', 'automatic',
+                'weight', 0,
+                'nearly_correct_multiplier', 0.5
+              ),
+              'feedback', jsonb_build_object(),
+              'diagnostics', jsonb_build_object('tested_codes', jsonb_build_array()),
+              'tags', jsonb_build_array('studio-smoke', 'vocabulary')
+            ),
+            jsonb_build_object(
               'client_key', 'studio_block_writing',
               'type', 'written_response',
               'title', 'Written Response',
@@ -203,7 +245,7 @@ begin
     where id = v_draft_id
       and status = 'published'
       and exercise_id = v_exercise_id
-      and (select count(*) from jsonb_object_keys(publication_map)) = 2
+      and (select count(*) from jsonb_object_keys(publication_map)) = 3
   ) then
     raise exception 'Studio publish did not link the immutable runtime back to the draft.';
   end if;
@@ -228,8 +270,8 @@ begin
     where question_version.topic = 'studio_smoke'
       and question.status = 'published'
       and question_version.review_status = 'approved'
-  ) <> 2 then
-    raise exception 'Studio publish did not publish the two pinned question versions.';
+  ) <> 3 then
+    raise exception 'Studio publish did not publish the three pinned question versions.';
   end if;
 
   if (
@@ -333,6 +375,35 @@ begin
     raise exception 'Studio automatic question was not graded correctly.';
   end if;
 
+
+  if not exists (
+    select 1
+    from public.learner_vocab_bank_items
+    where learner_id = '00000000-0000-0000-0000-000000000002'::uuid
+      and bank_kind = 'word'
+      and normalized_text = 'deadline'
+      and english_meaning = 'the latest time something must be finished'
+      and italian_support = 'scadenza'
+      and source_attempt_id = v_attempt_id
+      and activity_added = true
+      and self_added = false
+  ) then
+    raise exception 'Studio completion did not add the vocabulary word to the learner bank with activity provenance.';
+  end if;
+
+  if not exists (
+    select 1
+    from public.learner_vocab_bank_items
+    where learner_id = '00000000-0000-0000-0000-000000000002'::uuid
+      and bank_kind = 'chunk'
+      and normalized_text = 'get something off my plate'
+      and source_attempt_id = v_attempt_id
+      and activity_added = true
+      and self_added = false
+  ) then
+    raise exception 'Studio completion did not infer and add the vocabulary chunk with activity provenance.';
+  end if;
+
   if not exists (
     select 1
     from public.exercise_builder_attempt_questions
@@ -352,6 +423,42 @@ begin
       and (result_summary ->> 'pending_review')::integer = 1
   ) then
     raise exception 'Studio mixed attempt did not preserve the manual-review gate.';
+  end if;
+
+  insert into public.learner_vocab_bank_items (
+    learner_id,
+    bank_kind,
+    normalized_text,
+    display_text,
+    english_meaning,
+    italian_support,
+    topic,
+    self_added,
+    activity_added
+  ) values (
+    '00000000-0000-0000-0000-000000000002'::uuid,
+    'chunk',
+    'SHOULD_BE_NORMALISED',
+    '  Take   something   on board  ',
+    'accept and seriously consider an idea',
+    'prendere in considerazione',
+    'work',
+    true,
+    false
+  );
+
+  if not exists (
+    select 1
+    from public.learner_vocab_bank_items
+    where learner_id = '00000000-0000-0000-0000-000000000002'::uuid
+      and bank_kind = 'chunk'
+      and normalized_text = 'take something on board'
+      and display_text = 'Take   something   on board'
+      and self_added = true
+      and activity_added = false
+      and self_added_at is not null
+  ) then
+    raise exception 'Self-added vocabulary was not normalized and provenance-flagged correctly.';
   end if;
 
   perform set_config('app.test_uid', '00000000-0000-0000-0000-000000000001', false);
