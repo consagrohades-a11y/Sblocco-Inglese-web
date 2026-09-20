@@ -214,15 +214,16 @@ assert.match(app, /function AccountEntry\(\)/);
 assert.match(app, /profile\?\.role === 'learner'.*profile\?\.status === 'active'/s);
 assert.match(app, /<Navigate to="\/dashboard" replace \/>/);
 assert.match(app, /path="\/account\/settings" element={<ProtectedRoute><Account \/><\/ProtectedRoute>}/);
-assert.match(navbar, /label: 'Dashboard', to: '\/dashboard'/);
+assert.match(navbar, /label: 'Home', to: '\/dashboard'/);
 assert.match(navbar, /to="\/account\/settings"/);
 
 // N: recovery access selects the dedicated experience; all other learners keep a useful dashboard.
 assert.match(learnerHome, /access\?\.entitled \? <RecoveryDashboard/);
 assert.match(learnerHome, /!access\?\.entitled \? <GenericDashboard/);
 assert.match(learnerHome, /function GenericDashboard/);
-assert.match(learnerHome, /Il tuo prossimo passo/);
-assert.match(learnerHome, /Ripasso SRS/);
+assert.match(learnerHome, /Continua da qui/);
+assert.match(learnerHome, /Word & Chunk Bank/);
+assert.match(learnerHome, /Pratica mirata/);
 
 // R: Recovery curriculum and production content are source-controlled and importable.
 const recoveryCurriculum = JSON.parse(readFileSync('content/recovery/curriculum-years-1-3.json', 'utf8'));
