@@ -40,6 +40,7 @@ declare
   v_attempt_payload jsonb;
   v_attempt_id uuid;
   v_mcq_id uuid;
+  v_selection_id uuid;
   v_writing_id uuid;
   v_review jsonb;
   v_group_id uuid := gen_random_uuid();
@@ -58,6 +59,7 @@ begin
     'blocks', jsonb_build_array(
       jsonb_build_object('id', 'block_mcq', 'type', 'multiple_choice'),
       jsonb_build_object('id', 'block_vocab', 'type', 'vocabulary'),
+      jsonb_build_object('id', 'block_selection', 'type', 'practice_selection'),
       jsonb_build_object('id', 'block_writing', 'type', 'written_response')
     )
   );
@@ -194,6 +196,37 @@ begin
               'tags', jsonb_build_array('studio-smoke', 'vocabulary')
             ),
             jsonb_build_object(
+              'client_key', 'studio_block_selection',
+              'type', 'practice_selection',
+              'title', 'Selection · no correct answer',
+              'prompt', 'Which expression would you like to remember?',
+              'instructions', 'Choose anything useful to you.',
+              'instruction_language', 'it',
+              'level', 'A2',
+              'topic', 'studio_smoke',
+              'subtopic', null,
+              'primary_skill', 'vocabulary',
+              'learning_objective', 'Select useful language without right-or-wrong grading.',
+              'difficulty', 'standard',
+              'content', jsonb_build_object(
+                'selection_mode', 'multiple',
+                'options', jsonb_build_array(
+                  jsonb_build_object('key', 'option_1', 'text', 'deadline', 'vocab_bank', true, 'vocab_kind', 'word'),
+                  jsonb_build_object('key', 'option_2', 'text', 'get something off my plate', 'vocab_bank', true, 'vocab_kind', 'chunk')
+                )
+              ),
+              'grading', jsonb_build_object(
+                'mode', 'ungraded',
+                'weight', 0,
+                'nearly_correct_multiplier', 0
+              ),
+              'feedback', jsonb_build_object(),
+              'diagnostics', jsonb_build_object(
+                'tested_codes', jsonb_build_array()
+              ),
+              'tags', jsonb_build_array('studio-smoke', 'vocabulary')
+            ),
+            jsonb_build_object(
               'client_key', 'studio_block_writing',
               'type', 'written_response',
               'title', 'Written Response',
@@ -245,7 +278,7 @@ begin
     where id = v_draft_id
       and status = 'published'
       and exercise_id = v_exercise_id
-      and (select count(*) from jsonb_object_keys(publication_map)) = 3
+      and (select count(*) from jsonb_object_keys(publication_map)) = 4
   ) then
     raise exception 'Studio publish did not link the immutable runtime back to the draft.';
   end if;
@@ -270,8 +303,8 @@ begin
     where question_version.topic = 'studio_smoke'
       and question.status = 'published'
       and question_version.review_status = 'approved'
-  ) <> 3 then
-    raise exception 'Studio publish did not publish the three pinned question versions.';
+  ) <> 4 then
+    raise exception 'Studio publish did not publish the four pinned question versions.';
   end if;
 
   if (
@@ -338,13 +371,20 @@ begin
   limit 1;
 
   select id
+  into v_selection_id
+  from public.exercise_builder_attempt_questions
+  where attempt_id = v_attempt_id
+    and question_snapshot ->> 'type' = 'practice_selection'
+  limit 1;
+
+  select id
   into v_writing_id
   from public.exercise_builder_attempt_questions
   where attempt_id = v_attempt_id
     and question_snapshot ->> 'type' = 'written_response'
   limit 1;
 
-  if v_mcq_id is null or v_writing_id is null then
+  if v_mcq_id is null or v_selection_id is null or v_writing_id is null then
     raise exception 'Learner attempt does not contain the expected Studio question types.';
   end if;
 
@@ -354,6 +394,14 @@ begin
     to_jsonb('option_1'::text),
     0,
     0
+  );
+
+  perform public.save_exercise_builder_answer(
+    v_attempt_id,
+    v_selection_id,
+    jsonb_build_array('option_1'),
+    0,
+    1
   );
 
   perform public.save_exercise_builder_answer(
@@ -373,6 +421,33 @@ begin
       and automatic_grading_result ->> 'status' = 'correct'
   ) then
     raise exception 'Studio automatic question was not graded correctly.';
+  end if;
+
+  if not exists (
+    select 1
+    from public.exercise_builder_attempt_questions
+    where id = v_selection_id
+      and automatic_grading_result ->> 'status' = 'ungraded'
+      and coalesce((automatic_grading_result ->> 'ungraded')::boolean, false)
+  ) then
+    raise exception 'Studio practice selection did not remain explicitly ungraded.';
+  end if;
+
+  if exists (
+    select 1
+    from public.exercise_builder_diagnostic_events
+    where attempt_question_id = v_selection_id
+  ) then
+    raise exception 'Ungraded Studio selection created diagnostic evidence.';
+  end if;
+
+  if exists (
+    select 1
+    from public.exercise_builder_attempt_questions
+    where id = v_selection_id
+      and jsonb_array_length(coalesce(question_snapshot #> '{diagnostics,tested_codes}', '[]'::jsonb)) > 0
+  ) then
+    raise exception 'Studio publishing attached diagnostics to an ungraded selection.';
   end if;
 
 
