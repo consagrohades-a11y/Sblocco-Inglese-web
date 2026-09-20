@@ -5,7 +5,6 @@ import {
   CalendarDays,
   CheckCircle2,
   Clock3,
-  Flame,
   ListChecks,
   RefreshCw,
   Target,
