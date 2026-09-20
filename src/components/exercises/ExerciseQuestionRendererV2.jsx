@@ -38,9 +38,9 @@ function wordCount(value) {
   return String(value || '').trim().split(/\s+/).filter(Boolean).length;
 }
 
-function TextAnswer({ value, onChange, disabled, multiline = false, placeholder = 'Scrivi la risposta...' }) {
+function TextAnswer({ value, onChange, disabled, multiline = false, placeholder = 'Scrivi la risposta...', rows = 7 }) {
   const shared = 'focus-ring exercise-text-field w-full px-4 py-3 text-base font-semibold';
-  if (multiline) return <textarea rows={7} value={value || ''} onChange={(event) => onChange(event.target.value)} disabled={disabled} placeholder={placeholder} className={shared} />;
+  if (multiline) return <textarea rows={rows} value={value || ''} onChange={(event) => onChange(event.target.value)} disabled={disabled} placeholder={placeholder} className={shared} />;
   return <input value={value || ''} onChange={(event) => onChange(event.target.value)} disabled={disabled} placeholder={placeholder} className={shared} />;
 }
 
@@ -192,10 +192,10 @@ function WrittenResponse({ question, answer, onChange, disabled }) {
   const contextSections = content.context_sections && typeof content.context_sections === 'object'
     ? content.context_sections
     : {};
-  const structuredContext = [
-    ['Situazione', contextSections.situation || content.context],
+  const situation = contextSections.situation || content.context || '';
+  const compactContext = [
     ['Il tuo ruolo', contextSections.role],
-    ['A chi stai scrivendo', contextSections.audience],
+    ['Destinatario', contextSections.audience],
     ['Obiettivo', contextSections.goal],
   ].filter(([, value]) => value);
   const count = wordCount(answer);
@@ -204,31 +204,81 @@ function WrittenResponse({ question, answer, onChange, disabled }) {
   const validRange = (!min || count >= min) && (!max || count <= max);
 
   return (
-    <div className="grid gap-4">
-      {structuredContext.length ? (
-        <section className="grid gap-3 rounded-2xl border border-orange-200/70 bg-orange-50/60 p-4 dark:border-orange-300/15 dark:bg-orange-300/[0.05]">
-          <p className="text-xs font-black uppercase tracking-[0.1em] text-orange-800 dark:text-orange-200">Contesto</p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {structuredContext.map(([label, value]) => (
-              <div key={label} className="rounded-xl bg-white/75 p-3 dark:bg-white/[0.04]">
-                <p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">{label}</p>
-                <p className="mt-1 whitespace-pre-wrap text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">{value}</p>
+    <div className="grid gap-5">
+      {(situation || compactContext.length) ? (
+        <section className="overflow-hidden rounded-2xl border border-orange-200/70 bg-orange-50/40 dark:border-orange-300/15 dark:bg-orange-300/[0.04]">
+          <div className="border-b border-orange-200/60 px-4 py-3 dark:border-orange-300/10">
+            <p className="text-[0.7rem] font-black uppercase tracking-[0.12em] text-orange-800 dark:text-orange-200">Task brief</p>
+          </div>
+          <div className="grid gap-4 p-4">
+            {situation ? (
+              <div>
+                <p className="text-[0.65rem] font-black uppercase tracking-[0.1em] text-ink/40 dark:text-white/40">Situation</p>
+                <p className="mt-1.5 whitespace-pre-wrap text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">{situation}</p>
               </div>
-            ))}
+            ) : null}
+            {compactContext.length ? (
+              <div className="grid gap-3 border-t border-ink/5 pt-4 sm:grid-cols-3 dark:border-white/5">
+                {compactContext.map(([label, value]) => (
+                  <div key={label} className="min-w-0">
+                    <p className="text-[0.65rem] font-black uppercase tracking-[0.08em] text-ink/40 dark:text-white/40">{label}</p>
+                    <p className="mt-1 text-sm font-bold leading-5 text-ink/75 dark:text-white/75">{value}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
         </section>
       ) : null}
+
       {content.required_points?.length ? (
-        <div className="exercise-guidance">
-          <p className="text-xs font-bold uppercase tracking-wide">Punti da includere</p>
-          <ul className="mt-2 grid gap-1 text-sm font-semibold">{content.required_points.map((point) => <li key={point}>• {point}</li>)}</ul>
-        </div>
+        <section className="rounded-2xl border border-ink/10 bg-white/55 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="text-[0.7rem] font-black uppercase tracking-[0.1em] text-ink/55 dark:text-white/55">Include these points</p>
+            <span className="text-[0.68rem] font-bold text-ink/35 dark:text-white/35">{content.required_points.length} required</span>
+          </div>
+          <ol className="mt-3 grid gap-2">
+            {content.required_points.map((point, index) => (
+              <li key={point + index} className="flex items-start gap-3 text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">
+                <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-orange-100 text-[0.65rem] font-black text-orange-800 dark:bg-orange-300/10 dark:text-orange-200">
+                  {index + 1}
+                </span>
+                <span>{point}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
       ) : null}
-      <TextAnswer multiline value={answer || ''} onChange={onChange} disabled={disabled} placeholder="Scrivi qui la tua produzione..." />
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-black">
-        <span className={validRange ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-200'}>{count} parole</span>
-        <span className="text-ink/60 dark:text-white/60">Richieste: {min || 0}{max ? `–${max}` : '+'}</span>
-      </div>
+
+      <section className="overflow-hidden rounded-2xl border border-ink/10 bg-white/55 dark:border-white/10 dark:bg-white/[0.025]">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink/10 px-4 py-3 dark:border-white/10">
+          <div>
+            <p className="text-[0.7rem] font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">Your response</p>
+            <p className="mt-0.5 text-xs font-semibold text-ink/45 dark:text-white/45">Write naturally. You can edit before submitting.</p>
+          </div>
+          {(min || max) ? (
+            <span className="rounded-full bg-linen px-3 py-1.5 text-[0.68rem] font-black text-ink/55 dark:bg-white/[0.06] dark:text-white/55">
+              {min || 0}{max ? `–${max}` : '+'} words
+            </span>
+          ) : null}
+        </div>
+        <div className="p-4">
+          <TextAnswer
+            multiline
+            rows={10}
+            value={answer || ''}
+            onChange={onChange}
+            disabled={disabled}
+            placeholder="Scrivi qui la tua produzione..."
+          />
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs font-black">
+            <span className={validRange ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-200'}>
+              {count} {count === 1 ? 'parola' : 'parole'}
+            </span>
+            {!validRange ? <span className="text-amber-700 dark:text-amber-200">Raggiungi il range richiesto prima di consegnare.</span> : null}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
@@ -306,6 +356,56 @@ function ReadingComprehension({
     : {};
 
   function update(key, value) { onChange({ ...values, [key]: value }); }
+
+  if (content.presentation === 'open_answer_set') {
+    return (
+      <div className="grid gap-5">
+        {(content.items || []).map((openItem, index) => {
+          const itemResult = itemResults[openItem.key] || null;
+          const accepted = Array.isArray(itemResult?.correct_answer) ? itemResult.correct_answer : [];
+          const status = itemResult?.status || null;
+
+          return (
+            <section key={openItem.key} className="border-t border-ink/10 pt-5 first:border-t-0 first:pt-0 dark:border-white/10">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-[0.7rem] font-black uppercase tracking-[0.1em] text-orange-500">Item {index + 1}</p>
+                {status ? (
+                  <span className={`rounded-full px-2.5 py-1 text-[0.65rem] font-black ${
+                    status === 'correct'
+                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200'
+                      : status === 'nearly_correct'
+                        ? 'bg-amber-100 text-amber-800 dark:bg-amber-300/10 dark:text-amber-200'
+                        : 'bg-red-100 text-red-800 dark:bg-red-300/10 dark:text-red-200'
+                  }`}>
+                    {resultLabels[status] || status}
+                  </span>
+                ) : null}
+              </div>
+              <p className="mt-2 text-base font-black leading-7 text-ink dark:text-white">{openItem.prompt}</p>
+              <div className="mt-3">
+                <TextAnswer
+                  value={values[openItem.key] || ''}
+                  onChange={(value) => update(openItem.key, value)}
+                  disabled={disabled}
+                  placeholder="Scrivi una risposta..."
+                />
+              </div>
+              {disabled && showCorrectAnswers && accepted.length ? (
+                <div className="mt-3 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold leading-5 text-emerald-900 dark:bg-emerald-300/[0.08] dark:text-emerald-100">
+                  <span className="font-black">Risposta accettata:</span> {accepted.join(' / ')}
+                </div>
+              ) : null}
+              {showExplanations && itemResult?.explanation ? (
+                <p className="mt-2 rounded-xl bg-linen/70 px-3 py-2 text-xs font-semibold leading-5 text-ink/70 dark:bg-white/[0.05] dark:text-white/70">
+                  {itemResult.explanation}
+                </p>
+              ) : null}
+            </section>
+          );
+        })}
+      </div>
+    );
+  }
 
   if (content.presentation === 'choice_set') {
     return (
@@ -502,9 +602,8 @@ function ResultPanel({ question, result, teacherComment, showScore, showCorrectA
     );
   }
   const status = result.status || 'unanswered';
-  const correctAnswer = question.content?.presentation === 'choice_set'
-    ? ''
-    : formatExerciseCorrectAnswer(question, result.correct_answer);
+  const isCompositeSet = ['choice_set', 'open_answer_set'].includes(question.content?.presentation);
+  const correctAnswer = isCompositeSet ? '' : formatExerciseCorrectAnswer(question, result.correct_answer);
   return <ExerciseFeedbackPanel status={status} title={resultLabels[status] || status}>{status === 'pending_review' ? <p>La risposta è stata consegnata. Riceverai la valutazione dell’insegnante nella tua area studente.</p> : null}{showScore && result.max_points !== undefined && status !== 'pending_review' ? <p>Punti: <strong>{Number(result.earned_points || 0).toFixed(1)} / {Number(result.max_points || 0).toFixed(1)}</strong></p> : null}{showCorrectAnswers && correctAnswer ? <p>Risposta giusta: <strong>{correctAnswer}</strong></p> : null}{showExplanations && result.explanation ? <p>{typeof result.explanation === 'string' ? result.explanation : JSON.stringify(result.explanation)}</p> : null}{teacherComment ? <div className="mt-3 border-t border-current/15 pt-3"><p className="text-xs font-bold uppercase tracking-wide opacity-60">Commento dell’insegnante</p><p className="mt-1 whitespace-pre-wrap font-semibold">{teacherComment}</p></div> : null}</ExerciseFeedbackPanel>;
 }
 
@@ -538,6 +637,10 @@ export default function ExerciseQuestionRendererV2({
     return <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">Tipologia non supportata: {type || 'sconosciuta'}.</p>;
   }, [type, question, answer, onChange, disabled, attemptId, item?.id, item?.teacher_turn_reviews, result, showCorrectAnswers, showExplanations]);
 
-  const displayType = question.content?.presentation === 'choice_set' ? 'multiple_choice_set' : type;
+  const displayType = question.content?.presentation === 'choice_set'
+    ? 'multiple_choice_set'
+    : question.content?.presentation === 'open_answer_set'
+      ? 'open_answer_set'
+      : type;
   return <div><ExercisePrompt type={displayType} prompt={question.prompt} instructions={question.instructions} />{input}<ResultPanel question={question} result={result} teacherComment={item?.teacher_comment} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} /></div>;
 }
