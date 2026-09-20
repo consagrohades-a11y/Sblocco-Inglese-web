@@ -160,6 +160,24 @@ export function preflightStudioDocument(rawDocument) {
       runtime = compileStudioDocument(document);
       runtimeValidation = validateExerciseBuilderJson(JSON.stringify(runtime));
       issues.push(...collectRuntimeIssues(runtimeValidation));
+
+      let transcriptAvailable = false;
+      const runtimeQuestions = runtime.exercise?.sections?.flatMap((section) => section.questions || []) || [];
+      runtimeQuestions.forEach((question, index) => {
+        const media = question.content?.presentation === 'media' ? question.content?.media : null;
+        if (media?.transcript) transcriptAvailable = true;
+
+        if (question.content?.transcript_reference && !transcriptAvailable) {
+          issues.push({
+            code: 'missing_referenced_transcript',
+            severity: 'error',
+            field: 'blocks.' + index,
+            block_id: document.blocks?.[index]?.id || null,
+            block_type: document.blocks?.[index]?.type || null,
+            message: 'This block refers to the transcript, but no earlier media block contains a transcript.',
+          });
+        }
+      });
     } catch (error) {
       issues.push({
         code: 'compiler_failure',
