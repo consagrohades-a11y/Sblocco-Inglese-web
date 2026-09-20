@@ -86,6 +86,24 @@ function answerIsEmpty(answer, question) {
   return !hasMeaningfulValue(answer);
 }
 
+function transcriptBeforeQuestion(payload, targetSectionIndex, targetQuestionIndex) {
+  let transcript = '';
+  const sections = payload?.sections || [];
+
+  for (let sectionIndex = 0; sectionIndex <= targetSectionIndex; sectionIndex += 1) {
+    const questions = sections[sectionIndex]?.questions || [];
+    const lastIndex = sectionIndex === targetSectionIndex ? targetQuestionIndex - 1 : questions.length - 1;
+    for (let questionIndex = 0; questionIndex <= lastIndex; questionIndex += 1) {
+      const content = questions[questionIndex]?.question?.content;
+      if (content?.presentation === 'media' && String(content?.media?.transcript || '').trim()) {
+        transcript = content.media.transcript;
+      }
+    }
+  }
+
+  return transcript;
+}
+
 function getProgressMilestone(previousCount, completedCount, sectionTitle) {
   if (previousCount < 50 && completedCount >= 50) return { title: '50 attività completate', body: 'Hai costruito una pratica davvero solida. Fermati un momento e riconosci quanta strada hai fatto.' };
   if (previousCount < 25 && completedCount >= 25) return { title: '25 attività completate', body: 'Ottimo ritmo. Le strutture stanno diventando più familiari e più facili da usare.' };
@@ -336,7 +354,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
           </div>
         </article>
         <div className="mt-6 grid gap-5">
-          {payload.sections.map((section) => {
+          {payload.sections.map((section, sectionIndex) => {
             const feedbackHidden = section.feedback_timing === "hidden";
             return (
               <section
@@ -392,6 +410,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                           settings.show_explanations !== false
                         }
                         attemptId={attempt.id}
+                        referencedTranscript={transcriptBeforeQuestion(payload, sectionIndex, index)}
                       />
                     </ExerciseActivity>
                   ))}
@@ -850,6 +869,7 @@ export default function ExercisePlayerV2() {
                           exerciseSettings.show_explanations !== false
                         }
                         attemptId={payload.attempt.id}
+                        referencedTranscript={transcriptBeforeQuestion(payload, sectionIndex, index)}
                       />
                     </ExerciseActivity>
                   ))}
@@ -872,6 +892,7 @@ export default function ExercisePlayerV2() {
                       changeAnswer(item, answer, sectionIndex, index)
                     }
                     attemptId={payload.attempt.id}
+                    referencedTranscript={transcriptBeforeQuestion(payload, sectionIndex, index)}
                   />
                 </ExerciseActivity>
               ))}
@@ -914,6 +935,7 @@ export default function ExercisePlayerV2() {
                     Boolean(currentQuestion.result) &&
                     payload.exercise.settings?.show_explanations !== false
                   }
+                  referencedTranscript={transcriptBeforeQuestion(payload, sectionIndex, questionIndex)}
                 />
               </div>
               <ExerciseActionBar hint={!currentQuestionAnswered ? "Seleziona o inserisci una risposta per continuare." : null}>
