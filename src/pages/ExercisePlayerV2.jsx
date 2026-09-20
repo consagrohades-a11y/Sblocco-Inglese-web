@@ -407,7 +407,9 @@ function FinalResult({ payload, assignmentId, resourceId }) {
 }
 
 function activityDisplayType(question) {
-  return question?.content?.presentation === 'choice_set' ? 'multiple_choice_set' : question?.type;
+  if (question?.content?.presentation === 'choice_set') return 'multiple_choice_set';
+  if (question?.content?.presentation === 'open_answer_set') return 'open_answer_set';
+  return question?.type;
 }
 
 export default function ExercisePlayerV2() {
