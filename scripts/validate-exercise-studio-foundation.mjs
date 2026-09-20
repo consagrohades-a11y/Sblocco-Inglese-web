@@ -472,6 +472,29 @@ assert.equal(importedExample.publishable, true, importedExample.errors.map((item
 assert.equal(importedExample.needs_attention_blocks, 0);
 assert.ok(importedExample.ready_blocks >= 1);
 
+const universalAuthoringExample = fs.readFileSync(
+  new URL('../public/templates/sblocco-learning-studio/learning-activity-example-v1.json', import.meta.url),
+  'utf8',
+);
+const importedUniversalExample = parseStudioImport(universalAuthoringExample);
+assert.equal(
+  importedUniversalExample.publishable,
+  true,
+  importedUniversalExample.errors.map((item) => item.message).join('\n'),
+);
+assert.equal(importedUniversalExample.needs_attention_blocks, 0);
+assert.equal(importedUniversalExample.document.activity_type, 'lesson');
+assert.equal(importedUniversalExample.document.level, 'B1');
+assert.ok(importedUniversalExample.ready_blocks >= 10);
+assert.ok(
+  importedUniversalExample.document.blocks.some((block) => block.type === 'vocabulary'),
+  'Universal benchmark should exercise vocabulary authoring.',
+);
+assert.ok(
+  importedUniversalExample.document.blocks.some((block) => block.type === 'written_response'),
+  'Universal benchmark should exercise manual-review production.',
+);
+
 const hostileTechnicalFields = parseStudioImport(JSON.stringify({
   _template: {
     template_id: 'sblocco-grammar-mini-course',
