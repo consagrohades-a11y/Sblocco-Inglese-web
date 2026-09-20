@@ -120,7 +120,7 @@ function GenericDashboard({ firstName }) {
     {
       key: 'learn',
       icon: BookOpen,
-      label: 'Learn',
+      label: 'Impara',
       title: 'Le tue attività',
       detail: open.length ? `${open.length} ${open.length === 1 ? 'attività da continuare' : 'attività da continuare'}` : 'Tutto completato per ora.',
       to: '/attivita/esercizi',
@@ -129,7 +129,7 @@ function GenericDashboard({ firstName }) {
     {
       key: 'review',
       icon: RefreshCw,
-      label: 'Review',
+      label: 'Ripassa',
       title: 'Ripassa ciò che deve tornare',
       detail: dueCount ? `${dueCount} ${dueCount === 1 ? 'card pronta' : 'card pronte'} per il ripasso SRS.` : 'Nessuna card urgente in questo momento.',
       to: '/attivita/srs',
@@ -140,7 +140,7 @@ function GenericDashboard({ firstName }) {
     {
       key: 'vocabulary',
       icon: ListChecks,
-      label: 'Vocabulary',
+      label: 'Vocabolario',
       title: 'Word & Chunk Bank',
       detail: 'Ritrova il linguaggio incontrato nelle attività e quello che hai salvato tu.',
       to: '/vocab-bank',
@@ -149,7 +149,7 @@ function GenericDashboard({ firstName }) {
     {
       key: 'progress',
       icon: Target,
-      label: 'Progress',
+      label: 'Progressi',
       title: 'Guarda cosa stai consolidando',
       detail: `${completed.length} completate · ${reviewCount} ripassi negli ultimi 7 giorni.`,
       to: '/progressi',
