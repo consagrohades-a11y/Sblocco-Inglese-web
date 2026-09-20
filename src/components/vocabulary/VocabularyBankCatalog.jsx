@@ -163,16 +163,16 @@ export default function VocabularyBankCatalog({
               <div className="flex items-start justify-between gap-3 border-b border-ink/10 px-5 py-4 dark:border-white/10">
                 <div className="min-w-0">
                   <div className="flex flex-wrap gap-1.5">
-                    <span className="rounded-full bg-orange-100 px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-[0.1em] text-orange-800 dark:bg-orange-300/10 dark:text-orange-200">
+                    <span className="rounded-full border border-ink/10 bg-linen/45 px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-[0.1em] text-ink/55 dark:border-white/10 dark:bg-white/[0.045] dark:text-white/55">
                       {item.bank_kind === 'word' ? 'Word' : 'Chunk'}
                     </span>
                     {item.self_added ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-[0.08em] text-sky-800 dark:bg-sky-300/10 dark:text-sky-200">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-orange-100/70 px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-[0.08em] text-orange-800 dark:bg-orange-300/10 dark:text-orange-200">
                         <UserPlus className="h-3 w-3" /> Self-added
                       </span>
                     ) : null}
                     {item.activity_added ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-[0.08em] text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-ink/10 bg-white px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-[0.08em] text-ink/50 dark:border-white/10 dark:bg-white/[0.035] dark:text-white/50">
                         <BookOpenText className="h-3 w-3" /> Activity
                       </span>
                     ) : null}
@@ -226,7 +226,7 @@ export default function VocabularyBankCatalog({
                 {item.source_activity_title ? (
                   <p className="mt-2 truncate text-[0.68rem] font-bold text-ink/40 dark:text-white/40">From: {item.source_activity_title}</p>
                 ) : item.self_added ? (
-                  <p className="mt-2 inline-flex items-center gap-1 text-[0.68rem] font-bold text-sky-700/70 dark:text-sky-200/65"><Sparkles className="h-3 w-3" /> Added by the learner</p>
+                  <p className="mt-2 inline-flex items-center gap-1 text-[0.68rem] font-bold text-orange-700/70 dark:text-orange-200/65"><Sparkles className="h-3 w-3" /> Added by the learner</p>
                 ) : null}
               </footer>
             </article>
