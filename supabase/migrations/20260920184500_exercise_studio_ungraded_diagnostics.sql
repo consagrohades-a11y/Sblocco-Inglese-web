@@ -62,7 +62,7 @@ begin
 end;
 $$;
 
-do $
+do $fix$
 declare
   v_definition text;
 begin
@@ -87,6 +87,6 @@ begin
     );
   end if;
 end;
-$;
+$fix$;
 
 notify pgrst, 'reload schema';
