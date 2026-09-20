@@ -350,7 +350,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
     }),
   }),
   translation: definition({
-    type: 'translation', label: 'Open Answer / Translation', category: 'practice',
+    type: 'translation', label: 'Open Answer / Translation · Single', category: 'practice',
     capabilities: { automaticGrading: true },
     createDefault: () => ({
       title: '',
@@ -381,8 +381,72 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       grading: { mode: 'automatic', weight: 1, nearly_correct_multiplier: 0.5 },
     }),
   }),
+  open_answer_set: definition({
+    type: 'open_answer_set', label: 'Open Answer / Translation · Set', category: 'practice',
+    capabilities: { automaticGrading: true },
+    createDefault: () => ({
+      title: '',
+      prompt: 'Translate or answer each item naturally.',
+      instructions: 'Write one answer for every item.',
+      primary_skill: 'grammar',
+      learning_objective: '',
+      items: [
+        { prompt: '', accepted_answers: [], feedback: '' },
+        { prompt: '', accepted_answers: [], feedback: '' },
+      ],
+    }),
+    normalize: (block) => ({
+      ...block,
+      title: text(block.title),
+      prompt: text(block.prompt),
+      instructions: text(block.instructions),
+      items: (Array.isArray(block.items) ? block.items : []).map((item, index) => ({
+        key: 'item_' + (index + 1),
+        prompt: text(item?.prompt),
+        accepted_answers: list(item?.accepted_answers),
+        feedback: text(item?.feedback),
+      })),
+    }),
+    validate: (block) => {
+      const items = Array.isArray(block.items) ? block.items : [];
+      const issues = [];
+      if (!text(block.prompt) && !text(block.instructions)) {
+        issues.push(issue('required', 'Add the shared task or instruction.', 'instructions'));
+      }
+      if (items.length < 2) issues.push(issue('minimum', 'An Open Answer Set needs at least two questions.', 'items'));
+      items.forEach((item, index) => {
+        if (!text(item?.prompt)) issues.push(issue('required', 'Question ' + (index + 1) + ' needs a prompt.', 'items.' + index + '.prompt'));
+        if (!list(item?.accepted_answers).length) {
+          issues.push(issue('accepted_answer', 'Question ' + (index + 1) + ' needs at least one accepted answer.', 'items.' + index + '.accepted_answers'));
+        }
+      });
+      return issues;
+    },
+    compile: (block, context) => commonQuestion(block, context, {
+      type: 'reading_comprehension',
+      title: text(block.title) || 'Open answer set',
+      primary_skill: text(block.primary_skill) || 'grammar',
+      prompt: text(block.prompt) || text(block.title) || 'Answer each item.',
+      instructions: text(block.instructions),
+      content: {
+        presentation: 'open_answer_set',
+        passage: text(block.instructions) || text(block.prompt) || 'Complete the grouped open-answer practice.',
+        title: text(block.title) || null,
+        source_note: null,
+        items: (block.items || []).map((item, index) => ({
+          key: 'item_' + (index + 1),
+          type: 'short_answer',
+          prompt: text(item.prompt),
+          points: 1,
+          accepted_answers: list(item.accepted_answers),
+          feedback: text(item.feedback) || null,
+        })),
+      },
+      grading: { mode: 'per_item', weight: 1, nearly_correct_multiplier: 0.5 },
+    }),
+  }),
   multiple_choice_set: definition({
-    type: 'multiple_choice_set', label: 'Multiple Choice Set', category: 'practice',
+    type: 'multiple_choice_set', label: 'Multiple Choice · Set', category: 'practice',
     capabilities: { automaticGrading: true },
     createDefault: () => ({
       title: '',
@@ -470,7 +534,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
     }),
   }),
   multiple_choice: definition({
-    type: 'multiple_choice', label: 'Multiple Choice', category: 'practice',
+    type: 'multiple_choice', label: 'Multiple Choice · Single', category: 'practice',
     capabilities: { automaticGrading: true },
     createDefault: () => ({ title: '', prompt: '', instructions: 'Scegli una risposta.', primary_skill: 'grammar', learning_objective: '', options: [
       { key: 'option_1', text: '', is_correct: true },
