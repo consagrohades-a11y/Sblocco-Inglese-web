@@ -103,10 +103,8 @@ function GenericDashboard({ firstName }) {
 
   const open = assignments.filter((item) => item.status === 'published');
   const completed = assignments.filter((item) => item.status === 'completed');
-  const nextAssignments = open.slice(0, 3);
-  const nearestDeadline = open
-    .filter((item) => item.deadline_at)
-    .sort((a, b) => new Date(a.deadline_at) - new Date(b.deadline_at))[0]?.deadline_at;
+  const primaryAssignment = open[0] || null;
+  const laterAssignments = open.slice(1, 3);
   const completion = assignments.length ? Math.round((completed.length / assignments.length) * 100) : 0;
   const week = Array.from({ length: 7 }, (_, offset) => {
     const date = new Date(Date.now() - (6 - offset) * 86_400_000);
@@ -118,75 +116,150 @@ function GenericDashboard({ firstName }) {
     };
   });
 
+  const destinations = [
+    {
+      key: 'learn',
+      icon: BookOpen,
+      label: 'Learn',
+      title: 'Le tue attività',
+      detail: open.length ? `${open.length} ${open.length === 1 ? 'attività da continuare' : 'attività da continuare'}` : 'Tutto completato per ora.',
+      to: '/attivita/esercizi',
+      action: 'Apri',
+    },
+    {
+      key: 'review',
+      icon: RefreshCw,
+      label: 'Review',
+      title: 'Ripassa ciò che deve tornare',
+      detail: dueCount ? `${dueCount} ${dueCount === 1 ? 'card pronta' : 'card pronte'} per il ripasso SRS.` : 'Nessuna card urgente in questo momento.',
+      to: '/attivita/srs',
+      action: 'Ripassa',
+      secondaryTo: '/attivita/pratica-mirata',
+      secondaryLabel: 'Pratica mirata',
+    },
+    {
+      key: 'vocabulary',
+      icon: ListChecks,
+      label: 'Vocabulary',
+      title: 'Word & Chunk Bank',
+      detail: 'Ritrova il linguaggio incontrato nelle attività e quello che hai salvato tu.',
+      to: '/vocab-bank',
+      action: 'Apri',
+    },
+    {
+      key: 'progress',
+      icon: Target,
+      label: 'Progress',
+      title: 'Guarda cosa stai consolidando',
+      detail: `${completed.length} completate · ${reviewCount} ripassi negli ultimi 7 giorni.`,
+      to: '/progressi',
+      action: 'Vedi',
+    },
+  ];
+
   return (
-    <div className="learner-shell learner-dashboard learner-dashboard--standard">
-      <header className="learner-hero">
-        <div className="learner-hero__copy">
-          <p className="learner-hero__hello">Che bello rivederti!</p>
+    <div className="learner-shell learner-dashboard learner-dashboard--standard learner-dashboard--calm">
+      <header className="learner-home-intro">
+        <div>
+          <p className="learner-kicker">Home</p>
           <h1 className="learner-display">Ciao, <em>{firstName}.</em></h1>
-          <p className="learner-hero__support"><strong>Ogni piccolo passo</strong> ti avvicina ai tuoi obiettivi.<br />Sei nel posto giusto.</p>
-          {!loading ? <div className="learner-notice">{reviewCount ? <Flame aria-hidden="true" /> : <CheckCircle2 aria-hidden="true" />} {reviewCount ? `Hai completato ${reviewCount} ${reviewCount === 1 ? 'ripasso' : 'ripassi'} questa settimana. Ottimo ritmo!` : open.length ? `Hai ${open.length} ${open.length === 1 ? 'attività pronta' : 'attività pronte'} da cui continuare.` : 'Sei in pari con le attività assegnate.'}</div> : null}
+          <p>Riprendi dal prossimo passo utile. Il resto può aspettare.</p>
         </div>
-        <div className="learner-hero__art learner-standard-hero-art" aria-hidden="true">
-          <img className="learner-standard-hero-art__light" src="/assets/brand/learner-dashboard-hero-light-transparent-v2.png" alt="" />
-          <img className="learner-standard-hero-art__dark" src="/assets/brand/learner-dashboard-hero-dark-transparent-v2.png" alt="" />
-        </div>
+        {!loading ? (
+          <div className="learner-home-status">
+            <CheckCircle2 aria-hidden="true" />
+            <span>{open.length ? `${open.length} ${open.length === 1 ? 'attività pronta' : 'attività pronte'}` : 'Sei in pari'}</span>
+          </div>
+        ) : null}
       </header>
 
-      <div className="learner-summary-grid">
-        <SummaryCard icon={Target} label="Il tuo obiettivo" value="Un passo alla volta" detail="Continua dal prossimo compito utile." />
-        <SummaryCard icon={ListChecks} label="Da fare oggi" value={`${open.length} ${open.length === 1 ? 'attività' : 'attività'}`} detail={open.length ? 'Apri il prossimo passo qui sotto.' : 'Sei in pari con il piano.'} />
-        <SummaryCard icon={CalendarDays} label="Prossima scadenza" value={formatDate(nearestDeadline)} detail={nearestDeadline ? 'La scadenza più vicina tra le tue attività.' : 'Puoi seguire il tuo ritmo.'} />
-      </div>
+      <section className="learner-continue-panel">
+        <div className="learner-continue-panel__main">
+          <p className="learner-kicker">Continua da qui</p>
+          {primaryAssignment ? (
+            <>
+              <h2 className="learner-display">{primaryAssignment.title}</h2>
+              <p className="learner-continue-panel__description">{primaryAssignment.learner_note || 'Continua da qui per mantenere il filo del tuo percorso.'}</p>
+              <div className="learner-continue-panel__meta">
+                {primaryAssignment.estimated_minutes ? <span><Clock3 aria-hidden="true" />~ {primaryAssignment.estimated_minutes} min</span> : null}
+                {primaryAssignment.deadline_at ? <span><CalendarDays aria-hidden="true" />{formatDate(primaryAssignment.deadline_at)}</span> : null}
+              </div>
+              <Link to={`/assignments/${primaryAssignment.id}`} className="learner-primary-button learner-continue-panel__action">
+                Continua <ArrowRight aria-hidden="true" size={16} />
+              </Link>
+            </>
+          ) : (
+            <>
+              <h2 className="learner-display">Sei in pari.</h2>
+              <p className="learner-continue-panel__description">Non hai attività assegnate da completare. Puoi usare Review o Vocabulary per consolidare ciò che hai già incontrato.</p>
+              <Link to="/attivita/srs" className="learner-secondary-button learner-continue-panel__action">Vai al ripasso <ArrowRight aria-hidden="true" size={16} /></Link>
+            </>
+          )}
 
-      <div className="learner-main-grid">
-        <section className="learner-panel learner-panel--main">
-          <div className="learner-panel__heading">
-            <div><span className="learner-panel__eyebrow">Oggi</span><h2>Il tuo prossimo passo</h2></div>
-            <Link to="/assignments" className="learner-text-link">Vedi il piano <ArrowRight aria-hidden="true" /></Link>
-          </div>
-          {nextAssignments.length ? (
-            <ol className="learner-standard-assignment-list">
-              {nextAssignments.map((assignment, index) => (
-                <li key={assignment.id}>
-                  <span className="learner-standard-assignment-list__number">{index + 1}</span>
-                  <span className="learner-standard-assignment-list__icon"><BookOpen aria-hidden="true" /></span>
-                  <span className="learner-standard-assignment-list__copy"><small>Attività assegnata</small><strong>{assignment.title}</strong><p>{assignment.learner_note || 'Continua da qui per mantenere il filo del tuo percorso.'}</p></span>
-                  <span className="learner-standard-assignment-list__time">{assignment.estimated_minutes ? <><Clock3 aria-hidden="true" />~ {assignment.estimated_minutes} min</> : null}</span>
-                  <Link to={`/assignments/${assignment.id}`} className={index === 0 ? 'learner-primary-button' : 'learner-secondary-button'}>{index === 0 ? 'Inizia' : 'Apri'} <ArrowRight aria-hidden="true" size={15} /></Link>
-                </li>
+          {laterAssignments.length ? (
+            <div className="learner-continue-panel__queue">
+              <p className="learner-panel__eyebrow">Poi</p>
+              {laterAssignments.map((assignment) => (
+                <Link key={assignment.id} to={`/assignments/${assignment.id}`} className="learner-queue-row">
+                  <span>{assignment.title}</span>
+                  <ArrowRight aria-hidden="true" />
+                </Link>
               ))}
-            </ol>
-          ) : <div className="learner-empty"><strong>Le attività assegnate sono complete.</strong><br />Puoi fare un ripasso SRS oppure allenarti sulle parole scelte per te.</div>}
-        </section>
+            </div>
+          ) : null}
+        </div>
 
-        <aside className="learner-panel learner-panel--side">
-          <div className="learner-panel__heading"><div><span className="learner-panel__eyebrow">Il tuo ritmo</span><h3>Progressi visibili</h3></div></div>
-          <ProgressRing value={completion} label="completate" />
-          <p className="learner-progress-cheer">{completion ? 'Stai andando forte!' : 'Ogni passo conta.'}</p>
-          <div className="learner-progress-list">
-            <div className="learner-progress-row"><span>Completate</span><span className="learner-progress-row__track"><span className="learner-progress-row__fill" style={{ width: `${completion}%` }} /></span><span>{completed.length}</span></div>
-            <div className="learner-progress-row"><span>Da fare</span><span className="learner-progress-row__track"><span className="learner-progress-row__fill" style={{ width: `${assignments.length ? (open.length / assignments.length) * 100 : 0}%` }} /></span><span>{open.length}</span></div>
-            <div className="learner-progress-row"><span>Ripassi 7g</span><span className="learner-progress-row__track"><span className="learner-progress-row__fill" style={{ width: `${Math.min(100, reviewCount * 5)}%` }} /></span><span>{reviewCount}</span></div>
+        <aside className="learner-continue-panel__progress">
+          <p className="learner-panel__eyebrow">Il tuo percorso</p>
+          <strong>{completion}%</strong>
+          <div className="learner-home-progress-track" aria-label={`Attività completate: ${completion}%`}>
+            <span style={{ width: `${completion}%` }} />
           </div>
-          <p className="learner-empty learner-progress-note">Questi dati servono a vedere cosa stai consolidando. Non sono un voto.</p>
-          <Link to="/progressi" className="learner-text-link">Apri i progressi <ArrowRight size={14} /></Link>
+          <p>{completed.length} completate · {open.length} da fare</p>
+          <Link to="/progressi" className="learner-text-link">Dettagli <ArrowRight aria-hidden="true" /></Link>
         </aside>
-      </div>
-
-      <div className="learner-lower-grid learner-lower-grid--standard">
-        <article className="learner-lower-card"><p className="learner-kicker">Esercizi</p><h3>La tua giornata tipo</h3><p>Un piccolo segreto: la costanza fa una grande differenza.</p><div className="learner-form-actions"><Link to="/assignments" className="learner-text-link">Vedi il tuo piano <ArrowRight /></Link></div></article>
-        <article className="learner-lower-card"><p className="learner-kicker">Ripasso SRS</p><h3>Continua a costruire il tuo futuro</h3><p>{dueCount ? `${dueCount} ${dueCount === 1 ? 'card è pronta' : 'card sono pronte'} per un ripasso breve.` : 'Le parole torneranno quando sarà il momento giusto.'}</p><div className="learner-form-actions"><Link to="/attivita/srs" className="learner-text-link">Apri il ripasso <ArrowRight /></Link></div></article>
-        <article className="learner-lower-card"><p className="learner-kicker">Pratica mirata</p><h3>Allenati sulle parole scelte per te</h3><p>Quiz separati dal ripasso SRS, costruiti sulle indicazioni del tuo insegnante.</p><div className="learner-form-actions"><Link to="/attivita/pratica-mirata" className="learner-text-link">Apri la pratica <ArrowRight /></Link></div></article>
-        <article className="learner-lower-card"><p className="learner-kicker">Word & Chunk Bank</p><h3>Ritrova il linguaggio delle tue attività</h3><p>Parole ed espressioni incontrate nei lesson vengono raccolte qui automaticamente quando completi l’attività.</p><div className="learner-form-actions"><Link to="/vocab-bank" className="learner-text-link">Apri il bank <ArrowRight /></Link></div></article>
-      </div>
-
-      <section className="learner-standard-week">
-        <div><p className="learner-kicker">La tua settimana</p><h2 className="learner-display">{activeDays.size} {activeDays.size === 1 ? 'giorno di ripasso' : 'giorni di ripasso'}</h2><p>Nessuna serie da proteggere. Serve soltanto a vedere il ritmo che stai costruendo.</p></div>
-        <div className="learner-standard-week__days" aria-label="Attività di ripasso negli ultimi sette giorni">{week.map((day) => <span key={day.key} className={day.active ? 'is-active' : ''}><i aria-hidden="true" />{day.label}</span>)}</div>
       </section>
 
-      <section className="learner-bottom-cta"><div><h2 className="learner-display">Tu, cosa vuoi riuscire a fare?</h2><p>Qual è il tuo prossimo obiettivo? Studiare, lavorare, viaggiare o parlare con più sicurezza?</p></div><Link to="/assessment" className="learner-primary-button">I miei obiettivi <ArrowRight size={16} /></Link></section>
+      <section className="learner-learning-destinations">
+        <div className="learner-section-heading">
+          <div>
+            <p className="learner-kicker">Il tuo spazio</p>
+            <h2 className="learner-display">Scegli cosa vuoi fare.</h2>
+          </div>
+          <p>Quattro aree, senza dover capire come funziona il sistema dietro.</p>
+        </div>
+
+        <div className="learner-destination-list">
+          {destinations.map((item) => {
+            const Icon = item.icon;
+            return (
+              <article key={item.key} className="learner-destination-row">
+                <span className="learner-destination-row__icon"><Icon aria-hidden="true" /></span>
+                <div className="learner-destination-row__copy">
+                  <small>{item.label}</small>
+                  <strong>{item.title}</strong>
+                  <p>{item.detail}</p>
+                </div>
+                <div className="learner-destination-row__actions">
+                  {item.secondaryTo ? <Link to={item.secondaryTo} className="learner-destination-row__secondary">{item.secondaryLabel}</Link> : null}
+                  <Link to={item.to} className="learner-destination-row__primary">{item.action} <ArrowRight aria-hidden="true" /></Link>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="learner-week-calm">
+        <div>
+          <p className="learner-kicker">Questa settimana</p>
+          <h2 className="learner-display">{activeDays.size} {activeDays.size === 1 ? 'giorno attivo' : 'giorni attivi'}</h2>
+          <p>Una fotografia del ritmo, non un voto e non una serie da proteggere.</p>
+        </div>
+        <div className="learner-week-calm__days" aria-label="Attività di ripasso negli ultimi sette giorni">
+          {week.map((day) => <span key={day.key} className={day.active ? 'is-active' : ''}><i aria-hidden="true" />{day.label}</span>)}
+        </div>
+      </section>
     </div>
   );
 }
