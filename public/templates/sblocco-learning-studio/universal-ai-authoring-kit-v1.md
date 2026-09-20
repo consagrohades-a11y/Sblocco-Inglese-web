@@ -567,7 +567,7 @@ Manual review. Do not invent a model answer as the one correct response.
 }
 ```
 
-Note: the current Registry exposes 19 block **definitions**; this reference lists each current authoring type, including production/media/practice specialisations. Use only types accepted by the current Studio.
+The current Studio Block Registry exposes **20 supported authoring block types**. Use only the types documented above.
 
 ## 11. Lesson-type recipes
 
