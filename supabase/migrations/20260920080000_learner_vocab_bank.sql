@@ -27,11 +27,12 @@ create table if not exists public.learner_vocab_bank_items (
 alter table public.learner_vocab_bank_items enable row level security;
 
 drop policy if exists learner_vocab_bank_select_own on public.learner_vocab_bank_items;
-create policy learner_vocab_bank_select_own
+drop policy if exists learner_vocab_bank_admin_read on public.learner_vocab_bank_items;
+create policy learner_vocab_bank_read
 on public.learner_vocab_bank_items
 for select
 to authenticated
-using ((select auth.uid()) = learner_id);
+using ((select auth.uid()) = learner_id or public.is_admin());
 
 drop policy if exists learner_vocab_bank_delete_own on public.learner_vocab_bank_items;
 create policy learner_vocab_bank_delete_own
@@ -63,13 +64,6 @@ to authenticated
 using ((select auth.uid()) = learner_id)
 with check ((select auth.uid()) = learner_id and self_added = true);
 
-drop policy if exists learner_vocab_bank_admin_read on public.learner_vocab_bank_items;
-create policy learner_vocab_bank_admin_read
-on public.learner_vocab_bank_items
-for select
-to authenticated
-using (public.is_admin());
-
 revoke all on table public.learner_vocab_bank_items from anon;
 grant select, delete on table public.learner_vocab_bank_items to authenticated;
 grant insert (
@@ -90,7 +84,7 @@ returns trigger
 language plpgsql
 security invoker
 set search_path = public
-as $
+as $$
 begin
   new.display_text := trim(coalesce(new.display_text, ''));
   new.normalized_text := regexp_replace(lower(new.display_text), '\s+', ' ', 'g');
@@ -100,7 +94,7 @@ begin
   new.updated_at := now();
   return new;
 end;
-$;
+$$;
 
 revoke all on function public.normalize_learner_vocab_bank_item() from public;
 
