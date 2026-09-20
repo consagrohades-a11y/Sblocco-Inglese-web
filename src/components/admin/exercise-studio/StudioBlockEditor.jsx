@@ -351,6 +351,109 @@ function VocabularyEditor({ items = [], onChange }) {
   );
 }
 
+function OpenAnswerSetEditor({ block, patch }) {
+  const items = Array.isArray(block.items) ? block.items : [];
+
+  function patchItem(index, itemPatch) {
+    patch({ items: items.map((item, current) => current === index ? { ...item, ...itemPatch } : item) });
+  }
+
+  function addQuestion() {
+    patch({ items: [...items, { prompt: '', accepted_answers: [], feedback: '' }] });
+  }
+
+  function duplicateQuestion(index) {
+    const source = items[index];
+    if (!source) return;
+    patch({
+      items: [
+        ...items.slice(0, index + 1),
+        {
+          ...source,
+          key: undefined,
+          accepted_answers: [...(source.accepted_answers || [])],
+        },
+        ...items.slice(index + 1),
+      ],
+    });
+  }
+
+  return (
+    <>
+      <TextInput label="Set title" value={block.title} onChange={(value) => patch({ title: value })} placeholder="Translate naturally" />
+      <TextArea
+        label="Shared task"
+        value={block.prompt}
+        onChange={(value) => patch({ prompt: value })}
+        rows={2}
+        hint="Shown once above the whole set."
+      />
+      <TextInput
+        label="Shared learner instruction"
+        value={block.instructions}
+        onChange={(value) => patch({ instructions: value })}
+        placeholder="Write one natural answer for each item."
+        hint="Write the repeated instruction once."
+      />
+
+      <div className="grid min-w-0 gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Questions</p>
+            <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">Each answer is checked independently inside the set.</p>
+          </div>
+          <button type="button" onClick={addQuestion} className="focus-ring inline-flex items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200">
+            <Plus className="h-3.5 w-3.5" /> Add question
+          </button>
+        </div>
+
+        {items.map((item, itemIndex) => (
+          <section key={item.key || itemIndex} className="grid min-w-0 gap-3 rounded-2xl border border-ink/10 bg-white/65 p-3 dark:border-white/10 dark:bg-white/[0.025]">
+            <div className="flex items-center justify-between gap-2">
+              <span className="rounded-full bg-orange-100 px-2.5 py-1 text-[0.68rem] font-black text-orange-900 dark:bg-orange-300/10 dark:text-orange-100">Item {itemIndex + 1}</span>
+              <div className="flex items-center gap-2">
+                <button type="button" onClick={() => duplicateQuestion(itemIndex)} className="focus-ring text-[0.68rem] font-black text-ink/55 dark:text-white/55">Duplicate</button>
+                <button
+                  type="button"
+                  onClick={() => patch({ items: items.filter((_, current) => current !== itemIndex) })}
+                  className="focus-ring grid h-8 w-8 place-items-center rounded-lg text-ink/45 hover:bg-red-50 hover:text-red-700 dark:text-white/45 dark:hover:bg-red-300/10 dark:hover:text-red-200"
+                  aria-label={`Remove question ${itemIndex + 1}`}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            <TextArea
+              label="Prompt / source text"
+              value={item.prompt || ''}
+              onChange={(value) => patchItem(itemIndex, { prompt: value })}
+              rows={2}
+              placeholder="e.g. Traduci: Non posso rimandarlo ancora."
+            />
+
+            <StringListEditor
+              label="Accepted answers"
+              items={item.accepted_answers || []}
+              onChange={(accepted_answers) => patchItem(itemIndex, { accepted_answers })}
+              placeholder="One natural accepted answer"
+              hint="Add natural variants that should count as correct."
+            />
+
+            <TextArea
+              label="Optional feedback"
+              value={item.feedback || ''}
+              onChange={(value) => patchItem(itemIndex, { feedback: value })}
+              rows={2}
+              hint="Explain the language point only when useful."
+            />
+          </section>
+        ))}
+      </div>
+    </>
+  );
+}
+
 function MultipleChoiceSetEditor({ block, patch }) {
   const items = Array.isArray(block.items) ? block.items : [];
 
@@ -777,14 +880,31 @@ function MediaEditor({ block, patch, activityId }) {
 function WritingEditor({ block, patch }) {
   return (
     <>
-      <TextArea label="Writing prompt" value={block.prompt} onChange={(value) => patch({ prompt: value })} rows={4} />
+      <section className="grid gap-3 rounded-2xl border border-ink/10 bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+        <div>
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">Task</p>
+          <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">The main instruction the learner sees before writing.</p>
+        </div>
+        <TextArea label="Writing prompt" value={block.prompt} onChange={(value) => patch({ prompt: value })} rows={4} />
+      </section>
+
       <StructuredContextEditor block={block} patch={patch} />
-      <StringListEditor label="Required points" items={block.required_points || []} onChange={(required_points) => patch({ required_points })} hint="Concrete content the learner should include." />
-      <div className="grid min-w-0 grid-cols-2 gap-2">
-        <NumberInput label="Min words" value={block.min_words} min={1} onChange={(value) => patch({ min_words: value })} />
-        <NumberInput label="Max words" value={block.max_words} min={1} onChange={(value) => patch({ max_words: value })} />
-      </div>
-      <p className="text-xs font-semibold leading-5 text-ink/50 dark:text-white/50">A safe default review rubric is created automatically. Rich inline teacher correction is a later Studio layer.</p>
+
+      <section className="grid gap-3 rounded-2xl border border-ink/10 bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+        <div>
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">Requirements</p>
+          <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">Keep the learner focused on what must actually be included.</p>
+        </div>
+        <StringListEditor label="Required points" items={block.required_points || []} onChange={(required_points) => patch({ required_points })} hint="Concrete content the learner should include." />
+        <div className="grid min-w-0 grid-cols-2 gap-3 border-t border-ink/5 pt-3 dark:border-white/5">
+          <NumberInput label="Min words" value={block.min_words} min={1} onChange={(value) => patch({ min_words: value })} />
+          <NumberInput label="Max words" value={block.max_words} min={1} onChange={(value) => patch({ max_words: value })} />
+        </div>
+      </section>
+
+      <p className="rounded-xl bg-linen/55 px-3 py-2 text-xs font-semibold leading-5 text-ink/50 dark:bg-white/[0.04] dark:text-white/50">
+        Review criteria are generated safely by Sblocco. You only need to define the teaching task here.
+      </p>
     </>
   );
 }
@@ -904,6 +1024,7 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
           ) : null}
 
           <div className="grid min-w-0 gap-4">
+        {block.type === 'open_answer_set' ? <OpenAnswerSetEditor block={block} patch={patch} /> : null}
         {block.type === 'multiple_choice_set' ? <MultipleChoiceSetEditor block={block} patch={patch} /> : null}
         {block.type === 'multiple_choice' ? <MultipleChoiceEditor block={block} patch={patch} /> : null}
         {block.type === 'gap_fill' ? <GapFillEditor block={block} patch={patch} /> : null}
