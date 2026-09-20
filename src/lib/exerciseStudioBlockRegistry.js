@@ -18,14 +18,21 @@ const slug = (value, fallback = 'item') => text(value)
   .slice(0, 64) || fallback;
 
 
-function referencesTranscript(value, key = '') {
-  if (key === 'transcript' || key === 'url' || key.startsWith('storage_')) return false;
-  if (typeof value === 'string') return /\btranscript\b|\btrascrizion\w*\b/i.test(value);
-  if (Array.isArray(value)) return value.some((item) => referencesTranscript(item, key));
-  if (value && typeof value === 'object') {
-    return Object.entries(value).some(([childKey, childValue]) => referencesTranscript(childValue, childKey));
-  }
-  return false;
+function referencesTranscript(block) {
+  const learnerFacing = [
+    block?.title,
+    block?.prompt,
+    block?.instructions,
+    block?.body,
+    block?.context,
+    block?.context_situation,
+    block?.context_role,
+    block?.context_audience,
+    block?.context_goal,
+    ...(Array.isArray(block?.required_points) ? block.required_points : []),
+    ...(Array.isArray(block?.items) ? block.items.flatMap((item) => [item?.prompt, item?.text]) : []),
+  ];
+  return learnerFacing.some((value) => /\btranscript\b|\btrascrizion\w*\b/i.test(String(value || '')));
 }
 
 function optionList(value) {
