@@ -299,8 +299,17 @@ export default function AdminExerciseStudio() {
     setAssignmentNotice('');
     setDocument((current) => {
       const next = addStudioBlock(current, type);
-      const block = next.blocks[next.blocks.length - 1];
-      setSelectedBlockId(block.id);
+      const newBlock = next.blocks[next.blocks.length - 1];
+      const selectedIndex = current.blocks.findIndex((block) => block.id === selectedBlockId);
+
+      if (selectedIndex >= 0) {
+        const blocks = [...current.blocks];
+        blocks.splice(selectedIndex + 1, 0, newBlock);
+        setSelectedBlockId(newBlock.id);
+        return changedDraft(current, { blocks });
+      }
+
+      setSelectedBlockId(newBlock.id);
       return { ...next, status: current.status === 'published' ? 'draft' : current.status };
     });
     setPaletteOpen(false);
