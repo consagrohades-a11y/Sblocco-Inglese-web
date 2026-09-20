@@ -215,6 +215,49 @@ export function EditorialTeachingBlock({ content = {}, prompt = '', instructions
         </div>
       ) : null}
 
+      {type === 'vocabulary' && Array.isArray(content.entries) && content.entries.length ? (
+        <div className="mt-5 grid gap-3">
+          {content.entries.map((entry, index) => (
+            <article
+              key={`${entry?.term || 'vocab'}-${index}`}
+              className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035]"
+            >
+              <div className="border-b border-white/10 px-4 py-3 sm:px-5">
+                <div className="flex items-start gap-3">
+                  <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full border border-orange-400/30 bg-orange-400/10 text-[0.62rem] font-black text-orange-300">
+                    {index + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[0.62rem] font-black uppercase tracking-[0.12em] text-orange-300">Word / chunk</p>
+                    <p className="mt-1 text-base font-black leading-6 text-white">{entry?.term || '—'}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-0 sm:grid-cols-[minmax(0,1fr)_minmax(180px,0.72fr)]">
+                <div className="min-w-0 border-b border-white/10 px-4 py-3 sm:border-b-0 sm:border-r sm:px-5">
+                  <p className="text-[0.62rem] font-black uppercase tracking-[0.1em] text-white/40">Meaning</p>
+                  <p className="mt-1.5 text-sm font-semibold leading-6 text-white/82">{entry?.meaning || '—'}</p>
+                </div>
+                <div className="min-w-0 px-4 py-3 sm:px-5">
+                  <p className="text-[0.62rem] font-black uppercase tracking-[0.1em] text-orange-300/80">Italian support</p>
+                  <p className="mt-1.5 text-sm font-bold leading-6 text-white/78">{entry?.translation || '—'}</p>
+                </div>
+              </div>
+
+              {entry?.example ? (
+                <div className="border-t border-white/10 bg-black/10 px-4 py-3 sm:px-5">
+                  <p className="text-[0.62rem] font-black uppercase tracking-[0.1em] text-white/35">Example</p>
+                  <p className="mt-1.5 border-l-2 border-orange-400/60 pl-3 text-sm font-semibold italic leading-6 text-white/70">
+                    {entry.example}
+                  </p>
+                </div>
+              ) : null}
+            </article>
+          ))}
+        </div>
+      ) : null}
+
       {type === 'dialogue' && Array.isArray(content.turns) && content.turns.length ? (
         <div className="mt-4 grid gap-3">
           {content.turns.map((turn, index) => (
@@ -232,7 +275,7 @@ export function EditorialTeachingBlock({ content = {}, prompt = '', instructions
         </ul>
       ) : null}
 
-      {['summary', 'checklist', 'instructions', 'language_bank', 'vocabulary', 'useful_phrases', 'pronunciation'].includes(type) && items.length ? (
+      {['summary', 'checklist', 'instructions', 'language_bank', 'useful_phrases', 'pronunciation'].includes(type) && items.length ? (
         <ul className={`sblocco-teaching-list sblocco-teaching-list--${type}`}>
           {items.map((item, index) => <li key={`${item}-${index}`}>{type === 'pronunciation' ? <Mic2 aria-hidden="true" /> : <Check aria-hidden="true" />}<span>{item}</span></li>)}
         </ul>
