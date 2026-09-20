@@ -218,7 +218,7 @@ function WrittenResponse({ question, answer, onChange, disabled }) {
               </div>
             ) : null}
             {compactContext.length ? (
-              <div className="grid gap-3 border-t border-ink/5 pt-4 sm:grid-cols-3 dark:border-white/5">
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 border-t border-ink/5 pt-4 dark:border-white/5">
                 {compactContext.map(([label, value]) => (
                   <div key={label} className="min-w-0">
                     <p className="text-[0.65rem] font-black uppercase tracking-[0.08em] text-ink/40 dark:text-white/40">{label}</p>
