@@ -326,24 +326,103 @@ function StringListEditor({ label, items = [], onChange, placeholder = 'Add item
 
 function VocabularyEditor({ items = [], onChange }) {
   const values = Array.isArray(items) ? items : [];
+
   function patch(index, patchValue) {
     onChange(values.map((item, current) => current === index ? { ...item, ...patchValue } : item));
   }
+
+  function fieldLabel(label, tone = 'neutral') {
+    const toneClass = tone === 'orange'
+      ? 'text-orange-700 dark:text-orange-300'
+      : tone === 'italian'
+        ? 'text-sky-700 dark:text-sky-300'
+        : 'text-ink/45 dark:text-white/45';
+    return `text-[0.62rem] font-black uppercase tracking-[0.1em] ${toneClass}`;
+  }
+
   return (
-    <div className="grid gap-3">
-      <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Vocabulary items</p>
+    <div className="grid min-w-0 gap-3">
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Vocabulary items</p>
+        <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
+          Keep the expression, meaning, Italian support and example visually separate.
+        </p>
+      </div>
+
       {values.map((item, index) => (
-        <div key={index} className="grid gap-2 rounded-2xl border border-ink/10 bg-linen/25 p-3 dark:border-white/10 dark:bg-white/[0.03]">
-          <TextInput label="Term / chunk" value={item.term} onChange={(value) => patch(index, { term: value })} />
-          <TextInput label="Meaning" value={item.meaning} onChange={(value) => patch(index, { meaning: value })} />
-          <TextInput label="Italian support" value={item.translation} onChange={(value) => patch(index, { translation: value })} />
-          <TextInput label="Example" value={item.example} onChange={(value) => patch(index, { example: value })} />
-          <button type="button" onClick={() => onChange(values.filter((_, current) => current !== index))} className="focus-ring inline-flex w-fit items-center gap-2 text-xs font-black text-red-700 dark:text-red-200">
-            <Trash2 className="h-3.5 w-3.5" /> Remove
-          </button>
-        </div>
+        <section
+          key={index}
+          className="overflow-hidden rounded-2xl border border-ink/10 bg-white/75 shadow-sm dark:border-white/10 dark:bg-white/[0.025]"
+        >
+          <div className="flex items-center justify-between gap-3 border-b border-ink/10 bg-linen/45 px-3 py-2.5 dark:border-white/10 dark:bg-white/[0.035]">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-orange-500 text-[0.65rem] font-black text-white">
+                {index + 1}
+              </span>
+              <span className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-ink/55 dark:text-white/55">Vocabulary item</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => onChange(values.filter((_, current) => current !== index))}
+              className="focus-ring grid h-8 w-8 shrink-0 place-items-center rounded-lg text-ink/35 transition hover:bg-red-50 hover:text-red-700 dark:text-white/35 dark:hover:bg-red-300/10 dark:hover:text-red-200"
+              aria-label={`Remove vocabulary item ${index + 1}`}
+              title="Remove item"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="grid min-w-0 gap-0">
+            <label className="grid min-w-0 gap-1.5 border-b border-ink/10 px-3 py-3 dark:border-white/10">
+              <span className={fieldLabel('Word / chunk', 'orange')}>Word / chunk</span>
+              <input
+                value={item.term || ''}
+                onChange={(event) => patch(index, { term: event.target.value })}
+                placeholder="e.g. where someone is coming from"
+                className="focus-ring min-w-0 rounded-xl border border-orange-200 bg-orange-50/55 px-3 py-2.5 text-sm font-black text-ink shadow-sm dark:border-orange-300/20 dark:bg-orange-300/[0.055] dark:text-white"
+              />
+            </label>
+
+            <label className="grid min-w-0 gap-1.5 border-b border-ink/10 px-3 py-3 dark:border-white/10">
+              <span className={fieldLabel('Meaning')}>Meaning</span>
+              <textarea
+                rows={2}
+                value={item.meaning || ''}
+                onChange={(event) => patch(index, { meaning: event.target.value })}
+                placeholder="Explain what the expression means in clear English."
+                className="focus-ring min-w-0 resize-y rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-semibold leading-6 text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.04] dark:text-white"
+              />
+            </label>
+
+            <label className="grid min-w-0 gap-1.5 border-b border-ink/10 bg-sky-50/45 px-3 py-3 dark:border-white/10 dark:bg-sky-300/[0.035]">
+              <span className={fieldLabel('Italian support', 'italian')}>Italian support</span>
+              <input
+                value={item.translation || ''}
+                onChange={(event) => patch(index, { translation: event.target.value })}
+                placeholder="Optional Italian gloss or support"
+                className="focus-ring min-w-0 rounded-xl border border-sky-200 bg-white px-3 py-2.5 text-sm font-bold text-ink shadow-sm dark:border-sky-300/20 dark:bg-white/[0.04] dark:text-white"
+              />
+            </label>
+
+            <label className="grid min-w-0 gap-1.5 px-3 py-3">
+              <span className={fieldLabel('Example')}>Example in context</span>
+              <textarea
+                rows={2}
+                value={item.example || ''}
+                onChange={(event) => patch(index, { example: event.target.value })}
+                placeholder="Show how the expression is actually used."
+                className="focus-ring min-w-0 resize-y rounded-xl border border-ink/10 bg-linen/35 px-3 py-2.5 text-sm font-semibold italic leading-6 text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.035] dark:text-white"
+              />
+            </label>
+          </div>
+        </section>
       ))}
-      <button type="button" onClick={() => onChange([...values, { term: '', meaning: '', translation: '', example: '' }])} className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 hover:bg-orange-50 dark:border-orange-300/30 dark:text-orange-200">
+
+      <button
+        type="button"
+        onClick={() => onChange([...values, { term: '', meaning: '', translation: '', example: '' }])}
+        className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 hover:bg-orange-50 dark:border-orange-300/30 dark:text-orange-200"
+      >
         <Plus className="h-3.5 w-3.5" /> Add word or chunk
       </button>
     </div>
