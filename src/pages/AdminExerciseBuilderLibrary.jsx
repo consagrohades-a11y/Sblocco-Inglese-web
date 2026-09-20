@@ -136,6 +136,10 @@ export default function AdminExerciseBuilderLibrary() {
     archived: items.filter((item) => item.status === 'archived').length,
   }), [items]);
 
+  const folderQuery = !['all', 'unfiled'].includes(selectedFolder) ? `&folder=${encodeURIComponent(selectedFolder)}` : '';
+  const newActivityHref = `/admin/content/exercises/studio?${folderQuery ? folderQuery.slice(1) : ''}`;
+  const importHref = `/admin/content/exercises/studio?import=1${folderQuery}`;
+
   const selectedFolderLabel = selectedFolder === 'all'
     ? 'All activities'
     : selectedFolder === 'unfiled'
@@ -271,10 +275,10 @@ export default function AdminExerciseBuilderLibrary() {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <Link to="/admin/content/exercises/studio?import=1" className="focus-ring inline-flex items-center gap-2 rounded-full border border-orange-300 bg-orange-50 px-4 py-2.5 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:bg-orange-300/[0.07] dark:text-orange-100">
+                <Link to={importHref} className="focus-ring inline-flex items-center gap-2 rounded-full border border-orange-300 bg-orange-50 px-4 py-2.5 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:bg-orange-300/[0.07] dark:text-orange-100">
                   <FileJson2 className="h-4 w-4" /> Import JSON
                 </Link>
-                <Link to="/admin/content/exercises/studio" className="focus-ring inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-xs font-black text-white shadow-sm dark:bg-orange-400 dark:text-surface-950">
+                <Link to={newActivityHref} className="focus-ring inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-xs font-black text-white shadow-sm dark:bg-orange-400 dark:text-surface-950">
                   <Plus className="h-4 w-4" /> New activity
                 </Link>
               </div>
@@ -480,7 +484,7 @@ export default function AdminExerciseBuilderLibrary() {
                         : 'Create the first curated activity manually or import a lesson generated with the Sblocco AI authoring kit.'}
                     </p>
                     {!items.length ? (
-                      <Link to="/admin/content/exercises/studio" className="focus-ring mt-5 inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-sm font-black text-white">
+                      <Link to={newActivityHref} className="focus-ring mt-5 inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-sm font-black text-white">
                         <Plus className="h-4 w-4" /> Create first activity
                       </Link>
                     ) : null}
