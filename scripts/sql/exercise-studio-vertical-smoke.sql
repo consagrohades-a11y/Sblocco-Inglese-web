@@ -385,8 +385,10 @@ begin
       and english_meaning = 'the latest time something must be finished'
       and italian_support = 'scadenza'
       and source_attempt_id = v_attempt_id
+      and activity_added = true
+      and self_added = false
   ) then
-    raise exception 'Studio completion did not add the vocabulary word to the learner bank.';
+    raise exception 'Studio completion did not add the vocabulary word to the learner bank with activity provenance.';
   end if;
 
   if not exists (
@@ -396,8 +398,10 @@ begin
       and bank_kind = 'chunk'
       and normalized_text = 'get something off my plate'
       and source_attempt_id = v_attempt_id
+      and activity_added = true
+      and self_added = false
   ) then
-    raise exception 'Studio completion did not infer and add the vocabulary chunk to the learner bank.';
+    raise exception 'Studio completion did not infer and add the vocabulary chunk with activity provenance.';
   end if;
 
   if not exists (
@@ -419,6 +423,42 @@ begin
       and (result_summary ->> 'pending_review')::integer = 1
   ) then
     raise exception 'Studio mixed attempt did not preserve the manual-review gate.';
+  end if;
+
+  insert into public.learner_vocab_bank_items (
+    learner_id,
+    bank_kind,
+    normalized_text,
+    display_text,
+    english_meaning,
+    italian_support,
+    topic,
+    self_added,
+    activity_added
+  ) values (
+    '00000000-0000-0000-0000-000000000002'::uuid,
+    'chunk',
+    'SHOULD_BE_NORMALISED',
+    '  Take   something   on board  ',
+    'accept and seriously consider an idea',
+    'prendere in considerazione',
+    'work',
+    true,
+    false
+  );
+
+  if not exists (
+    select 1
+    from public.learner_vocab_bank_items
+    where learner_id = '00000000-0000-0000-0000-000000000002'::uuid
+      and bank_kind = 'chunk'
+      and normalized_text = 'take something on board'
+      and display_text = 'Take   something   on board'
+      and self_added = true
+      and activity_added = false
+      and self_added_at is not null
+  ) then
+    raise exception 'Self-added vocabulary was not normalized and provenance-flagged correctly.';
   end if;
 
   perform set_config('app.test_uid', '00000000-0000-0000-0000-000000000001', false);
