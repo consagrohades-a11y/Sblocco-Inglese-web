@@ -237,11 +237,11 @@ export function EditorialTeachingBlock({ content = {}, prompt = '', instructions
               <div className="grid gap-0 sm:grid-cols-[minmax(0,1fr)_minmax(180px,0.72fr)]">
                 <div className="min-w-0 border-b border-white/10 px-4 py-3 sm:border-b-0 sm:border-r sm:px-5">
                   <p className="text-[0.62rem] font-black uppercase tracking-[0.1em] text-white/40">Meaning</p>
-                  <p className="mt-1.5 text-sm font-semibold leading-6 text-white/82">{entry?.meaning || '—'}</p>
+                  <p className="mt-1.5 text-sm font-semibold leading-6 text-white/80">{entry?.meaning || '—'}</p>
                 </div>
                 <div className="min-w-0 px-4 py-3 sm:px-5">
                   <p className="text-[0.62rem] font-black uppercase tracking-[0.1em] text-orange-300/80">Italian support</p>
-                  <p className="mt-1.5 text-sm font-bold leading-6 text-white/78">{entry?.translation || '—'}</p>
+                  <p className="mt-1.5 text-sm font-bold leading-6 text-white/75">{entry?.translation || '—'}</p>
                 </div>
               </div>
 
