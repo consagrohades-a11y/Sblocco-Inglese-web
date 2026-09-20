@@ -136,7 +136,9 @@ export default function ExerciseMediaBlock({ content = {}, prompt = '', instruct
           <summary className="cursor-pointer text-xs font-black uppercase tracking-wide text-ink/65 dark:text-white/65">
             Trascrizione
           </summary>
-          <p className="mt-3 whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/80 dark:text-white/80">{media.transcript}</p>
+          <div className="mt-3 max-h-80 overflow-y-auto overscroll-contain rounded-lg bg-linen/35 px-3 py-2 pr-4 [scrollbar-width:thin] dark:bg-white/[0.025]">
+            <p className="whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/80 dark:text-white/80">{media.transcript}</p>
+          </div>
         </details>
       ) : null}
     </div>
