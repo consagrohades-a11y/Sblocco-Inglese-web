@@ -3,9 +3,9 @@ import {
   ArrowLeft,
   ArrowRight,
   BarChart3,
+  BookMarked,
   BookOpen,
   ChevronDown,
-  ClipboardList,
   Dumbbell,
   GraduationCap,
   LayoutDashboard,
@@ -32,12 +32,11 @@ const publicItems = [
 ];
 
 const learnerItems = [
-  { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
-  { label: 'Esercizi', to: '/attivita/esercizi', icon: ClipboardList },
-  { label: 'Ripasso SRS', to: '/attivita/srs', icon: Dumbbell },
-  { label: 'Pratica mirata', to: '/attivita/pratica-mirata', icon: Target },
-  { label: 'Corsi', to: '/percorsi', icon: BookOpen },
-  { label: 'Progressi', to: '/progressi', icon: BarChart3 },
+  { label: 'Home', to: '/dashboard', icon: LayoutDashboard },
+  { label: 'Learn', to: '/attivita/esercizi', icon: BookOpen, activePrefixes: ['/assignments', '/exercises', '/percorsi'] },
+  { label: 'Review', to: '/attivita/srs', icon: Dumbbell, activePrefixes: ['/attivita/pratica-mirata'] },
+  { label: 'Vocabulary', to: '/vocab-bank', icon: BookMarked },
+  { label: 'Progress', to: '/progressi', icon: BarChart3 },
 ];
 
 const editorialHomeItems = [
@@ -249,11 +248,12 @@ export default function Navbar() {
 
         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex" aria-label={isLearner ? 'Navigazione studente' : 'Navigazione principale'}>
           {items.map((item) => {
-            const active = isRouteActive(location.pathname, item.to);
+            const active = isRouteActive(location.pathname, item.to)
+              || item.activePrefixes?.some((prefix) => location.pathname === prefix || location.pathname.startsWith(`${prefix}/`));
             return (
-              <NavLink key={item.to} to={item.to} className={`focus-ring relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'text-ink dark:text-white' : 'text-ink/70 hover:bg-ink/[0.05] hover:text-ink dark:text-white/80 dark:hover:bg-white/[0.05] dark:hover:text-white'}`}>
+              <NavLink key={item.to} to={item.to} className={`focus-ring relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'text-ink dark:text-[#f3eee7]' : 'text-ink/65 hover:bg-ink/[0.04] hover:text-ink dark:text-white/65 dark:hover:bg-white/[0.045] dark:hover:text-[#f3eee7]'}`}>
                 {item.label}
-                {active ? <span aria-hidden="true" className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-mint via-coral to-butter" /> : null}
+                {active ? <span aria-hidden="true" className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-coral" /> : null}
               </NavLink>
             );
           })}
@@ -262,7 +262,7 @@ export default function Navbar() {
         <div className="hidden shrink-0 items-center gap-2 xl:flex">
           {isLearner ? (
             learnerAction.to ? (
-              <Link to={learnerAction.to} className="focus-ring inline-flex h-10 items-center gap-2 rounded-full bg-moss px-4 text-sm font-extrabold text-white transition hover:-translate-y-px hover:bg-[#19947b]">
+              <Link to={learnerAction.to} className="focus-ring inline-flex h-10 items-center gap-2 rounded-full border border-ink/12 bg-white/70 px-4 text-sm font-extrabold text-ink transition hover:bg-white dark:border-white/10 dark:bg-white/[0.055] dark:text-[#f3eee7] dark:hover:bg-white/[0.09]">
                 <ArrowLeft aria-hidden="true" className="h-4 w-4" />
                 {learnerAction.label}
               </Link>
@@ -309,7 +309,7 @@ export default function Navbar() {
           <nav className="mx-auto grid max-w-lg gap-2" aria-label={isLearner ? 'Navigazione studente mobile' : 'Navigazione mobile'}>
             {isLearner ? (
               learnerAction.to ? (
-                <Link to={learnerAction.to} className="focus-ring mb-2 flex min-h-12 items-center gap-2 rounded-2xl bg-moss px-4 py-3 text-base font-black text-white">
+                <Link to={learnerAction.to} className="focus-ring mb-2 flex min-h-12 items-center gap-2 rounded-2xl border border-ink/12 bg-white px-4 py-3 text-base font-black text-ink dark:border-white/10 dark:bg-white/[0.06] dark:text-[#f3eee7]">
                   <ArrowLeft aria-hidden="true" className="h-5 w-5" />
                   {learnerAction.label}
                 </Link>
