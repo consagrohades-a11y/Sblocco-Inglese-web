@@ -579,4 +579,4 @@ begin
     raise exception 'Deleting a Studio folder did not safely return its activity to Unfiled.';
   end if;
 end;
-$;
+$$;
