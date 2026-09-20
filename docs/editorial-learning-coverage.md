@@ -93,3 +93,6 @@ for these high-risk representative surfaces:
 - one `/recupero-debito/*` learner page
 
 The PR remains draft until this visual gate is completed. Build/CI success validates architecture and CSS coverage, but should not be reported as pixel-level visual QA.
+
+
+<!-- preview-refresh: calm-learner-redesign -->
