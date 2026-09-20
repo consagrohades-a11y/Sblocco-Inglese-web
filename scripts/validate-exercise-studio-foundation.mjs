@@ -139,7 +139,7 @@ const raw = {
     },
     {
       type: 'written_response',
-      prompt: 'Write about one place you have visited and say when you went there.',
+      prompt: 'Read the transcript, then write about one place you have visited and say when you went there.',
       min_words: 40,
       max_words: 90,
       required_points: ['Name the place', 'Describe the experience', 'Say when you went'],
@@ -215,6 +215,13 @@ const mediaQuestion = preflight.runtime.exercise.sections[0].questions[7];
 assert.equal(mediaQuestion.content.presentation, 'media');
 assert.equal(mediaQuestion.content.media.source_type, 'audio');
 assert.equal(mediaQuestion.content.media.url, 'https://example.com/audio.mp3');
+
+const transcriptReferencedWriting = preflight.runtime.exercise.sections[0].questions[8];
+assert.equal(
+  transcriptReferencedWriting.content.transcript_reference,
+  true,
+  'Blocks that explicitly reference the transcript must compile with contextual transcript access.',
+);
 
 const wordOrderQuestion = preflight.runtime.exercise.sections[0].questions[6];
 assert.equal(wordOrderQuestion.content.shuffle_strategy, 'stable_attempt');
