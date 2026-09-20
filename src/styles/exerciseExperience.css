@@ -399,3 +399,23 @@
 .dark .exercise-inline-gap {
   background: rgba(255, 255, 255, 0.025) !important;
 }
+
+
+.learner-exercise-page {
+  background: #f8f4ee;
+  box-shadow: 0 0 0 100vmax #f8f4ee;
+  clip-path: inset(0 -100vmax);
+}
+
+.dark .learner-exercise-page {
+  background: #111513;
+  box-shadow: 0 0 0 100vmax #111513;
+}
+
+.dark .learner-exercise-page .exercise-progress-header {
+  border-color: rgba(243, 238, 231, 0.09);
+}
+
+.dark .learner-exercise-page .exercise-progress-header__meter > div {
+  background: rgba(243, 238, 231, 0.09);
+}
