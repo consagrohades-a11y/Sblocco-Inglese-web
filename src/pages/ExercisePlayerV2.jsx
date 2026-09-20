@@ -128,12 +128,12 @@ function Intro({ payload, assignmentId, onStart }) {
     0,
   );
   return (
-    <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
+    <section className="learner-exercise-page section-shell py-10 lg:py-14">
       <ExerciseCanvas>
       <div className="mx-auto max-w-4xl">
         <Link
           to={`/assignments/${assignmentId}`}
-          className="inline-flex items-center gap-2 text-sm font-black text-clay underline dark:text-[#f7a98d]"
+          className="inline-flex items-center gap-2 text-sm font-black text-clay underline underline-offset-4 dark:text-[#f0a27d]"
         >
           <ArrowLeft className="h-4 w-4" />
           Torna all’attività
@@ -249,7 +249,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
       : null;
 
   return (
-    <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
+    <section className="learner-exercise-page section-shell py-10 lg:py-14">
       <ExerciseCanvas>
       <div className="mx-auto max-w-4xl">
         <article className="exercise-activity p-7 sm:p-10">
@@ -799,14 +799,14 @@ export default function ExercisePlayerV2() {
         title={`${payload.exercise.title} | Sblocco Inglese`}
         description="Completa esercizio"
       />
-      <section className="section-shell py-7 dark:bg-surface-950 lg:py-10">
+      <section className="learner-exercise-page section-shell py-7 lg:py-10">
         <ExerciseCanvas>
         <div className="mx-auto max-w-5xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <button
               type="button"
               onClick={() => setShowIntro(true)}
-              className="inline-flex items-center gap-2 text-sm font-black text-clay underline dark:text-[#f7a98d]"
+              className="inline-flex items-center gap-2 text-sm font-black text-clay underline underline-offset-4 dark:text-[#f0a27d]"
             >
               <ArrowLeft className="h-4 w-4" />
               Panoramica
