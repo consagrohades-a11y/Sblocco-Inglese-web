@@ -220,35 +220,35 @@ export function EditorialTeachingBlock({ content = {}, prompt = '', instructions
           {content.entries.map((entry, index) => (
             <article
               key={`${entry?.term || 'vocab'}-${index}`}
-              className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035]"
+              className="overflow-hidden rounded-2xl border border-ink/10 bg-white/65 dark:border-white/10 dark:bg-white/[0.035]"
             >
-              <div className="border-b border-white/10 px-4 py-3 sm:px-5">
+              <div className="border-b border-ink/10 px-4 py-3 sm:px-5 dark:border-white/10">
                 <div className="flex items-start gap-3">
-                  <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full border border-orange-400/30 bg-orange-400/10 text-[0.62rem] font-black text-orange-300">
+                  <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full border border-orange-400/30 bg-orange-400/10 text-[0.62rem] font-black text-orange-700 dark:text-orange-300">
                     {index + 1}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-[0.62rem] font-black uppercase tracking-[0.12em] text-orange-300">Word / chunk</p>
-                    <p className="mt-1 text-base font-black leading-6 text-white">{entry?.term || '—'}</p>
+                    <p className="text-[0.62rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">Word / chunk</p>
+                    <p className="mt-1 text-base font-black leading-6 text-ink dark:text-white">{entry?.term || '—'}</p>
                   </div>
                 </div>
               </div>
 
               <div className="grid gap-0 sm:grid-cols-[minmax(0,1fr)_minmax(180px,0.72fr)]">
-                <div className="min-w-0 border-b border-white/10 px-4 py-3 sm:border-b-0 sm:border-r sm:px-5">
-                  <p className="text-[0.62rem] font-black uppercase tracking-[0.1em] text-white/40">Meaning</p>
-                  <p className="mt-1.5 text-sm font-semibold leading-6 text-white/80">{entry?.meaning || '—'}</p>
+                <div className="min-w-0 border-b border-ink/10 px-4 py-3 sm:border-b-0 sm:border-r sm:border-ink/10 sm:px-5 dark:border-white/10">
+                  <p className="text-[0.62rem] font-black uppercase tracking-[0.1em] text-ink/45 dark:text-white/40">Meaning</p>
+                  <p className="mt-1.5 text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">{entry?.meaning || '—'}</p>
                 </div>
                 <div className="min-w-0 px-4 py-3 sm:px-5">
-                  <p className="text-[0.62rem] font-black uppercase tracking-[0.1em] text-orange-300/80">Italian support</p>
-                  <p className="mt-1.5 text-sm font-bold leading-6 text-white/75">{entry?.translation || '—'}</p>
+                  <p className="text-[0.62rem] font-black uppercase tracking-[0.1em] text-sky-700 dark:text-sky-300">Italian support</p>
+                  <p className="mt-1.5 text-sm font-bold leading-6 text-ink/75 dark:text-white/75">{entry?.translation || '—'}</p>
                 </div>
               </div>
 
               {entry?.example ? (
-                <div className="border-t border-white/10 bg-black/10 px-4 py-3 sm:px-5">
-                  <p className="text-[0.62rem] font-black uppercase tracking-[0.1em] text-white/35">Example</p>
-                  <p className="mt-1.5 border-l-2 border-orange-400/60 pl-3 text-sm font-semibold italic leading-6 text-white/70">
+                <div className="border-t border-ink/10 bg-linen/55 px-4 py-3 sm:px-5 dark:border-white/10 dark:bg-black/10">
+                  <p className="text-[0.62rem] font-black uppercase tracking-[0.1em] text-ink/40 dark:text-white/35">Example</p>
+                  <p className="mt-1.5 border-l-2 border-orange-400/60 pl-3 text-sm font-semibold italic leading-6 text-ink/70 dark:text-white/70">
                     {entry.example}
                   </p>
                 </div>
