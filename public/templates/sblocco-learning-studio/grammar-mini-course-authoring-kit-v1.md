@@ -394,7 +394,48 @@ Rules:
 
 ---
 
-## 14. gap_fill
+## 14. open_answer_set
+
+Use when several short open-answer or translation items share the same instruction.
+
+```json
+{
+  "type": "open_answer_set",
+  "title": "Translate naturally",
+  "prompt": "Translate each sentence into natural English.",
+  "instructions": "Write one answer for every item.",
+  "items": [
+    {
+      "prompt": "Non posso rimandarlo ancora.",
+      "accepted_answers": [
+        "I can't put it off any longer.",
+        "I cannot put it off any longer."
+      ],
+      "feedback": "Put off means postpone."
+    },
+    {
+      "prompt": "È più probabile che succeda sotto pressione.",
+      "accepted_answers": [
+        "It's more likely to happen under pressure.",
+        "It is more likely to happen under pressure."
+      ]
+    }
+  ]
+}
+```
+
+Rules:
+- use one shared task/instruction for the whole set;
+- include at least two items;
+- every item needs a prompt and at least one accepted answer;
+- add natural variants when more than one form should count as correct;
+- do not add item keys;
+- keep item-level feedback short and explanatory;
+- use the single Open Answer / Translation block when only one response is needed.
+
+---
+
+## 15. gap_fill
 
 Use `[[blank_1]]`, `[[blank_2]]`, etc. inside `text_template`.
 Do not create gap IDs/keys separately; Sblocco will generate them in order.
@@ -415,7 +456,7 @@ Every blank needs at least one accepted answer.
 
 ---
 
-## 15. word_order
+## 16. word_order
 
 Provide chunks in the **correct order**. Sblocco randomises their learner-facing starting order and keeps it stable within an attempt.
 
@@ -439,7 +480,7 @@ Keep multiword units together when pedagogically useful.
 
 ---
 
-## 16. written_response
+## 17. written_response
 
 This is manually reviewed. Do not pretend there is one exact automatic answer.
 
@@ -461,7 +502,7 @@ This is manually reviewed. Do not pretend there is one exact automatic answer.
 
 ---
 
-## 17. media
+## 18. media
 
 Use for audio, direct video or YouTube.
 
@@ -500,6 +541,7 @@ Before returning the JSON, silently check:
 - no diagnostic codes;
 - every multiple-choice block has exactly one correct answer;
 - every multiple-choice set has one shared task and every item has exactly one correct answer;
+- every open-answer set has one shared task and every item has at least one accepted answer;
 - every gap has accepted answers;
 - every word-order task has at least two chunks in correct order;
 - every writing task has a meaningful open prompt;
