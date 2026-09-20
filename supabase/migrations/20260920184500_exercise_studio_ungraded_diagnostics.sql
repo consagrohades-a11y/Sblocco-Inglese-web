@@ -62,4 +62,31 @@ begin
 end;
 $$;
 
+do $
+declare
+  v_definition text;
+begin
+  select pg_get_functiondef('public.assert_exercise_builder_question_version_publishable(uuid)'::regprocedure)
+    into v_definition;
+
+  if position(
+    'if v_version.question_type in (''content_block'', ''practice_selection'') then return; end if;'
+    in v_definition
+  ) = 0 then
+    if position(
+      'if v_version.question_type = ''content_block'' then return; end if;'
+      in v_definition
+    ) = 0 then
+      raise exception 'Unexpected assert_exercise_builder_question_version_publishable definition.';
+    end if;
+
+    execute replace(
+      v_definition,
+      'if v_version.question_type = ''content_block'' then return; end if;',
+      'if v_version.question_type in (''content_block'', ''practice_selection'') then return; end if;'
+    );
+  end if;
+end;
+$;
+
 notify pgrst, 'reload schema';
