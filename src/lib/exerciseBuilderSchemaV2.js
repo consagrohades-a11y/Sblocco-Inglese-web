@@ -172,7 +172,14 @@ function normalizeReadingItem(rawItem, index, errors, path) {
 
   const acceptedAnswers = stringArray(rawItem?.accepted_answers || rawItem?.answers);
   if (!acceptedAnswers.length) errors.push(pathMessage(path, 'accepted_answers obbligatorio.'));
-  return { key, type, prompt, points, accepted_answers: acceptedAnswers };
+  return {
+    key,
+    type,
+    prompt,
+    points,
+    accepted_answers: acceptedAnswers,
+    feedback: text(rawItem?.feedback) || null,
+  };
 }
 
 function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
