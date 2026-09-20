@@ -96,10 +96,9 @@ function LongTextEditor({ label, value, onChange, hint = '', placeholder = '' })
         value={textValue}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        rows={expanded ? 24 : 10}
-        className={`focus-ring w-full min-w-0 resize-y rounded-2xl border border-ink/10 bg-white px-3.5 py-3 text-sm font-semibold leading-6 normal-case tracking-normal text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-white ${expanded ? 'min-h-[34rem]' : 'min-h-56'}`}
+        className={`focus-ring w-full min-w-0 resize-none overflow-y-auto overscroll-contain rounded-2xl border border-ink/10 bg-white px-3.5 py-3 text-sm font-semibold leading-6 normal-case tracking-normal text-ink shadow-sm [scrollbar-width:thin] dark:border-white/10 dark:bg-white/[0.05] dark:text-white ${expanded ? 'h-[32rem]' : 'h-64'}`}
       />
-      <p className="text-[0.7rem] font-semibold leading-5 text-ink/40 dark:text-white/40">The full text is stored. The editor never intentionally shortens the transcript.</p>
+      <p className="text-[0.7rem] font-semibold leading-5 text-ink/40 dark:text-white/40">Scroll inside the transcript field. The full text remains stored.</p>
     </div>
   );
 }
