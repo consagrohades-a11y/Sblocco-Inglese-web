@@ -67,8 +67,7 @@ begin
     id,
     name,
     created_by,
-    updated_by,
-    folder_id
+    updated_by
   ) values (
     v_folder_id,
     'Studio CI Folder',
@@ -88,7 +87,8 @@ begin
     schema_version,
     document,
     created_by,
-    updated_by
+    updated_by,
+    folder_id
   ) values (
     v_draft_id,
     'Studio end-to-end smoke',
