@@ -12,6 +12,12 @@ create table if not exists public.exercise_studio_folders (
 create unique index if not exists exercise_studio_folders_name_unique_ci
   on public.exercise_studio_folders (lower(btrim(name)));
 
+create index if not exists exercise_studio_folders_created_by_idx
+  on public.exercise_studio_folders (created_by);
+
+create index if not exists exercise_studio_folders_updated_by_idx
+  on public.exercise_studio_folders (updated_by);
+
 alter table public.exercise_studio_folders enable row level security;
 
 drop policy if exists exercise_studio_folders_admin_all on public.exercise_studio_folders;
