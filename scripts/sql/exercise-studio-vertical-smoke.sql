@@ -45,6 +45,7 @@ declare
   v_group_id uuid := gen_random_uuid();
   v_group_assign jsonb;
   v_group_batch_id uuid;
+  v_folder_id uuid := gen_random_uuid();
 begin
   v_document := jsonb_build_object(
     'schema_version', 1,
@@ -60,6 +61,19 @@ begin
       jsonb_build_object('id', 'block_vocab', 'type', 'vocabulary'),
       jsonb_build_object('id', 'block_writing', 'type', 'written_response')
     )
+  );
+
+  insert into public.exercise_studio_folders (
+    id,
+    name,
+    created_by,
+    updated_by,
+    folder_id
+  ) values (
+    v_folder_id,
+    'Studio CI Folder',
+    auth.uid(),
+    auth.uid()
   );
 
   insert into public.exercise_studio_drafts (
@@ -87,8 +101,18 @@ begin
     1,
     v_document,
     auth.uid(),
-    auth.uid()
+    auth.uid(),
+    v_folder_id
   );
+
+  if not exists (
+    select 1
+    from public.exercise_studio_drafts
+    where id = v_draft_id
+      and folder_id = v_folder_id
+  ) then
+    raise exception 'Studio folder did not attach to the draft.';
+  end if;
 
   v_runtime := jsonb_build_object(
     'schema_version', 2,
@@ -542,5 +566,17 @@ begin
   ) <> 2 then
     raise exception 'Studio group Quick Assign did not pin the same published version for each learner.';
   end if;
+
+  delete from public.exercise_studio_folders
+  where id = v_folder_id;
+
+  if not exists (
+    select 1
+    from public.exercise_studio_drafts
+    where id = v_draft_id
+      and folder_id is null
+  ) then
+    raise exception 'Deleting a Studio folder did not safely return its activity to Unfiled.';
+  end if;
 end;
-$$;
+$;
