@@ -76,6 +76,14 @@ function blockSummary(block) {
   return 'Untitled block';
 }
 
+function transcriptBeforeBlock(blocks, index) {
+  for (let current = index - 1; current >= 0; current -= 1) {
+    const block = blocks[current];
+    if (block?.type === 'media' && String(block.transcript || '').trim()) return block.transcript;
+  }
+  return '';
+}
+
 function PreviewBlock({ block, document, index, total, selected, onSelect }) {
   let question = null;
   let previewError = '';
@@ -127,6 +135,7 @@ function PreviewBlock({ block, document, index, total, selected, onSelect }) {
             showScore={false}
             showCorrectAnswers={false}
             showExplanations={false}
+            referencedTranscript={transcriptBeforeBlock(document.blocks || [], index)}
           />
         </ExerciseActivity>
       ) : (
