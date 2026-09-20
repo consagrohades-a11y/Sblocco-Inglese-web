@@ -5,6 +5,7 @@ import ExerciseQuestionRendererV2 from './ExerciseQuestionRendererV2.jsx';
 import ExerciseMediaBlock from './ExerciseMediaBlock.jsx';
 import ListeningComprehensionQuestion from './ListeningComprehensionQuestion.jsx';
 import SafeTeachingContent from './SafeTeachingContent.jsx';
+import TranscriptReferencePanel from './TranscriptReferencePanel.jsx';
 
 // Compatibility entry point for existing player and admin imports.
 // Legacy one-body teaching blocks keep their established editorial treatment.
@@ -12,13 +13,17 @@ import SafeTeachingContent from './SafeTeachingContent.jsx';
 // semantic renderers so admin preview and learner delivery stay aligned.
 export default function ExerciseQuestionRenderer(props) {
   const question = props.item?.question || {};
+  const transcriptPanel = question.content?.transcript_reference && props.referencedTranscript
+    ? <TranscriptReferencePanel transcript={props.referencedTranscript} />
+    : null;
+  const wrap = (content) => <>{transcriptPanel}{content}</>;
 
   if (question.type === 'content_block' && question.content?.presentation === 'media') {
-    return <ExerciseMediaBlock content={question.content || {}} prompt={question.prompt || ''} instructions={question.instructions || ''} disabled={props.disabled} />;
+    return wrap(<ExerciseMediaBlock content={question.content || {}} prompt={question.prompt || ''} instructions={question.instructions || ''} disabled={props.disabled} />);
   }
 
   if (question.type === 'content_block' && !isStructuredEducationalContent(question.content)) {
-    return (
+    return wrap(
       <EditorialTeachingBlock
         content={question.content || {}}
         prompt={question.prompt || ''}
@@ -33,8 +38,8 @@ export default function ExerciseQuestionRenderer(props) {
   }
 
   if (question.type === 'listening_comprehension') {
-    return <ListeningComprehensionQuestion {...props} />;
+    return wrap(<ListeningComprehensionQuestion {...props} />);
   }
 
-  return <ExerciseQuestionRendererV2 {...props} />;
+  return wrap(<ExerciseQuestionRendererV2 {...props} />);
 }
