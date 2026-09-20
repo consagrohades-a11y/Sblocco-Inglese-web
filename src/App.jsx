@@ -90,6 +90,7 @@ const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDeta
 const LearnerCollectionPath = lazy(() => import('./pages/LearnerCollectionPath'));
 const LearnerProgress = lazy(() => import('./pages/LearnerProgress'));
 const LearnerHome = lazy(() => import('./pages/LearnerHome'));
+const LearnerVocabularyBank = lazy(() => import('./pages/LearnerVocabularyBank'));
 const RecoveryDiagnostic = lazy(() => import('./pages/RecoveryDiagnostic'));
 const RecoveryLandingPage = lazy(() => import('./pages/RecoveryLandingPage'));
 const RecoveryOnboarding = lazy(() => import('./pages/RecoveryOnboarding'));
@@ -227,6 +228,7 @@ export default function App() {
             <Route path="/attivita/pratica-mirata" element={<ProtectedRoute><LearnerAssignments initialArea="practice" /></ProtectedRoute>} />
             <Route path="/assignments/:assignmentId" element={<ProtectedRoute><LearnerAssignmentDetail /></ProtectedRoute>} />
             <Route path="/progressi" element={<ProtectedRoute><LearnerProgress /></ProtectedRoute>} />
+            <Route path="/vocab-bank" element={<ProtectedRoute><LearnerVocabularyBank /></ProtectedRoute>} />
             <Route path="/admin" element={<AdminRoute><AdminShell /></AdminRoute>}>
               <Route index element={<AdminDashboard />} />
               <Route path="learners" element={<AdminLearners />} />
