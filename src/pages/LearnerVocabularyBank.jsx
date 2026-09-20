@@ -19,7 +19,7 @@ const EMPTY_FORM = {
 };
 
 function inputClass() {
-  return 'focus-ring w-full rounded-xl border border-ink/10 bg-white px-3.5 py-3 text-sm font-semibold text-ink shadow-sm outline-none placeholder:text-ink/35 dark:border-white/10 dark:bg-surface-900 dark:text-white dark:placeholder:text-white/35';
+  return 'focus-ring w-full rounded-xl border border-ink/10 bg-white px-3.5 py-3 text-sm font-semibold text-ink shadow-sm outline-none placeholder:text-ink/35 dark:border-white/10 dark:bg-[#181d1a] dark:text-white dark:placeholder:text-white/35';
 }
 
 export default function LearnerVocabularyBank() {
@@ -84,7 +84,7 @@ export default function LearnerVocabularyBank() {
   }
 
   return (
-    <div className="min-h-screen bg-paper px-4 py-8 text-ink dark:bg-surface-950 dark:text-white sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#f8f4ee] px-4 py-8 text-ink dark:bg-[#111513] dark:text-[#f3eee7] sm:px-6 lg:px-8">
       <SEO title="Word & Chunk Bank | Sblocco Inglese" description="Le parole e i chunk incontrati nelle tue attività Sblocco Inglese." />
 
       <div className="mx-auto max-w-7xl">
@@ -92,7 +92,7 @@ export default function LearnerVocabularyBank() {
           <ArrowLeft className="h-4 w-4" /> Dashboard
         </Link>
 
-        <header className="relative mt-6 overflow-hidden rounded-[2.25rem] border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/[0.035] sm:p-8">
+        <header className="relative mt-6 overflow-hidden rounded-[2.25rem] border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#181d1a] sm:p-8">
           <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-orange-100/70 blur-3xl dark:bg-orange-300/[0.07]" />
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
@@ -120,7 +120,7 @@ export default function LearnerVocabularyBank() {
         </header>
 
         {addOpen ? (
-          <section className="mt-5 overflow-hidden rounded-[2rem] border border-orange-200 bg-[#fffaf3] shadow-sm dark:border-orange-300/15 dark:bg-orange-300/[0.035]">
+          <section className="mt-5 overflow-hidden rounded-[2rem] border border-orange-200 bg-[#fffaf3] shadow-sm dark:border-orange-300/15 dark:bg-[#181d1a]">
             <div className="border-b border-orange-200/70 px-5 py-4 dark:border-orange-300/10 sm:px-6">
               <div className="flex items-start gap-3">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-orange-500 text-white dark:text-surface-950">
@@ -173,7 +173,7 @@ export default function LearnerVocabularyBank() {
                 </label>
 
                 <label>
-                  <span className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-sky-700 dark:text-sky-300">Italian support</span>
+                  <span className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700/75 dark:text-orange-300/75">Italian support</span>
                   <input
                     value={form.italianSupport}
                     onChange={(event) => setForm((current) => ({ ...current, italianSupport: event.target.value }))}
