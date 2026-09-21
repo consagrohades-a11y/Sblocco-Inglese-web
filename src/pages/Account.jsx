@@ -187,7 +187,7 @@ export default function Account() {
     try {
       await refreshProfile(user);
     } catch {
-      setError('L avatar è stato salvato, ma il profilo non si è aggiornato correttamente. Ricarica la pagina.');
+      setError("L'avatar è stato salvato, ma il profilo non si è aggiornato correttamente. Ricarica la pagina.");
     } finally {
       setAvatarSaving('');
     }
