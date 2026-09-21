@@ -47,6 +47,8 @@ declare
   v_group_assign jsonb;
   v_group_batch_id uuid;
   v_folder_id uuid := gen_random_uuid();
+  v_child_folder_id uuid := gen_random_uuid();
+  v_cycle_rejected boolean := false;
 begin
   v_document := jsonb_build_object(
     'schema_version', 1,
@@ -68,14 +70,61 @@ begin
   insert into public.exercise_studio_folders (
     id,
     name,
+    color_key,
     created_by,
     updated_by
   ) values (
     v_folder_id,
     'Studio CI Folder',
+    'orange',
     auth.uid(),
     auth.uid()
   );
+
+  insert into public.exercise_studio_folders (
+    id,
+    name,
+    parent_id,
+    color_key,
+    created_by,
+    updated_by
+  ) values (
+    v_child_folder_id,
+    'Studio CI Child Folder',
+    v_folder_id,
+    'blue',
+    auth.uid(),
+    auth.uid()
+  );
+
+  if not exists (
+    select 1
+    from public.exercise_studio_folders parent
+    join public.exercise_studio_folders child on child.parent_id = parent.id
+    where parent.id = v_folder_id
+      and parent.color_key = 'orange'
+      and child.id = v_child_folder_id
+      and child.color_key = 'blue'
+  ) then
+    raise exception 'Studio nested folder metadata did not persist.';
+  end if;
+
+  begin
+    update public.exercise_studio_folders
+    set parent_id = v_child_folder_id
+    where id = v_folder_id;
+  exception
+    when others then
+      if sqlerrm like 'A Studio folder cannot be moved inside one of its descendants.%' then
+        v_cycle_rejected := true;
+      else
+        raise;
+      end if;
+  end;
+
+  if not v_cycle_rejected then
+    raise exception 'Studio folder cycle guard did not reject a parent-to-descendant move.';
+  end if;
 
   insert into public.exercise_studio_drafts (
     id,
@@ -653,5 +702,18 @@ begin
   ) then
     raise exception 'Deleting a Studio folder did not safely return its activity to Unfiled.';
   end if;
+
+  if not exists (
+    select 1
+    from public.exercise_studio_folders
+    where id = v_child_folder_id
+      and parent_id is null
+      and color_key = 'blue'
+  ) then
+    raise exception 'Deleting a Studio parent folder did not safely return its child folder to the Library root.';
+  end if;
+
+  delete from public.exercise_studio_folders
+  where id = v_child_folder_id;
 end;
 $$;
