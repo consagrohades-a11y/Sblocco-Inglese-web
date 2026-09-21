@@ -27,24 +27,32 @@ set role = excluded.role,
 
 select set_config('app.test_uid', '00000000-0000-0000-0000-000000000001', false);
 
-do $$
+-- Create one learner only after the admin profile exists. This mirrors a real
+-- registration and verifies the profile trigger rather than relying on seed order.
+insert into auth.users (id, email, raw_user_meta_data)
+values (
+  '00000000-0000-0000-0000-000000000004',
+  'studio-signup-notification@example.test',
+  jsonb_build_object('display_name', 'Studio Signup Learner')
+)
+on conflict (id) do nothing;
+
+do $
 begin
-  if (
-    select count(*)
+  if not exists (
+    select 1
     from public.teacher_notifications
     where teacher_id = '00000000-0000-0000-0000-000000000001'::uuid
       and notification_type = 'learner_signed_up'
-      and related_learner_id in (
-        '00000000-0000-0000-0000-000000000002'::uuid,
-        '00000000-0000-0000-0000-000000000003'::uuid
-      )
-  ) <> 2 then
-    raise exception 'Learner signup did not create teacher notifications.';
+      and related_learner_id = '00000000-0000-0000-0000-000000000004'::uuid
+      and route = '/admin/learners/00000000-0000-0000-0000-000000000004'
+  ) then
+    raise exception 'Learner signup did not create a teacher notification.';
   end if;
 end;
-$$;
+$;
 
-do $$
+do $
 declare
   v_draft_id uuid := gen_random_uuid();
   v_document jsonb;
