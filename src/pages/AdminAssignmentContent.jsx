@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
+import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import AssignmentCollectionPicker from '../components/admin/AssignmentCollectionPicker.jsx';
 import AssignmentExercisePicker from '../components/admin/AssignmentExercisePicker.jsx';
 import AssignmentPracticeEditor, { DEFAULT_ASSIGNMENT_PRACTICE } from '../components/admin/AssignmentPracticeEditor.jsx';
@@ -250,35 +251,35 @@ export default function AdminAssignmentContent() {
     setSuccess((nextStatus === 'published' ? 'Assegnazione pubblicata.' : nextStatus === 'archived' ? 'Assegnazione archiviata.' : nextStatus === 'draft' ? 'Assegnazione riportata in bozza.' : 'Modifiche salvate.') + groupSuffix);
   }
 
-  const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
+  const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-clay focus:ring-4 focus:ring-clay/10 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-coral dark:focus:ring-coral/10';
 
   return (
     <>
       <SEO title="Gestisci assegnazione | Sblocco Inglese" description="Modifica, completa e pubblica un’assegnazione." />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-6xl">
-          <div className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 shadow-soft sm:p-8">
-            <span className="eyebrow">Assegnazione</span>
-            <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">Gestisci assegnazione</h1>
-                <div className="mt-3 flex flex-wrap gap-2 text-xs font-black">
-                  {assignment ? <span className="rounded-full bg-linen px-3 py-1.5 text-ink dark:bg-white/10 dark:text-white">Stato: {assignment.status}</span> : null}
-                  {isOverdue ? <span className="rounded-full bg-red-100 px-3 py-1.5 text-red-800">Scaduta</span> : null}
-                </div>
-              </div>
-              <Link to={`/admin/learners/${learnerId}`} className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white dark:border-white/20 dark:bg-white/10 dark:text-white px-5 py-2.5 text-sm font-black text-ink hover:bg-linen dark:hover:bg-white/15">Torna allo studente</Link>
-            </div>
-          </div>
+          <AdminPageHeader
+            eyebrow="Assegnazioni"
+            title="Gestisci assegnazione"
+            description={assignment ? `Stato: ${assignment.status}${isOverdue ? ' · scaduta' : ''}` : 'Caricamento assegnazione...'}
+            actions={(
+              <Link
+                to={`/admin/learners/${learnerId}`}
+                className="focus-ring inline-flex min-h-10 items-center justify-center rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink transition hover:border-clay/35 hover:text-clay dark:border-white/15 dark:bg-white/[0.06] dark:text-white"
+              >
+                Profilo studente
+              </Link>
+            )}
+          />
 
           {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 text-sm font-bold text-ink/65 dark:text-white/60">Caricamento...</div> : null}
           {error ? <div className="mt-6 border-l-4 border-red-400 bg-red-50 p-5 text-sm font-bold text-red-900">{error}</div> : null}
-          {success ? <div className="mt-6 border-l-4 border-moss bg-mint/30 p-5 text-sm font-bold text-ink dark:bg-emerald-400/10 dark:text-emerald-100">{success}</div> : null}
+          {success ? <div className="mt-6 border-l-4 border-clay bg-clay/[0.08] p-5 text-sm font-bold text-ink dark:bg-coral/10 dark:text-white">{success}</div> : null}
 
           {!loading && assignment ? (
             <div className="mt-6 grid gap-6">
               <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 shadow-sm sm:p-8">
-                <p className="text-xs font-bold uppercase tracking-wide text-moss">Dati e messaggi</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-clay">Dati e messaggi</p>
                 <div className="mt-5 grid gap-5">
                   <label><span className="text-sm font-black">Titolo</span><input value={title} onChange={(e) => setTitle(e.target.value)} className={fieldClass} /></label>
                   <label><span className="text-sm font-black">Messaggio visibile allo studente</span><textarea rows={5} value={learnerMessage} onChange={(e) => setLearnerMessage(e.target.value)} className={fieldClass} /></label>
@@ -291,8 +292,8 @@ export default function AdminAssignmentContent() {
                 </div>
               </section>
 
-              <section className="grid gap-4 rounded-3xl border border-emerald-200 bg-emerald-50/35 p-4 dark:border-emerald-300/20 dark:bg-emerald-300/[0.04] sm:p-6">
-                <div><p className="text-xs font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">Ripasso SRS</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Card programmate nel tempo</h2><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Il sistema decide quando ripresentare le card selezionate.</p></div>
+              <section className="grid gap-4 rounded-3xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-white/[0.035] sm:p-6">
+                <div><p className="text-xs font-bold uppercase tracking-wide text-clay dark:text-coral">Ripasso SRS</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Card programmate nel tempo</h2><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Il sistema decide quando ripresentare le card selezionate.</p></div>
                 <AssignmentStudyScopeEditor
                   enabled={studyEnabled}
                   onEnabledChange={setStudyEnabled}
@@ -304,8 +305,8 @@ export default function AdminAssignmentContent() {
                 />
               </section>
 
-              <section className="grid gap-4 rounded-3xl border border-coral/25 bg-blush/35 p-4 dark:border-coral/20 dark:bg-coral/[0.04] sm:p-6">
-                <div><p className="text-xs font-bold uppercase tracking-wide text-coral dark:text-[#ff9b7d]">Pratica mirata</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Quiz sulle parole scelte da te</h2><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Seleziona deck, filtri e modalità. Questa attività non modifica la programmazione SRS.</p></div>
+              <section className="grid gap-4 rounded-3xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-white/[0.035] sm:p-6">
+                <div><p className="text-xs font-bold uppercase tracking-wide text-clay dark:text-coral">Pratica mirata</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Quiz sulle parole scelte da te</h2><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Seleziona deck, filtri e modalità. Questa attività non modifica la programmazione SRS.</p></div>
                 <AssignmentPracticeEditor
                   enabled={practiceEnabled}
                   onEnabledChange={setPracticeEnabled}
@@ -315,33 +316,33 @@ export default function AdminAssignmentContent() {
                 />
               </section>
 
-              <section className="grid gap-4 rounded-3xl border border-violet-200 bg-violet-50/35 p-4 dark:border-violet-300/20 dark:bg-violet-300/[0.04] sm:p-6">
-                <div><p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">Esercizi</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Exercise Builder e raccolte</h2><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Attività strutturate con punteggio, correzioni e feedback.</p></div>
+              <section className="grid gap-4 rounded-3xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-white/[0.035] sm:p-6">
+                <div><p className="text-xs font-bold uppercase tracking-wide text-clay dark:text-coral">Esercizi</p><h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Exercise Builder e raccolte</h2><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Attività strutturate con punteggio, correzioni e feedback.</p></div>
                 <AssignmentExercisePicker value={selectedExerciseResources} onChange={setSelectedExerciseResources} />
                 <AssignmentCollectionPicker value={selectedCollectionResources} onChange={setSelectedCollectionResources} />
               </section>
 
               <div className="grid gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.65fr)]">
                 <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 shadow-sm">
-                  <p className="text-xs font-bold uppercase tracking-wide text-moss">Contenuti</p>
+                  <p className="text-xs font-bold uppercase tracking-wide text-clay">Contenuti</p>
                   <h2 className="mt-2 text-2xl font-black text-ink dark:text-white">Attività disponibili</h2>
                   <div className="mt-6 grid gap-4 sm:grid-cols-2">
                     {assignmentActivityCatalog.map((activity) => {
                       const selected = selectedKeys.includes(activity.key);
-                      return <button key={activity.key} type="button" onClick={() => toggleActivity(activity.key)} className={`focus-ring rounded-xl border p-4 text-left transition ${selected ? 'border-moss bg-mint/30 dark:border-emerald-300/40 dark:bg-emerald-400/15' : 'border-ink/10 bg-white hover:bg-linen/45 dark:border-white/10 dark:bg-white/[0.05] dark:hover:bg-white/10'}`}><span className="text-xs font-bold uppercase tracking-wide text-moss">{activity.type === 'trainer' ? 'Trainer' : 'Unità grammaticale'}</span><h3 className="mt-2 text-base font-black text-ink dark:text-white">{activity.title}</h3><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">{activity.description}</p><span className="mt-4 inline-flex text-sm font-black text-moss">{selected ? 'Selezionata' : 'Aggiungi'}</span></button>;
+                      return <button key={activity.key} type="button" onClick={() => toggleActivity(activity.key)} className={`focus-ring rounded-xl border p-4 text-left transition ${selected ? 'border-moss bg-mint/30 dark:border-emerald-300/40 dark:bg-emerald-400/15' : 'border-ink/10 bg-white hover:bg-linen/45 dark:border-white/10 dark:bg-white/[0.05] dark:hover:bg-white/10'}`}><span className="text-xs font-bold uppercase tracking-wide text-clay">{activity.type === 'trainer' ? 'Trainer' : 'Unità grammaticale'}</span><h3 className="mt-2 text-base font-black text-ink dark:text-white">{activity.title}</h3><p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">{activity.description}</p><span className="mt-4 inline-flex text-sm font-black text-clay">{selected ? 'Selezionata' : 'Aggiungi'}</span></button>;
                     })}
                   </div>
                 </section>
 
                 <aside className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 lg:sticky lg:top-24 lg:self-start">
                   <div className="flex items-end justify-between gap-3">
-                    <div><p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Anteprima struttura</p><h2 className="mt-1 text-lg font-black text-ink dark:text-white">Contenuti selezionati</h2></div>
+                    <div><p className="text-xs font-bold uppercase tracking-wide text-clay dark:text-emerald-300">Anteprima struttura</p><h2 className="mt-1 text-lg font-black text-ink dark:text-white">Contenuti selezionati</h2></div>
                     <span className="rounded-full bg-linen px-2.5 py-1 text-xs font-black text-ink/65 dark:bg-white/10 dark:text-white/65">{selectedStructureCount}</span>
                   </div>
                   {selectedStructureCount === 0 ? <p className="mt-4 text-sm leading-6 text-ink/60 dark:text-white/60">Nessun contenuto selezionato.</p> : (
                     <div className="mt-3 divide-y divide-ink/10 border-y border-ink/10 dark:divide-white/10 dark:border-white/10">
                       {studyEnabled ? <div className="flex gap-3 py-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-sea/15 text-xs font-black text-sea">SRS</span><div><p className="text-sm font-black text-ink dark:text-white">Percorso guidato</p><p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">{resolvedItemIds.length} card selezionate</p></div></div> : null}
-                      {practiceEnabled ? <div className="flex gap-3 py-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mint text-xs font-black text-moss">P</span><div><p className="text-sm font-black text-ink dark:text-white">Pratica mirata</p><p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">{practiceConfig.question_count} domande, {practiceConfig.modes.length} tipi di esercizio</p></div></div> : null}
+                      {practiceEnabled ? <div className="flex gap-3 py-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mint text-xs font-black text-clay">P</span><div><p className="text-sm font-black text-ink dark:text-white">Pratica mirata</p><p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">{practiceConfig.question_count} domande, {practiceConfig.modes.length} tipi di esercizio</p></div></div> : null}
                       {selectedExerciseResources.map((resource) => <div key={resource.key} className="flex gap-3 py-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-violet-100 text-xs font-black text-violet-800 dark:bg-violet-300/15 dark:text-violet-200">EX</span><div><p className="text-sm font-black text-ink dark:text-white">{resource.title}</p><p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">Exercise Builder · punteggio minimo {resource.exercise_config?.required_score ?? 70}%</p></div></div>)}
                       {selectedCollectionResources.map((resource) => <div key={resource.collectionVersionId} className="flex gap-3 py-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-cyan-100 text-[0.65rem] font-black text-cyan-800 dark:bg-cyan-300/15 dark:text-cyan-200">COL</span><div><p className="text-sm font-black text-ink dark:text-white">{resource.title}</p><p className="mt-1 text-xs font-semibold text-ink/65 dark:text-white/65">Versione {resource.versionNumber} · {resource.itemCount} tappe · snapshot stabile</p></div></div>)}
                       {selectedActivities.map((activity, index) => (
@@ -363,7 +364,7 @@ export default function AdminAssignmentContent() {
               </div>
 
               <section className="rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 shadow-sm">
-                <p className="text-xs font-bold uppercase tracking-wide text-moss">Azioni</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-clay">Azioni</p>
                 <div className="mt-4 flex flex-wrap gap-3">
                   <button type="button" disabled={saving} onClick={() => save(null)} className="rounded-full border border-ink/15 bg-white dark:border-white/20 dark:bg-white/10 dark:text-white px-5 py-3 text-sm font-black">{saving ? 'Salvataggio...' : 'Salva modifiche'}</button>
                   {assignment.status !== 'published' ? <button type="button" disabled={saving} onClick={() => save('published')} className="rounded-full bg-ink px-5 py-3 text-sm font-black text-white">Pubblica</button> : <button type="button" disabled={saving} onClick={() => save('draft')} className="rounded-full border border-ink/15 bg-white dark:border-white/20 dark:bg-white/10 dark:text-white px-5 py-3 text-sm font-black">Riporta in bozza</button>}
