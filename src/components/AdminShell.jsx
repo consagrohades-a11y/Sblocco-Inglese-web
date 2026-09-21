@@ -24,6 +24,7 @@ import {
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import BrandLogo from './BrandLogo';
 import ThemeToggle from './ThemeToggle';
+import AdminNotificationBell from './admin/AdminNotificationBell.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 
 const navigationGroups = [
@@ -318,6 +319,7 @@ export default function AdminShell() {
         <div className={`border-t border-white/10 ${collapsed ? 'grid justify-items-center gap-2 p-2' : 'p-3'}`}>
           {collapsed ? (
             <>
+              <AdminNotificationBell compact onNavigate={() => setMobileOpen(false)} />
               <ThemeToggle />
               <Link
                 to="/account"
@@ -337,7 +339,8 @@ export default function AdminShell() {
                 </div>
                 <ThemeToggle />
               </div>
-              <Link to="/account" className="focus-ring mt-3 flex min-h-10 items-center justify-center rounded-xl border border-white/15 px-3 py-2 text-xs font-black text-white/85 transition hover:bg-white/10 hover:text-white">
+              <AdminNotificationBell onNavigate={() => setMobileOpen(false)} />
+              <Link to="/account" className="focus-ring mt-2 flex min-h-10 items-center justify-center rounded-xl border border-white/15 px-3 py-2 text-xs font-black text-white/85 transition hover:bg-white/10 hover:text-white">
                 Account personale
               </Link>
             </>
@@ -361,7 +364,9 @@ export default function AdminShell() {
 
       <header className="sticky top-0 z-40 flex min-h-16 items-center justify-between border-b border-ink/10 bg-paper/95 px-4 backdrop-blur-xl dark:border-white/10 dark:bg-surface-950/95 lg:hidden">
         <BrandLogo to="/admin" compact />
-        <button
+        <div className="flex items-center gap-2">
+          <AdminNotificationBell compact />
+          <button
           type="button"
           onClick={() => setMobileOpen(true)}
           className="focus-ring inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 bg-white text-ink shadow-sm dark:border-white/15 dark:bg-white/10 dark:text-white"
@@ -369,7 +374,8 @@ export default function AdminShell() {
           aria-expanded={mobileOpen}
         >
           <Menu aria-hidden="true" className="h-5 w-5" />
-        </button>
+          </button>
+        </div>
       </header>
 
       {mobileOpen ? (
