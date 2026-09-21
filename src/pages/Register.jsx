@@ -17,7 +17,10 @@ import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import LearnerAvatarPicker from '../components/learner/LearnerAvatarPicker.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { getAuthErrorMessage } from '../auth/authMessages';
-import { DEFAULT_LEARNER_AVATAR_BACKGROUND_KEY } from '../lib/learnerAvatars.js';
+import {
+  DEFAULT_LEARNER_AVATAR_BACKGROUND_KEY,
+  LEARNER_AVATAR_BACKGROUNDS,
+} from '../lib/learnerAvatars.js';
 import { authPath, safeReturnTo } from '../lib/safeReturnTo.js';
 import '../styles/registerJourney.css';
 
@@ -76,8 +79,8 @@ const STAGE_COPY = {
   },
   3: {
     eyebrow: '03 | Il tuo avatar',
-    title: 'Scegli il volto del tuo spazio.',
-    support: 'Non deve assomigliarti. Deve solo sembrarti tuo. Potrai cambiarlo quando vuoi.',
+    title: 'Scegli il tuo avatar.',
+    support: 'Scegli quello che senti più tuo. Ti accompagnerà nel tuo spazio Sblocco e potrai cambiarlo quando vuoi.',
   },
   4: {
     eyebrow: '04 | Il tuo accesso',
@@ -432,33 +435,79 @@ export default function Register() {
 
             {step === 3 ? (
               <div className="register-journey__form register-journey__form--avatar">
-                <div className="register-journey__avatar-intro">
-                  <p className="register-journey__microcopy">Puoi abbinarlo al colore che preferisci e cambiarlo più avanti dalle impostazioni.</p>
-                  <LearnerAvatar
-                    avatarKey={avatarKey}
-                    backgroundKey={avatarBackgroundKey}
-                    displayName={displayName || name}
-                    size="2xl"
-                    eager
-                  />
+                <div className="register-journey__avatar-choice-layout">
+                  <div className="register-journey__avatar-gallery">
+                    <div className="register-journey__avatar-gallery-heading">
+                      <div>
+                        <p className="register-journey__avatar-section-kicker">Scegline uno</p>
+                        <h2>Quale ti rappresenta di più?</h2>
+                      </div>
+                      <p>Non deve assomigliarti. Basta che ti venga naturale sceglierlo.</p>
+                    </div>
+
+                    <LearnerAvatarPicker
+                      value={avatarKey}
+                      backgroundValue={avatarBackgroundKey}
+                      onChange={setAvatarKey}
+                      onBackgroundChange={setAvatarBackgroundKey}
+                      variant="bare"
+                      showBackgrounds={false}
+                      showSectionLabels={false}
+                    />
+                  </div>
+
+                  <aside className="register-journey__avatar-preview" aria-label="Anteprima avatar scelto">
+                    <p className="register-journey__avatar-section-kicker">{avatarKey ? 'La tua scelta' : 'La tua anteprima'}</p>
+
+                    <div className={`register-journey__avatar-preview-portrait ${avatarKey ? 'is-selected' : ''}`}>
+                      <LearnerAvatar
+                        avatarKey={avatarKey}
+                        backgroundKey={avatarBackgroundKey}
+                        displayName={displayName || name}
+                        size="2xl"
+                        eager
+                      />
+                      {avatarKey ? <span className="register-journey__avatar-preview-check" aria-hidden="true"><Check /></span> : null}
+                    </div>
+
+                    <div className="register-journey__avatar-preview-copy">
+                      <h2>{avatarKey ? 'Sì, questo è il tuo.' : 'Scegli un volto dalla galleria.'}</h2>
+                      <p>{avatarKey
+                        ? 'Ora puoi dargli il colore che preferisci. Lo ritroverai nel tuo profilo e nel tuo spazio.'
+                        : 'Appena ne scegli uno, lo vedrai qui in grande.'}</p>
+                    </div>
+
+                    <div className="register-journey__avatar-colors">
+                      <p className="register-journey__avatar-section-kicker">Colore</p>
+                      <div className="register-journey__avatar-color-row" aria-label="Scegli il colore di sfondo">
+                        {LEARNER_AVATAR_BACKGROUNDS.map((background) => {
+                          const selected = avatarBackgroundKey === background.key;
+                          return (
+                            <button
+                              key={background.key}
+                              type="button"
+                              aria-label={`Sfondo ${background.label}`}
+                              aria-pressed={selected}
+                              title={background.label}
+                              onClick={() => setAvatarBackgroundKey(background.key)}
+                              className={selected ? 'is-selected' : ''}
+                              style={{ backgroundColor: background.color, color: background.textColor }}
+                            >
+                              {selected ? <Check aria-hidden="true" /> : null}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </aside>
                 </div>
 
-                <div className="register-journey__avatar-scroll">
-                  <LearnerAvatarPicker
-                    value={avatarKey}
-                    backgroundValue={avatarBackgroundKey}
-                    onChange={setAvatarKey}
-                    onBackgroundChange={setAvatarBackgroundKey}
-                    variant="bare"
-                  />
-                </div>
-
-                <div className="register-journey__actions">
+                <div className="register-journey__actions register-journey__actions--avatar">
                   <button type="button" onClick={goBack} className="register-journey__back"><ArrowLeft /> Indietro</button>
                   <div className="register-journey__actions-right">
                     {!avatarKey ? <button type="button" onClick={() => moveTo(4)} className="register-journey__skip">Lo scelgo dopo</button> : null}
                     <button type="button" onClick={continueJourney} className="register-journey__primary">
-                      {avatarKey ? 'Mi piace' : 'Continua'} <ArrowRight />
+                      {avatarKey ? 'Continua con questo' : 'Continua'} <ArrowRight />
                     </button>
                   </div>
                 </div>
