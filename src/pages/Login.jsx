@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import AuthFormField from '../components/auth/AuthFormField';
+import AuthJourneyShell from '../components/auth/AuthJourneyShell.jsx';
 import AuthNotice from '../components/auth/AuthNotice';
-import AuthPageShell from '../components/auth/AuthPageShell';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { getAuthErrorMessage } from '../auth/authMessages';
 import { authPath, safeReturnTo } from '../lib/safeReturnTo.js';
@@ -45,24 +46,29 @@ export default function Login() {
   }
 
   return (
-    <AuthPageShell
-      eyebrow="Account"
-      title="Accedi"
-      description="Entra con email e password per vedere il tuo account Sblocco Inglese."
+    <AuthJourneyShell
+      eyebrow="Bentornato"
+      title="Riprendiamo da dove avevi lasciato."
+      description="Il tuo spazio Sblocco è già qui. Accedi e continua il percorso."
+      topAction={(
+        <span className="register-journey__login-link">
+          Non hai un account? <Link to={authPath('/register', from)}><strong>Registrati</strong></Link>
+        </span>
+      )}
       footer={(
-        <>
-          Non hai un account? <Link className="text-moss underline" to={authPath('/register', from)}>Registrati</Link>
-          <span className="mx-2 text-ink/30">/</span>
-          <Link className="text-moss underline" to="/forgot-password">Password dimenticata?</Link>
-        </>
+        <div className="auth-journey__links">
+          <Link to="/forgot-password">Hai dimenticato la password?</Link>
+          <Link to="/">Torna al sito</Link>
+        </div>
       )}
     >
-      <form className="grid gap-4" onSubmit={handleSubmit}>
+      <form className="auth-journey__form" onSubmit={handleSubmit}>
         {notice ? <AuthNotice>{notice}</AuthNotice> : null}
         {loading ? <AuthNotice>Controllo sessione in corso...</AuthNotice> : null}
         {error ? <AuthNotice tone="error">{error}</AuthNotice> : null}
 
         <AuthFormField
+          variant="journey"
           label="Email"
           type="email"
           autoComplete="email"
@@ -71,6 +77,7 @@ export default function Login() {
           onChange={(event) => setEmail(event.target.value)}
         />
         <AuthFormField
+          variant="journey"
           label="Password"
           type="password"
           autoComplete="current-password"
@@ -78,14 +85,16 @@ export default function Login() {
           required
           onChange={(event) => setPassword(event.target.value)}
         />
+
         <button
           type="submit"
           disabled={loading || submitting}
-          className="focus-ring rounded-full bg-ink px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-moss disabled:cursor-not-allowed disabled:opacity-60"
+          className="register-journey__primary auth-journey__submit disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitting ? 'Accesso in corso...' : 'Accedi'}
+          {submitting ? 'Accesso in corso...' : 'Entra nel mio spazio'}
+          {!submitting ? <ArrowRight /> : null}
         </button>
       </form>
-    </AuthPageShell>
+    </AuthJourneyShell>
   );
 }
