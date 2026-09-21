@@ -7,7 +7,7 @@ import {
   subscribeToTeacherNotifications,
 } from '../../lib/teacherNotificationsApi.js';
 
-export default function AdminNotificationBell({ compact = false, onNavigate }) {
+export default function AdminNotificationBell({ compact = false, onNavigate, tone = 'dark' }) {
   const { user } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -30,11 +30,15 @@ export default function AdminNotificationBell({ compact = false, onNavigate }) {
   }, [refresh, user?.id]);
 
   if (compact) {
+    const compactClass = tone === 'light'
+      ? 'border-ink/15 bg-white text-ink shadow-sm hover:border-clay hover:text-clay dark:border-white/15 dark:bg-white/10 dark:text-white'
+      : 'border-white/15 text-white/80 hover:bg-white/10 hover:text-white';
+
     return (
       <Link
         to="/admin/notifications"
         onClick={onNavigate}
-        className="focus-ring relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/80 transition hover:bg-white/10 hover:text-white"
+        className={`focus-ring relative inline-flex h-11 w-11 items-center justify-center rounded-full border transition ${compactClass}`}
         aria-label={unreadCount ? `Notifiche, ${unreadCount} non lette` : 'Notifiche'}
         title="Notifiche"
       >
