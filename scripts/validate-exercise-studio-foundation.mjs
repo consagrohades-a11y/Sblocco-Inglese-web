@@ -154,11 +154,22 @@ const normalized = normalizeStudioDocument(raw);
 assert.ok(normalized.document.id, 'Studio must generate an activity ID.');
 assert.ok(normalized.document.internal_code, 'Studio must generate an internal code.');
 assert.ok(normalized.document.slug, 'Studio must generate a slug.');
+assert.equal(normalized.document.settings.feedback_timing, 'exercise_end', 'Studio must default learner results to exercise end.');
 assert.equal(normalized.document.blocks.length, raw.blocks.length);
 normalized.document.blocks.forEach((block, index) => {
   assert.ok(block.id, 'Studio must generate block IDs.');
   assert.equal(block.sequence_index, index + 1, 'Studio must own sequence indexes.');
 });
+
+const compiledDefaultFeedback = compileStudioDocument({
+  ...normalized.document,
+  settings: {
+    ...normalized.document.settings,
+    feedback_timing: undefined,
+  },
+});
+assert.equal(compiledDefaultFeedback.exercise.settings.feedback_timing, 'exercise_end');
+assert.equal(compiledDefaultFeedback.exercise.sections[0].feedback_timing, 'exercise_end');
 
 const exported = buildStudioActivityExport(normalized.document);
 assert.equal(exported._template.template_id, 'sblocco-learning-activity');
@@ -550,6 +561,7 @@ assert.equal(
 assert.equal(importedGoldAssessment.needs_attention_blocks, 0);
 assert.equal(importedGoldAssessment.document.activity_type, 'assessment');
 assert.equal(importedGoldAssessment.document.level, 'A1+');
+assert.equal(importedGoldAssessment.document.settings.feedback_timing, 'exercise_end');
 assertNoEmDashTitles(importedGoldAssessment.document, 'Gold assessment');
 assert.ok(importedGoldAssessment.ready_blocks >= 11);
 assert.ok(
@@ -578,6 +590,7 @@ assert.equal(
 assert.equal(importedGoldListening.needs_attention_blocks, 0);
 assert.equal(importedGoldListening.document.activity_type, 'listening_lesson');
 assert.equal(importedGoldListening.document.level, 'B2');
+assert.equal(importedGoldListening.document.settings.feedback_timing, 'exercise_end');
 assertNoEmDashTitles(importedGoldListening.document, 'Gold listening lesson');
 assert.ok(importedGoldListening.ready_blocks >= 15);
 const goldListeningMedia = importedGoldListening.document.blocks.filter((block) => block.type === 'media');
