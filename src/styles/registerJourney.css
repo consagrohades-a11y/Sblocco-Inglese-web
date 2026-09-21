@@ -692,3 +692,101 @@
     animation: none;
   }
 }
+
+
+.auth-journey__top-action {
+  justify-self: end;
+}
+
+.auth-journey__layout {
+  width: min(calc(100% - 2.5rem), 64rem);
+  min-height: calc(100dvh - 5.25rem);
+  margin-inline: auto;
+  display: grid;
+  align-content: center;
+  gap: 2rem;
+  padding: 4rem 0 5rem;
+}
+
+.auth-journey__intro {
+  max-width: 48rem;
+}
+
+.auth-journey__intro h1 {
+  margin: .75rem 0 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  font-size: clamp(3rem, 6vw, 5.1rem);
+  font-weight: 400;
+  letter-spacing: -.048em;
+  line-height: .97;
+}
+
+.auth-journey__intro > p:last-child {
+  max-width: 38rem;
+  margin: 1rem 0 0;
+  color: var(--journey-ink-soft);
+  font-size: .91rem;
+  line-height: 1.7;
+}
+
+.auth-journey__content {
+  width: min(100%, 36rem);
+  padding-top: .4rem;
+}
+
+.auth-journey__form {
+  display: grid;
+  gap: 1.05rem;
+}
+
+.auth-journey__submit {
+  width: fit-content;
+  margin-top: .45rem;
+}
+
+.auth-journey__footer {
+  margin-top: 1.7rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--journey-line);
+  color: var(--journey-ink-soft);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.auth-journey__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .7rem 1.1rem;
+}
+
+.auth-journey__links a,
+.auth-journey__quiet-link {
+  color: var(--journey-ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-journey__links a:hover,
+.auth-journey__quiet-link:hover {
+  color: var(--journey-orange);
+}
+
+@media (max-width: 640px) {
+  .auth-journey__layout {
+    width: min(calc(100% - 1.25rem), 64rem);
+    min-height: calc(100dvh - 4.5rem);
+    padding: 3rem 0 4rem;
+  }
+
+  .auth-journey__top-action {
+    display: none;
+  }
+
+  .auth-journey__intro h1 {
+    font-size: clamp(2.8rem, 12vw, 4.3rem);
+  }
+
+  .auth-journey__submit {
+    width: 100%;
+  }
+}
