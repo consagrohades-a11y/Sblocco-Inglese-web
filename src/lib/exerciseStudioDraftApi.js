@@ -23,7 +23,7 @@ async function currentUserId() {
 export async function listStudioDrafts({ status = null, search = '' } = {}) {
   let query = supabase
     .from('exercise_studio_drafts')
-    .select('id, exercise_id, folder_id, internal_title, learner_title, level, topic, activity_type, status, origin, schema_version, created_at, updated_at')
+    .select('id, exercise_id, folder_id, internal_title, learner_title, level, topic, activity_type, status, origin, schema_version, tags:document->tags, created_at, updated_at')
     .order('updated_at', { ascending: false });
 
   if (status) query = query.eq('status', status);
