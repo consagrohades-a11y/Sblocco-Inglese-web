@@ -27,6 +27,31 @@ set role = excluded.role,
 
 select set_config('app.test_uid', '00000000-0000-0000-0000-000000000001', false);
 
+-- Create one learner only after the admin profile exists. This mirrors a real
+-- registration and verifies the profile trigger rather than relying on seed order.
+insert into auth.users (id, email, raw_user_meta_data)
+values (
+  '00000000-0000-0000-0000-000000000004',
+  'studio-signup-notification@example.test',
+  jsonb_build_object('display_name', 'Studio Signup Learner')
+)
+on conflict (id) do nothing;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from public.teacher_notifications
+    where teacher_id = '00000000-0000-0000-0000-000000000001'::uuid
+      and notification_type = 'learner_signed_up'
+      and related_learner_id = '00000000-0000-0000-0000-000000000004'::uuid
+      and route = '/admin/learners/00000000-0000-0000-0000-000000000004'
+  ) then
+    raise exception 'Learner signup did not create a teacher notification.';
+  end if;
+end;
+$$;
+
 do $$
 declare
   v_draft_id uuid := gen_random_uuid();
@@ -503,6 +528,20 @@ begin
 
   if not exists (
     select 1
+    from public.teacher_notifications
+    where teacher_id = '00000000-0000-0000-0000-000000000001'::uuid
+      and notification_type = 'exercise_submitted'
+      and related_learner_id = '00000000-0000-0000-0000-000000000002'::uuid
+      and related_attempt_id = v_attempt_id
+      and route = '/admin/content/exercises/results?attemptId=' || v_attempt_id::text
+      and (metadata ->> 'pending_review')::integer = 1
+      and coalesce((metadata ->> 'review_required')::boolean, false)
+  ) then
+    raise exception 'Studio submission did not create an actionable teacher notification.';
+  end if;
+
+  if not exists (
+    select 1
     from public.exercise_builder_attempt_questions
     where id = v_mcq_id
       and automatic_grading_result ->> 'status' = 'correct'
@@ -624,6 +663,26 @@ begin
   end if;
 
   perform set_config('app.test_uid', '00000000-0000-0000-0000-000000000001', false);
+
+  perform public.mark_teacher_notification_read((
+    select id
+    from public.teacher_notifications
+    where teacher_id = '00000000-0000-0000-0000-000000000001'::uuid
+      and notification_type = 'exercise_submitted'
+      and related_attempt_id = v_attempt_id
+    limit 1
+  ));
+
+  if not exists (
+    select 1
+    from public.teacher_notifications
+    where teacher_id = '00000000-0000-0000-0000-000000000001'::uuid
+      and notification_type = 'exercise_submitted'
+      and related_attempt_id = v_attempt_id
+      and read_at is not null
+  ) then
+    raise exception 'Teacher notification could not be marked as read.';
+  end if;
 
   v_review := public.admin_save_exercise_builder_attempt_review(
     v_attempt_id,
