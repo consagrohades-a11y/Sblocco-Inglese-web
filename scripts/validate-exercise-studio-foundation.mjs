@@ -521,6 +521,64 @@ assert.ok(
   'Universal benchmark should exercise manual-review production.',
 );
 
+const goldAssessment = fs.readFileSync(
+  new URL('../public/templates/sblocco-learning-studio/gold-benchmark-a1plus-a2-threshold-assessment-v1.json', import.meta.url),
+  'utf8',
+);
+const importedGoldAssessment = parseStudioImport(goldAssessment);
+assert.equal(
+  importedGoldAssessment.publishable,
+  true,
+  importedGoldAssessment.errors.map((item) => item.message).join('\n'),
+);
+assert.equal(importedGoldAssessment.needs_attention_blocks, 0);
+assert.equal(importedGoldAssessment.document.activity_type, 'assessment');
+assert.equal(importedGoldAssessment.document.level, 'A1+');
+assert.ok(importedGoldAssessment.ready_blocks >= 11);
+assert.ok(
+  importedGoldAssessment.document.blocks.some((block) => block.type === 'multiple_choice_set'),
+  'Gold assessment should include grouped recognition tasks.',
+);
+assert.ok(
+  importedGoldAssessment.document.blocks.some((block) => block.type === 'open_answer_set'),
+  'Gold assessment should include active retrieval.',
+);
+assert.ok(
+  importedGoldAssessment.document.blocks.some((block) => block.type === 'word_order'),
+  'Gold assessment should include sentence construction.',
+);
+
+const goldListening = fs.readFileSync(
+  new URL('../public/templates/sblocco-learning-studio/gold-benchmark-b2-listening-vocabulary-chunks-v1.json', import.meta.url),
+  'utf8',
+);
+const importedGoldListening = parseStudioImport(goldListening);
+assert.equal(
+  importedGoldListening.publishable,
+  true,
+  importedGoldListening.errors.map((item) => item.message).join('\n'),
+);
+assert.equal(importedGoldListening.needs_attention_blocks, 0);
+assert.equal(importedGoldListening.document.activity_type, 'listening_lesson');
+assert.equal(importedGoldListening.document.level, 'B2');
+assert.ok(importedGoldListening.ready_blocks >= 15);
+const goldListeningMedia = importedGoldListening.document.blocks.filter((block) => block.type === 'media');
+assert.ok(goldListeningMedia.length >= 4, 'Gold listening should use staged media passes.');
+assert.equal(goldListeningMedia[0].transcript_visibility, 'never');
+assert.equal(goldListeningMedia.at(-1).transcript_visibility, 'always');
+assert.ok(
+  importedGoldListening.document.blocks.some((block) => block.type === 'vocabulary'),
+  'Gold listening should teach individual vocabulary explicitly.',
+);
+assert.ok(
+  importedGoldListening.document.blocks.some((block) => block.type === 'language_bank'),
+  'Gold listening should teach reusable chunks.',
+);
+assert.ok(
+  importedGoldListening.document.blocks.some((block) => block.type === 'practice_selection'),
+  'Gold listening should support learner vocabulary-bank selection.',
+);
+
 const hostileTechnicalFields = parseStudioImport(JSON.stringify({
   _template: {
     template_id: 'sblocco-grammar-mini-course',

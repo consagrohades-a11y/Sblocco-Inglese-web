@@ -1,0 +1,719 @@
+{
+  "_template": {
+    "template_id": "sblocco-learning-activity",
+    "template_version": 1,
+    "authoring_contract_version": 1
+  },
+  "activity": {
+    "schema_version": 1,
+    "kind": "learning_activity",
+    "internal_title": "Upper A1 Grammar and Vocabulary Assessment | A2 Threshold",
+    "learner_title": "Grammar & Vocabulary Challenge",
+    "description": "A substantial high-A1 assessment focused on grammar and vocabulary. The test begins with secure A1 language and gradually moves towards the A2 threshold, including past simple, future plans, comparison, quantity, everyday vocabulary and productive language use.",
+    "instructions": "Complete all seven parts. Read the context carefully before answering. Some questions become more difficult near the end. Try to work without a dictionary.",
+    "level": "A1+",
+    "topic": "Everyday grammar and vocabulary",
+    "subtopic": "A1 consolidation and A2 readiness",
+    "skills": [
+      "grammar",
+      "vocabulary",
+      "word_order"
+    ],
+    "tags": [
+      "A1+",
+      "grammar",
+      "vocabulary",
+      "assessment",
+      "A2-readiness",
+      "exam-practice"
+    ],
+    "activity_type": "assessment",
+    "estimated_minutes": 50,
+    "settings": {
+      "instruction_language": "it",
+      "display_mode": "one_at_a_time",
+      "feedback_timing": "question_end",
+      "show_score": true,
+      "show_correct_answers": true,
+      "show_explanations": true,
+      "show_diagnostic_summary": true,
+      "allow_retry": true
+    },
+    "blocks": [
+      {
+        "type": "multiple_choice_set",
+        "items": [
+          {
+            "prompt": "My brother ___ in a restaurant near our house.",
+            "options": [
+              {
+                "text": "work",
+                "is_correct": false
+              },
+              {
+                "text": "works",
+                "is_correct": true
+              },
+              {
+                "text": "is work",
+                "is_correct": false
+              }
+            ],
+            "feedback": "With he, she or it in the present simple, the verb normally takes -s: he works."
+          },
+          {
+            "prompt": "Listen! Someone ___ at the door.",
+            "options": [
+              {
+                "text": "knocks",
+                "is_correct": false
+              },
+              {
+                "text": "is knocking",
+                "is_correct": true
+              },
+              {
+                "text": "knock",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Listen! shows that the action is happening now, so use the present continuous."
+          },
+          {
+            "prompt": "We ___ meat. We're vegetarian.",
+            "options": [
+              {
+                "text": "don't eat",
+                "is_correct": true
+              },
+              {
+                "text": "aren't eating",
+                "is_correct": false
+              },
+              {
+                "text": "doesn't eat",
+                "is_correct": false
+              }
+            ],
+            "feedback": "This describes a general habit or fact, so the present simple is appropriate."
+          },
+          {
+            "prompt": "*__ any good cafés near your house?",
+            "options": [
+              {
+                "text": "Are there",
+                "is_correct": true
+              },
+              {
+                "text": "There are",
+                "is_correct": false
+              },
+              {
+                "text": "Is there",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Use are there to ask about plural things: cafés."
+          },
+          {
+            "prompt": "I haven't got ___ brothers, but I've got two sisters.",
+            "options": [
+              {
+                "text": "some",
+                "is_correct": false
+              },
+              {
+                "text": "any",
+                "is_correct": true
+              },
+              {
+                "text": "a",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Any is normally used with plural nouns in negative sentences."
+          },
+          {
+            "prompt": "My parents live in Rome. I visit ___ every month.",
+            "options": [
+              {
+                "text": "they",
+                "is_correct": false
+              },
+              {
+                "text": "their",
+                "is_correct": false
+              },
+              {
+                "text": "them",
+                "is_correct": true
+              }
+            ],
+            "feedback": "After a verb, use the object pronoun them, not they."
+          },
+          {
+            "prompt": "We have English lessons ___ Tuesdays and Thursdays.",
+            "options": [
+              {
+                "text": "in",
+                "is_correct": false
+              },
+              {
+                "text": "on",
+                "is_correct": true
+              },
+              {
+                "text": "at",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Use on with days of the week."
+          },
+          {
+            "prompt": "___ your sister drive?",
+            "options": [
+              {
+                "text": "Can",
+                "is_correct": true
+              },
+              {
+                "text": "Does can",
+                "is_correct": false
+              },
+              {
+                "text": "Is",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Can comes directly before the subject in questions: Can your sister drive?"
+          }
+        ],
+        "title": "Part 1 — Grammar Check",
+        "prompt": "Choose the option that completes each sentence correctly.",
+        "instructions": "Choose one answer for each item.",
+        "primary_skill": "grammar",
+        "learning_objective": "Show control of core A1 grammar in short everyday contexts."
+      },
+      {
+        "type": "multiple_choice_set",
+        "items": [
+          {
+            "prompt": "I need to ___ the 7:30 bus or I'll be late for work.",
+            "options": [
+              {
+                "text": "catch",
+                "is_correct": true
+              },
+              {
+                "text": "drive",
+                "is_correct": false
+              },
+              {
+                "text": "bring",
+                "is_correct": false
+              }
+            ],
+            "feedback": "We normally say catch a bus, train or flight."
+          },
+          {
+            "prompt": "I always ___ a shower before I go to work.",
+            "options": [
+              {
+                "text": "make",
+                "is_correct": false
+              },
+              {
+                "text": "take",
+                "is_correct": true
+              },
+              {
+                "text": "do",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The usual collocation is take a shower."
+          },
+          {
+            "prompt": "Could I ___ €10 from you? I'll give it back tomorrow.",
+            "options": [
+              {
+                "text": "borrow",
+                "is_correct": true
+              },
+              {
+                "text": "lend",
+                "is_correct": false
+              },
+              {
+                "text": "spend",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Borrow means receive something temporarily. Lend means give something temporarily."
+          },
+          {
+            "prompt": "This suitcase is very ___. Can you help me carry it?",
+            "options": [
+              {
+                "text": "heavy",
+                "is_correct": true
+              },
+              {
+                "text": "busy",
+                "is_correct": false
+              },
+              {
+                "text": "crowded",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Something that is difficult to carry because of its weight is heavy."
+          },
+          {
+            "prompt": "I need some medicine. Is there a ___ near here?",
+            "options": [
+              {
+                "text": "bakery",
+                "is_correct": false
+              },
+              {
+                "text": "pharmacy",
+                "is_correct": true
+              },
+              {
+                "text": "library",
+                "is_correct": false
+              }
+            ],
+            "feedback": "A pharmacy is a place where you can buy medicine."
+          },
+          {
+            "prompt": "We're going to the supermarket because we need to ___ some food.",
+            "options": [
+              {
+                "text": "buy",
+                "is_correct": true
+              },
+              {
+                "text": "pay",
+                "is_correct": false
+              },
+              {
+                "text": "sell",
+                "is_correct": false
+              }
+            ],
+            "feedback": "You buy things from a shop. Pay refers to giving the money."
+          },
+          {
+            "prompt": "It's raining. Don't forget your ___.",
+            "options": [
+              {
+                "text": "umbrella",
+                "is_correct": true
+              },
+              {
+                "text": "wallet",
+                "is_correct": false
+              },
+              {
+                "text": "belt",
+                "is_correct": false
+              }
+            ],
+            "feedback": "An umbrella protects you from rain."
+          },
+          {
+            "prompt": "I don't want to cook tonight. Let's ___ a pizza.",
+            "options": [
+              {
+                "text": "order",
+                "is_correct": true
+              },
+              {
+                "text": "ask",
+                "is_correct": false
+              },
+              {
+                "text": "reserve",
+                "is_correct": false
+              }
+            ],
+            "feedback": "You can order food from a restaurant for delivery or collection."
+          }
+        ],
+        "title": "Part 2 — Vocabulary in Context",
+        "prompt": "Choose the word or phrase that best completes each situation.",
+        "instructions": "Choose one answer for each item.",
+        "primary_skill": "vocabulary",
+        "learning_objective": "Recognise high-frequency vocabulary and common collocations in everyday contexts."
+      },
+      {
+        "type": "gap_fill",
+        "title": "Part 3 — A Weekend Away",
+        "blanks": [
+          {
+            "accepted_answers": [
+              "went"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "by"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "was"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "a"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "much"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "had"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "had",
+              "ordered"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "earlier"
+            ]
+          }
+        ],
+        "prompt": "Complete the text with the missing words.",
+        "instructions": "Write one word in each gap.",
+        "primary_skill": "grammar",
+        "text_template": "Last weekend, my friend Elisa and I [[blank_1]] to Florence. We travelled [[blank_2]] train on Saturday morning. Our hotel was actually very small, but there [[blank_3]] a beautiful café next door. After breakfast, we visited [[blank_4]] famous museum and then walked around the city centre. We didn't have [[blank_5]] time for shopping because the museum was very busy. In the evening, we [[blank_6]] dinner in a small restaurant. Elisa ordered pasta, but I [[blank_7]] a pizza. On Sunday though, the weather was terrible, so we came home [[blank_8]] than planned.",
+        "learning_objective": "Use present and past forms, articles, quantity words and prepositions accurately in connected text."
+      },
+      {
+        "type": "open_answer_set",
+        "items": [
+          {
+            "prompt": "fermata dell'autobus → ___",
+            "accepted_answers": [
+              "bus stop"
+            ],
+            "feedback": "A bus stop is the place where passengers wait for a bus."
+          },
+          {
+            "prompt": "fare la spesa → ___",
+            "accepted_answers": [
+              "go shopping",
+              "do the shopping",
+              "go grocery shopping",
+              "do the grocery shopping"
+            ],
+            "feedback": "Go shopping is a common general expression. Do the shopping is also natural when referring to necessary household shopping."
+          },
+          {
+            "prompt": "vicino di casa → ___",
+            "accepted_answers": [
+              "neighbour",
+              "neighbor"
+            ],
+            "feedback": "A neighbour is a person who lives near you."
+          },
+          {
+            "prompt": "Ho mal di testa. → I have a ___.",
+            "accepted_answers": [
+              "headache"
+            ],
+            "feedback": "A headache is pain in your head."
+          },
+          {
+            "prompt": "Il treno è in ritardo. → The train is ___.",
+            "accepted_answers": [
+              "late",
+              "delayed"
+            ],
+            "feedback": "Late is the basic everyday adjective. Delayed is also natural for trains and other transport."
+          },
+          {
+            "prompt": "Vorrei provare questa giacca. → I'd like to ___ this jacket on.",
+            "accepted_answers": [
+              "try"
+            ],
+            "feedback": "Try something on means put on clothes to see whether they fit or look good."
+          }
+        ],
+        "title": "Part 4 — Find the English Word",
+        "prompt": "Write the English word or expression.",
+        "instructions": "Use the context to help you. Write only the missing English word or expression.",
+        "primary_skill": "vocabulary",
+        "learning_objective": "Actively retrieve high-frequency everyday vocabulary rather than only recognise it."
+      },
+      {
+        "type": "word_order",
+        "title": "Part 5A — Build the Sentence",
+        "chunks": [
+          "i",
+          "usually",
+          "visit",
+          "my grandparents",
+          "on sundays"
+        ],
+        "prompt": "Put the chunks in the correct order.",
+        "instructions": "Use every chunk. Capitalisation is not provided as a clue.",
+        "primary_skill": "word_order",
+        "learning_objective": "Use natural present-simple word order with a frequency adverb.",
+        "terminal_punctuation": "."
+      },
+      {
+        "type": "word_order",
+        "title": "Part 5B — Build the Question",
+        "chunks": [
+          "where",
+          "did",
+          "you",
+          "go",
+          "last weekend"
+        ],
+        "prompt": "Put the chunks in the correct order.",
+        "instructions": "Use every chunk. Capitalisation is not provided as a clue.",
+        "primary_skill": "word_order",
+        "learning_objective": "Form a past-simple question correctly.",
+        "terminal_punctuation": "?"
+      },
+      {
+        "type": "word_order",
+        "title": "Part 5C — Build the Sentence",
+        "chunks": [
+          "we",
+          "are going to",
+          "visit",
+          "our friends",
+          "tomorrow"
+        ],
+        "prompt": "Put the chunks in the correct order.",
+        "instructions": "Use every chunk. Capitalisation is not provided as a clue.",
+        "primary_skill": "word_order",
+        "learning_objective": "Place a time expression naturally in a future-plan sentence.",
+        "terminal_punctuation": "."
+      },
+      {
+        "type": "word_order",
+        "title": "Part 5D — Build the Question",
+        "chunks": [
+          "what",
+          "are",
+          "you",
+          "doing",
+          "at the moment"
+        ],
+        "prompt": "Put the chunks in the correct order.",
+        "instructions": "Use every chunk. Capitalisation is not provided as a clue.",
+        "primary_skill": "word_order",
+        "learning_objective": "Form a present-continuous question.",
+        "terminal_punctuation": "?"
+      },
+      {
+        "type": "word_order",
+        "title": "Part 5E — Build the Sentence",
+        "chunks": [
+          "this restaurant",
+          "is",
+          "cheaper",
+          "than",
+          "the other one"
+        ],
+        "prompt": "Put the chunks in the correct order.",
+        "instructions": "Use every chunk. Capitalisation is not provided as a clue.",
+        "primary_skill": "word_order",
+        "learning_objective": "Form a comparative sentence correctly.",
+        "terminal_punctuation": "."
+      },
+      {
+        "type": "open_answer_set",
+        "items": [
+          {
+            "prompt": "Make this negative: She works on Saturdays.",
+            "accepted_answers": [
+              "She doesn't work on Saturdays.",
+              "She does not work on Saturdays."
+            ],
+            "feedback": "Use doesn't + base verb with she: doesn't work."
+          },
+          {
+            "prompt": "Make a question: They live near the station.",
+            "accepted_answers": [
+              "Do they live near the station?"
+            ],
+            "feedback": "Present-simple questions use do + subject + base verb."
+          },
+          {
+            "prompt": "Complete the question: Maria bought a new phone yesterday. What ___ yesterday?",
+            "accepted_answers": [
+              "did Maria buy",
+              "did maria buy"
+            ],
+            "feedback": "After did, use the base form: buy, not bought."
+          },
+          {
+            "prompt": "Change to the past: We are very tired.",
+            "accepted_answers": [
+              "We were very tired.",
+              "we were very tired."
+            ],
+            "feedback": "The past form of are is were."
+          },
+          {
+            "prompt": "Make a comparative sentence: My new bedroom is small. My old bedroom was bigger.",
+            "accepted_answers": [
+              "My new bedroom is smaller than my old bedroom.",
+              "my new bedroom is smaller than my old bedroom.",
+              "The new bedroom is smaller than the old bedroom.",
+              "the new bedroom is smaller than the old bedroom."
+            ],
+            "feedback": "For short adjectives such as small, use adjective + -er + than."
+          },
+          {
+            "prompt": "Complete the plan: We bought plane tickets for July. We ___ visit Portugal.",
+            "accepted_answers": [
+              "are going to",
+              "'re going to"
+            ],
+            "feedback": "Be going to is used here for an existing future plan."
+          }
+        ],
+        "title": "Part 6 — Change the Sentence",
+        "prompt": "Rewrite or complete each sentence as instructed.",
+        "instructions": "Keep the meaning and use the correct grammar.",
+        "primary_skill": "grammar",
+        "learning_objective": "Produce core grammar through negation, question formation and grammatical transformation."
+      },
+      {
+        "type": "multiple_choice_set",
+        "items": [
+          {
+            "prompt": "There isn't ___ milk left. Can you buy some?",
+            "options": [
+              {
+                "text": "many",
+                "is_correct": false
+              },
+              {
+                "text": "much",
+                "is_correct": true
+              },
+              {
+                "text": "a few",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Milk is uncountable, so use much in this negative sentence."
+          },
+          {
+            "prompt": "Yesterday I ___ my keys, so I couldn't open the door.",
+            "options": [
+              {
+                "text": "lose",
+                "is_correct": false
+              },
+              {
+                "text": "lost",
+                "is_correct": true
+              },
+              {
+                "text": "losed",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The past simple of lose is lost."
+          },
+          {
+            "prompt": "This is ___ restaurant in our town.",
+            "options": [
+              {
+                "text": "the most expensive",
+                "is_correct": true
+              },
+              {
+                "text": "more expensive",
+                "is_correct": false
+              },
+              {
+                "text": "the more expensive",
+                "is_correct": false
+              }
+            ],
+            "feedback": "When comparing one thing with all the others in a group, use the superlative: the most expensive."
+          },
+          {
+            "prompt": "A: What are you doing this evening?\nB: I ___ dinner with Marta at eight.",
+            "options": [
+              {
+                "text": "have",
+                "is_correct": false
+              },
+              {
+                "text": "am having",
+                "is_correct": true
+              },
+              {
+                "text": "had",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The present continuous can describe a specific future arrangement."
+          },
+          {
+            "prompt": "We walked for three hours, so when we arrived home we were very ___.",
+            "options": [
+              {
+                "text": "tired",
+                "is_correct": true
+              },
+              {
+                "text": "boring",
+                "is_correct": false
+              },
+              {
+                "text": "delicious",
+                "is_correct": false
+              }
+            ],
+            "feedback": "After a long walk, a person can feel tired."
+          },
+          {
+            "prompt": "A: Why are you taking an umbrella?\nB: Because it ___ rain later.",
+            "options": [
+              {
+                "text": "is going to",
+                "is_correct": true
+              },
+              {
+                "text": "goes to",
+                "is_correct": false
+              },
+              {
+                "text": "going",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Be going to can be used for a prediction based on present evidence or expectation."
+          }
+        ],
+        "title": "Part 7 — A2 Threshold Challenge",
+        "prompt": "These final questions are slightly more difficult. Choose the best answer.",
+        "instructions": "Choose one answer for each item.",
+        "primary_skill": "grammar",
+        "learning_objective": "Check whether the learner is beginning to control grammar and vocabulary typically encountered around the A1–A2 transition."
+      }
+    ]
+  }
+}
