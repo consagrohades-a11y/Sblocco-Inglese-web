@@ -24,6 +24,7 @@ const learnerProgress = read('src/pages/LearnerProgress.jsx');
 const recoveryGuide = read('src/pages/RecoveryGuide.jsx');
 const learnerAnalytics = read('src/pages/AdminLearnerAnalytics.jsx');
 const marketingContent = read('src/data/content.js');
+const contactQuestionForm = read('src/components/ContactQuestionForm.jsx');
 const sitemap = read('public/sitemap.xml');
 const platform = read('src/pages/Platform.jsx');
 
@@ -79,10 +80,11 @@ for (const [source, name] of [
   [recoveryGuide, 'RecoveryGuide'],
   [learnerAnalytics, 'AdminLearnerAnalytics'],
   [marketingContent, 'MarketingContent'],
+  [contactQuestionForm, 'ContactQuestionForm'],
   [sitemap, 'Sitemap'],
   [platform, 'Platform'],
 ]) {
-  for (const legacyCopy of ['Word Trainer', 'Expression Trainer', 'Ripasso SRS', 'Pratica mirata']) {
+  for (const legacyCopy of ['Word Trainer', 'Expression Trainer', 'Trainer Suite', 'Ripasso SRS', 'Pratica mirata']) {
     assertNotContains(source, legacyCopy, `${name} still exposes retired learner copy: ${legacyCopy}`);
   }
 }
