@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -97,6 +97,16 @@ export default function Register() {
   const from = safeReturnTo(requestedReturnTo, '/account');
   const activeCopy = STAGE_COPY[step] || STAGE_COPY[0];
   const name = useMemo(() => firstName(displayName), [displayName]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const wasDark = root.classList.contains('dark');
+    if (wasDark) root.classList.remove('dark');
+
+    return () => {
+      if (wasDark) root.classList.add('dark');
+    };
+  }, []);
 
   if (!loading && user && !submitting && !completionMode) {
     return <Navigate to={from} replace />;
