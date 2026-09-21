@@ -716,4 +716,4 @@ begin
   delete from public.exercise_studio_folders
   where id = v_child_folder_id;
 end;
-$;
+$$;
