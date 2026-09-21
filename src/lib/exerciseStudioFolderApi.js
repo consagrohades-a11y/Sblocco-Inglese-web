@@ -70,6 +70,24 @@ export async function deleteStudioFolder(folderId) {
   if (error) throw error;
 }
 
+
+export async function bulkMoveStudioDraftsToFolder(draftIds, folderId = null) {
+  const ids = [...new Set((draftIds || []).filter(Boolean))];
+  if (!ids.length) return [];
+
+  const { data, error } = await supabase
+    .from('exercise_studio_drafts')
+    .update({
+      folder_id: folderId || null,
+      updated_at: new Date().toISOString(),
+    })
+    .in('id', ids)
+    .select('id, folder_id, updated_at');
+
+  if (error) throw error;
+  return data || [];
+}
+
 export async function moveStudioDraftToFolder(draftId, folderId = null) {
   const { data, error } = await supabase
     .from('exercise_studio_drafts')
