@@ -1,0 +1,872 @@
+{
+  "_template": {
+    "template_id": "sblocco-learning-activity",
+    "template_version": 1,
+    "authoring_contract_version": 1
+  },
+  "activity": {
+    "schema_version": 1,
+    "kind": "learning_activity",
+    "internal_title": "BBC Learning English | Meta on Trial: Listening, Vocabulary and Chunks",
+    "learner_title": "Meta on Trial: Listen, Notice and Use the Language",
+    "description": "A listening and lexical-development lesson based on a BBC Learning English news report about a US lawsuit against Meta. Learners first understand the story, then listen for detail, notice reusable chunks and collocations, retrieve key vocabulary and transfer the language to new contexts.",
+    "instructions": "Work through the listening in stages. The audio appears more than once because each listen has a different purpose. Do not use the transcript until the final transcript-check stage.",
+    "level": "B2",
+    "topic": "News and social media",
+    "subtopic": "Meta, child safety and legal action",
+    "skills": [
+      "listening",
+      "vocabulary",
+      "functional_language"
+    ],
+    "tags": [
+      "BBC Learning English",
+      "news English",
+      "social media",
+      "law",
+      "chunks",
+      "collocations",
+      "listening",
+      "vocabulary"
+    ],
+    "activity_type": "listening_lesson",
+    "estimated_minutes": 45,
+    "settings": {
+      "instruction_language": "it",
+      "display_mode": "one_at_a_time",
+      "feedback_timing": "question_end",
+      "show_score": true,
+      "show_correct_answers": true,
+      "show_explanations": true,
+      "show_diagnostic_summary": true,
+      "allow_retry": true
+    },
+    "blocks": [
+      {
+        "url": "https://www.youtube.com/watch?v=8ip3fMwdhx0",
+        "type": "media",
+        "title": "First listen | understand the story",
+        "transcript": "This is Learning English from the News, our podcast about the news headlines.\n\nIn this programme, Facebook and Instagram's owner Meta is on trial again.\n\nHello, I'm Becca. And I'm Phil.\n\nIn this programme, we look at one big news story and the vocabulary in the headlines that will help you understand it.\n\nYou can find all the vocabulary and headlines from this episode, as well as a worksheet on our website.\n\nThat's bbclearningenglish.com.\n\nSo, let's hear more about this story.\n\nMeta, the owner of Facebook, Instagram and WhatsApp, has gone on trial in the US, accused of breaking state and federal laws around child privacy.\n\nThe lawsuit has been filed by 29 US states, representing more than two thirds of the country's population.\n\nIn this trial, four of these states — California, Kentucky, Colorado and New Jersey — are making their argument.\n\nThey claim that Meta designed Facebook and Instagram to be addictive to children and teens, and have misled users about the dangers.\n\nThis is the largest of a number of lawsuits against Meta relating to child safety.\n\nThe company had previously been ordered to pay out hundreds of millions of dollars.\n\nMeta denies the allegations, saying that it removes child accounts and that it is taking steps to improve teenagers' well-being on their platform.\n\nThe trial is expected to last around six weeks.\n\nLet's have our first headline.\n\nThis headline is from The Guardian, a British newspaper.\n\n“US states take on Meta in pivotal trial over child social media addiction claims.”\n\nThat headline again, from The Guardian, a British newspaper:\n\n“US states take on Meta in pivotal trial over child social media addiction claims.”\n\nThe headline is from an article that talks about this lawsuit, and also mentions other court cases that Meta has faced recently.\n\nThe word that we're interested in here is “pivotal”.\n\nLet's look at it in more detail, Phil.\n\nSomething that's pivotal is the centre of everything.\n\nIt's very important and other things depend on it.\n\nYes, “pivotal” comes from the noun “pivot”, which is a point that everything else turns around.\n\nHere, it's saying that this particular lawsuit is especially significant and could determine things in the future.\n\nIt's pivotal.\n\nLet's talk about some other ways that we can use “pivotal”.\n\nA pivotal figure is the most important person.\n\nThey might play a pivotal role in making something happen.\n\nA pivotal issue is a very important one that can have a big impact.\n\nWe've had “pivotal” — very significant because other things depend on it.\n\nFor example:\n\n“The designer played a pivotal role in the company's success.”\n\nThis is Learning English from the News, our podcast about the news headlines.\n\nToday, we're talking about the latest lawsuit being faced by Instagram and Facebook's owner, Meta.\n\nThe potential damages that Meta may have to pay, should they lose this case, have been estimated at $200 billion.\n\nDamages are the money that you have to pay the other side if you lose a court case.\n\nThe court could also force the company to make changes to its products.\n\nThe states behind the lawsuit have asked for the removal of many image filters and autoplay of videos, and for the introduction of parental verification, among other measures.\n\nThis leads us to our next headline, and this is from CNBC, an American business news organisation.\n\n“Meta faces ‘astronomical’ consequences as legal fight reaches critical moment in California.”\n\nAnd that headline again, from CNBC:\n\n“Meta faces astronomical consequences as legal fight reaches critical moment in California.”\n\nLet's find out what “astronomical” means here.\n\nWe can use “astronomical” to say that something is related to the study of space and the universe, but that's not what's happening here.\n\nNo, we can also use “astronomical” metaphorically with numbers.\n\nYou know how space is really big?\n\nWell, an astronomical number is a really big number.\n\nWe just mentioned the $200 billion in damages.\n\nThat is an astronomical amount of money.\n\nWhen the headline says that Meta could be facing astronomical consequences, it's talking about how large and severe these consequences could be.\n\nWe often use “astronomical” together with money and quantity words:\n\nan astronomical figure,\nan astronomical amount,\nand an astronomical sum.\n\nWe've had “astronomical” — very large.\n\nFor example:\n\n“To buy a mansion like that must cost an astronomical amount of money.”\n\nThis is Learning English from the News from BBC Learning English.\n\nWe're talking about the latest lawsuit to be faced by Meta.\n\nMuch of the focus of this story is about the potential harm to teens.\n\nThe state's case says that Meta knew how Instagram could take advantage of teenagers' brains.\n\nMeta denies this, and presented a study showing many teenagers feel better about themselves after using Instagram.\n\nHere's our next headline.\n\nThis headline is from The Washington Post, an American newspaper.\n\n“Zuckerberg faces potential reckoning in court over Instagram's effects on teens.”\n\nThat headline again, from The Washington Post, an American newspaper:\n\n“Zuckerberg faces potential reckoning in court over Instagram's effects on teens.”\n\nThe word that we're interested in here is “reckoning”.\n\n“Reckoning” has a few related meanings.\n\nIt can be a calculation or an estimate.\n\nA reckoning can also be a judgement, and that is the sense that is being used here.\n\nWhen the headline says that Zuckerberg is facing a potential reckoning, it means that he's facing a judgement and potential consequences.\n\n“Reckoning” is quite an old-fashioned word that we don't use in everyday speech in this context.\n\nThere are expressions like “day of reckoning” or “the final reckoning”, but we'd usually see these written in books.\n\nWhat's more common is the verb “reckon”, which means “estimate” or “think”.\n\nWe've had “reckoning” — a judgement and its related consequences.\n\nFor example:\n\n“The politician will face his reckoning on election day.”\n\nThat's it for this episode of Learning English from the News.\n\nWe'll be back next week with another news story.\n\nIf you've enjoyed this programme, don't forget to sign up for our newsletter to find out about all the different programmes that we have, and you can find the link to sign up for it in the notes below this programme.\n\nThat's it for now.\n\nBye! Bye!",
+        "end_seconds": null,
+        "source_type": "youtube",
+        "instructions": "Listen once without stopping if possible. Do not try to understand every word. Focus on the main dispute, the two sides and why the case matters.",
+        "start_seconds": 0,
+        "transcript_visibility": "never"
+      },
+      {
+        "type": "multiple_choice_set",
+        "items": [
+          {
+            "prompt": "Why is Meta on trial in the US?",
+            "options": [
+              {
+                "text": "It is accused of breaking laws connected with child privacy and the safety of young users.",
+                "is_correct": true
+              },
+              {
+                "text": "It is accused of closing Facebook and Instagram without warning.",
+                "is_correct": false
+              },
+              {
+                "text": "It is accused of refusing to sell WhatsApp to the US government.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The report says Meta is accused of breaking state and federal laws around child privacy."
+          },
+          {
+            "prompt": "What do the states claim Meta did?",
+            "options": [
+              {
+                "text": "It designed Facebook and Instagram to be addictive to children and teens and misled users about the dangers.",
+                "is_correct": true
+              },
+              {
+                "text": "It stopped teenagers from creating social-media accounts.",
+                "is_correct": false
+              },
+              {
+                "text": "It secretly removed all parental controls from its platforms.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The states claim that Meta designed the platforms to be addictive to children and teens and misled users about the risks."
+          },
+          {
+            "prompt": "What is Meta's position?",
+            "options": [
+              {
+                "text": "It denies the allegations and says it is taking measures to improve teenagers' well-being.",
+                "is_correct": true
+              },
+              {
+                "text": "It accepts the allegations but says the problems are now too old to matter.",
+                "is_correct": false
+              },
+              {
+                "text": "It says only parents should be responsible for teenage users.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Meta denies the allegations and says it removes child accounts and is taking steps to improve teenagers' well-being."
+          },
+          {
+            "prompt": "What does the BBC programme do in addition to explaining the story?",
+            "options": [
+              {
+                "text": "It teaches vocabulary used in news headlines.",
+                "is_correct": true
+              },
+              {
+                "text": "It interviews the lawyers involved in the case.",
+                "is_correct": false
+              },
+              {
+                "text": "It gives legal advice to social-media companies.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The programme explains the story and focuses on important vocabulary used in the headlines."
+          }
+        ],
+        "title": "First listen — the big picture",
+        "prompt": "Choose the best answer based on your first listen.",
+        "instructions": "Focus on the main story rather than small details.",
+        "primary_skill": "listening",
+        "learning_objective": "Identify the central dispute, the main positions and the purpose of the report."
+      },
+      {
+        "url": "https://youtu.be/8ip3fMwdhx0?si=80W_T53uTeeMPHAk",
+        "type": "media",
+        "title": "Second listen | listen for evidence and detail",
+        "transcript": "This is Learning English from the News, our podcast about the news headlines.\n\nIn this programme, Facebook and Instagram's owner Meta is on trial again.\n\nHello, I'm Becca. And I'm Phil.\n\nIn this programme, we look at one big news story and the vocabulary in the headlines that will help you understand it.\n\nYou can find all the vocabulary and headlines from this episode, as well as a worksheet on our website.\n\nThat's bbclearningenglish.com.\n\nSo, let's hear more about this story.\n\nMeta, the owner of Facebook, Instagram and WhatsApp, has gone on trial in the US, accused of breaking state and federal laws around child privacy.\n\nThe lawsuit has been filed by 29 US states, representing more than two thirds of the country's population.\n\nIn this trial, four of these states — California, Kentucky, Colorado and New Jersey — are making their argument.\n\nThey claim that Meta designed Facebook and Instagram to be addictive to children and teens, and have misled users about the dangers.\n\nThis is the largest of a number of lawsuits against Meta relating to child safety.\n\nThe company had previously been ordered to pay out hundreds of millions of dollars.\n\nMeta denies the allegations, saying that it removes child accounts and that it is taking steps to improve teenagers' well-being on their platform.\n\nThe trial is expected to last around six weeks.\n\nLet's have our first headline.\n\nThis headline is from The Guardian, a British newspaper.\n\n“US states take on Meta in pivotal trial over child social media addiction claims.”\n\nThat headline again, from The Guardian, a British newspaper:\n\n“US states take on Meta in pivotal trial over child social media addiction claims.”\n\nThe headline is from an article that talks about this lawsuit, and also mentions other court cases that Meta has faced recently.\n\nThe word that we're interested in here is “pivotal”.\n\nLet's look at it in more detail, Phil.\n\nSomething that's pivotal is the centre of everything.\n\nIt's very important and other things depend on it.\n\nYes, “pivotal” comes from the noun “pivot”, which is a point that everything else turns around.\n\nHere, it's saying that this particular lawsuit is especially significant and could determine things in the future.\n\nIt's pivotal.\n\nLet's talk about some other ways that we can use “pivotal”.\n\nA pivotal figure is the most important person.\n\nThey might play a pivotal role in making something happen.\n\nA pivotal issue is a very important one that can have a big impact.\n\nWe've had “pivotal” — very significant because other things depend on it.\n\nFor example:\n\n“The designer played a pivotal role in the company's success.”\n\nThis is Learning English from the News, our podcast about the news headlines.\n\nToday, we're talking about the latest lawsuit being faced by Instagram and Facebook's owner, Meta.\n\nThe potential damages that Meta may have to pay, should they lose this case, have been estimated at $200 billion.\n\nDamages are the money that you have to pay the other side if you lose a court case.\n\nThe court could also force the company to make changes to its products.\n\nThe states behind the lawsuit have asked for the removal of many image filters and autoplay of videos, and for the introduction of parental verification, among other measures.\n\nThis leads us to our next headline, and this is from CNBC, an American business news organisation.\n\n“Meta faces ‘astronomical’ consequences as legal fight reaches critical moment in California.”\n\nAnd that headline again, from CNBC:\n\n“Meta faces astronomical consequences as legal fight reaches critical moment in California.”\n\nLet's find out what “astronomical” means here.\n\nWe can use “astronomical” to say that something is related to the study of space and the universe, but that's not what's happening here.\n\nNo, we can also use “astronomical” metaphorically with numbers.\n\nYou know how space is really big?\n\nWell, an astronomical number is a really big number.\n\nWe just mentioned the $200 billion in damages.\n\nThat is an astronomical amount of money.\n\nWhen the headline says that Meta could be facing astronomical consequences, it's talking about how large and severe these consequences could be.\n\nWe often use “astronomical” together with money and quantity words:\n\nan astronomical figure,\nan astronomical amount,\nand an astronomical sum.\n\nWe've had “astronomical” — very large.\n\nFor example:\n\n“To buy a mansion like that must cost an astronomical amount of money.”\n\nThis is Learning English from the News from BBC Learning English.\n\nWe're talking about the latest lawsuit to be faced by Meta.\n\nMuch of the focus of this story is about the potential harm to teens.\n\nThe state's case says that Meta knew how Instagram could take advantage of teenagers' brains.\n\nMeta denies this, and presented a study showing many teenagers feel better about themselves after using Instagram.\n\nHere's our next headline.\n\nThis headline is from The Washington Post, an American newspaper.\n\n“Zuckerberg faces potential reckoning in court over Instagram's effects on teens.”\n\nThat headline again, from The Washington Post, an American newspaper:\n\n“Zuckerberg faces potential reckoning in court over Instagram's effects on teens.”\n\nThe word that we're interested in here is “reckoning”.\n\n“Reckoning” has a few related meanings.\n\nIt can be a calculation or an estimate.\n\nA reckoning can also be a judgement, and that is the sense that is being used here.\n\nWhen the headline says that Zuckerberg is facing a potential reckoning, it means that he's facing a judgement and potential consequences.\n\n“Reckoning” is quite an old-fashioned word that we don't use in everyday speech in this context.\n\nThere are expressions like “day of reckoning” or “the final reckoning”, but we'd usually see these written in books.\n\nWhat's more common is the verb “reckon”, which means “estimate” or “think”.\n\nWe've had “reckoning” — a judgement and its related consequences.\n\nFor example:\n\n“The politician will face his reckoning on election day.”\n\nThat's it for this episode of Learning English from the News.\n\nWe'll be back next week with another news story.\n\nIf you've enjoyed this programme, don't forget to sign up for our newsletter to find out about all the different programmes that we have, and you can find the link to sign up for it in the notes below this programme.\n\nThat's it for now.\n\nBye! Bye!",
+        "end_seconds": null,
+        "source_type": "youtube",
+        "instructions": "Listen again. This time, look at the questions first and listen for numbers, specific claims, possible consequences and Meta's response.",
+        "start_seconds": 0,
+        "transcript_visibility": "never"
+      },
+      {
+        "type": "multiple_choice_set",
+        "items": [
+          {
+            "prompt": "How many US states filed the lawsuit?",
+            "options": [
+              {
+                "text": "4",
+                "is_correct": false
+              },
+              {
+                "text": "29",
+                "is_correct": true
+              },
+              {
+                "text": "50",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The lawsuit was filed by 29 US states."
+          },
+          {
+            "prompt": "Which four states are making their argument in this particular trial?",
+            "options": [
+              {
+                "text": "California, Kentucky, Colorado and New Jersey",
+                "is_correct": true
+              },
+              {
+                "text": "California, Texas, Florida and New York",
+                "is_correct": false
+              },
+              {
+                "text": "Colorado, Oregon, Nevada and Washington",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The report names California, Kentucky, Colorado and New Jersey."
+          },
+          {
+            "prompt": "How long is the trial expected to last?",
+            "options": [
+              {
+                "text": "Around six days",
+                "is_correct": false
+              },
+              {
+                "text": "Around six weeks",
+                "is_correct": true
+              },
+              {
+                "text": "Around six months",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The trial is expected to last around six weeks."
+          },
+          {
+            "prompt": "How much could Meta potentially have to pay in damages?",
+            "options": [
+              {
+                "text": "$200 million",
+                "is_correct": false
+              },
+              {
+                "text": "$20 billion",
+                "is_correct": false
+              },
+              {
+                "text": "$200 billion",
+                "is_correct": true
+              }
+            ],
+            "feedback": "The report says potential damages have been estimated at $200 billion."
+          },
+          {
+            "prompt": "What are 'damages' in this legal context?",
+            "options": [
+              {
+                "text": "Money one side may have to pay the other side after losing a court case",
+                "is_correct": true
+              },
+              {
+                "text": "The physical damage caused by a product",
+                "is_correct": false
+              },
+              {
+                "text": "The cost of employing a legal team",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The presenters define damages as money you have to pay the other side if you lose a court case."
+          },
+          {
+            "prompt": "Which changes have the states asked for?",
+            "options": [
+              {
+                "text": "The removal of many image filters and autoplay, and the introduction of parental verification",
+                "is_correct": true
+              },
+              {
+                "text": "More autoplay videos and more image filters",
+                "is_correct": false
+              },
+              {
+                "text": "A complete ban on social media for everyone under 21",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The report mentions removing many image filters and autoplay and introducing parental verification, among other measures."
+          },
+          {
+            "prompt": "What evidence does Meta present about teenagers?",
+            "options": [
+              {
+                "text": "A study suggesting many teenagers feel better about themselves after using Instagram",
+                "is_correct": true
+              },
+              {
+                "text": "A study showing that teenagers no longer use Instagram",
+                "is_correct": false
+              },
+              {
+                "text": "A survey showing that all teenagers support Meta",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Meta presented a study showing that many teenagers feel better about themselves after using Instagram."
+          }
+        ],
+        "title": "Second listen — important details",
+        "prompt": "Choose the best answer based on the report.",
+        "instructions": "You may replay the audio while answering.",
+        "primary_skill": "listening",
+        "learning_objective": "Understand specific factual information and supporting details in the report."
+      },
+      {
+        "url": "https://youtu.be/8ip3fMwdhx0?si=80W_T53uTeeMPHAk",
+        "type": "media",
+        "title": "Third listen | listen for the language",
+        "transcript": "This is Learning English from the News, our podcast about the news headlines.\n\nIn this programme, Facebook and Instagram's owner Meta is on trial again.\n\nHello, I'm Becca. And I'm Phil.\n\nIn this programme, we look at one big news story and the vocabulary in the headlines that will help you understand it.\n\nYou can find all the vocabulary and headlines from this episode, as well as a worksheet on our website.\n\nThat's bbclearningenglish.com.\n\nSo, let's hear more about this story.\n\nMeta, the owner of Facebook, Instagram and WhatsApp, has gone on trial in the US, accused of breaking state and federal laws around child privacy.\n\nThe lawsuit has been filed by 29 US states, representing more than two thirds of the country's population.\n\nIn this trial, four of these states — California, Kentucky, Colorado and New Jersey — are making their argument.\n\nThey claim that Meta designed Facebook and Instagram to be addictive to children and teens, and have misled users about the dangers.\n\nThis is the largest of a number of lawsuits against Meta relating to child safety.\n\nThe company had previously been ordered to pay out hundreds of millions of dollars.\n\nMeta denies the allegations, saying that it removes child accounts and that it is taking steps to improve teenagers' well-being on their platform.\n\nThe trial is expected to last around six weeks.\n\nLet's have our first headline.\n\nThis headline is from The Guardian, a British newspaper.\n\n“US states take on Meta in pivotal trial over child social media addiction claims.”\n\nThat headline again, from The Guardian, a British newspaper:\n\n“US states take on Meta in pivotal trial over child social media addiction claims.”\n\nThe headline is from an article that talks about this lawsuit, and also mentions other court cases that Meta has faced recently.\n\nThe word that we're interested in here is “pivotal”.\n\nLet's look at it in more detail, Phil.\n\nSomething that's pivotal is the centre of everything.\n\nIt's very important and other things depend on it.\n\nYes, “pivotal” comes from the noun “pivot”, which is a point that everything else turns around.\n\nHere, it's saying that this particular lawsuit is especially significant and could determine things in the future.\n\nIt's pivotal.\n\nLet's talk about some other ways that we can use “pivotal”.\n\nA pivotal figure is the most important person.\n\nThey might play a pivotal role in making something happen.\n\nA pivotal issue is a very important one that can have a big impact.\n\nWe've had “pivotal” — very significant because other things depend on it.\n\nFor example:\n\n“The designer played a pivotal role in the company's success.”\n\nThis is Learning English from the News, our podcast about the news headlines.\n\nToday, we're talking about the latest lawsuit being faced by Instagram and Facebook's owner, Meta.\n\nThe potential damages that Meta may have to pay, should they lose this case, have been estimated at $200 billion.\n\nDamages are the money that you have to pay the other side if you lose a court case.\n\nThe court could also force the company to make changes to its products.\n\nThe states behind the lawsuit have asked for the removal of many image filters and autoplay of videos, and for the introduction of parental verification, among other measures.\n\nThis leads us to our next headline, and this is from CNBC, an American business news organisation.\n\n“Meta faces ‘astronomical’ consequences as legal fight reaches critical moment in California.”\n\nAnd that headline again, from CNBC:\n\n“Meta faces astronomical consequences as legal fight reaches critical moment in California.”\n\nLet's find out what “astronomical” means here.\n\nWe can use “astronomical” to say that something is related to the study of space and the universe, but that's not what's happening here.\n\nNo, we can also use “astronomical” metaphorically with numbers.\n\nYou know how space is really big?\n\nWell, an astronomical number is a really big number.\n\nWe just mentioned the $200 billion in damages.\n\nThat is an astronomical amount of money.\n\nWhen the headline says that Meta could be facing astronomical consequences, it's talking about how large and severe these consequences could be.\n\nWe often use “astronomical” together with money and quantity words:\n\nan astronomical figure,\nan astronomical amount,\nand an astronomical sum.\n\nWe've had “astronomical” — very large.\n\nFor example:\n\n“To buy a mansion like that must cost an astronomical amount of money.”\n\nThis is Learning English from the News from BBC Learning English.\n\nWe're talking about the latest lawsuit to be faced by Meta.\n\nMuch of the focus of this story is about the potential harm to teens.\n\nThe state's case says that Meta knew how Instagram could take advantage of teenagers' brains.\n\nMeta denies this, and presented a study showing many teenagers feel better about themselves after using Instagram.\n\nHere's our next headline.\n\nThis headline is from The Washington Post, an American newspaper.\n\n“Zuckerberg faces potential reckoning in court over Instagram's effects on teens.”\n\nThat headline again, from The Washington Post, an American newspaper:\n\n“Zuckerberg faces potential reckoning in court over Instagram's effects on teens.”\n\nThe word that we're interested in here is “reckoning”.\n\n“Reckoning” has a few related meanings.\n\nIt can be a calculation or an estimate.\n\nA reckoning can also be a judgement, and that is the sense that is being used here.\n\nWhen the headline says that Zuckerberg is facing a potential reckoning, it means that he's facing a judgement and potential consequences.\n\n“Reckoning” is quite an old-fashioned word that we don't use in everyday speech in this context.\n\nThere are expressions like “day of reckoning” or “the final reckoning”, but we'd usually see these written in books.\n\nWhat's more common is the verb “reckon”, which means “estimate” or “think”.\n\nWe've had “reckoning” — a judgement and its related consequences.\n\nFor example:\n\n“The politician will face his reckoning on election day.”\n\nThat's it for this episode of Learning English from the News.\n\nWe'll be back next week with another news story.\n\nIf you've enjoyed this programme, don't forget to sign up for our newsletter to find out about all the different programmes that we have, and you can find the link to sign up for it in the notes below this programme.\n\nThat's it for now.\n\nBye! Bye!",
+        "end_seconds": 93,
+        "source_type": "youtube",
+        "instructions": "Now listen only to this short section. This time, ignore the general story and listen closely for the exact expressions used to describe legal action, accusations and Meta's response.",
+        "start_seconds": 42,
+        "transcript_visibility": "never"
+      },
+      {
+        "type": "multiple_choice_set",
+        "items": [
+          {
+            "prompt": "Meta has GONE ON TRIAL in the US.",
+            "options": [
+              {
+                "text": "A legal case against Meta has begun in court.",
+                "is_correct": true
+              },
+              {
+                "text": "Meta has begun testing a new product.",
+                "is_correct": false
+              },
+              {
+                "text": "Meta has travelled to the US for a business meeting.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Go on trial means have a legal case against you formally heard in court."
+          },
+          {
+            "prompt": "Meta is ACCUSED OF BREAKING state and federal laws.",
+            "options": [
+              {
+                "text": "Someone claims that Meta broke the laws.",
+                "is_correct": true
+              },
+              {
+                "text": "Meta has definitely been found guilty of breaking the laws.",
+                "is_correct": false
+              },
+              {
+                "text": "Meta has asked for the laws to be changed.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Be accused of something means be claimed to have done something wrong. It does not mean guilt has already been proved."
+          },
+          {
+            "prompt": "The lawsuit has been FILED BY 29 US states.",
+            "options": [
+              {
+                "text": "The states have officially started or submitted the legal case.",
+                "is_correct": true
+              },
+              {
+                "text": "The states have cancelled the case.",
+                "is_correct": false
+              },
+              {
+                "text": "The states have written a newspaper article about the case.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "To file a lawsuit means formally start or submit a legal case."
+          },
+          {
+            "prompt": "The states say Meta MISLED USERS ABOUT THE DANGERS.",
+            "options": [
+              {
+                "text": "It caused users to believe something inaccurate or incomplete about the risks.",
+                "is_correct": true
+              },
+              {
+                "text": "It asked users to report dangerous content.",
+                "is_correct": false
+              },
+              {
+                "text": "It stopped users from reading safety information.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Mislead someone about something means cause them to form a false or inaccurate understanding."
+          },
+          {
+            "prompt": "Meta DENIES THE ALLEGATIONS.",
+            "options": [
+              {
+                "text": "It says the accusations are not true.",
+                "is_correct": true
+              },
+              {
+                "text": "It says the accusations are serious.",
+                "is_correct": false
+              },
+              {
+                "text": "It agrees to pay compensation immediately.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Deny an allegation means say that the accusation is not true."
+          },
+          {
+            "prompt": "Meta says it is TAKING STEPS TO IMPROVE teenagers' well-being.",
+            "options": [
+              {
+                "text": "It says it is taking action to make the situation better.",
+                "is_correct": true
+              },
+              {
+                "text": "It says it has completely solved the problem.",
+                "is_correct": false
+              },
+              {
+                "text": "It says teenagers need to change their own behaviour.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Take steps to do something means take action intended to achieve a result."
+          }
+        ],
+        "title": "Language noticing — what do the chunks mean?",
+        "prompt": "These expressions all come from the section you just heard. Choose the meaning that best matches how each expression is used.",
+        "instructions": "Think about the complete expression, not just one word inside it.",
+        "primary_skill": "vocabulary",
+        "learning_objective": "Infer the meaning of reusable legal and news chunks from context."
+      },
+      {
+        "body": "These expressions are useful because you can reuse the whole pattern in many contexts: go on trial; be accused of + noun / -ing; file a lawsuit; mislead someone about something; deny an allegation; take steps to + verb.",
+        "type": "rule",
+        "title": "Notice the reusable patterns",
+        "examples": [
+          "The company was accused of hiding important information.",
+          "The government is taking steps to reduce pollution.",
+          "Several customers filed a lawsuit against the company."
+        ]
+      },
+      {
+        "type": "gap_fill",
+        "title": "Listen closely — reconstruct the chunks",
+        "blanks": [
+          {
+            "accepted_answers": [
+              "gone on trial"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "accused of"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "filed by"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "misled"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "denies"
+            ]
+          },
+          {
+            "accepted_answers": [
+              "taking steps to"
+            ]
+          }
+        ],
+        "prompt": "Listen to the short section again and complete the expressions.",
+        "instructions": "Write the exact missing word or words from the audio.",
+        "primary_skill": "listening",
+        "text_template": "Meta has [[blank_1]] in the US.\n\nIt is [[blank_2]] breaking state and federal laws around child privacy.\n\nThe lawsuit has been [[blank_3]] 29 US states.\n\nThe states claim that Meta has [[blank_4]] users about the dangers.\n\nMeta [[blank_5]] the allegations.\n\nThe company says it is [[blank_6]] improve teenagers' well-being.",
+        "learning_objective": "Connect the sound of the audio with the exact wording of high-value chunks."
+      },
+      {
+        "body": "The programme explicitly teaches three headline words, but they are more useful when you learn the words they commonly combine with. The other items below are important news and legal vocabulary from the report.",
+        "type": "vocabulary",
+        "items": [
+          {
+            "term": "lawsuit",
+            "meaning": "a legal case that one person, group or organisation brings against another",
+            "translation": "causa legale",
+            "example": "Several states filed a lawsuit against the company."
+          },
+          {
+            "term": "allegation",
+            "meaning": "a claim that someone has done something wrong, before it has been proved",
+            "translation": "accusa / affermazione non ancora provata",
+            "example": "The company denies the allegations."
+          },
+          {
+            "term": "mislead",
+            "meaning": "cause someone to believe something that is not accurate or complete",
+            "translation": "fuorviare / ingannare",
+            "example": "The report claims that users were misled about the dangers."
+          },
+          {
+            "term": "pivotal",
+            "meaning": "extremely important because other events or decisions depend on it",
+            "translation": "cruciale / determinante",
+            "example": "The ruling could play a pivotal role in future cases."
+          },
+          {
+            "term": "damages",
+            "meaning": "money that a court orders one side to pay another",
+            "translation": "risarcimento / danni",
+            "example": "The company could have to pay billions in damages."
+          },
+          {
+            "term": "astronomical",
+            "meaning": "extremely large, especially when describing an amount, figure, cost or sum",
+            "translation": "astronomico / enorme",
+            "example": "The company could face an astronomical financial cost."
+          },
+          {
+            "term": "reckoning",
+            "meaning": "a judgement or moment when someone must face the consequences of previous actions",
+            "translation": "resa dei conti / giudizio con conseguenze",
+            "example": "The headline says Zuckerberg could face a reckoning."
+          }
+        ],
+        "title": "Headline words and their natural partners"
+      },
+      {
+        "type": "multiple_choice_set",
+        "items": [
+          {
+            "prompt": "Which expression is natural?",
+            "options": [
+              {
+                "text": "file a lawsuit",
+                "is_correct": true
+              },
+              {
+                "text": "do a lawsuit",
+                "is_correct": false
+              },
+              {
+                "text": "make a lawsuit",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The normal legal collocation is file a lawsuit."
+          },
+          {
+            "prompt": "Which expression is natural?",
+            "options": [
+              {
+                "text": "deny the allegations",
+                "is_correct": true
+              },
+              {
+                "text": "refuse the allegations",
+                "is_correct": false
+              },
+              {
+                "text": "cancel the allegations",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Deny the allegations is a common news and legal collocation."
+          },
+          {
+            "prompt": "Which expression is natural?",
+            "options": [
+              {
+                "text": "pay damages",
+                "is_correct": true
+              },
+              {
+                "text": "do damages",
+                "is_correct": false
+              },
+              {
+                "text": "spend damages",
+                "is_correct": false
+              }
+            ],
+            "feedback": "A person or company can be ordered to pay damages."
+          },
+          {
+            "prompt": "Which expression is natural?",
+            "options": [
+              {
+                "text": "play a pivotal role",
+                "is_correct": true
+              },
+              {
+                "text": "make a pivotal role",
+                "is_correct": false
+              },
+              {
+                "text": "do a pivotal role",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Play a pivotal role is a common collocation meaning be extremely important to an outcome."
+          },
+          {
+            "prompt": "Which expression is natural?",
+            "options": [
+              {
+                "text": "an astronomical amount",
+                "is_correct": true
+              },
+              {
+                "text": "an astronomical size of money",
+                "is_correct": false
+              },
+              {
+                "text": "an astronomical quantity price",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Astronomical commonly combines with amount, figure, sum, cost and number."
+          },
+          {
+            "prompt": "Which expression is natural?",
+            "options": [
+              {
+                "text": "face serious consequences",
+                "is_correct": true
+              },
+              {
+                "text": "meet serious consequences",
+                "is_correct": false
+              },
+              {
+                "text": "take serious consequences",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Face consequences means experience or have to deal with the results of an action or event."
+          }
+        ],
+        "title": "Language noticing — which words naturally go together?",
+        "prompt": "Choose the combination that sounds natural in the meaning used in the programme.",
+        "instructions": "Pay attention to collocation: English words often prefer particular partners.",
+        "primary_skill": "vocabulary",
+        "learning_objective": "Recognise common collocations built around the lesson's key vocabulary."
+      },
+      {
+        "body": "These are the main reusable expressions to take from the listening. Notice which ones are legal/news language and which ones also work well in everyday professional English.",
+        "type": "language_bank",
+        "items": [
+          "go on trial",
+          "be accused of + noun / -ing",
+          "file a lawsuit",
+          "mislead someone about something",
+          "deny the allegations",
+          "take steps to + verb",
+          "take on a company / organisation",
+          "play a pivotal role",
+          "face serious consequences",
+          "take advantage of someone / something",
+          "pay damages",
+          "an astronomical amount / figure / sum",
+          "face a reckoning"
+        ],
+        "title": "Useful chunks from the report"
+      },
+      {
+        "type": "open_answer_set",
+        "items": [
+          {
+            "prompt": "The company says the accusations are false. → The company ___ the ___.",
+            "accepted_answers": [
+              "denies the allegations",
+              "denied the allegations"
+            ],
+            "feedback": "The target collocation is deny the allegations."
+          },
+          {
+            "prompt": "Several customers officially started a legal case against the company. → Several customers ___ a ___.",
+            "accepted_answers": [
+              "filed a lawsuit",
+              "have filed a lawsuit"
+            ],
+            "feedback": "File a lawsuit means formally start a legal case."
+          },
+          {
+            "prompt": "The organisation is taking action to reduce the problem. → The organisation is ___ ___ to reduce the problem.",
+            "accepted_answers": [
+              "taking steps"
+            ],
+            "feedback": "Take steps to + verb means take action intended to achieve a result."
+          },
+          {
+            "prompt": "The decision was extremely important to the project's success. → The decision ___ a pivotal ___ in the project's success.",
+            "accepted_answers": [
+              "played a pivotal role"
+            ],
+            "feedback": "Play a pivotal role means be extremely important to an outcome."
+          },
+          {
+            "prompt": "The company may have to deal with very serious results if it loses. → The company may ___ serious ___.",
+            "accepted_answers": [
+              "face serious consequences"
+            ],
+            "feedback": "Face consequences is a common way to describe having to deal with the results of an action or decision."
+          },
+          {
+            "prompt": "The article claims the company caused customers to misunderstand the risks. → The article claims the company ___ customers ___ the risks.",
+            "accepted_answers": [
+              "misled customers about"
+            ],
+            "feedback": "The pattern is mislead someone about something."
+          }
+        ],
+        "title": "Retrieve the chunks",
+        "prompt": "Complete each sentence with language from the lesson.",
+        "instructions": "Use the target chunk. Do not replace it with a different expression that has the same meaning.",
+        "primary_skill": "vocabulary",
+        "learning_objective": "Retrieve key words and chunks without multiple-choice support."
+      },
+      {
+        "type": "open_answer_set",
+        "items": [
+          {
+            "prompt": "A university introduces several new measures to reduce student stress. → The university is ___ student stress.",
+            "accepted_answers": [
+              "taking steps to reduce",
+              "taking steps to address"
+            ],
+            "feedback": "Take steps to + verb works in many institutional and professional contexts."
+          },
+          {
+            "prompt": "A small company decides to compete directly with a much larger competitor. → The small company decides to ___ the larger competitor.",
+            "accepted_answers": [
+              "take on"
+            ],
+            "feedback": "Take on can mean challenge or compete against a person, company or organisation."
+          },
+          {
+            "prompt": "One engineer was extremely important to the success of a new product. → The engineer ___ in the product's success.",
+            "accepted_answers": [
+              "played a pivotal role"
+            ],
+            "feedback": "Play a pivotal role is useful far beyond news English."
+          },
+          {
+            "prompt": "A business may lose major contracts because of a serious mistake. → The business could ___ because of the mistake.",
+            "accepted_answers": [
+              "face serious consequences",
+              "face consequences"
+            ],
+            "feedback": "Face consequences means have to deal with the results of an action or event."
+          },
+          {
+            "prompt": "An app uses people's personal information for its own benefit. → The app is ___ people's personal information.",
+            "accepted_answers": [
+              "taking advantage of"
+            ],
+            "feedback": "Take advantage of something can mean use a situation, resource or opportunity for your own benefit."
+          }
+        ],
+        "title": "Use the language in new contexts",
+        "prompt": "Complete each new situation with a chunk from the lesson.",
+        "instructions": "The topic has changed. Reuse the language naturally in the new context.",
+        "primary_skill": "functional_language",
+        "learning_objective": "Transfer target vocabulary and chunks beyond the original Meta story."
+      },
+      {
+        "type": "practice_selection",
+        "title": "Save what you want to remember",
+        "prompt": "Which words and chunks would you like to keep for later review?",
+        "options": [
+          {
+            "text": "lawsuit",
+            "vocab_bank": true,
+            "vocab_kind": "word"
+          },
+          {
+            "text": "allegation",
+            "vocab_bank": true,
+            "vocab_kind": "word"
+          },
+          {
+            "text": "mislead",
+            "vocab_bank": true,
+            "vocab_kind": "word"
+          },
+          {
+            "text": "pivotal",
+            "vocab_bank": true,
+            "vocab_kind": "word"
+          },
+          {
+            "text": "damages",
+            "vocab_bank": true,
+            "vocab_kind": "word"
+          },
+          {
+            "text": "astronomical",
+            "vocab_bank": true,
+            "vocab_kind": "word"
+          },
+          {
+            "text": "reckoning",
+            "vocab_bank": true,
+            "vocab_kind": "word"
+          },
+          {
+            "text": "go on trial",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          },
+          {
+            "text": "be accused of + -ing",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          },
+          {
+            "text": "file a lawsuit",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          },
+          {
+            "text": "mislead someone about something",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          },
+          {
+            "text": "deny the allegations",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          },
+          {
+            "text": "take steps to + verb",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          },
+          {
+            "text": "take on a company / organisation",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          },
+          {
+            "text": "play a pivotal role",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          },
+          {
+            "text": "face serious consequences",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          },
+          {
+            "text": "take advantage of someone / something",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          },
+          {
+            "text": "an astronomical amount / figure / sum",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          },
+          {
+            "text": "face a reckoning",
+            "vocab_bank": true,
+            "vocab_kind": "chunk"
+          }
+        ],
+        "instructions": "Choose as many as you want. Words and chunks are saved separately in your vocabulary bank.",
+        "primary_skill": "vocabulary",
+        "selection_mode": "multiple",
+        "learning_objective": "Select personally useful language for later retrieval and review."
+      },
+      {
+        "url": "https://youtu.be/8ip3fMwdhx0?si=80W_T53uTeeMPHAk",
+        "type": "media",
+        "title": "Final check | listen with the transcript",
+        "transcript": "This is Learning English from the News, our podcast about the news headlines.\n\nIn this programme, Facebook and Instagram's owner Meta is on trial again.\n\nHello, I'm Becca. And I'm Phil.\n\nIn this programme, we look at one big news story and the vocabulary in the headlines that will help you understand it.\n\nYou can find all the vocabulary and headlines from this episode, as well as a worksheet on our website. That's bbclearningenglish.com.\n\nSo, let's hear more about this story.\n\nMeta, the owner of Facebook, Instagram and WhatsApp has gone on trial in the US, accused of breaking state and federal laws around child privacy.\n\nThe lawsuit has been filed by 29 US states, representing more than two thirds of the country's population.\n\nIn this trial, four of these states California, Kentucky, Colorado and New Jersey are making their argument.\n\nThey claim that Meta designed Facebook and Instagram to be addictive to children and teens, and have misled users about the dangers.\n\nThis is the largest of a number of lawsuits against Meta relating to child safety.\n\nThe company had previously been ordered to pay out hundreds of millions of dollars.\n\nMeta denies the allegations, saying that it removes child accounts and that it is taking steps to improve teenagers' well-being on their platform.\n\nThe trial is expected to last around six weeks.\n\nLet's have our first headline.\n\nThis headline is from The Guardian, a British newspaper.\n\nUS states take on Meta in pivotal trial over child social media addiction claims.\n\nThat headline again, from The Guardian, a British newspaper.\n\nUS states take on Meta in pivotal trial over child social media addiction claims.\n\nThe headline is from an article that talks about this lawsuit, and also mentions other court cases that Meta has faced recently.\n\nThe word that we're interested in here is 'pivotal'.\n\nSomething that's pivotal is the centre of everything. It's very important and other things depend on it.\n\nYes, 'pivotal' comes from the noun 'pivot', which is a point that everything else turns around.\n\nHere, it's saying that this particular lawsuit is especially significant and could determine things in the future. It's pivotal.\n\nLet's talk about some other ways that we can use 'pivotal'.\n\nA pivotal figure is the most important person. They might play a pivotal role in making something happen. A pivotal issue is a very important one that can have a big impact.\n\nWe've had 'pivotal' - very significant because other things depend on it.\n\nFor example: The designer played a pivotal role in the company's success.\n\nThis is Learning English from the News, our podcast about the news headlines.\n\nToday, we're talking about the latest lawsuit being faced by Instagram and Facebook's owner, Meta.\n\nThe potential damages that Meta may have to pay should they lose this case have been estimated at $200 billion.\n\nDamages are the money that you have to pay the other side. If you lose a court case.\n\nThe court could also force the company to make changes to its products.\n\nThe states behind the lawsuit have asked for the removal of many image filters and autoplay of videos, and for the introduction of parental verification, among other measures.\n\nThis leads us to our next headline, and this is from CNBC, an American business news organisation.\n\nMeta faces 'astronomical' consequences as legal fight reaches critical moment in California.\n\nAnd that headline, again from CNBC.\n\nMeta faces astronomical consequences as legal fight reaches critical moment in California.\n\nLet's find out what 'astronomical' means here.\n\nWe can use 'astronomical' to say that something is related to the study of space and the universe, but that's not what's happening here.\n\nNo, we can also use 'astronomical' metaphorically with numbers.\n\nYou know how space is really big. Well, an astronomical number is a really big number.\n\nWe just mentioned the $200 billion in damages. That is an astronomical amount of money.\n\nWhen the headline says that Meta could be facing astronomical consequences, it's talking about how large and severe these consequences could be.\n\nWe often use 'astronomical' together with money and quantity words, an astronomical figure, an astronomical amount and an astronomical sum.\n\nWe've had 'astronomical' - very large.\n\nFor example: To buy a mansion like that must cost an astronomical amount of money.\n\nThis is Learning English from the News from BBC Learning English.\n\nWe're talking about the latest lawsuit to be faced by Meta.\n\nMuch of the focus of this story is about the potential harm to teens.\n\nThe state's case says that Meta knew how Instagram could take advantage of teenagers' brains.\n\nMeta denies this, and presented a study showing many teenagers feel better about themselves after using Instagram.\n\nHere's our next headline.\n\nThis headline is from The Washington Post, an American newspaper.\n\nZuckerberg faces potential reckoning in court over Instagram's effects on teens.\n\nThat headline, again from The Washington Post, an American newspaper.\n\nZuckerberg faces potential reckoning in court over Instagram's effects on teens.\n\nThe word that we're interested in here is 'reckoning'.\n\n'Reckoning' has a few related meanings.\n\nIt can be a calculation or an estimate.\n\nA reckoning can also be a judgement, and that is the sense that is being used here.\n\nWhen the headline says that Zuckerberg is facing a potential reckoning, it means that he's facing a judgement and potential consequences.\n\n'Reckoning' is quite an old fashioned word that we don't use in everyday speech in this context.\n\nThere are expressions like 'day of reckoning' or 'the final reckoning', but we'd usually see these written in books.\n\nWhat's more common is the verb 'reckon', which means 'estimate' or 'think'.\n\nWe've had 'reckoning' - a judgement and its related consequences.\n\nFor example: The politician will face his reckoning on election day.\n\nThat's it for this episode of Learning English from the News.\n\nWe'll be back next week with another news story.\n\nIf you've enjoyed this programme, don't forget to sign up for our newsletter to find out about all the different programmes that we have, and you can find the link to sign up for it in the notes below this programme.\n\nThat's it for now, bye! Bye!",
+        "end_seconds": null,
+        "source_type": "youtube",
+        "instructions": "Now use the transcript. Listen again to any sections you found difficult and compare what you thought you heard with the actual wording. Pay particular attention to the chunks and collocations from the lesson.",
+        "start_seconds": 0,
+        "transcript_visibility": "always"
+      }
+    ]
+  }
+}
