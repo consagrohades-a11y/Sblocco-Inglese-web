@@ -27,7 +27,7 @@ set role = excluded.role,
 
 select set_config('app.test_uid', '00000000-0000-0000-0000-000000000001', false);
 
-do $
+do $$
 begin
   if (
     select count(*)
@@ -42,9 +42,9 @@ begin
     raise exception 'Learner signup did not create teacher notifications.';
   end if;
 end;
-$;
+$$;
 
-do $
+do $$
 declare
   v_draft_id uuid := gen_random_uuid();
   v_document jsonb;
