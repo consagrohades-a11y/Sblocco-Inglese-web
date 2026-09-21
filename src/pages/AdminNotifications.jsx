@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
+import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import {
   loadTeacherNotifications,
   markAllTeacherNotificationsRead,
@@ -91,27 +92,21 @@ export default function AdminNotifications() {
       <SEO title="Notifiche | Sblocco Inglese" description="Aggiornamenti operativi sui tuoi studenti." />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-5xl">
-          <header className="border-b border-ink/10 pb-6 dark:border-white/10">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <span className="eyebrow">Studenti</span>
-                <h1 className="mt-3 text-3xl font-black text-ink dark:text-white sm:text-4xl">Notifiche</h1>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/65 dark:text-white/65">
-                  Nuove iscrizioni e attività completate, con accesso diretto al punto che richiede la tua attenzione.
-                </p>
-              </div>
-              {unreadCount ? (
-                <button
-                  type="button"
-                  onClick={markAllRead}
-                  className="focus-ring inline-flex min-h-10 items-center gap-2 self-start rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink transition hover:border-clay hover:text-clay dark:border-white/15 dark:bg-white/[0.06] dark:text-white"
-                >
-                  <CheckCheck className="h-4 w-4" aria-hidden="true" />
-                  Segna tutte come lette
-                </button>
-              ) : null}
-            </div>
-          </header>
+          <AdminPageHeader
+            eyebrow="Workspace"
+            title="Notifiche"
+            description="Le nuove registrazioni hanno priorità. Da qui apri direttamente il profilo learner o il risultato che richiede attenzione."
+            actions={unreadCount ? (
+              <button
+                type="button"
+                onClick={markAllRead}
+                className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink transition hover:border-clay hover:text-clay dark:border-white/15 dark:bg-white/[0.06] dark:text-white"
+              >
+                <CheckCheck className="h-4 w-4" aria-hidden="true" />
+                Segna tutte come lette
+              </button>
+            ) : null}
+          />
 
           {error ? (
             <div className="mt-5 border-l-4 border-red-400 bg-red-50 p-4 text-sm font-bold text-red-950 dark:bg-red-400/10 dark:text-red-100">
@@ -143,12 +138,17 @@ export default function AdminNotifications() {
                     key={notification.id}
                     type="button"
                     onClick={() => openNotification(notification)}
-                    className={`flex w-full items-start gap-4 px-5 py-5 text-left transition hover:bg-linen/45 dark:hover:bg-white/[0.04] sm:px-6 ${notification.read_at ? 'opacity-65' : 'bg-clay/[0.045] dark:bg-clay/[0.055]'}`}
+                    className={`flex w-full items-start gap-4 px-5 py-5 text-left transition hover:bg-linen/45 dark:hover:bg-white/[0.04] sm:px-6 ${notification.read_at ? 'opacity-65' : notification.notification_type === 'learner_signed_up' ? 'bg-clay/[0.08] dark:bg-clay/[0.09]' : 'bg-clay/[0.035] dark:bg-clay/[0.045]'}`}
                   >
                     <NotificationIcon type={notification.notification_type} />
                     <span className="min-w-0 flex-1">
                       <span className="flex flex-wrap items-center gap-2">
                         <strong className="text-sm font-black text-ink dark:text-white">{notification.title}</strong>
+                        {notification.notification_type === 'learner_signed_up' ? (
+                          <span className="rounded-full border border-clay/20 bg-clay/[0.08] px-2 py-1 text-[0.6rem] font-black uppercase tracking-wide text-clay dark:border-coral/20 dark:bg-coral/10 dark:text-coral">
+                            Registrazione
+                          </span>
+                        ) : null}
                         {!notification.read_at ? (
                           <span className="rounded-full bg-clay/10 px-2 py-1 text-[0.62rem] font-black uppercase tracking-wide text-clay dark:bg-clay/15 dark:text-[#f0a27d]">
                             Nuovo
