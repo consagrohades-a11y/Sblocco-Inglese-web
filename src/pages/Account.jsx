@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Briefcase,
   CalendarDays,
-  Globe2,
   LogOut,
   Mail,
   ShieldCheck,
@@ -17,7 +16,6 @@ import { useAuth } from '../auth/AuthContext.jsx';
 import { getAuthErrorMessage } from '../auth/authMessages';
 import { supabase } from '../lib/supabaseClient.js';
 
-const languageLabels = { it: 'Italiano', en: 'English' };
 const roleLabels = { learner: 'Studente', admin: 'Amministratore' };
 
 function firstNameFromProfile(profile, user) {
@@ -52,7 +50,6 @@ export default function Account() {
     displayName: '',
     profession: '',
     age: '',
-    interfaceLanguage: 'it',
   });
 
   const isLearner = profile?.role === 'learner' && profile?.status === 'active';
@@ -67,7 +64,6 @@ export default function Account() {
       displayName: profile?.display_name || '',
       profession: profile?.profession || '',
       age: profile?.age == null ? '' : String(profile.age),
-      interfaceLanguage: profile?.interface_language || 'it',
     });
   }, [profile]);
 
@@ -101,7 +97,6 @@ export default function Account() {
         display_name: nextDisplayName,
         profession: isLearner ? (nextProfession || null) : profile?.profession || null,
         age: isLearner ? nextAge : profile?.age ?? null,
-        interface_language: form.interfaceLanguage,
         timezone: detectedTimezone,
       })
       .eq('id', user.id);
@@ -309,20 +304,6 @@ export default function Account() {
                     </label>
                   ) : null}
 
-                  <label className="text-sm font-bold text-[var(--learner-navy)]">
-                    Lingua dell'interfaccia
-                    <div className="relative">
-                      <Globe2 className="pointer-events-none absolute left-4 top-1/2 mt-1 h-4 w-4 -translate-y-1/2 text-[var(--learner-muted)]" />
-                      <select
-                        className={inputClass + ' pl-11'}
-                        value={form.interfaceLanguage}
-                        onChange={(event) => setForm((current) => ({ ...current, interfaceLanguage: event.target.value }))}
-                      >
-                        <option value="it">Italiano</option>
-                        <option value="en">English</option>
-                      </select>
-                    </div>
-                  </label>
                 </div>
 
                 <p className="mt-5 text-xs leading-5 text-[var(--learner-muted)]">
@@ -349,7 +330,6 @@ export default function Account() {
                 <InfoRow icon={Mail} label="Email" value={user?.email} />
                 <InfoRow icon={ShieldCheck} label="Tipo di account" value={role} />
                 <InfoRow icon={UserRound} label="Nome visualizzato" value={displayName || firstName} />
-                <InfoRow icon={Globe2} label="Lingua" value={languageLabels[profile?.interface_language] || profile?.interface_language} />
               </div>
 
               <button
