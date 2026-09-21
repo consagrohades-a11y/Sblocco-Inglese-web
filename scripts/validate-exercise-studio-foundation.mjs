@@ -489,6 +489,20 @@ const unsupported = preflightStudioDocument({
 assert.equal(unsupported.valid, false);
 assert.ok(unsupported.errors.some((item) => item.code === 'unsupported_block'));
 
+function assertNoEmDashTitles(document, label) {
+  const titles = [
+    document.internal_title,
+    document.learner_title,
+    ...(document.blocks || []).map((block) => block?.title),
+  ].filter((value) => typeof value === 'string');
+
+  assert.equal(
+    titles.some((value) => value.includes('—')),
+    false,
+    `${label} must use "|" rather than em dashes in generated titles.`,
+  );
+}
+
 const authoringExample = fs.readFileSync(
   new URL('../public/templates/sblocco-learning-studio/grammar-mini-course-example-v1.json', import.meta.url),
   'utf8',
@@ -497,6 +511,7 @@ const importedExample = parseStudioImport(authoringExample);
 assert.equal(importedExample.publishable, true, importedExample.errors.map((item) => item.message).join('\n'));
 assert.equal(importedExample.needs_attention_blocks, 0);
 assert.ok(importedExample.ready_blocks >= 1);
+assertNoEmDashTitles(importedExample.document, 'Grammar authoring example');
 
 const universalAuthoringExample = fs.readFileSync(
   new URL('../public/templates/sblocco-learning-studio/learning-activity-example-v1.json', import.meta.url),
@@ -512,6 +527,7 @@ assert.equal(importedUniversalExample.needs_attention_blocks, 0);
 assert.equal(importedUniversalExample.document.activity_type, 'lesson');
 assert.equal(importedUniversalExample.document.level, 'B1');
 assert.ok(importedUniversalExample.ready_blocks >= 10);
+assertNoEmDashTitles(importedUniversalExample.document, 'Universal authoring example');
 assert.ok(
   importedUniversalExample.document.blocks.some((block) => block.type === 'vocabulary'),
   'Universal benchmark should exercise vocabulary authoring.',
@@ -534,6 +550,7 @@ assert.equal(
 assert.equal(importedGoldAssessment.needs_attention_blocks, 0);
 assert.equal(importedGoldAssessment.document.activity_type, 'assessment');
 assert.equal(importedGoldAssessment.document.level, 'A1+');
+assertNoEmDashTitles(importedGoldAssessment.document, 'Gold assessment');
 assert.ok(importedGoldAssessment.ready_blocks >= 11);
 assert.ok(
   importedGoldAssessment.document.blocks.some((block) => block.type === 'multiple_choice_set'),
@@ -561,6 +578,7 @@ assert.equal(
 assert.equal(importedGoldListening.needs_attention_blocks, 0);
 assert.equal(importedGoldListening.document.activity_type, 'listening_lesson');
 assert.equal(importedGoldListening.document.level, 'B2');
+assertNoEmDashTitles(importedGoldListening.document, 'Gold listening lesson');
 assert.ok(importedGoldListening.ready_blocks >= 15);
 const goldListeningMedia = importedGoldListening.document.blocks.filter((block) => block.type === 'media');
 assert.ok(goldListeningMedia.length >= 4, 'Gold listening should use staged media passes.');
