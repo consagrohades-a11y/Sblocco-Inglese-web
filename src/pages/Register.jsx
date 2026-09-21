@@ -337,7 +337,7 @@ export default function Register() {
           </div>
         ) : null}
 
-        <section className="register-journey__workspace">
+        <section className={`register-journey__workspace ${step === 3 ? 'is-avatar-step' : ''}`}>
           <div className="register-journey__scene-copy">
             <p className="register-journey__kicker">{activeCopy.eyebrow}</p>
             <h1>{activeCopy.title}</h1>
