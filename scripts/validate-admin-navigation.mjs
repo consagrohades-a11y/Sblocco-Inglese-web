@@ -15,6 +15,12 @@ function assertNotContains(source, fragment, message) {
 const shell = read('src/components/AdminShell.jsx');
 const dashboard = read('src/pages/AdminDashboard.jsx');
 const app = read('src/App.jsx');
+const navbar = read('src/components/Navbar.jsx');
+const footer = read('src/components/Footer.jsx');
+const learnerHome = read('src/pages/LearnerHome.jsx');
+const learnerAssignments = read('src/pages/LearnerAssignments.jsx');
+const learnerAssignmentDetail = read('src/pages/LearnerAssignmentDetail.jsx');
+const platform = read('src/pages/Platform.jsx');
 
 for (const activeRoute of [
   '/admin/notifications',
@@ -58,4 +64,36 @@ assertContains(app, '<Route path="assignments" element={<AdminAssignments />} />
 assertNotContains(app, 'AdminSectionOverview', 'AdminSectionOverview placeholder must stay retired.');
 assertNotContains(app, 'AdminContentOverview', 'AdminContentOverview legacy hub must stay retired.');
 
-console.log('Admin navigation validation passed.');
+for (const [source, name] of [
+  [navbar, 'Navbar'],
+  [footer, 'Footer'],
+  [learnerHome, 'LearnerHome'],
+  [learnerAssignments, 'LearnerAssignments'],
+  [learnerAssignmentDetail, 'LearnerAssignmentDetail'],
+  [platform, 'Platform'],
+]) {
+  for (const legacyCopy of ['Word Trainer', 'Expression Trainer', 'Ripasso SRS', 'Pratica mirata']) {
+    assertNotContains(source, legacyCopy, `${name} still exposes retired learner copy: ${legacyCopy}`);
+  }
+}
+
+for (const retiredImport of [
+  'TrainersLanding',
+  'WordTrainer',
+  'GeneralExpressionTrainer',
+  'HospitalityExpressionTrainer',
+  'TravelExpressionTrainer',
+  'PracticeHub',
+  'AdminTrainerContent',
+  'AdminWordTrainerContent',
+  'AdminTravelTrainer',
+]) {
+  assertNotContains(app, retiredImport, `App still imports retired runtime: ${retiredImport}`);
+}
+
+assertContains(app, '<Route path="/trainers" element={<Navigate to="/piattaforma" replace />} />', 'Legacy /trainers URL must redirect safely.');
+assertContains(app, '<Route path="/practice" element={<ProtectedRoute><Navigate to="/assignments" replace /></ProtectedRoute>} />', 'Legacy /practice URL must redirect safely.');
+assertContains(app, '<Route path="/attivita/srs" element={<ProtectedRoute><Navigate to="/attivita/esercizi" replace /></ProtectedRoute>} />', 'Legacy SRS learner URL must redirect safely.');
+assertContains(app, '<Route path="/attivita/pratica-mirata" element={<ProtectedRoute><Navigate to="/attivita/esercizi" replace /></ProtectedRoute>} />', 'Legacy practice learner URL must redirect safely.');
+
+console.log('Admin and legacy-surface navigation validation passed.');
