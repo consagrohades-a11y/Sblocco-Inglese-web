@@ -442,7 +442,6 @@ export default function Register() {
                         <p className="register-journey__avatar-section-kicker">Scegline uno</p>
                         <h2>Quale ti rappresenta di più?</h2>
                       </div>
-                      <p>Non deve assomigliarti. Basta che ti venga naturale sceglierlo.</p>
                     </div>
 
                     <LearnerAvatarPicker
@@ -499,17 +498,18 @@ export default function Register() {
                         })}
                       </div>
                     </div>
+
+                    <div className="register-journey__avatar-preview-actions">
+                      {!avatarKey ? <button type="button" onClick={() => moveTo(4)} className="register-journey__skip">Lo scelgo dopo</button> : null}
+                      <button type="button" onClick={continueJourney} className="register-journey__primary register-journey__primary--avatar">
+                        {avatarKey ? 'Continua con questo' : 'Continua'} <ArrowRight />
+                      </button>
+                    </div>
                   </aside>
                 </div>
 
-                <div className="register-journey__actions register-journey__actions--avatar">
+                <div className="register-journey__actions register-journey__actions--avatar-back">
                   <button type="button" onClick={goBack} className="register-journey__back"><ArrowLeft /> Indietro</button>
-                  <div className="register-journey__actions-right">
-                    {!avatarKey ? <button type="button" onClick={() => moveTo(4)} className="register-journey__skip">Lo scelgo dopo</button> : null}
-                    <button type="button" onClick={continueJourney} className="register-journey__primary">
-                      {avatarKey ? 'Continua con questo' : 'Continua'} <ArrowRight />
-                    </button>
-                  </div>
                 </div>
               </div>
             ) : null}
