@@ -4,6 +4,7 @@ import {
   ArrowUpDown,
   Check,
   ChevronDown,
+  ChevronRight,
   Download,
   FileJson2,
   Filter,
@@ -41,7 +42,7 @@ import {
   deleteStudioFolder,
   listStudioFolders,
   moveStudioDraftToFolder,
-  renameStudioFolder,
+  updateStudioFolder,
 } from '../lib/exerciseStudioFolderApi.js';
 
 const STATUS_OPTIONS = [
@@ -106,11 +107,66 @@ function updatedLabel(value) {
   }
 }
 
-function folderCount(items, folderId) {
-  if (folderId === 'all') return items.length;
-  if (folderId === 'pinned') return items.filter((item) => Boolean(item.pinned_at)).length;
-  if (folderId === 'unfiled') return items.filter((item) => !item.folder_id).length;
-  return items.filter((item) => item.folder_id === folderId).length;
+const FOLDER_COLORS = [
+  { key: 'sand', label: 'Sand', hex: '#A88F6A' },
+  { key: 'orange', label: 'Orange', hex: '#E76524' },
+  { key: 'navy', label: 'Navy', hex: '#35536A' },
+  { key: 'coral', label: 'Coral', hex: '#D95D59' },
+  { key: 'gold', label: 'Gold', hex: '#C58A18' },
+  { key: 'blue', label: 'Blue', hex: '#3A6EA5' },
+  { key: 'rose', label: 'Rose', hex: '#B65C7A' },
+];
+
+function folderColor(colorKey) {
+  return FOLDER_COLORS.find((color) => color.key === colorKey) || FOLDER_COLORS[0];
+}
+
+function childFolders(folders, parentId) {
+  return folders
+    .filter((folder) => (folder.parent_id || null) === (parentId || null))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function folderDescendantIds(folders, folderId) {
+  const descendants = new Set();
+  const queue = [folderId];
+
+  while (queue.length) {
+    const parentId = queue.shift();
+    for (const folder of folders) {
+      if (folder.parent_id === parentId && !descendants.has(folder.id)) {
+        descendants.add(folder.id);
+        queue.push(folder.id);
+      }
+    }
+  }
+
+  return descendants;
+}
+
+function folderPath(folders, folderId) {
+  const byId = new Map(folders.map((folder) => [folder.id, folder]));
+  const path = [];
+  const seen = new Set();
+  let current = byId.get(folderId);
+
+  while (current && !seen.has(current.id)) {
+    path.unshift(current);
+    seen.add(current.id);
+    current = current.parent_id ? byId.get(current.parent_id) : null;
+  }
+
+  return path;
+}
+
+function folderPathLabel(folders, folderId) {
+  return folderPath(folders, folderId).map((folder) => folder.name).join(' › ');
+}
+
+function folderRecursiveCount(items, folders, folderId) {
+  const ids = folderDescendantIds(folders, folderId);
+  ids.add(folderId);
+  return items.filter((item) => item.folder_id && ids.has(item.folder_id)).length;
 }
 
 function sortItems(items, sort) {
@@ -149,7 +205,7 @@ export default function AdminExerciseBuilderLibrary() {
   const [folders, setFolders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState('all');
-  const [selectedFolder, setSelectedFolder] = useState('all');
+  const [selectedFolder, setSelectedFolder] = useState('root');
   const [selectedTag, setSelectedTag] = useState('all');
   const [levelFilter, setLevelFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -166,8 +222,11 @@ export default function AdminExerciseBuilderLibrary() {
   const [pinningId, setPinningId] = useState('');
   const [newFolderOpen, setNewFolderOpen] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
+  const [newFolderColor, setNewFolderColor] = useState('orange');
   const [renamingFolderId, setRenamingFolderId] = useState('');
   const [renameValue, setRenameValue] = useState('');
+  const [editFolderColor, setEditFolderColor] = useState('sand');
+  const [editFolderParent, setEditFolderParent] = useState('root');
   const [folderBusy, setFolderBusy] = useState(false);
   const [draggedDraftId, setDraggedDraftId] = useState('');
   const [dragOverFolder, setDragOverFolder] = useState('');
@@ -211,9 +270,15 @@ export default function AdminExerciseBuilderLibrary() {
 
     const rows = items.filter((item) => {
       if (status !== 'all' && item.status !== status) return false;
-      if (selectedFolder === 'pinned' && !item.pinned_at) return false;
-      if (selectedFolder === 'unfiled' && item.folder_id) return false;
-      if (!['all', 'pinned', 'unfiled'].includes(selectedFolder) && item.folder_id !== selectedFolder) return false;
+
+      if (selectedFolder === 'pinned') {
+        if (!item.pinned_at) return false;
+      } else if (selectedFolder === 'root') {
+        if (!needle && item.folder_id) return false;
+      } else if (item.folder_id !== selectedFolder) {
+        return false;
+      }
+
       if (levelFilter !== 'all' && item.level !== levelFilter) return false;
       if (typeFilter !== 'all' && item.activity_type !== typeFilter) return false;
       if (originFilter !== 'all' && item.origin !== originFilter) return false;
@@ -267,17 +332,31 @@ export default function AdminExerciseBuilderLibrary() {
   ), [selectedItems]);
 
   const activeFilterCount = [levelFilter, typeFilter, originFilter].filter((value) => value !== 'all').length;
-  const folderQuery = !['all', 'pinned', 'unfiled'].includes(selectedFolder) ? `&folder=${encodeURIComponent(selectedFolder)}` : '';
+  const currentFolder = !['root', 'pinned'].includes(selectedFolder)
+    ? folders.find((folder) => folder.id === selectedFolder) || null
+    : null;
+  const currentPath = currentFolder ? folderPath(folders, currentFolder.id) : [];
+  const visibleFolders = selectedFolder === 'root'
+    ? childFolders(folders, null)
+    : currentFolder
+      ? childFolders(folders, currentFolder.id)
+      : [];
+  const folderOptions = folders
+    .map((folder) => ({ ...folder, path_label: folderPathLabel(folders, folder.id) || folder.name }))
+    .sort((a, b) => a.path_label.localeCompare(b.path_label));
+  const folderQuery = currentFolder ? `&folder=${encodeURIComponent(currentFolder.id)}` : '';
   const newActivityHref = `/admin/content/exercises/studio?${folderQuery ? folderQuery.slice(1) : ''}`;
   const importHref = `/admin/content/exercises/studio?import=1${folderQuery}`;
-
-  const selectedFolderLabel = selectedFolder === 'all'
-    ? 'All activities'
-    : selectedFolder === 'pinned'
-      ? 'Pinned'
-      : selectedFolder === 'unfiled'
-        ? 'Unfiled'
-        : folders.find((folder) => folder.id === selectedFolder)?.name || 'Folder';
+  const isGlobalSearch = selectedFolder === 'root' && Boolean(search.trim());
+  const selectedFolderLabel = selectedFolder === 'pinned'
+    ? 'Pinned activities'
+    : isGlobalSearch
+      ? 'Search results'
+      : currentFolder
+        ? currentFolder.name
+        : 'Unfiled';
+  const pinnedCount = items.filter((item) => Boolean(item.pinned_at)).length;
+  const unfiledCount = items.filter((item) => !item.folder_id).length;
 
   function clearContentFilters() {
     setSelectedTag('all');
