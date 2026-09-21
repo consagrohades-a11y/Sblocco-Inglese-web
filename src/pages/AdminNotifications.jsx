@@ -8,12 +8,10 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
-import { useAuth } from '../auth/AuthContext.jsx';
 import {
   loadTeacherNotifications,
   markAllTeacherNotificationsRead,
   markTeacherNotificationRead,
-  subscribeToTeacherNotifications,
 } from '../lib/teacherNotificationsApi.js';
 
 function formatDate(value) {
@@ -37,7 +35,6 @@ function NotificationIcon({ type }) {
 
 export default function AdminNotifications() {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -59,9 +56,9 @@ export default function AdminNotifications() {
 
   useEffect(() => {
     refresh();
-    const unsubscribe = subscribeToTeacherNotifications(user?.id, () => refresh({ quiet: true }));
-    return unsubscribe;
-  }, [refresh, user?.id]);
+    const timer = window.setInterval(() => refresh({ quiet: true }), 30000);
+    return () => window.clearInterval(timer);
+  }, [refresh]);
 
   async function openNotification(notification) {
     try {
