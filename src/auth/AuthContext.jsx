@@ -54,12 +54,25 @@ export function AuthProvider({ children }) {
       }
 
       const nextSession = data.session ?? null;
-      setSession(nextSession);
-      setUser(nextSession?.user ?? null);
 
       try {
-        setProfile(nextSession?.user ? await loadProfile(nextSession.user.id) : null);
+        const nextProfile = nextSession?.user ? await loadProfile(nextSession.user.id) : null;
+
+        if (nextSession?.user && !nextProfile) {
+          await supabase.auth.signOut({ scope: 'local' });
+          if (!active) return;
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          return;
+        }
+
+        setSession(nextSession);
+        setUser(nextSession?.user ?? null);
+        setProfile(nextProfile);
       } catch {
+        setSession(null);
+        setUser(null);
         setProfile(null);
       } finally {
         if (active) setLoading(false);
@@ -68,13 +81,26 @@ export function AuthProvider({ children }) {
 
     initialiseAuth();
 
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, nextSession) => {
-      setSession(nextSession);
-      setUser(nextSession?.user ?? null);
-
+    const { data: listener } = supabase.auth.onAuthStateChange(async (event, nextSession) => {
       try {
-        setProfile(nextSession?.user ? await loadProfile(nextSession.user.id) : null);
+        const nextProfile = nextSession?.user ? await loadProfile(nextSession.user.id) : null;
+
+        if (nextSession?.user && !nextProfile) {
+          if (event !== 'SIGNED_OUT') {
+            await supabase.auth.signOut({ scope: 'local' });
+          }
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          return;
+        }
+
+        setSession(nextSession);
+        setUser(nextSession?.user ?? null);
+        setProfile(nextProfile);
       } catch {
+        setSession(null);
+        setUser(null);
         setProfile(null);
       } finally {
         setLoading(false);

@@ -20,7 +20,11 @@ export default function AdminRoute({ children }) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
-  if (profile?.role !== 'admin' || profile?.status !== 'active') {
+  if (!profile) {
+    return <Navigate to="/login" replace state={{ from: location.pathname, message: 'La sessione non è più valida. Accedi di nuovo.' }} />;
+  }
+
+  if (profile.role !== 'admin' || profile.status !== 'active') {
     return <Navigate to="/account" replace />;
   }
 
