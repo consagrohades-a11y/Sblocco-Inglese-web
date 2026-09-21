@@ -129,6 +129,47 @@ Flexible ranges based on learner actions:
 
 These are guides, not quotas.
 
+### Full-depth lesson architecture
+
+A substantial Sblocco lesson should feel **rich, not bloated**. Depth comes from a purposeful sequence of stages, not from repeating the same question type until the activity looks long.
+
+For a full 35–50 minute lesson, normally build an arc such as:
+
+```text
+input / context
+→ understanding
+→ noticing
+→ explicit teaching where useful
+→ controlled retrieval
+→ less-supported retrieval or manipulation
+→ transfer to a new context
+→ personalisation / production / selective review
+```
+
+The exact stages depend on lesson type. Do not force every lesson through the same sequence.
+
+High-value target language should normally reappear through **different cognitive operations**. For example:
+
+```text
+encounter it
+→ recognise its meaning/use
+→ retrieve it without options
+→ manipulate or reconstruct it
+→ use it in a different context
+```
+
+Do not confuse repetition with recycling. Asking the same multiple-choice question pattern ten times is repetition. Revisiting the same language through listening, noticing, retrieval and transfer is recycling.
+
+For substantial lessons:
+- use multiple pedagogical stages, not one giant practice block;
+- let each stage have a distinct purpose;
+- allow source audio/video to reappear when each replay has a different task;
+- make later stages less supported than early stages;
+- normally include a transfer, production or personal-selection stage when the lesson is teaching reusable language;
+- do not add a recap automatically. A meaningful recap may remain when it genuinely compresses or organises useful information.
+
+A full-depth activity may legitimately contain more learner actions than the default ranges above when the actions are varied and purposeful. Do not shorten a coherent 45–50 minute lesson merely to hit a numerical target.
+
 ## 6. Vocabulary policy by CEFR
 
 Do not apply a blanket "chunks first" rule.
@@ -623,18 +664,37 @@ Avoid:
 ### Listening lesson
 Use only when the learner has real audio/video/transcript content.
 
-Default:
+For a short listening exercise, a simple gist → detail → reuse sequence may be enough.
+
+For a **full-depth source-based listening lesson**, prefer a staged architecture such as:
+
 ```text
 context / essential pre-listening support
-→ media
-→ gist
-→ detail
+→ first listen: gist / big picture
+→ second listen: evidence / detail
+→ focused listen: exact language
 → language noticing
-→ retrieval/reuse
-→ discussion/writing
+→ explicit words + collocations + chunks
+→ reconstruct language from the audio
+→ active retrieval
+→ transfer the language to new contexts
+→ optional vocabulary-bank selection
+→ final transcript-supported check
 ```
 
-Normally gist precedes fine detail. Do not pre-teach so much that the listening task becomes trivial. Never invent comprehension from an inaccessible URL.
+Not every source needs three listens. Use as many passes as have a distinct pedagogical purpose.
+
+Rules:
+- gist normally precedes fine detail;
+- do not pre-teach so much that the first listen becomes trivial;
+- it is legitimate to reuse the same media block several times when each replay has a different task;
+- when the learner is meant to listen without the transcript, use `transcript_visibility: "never"` or `"after_submit"` as appropriate;
+- a final transcript-check stage may use `transcript_visibility: "always"`;
+- mine the source for reusable language, not only comprehension questions;
+- at B2–C2, lexical work should normally include useful words **and** collocations/chunks when the source supports them;
+- after source-bound retrieval, include at least some transfer to a different context when the objective is reusable language.
+
+Never invent comprehension, quotations or language from an inaccessible source.
 
 ### Writing activity
 Build around communicative purpose.
@@ -660,12 +720,78 @@ Avoid "mixed" lessons that are simply disconnected blocks.
 ### Assessment
 Assess taught/expected knowledge rather than teach it heavily before testing.
 
-Use stricter ambiguity standards than normal practice. Keep scoring targets clear. Do not use an assessment to sneak in large amounts of new teaching.
+For a **substantial CEFR assessment**, prefer progression rather than a flat bank of identical questions. A useful architecture is:
+
+```text
+secure core
+→ vocabulary in context
+→ connected language
+→ active lexical recall
+→ sentence/question construction
+→ grammatical transformation
+→ optional threshold/stretch section
+```
+
+The exact sequence depends on what is being assessed.
+
+Requirements:
+- use stricter ambiguity standards than normal practice;
+- keep scoring targets clear;
+- use more than one response mode in a substantial assessment when the construct supports it;
+- lower-level vocabulary assessment must include some **active retrieval**, not only recognition;
+- connected-text tasks can test whether grammar survives outside isolated sentences;
+- construction and transformation tasks can test productive control without requiring long free writing;
+- a threshold/stretch section is useful when the explicit purpose is readiness for the next CEFR band;
+- stretch content must be clearly framed and should not distort the score if the requested assessment is meant to measure the current level only.
+
+Do not use an assessment to sneak in large amounts of new teaching. Feedback may explain answers after the learner responds.
 
 ### Quick exercise
 Usually 6–10 focused learner actions around one target. Minimal theory. Appropriate for homework, retrieval, correction practice or reinforcement.
 
 Do not inflate it into a fake 30-minute lesson.
+
+## 11A. Gold-standard Sblocco benchmark patterns
+
+The following cleaned examples are **quality benchmarks**, not rigid templates. Match their pedagogical richness and progression when the requested scope is comparable, but do not mechanically copy their topic, block count or exact exercise types.
+
+### Benchmark A — Substantial A1+ → A2 threshold assessment
+
+File: `gold-benchmark-a1plus-a2-threshold-assessment-v1.json`
+
+What to learn from it:
+- starts with secure core language and becomes progressively more demanding;
+- combines grammar and vocabulary rather than pretending one multiple-choice bank is a complete assessment;
+- includes vocabulary recognition **and active lexical retrieval**;
+- uses connected-text gap filling, word order and grammatical transformation;
+- varies response mode while keeping answers safely gradable;
+- uses a final threshold section because A2 readiness is an explicit purpose.
+
+Do **not** infer that every assessment needs seven parts or a threshold section.
+
+### Benchmark B — B2 source-based listening + vocabulary/chunks
+
+File: `gold-benchmark-b2-listening-vocabulary-chunks-v1.json`
+
+What to learn from it:
+- reuses the same source for different listening purposes rather than asking all questions after one play;
+- moves from gist → detail → exact language;
+- treats listening as a source of reusable language, not only comprehension;
+- teaches individual words, collocations and chunks;
+- makes the learner reconstruct and retrieve language after noticing it;
+- transfers target language beyond the original news story;
+- lets the learner select personally useful words/chunks for the vocabulary bank;
+- makes the transcript available at the final checking stage rather than during initial listening.
+
+Do **not** force three listens when the source or lesson goal does not justify them.
+
+### Benchmark rule
+
+When producing a substantial lesson, silently ask:
+
+> Does this activity have the same level of pedagogical purpose, progression, recycling and learner usefulness as the most relevant Sblocco benchmark?
+
+Passing schema validation is necessary but **not sufficient**. A technically valid JSON file can still be pedagogically thin.
 
 ## 12. Source fidelity
 
@@ -703,6 +829,10 @@ Check all of the following:
 - source questions are source-grounded;
 - writing remains open-ended/manual-review appropriate;
 - recap, if present, adds real consolidation;
+- a substantial lesson has multiple pedagogical stages rather than one repeated exercise pattern;
+- important target language is recycled through different operations, not merely repeated;
+- source-based listening keeps the transcript hidden until the intended transcript stage;
+- substantial assessments use varied evidence of learning when appropriate;
 - the lesson is coherent and useful, not merely long.
 
 ## 14. Output rule
