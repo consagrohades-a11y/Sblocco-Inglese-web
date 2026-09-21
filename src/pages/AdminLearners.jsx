@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 import { loadLearnerGroups } from '../lib/learnerGroupsApi.js';
 
@@ -201,9 +202,16 @@ export default function AdminLearners() {
                       to={`/admin/learners/${learner.id}`}
                       className="focus-ring grid gap-4 p-5 transition hover:bg-linen/45 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1.5fr)_auto_auto_auto] md:items-center"
                     >
-                      <div>
-                        <p className="text-base font-black text-ink dark:text-white">{learner.display_name || 'Nome non impostato'}</p>
-                        <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">Registrato il {formatDate(learner.created_at)}</p>
+                      <div className="flex min-w-0 items-center gap-3">
+                        <LearnerAvatar
+                          avatarKey={learner.avatar_key}
+                          displayName={learner.display_name || learner.email}
+                          size="md"
+                        />
+                        <div className="min-w-0">
+                          <p className="truncate text-base font-black text-ink dark:text-white">{learner.display_name || 'Nome non impostato'}</p>
+                          <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">Registrato il {formatDate(learner.created_at)}</p>
+                        </div>
                       </div>
                       <p className="break-all text-sm font-semibold text-ink/70 dark:text-white/65">{learner.email || '-'}</p>
                       <div className="flex flex-wrap gap-2">
