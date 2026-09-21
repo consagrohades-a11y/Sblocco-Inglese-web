@@ -13,15 +13,18 @@ export default function LearnerAvatarPicker({
   onBackgroundChange,
   disabled = false,
   variant = 'card',
+  showBackgrounds = true,
+  showSectionLabels = true,
 }) {
   const selectedBackground = backgroundValue || DEFAULT_LEARNER_AVATAR_BACKGROUND_KEY;
   const bare = variant === 'bare';
 
   return (
     <div>
-      <div>
-        <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/55 dark:text-white/55">Sfondo</p>
-        <div className="mt-3 flex flex-wrap gap-3" aria-label="Scegli il colore di sfondo">
+      {showBackgrounds ? (
+        <div>
+          {showSectionLabels ? <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/55 dark:text-white/55">Sfondo</p> : null}
+          <div className={showSectionLabels ? 'mt-3 flex flex-wrap gap-3' : 'flex flex-wrap gap-3'} aria-label="Scegli il colore di sfondo">
           {LEARNER_AVATAR_BACKGROUNDS.map((background) => {
             const selected = selectedBackground === background.key;
             return (
@@ -51,12 +54,13 @@ export default function LearnerAvatarPicker({
               </button>
             );
           })}
+          </div>
         </div>
-      </div>
+      ) : null}
 
-      <div className="mt-6 border-t border-ink/8 pt-5 dark:border-white/8">
-        <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/55 dark:text-white/55">Personaggio</p>
-        <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6" aria-label="Scegli il tuo avatar">
+      <div className={showBackgrounds ? 'mt-6 border-t border-ink/8 pt-5 dark:border-white/8' : ''}>
+        {showSectionLabels ? <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/55 dark:text-white/55">Personaggio</p> : null}
+        <div className={showSectionLabels ? 'mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6' : 'grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'} aria-label="Scegli il tuo avatar">
           {LEARNER_AVATARS.map((avatar, index) => {
             const selected = value === avatar.key;
             return (
