@@ -768,6 +768,61 @@
 }
 
 @media (max-width: 900px) {
+  .register-journey__workspace.is-avatar-step {
+    width: min(100%, 42rem);
+  }
+
+  .register-journey__avatar-choice-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .register-journey__avatar-preview {
+    position: static;
+    order: -1;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "kicker kicker"
+      "portrait copy"
+      "colors colors";
+    align-items: center;
+    gap: .65rem 1.25rem;
+    padding: 1rem 0 1.25rem;
+    border-left: 0;
+    border-bottom: 1px solid rgba(18, 56, 74, .1);
+    background: transparent;
+  }
+
+  .register-journey__avatar-preview > .register-journey__avatar-section-kicker {
+    grid-area: kicker;
+  }
+
+  .register-journey__avatar-preview-portrait {
+    grid-area: portrait;
+    margin: .25rem 0;
+  }
+
+  .register-journey__avatar-preview-portrait > span:first-child {
+    width: 7.4rem;
+    height: 7.4rem;
+  }
+
+  .register-journey__avatar-preview-copy {
+    grid-area: copy;
+    max-width: 22rem;
+  }
+
+  .register-journey__avatar-colors {
+    grid-area: colors;
+    margin-top: .35rem;
+    padding-top: .9rem;
+  }
+
+  .register-journey__avatar-gallery-heading {
+    align-items: start;
+  }
+
   .register-journey__topbar {
     grid-template-columns: auto 1fr auto;
   }
@@ -795,6 +850,57 @@
 }
 
 @media (max-width: 640px) {
+  .register-journey__workspace.is-avatar-step .register-journey__scene-copy h1 {
+    font-size: clamp(2.55rem, 12vw, 3.5rem);
+  }
+
+  .register-journey__workspace.is-avatar-step .register-journey__scene-copy > p:last-child {
+    max-width: 31rem;
+  }
+
+  .register-journey__avatar-gallery-heading {
+    display: block;
+    margin-bottom: .9rem;
+  }
+
+  .register-journey__avatar-gallery-heading > p {
+    max-width: 25rem;
+    margin-top: .6rem;
+    text-align: left;
+  }
+
+  .register-journey__avatar-gallery button[aria-label^="Scegli "] {
+    min-height: 7.2rem;
+    padding: .4rem;
+  }
+
+  .register-journey__avatar-gallery button[aria-label^="Scegli "] > span:first-of-type {
+    width: 5.9rem;
+    height: 5.9rem;
+  }
+
+  .register-journey__avatar-preview {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: .55rem 1rem;
+  }
+
+  .register-journey__avatar-preview-portrait > span:first-child {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .register-journey__avatar-preview-copy h2 {
+    font-size: 1.25rem;
+  }
+
+  .register-journey__avatar-preview-copy p {
+    font-size: .7rem;
+  }
+
+  .register-journey__actions--avatar {
+    margin-top: 1.3rem;
+  }
+
   .register-journey__topbar {
     width: min(calc(100% - 1.25rem), 88rem);
     min-height: 4.5rem;
