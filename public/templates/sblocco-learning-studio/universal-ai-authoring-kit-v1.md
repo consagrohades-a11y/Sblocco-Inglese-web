@@ -1,4 +1,4 @@
-# Sblocco Inglese — Universal AI Authoring Kit v1
+# Sblocco Inglese | Universal AI Authoring Kit v1
 
 **Template ID:** `sblocco-learning-activity`  
 **Template version:** `1`  
@@ -91,6 +91,8 @@ Only declare a skill when the activity genuinely teaches or practises it.
 10. Do not use a theory block merely for decoration.
 11. A recap is optional. Include it only when it adds synthesis, a decision rule, a useful contrast, an error warning or another meaningful consolidation benefit.
 12. If a recap only repeats earlier content, omit it.
+13. **Title style:** never use an em dash (`—`) in generated activity titles, learner titles, internal titles, block titles, part titles or section titles. When a title needs a separator, use a vertical bar (`|`) instead. Example: `Part 3 | A Weekend Away`, not `Part 3 — A Weekend Away`.
+14. This title rule applies to generated titles only. Do not alter punctuation inside quoted source material or transcripts merely to match the house style.
 
 ## 5. Lesson depth: count learner actions, not blocks
 
@@ -755,7 +757,7 @@ Do not inflate it into a fake 30-minute lesson.
 
 The following cleaned examples are **quality benchmarks**, not rigid templates. Match their pedagogical richness and progression when the requested scope is comparable, but do not mechanically copy their topic, block count or exact exercise types.
 
-### Benchmark A — Substantial A1+ → A2 threshold assessment
+### Benchmark A | Substantial A1+ → A2 threshold assessment
 
 File: `gold-benchmark-a1plus-a2-threshold-assessment-v1.json`
 
@@ -769,7 +771,7 @@ What to learn from it:
 
 Do **not** infer that every assessment needs seven parts or a threshold section.
 
-### Benchmark B — B2 source-based listening + vocabulary/chunks
+### Benchmark B | B2 source-based listening + vocabulary/chunks
 
 File: `gold-benchmark-b2-listening-vocabulary-chunks-v1.json`
 

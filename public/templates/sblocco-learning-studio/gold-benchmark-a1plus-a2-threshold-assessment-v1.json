@@ -188,7 +188,7 @@
             "feedback": "Can comes directly before the subject in questions: Can your sister drive?"
           }
         ],
-        "title": "Part 1 — Grammar Check",
+        "title": "Part 1 | Grammar Check",
         "prompt": "Choose the option that completes each sentence correctly.",
         "instructions": "Choose one answer for each item.",
         "primary_skill": "grammar",
@@ -342,7 +342,7 @@
             "feedback": "You can order food from a restaurant for delivery or collection."
           }
         ],
-        "title": "Part 2 — Vocabulary in Context",
+        "title": "Part 2 | Vocabulary in Context",
         "prompt": "Choose the word or phrase that best completes each situation.",
         "instructions": "Choose one answer for each item.",
         "primary_skill": "vocabulary",
@@ -350,7 +350,7 @@
       },
       {
         "type": "gap_fill",
-        "title": "Part 3 — A Weekend Away",
+        "title": "Part 3 | A Weekend Away",
         "blanks": [
           {
             "accepted_answers": [
@@ -451,7 +451,7 @@
             "feedback": "Try something on means put on clothes to see whether they fit or look good."
           }
         ],
-        "title": "Part 4 — Find the English Word",
+        "title": "Part 4 | Find the English Word",
         "prompt": "Write the English word or expression.",
         "instructions": "Use the context to help you. Write only the missing English word or expression.",
         "primary_skill": "vocabulary",
@@ -459,7 +459,7 @@
       },
       {
         "type": "word_order",
-        "title": "Part 5A — Build the Sentence",
+        "title": "Part 5A | Build the Sentence",
         "chunks": [
           "i",
           "usually",
@@ -475,7 +475,7 @@
       },
       {
         "type": "word_order",
-        "title": "Part 5B — Build the Question",
+        "title": "Part 5B | Build the Question",
         "chunks": [
           "where",
           "did",
@@ -491,7 +491,7 @@
       },
       {
         "type": "word_order",
-        "title": "Part 5C — Build the Sentence",
+        "title": "Part 5C | Build the Sentence",
         "chunks": [
           "we",
           "are going to",
@@ -507,7 +507,7 @@
       },
       {
         "type": "word_order",
-        "title": "Part 5D — Build the Question",
+        "title": "Part 5D | Build the Question",
         "chunks": [
           "what",
           "are",
@@ -523,7 +523,7 @@
       },
       {
         "type": "word_order",
-        "title": "Part 5E — Build the Sentence",
+        "title": "Part 5E | Build the Sentence",
         "chunks": [
           "this restaurant",
           "is",
@@ -590,7 +590,7 @@
             "feedback": "Be going to is used here for an existing future plan."
           }
         ],
-        "title": "Part 6 — Change the Sentence",
+        "title": "Part 6 | Change the Sentence",
         "prompt": "Rewrite or complete each sentence as instructed.",
         "instructions": "Keep the meaning and use the correct grammar.",
         "primary_skill": "grammar",
@@ -708,7 +708,7 @@
             "feedback": "Be going to can be used for a prediction based on present evidence or expectation."
           }
         ],
-        "title": "Part 7 — A2 Threshold Challenge",
+        "title": "Part 7 | A2 Threshold Challenge",
         "prompt": "These final questions are slightly more difficult. Choose the best answer.",
         "instructions": "Choose one answer for each item.",
         "primary_skill": "grammar",

@@ -5,13 +5,17 @@
     "authoring_contract_version": 1
   },
   "activity": {
-    "internal_title": "A2 — Present Perfect — Life Experiences",
+    "internal_title": "A2 | Present Perfect | Life Experiences",
     "learner_title": "Talking about your experiences",
     "level": "A2",
     "topic": "present_perfect",
     "activity_type": "mini_course",
     "estimated_minutes": 16,
-    "tags": ["grammar", "conversation", "life experiences"],
+    "tags": [
+      "grammar",
+      "conversation",
+      "life experiences"
+    ],
     "blocks": [
       {
         "type": "explanation",
@@ -22,7 +26,10 @@
         "type": "rule",
         "title": "The pattern",
         "body": "have / has + past participle",
-        "examples": ["I have visited Berlin.", "She has never tried surfing."]
+        "examples": [
+          "I have visited Berlin.",
+          "She has never tried surfing."
+        ]
       },
       {
         "type": "multiple_choice",
@@ -30,9 +37,18 @@
         "instructions": "Choose the best answer.",
         "learning_objective": "Choose the correct past participle after have.",
         "options": [
-          { "text": "been", "is_correct": true },
-          { "text": "went", "is_correct": false },
-          { "text": "go", "is_correct": false }
+          {
+            "text": "been",
+            "is_correct": true
+          },
+          {
+            "text": "went",
+            "is_correct": false
+          },
+          {
+            "text": "go",
+            "is_correct": false
+          }
         ],
         "feedback": {
           "explanation": "After have, use a past participle. The past participle of go is been when we mean visiting a place."
@@ -57,7 +73,12 @@
       {
         "type": "word_order",
         "prompt": "Build the question.",
-        "chunks": ["Have", "you ever", "travelled", "abroad"],
+        "chunks": [
+          "Have",
+          "you ever",
+          "travelled",
+          "abroad"
+        ],
         "terminal_punctuation": "?"
       },
       {
@@ -74,7 +95,12 @@
         "prompt": "Write about one place you have visited. Introduce the experience, then give finished past details.",
         "min_words": 60,
         "max_words": 120,
-        "required_points": ["Name the place", "Say what you experienced", "Say when you went", "Give one extra detail"],
+        "required_points": [
+          "Name the place",
+          "Say what you experienced",
+          "Say when you went",
+          "Give one extra detail"
+        ],
         "learning_objective": "Distinguish life experience from finished past details in connected writing."
       },
       {
@@ -89,4 +115,3 @@
     ]
   }
 }
-

@@ -129,7 +129,7 @@
             "feedback": "The programme explains the story and focuses on important vocabulary used in the headlines."
           }
         ],
-        "title": "First listen — the big picture",
+        "title": "First listen | the big picture",
         "prompt": "Choose the best answer based on your first listen.",
         "instructions": "Focus on the main story rather than small details.",
         "primary_skill": "listening",
@@ -276,7 +276,7 @@
             "feedback": "Meta presented a study showing that many teenagers feel better about themselves after using Instagram."
           }
         ],
-        "title": "Second listen — important details",
+        "title": "Second listen | important details",
         "prompt": "Choose the best answer based on the report.",
         "instructions": "You may replay the audio while answering.",
         "primary_skill": "listening",
@@ -405,7 +405,7 @@
             "feedback": "Take steps to do something means take action intended to achieve a result."
           }
         ],
-        "title": "Language noticing — what do the chunks mean?",
+        "title": "Language noticing | what do the chunks mean?",
         "prompt": "These expressions all come from the section you just heard. Choose the meaning that best matches how each expression is used.",
         "instructions": "Think about the complete expression, not just one word inside it.",
         "primary_skill": "vocabulary",
@@ -423,7 +423,7 @@
       },
       {
         "type": "gap_fill",
-        "title": "Listen closely — reconstruct the chunks",
+        "title": "Listen closely | reconstruct the chunks",
         "blanks": [
           {
             "accepted_answers": [
@@ -623,7 +623,7 @@
             "feedback": "Face consequences means experience or have to deal with the results of an action or event."
           }
         ],
-        "title": "Language noticing — which words naturally go together?",
+        "title": "Language noticing | which words naturally go together?",
         "prompt": "Choose the combination that sounds natural in the meaning used in the programme.",
         "instructions": "Pay attention to collocation: English words often prefer particular partners.",
         "primary_skill": "vocabulary",
