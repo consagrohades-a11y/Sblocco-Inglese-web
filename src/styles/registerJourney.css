@@ -535,10 +535,6 @@
 }
 
 .register-journey__avatar-gallery-heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 1.5rem;
   margin-bottom: 1.25rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(18, 56, 74, .1);
@@ -716,6 +712,25 @@
   stroke-width: 3;
 }
 
+.register-journey__avatar-preview-actions {
+  display: grid;
+  gap: .55rem;
+  margin-top: 1.35rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(18, 56, 74, .1);
+}
+
+.register-journey__primary--avatar {
+  width: 100%;
+  min-height: 3rem;
+}
+
+.register-journey__avatar-preview-actions .register-journey__skip {
+  width: 100%;
+  min-height: 2rem;
+  padding: .25rem;
+}
+
 .register-journey__actions {
   display: flex;
   align-items: center;
@@ -733,8 +748,9 @@
   gap: .9rem;
 }
 
-.register-journey__actions--avatar {
+.register-journey__actions--avatar-back {
   max-width: none;
+  justify-content: flex-start;
   margin-top: 1.6rem;
 }
 
@@ -1025,7 +1041,7 @@
     font-size: .7rem;
   }
 
-  .register-journey__actions--avatar {
+  .register-journey__actions--avatar-back {
     margin-top: 1.3rem;
   }
 
