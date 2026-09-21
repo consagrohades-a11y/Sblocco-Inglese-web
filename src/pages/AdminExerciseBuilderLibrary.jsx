@@ -349,11 +349,11 @@ export default function AdminExerciseBuilderLibrary() {
   const importHref = `/admin/content/exercises/studio?import=1${folderQuery}`;
   const isGlobalSearch = selectedFolder === 'root' && Boolean(search.trim());
   const selectedFolderLabel = selectedFolder === 'pinned'
-    ? 'Pinned activities'
+    ? 'Pinned'
     : isGlobalSearch
       ? 'Search results'
       : currentFolder
-        ? currentFolder.name
+        ? 'Activities'
         : 'Unfiled';
   const pinnedCount = items.filter((item) => Boolean(item.pinned_at)).length;
   const unfiledCount = items.filter((item) => !item.folder_id).length;
@@ -1114,8 +1114,26 @@ export default function AdminExerciseBuilderLibrary() {
           <main className="mt-5 min-w-0">
             <div className="flex flex-wrap items-end justify-between gap-3 px-1">
               <div>
-                <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">Current view</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">
+                    {isGlobalSearch ? 'Across the library' : currentFolder ? 'Directly in this folder' : selectedFolder === 'pinned' ? 'Quick access' : 'Not inside a folder'}
+                  </p>
+                  {selectedFolder === 'pinned' ? (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedFolder('root')}
+                      className="focus-ring text-[0.68rem] font-black text-ink/40 underline decoration-ink/20 underline-offset-4 hover:text-ink dark:text-white/40 dark:hover:text-white"
+                    >
+                      Back to library
+                    </button>
+                  ) : null}
+                </div>
                 <h2 className="mt-1 text-2xl font-black text-ink dark:text-white">{selectedFolderLabel}</h2>
+                {currentFolder ? (
+                  <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">{currentFolder.name}</p>
+                ) : selectedFolder === 'root' && !isGlobalSearch ? (
+                  <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">{unfiledCount} total unfiled</p>
+                ) : null}
               </div>
               <div className="flex items-center gap-3">
                 {filtered.length ? (
@@ -1142,9 +1160,9 @@ export default function AdminExerciseBuilderLibrary() {
                     <button type="button" onClick={(event) => { moveSelected(null, 'Unfiled'); event.currentTarget.closest('details')?.removeAttribute('open'); }} className="focus-ring flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-bold text-ink/65 hover:bg-linen dark:text-white/65 dark:hover:bg-white/[0.06]">
                       <Inbox className="h-3.5 w-3.5" /> Unfiled
                     </button>
-                    {folders.map((folder) => (
-                      <button key={folder.id} type="button" onClick={(event) => { moveSelected(folder.id, folder.name); event.currentTarget.closest('details')?.removeAttribute('open'); }} className="focus-ring flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-bold text-ink/65 hover:bg-linen dark:text-white/65 dark:hover:bg-white/[0.06]">
-                        <Folder className="h-3.5 w-3.5" /> <span className="truncate">{folder.name}</span>
+                    {folderOptions.map((folder) => (
+                      <button key={folder.id} type="button" onClick={(event) => { moveSelected(folder.id, folder.path_label); event.currentTarget.closest('details')?.removeAttribute('open'); }} className="focus-ring flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-bold text-ink/65 hover:bg-linen dark:text-white/65 dark:hover:bg-white/[0.06]">
+                        <Folder className="h-3.5 w-3.5" /> <span className="truncate">{folder.path_label}</span>
                       </button>
                     ))}
                   </div>
@@ -1192,18 +1210,32 @@ export default function AdminExerciseBuilderLibrary() {
             ) : null}
 
             {!loading && filtered.length === 0 ? (
-              <div className="mt-4 grid min-h-72 place-items-center rounded-[2rem] border border-dashed border-ink/15 bg-white/60 p-8 text-center dark:border-white/15 dark:bg-white/[0.025]">
-                <div className="max-w-md">
-                  <h3 className="text-2xl font-black text-ink dark:text-white">
-                    {items.length ? 'Nothing matches this view.' : 'The library is clean and empty.'}
+              <div className="mt-4 grid min-h-40 place-items-center rounded-[1.5rem] border border-dashed border-ink/15 bg-white/55 p-6 text-center dark:border-white/15 dark:bg-white/[0.025]">
+                <div className="max-w-lg">
+                  <h3 className="text-xl font-black text-ink dark:text-white">
+                    {!items.length
+                      ? 'The library is clean and empty.'
+                      : isGlobalSearch
+                        ? 'No search matches.'
+                        : selectedFolder === 'pinned'
+                          ? 'Nothing pinned yet.'
+                          : currentFolder
+                            ? 'No activities directly in this folder.'
+                            : 'Everything here is filed.'}
                   </h3>
                   <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
-                    {items.length
-                      ? 'Try another folder, search term, tag or filter.'
-                      : 'Create the first curated activity manually or import a lesson generated with the Sblocco AI authoring kit.'}
+                    {!items.length
+                      ? 'Create the first curated activity manually or import one with the Sblocco AI authoring kit.'
+                      : isGlobalSearch
+                        ? 'Try another search term or clear one of the active filters.'
+                        : selectedFolder === 'pinned'
+                          ? 'Use the star on an activity whenever you want it in quick access.'
+                          : currentFolder
+                            ? 'Its subfolders stay above. New activities created here will be filed into this folder automatically.'
+                            : 'There are no unfiled activities. Open a folder above, or create a new activity when you need one.'}
                   </p>
                   {!items.length ? (
-                    <Link to={newActivityHref} className="focus-ring mt-5 inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-sm font-black text-white">
+                    <Link to={newActivityHref} className="focus-ring mt-4 inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-black text-white">
                       <Plus className="h-4 w-4" /> Create first activity
                     </Link>
                   ) : null}
@@ -1214,7 +1246,7 @@ export default function AdminExerciseBuilderLibrary() {
             {!loading && filtered.length ? (
               <div className="mt-4 grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
                 {filtered.map((item) => {
-                  const currentFolder = folders.find((folder) => folder.id === item.folder_id);
+                  const itemFolderPath = item.folder_id ? folderPathLabel(folders, item.folder_id) : 'Unfiled';
                   const selected = selectedSet.has(item.id);
 
                   return (
@@ -1270,7 +1302,7 @@ export default function AdminExerciseBuilderLibrary() {
                       <div className="mt-4 min-w-0 flex-1">
                         <div className="flex min-w-0 items-center gap-1.5 text-[0.65rem] font-black text-ink/40 dark:text-white/40">
                           {item.folder_id ? <Folder className="h-3.5 w-3.5 shrink-0" /> : <Inbox className="h-3.5 w-3.5 shrink-0" />}
-                          <span className="truncate">{currentFolder?.name || 'Unfiled'}</span>
+                          <span className="truncate">{itemFolderPath}</span>
                         </div>
                         <p className="mt-2 text-[0.65rem] font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">{activityTypeLabel(item.activity_type)}</p>
                         <h3 className="mt-1 text-xl font-black leading-tight text-ink dark:text-white">{item.internal_title || 'Untitled activity'}</h3>
@@ -1333,17 +1365,17 @@ export default function AdminExerciseBuilderLibrary() {
                                 >
                                   <Inbox className="h-3.5 w-3.5" /> Unfiled
                                 </button>
-                                {folders.map((folder) => (
+                                {folderOptions.map((folder) => (
                                   <button
                                     key={folder.id}
                                     type="button"
                                     onClick={(event) => {
-                                      moveDraft(item.id, folder.id, folder.name);
+                                      moveDraft(item.id, folder.id, folder.path_label);
                                       event.currentTarget.closest('details')?.parentElement?.closest('details')?.removeAttribute('open');
                                     }}
                                     className="focus-ring flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-bold text-ink/55 hover:bg-linen dark:text-white/55 dark:hover:bg-white/[0.06]"
                                   >
-                                    <Folder className="h-3.5 w-3.5" /> <span className="truncate">{folder.name}</span>
+                                    <Folder className="h-3.5 w-3.5" /> <span className="truncate">{folder.path_label}</span>
                                   </button>
                                 ))}
                               </div>
