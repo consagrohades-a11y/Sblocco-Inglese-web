@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   BarChart3,
+  Bell,
   Blocks,
   BookOpen,
   ChevronDown,
@@ -24,7 +25,6 @@ import {
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import BrandLogo from './BrandLogo';
 import ThemeToggle from './ThemeToggle';
-import AdminNotificationBell from './admin/AdminNotificationBell.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 
 const navigationGroups = [
@@ -35,6 +35,7 @@ const navigationGroups = [
     icon: LayoutDashboard,
     items: [
       { label: 'Dashboard', to: '/admin', icon: LayoutDashboard, end: true },
+      { label: 'Notifiche', to: '/admin/notifications', icon: Bell },
     ],
   },
   {
@@ -319,7 +320,6 @@ export default function AdminShell() {
         <div className={`border-t border-white/10 ${collapsed ? 'grid justify-items-center gap-2 p-2' : 'p-3'}`}>
           {collapsed ? (
             <>
-              <AdminNotificationBell compact onNavigate={() => setMobileOpen(false)} />
               <ThemeToggle />
               <Link
                 to="/account"
@@ -339,7 +339,6 @@ export default function AdminShell() {
                 </div>
                 <ThemeToggle />
               </div>
-              <AdminNotificationBell onNavigate={() => setMobileOpen(false)} />
               <Link to="/account" className="focus-ring mt-2 flex min-h-10 items-center justify-center rounded-xl border border-white/15 px-3 py-2 text-xs font-black text-white/85 transition hover:bg-white/10 hover:text-white">
                 Account personale
               </Link>
@@ -365,7 +364,6 @@ export default function AdminShell() {
       <header className="sticky top-0 z-40 flex min-h-16 items-center justify-between border-b border-ink/10 bg-paper/95 px-4 backdrop-blur-xl dark:border-white/10 dark:bg-surface-950/95 lg:hidden">
         <BrandLogo to="/admin" compact />
         <div className="flex items-center gap-2">
-          <AdminNotificationBell compact tone="light" />
           <button
           type="button"
           onClick={() => setMobileOpen(true)}
