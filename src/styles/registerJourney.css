@@ -181,6 +181,47 @@
   padding-top: clamp(2.8rem, 7vw, 5.5rem);
 }
 
+.register-journey__workspace.is-avatar-step {
+  width: min(100%, 76rem);
+  padding-top: clamp(2rem, 4vw, 3.4rem);
+}
+
+.register-journey__workspace.is-avatar-step .register-journey__scene-copy {
+  max-width: 46rem;
+}
+
+.register-journey__workspace.is-avatar-step .register-journey__scene-copy h1 {
+  font-size: clamp(2.8rem, 4.6vw, 4.35rem);
+  line-height: .98;
+}
+
+.register-journey__workspace.is-avatar-step .register-journey__stage {
+  margin-top: 1.75rem;
+}
+
+.register-journey__workspace.is-access-step {
+  width: min(100%, 54rem);
+  padding-top: clamp(1.8rem, 3.5vw, 3rem);
+}
+
+.register-journey__workspace.is-access-step .register-journey__scene-copy {
+  max-width: 36rem;
+}
+
+.register-journey__workspace.is-access-step .register-journey__scene-copy h1 {
+  font-size: clamp(2.75rem, 4.8vw, 4.2rem);
+  line-height: .98;
+}
+
+.register-journey__workspace.is-access-step .register-journey__scene-copy > p:last-child {
+  max-width: 34rem;
+  margin-top: .75rem;
+}
+
+.register-journey__workspace.is-access-step .register-journey__stage {
+  margin-top: 1.6rem;
+}
+
 .register-journey__scene-copy {
   max-width: 54rem;
 }
@@ -409,38 +450,285 @@
   text-underline-offset: 2px;
 }
 
-.register-journey__avatar-intro {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  max-width: 58rem;
-  padding-bottom: 1rem;
+.register-journey__access-form {
+  width: min(100%, 42rem);
+  padding: 1.5rem 0 0;
+  border-top: 1px solid rgba(18, 56, 74, .1);
 }
 
-.register-journey__avatar-intro .register-journey__microcopy {
-  margin-bottom: 0;
+.register-journey__access-identity {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.register-journey__access-identity > span:first-child {
+  box-shadow: 0 .75rem 1.8rem rgba(18, 56, 74, .09);
+}
+
+.register-journey__access-identity h2 {
+  margin: .25rem 0 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+  letter-spacing: -.025em;
+  line-height: 1.06;
+}
+
+.register-journey__access-identity p:last-child {
+  margin: .38rem 0 0;
+  color: var(--journey-ink-soft);
+  font-size: .73rem;
+  line-height: 1.55;
+}
+
+.register-journey__access-fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.register-journey__password-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.register-journey__password-grid .register-journey__field + .register-journey__field {
+  margin-top: 0;
+}
+
+.register-journey__access-form .register-journey__input {
+  min-height: 3.65rem;
+  background: rgba(255, 250, 244, .5);
+}
+
+.register-journey__legal--access {
+  max-width: 42rem;
+  margin-top: 1rem;
+}
+
+.register-journey__actions--access {
+  max-width: 42rem;
+  margin-top: 1.3rem;
+  padding-top: 1.2rem;
+}
+
+.register-journey__primary--access {
+  min-width: 11.5rem;
 }
 
 .register-journey__form--avatar {
   width: 100%;
 }
 
-.register-journey__avatar-scroll {
-  max-height: min(52vh, 34rem);
-  overflow-y: auto;
-  margin-top: .6rem;
-  padding: .15rem .65rem .4rem .05rem;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(217, 79, 27, .34) transparent;
+.register-journey__avatar-choice-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 18rem);
+  align-items: start;
+  gap: clamp(2rem, 4vw, 4rem);
 }
 
-.register-journey__avatar-scroll > div > div + div {
-  border-top-color: rgba(18, 56, 74, .1);
+.register-journey__avatar-gallery {
+  min-width: 0;
 }
 
-.register-journey__avatar-scroll button[aria-label^="Scegli "] {
+.register-journey__avatar-gallery-heading {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(18, 56, 74, .1);
+}
+
+.register-journey__avatar-gallery-heading h2,
+.register-journey__avatar-preview-copy h2 {
+  margin: .3rem 0 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 400;
+  letter-spacing: -.025em;
+  line-height: 1.05;
+}
+
+.register-journey__avatar-gallery-heading > p {
+  max-width: 17rem;
+  margin: 0;
+  color: var(--journey-ink-soft);
+  font-size: .72rem;
+  line-height: 1.55;
+  text-align: right;
+}
+
+.register-journey__avatar-section-kicker {
+  margin: 0;
+  color: var(--journey-orange);
+  font-size: .62rem;
+  font-weight: 860;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.register-journey__avatar-gallery button[aria-label^="Scegli "] {
+  min-height: 8.4rem;
+  max-width: none;
+  border: 1px solid transparent;
+  border-radius: 1.35rem;
+  padding: .65rem;
   background: transparent;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.register-journey__avatar-gallery button[aria-label^="Scegli "]:hover {
+  transform: translateY(-3px);
+  border-color: rgba(217, 79, 27, .2);
+  background: rgba(255, 250, 244, .52);
+}
+
+.register-journey__avatar-gallery button[aria-label^="Scegli "][aria-pressed="true"] {
+  border-color: rgba(217, 79, 27, .55);
+  background: rgba(217, 79, 27, .055);
+  box-shadow: 0 .7rem 1.8rem rgba(18, 56, 74, .08);
+}
+
+.register-journey__avatar-gallery button[aria-label^="Scegli "] > span:first-of-type {
+  width: 6.9rem;
+  height: 6.9rem;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.register-journey__avatar-gallery button[aria-label^="Scegli "]:hover > span:first-of-type,
+.register-journey__avatar-gallery button[aria-label^="Scegli "][aria-pressed="true"] > span:first-of-type {
+  transform: scale(1.045);
+  box-shadow: 0 .75rem 1.6rem rgba(18, 56, 74, .12);
+}
+
+.register-journey__avatar-preview {
+  position: sticky;
+  top: 1.5rem;
+  padding: .35rem 0 1rem 1.75rem;
+  border-left: 1px solid rgba(18, 56, 74, .12);
+  background:
+    radial-gradient(circle at 45% 27%, rgba(217, 79, 27, .075), transparent 8.5rem);
+}
+
+.register-journey__avatar-preview-portrait {
+  position: relative;
+  width: fit-content;
+  margin: 1.2rem 0 1.1rem;
+  padding: .55rem;
+  border-radius: 50%;
+  border: 1px solid rgba(18, 56, 74, .09);
+  background: rgba(255, 250, 244, .45);
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.register-journey__avatar-preview-portrait.is-selected {
+  transform: translateY(-2px);
+  border-color: rgba(217, 79, 27, .28);
+  box-shadow: 0 1rem 2.4rem rgba(18, 56, 74, .1);
+}
+
+.register-journey__avatar-preview-portrait > span:first-child {
+  width: 9.25rem;
+  height: 9.25rem;
+}
+
+.register-journey__avatar-preview-check {
+  position: absolute;
+  right: .1rem;
+  bottom: .65rem;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: .2rem solid var(--journey-paper);
+  border-radius: 50%;
+  color: #fffaf4;
+  background: var(--journey-orange);
+  box-shadow: 0 .35rem .8rem rgba(18, 56, 74, .12);
+}
+
+.register-journey__avatar-preview-check svg {
+  width: .9rem;
+  height: .9rem;
+  stroke-width: 3;
+}
+
+.register-journey__avatar-preview-copy {
+  max-width: 16rem;
+}
+
+.register-journey__avatar-preview-copy h2 {
+  font-size: 1.45rem;
+}
+
+.register-journey__avatar-preview-copy p {
+  margin: .65rem 0 0;
+  color: var(--journey-ink-soft);
+  font-size: .75rem;
+  line-height: 1.6;
+}
+
+.register-journey__avatar-colors {
+  margin-top: 1.45rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(18, 56, 74, .1);
+}
+
+.register-journey__avatar-color-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-top: .75rem;
+}
+
+.register-journey__avatar-color-row button {
+  display: grid;
+  width: 2.3rem;
+  height: 2.3rem;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, .82);
+  border-radius: 50%;
+  outline: 1px solid rgba(18, 56, 74, .13);
+  transition: transform 150ms ease, outline-color 150ms ease, box-shadow 150ms ease;
+}
+
+.register-journey__avatar-color-row button:hover {
+  transform: scale(1.08);
+}
+
+.register-journey__avatar-color-row button.is-selected {
+  outline: 2px solid var(--journey-orange);
+  box-shadow: 0 0 0 .18rem rgba(217, 79, 27, .1);
+}
+
+.register-journey__avatar-color-row button svg {
+  width: .85rem;
+  height: .85rem;
+  stroke-width: 3;
+}
+
+.register-journey__avatar-preview-actions {
+  display: grid;
+  gap: .55rem;
+  margin-top: 1.35rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(18, 56, 74, .1);
+}
+
+.register-journey__primary--avatar {
+  width: 100%;
+  min-height: 3rem;
+}
+
+.register-journey__avatar-preview-actions .register-journey__skip {
+  width: 100%;
+  min-height: 2rem;
+  padding: .25rem;
 }
 
 .register-journey__actions {
@@ -458,6 +746,12 @@
   display: flex;
   align-items: center;
   gap: .9rem;
+}
+
+.register-journey__actions--avatar-back {
+  max-width: none;
+  justify-content: flex-start;
+  margin-top: 1.6rem;
 }
 
 .register-journey__primary,
@@ -582,6 +876,65 @@
 }
 
 @media (max-width: 900px) {
+  .register-journey__workspace.is-access-step {
+    width: min(100%, 40rem);
+  }
+
+  .register-journey__workspace.is-avatar-step {
+    width: min(100%, 42rem);
+  }
+
+  .register-journey__avatar-choice-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .register-journey__avatar-preview {
+    position: static;
+    order: -1;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "kicker kicker"
+      "portrait copy"
+      "colors colors";
+    align-items: center;
+    gap: .65rem 1.25rem;
+    padding: 1rem 0 1.25rem;
+    border-left: 0;
+    border-bottom: 1px solid rgba(18, 56, 74, .1);
+    background: transparent;
+  }
+
+  .register-journey__avatar-preview > .register-journey__avatar-section-kicker {
+    grid-area: kicker;
+  }
+
+  .register-journey__avatar-preview-portrait {
+    grid-area: portrait;
+    margin: .25rem 0;
+  }
+
+  .register-journey__avatar-preview-portrait > span:first-child {
+    width: 7.4rem;
+    height: 7.4rem;
+  }
+
+  .register-journey__avatar-preview-copy {
+    grid-area: copy;
+    max-width: 22rem;
+  }
+
+  .register-journey__avatar-colors {
+    grid-area: colors;
+    margin-top: .35rem;
+    padding-top: .9rem;
+  }
+
+  .register-journey__avatar-gallery-heading {
+    align-items: start;
+  }
+
   .register-journey__topbar {
     grid-template-columns: auto 1fr auto;
   }
@@ -609,6 +962,89 @@
 }
 
 @media (max-width: 640px) {
+  .register-journey__workspace.is-access-step .register-journey__scene-copy h1 {
+    font-size: clamp(2.5rem, 11vw, 3.35rem);
+  }
+
+  .register-journey__access-form {
+    padding-top: 1.2rem;
+  }
+
+  .register-journey__access-identity {
+    gap: .8rem;
+  }
+
+  .register-journey__access-identity h2 {
+    font-size: 1.28rem;
+  }
+
+  .register-journey__password-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .register-journey__password-grid .register-journey__field + .register-journey__field {
+    margin-top: 0;
+  }
+
+  .register-journey__actions--access {
+    align-items: center;
+  }
+
+  .register-journey__primary--access {
+    min-width: 0;
+  }
+
+  .register-journey__workspace.is-avatar-step .register-journey__scene-copy h1 {
+    font-size: clamp(2.55rem, 12vw, 3.5rem);
+  }
+
+  .register-journey__workspace.is-avatar-step .register-journey__scene-copy > p:last-child {
+    max-width: 31rem;
+  }
+
+  .register-journey__avatar-gallery-heading {
+    display: block;
+    margin-bottom: .9rem;
+  }
+
+  .register-journey__avatar-gallery-heading > p {
+    max-width: 25rem;
+    margin-top: .6rem;
+    text-align: left;
+  }
+
+  .register-journey__avatar-gallery button[aria-label^="Scegli "] {
+    min-height: 7.2rem;
+    padding: .4rem;
+  }
+
+  .register-journey__avatar-gallery button[aria-label^="Scegli "] > span:first-of-type {
+    width: 5.9rem;
+    height: 5.9rem;
+  }
+
+  .register-journey__avatar-preview {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: .55rem 1rem;
+  }
+
+  .register-journey__avatar-preview-portrait > span:first-child {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .register-journey__avatar-preview-copy h2 {
+    font-size: 1.25rem;
+  }
+
+  .register-journey__avatar-preview-copy p {
+    font-size: .7rem;
+  }
+
+  .register-journey__actions--avatar-back {
+    margin-top: 1.3rem;
+  }
+
   .register-journey__topbar {
     width: min(calc(100% - 1.25rem), 88rem);
     min-height: 4.5rem;

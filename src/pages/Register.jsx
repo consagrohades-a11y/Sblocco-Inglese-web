@@ -17,7 +17,10 @@ import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import LearnerAvatarPicker from '../components/learner/LearnerAvatarPicker.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { getAuthErrorMessage } from '../auth/authMessages';
-import { DEFAULT_LEARNER_AVATAR_BACKGROUND_KEY } from '../lib/learnerAvatars.js';
+import {
+  DEFAULT_LEARNER_AVATAR_BACKGROUND_KEY,
+  LEARNER_AVATAR_BACKGROUNDS,
+} from '../lib/learnerAvatars.js';
 import { authPath, safeReturnTo } from '../lib/safeReturnTo.js';
 import '../styles/registerJourney.css';
 
@@ -76,13 +79,13 @@ const STAGE_COPY = {
   },
   3: {
     eyebrow: '03 | Il tuo avatar',
-    title: 'Scegli il volto del tuo spazio.',
-    support: 'Non deve assomigliarti. Deve solo sembrarti tuo. Potrai cambiarlo quando vuoi.',
+    title: 'Scegli il tuo avatar.',
+    support: 'Scegli quello che senti più tuo. Ti accompagnerà nel tuo spazio Sblocco e potrai cambiarlo quando vuoi.',
   },
   4: {
     eyebrow: '04 | Il tuo accesso',
-    title: 'Ultimo passo. Mettiamo al sicuro il tuo spazio.',
-    support: 'Email e password servono per ritrovare il tuo percorso ogni volta che torni.',
+    title: 'Crea il tuo accesso.',
+    support: 'Una email e una password. Poi il tuo spazio Sblocco è pronto.',
   },
 };
 
@@ -334,7 +337,7 @@ export default function Register() {
           </div>
         ) : null}
 
-        <section className="register-journey__workspace">
+        <section className={`register-journey__workspace ${step === 3 ? 'is-avatar-step' : step === 4 ? 'is-access-step' : ''}`}>
           <div className="register-journey__scene-copy">
             <p className="register-journey__kicker">{activeCopy.eyebrow}</p>
             <h1>{activeCopy.title}</h1>
@@ -432,90 +435,151 @@ export default function Register() {
 
             {step === 3 ? (
               <div className="register-journey__form register-journey__form--avatar">
-                <div className="register-journey__avatar-intro">
-                  <p className="register-journey__microcopy">Puoi abbinarlo al colore che preferisci e cambiarlo più avanti dalle impostazioni.</p>
-                  <LearnerAvatar
-                    avatarKey={avatarKey}
-                    backgroundKey={avatarBackgroundKey}
-                    displayName={displayName || name}
-                    size="2xl"
-                    eager
-                  />
-                </div>
+                <div className="register-journey__avatar-choice-layout">
+                  <div className="register-journey__avatar-gallery">
+                    <div className="register-journey__avatar-gallery-heading">
+                      <div>
+                        <p className="register-journey__avatar-section-kicker">Scegline uno</p>
+                        <h2>Quale ti rappresenta di più?</h2>
+                      </div>
+                    </div>
 
-                <div className="register-journey__avatar-scroll">
-                  <LearnerAvatarPicker
-                    value={avatarKey}
-                    backgroundValue={avatarBackgroundKey}
-                    onChange={setAvatarKey}
-                    onBackgroundChange={setAvatarBackgroundKey}
-                    variant="bare"
-                  />
-                </div>
-
-                <div className="register-journey__actions">
-                  <button type="button" onClick={goBack} className="register-journey__back"><ArrowLeft /> Indietro</button>
-                  <div className="register-journey__actions-right">
-                    {!avatarKey ? <button type="button" onClick={() => moveTo(4)} className="register-journey__skip">Lo scelgo dopo</button> : null}
-                    <button type="button" onClick={continueJourney} className="register-journey__primary">
-                      {avatarKey ? 'Mi piace' : 'Continua'} <ArrowRight />
-                    </button>
+                    <LearnerAvatarPicker
+                      value={avatarKey}
+                      backgroundValue={avatarBackgroundKey}
+                      onChange={setAvatarKey}
+                      onBackgroundChange={setAvatarBackgroundKey}
+                      variant="bare"
+                      showBackgrounds={false}
+                      showSectionLabels={false}
+                    />
                   </div>
+
+                  <aside className="register-journey__avatar-preview" aria-label="Anteprima avatar scelto">
+                    <p className="register-journey__avatar-section-kicker">{avatarKey ? 'La tua scelta' : 'La tua anteprima'}</p>
+
+                    <div className={`register-journey__avatar-preview-portrait ${avatarKey ? 'is-selected' : ''}`}>
+                      <LearnerAvatar
+                        avatarKey={avatarKey}
+                        backgroundKey={avatarBackgroundKey}
+                        displayName={displayName || name}
+                        size="2xl"
+                        eager
+                      />
+                      {avatarKey ? <span className="register-journey__avatar-preview-check" aria-hidden="true"><Check /></span> : null}
+                    </div>
+
+                    <div className="register-journey__avatar-preview-copy">
+                      <h2>{avatarKey ? 'Sì, questo è il tuo.' : 'Scegli un volto dalla galleria.'}</h2>
+                      <p>{avatarKey
+                        ? 'Ora puoi dargli il colore che preferisci. Lo ritroverai nel tuo profilo e nel tuo spazio.'
+                        : 'Appena ne scegli uno, lo vedrai qui in grande.'}</p>
+                    </div>
+
+                    <div className="register-journey__avatar-colors">
+                      <p className="register-journey__avatar-section-kicker">Colore</p>
+                      <div className="register-journey__avatar-color-row" aria-label="Scegli il colore di sfondo">
+                        {LEARNER_AVATAR_BACKGROUNDS.map((background) => {
+                          const selected = avatarBackgroundKey === background.key;
+                          return (
+                            <button
+                              key={background.key}
+                              type="button"
+                              aria-label={`Sfondo ${background.label}`}
+                              aria-pressed={selected}
+                              title={background.label}
+                              onClick={() => setAvatarBackgroundKey(background.key)}
+                              className={selected ? 'is-selected' : ''}
+                              style={{ backgroundColor: background.color, color: background.textColor }}
+                            >
+                              {selected ? <Check aria-hidden="true" /> : null}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="register-journey__avatar-preview-actions">
+                      {!avatarKey ? <button type="button" onClick={() => moveTo(4)} className="register-journey__skip">Lo scelgo dopo</button> : null}
+                      <button type="button" onClick={continueJourney} className="register-journey__primary register-journey__primary--avatar">
+                        {avatarKey ? 'Continua con questo' : 'Continua'} <ArrowRight />
+                      </button>
+                    </div>
+                  </aside>
+                </div>
+
+                <div className="register-journey__actions register-journey__actions--avatar-back">
+                  <button type="button" onClick={goBack} className="register-journey__back"><ArrowLeft /> Indietro</button>
                 </div>
               </div>
             ) : null}
 
             {step === 4 ? (
-              <form className="register-journey__form" onSubmit={handleSubmit}>
-                <p className="register-journey__microcopy">Ci siamo quasi, {name}. Questi dati servono soltanto per accedere in modo sicuro al tuo spazio Sblocco.</p>
-
-                <FieldShell icon={Mail} label="Email">
-                  <input
-                    type="email"
-                    autoComplete="email"
-                    value={email}
-                    required
-                    onChange={(event) => setEmail(event.target.value)}
-                    placeholder="nome@email.it"
-                    className="register-journey__input"
+              <form className="register-journey__form register-journey__access-form" onSubmit={handleSubmit}>
+                <div className="register-journey__access-identity">
+                  <LearnerAvatar
+                    avatarKey={avatarKey}
+                    backgroundKey={avatarBackgroundKey}
+                    displayName={displayName || name}
+                    size="xl"
+                    eager
                   />
-                </FieldShell>
-
-                <div className="register-journey__field-grid">
-                  <FieldShell icon={LockKeyhole} label="Password" hint={password && password.length < 8 ? 'Almeno 8 caratteri.' : undefined}>
-                    <input
-                      type="password"
-                      autoComplete="new-password"
-                      value={password}
-                      required
-                      minLength={8}
-                      onChange={(event) => setPassword(event.target.value)}
-                      placeholder="Almeno 8 caratteri"
-                      className="register-journey__input"
-                    />
-                  </FieldShell>
-
-                  <FieldShell icon={LockKeyhole} label="Conferma password">
-                    <input
-                      type="password"
-                      autoComplete="new-password"
-                      value={confirmPassword}
-                      required
-                      minLength={8}
-                      onChange={(event) => setConfirmPassword(event.target.value)}
-                      placeholder="Ripeti la password"
-                      className="register-journey__input"
-                    />
-                  </FieldShell>
+                  <div>
+                    <p className="register-journey__avatar-section-kicker">Quasi fatto</p>
+                    <h2>{name}, questo spazio è tuo.</h2>
+                    <p>Imposta le credenziali che userai per tornarci.</p>
+                  </div>
                 </div>
 
-                <p className="register-journey__legal">
+                <div className="register-journey__access-fields">
+                  <FieldShell icon={Mail} label="Email">
+                    <input
+                      type="email"
+                      autoComplete="email"
+                      value={email}
+                      required
+                      onChange={(event) => setEmail(event.target.value)}
+                      placeholder="nome@email.it"
+                      className="register-journey__input"
+                    />
+                  </FieldShell>
+
+                  <div className="register-journey__password-grid">
+                    <FieldShell icon={LockKeyhole} label="Password" hint={password && password.length < 8 ? 'Almeno 8 caratteri.' : undefined}>
+                      <input
+                        type="password"
+                        autoComplete="new-password"
+                        value={password}
+                        required
+                        minLength={8}
+                        onChange={(event) => setPassword(event.target.value)}
+                        placeholder="Almeno 8 caratteri"
+                        className="register-journey__input"
+                      />
+                    </FieldShell>
+
+                    <FieldShell icon={LockKeyhole} label="Conferma password">
+                      <input
+                        type="password"
+                        autoComplete="new-password"
+                        value={confirmPassword}
+                        required
+                        minLength={8}
+                        onChange={(event) => setConfirmPassword(event.target.value)}
+                        placeholder="Ripeti la password"
+                        className="register-journey__input"
+                      />
+                    </FieldShell>
+                  </div>
+                </div>
+
+                <p className="register-journey__legal register-journey__legal--access">
                   Creando l’account accetti i <Link to="/termini-e-condizioni" target="_blank">Termini e condizioni</Link> e confermi di aver letto la <Link to="/privacy" target="_blank">Privacy Policy</Link>.
                 </p>
 
-                <div className="register-journey__actions">
+                <div className="register-journey__actions register-journey__actions--access">
                   <button type="button" disabled={submitting} onClick={goBack} className="register-journey__back"><ArrowLeft /> Indietro</button>
-                  <button type="submit" disabled={loading || submitting} className="register-journey__primary disabled:cursor-wait disabled:opacity-60">
+                  <button type="submit" disabled={loading || submitting} className="register-journey__primary register-journey__primary--access disabled:cursor-wait disabled:opacity-60">
                     {submitting ? 'Creazione in corso...' : 'Crea il mio spazio'} {!submitting ? <ArrowRight /> : null}
                   </button>
                 </div>
