@@ -170,6 +170,7 @@ export default function AdminExerciseStudio() {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlDraftId = searchParams.get('draft');
   const importRequested = searchParams.get('import') === '1';
+  const [newDraftFolderId] = useState(() => searchParams.get('folder'));
   const [document, setDocument] = useState(starterDocument);
   const [selectedBlockId, setSelectedBlockId] = useState(null);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -205,9 +206,9 @@ export default function AdminExerciseStudio() {
   useEffect(() => {
     if (importRequested && !urlDraftId) {
       setImportOpen(true);
-      setSearchParams({}, { replace: true });
+      setSearchParams(newDraftFolderId ? { folder: newDraftFolderId } : {}, { replace: true });
     }
-  }, [importRequested, urlDraftId, setSearchParams]);
+  }, [importRequested, urlDraftId, newDraftFolderId, setSearchParams]);
 
   useEffect(() => {
     if (!urlDraftId) {
@@ -271,7 +272,7 @@ export default function AdminExerciseStudio() {
         .then(async () => {
           let draftId = draftIdRef.current;
           if (!draftId) {
-            const created = await createStudioDraft(snapshot, { origin: draftOrigin });
+            const created = await createStudioDraft(snapshot, { origin: draftOrigin, folderId: newDraftFolderId });
             if (generation !== documentGenerationRef.current) return;
             draftId = created.id;
             draftIdRef.current = draftId;
@@ -407,7 +408,7 @@ export default function AdminExerciseStudio() {
       let draftId = draftIdRef.current;
 
       if (!draftId) {
-        const created = await createStudioDraft(snapshot, { origin: draftOrigin });
+        const created = await createStudioDraft(snapshot, { origin: draftOrigin, folderId: newDraftFolderId });
         draftId = created.id;
         draftIdRef.current = draftId;
         setSearchParams({ draft: draftId }, { replace: true });
