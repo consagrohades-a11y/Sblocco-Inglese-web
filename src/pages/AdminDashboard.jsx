@@ -1,59 +1,54 @@
 import React from 'react';
-import { BarChart3, BookOpen, ClipboardList, Mail, Plane, Settings, Users } from 'lucide-react';
+import {
+  BarChart3,
+  Bell,
+  Blocks,
+  BookOpen,
+  ClipboardList,
+  UserPlus,
+  Users,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
-import { adminButton, adminSurface } from '../styles/adminUi.js';
 
-const sections = [
-  {
-    title: 'Lead e cohort',
-    description: 'Profili dal quiz pubblico, idoneità alla beta, richieste di ricontatto e stato commerciale.',
-    to: '/admin/leads',
-    icon: Mail,
-    status: 'Nuovo',
-  },
+const primaryAreas = [
   {
     title: 'Studenti',
-    description: 'Account learner, profili, relazioni didattiche e accesso alle assegnazioni.',
+    description: 'Profili learner, gruppi e contesto didattico.',
     to: '/admin/learners',
     icon: Users,
-    status: 'Attivo',
   },
   {
-    title: 'Contenuti',
-    description: 'Word ed Expression card con importazione, revisione e pubblicazione.',
-    to: '/admin/content',
+    title: 'Learning Studio',
+    description: 'Crea o importa una nuova attività e pubblicala.',
+    to: '/admin/content/exercises/studio',
+    icon: Blocks,
+  },
+  {
+    title: 'Libreria attività',
+    description: 'Trova, organizza, modifica e assegna attività esistenti.',
+    to: '/admin/content/exercises/library',
     icon: BookOpen,
-    status: 'Attivo',
-  },
-  {
-    title: 'Travel Trainer',
-    description: 'Aggiungi, importa, modifica e pubblica direttamente le espressioni per i viaggi.',
-    to: '/admin/content/travel-expressions',
-    icon: Plane,
-    status: 'Attivo',
   },
   {
     title: 'Assegnazioni',
-    description: 'Attività collegate agli studenti, con struttura pronta per filtri e progressi.',
+    description: 'Controlla ciò che è stato assegnato a studenti e gruppi.',
     to: '/admin/assignments',
     icon: ClipboardList,
-    status: 'Attivo',
+  },
+  {
+    title: 'Risultati e review',
+    description: 'Apri i tentativi e gestisci ciò che richiede revisione docente.',
+    to: '/admin/content/exercises/results',
+    icon: BarChart3,
   },
   {
     title: 'Analisi',
-    description: 'Attività studenti, card difficili e risultati degli esercizi.',
+    description: 'Leggi andamento, attività e progressi degli studenti.',
     to: '/admin/analytics',
     icon: BarChart3,
-    status: 'Attivo',
-  },
-  {
-    title: 'Impostazioni',
-    description: 'Tema dell’interfaccia e gestione dell’account amministratore.',
-    to: '/admin/settings',
-    icon: Settings,
-    status: 'Parziale',
   },
 ];
 
@@ -64,49 +59,61 @@ export default function AdminDashboard() {
   return (
     <>
       <SEO title="Dashboard admin | Sblocco Inglese" description="Workspace amministrativo di Sblocco Inglese." />
-      <section className="section-shell py-10 lg:py-14">
+      <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-6xl">
-          <header className={`${adminSurface.panel} p-6 sm:p-8`}>
-            <span className="eyebrow">Dashboard</span>
-            <h1 className="mt-4 text-3xl font-black leading-tight text-ink dark:text-white sm:text-4xl">Ciao {displayName}</h1>
-            <p className="mt-3 max-w-2xl text-base leading-7 text-ink/70 dark:text-white/65">
-              Gestisci recruitment, studenti, contenuti e attività da un unico workspace. I profili pubblici ora entrano direttamente in una pipeline dedicata alla beta e alle liste d’interesse.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/admin/leads" className={adminButton.primary}><Mail className="h-4 w-4" />Apri lead assessment</Link>
-              <Link to="/admin/content/travel-expressions" className={adminButton.secondary}><Plane className="h-4 w-4" />Gestisci Travel Trainer</Link>
-              <Link to="/admin/content/words" className={adminButton.secondary}>Revisiona Word card</Link>
-              <Link to="/admin/content/expressions" className={adminButton.positive}>Revisiona Expressions</Link>
-              <Link to="/admin/learners" className={adminButton.secondary}>Apri studenti</Link>
-            </div>
-          </header>
+          <AdminPageHeader
+            eyebrow="Workspace admin"
+            title={`Ciao ${displayName}`}
+            description="Gestisci studenti, attività, assegnazioni e risultati da un unico spazio."
+          />
 
-          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {sections.map((section) => {
-              const Icon = section.icon;
-              return (
-                <Link key={section.title} to={section.to} className={`${adminSurface.panel} focus-ring group p-6 transition hover:-translate-y-0.5 hover:border-moss/25 hover:shadow-soft dark:hover:border-emerald-300/25`}>
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-mint text-moss dark:bg-emerald-400/15 dark:text-emerald-300">
-                      <Icon aria-hidden="true" className="h-5 w-5" />
+          <Link
+            to="/admin/notifications"
+            className="focus-ring mt-6 flex items-center gap-4 rounded-2xl border border-clay/20 bg-clay/[0.055] p-5 transition hover:border-clay/35 hover:bg-clay/[0.085] dark:border-coral/20 dark:bg-coral/[0.07]"
+          >
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-clay text-white dark:bg-coral">
+              <UserPlus className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[0.68rem] font-black uppercase tracking-[0.12em] text-clay dark:text-coral">
+                Priorità
+              </span>
+              <strong className="mt-1 block text-lg font-black text-ink dark:text-white">Nuove registrazioni</strong>
+              <span className="mt-1 block text-sm leading-6 text-ink/65 dark:text-white/60">
+                Le nuove iscrizioni learner arrivano nelle notifiche e aprono direttamente il profilo dello studente.
+              </span>
+            </span>
+            <Bell className="h-5 w-5 shrink-0 text-clay dark:text-coral" aria-hidden="true" />
+          </Link>
+
+          <div className="mt-8">
+            <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-ink/45 dark:text-white/40">
+              Aree principali
+            </p>
+            <div className="mt-3 divide-y divide-ink/10 border-y border-ink/10 dark:divide-white/10 dark:border-white/10">
+              {primaryAreas.map((area) => {
+                const Icon = area.icon;
+                return (
+                  <Link
+                    key={area.to}
+                    to={area.to}
+                    className="focus-ring group grid gap-3 py-5 transition hover:bg-clay/[0.025] sm:grid-cols-[2.75rem_minmax(0,1fr)_auto] sm:items-center sm:px-3 dark:hover:bg-white/[0.025]"
+                  >
+                    <span className="grid h-10 w-10 place-items-center rounded-xl border border-ink/10 bg-white text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white">
+                      <Icon className="h-4.5 w-4.5" aria-hidden="true" />
                     </span>
-                    <span className="rounded-full bg-linen px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-wide text-ink/65 dark:bg-white/10 dark:text-white/65">{section.status}</span>
-                  </div>
-                  <h2 className="mt-5 text-xl font-black text-ink dark:text-white">{section.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">{section.description}</p>
-                  <span className="mt-5 inline-flex text-sm font-black text-moss group-hover:underline dark:text-emerald-300">Apri sezione</span>
-                </Link>
-              );
-            })}
+                    <span>
+                      <strong className="block text-base font-black text-ink dark:text-white">{area.title}</strong>
+                      <span className="mt-1 block text-sm leading-6 text-ink/60 dark:text-white/55">{area.description}</span>
+                    </span>
+                    <span className="text-xs font-black text-clay opacity-80 transition group-hover:opacity-100 dark:text-coral">
+                      Apri
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-
-          <section className="mt-6 rounded-2xl border border-moss/20 bg-mint/25 p-6 dark:border-emerald-300/20 dark:bg-emerald-400/10">
-            <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">Flusso recruitment</p>
-            <h2 className="mt-2 text-xl font-black text-ink dark:text-white">Profilo, qualifica, ricontatto, cohort</h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70 dark:text-white/60">
-              Ogni assessment salva contesto, difficoltà, percorso consigliato, idoneità alla beta e consensi. Puoi quindi contattare le persone giuste con un messaggio pertinente.
-            </p>
-          </section>
         </div>
       </section>
     </>
