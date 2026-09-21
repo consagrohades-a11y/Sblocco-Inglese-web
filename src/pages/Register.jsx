@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -27,6 +27,36 @@ const JOURNEY_STEPS = [
   { label: 'Il tuo avatar', short: 'Avatar' },
   { label: 'Il tuo accesso', short: 'Accesso' },
 ];
+
+const REGISTRATION_DRAFT_KEY = 'sblocco-registration-draft-v1';
+
+function readRegistrationDraft() {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    const parsed = JSON.parse(window.sessionStorage.getItem(REGISTRATION_DRAFT_KEY) || 'null');
+    if (!parsed || typeof parsed !== 'object') return null;
+
+    const step = Number(parsed.step);
+    return {
+      step: Number.isInteger(step) && step >= 0 && step <= 4 ? step : 0,
+      displayName: typeof parsed.displayName === 'string' ? parsed.displayName.slice(0, 80) : '',
+      profession: typeof parsed.profession === 'string' ? parsed.profession.slice(0, 80) : '',
+      age: typeof parsed.age === 'string' ? parsed.age.slice(0, 3) : '',
+      avatarKey: typeof parsed.avatarKey === 'string' ? parsed.avatarKey : null,
+      avatarBackgroundKey: typeof parsed.avatarBackgroundKey === 'string'
+        ? parsed.avatarBackgroundKey
+        : DEFAULT_LEARNER_AVATAR_BACKGROUND_KEY,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function clearRegistrationDraft() {
+  if (typeof window === 'undefined') return;
+  window.sessionStorage.removeItem(REGISTRATION_DRAFT_KEY);
+}
 
 const STAGE_COPY = {
   0: {
@@ -79,13 +109,17 @@ export default function Register() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [step, setStep] = useState(0);
+  const initialDraft = useMemo(() => readRegistrationDraft(), []);
+  const stageRef = useRef(null);
+  const [step, setStep] = useState(initialDraft?.step ?? 0);
   const [direction, setDirection] = useState('forward');
-  const [displayName, setDisplayName] = useState('');
-  const [profession, setProfession] = useState('');
-  const [age, setAge] = useState('');
-  const [avatarKey, setAvatarKey] = useState(null);
-  const [avatarBackgroundKey, setAvatarBackgroundKey] = useState(DEFAULT_LEARNER_AVATAR_BACKGROUND_KEY);
+  const [displayName, setDisplayName] = useState(initialDraft?.displayName ?? '');
+  const [profession, setProfession] = useState(initialDraft?.profession ?? '');
+  const [age, setAge] = useState(initialDraft?.age ?? '');
+  const [avatarKey, setAvatarKey] = useState(initialDraft?.avatarKey ?? null);
+  const [avatarBackgroundKey, setAvatarBackgroundKey] = useState(
+    initialDraft?.avatarBackgroundKey ?? DEFAULT_LEARNER_AVATAR_BACKGROUND_KEY,
+  );
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -107,6 +141,30 @@ export default function Register() {
       if (wasDark) root.classList.add('dark');
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || completionMode) return;
+
+    window.sessionStorage.setItem(REGISTRATION_DRAFT_KEY, JSON.stringify({
+      step,
+      displayName,
+      profession,
+      age,
+      avatarKey,
+      avatarBackgroundKey,
+    }));
+  }, [step, displayName, profession, age, avatarKey, avatarBackgroundKey, completionMode]);
+
+  useEffect(() => {
+    if (step === 0) return;
+    const node = stageRef.current;
+    if (!node) return;
+
+    window.requestAnimationFrame(() => {
+      node.focus({ preventScroll: true });
+    });
+  }, [step]);
+
 
   if (!loading && user && !submitting && !completionMode) {
     return <Navigate to={from} replace />;
@@ -192,6 +250,7 @@ export default function Register() {
       return;
     }
 
+    clearRegistrationDraft();
     setDirection('forward');
     setCompletionMode(data.session ? 'ready' : 'confirm-email');
     setSubmitting(false);
@@ -288,7 +347,12 @@ export default function Register() {
             <p>{activeCopy.support}</p>
           </div>
 
-          <div key={step} className={`register-journey__stage is-${direction}`}>
+          <div
+            key={step}
+            ref={stageRef}
+            tabIndex={-1}
+            className={`register-journey__stage is-${direction}`}
+          >
             {error ? <div className="register-journey__notice"><AuthNotice tone="error">{error}</AuthNotice></div> : null}
 
             {step === 0 ? (
