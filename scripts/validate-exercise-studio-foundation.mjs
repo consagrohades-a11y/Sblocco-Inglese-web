@@ -14,6 +14,7 @@ import {
 } from '../src/lib/exerciseStudioCompiler.js';
 import { stableShuffleWordOrderTokenInstances } from '../src/lib/wordOrderShuffle.js';
 import { parseStudioImport } from '../src/lib/exerciseStudioImport.js';
+import { buildStudioActivityExport } from '../src/lib/exerciseStudioExport.js';
 
 const requiredTypes = [
   'explanation',
@@ -158,6 +159,20 @@ normalized.document.blocks.forEach((block, index) => {
   assert.ok(block.id, 'Studio must generate block IDs.');
   assert.equal(block.sequence_index, index + 1, 'Studio must own sequence indexes.');
 });
+
+const exported = buildStudioActivityExport(normalized.document);
+assert.equal(exported._template.template_id, 'sblocco-learning-activity');
+assert.deepEqual(exported.activity.tags, raw.tags, 'Studio JSON export must preserve teacher-authored tags.');
+assert.equal(Object.hasOwn(exported.activity, 'id'), false, 'Portable export must omit activity IDs.');
+assert.equal(Object.hasOwn(exported.activity, 'internal_code'), false, 'Portable export must omit internal codes.');
+assert.equal(Object.hasOwn(exported.activity, 'slug'), false, 'Portable export must omit system slugs.');
+assert.equal(Object.hasOwn(exported.activity.blocks[0], 'id'), false, 'Portable export must omit block IDs.');
+assert.equal(Object.hasOwn(exported.activity.blocks[0], 'sequence_index'), false, 'Portable export must omit sequence indexes.');
+
+const reimportedExport = parseStudioImport(JSON.stringify(exported));
+assert.equal(reimportedExport.publishable, true, reimportedExport.errors.map((item) => item.message).join('\n'));
+assert.deepEqual(reimportedExport.document.tags, raw.tags, 'Exported JSON must round-trip tags through Studio import.');
+assert.equal(reimportedExport.document.blocks.length, raw.blocks.length, 'Exported JSON must round-trip every authored block.');
 
 const repairCodes = new Set(normalized.repairs.map((repair) => repair.code));
 assert.ok(repairCodes.has('generated_activity_id'));
