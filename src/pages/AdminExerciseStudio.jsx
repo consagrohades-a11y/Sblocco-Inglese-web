@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  Download,
   Eye,
   FileJson2,
   GripVertical,
@@ -43,6 +44,7 @@ import {
   publishStudioDraft,
   saveStudioDraft,
 } from '../lib/exerciseStudioDraftApi.js';
+import { downloadStudioActivityJson } from '../lib/exerciseStudioExport.js';
 import { deleteStudioContentMedia } from '../lib/exerciseStudioMediaApi.js';
 
 const LEVELS = ['A0', 'A1', 'A1+', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2', 'Mixed'];
@@ -66,6 +68,71 @@ function starterDocument() {
 
 function metadataInputClass() {
   return 'focus-ring w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-bold text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-white';
+}
+
+function StudioTagsEditor({ tags = [], onChange }) {
+  const [value, setValue] = useState('');
+
+  function addTag(rawValue) {
+    const tag = String(rawValue || '').trim().replace(/\s+/g, ' ');
+    if (!tag) return;
+    const exists = tags.some((item) => item.toLocaleLowerCase() === tag.toLocaleLowerCase());
+    if (!exists) onChange([...tags, tag]);
+    setValue('');
+  }
+
+  function removeTag(tag) {
+    onChange(tags.filter((item) => item !== tag));
+  }
+
+  return (
+    <div className="grid gap-2 sm:col-span-2">
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Tags</span>
+        <span className="text-[0.68rem] font-semibold normal-case tracking-normal text-ink/35 dark:text-white/35">Press Enter or comma to add</span>
+      </div>
+      <div className="flex min-h-11 flex-wrap items-center gap-2 rounded-xl border border-ink/10 bg-white px-2.5 py-2 shadow-sm dark:border-white/10 dark:bg-white/[0.05]">
+        {tags.map((tag) => (
+          <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-linen px-2.5 py-1 text-xs font-black text-ink/65 dark:bg-white/[0.08] dark:text-white/70">
+            {tag}
+            <button
+              type="button"
+              onClick={() => removeTag(tag)}
+              className="focus-ring grid h-4 w-4 place-items-center rounded-full text-[0.7rem] leading-none text-ink/35 hover:bg-white hover:text-ink dark:text-white/35 dark:hover:bg-white/[0.1] dark:hover:text-white"
+              aria-label={`Remove tag ${tag}`}
+            >
+              ×
+            </button>
+          </span>
+        ))}
+        <input
+          value={value}
+          onChange={(event) => {
+            const next = event.target.value;
+            if (next.includes(',')) {
+              const parts = next.split(',');
+              parts.slice(0, -1).forEach(addTag);
+              setValue(parts.at(-1) || '');
+              return;
+            }
+            setValue(next);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              addTag(value);
+            }
+            if (event.key === 'Backspace' && !value && tags.length) {
+              removeTag(tags.at(-1));
+            }
+          }}
+          onBlur={() => addTag(value)}
+          placeholder={tags.length ? 'Add another tag…' : 'e.g. travel, present perfect, interview'}
+          className="min-w-[12rem] flex-1 bg-transparent px-1 py-1 text-sm font-bold text-ink outline-none placeholder:text-ink/30 dark:text-white dark:placeholder:text-white/25"
+        />
+      </div>
+    </div>
+  );
 }
 
 function blockSummary(block) {
@@ -517,6 +584,9 @@ export default function AdminExerciseStudio() {
               <button type="button" onClick={() => setImportOpen(true)} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-xs font-black text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white">
                 <FileJson2 className="h-3.5 w-3.5" /> Import JSON
               </button>
+              <button type="button" onClick={() => downloadStudioActivityJson(document)} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-xs font-black text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white">
+                <Download className="h-3.5 w-3.5" /> Export JSON
+              </button>
               <button type="button" onClick={() => setPreflightVisible((value) => !value)} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-xs font-black text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white">
                 <Eye className="h-3.5 w-3.5" /> Preflight
               </button>
@@ -757,6 +827,10 @@ export default function AdminExerciseStudio() {
                     Estimated minutes
                     <input type="number" min="1" value={document.estimated_minutes || ''} onChange={(event) => patchDocument({ estimated_minutes: event.target.value ? Number(event.target.value) : null })} placeholder="Automatic" className={metadataInputClass()} />
                   </label>
+                  <StudioTagsEditor
+                    tags={document.tags || []}
+                    onChange={(tags) => patchDocument({ tags })}
+                  />
                 </div>
               ) : null}
 
