@@ -135,7 +135,7 @@ function EditorialHomeNavbar({ avatarBackgroundKey, avatarKey, displayName, isAd
           ) : !loading ? (
             <Link to="/login" className="home-site-header__login">Accedi</Link>
           ) : null}
-          <Link to="/prenota" className="home-site-header__cta">Inizia ora</Link>
+          <Link to="/register" className="home-site-header__cta">Inizia ora</Link>
         </div>
 
         <button
@@ -163,7 +163,7 @@ function EditorialHomeNavbar({ avatarBackgroundKey, avatarKey, displayName, isAd
             </>
           ) : !loading ? <Link to="/login">Accedi</Link> : null}
           {showThemeToggle ? <ThemeToggle mobile /> : null}
-          <Link to="/prenota" className="home-site-header__cta">Inizia ora</Link>
+          <Link to="/register" className="home-site-header__cta">Inizia ora</Link>
         </nav>
       ) : null}
     </header>
