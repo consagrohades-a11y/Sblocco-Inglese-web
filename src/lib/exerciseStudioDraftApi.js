@@ -23,7 +23,7 @@ async function currentUserId() {
 export async function listStudioDrafts({ status = null, search = '' } = {}) {
   let query = supabase
     .from('exercise_studio_drafts')
-    .select('id, exercise_id, folder_id, internal_title, learner_title, level, topic, activity_type, status, origin, schema_version, tags:document->tags, created_at, updated_at')
+    .select('id, exercise_id, folder_id, pinned_at, internal_title, learner_title, level, topic, activity_type, status, origin, schema_version, tags:document->tags, last_published_at, created_at, updated_at')
     .order('updated_at', { ascending: false });
 
   if (status) query = query.eq('status', status);
@@ -33,6 +33,33 @@ export async function listStudioDrafts({ status = null, search = '' } = {}) {
   }
 
   const { data, error } = await query;
+  if (error) throw error;
+  return data || [];
+}
+
+
+export async function setStudioDraftPinned(draftId, pinned) {
+  const { data, error } = await supabase
+    .from('exercise_studio_drafts')
+    .update({ pinned_at: pinned ? new Date().toISOString() : null })
+    .eq('id', draftId)
+    .select('id, pinned_at')
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function bulkPatchStudioDraftTags(draftIds, { add = [], remove = [] } = {}) {
+  const ids = [...new Set((draftIds || []).filter(Boolean))];
+  if (!ids.length) return [];
+
+  const { data, error } = await supabase.rpc('admin_bulk_patch_exercise_studio_tags', {
+    p_draft_ids: ids,
+    p_add_tags: add,
+    p_remove_tags: remove,
+  });
+
   if (error) throw error;
   return data || [];
 }
