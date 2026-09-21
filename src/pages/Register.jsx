@@ -249,64 +249,58 @@ export default function Register() {
       </header>
 
       <main className="register-journey__layout">
-        <aside className="register-journey__story">
-          <div className="register-journey__story-copy">
-            <p className="register-journey__kicker">{activeCopy.eyebrow}</p>
-            <h1>{activeCopy.title}</h1>
-            <p>{activeCopy.support}</p>
-          </div>
-
-          <div className="register-journey__art" aria-hidden="true">
-            <span className="register-journey__art-orbit" />
-            <img src="/assets/brand/sblocco-editorial-conversation-v2.png" alt="" />
-          </div>
-
-          {step > 0 ? (
-            <ol className="register-journey__steps" aria-label="Progressione iscrizione">
+        {step > 0 ? (
+          <div className="register-journey__progress" aria-label={`Passaggio ${step} di 4`}>
+            <div className="register-journey__progress-count">
+              <strong>{String(step).padStart(2, '0')}</strong>
+              <span>di 04</span>
+            </div>
+            <ol>
               {JOURNEY_STEPS.map((item, index) => {
                 const number = index + 1;
                 const active = step === number;
                 const complete = step > number;
                 return (
                   <li key={item.label} className={active ? 'is-active' : complete ? 'is-complete' : ''}>
-                    <span>{complete ? <Check /> : String(number).padStart(2, '0')}</span>
+                    <span>{complete ? <Check /> : number}</span>
                     <p>{item.label}</p>
                   </li>
                 );
               })}
             </ol>
-          ) : (
-            <p className="register-journey__story-note">
-              Quattro passaggi. Meno di due minuti. E puoi cambiare tutto più tardi.
-            </p>
-          )}
-        </aside>
+          </div>
+        ) : null}
 
         <section className="register-journey__workspace">
+          <div className="register-journey__scene-copy">
+            <p className="register-journey__kicker">{activeCopy.eyebrow}</p>
+            <h1>{activeCopy.title}</h1>
+            <p>{activeCopy.support}</p>
+          </div>
+
           <div key={step} className={`register-journey__stage is-${direction}`}>
             {error ? <div className="register-journey__notice"><AuthNotice tone="error">{error}</AuthNotice></div> : null}
 
             {step === 0 ? (
               <div className="register-journey__welcome">
-                <span className="register-journey__welcome-icon"><Sparkles /></span>
-                <p className="register-journey__stage-eyebrow">Il tuo spazio, dall’inizio.</p>
-                <h2>Non stai creando soltanto un account.</h2>
-                <p>
-                  Stai preparando il posto in cui troverai attività, parole, feedback e progressi. Facciamolo sembrare tuo fin dal primo minuto.
-                </p>
-                <button type="button" onClick={continueJourney} className="register-journey__primary">
-                  Cominciamo <ArrowRight />
-                </button>
+                <div className="register-journey__welcome-copy">
+                  <span className="register-journey__welcome-icon"><Sparkles /></span>
+                  <p>
+                    Qui troverai attività, parole, feedback e progressi. Prima di tutto, però, prepariamo il tuo spazio.
+                  </p>
+                  <button type="button" onClick={continueJourney} className="register-journey__primary">
+                    Cominciamo <ArrowRight />
+                  </button>
+                </div>
+                <div className="register-journey__welcome-art" aria-hidden="true">
+                  <img src="/assets/brand/sblocco-editorial-conversation-v2.png" alt="" />
+                </div>
               </div>
             ) : null}
 
             {step === 1 ? (
               <form className="register-journey__form" onSubmit={(event) => { event.preventDefault(); continueJourney(); }}>
-                <div className="register-journey__stage-heading">
-                  <span>Partiamo dalla cosa più semplice.</span>
-                  <h2>Come ti chiami?</h2>
-                  <p>Puoi usare nome e cognome, solo il nome o il modo in cui preferisci essere chiamato.</p>
-                </div>
+                <p className="register-journey__microcopy">Puoi usare nome e cognome, solo il nome o il modo in cui preferisci essere chiamato.</p>
 
                 <FieldShell icon={UserRound} label="Nome visualizzato">
                   <input
@@ -330,11 +324,7 @@ export default function Register() {
 
             {step === 2 ? (
               <form className="register-journey__form" onSubmit={(event) => { event.preventDefault(); continueJourney(); }}>
-                <div className="register-journey__stage-heading">
-                  <span>Non serve un curriculum.</span>
-                  <h2>Raccontaci solo due cose.</h2>
-                  <p>Entrambe sono facoltative. Servono a dare un po’ più di contesto al tuo profilo.</p>
-                </div>
+                <p className="register-journey__microcopy">Non serve un curriculum. Entrambe le informazioni sono facoltative e servono solo a dare un po’ più di contesto al tuo profilo.</p>
 
                 <div className="register-journey__field-grid">
                   <FieldShell icon={Briefcase} label="Professione" optional>
@@ -373,12 +363,8 @@ export default function Register() {
 
             {step === 3 ? (
               <div className="register-journey__form register-journey__form--avatar">
-                <div className="register-journey__stage-heading register-journey__stage-heading--avatar">
-                  <div>
-                    <span>Questa parte è solo tua.</span>
-                    <h2>Scegli il tuo personaggio.</h2>
-                    <p>Puoi abbinarlo al colore che preferisci e cambiarlo più avanti dalle impostazioni.</p>
-                  </div>
+                <div className="register-journey__avatar-intro">
+                  <p className="register-journey__microcopy">Puoi abbinarlo al colore che preferisci e cambiarlo più avanti dalle impostazioni.</p>
                   <LearnerAvatar
                     avatarKey={avatarKey}
                     backgroundKey={avatarBackgroundKey}
@@ -411,11 +397,7 @@ export default function Register() {
 
             {step === 4 ? (
               <form className="register-journey__form" onSubmit={handleSubmit}>
-                <div className="register-journey__stage-heading">
-                  <span>Ci siamo quasi, {name}.</span>
-                  <h2>Crea il tuo accesso.</h2>
-                  <p>Questi dati servono soltanto per accedere in modo sicuro al tuo spazio Sblocco.</p>
-                </div>
+                <p className="register-journey__microcopy">Ci siamo quasi, {name}. Questi dati servono soltanto per accedere in modo sicuro al tuo spazio Sblocco.</p>
 
                 <FieldShell icon={Mail} label="Email">
                   <input
