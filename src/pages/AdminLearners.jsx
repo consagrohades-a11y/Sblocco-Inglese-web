@@ -205,6 +205,7 @@ export default function AdminLearners() {
                       <div className="flex min-w-0 items-center gap-3">
                         <LearnerAvatar
                           avatarKey={learner.avatar_key}
+                          backgroundKey={learner.avatar_background_key}
                           displayName={learner.display_name || learner.email}
                           size="md"
                         />
