@@ -205,17 +205,16 @@
   width: 100%;
   max-width: 52rem;
   justify-self: end;
-  border: 1px solid var(--journey-line);
-  border-radius: 1.35rem;
-  background: color-mix(in srgb, var(--journey-paper-raised) 94%, transparent);
-  box-shadow: 0 1.4rem 4rem rgba(14, 48, 69, .06);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
-.dark .register-journey__stage { box-shadow: 0 1.4rem 4rem rgba(0,0,0,.16); }
 .register-journey__stage.is-forward { animation: registerJourneyForward 380ms cubic-bezier(.2,.75,.25,1) both; }
 .register-journey__stage.is-back { animation: registerJourneyBack 350ms cubic-bezier(.2,.75,.25,1) both; }
 
 .register-journey__welcome,
-.register-journey__form { padding: clamp(1.5rem, 4vw, 3.1rem); }
+.register-journey__form { padding: 0; }
 .register-journey__welcome { min-height: 31rem; display: flex; flex-direction: column; justify-content: center; }
 .register-journey__welcome-icon {
   display: grid;
@@ -245,7 +244,7 @@
   line-height: 1.7;
 }
 
-.register-journey__notice { padding: 1.1rem 1.3rem 0; }
+.register-journey__notice { padding: 0 0 1rem; }
 .register-journey__stage-heading { margin-bottom: 2rem; }
 .register-journey__stage-heading > span {
   color: var(--journey-orange);
@@ -295,15 +294,14 @@
   min-height: 3.35rem;
   padding: .85rem 1rem;
   border: 1px solid var(--journey-line);
-  border-radius: .85rem;
+  border-radius: .7rem;
   outline: none;
   color: var(--journey-navy);
-  background: color-mix(in srgb, var(--journey-paper-raised) 92%, white);
+  background: color-mix(in srgb, var(--journey-paper) 72%, transparent);
   font-size: .9rem;
   font-weight: 650;
   transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
-.dark .register-journey__input { background: color-mix(in srgb, var(--journey-paper-raised) 94%, black); }
 .register-journey__input::placeholder { color: color-mix(in srgb, var(--journey-muted) 70%, transparent); }
 .register-journey__input:focus {
   border-color: color-mix(in srgb, var(--journey-orange) 58%, transparent);
@@ -347,8 +345,8 @@
   justify-content: space-between;
   gap: 1rem;
   margin-top: 2.2rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--journey-line);
+  padding-top: 1.1rem;
+  border-top: 1px solid color-mix(in srgb, var(--journey-navy) 10%, transparent);
 }
 .register-journey__actions-right { display: flex; align-items: center; gap: 1rem; }
 
