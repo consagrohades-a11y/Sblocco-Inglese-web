@@ -181,27 +181,20 @@ function AssignmentCard({ assignment, busy, onStatusChange }) {
   );
 }
 
-const areaHeadings = {
-  exercise: ['Esercizi assegnati', 'Exercise Builder e raccolte di esercizi, separati dal ripasso e dalla pratica sulle parole.'],
-  srs: ['Ripasso SRS', 'Percorsi di memoria con card programmate dal sistema in base alla data di ripasso.'],
-  practice: ['Pratica mirata', 'Quiz sulle parole e sui deck scelti direttamente dall’insegnante.'],
-};
 
 function matchesContentFilter(assignment, filter) {
   if (filter === 'with_content') return Boolean(assignment.has_content);
   if (filter === 'without_content') return !assignment.has_content;
   if (filter === 'exercise') return (assignment.resource_types || []).some((type) => ['custom_exercise', 'exercise_collection', 'grammar_unit'].includes(type));
-  if (filter === 'srs') return Number(assignment.study_item_count || 0) > 0;
-  if (filter === 'practice') return (assignment.resource_types || []).includes('practice_session');
   return true;
 }
 
-export default function AdminAssignments({ initialContentFilter = 'all' }) {
+export default function AdminAssignments() {
   const [searchParams] = useSearchParams();
   const [assignments, setAssignments] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('active');
-  const [contentFilter, setContentFilter] = useState(initialContentFilter);
+  const [contentFilter, setContentFilter] = useState('all');
   const [groupFilter, setGroupFilter] = useState(searchParams.get('group') || 'all');
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
@@ -226,9 +219,7 @@ export default function AdminAssignments({ initialContentFilter = 'all' }) {
   }
 
   useEffect(() => { loadAssignments(); }, []);
-  useEffect(() => { setContentFilter(initialContentFilter); }, [initialContentFilter]);
-
-  const countScope = useMemo(() => assignments.filter((assignment) => matchesContentFilter(assignment, initialContentFilter)), [assignments, initialContentFilter]);
+  const countScope = assignments;
   const counts = useMemo(() => countScope.reduce((result, assignment) => ({
     ...result,
     [assignment.status]: (result[assignment.status] || 0) + 1,
@@ -269,8 +260,6 @@ export default function AdminAssignments({ initialContentFilter = 'all' }) {
     setBusyId(null);
   }
 
-  const areaHeading = areaHeadings[initialContentFilter];
-
   return (
     <>
       <SEO title="Assegnazioni | Admin | Sblocco Inglese" description="Gestisci tutte le assegnazioni da una sola pagina." />
@@ -278,8 +267,8 @@ export default function AdminAssignments({ initialContentFilter = 'all' }) {
         <div className="mx-auto max-w-7xl">
           <AdminPageHeader
             eyebrow="Studenti"
-            title={areaHeading?.[0] || 'Assegnazioni'}
-            description={areaHeading?.[1] || 'Controlla tutte le attività assegnate e apri direttamente ciò che devi modificare.'}
+            title="Assegnazioni"
+            description="Controlla tutte le attività assegnate e apri direttamente ciò che devi modificare."
             actions={(
               <Link
                 to="/admin/learners"
@@ -325,11 +314,9 @@ export default function AdminAssignments({ initialContentFilter = 'all' }) {
                 <option value="with_content">Con contenuti</option>
                 <option value="without_content">Senza contenuti</option>
                 <option value="exercise">Con esercizio</option>
-                <option value="srs">Con ripasso SRS</option>
-                <option value="practice">Con pratica mirata</option>
               </select>
               <select value={groupFilter} onChange={(event) => setGroupFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-clay dark:border-white/20 dark:bg-surface-800 dark:text-white"><option value="all">Tutti i gruppi</option>{groups.map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select>
-              <button type="button" onClick={() => { setSearch(''); setStatusFilter('active'); setContentFilter(initialContentFilter); setGroupFilter('all'); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-ink/15 px-4 text-sm font-black text-ink dark:border-white/20 dark:text-white">
+              <button type="button" onClick={() => { setSearch(''); setStatusFilter('active'); setContentFilter('all'); setGroupFilter('all'); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-ink/15 px-4 text-sm font-black text-ink dark:border-white/20 dark:text-white">
                 <Filter className="h-4 w-4" />Azzera
               </button>
             </div>
