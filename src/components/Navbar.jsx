@@ -6,7 +6,6 @@ import {
   BookMarked,
   BookOpen,
   ChevronDown,
-  Dumbbell,
   GraduationCap,
   LayoutDashboard,
   LogOut,
@@ -27,14 +26,12 @@ const publicItems = [
   { label: 'Corsi', to: '/percorsi' },
   { label: 'Metodo', to: '/metodo' },
   { label: 'Piattaforma', to: '/piattaforma' },
-  { label: 'Trainer', to: '/trainers' },
   { label: 'Risultati', to: '/recensioni' },
 ];
 
 const learnerItems = [
   { label: 'Home', to: '/dashboard', icon: LayoutDashboard },
-  { label: 'Impara', to: '/attivita/esercizi', icon: BookOpen, activePrefixes: ['/assignments', '/exercises', '/percorsi'] },
-  { label: 'Ripassa', to: '/attivita/srs', icon: Dumbbell, activePrefixes: ['/attivita/pratica-mirata'] },
+  { label: 'Attività', to: '/attivita/esercizi', icon: BookOpen, activePrefixes: ['/assignments', '/exercises', '/collections'] },
   { label: 'Vocabolario', to: '/vocab-bank', icon: BookMarked },
   { label: 'Progressi', to: '/progressi', icon: BarChart3 },
 ];
@@ -42,7 +39,7 @@ const learnerItems = [
 const editorialHomeItems = [
   { label: 'Il metodo', to: '/metodo' },
   { label: 'Percorsi', to: '/percorsi' },
-  { label: 'Risorse', to: '/trainers' },
+  { label: 'Piattaforma', to: '/piattaforma' },
   { label: 'Storie', to: '/casi-reali' },
 ];
 
@@ -186,16 +183,13 @@ export default function Navbar() {
   const items = useMemo(() => (isLearner ? learnerItems : publicItems), [isLearner]);
   const routeParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const requestedReturnTo = routeParams.get('returnTo') || '';
-  const practiceAssignmentId = routeParams.get('assignmentId') || '';
   const safeReturnTo = requestedReturnTo.startsWith('/assignments/') ? requestedReturnTo : '';
   const assignmentDetail = location.pathname.startsWith('/assignments/');
   const learnerAction = safeReturnTo
     ? { label: 'Torna all’attività', to: safeReturnTo }
-    : location.pathname === '/practice' && practiceAssignmentId
-      ? { label: 'Torna all’attività', to: `/assignments/${practiceAssignmentId}` }
-      : assignmentDetail
-        ? { label: 'Torna alle attività', to: '/assignments' }
-        : { label: 'Indietro', to: '' };
+    : assignmentDetail
+      ? { label: 'Torna alle attività', to: '/assignments' }
+      : { label: 'Indietro', to: '' };
 
   useEffect(() => {
     function handleScroll() {
