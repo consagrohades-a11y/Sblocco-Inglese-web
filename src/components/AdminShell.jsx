@@ -365,7 +365,7 @@ export default function AdminShell() {
       <header className="sticky top-0 z-40 flex min-h-16 items-center justify-between border-b border-ink/10 bg-paper/95 px-4 backdrop-blur-xl dark:border-white/10 dark:bg-surface-950/95 lg:hidden">
         <BrandLogo to="/admin" compact />
         <div className="flex items-center gap-2">
-          <AdminNotificationBell compact />
+          <AdminNotificationBell compact tone="light" />
           <button
           type="button"
           onClick={() => setMobileOpen(true)}
