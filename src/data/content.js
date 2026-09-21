@@ -33,7 +33,7 @@ export const navItems = [
   { label: 'Home', to: '/' },
   { label: 'Corsi', to: '/percorsi' },
   { label: 'Simulazione', to: '/simulazione-39' },
-  { label: 'Trainer', to: '/trainers' },
+  { label: 'Piattaforma', to: '/piattaforma' },
   { label: 'Grammatica', to: '/grammar' },
   { label: 'Founder e recensioni', to: '/recensioni' },
   { label: 'Contatti', to: '/contatti' },
@@ -176,7 +176,7 @@ export const bookingSteps = [
     detailTitle: 'Il lavoro continua dopo la call.',
     detail:
       'Il feedback ti aiuta a rivedere ciò che è emerso: errori, alternative migliori e indicazioni per capire se proseguire con un corso o con pratica autonoma.',
-    focus: 'Questo è il ponte verso corsi, trainer o prossimo step.',
+    focus: 'Questo è il ponte verso un corso o il prossimo step più utile.',
   },
 ];
 
@@ -331,7 +331,7 @@ export const percorsoOffers = [
       'correzione degli errori comuni',
       'simulazioni guidate',
       'allenamento fuori lezione con feedback',
-      'Trainer Suite inclusa durante il corso',
+      'Piattaforma e attività incluse durante il corso',
     ],
     bestFor:
       'Chi vuole sbloccarsi con pratica strutturata, senza aspettare un colloquio urgente. Per non farsi cogliere di sorpresa.',
@@ -361,7 +361,7 @@ export const percorsoOffers = [
       'frasi professionali',
       'customer-facing English',
       'speaking in ambienti quali expo, congressi, networking',
-      'trainer business incluso durante il corso',
+      'attività Business English incluse durante il corso',
     ],
     bestFor:
       'Chi usa già l’inglese al lavoro e vuole sembrare più chiaro, presente e professionale.',
@@ -373,7 +373,7 @@ export const percorsoOffers = [
     selectedBullets: [
       'più formule pronte per call ed email',
       'meno traduzione mentale nelle risposte professionali',
-      'trainer business collegato al lavoro fatto nel corso',
+      'attività Business English collegate al lavoro fatto nel corso',
     ],
     icon: BriefcaseBusiness,
   },
@@ -391,7 +391,7 @@ export const percorsoOffers = [
       'correzione frasi',
       'pratica personalizzata',
       'review CV (ATTENZIONE!, in inglese si scrive diversamente...)',
-      'Trainer Suite incluso durante la preparazione. Qui diventa fondamentale e aumenta la tua probabilità di successo',
+      'Piattaforma e attività incluse durante la preparazione, collegate direttamente al lavoro fatto nel percorso',
     ],
     bestFor:
       'Chi ha un colloquio vero, una candidatura importante o poco tempo per prepararsi.',
@@ -420,7 +420,7 @@ export const percorsoOffers = [
       'frasi e template pratici',
       'simulazioni con clienti',
       'feedback sul team',
-      'Trainer Suite disponibile per tutto il team durante il percorso',
+      'Piattaforma e attività disponibili per tutto il team durante il percorso',
     ],
     bestFor:
       'Piccole aziende, studi, attività turistiche, hospitality, customer service, beauty/wellness, eventi o servizi con clienti internazionali.',
