@@ -13,7 +13,7 @@ declare
   requested_background_key text;
   requested_timezone text;
 begin
-  if coalesce(new.raw_user_meta_data ->> 'age', '') ~ '^[0-9]{1,3} then
+  if coalesce(new.raw_user_meta_data ->> 'age', '') ~ '^[0-9]{1,3}$' then
     requested_age := (new.raw_user_meta_data ->> 'age')::smallint;
     if requested_age < 5 or requested_age > 120 then
       requested_age := null;
