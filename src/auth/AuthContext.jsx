@@ -87,13 +87,28 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const signUp = useCallback(({ displayName, email, password, emailRedirectTo }) =>
+  const signUp = useCallback(({
+    displayName,
+    profession,
+    age,
+    avatarKey,
+    avatarBackgroundKey,
+    timezone,
+    email,
+    password,
+    emailRedirectTo,
+  }) =>
     supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           display_name: displayName.trim(),
+          profession: String(profession || '').trim() || null,
+          age: Number.isInteger(age) ? age : null,
+          avatar_key: avatarKey || null,
+          avatar_background_key: avatarKey ? (avatarBackgroundKey || 'cream') : null,
+          timezone: timezone || null,
         },
         ...(emailRedirectTo ? { emailRedirectTo } : {}),
       },
