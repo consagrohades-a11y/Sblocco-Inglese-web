@@ -154,15 +154,16 @@ export default function App() {
     || (import.meta.env.DEV && location.pathname.startsWith('/__preview/recovery'));
   const isStandaloneRecoveryOnboarding = location.pathname === '/recupero-debito/onboarding'
     || (import.meta.env.DEV && location.pathname === '/__preview/recovery-onboarding');
+  const isStandaloneAuth = ['/register', '/login', '/forgot-password', '/update-password'].includes(location.pathname);
   const isStandaloneRegistration = location.pathname === '/register';
-  const isStandaloneExperience = isStandaloneRecoveryOnboarding || isStandaloneRegistration;
-  const suppressMarketingMobileCta = isRecoveryExperience || isStandaloneRegistration;
+  const isStandaloneExperience = isStandaloneRecoveryOnboarding || isStandaloneAuth;
+  const suppressMarketingMobileCta = isRecoveryExperience || isStandaloneAuth;
 
   return (
     <div className="min-h-screen overflow-x-clip bg-paper text-ink transition-colors duration-300 dark:bg-surface-950 dark:text-white">
       <ScrollManager />
       {!isAdmin && !isStandaloneExperience ? <Navbar /> : null}
-      <main className={isAdmin || isHomepage || isColloquioPathway || isRecoveryExperience || isStandaloneRegistration ? '' : 'pb-24 xl:pb-0'}>
+      <main className={isAdmin || isHomepage || isColloquioPathway || isRecoveryExperience || isStandaloneAuth ? '' : 'pb-24 xl:pb-0'}>
         <Suspense fallback={<PageFallback />}>
           <Routes>
             <Route path="/" element={<Home />} />
