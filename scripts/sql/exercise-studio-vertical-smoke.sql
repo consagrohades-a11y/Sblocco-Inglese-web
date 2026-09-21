@@ -37,7 +37,7 @@ values (
 )
 on conflict (id) do nothing;
 
-do $
+do $$
 begin
   if not exists (
     select 1
@@ -50,9 +50,9 @@ begin
     raise exception 'Learner signup did not create a teacher notification.';
   end if;
 end;
-$;
+$$;
 
-do $
+do $$
 declare
   v_draft_id uuid := gen_random_uuid();
   v_document jsonb;
