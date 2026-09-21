@@ -69,19 +69,43 @@ export default function StudioJsonImportPanel({ onClose, onImport }) {
                 Download universal AI kit
               </a>
               <a
-                href="/templates/sblocco-learning-studio/learning-activity-example-v1.json"
-                download
-                className="focus-ring rounded-full border border-orange-300 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:text-orange-100"
-              >
-                Example JSON
-              </a>
-              <a
                 href="/templates/sblocco-learning-studio/learning-activity-template-v1.json"
                 download
                 className="focus-ring rounded-full border border-ink/10 bg-white/70 px-3.5 py-2 text-xs font-black text-ink/70 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/70"
               >
                 Blank JSON
               </a>
+            </div>
+            <div className="mt-4 border-t border-orange-200/80 pt-3 dark:border-orange-300/15">
+              <p className="text-[11px] font-black uppercase tracking-[0.1em] text-orange-900/60 dark:text-orange-100/55">
+                Gold-standard examples
+              </p>
+              <p className="mt-1 text-xs font-semibold leading-5 text-orange-900/70 dark:text-orange-100/65">
+                Use these to show the AI the depth and progression Sblocco expects — not as rigid templates.
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <a
+                  href="/templates/sblocco-learning-studio/gold-benchmark-a1plus-a2-threshold-assessment-v1.json"
+                  download
+                  className="focus-ring rounded-full border border-orange-300 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:text-orange-100"
+                >
+                  A1+ assessment
+                </a>
+                <a
+                  href="/templates/sblocco-learning-studio/gold-benchmark-b2-listening-vocabulary-chunks-v1.json"
+                  download
+                  className="focus-ring rounded-full border border-orange-300 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:text-orange-100"
+                >
+                  B2 listening + chunks
+                </a>
+                <a
+                  href="/templates/sblocco-learning-studio/learning-activity-example-v1.json"
+                  download
+                  className="focus-ring rounded-full border border-ink/10 bg-white/70 px-3.5 py-2 text-xs font-black text-ink/70 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/70"
+                >
+                  Short mixed example
+                </a>
+              </div>
             </div>
           </div>
 
