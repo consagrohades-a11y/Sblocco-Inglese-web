@@ -23,7 +23,7 @@ function runtimeSettings(document) {
     display_mode: source.display_mode === 'all_questions' ? 'all_questions' : 'one_at_a_time',
     feedback_timing: ['question_end', 'section_end', 'exercise_end', 'hidden'].includes(source.feedback_timing)
       ? source.feedback_timing
-      : 'question_end',
+      : 'exercise_end',
     show_score: source.show_score !== false,
     show_correct_answers: source.show_correct_answers !== false,
     show_explanations: source.show_explanations !== false,

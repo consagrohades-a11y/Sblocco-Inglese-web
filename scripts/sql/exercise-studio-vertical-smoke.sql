@@ -179,7 +179,7 @@ begin
       'estimated_minutes', 5,
       'settings', jsonb_build_object(
         'display_mode', 'one_at_a_time',
-        'feedback_timing', 'question_end',
+        'feedback_timing', 'exercise_end',
         'show_score', true,
         'show_correct_answers', true,
         'show_explanations', true,
@@ -192,7 +192,7 @@ begin
           'title', 'A short Studio test',
           'instructions', 'Work through each block in order.',
           'selection_mode', 'fixed',
-          'feedback_timing', 'question_end',
+          'feedback_timing', 'exercise_end',
           'settings', '{}'::jsonb,
           'questions', jsonb_build_array(
             jsonb_build_object(
@@ -366,6 +366,20 @@ begin
       and version.review_status = 'approved'
   ) then
     raise exception 'Studio publish did not create an approved published exercise.';
+  end if;
+
+  if not exists (
+    select 1
+    from public.exercise_builder_exercises exercise
+    join public.exercise_builder_exercise_versions version
+      on version.id = exercise.current_version_id
+    join public.exercise_builder_sections section
+      on section.exercise_version_id = version.id
+    where exercise.id = v_exercise_id
+      and coalesce(version.settings ->> 'feedback_timing', '') = 'exercise_end'
+      and section.feedback_timing = 'exercise_end'
+  ) then
+    raise exception 'Studio publish did not withhold results until exercise completion.';
   end if;
 
   if (

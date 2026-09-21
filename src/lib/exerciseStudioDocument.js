@@ -28,7 +28,7 @@ export function defaultStudioSettings() {
   return {
     instruction_language: 'it',
     display_mode: 'one_at_a_time',
-    feedback_timing: 'question_end',
+    feedback_timing: 'exercise_end',
     show_score: true,
     show_correct_answers: true,
     show_explanations: true,
