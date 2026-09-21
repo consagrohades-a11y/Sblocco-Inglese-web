@@ -133,16 +133,6 @@ export default function Register() {
   const name = useMemo(() => firstName(displayName), [displayName]);
 
   useEffect(() => {
-    const root = document.documentElement;
-    const wasDark = root.classList.contains('dark');
-    if (wasDark) root.classList.remove('dark');
-
-    return () => {
-      if (wasDark) root.classList.add('dark');
-    };
-  }, []);
-
-  useEffect(() => {
     if (typeof window === 'undefined' || completionMode) return;
 
     window.sessionStorage.setItem(REGISTRATION_DRAFT_KEY, JSON.stringify({
