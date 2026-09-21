@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { getLearnerAvatar } from '../../lib/learnerAvatars.js';
+import {
+  getLearnerAvatar,
+  getLearnerAvatarBackground,
+} from '../../lib/learnerAvatars.js';
 
 const sizeClasses = {
   xs: 'h-7 w-7 text-[10px]',
@@ -22,12 +25,14 @@ function initialsFromName(value) {
 
 export default function LearnerAvatar({
   avatarKey,
+  backgroundKey,
   displayName,
   size = 'md',
   className = '',
   eager = false,
 }) {
   const avatar = useMemo(() => getLearnerAvatar(avatarKey), [avatarKey]);
+  const background = useMemo(() => getLearnerAvatarBackground(backgroundKey), [backgroundKey]);
   const [imageFailed, setImageFailed] = useState(false);
 
   useEffect(() => {
@@ -36,7 +41,8 @@ export default function LearnerAvatar({
 
   return (
     <span
-      className={`relative inline-grid shrink-0 place-items-center overflow-hidden rounded-full bg-[#f2eadf] font-black text-ink ring-1 ring-ink/10 dark:bg-white/[0.08] dark:text-white dark:ring-white/10 ${sizeClasses[size] || sizeClasses.md} ${className}`}
+      className={`relative inline-grid shrink-0 place-items-center overflow-hidden rounded-full font-black ring-1 ring-ink/10 dark:ring-white/10 ${sizeClasses[size] || sizeClasses.md} ${className}`}
+      style={{ backgroundColor: background.color, color: background.textColor }}
       aria-hidden="true"
     >
       {avatar && !imageFailed ? (
