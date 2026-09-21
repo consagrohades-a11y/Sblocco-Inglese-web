@@ -20,6 +20,11 @@ const footer = read('src/components/Footer.jsx');
 const learnerHome = read('src/pages/LearnerHome.jsx');
 const learnerAssignments = read('src/pages/LearnerAssignments.jsx');
 const learnerAssignmentDetail = read('src/pages/LearnerAssignmentDetail.jsx');
+const learnerProgress = read('src/pages/LearnerProgress.jsx');
+const recoveryGuide = read('src/pages/RecoveryGuide.jsx');
+const learnerAnalytics = read('src/pages/AdminLearnerAnalytics.jsx');
+const marketingContent = read('src/data/content.js');
+const sitemap = read('public/sitemap.xml');
 const platform = read('src/pages/Platform.jsx');
 
 for (const activeRoute of [
@@ -70,6 +75,11 @@ for (const [source, name] of [
   [learnerHome, 'LearnerHome'],
   [learnerAssignments, 'LearnerAssignments'],
   [learnerAssignmentDetail, 'LearnerAssignmentDetail'],
+  [learnerProgress, 'LearnerProgress'],
+  [recoveryGuide, 'RecoveryGuide'],
+  [learnerAnalytics, 'AdminLearnerAnalytics'],
+  [marketingContent, 'MarketingContent'],
+  [sitemap, 'Sitemap'],
   [platform, 'Platform'],
 ]) {
   for (const legacyCopy of ['Word Trainer', 'Expression Trainer', 'Ripasso SRS', 'Pratica mirata']) {
@@ -95,5 +105,18 @@ assertContains(app, '<Route path="/trainers" element={<Navigate to="/piattaforma
 assertContains(app, '<Route path="/practice" element={<ProtectedRoute><Navigate to="/assignments" replace /></ProtectedRoute>} />', 'Legacy /practice URL must redirect safely.');
 assertContains(app, '<Route path="/attivita/srs" element={<ProtectedRoute><Navigate to="/attivita/esercizi" replace /></ProtectedRoute>} />', 'Legacy SRS learner URL must redirect safely.');
 assertContains(app, '<Route path="/attivita/pratica-mirata" element={<ProtectedRoute><Navigate to="/attivita/esercizi" replace /></ProtectedRoute>} />', 'Legacy practice learner URL must redirect safely.');
+
+for (const retiredPublicUrl of [
+  '/trainers/word-trainer',
+  '/trainers/business-expression',
+  '/trainers/general-expression',
+  '/trainers/hospitality-expression',
+  '/trainers/travel-expression',
+]) {
+  assertNotContains(sitemap, retiredPublicUrl, `Retired public URL is still indexed: ${retiredPublicUrl}`);
+}
+
+assertNotContains(marketingContent, "to: '/trainers'", 'Marketing navigation must not point to the retired Trainer hub.');
+assertContains(marketingContent, "label: 'Piattaforma', to: '/piattaforma'", 'Marketing navigation must expose the current platform destination.');
 
 console.log('Admin and legacy-surface navigation validation passed.');
