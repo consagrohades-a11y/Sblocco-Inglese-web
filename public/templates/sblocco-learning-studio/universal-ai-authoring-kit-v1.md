@@ -61,6 +61,16 @@ Sblocco generates, repairs or derives these.
     "tags": [],
     "activity_type": "lesson",
     "estimated_minutes": 20,
+    "settings": {
+      "instruction_language": "it",
+      "display_mode": "one_at_a_time",
+      "feedback_timing": "exercise_end",
+      "show_score": true,
+      "show_correct_answers": true,
+      "show_explanations": true,
+      "show_diagnostic_summary": true,
+      "allow_retry": true
+    },
     "blocks": []
   }
 }
@@ -93,6 +103,7 @@ Only declare a skill when the activity genuinely teaches or practises it.
 12. If a recap only repeats earlier content, omit it.
 13. **Title style:** never use an em dash (`—`) in generated activity titles, learner titles, internal titles, block titles, part titles or section titles. When a title needs a separator, use a vertical bar (`|`) instead. Example: `Part 3 | A Weekend Away`, not `Part 3 — A Weekend Away`.
 14. This title rule applies to generated titles only. Do not alter punctuation inside quoted source material or transcripts merely to match the house style.
+15. **Feedback timing:** Sblocco Studio activities should normally use `feedback_timing: "exercise_end"`. The learner completes and submits the whole activity before seeing score, corrections and explanations. Do not use `question_end` unless the teacher explicitly asks for immediate coaching after each item.
 
 ## 5. Lesson depth: count learner actions, not blocks
 
