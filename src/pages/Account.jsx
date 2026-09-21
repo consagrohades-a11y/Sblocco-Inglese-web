@@ -125,6 +125,7 @@ export default function Account() {
   const [assignments, setAssignments] = useState([]);
   const [assignmentsLoading, setAssignmentsLoading] = useState(false);
   const [avatarSaving, setAvatarSaving] = useState('');
+  const [avatarBackgroundSaving, setAvatarBackgroundSaving] = useState('');
 
   const isAdmin = profile?.role === 'admin' && profile?.status === 'active';
   const isLearner = profile?.role === 'learner' && profile?.status === 'active';
@@ -193,8 +194,35 @@ export default function Account() {
     }
   }
 
+  async function handleAvatarBackgroundChange(nextBackgroundKey) {
+    if (!isLearner || !user?.id || avatarBackgroundSaving || nextBackgroundKey === profile?.avatar_background_key) return;
+
+    setError('');
+    setAvatarBackgroundSaving(nextBackgroundKey);
+
+    const { error: backgroundError } = await supabase
+      .from('profiles')
+      .update({ avatar_background_key: nextBackgroundKey })
+      .eq('id', user.id);
+
+    if (backgroundError) {
+      setError('Non è stato possibile salvare il colore del tuo avatar. Riprova.');
+      setAvatarBackgroundSaving('');
+      return;
+    }
+
+    try {
+      await refreshProfile(user);
+    } catch {
+      setError("Il colore è stato salvato, ma il profilo non si è aggiornato correttamente. Ricarica la pagina.");
+    } finally {
+      setAvatarBackgroundSaving('');
+    }
+  }
+
   const displayName = profile?.display_name || user?.user_metadata?.display_name || '';
   const avatarKey = profile?.avatar_key || null;
+  const avatarBackgroundKey = profile?.avatar_background_key || null;
   const firstName = useMemo(() => firstNameFromProfile(profile, user), [profile, user]);
   const language = languageLabels[profile?.interface_language] || profile?.interface_language;
   const role = roleLabels[profile?.role] || profile?.role;
@@ -305,18 +333,18 @@ export default function Account() {
               {isLearner ? (
                 <section className="overflow-hidden rounded-3xl border border-coral/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-surface-900">
                   <div className="flex items-center gap-4 p-6">
-                    <LearnerAvatar avatarKey={avatarKey} displayName={displayName || firstName} size="xl" eager />
+                    <LearnerAvatar avatarKey={avatarKey} backgroundKey={avatarBackgroundKey} displayName={displayName || firstName} size="xl" eager />
                     <div className="min-w-0">
                       <p className="text-xs font-bold uppercase tracking-[0.12em] text-clay dark:text-[#f7a98d]">Il tuo avatar</p>
                       <h2 className="mt-1 text-lg font-black text-ink dark:text-white">
                         {avatarKey ? 'Questo sei tu su Sblocco' : 'Scegli come apparire'}
                       </h2>
                       <p className="mt-1 text-sm leading-6 text-ink/60 dark:text-white/60">
-                        {avatarSaving
+                        {avatarSaving || avatarBackgroundSaving
                           ? 'Salvataggio in corso...'
                           : avatarKey
-                            ? 'Puoi cambiarlo quando vuoi.'
-                            : 'Scegli uno dei 36 personaggi Sblocco.'}
+                            ? 'Puoi cambiare personaggio e colore quando vuoi.'
+                            : 'Scegli un personaggio e il colore del suo sfondo.'}
                       </p>
                     </div>
                   </div>
@@ -328,8 +356,10 @@ export default function Account() {
                     <div className="border-t border-ink/8 p-5 dark:border-white/8">
                       <LearnerAvatarPicker
                         value={avatarKey}
+                        backgroundValue={avatarBackgroundKey}
                         onChange={handleAvatarChange}
-                        disabled={Boolean(avatarSaving)}
+                        onBackgroundChange={handleAvatarBackgroundChange}
+                        disabled={Boolean(avatarSaving || avatarBackgroundSaving)}
                       />
                     </div>
                   </details>
