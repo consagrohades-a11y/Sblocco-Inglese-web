@@ -817,130 +817,257 @@ export default function AdminExerciseBuilderLibrary() {
           {error ? <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">{error}</div> : null}
           {notice ? <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold text-emerald-900 dark:border-emerald-300/20 dark:bg-emerald-300/10 dark:text-emerald-100">{notice}</div> : null}
 
-          <section className="mt-5 rounded-[1.6rem] border border-ink/10 bg-white/75 p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.025] sm:p-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">Folders</p>
-                <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">Choose a workspace, or drag an activity onto a folder.</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setNewFolderOpen((current) => !current)}
-                className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-3.5 py-2 text-xs font-black text-ink/65 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/65"
-              >
-                <FolderPlus className="h-3.5 w-3.5" /> New folder
-              </button>
-            </div>
+          {!isGlobalSearch && selectedFolder !== 'pinned' ? (
+            <section className="mt-5 rounded-[1.6rem] border border-ink/10 bg-white/75 p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.025] sm:p-5">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <nav className="flex flex-wrap items-center gap-1 text-[0.68rem] font-black text-ink/40 dark:text-white/40" aria-label="Folder breadcrumb">
+                    <button
+                      type="button"
+                      onClick={() => { setSelectedFolder('root'); setSearch(''); }}
+                      className="focus-ring rounded-md px-1 py-0.5 hover:text-orange-700 dark:hover:text-orange-200"
+                    >
+                      Library
+                    </button>
+                    {currentPath.map((folder) => (
+                      <React.Fragment key={folder.id}>
+                        <ChevronRight className="h-3 w-3" />
+                        <button
+                          type="button"
+                          onClick={() => { setSelectedFolder(folder.id); setSearch(''); }}
+                          className="focus-ring max-w-52 truncate rounded-md px-1 py-0.5 hover:text-orange-700 dark:hover:text-orange-200"
+                        >
+                          {folder.name}
+                        </button>
+                      </React.Fragment>
+                    ))}
+                  </nav>
 
-            {newFolderOpen ? (
-              <form onSubmit={createFolder} className="mt-3 flex flex-col gap-2 rounded-2xl bg-linen/45 p-3 dark:bg-white/[0.04] sm:flex-row">
-                <input
-                  autoFocus
-                  maxLength={80}
-                  value={newFolderName}
-                  onChange={(event) => setNewFolderName(event.target.value)}
-                  placeholder="Folder name"
-                  className="focus-ring min-w-0 flex-1 rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-bold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
-                />
-                <div className="flex justify-end gap-2">
-                  <button type="button" onClick={() => { setNewFolderOpen(false); setNewFolderName(''); }} className="focus-ring rounded-full px-3 py-2 text-xs font-black text-ink/45 dark:text-white/45">Cancel</button>
-                  <button type="submit" disabled={folderBusy || !newFolderName.trim()} className="focus-ring rounded-full bg-ink px-4 py-2 text-xs font-black text-white disabled:opacity-35 dark:bg-orange-400 dark:text-surface-950">Create</button>
+                  <div className="mt-2">
+                    <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">
+                      {currentFolder ? 'Subfolders' : 'Folders'}
+                    </p>
+                    <h2 className="mt-1 text-xl font-black text-ink dark:text-white">
+                      {currentFolder ? currentFolder.name : 'Your folders'}
+                    </h2>
+                    <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
+                      {currentFolder
+                        ? 'Only this folder’s direct activities appear below. Open a subfolder to go deeper.'
+                        : 'Your main library stays quiet: folders first, then only activities that have not been filed yet.'}
+                    </p>
+                  </div>
                 </div>
-              </form>
-            ) : null}
 
-            <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-              <button type="button" onClick={() => setSelectedFolder('all')} className={`focus-ring flex min-h-24 items-center gap-3 rounded-2xl border p-4 text-left transition ${folderTileClass(selectedFolder === 'all')}`}>
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-current/5"><FolderOpen className="h-5 w-5" /></span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-black">All activities</span>
-                  <span className="mt-1 block text-xs font-bold opacity-55">{folderCount(items, 'all')} activities</span>
-                </span>
-              </button>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => { setSelectedFolder('pinned'); setSearch(''); }}
+                    className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-3.5 py-2 text-xs font-black text-ink/60 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/60"
+                  >
+                    <Star className="h-3.5 w-3.5" /> Pinned · {pinnedCount}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNewFolderOpen((current) => !current)}
+                    className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-3.5 py-2 text-xs font-black text-ink/65 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/65"
+                  >
+                    <FolderPlus className="h-3.5 w-3.5" /> {currentFolder ? 'New subfolder' : 'New folder'}
+                  </button>
+                </div>
+              </div>
 
-              <button type="button" onClick={() => setSelectedFolder('pinned')} className={`focus-ring flex min-h-24 items-center gap-3 rounded-2xl border p-4 text-left transition ${folderTileClass(selectedFolder === 'pinned')}`}>
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-current/5"><Star className="h-5 w-5" /></span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-black">Pinned</span>
-                  <span className="mt-1 block text-xs font-bold opacity-55">{folderCount(items, 'pinned')} favourites</span>
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedFolder('unfiled')}
-                {...folderDropProps('unfiled', 'Unfiled')}
-                className={`focus-ring flex min-h-24 items-center gap-3 rounded-2xl border p-4 text-left transition ${folderTileClass(selectedFolder === 'unfiled', dragOverFolder === 'unfiled')}`}
-              >
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-current/5"><Inbox className="h-5 w-5" /></span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-black">Unfiled</span>
-                  <span className="mt-1 block text-xs font-bold opacity-55">{folderCount(items, 'unfiled')} activities</span>
-                </span>
-              </button>
-
-              {folders.map((folder) => {
-                const active = selectedFolder === folder.id;
-                const dragActive = dragOverFolder === folder.id;
-
-                if (renamingFolderId === folder.id) {
-                  return (
-                    <form key={folder.id} onSubmit={(event) => { event.preventDefault(); saveFolderName(folder.id); }} className="min-h-24 rounded-2xl border border-orange-200 bg-orange-50/60 p-3 dark:border-orange-300/20 dark:bg-orange-300/[0.06]">
+              {newFolderOpen ? (
+                <form onSubmit={createFolder} className="mt-4 rounded-2xl bg-linen/45 p-3 dark:bg-white/[0.04]">
+                  <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
+                    <label className="grid min-w-0 flex-1 gap-1.5 text-xs font-black text-ink/55 dark:text-white/55">
+                      Folder name
                       <input
                         autoFocus
                         maxLength={80}
-                        value={renameValue}
-                        onChange={(event) => setRenameValue(event.target.value)}
-                        className="focus-ring w-full rounded-lg border border-ink/10 bg-white px-2.5 py-2 text-xs font-bold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+                        value={newFolderName}
+                        onChange={(event) => setNewFolderName(event.target.value)}
+                        placeholder={currentFolder ? 'Subfolder name' : 'Folder name'}
+                        className="focus-ring min-w-0 rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-bold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
                       />
-                      <div className="mt-2 flex justify-end gap-1">
-                        <button type="button" onClick={() => setRenamingFolderId('')} className="focus-ring px-2 py-1 text-[0.65rem] font-black text-ink/45 dark:text-white/45">Cancel</button>
-                        <button type="submit" disabled={folderBusy || !renameValue.trim()} className="focus-ring rounded-md bg-ink px-2.5 py-1 text-[0.65rem] font-black text-white disabled:opacity-35 dark:bg-orange-400 dark:text-surface-950">Save</button>
-                      </div>
-                    </form>
-                  );
-                }
+                    </label>
 
-                return (
-                  <div
-                    key={folder.id}
-                    {...folderDropProps(folder.id, folder.name)}
-                    className={`group relative min-h-24 rounded-2xl border transition ${folderTileClass(active, dragActive)}`}
-                  >
-                    <button type="button" onClick={() => setSelectedFolder(folder.id)} className="focus-ring flex h-full min-h-24 w-full items-center gap-3 p-4 pr-16 text-left">
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-current/5"><Folder className="h-5 w-5" /></span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-black">{folder.name}</span>
-                        <span className="mt-1 block text-xs font-bold opacity-55">{folderCount(items, folder.id)} activities</span>
-                      </span>
-                    </button>
-                    <div className="absolute right-2 top-2 flex gap-0.5 opacity-55 transition group-hover:opacity-100">
+                    <fieldset className="min-w-0">
+                      <legend className="mb-1.5 text-xs font-black text-ink/55 dark:text-white/55">Colour</legend>
+                      <div className="flex flex-wrap gap-1.5">
+                        {FOLDER_COLORS.map((color) => (
+                          <button
+                            key={color.key}
+                            type="button"
+                            onClick={() => setNewFolderColor(color.key)}
+                            className={'focus-ring grid h-8 w-8 place-items-center rounded-full border-2 ' + (newFolderColor === color.key ? 'border-ink dark:border-white' : 'border-transparent')}
+                            aria-label={color.label}
+                            title={color.label}
+                          >
+                            <span className="h-5 w-5 rounded-full" style={{ backgroundColor: color.hex }} />
+                          </button>
+                        ))}
+                      </div>
+                    </fieldset>
+
+                    <div className="flex justify-end gap-2">
                       <button
                         type="button"
-                        onClick={() => { setRenamingFolderId(folder.id); setRenameValue(folder.name); }}
-                        className="focus-ring grid h-7 w-7 place-items-center rounded-lg bg-white/75 text-ink/45 hover:text-ink dark:bg-surface-950/50 dark:text-white/45 dark:hover:text-white"
-                        aria-label={`Rename ${folder.name}`}
+                        onClick={() => { setNewFolderOpen(false); setNewFolderName(''); setNewFolderColor('orange'); }}
+                        className="focus-ring rounded-full px-3 py-2 text-xs font-black text-ink/45 dark:text-white/45"
                       >
-                        <Pencil className="h-3.5 w-3.5" />
+                        Cancel
                       </button>
                       <button
-                        type="button"
-                        onClick={() => removeFolder(folder)}
-                        className="focus-ring grid h-7 w-7 place-items-center rounded-lg bg-white/75 text-red-600/65 hover:text-red-700 dark:bg-surface-950/50 dark:text-red-200/65 dark:hover:text-red-200"
-                        aria-label={`Delete ${folder.name}`}
+                        type="submit"
+                        disabled={folderBusy || !newFolderName.trim()}
+                        className="focus-ring rounded-full bg-ink px-4 py-2 text-xs font-black text-white disabled:opacity-35 dark:bg-orange-400 dark:text-surface-950"
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
+                        Create
                       </button>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </form>
+              ) : null}
 
-            {draggedDraftId ? (
-              <p className="mt-3 text-xs font-bold text-orange-800 dark:text-orange-200">Drop the activity onto Unfiled or a custom folder.</p>
-            ) : null}
-          </section>
+              {visibleFolders.length ? (
+                <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {visibleFolders.map((folder) => {
+                    const color = folderColor(folder.color_key);
+                    const dragActive = dragOverFolder === folder.id;
+                    const directChildren = folders.filter((item) => item.parent_id === folder.id).length;
+                    const totalActivities = folderRecursiveCount(items, folders, folder.id);
+                    const blockedParents = folderDescendantIds(folders, folder.id);
+                    blockedParents.add(folder.id);
+                    const parentOptions = folderOptions.filter((option) => !blockedParents.has(option.id));
+
+                    if (renamingFolderId === folder.id) {
+                      return (
+                        <form
+                          key={folder.id}
+                          onSubmit={(event) => { event.preventDefault(); saveFolder(folder.id); }}
+                          className="rounded-2xl border border-orange-200 bg-orange-50/60 p-3 dark:border-orange-300/20 dark:bg-orange-300/[0.06]"
+                        >
+                          <label className="grid gap-1 text-[0.68rem] font-black text-ink/45 dark:text-white/45">
+                            Name
+                            <input
+                              autoFocus
+                              maxLength={80}
+                              value={renameValue}
+                              onChange={(event) => setRenameValue(event.target.value)}
+                              className="focus-ring w-full rounded-lg border border-ink/10 bg-white px-2.5 py-2 text-xs font-bold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+                            />
+                          </label>
+
+                          <fieldset className="mt-2">
+                            <legend className="mb-1 text-[0.68rem] font-black text-ink/45 dark:text-white/45">Colour</legend>
+                            <div className="flex flex-wrap gap-1">
+                              {FOLDER_COLORS.map((option) => (
+                                <button
+                                  key={option.key}
+                                  type="button"
+                                  onClick={() => setEditFolderColor(option.key)}
+                                  className={'focus-ring grid h-7 w-7 place-items-center rounded-full border-2 ' + (editFolderColor === option.key ? 'border-ink dark:border-white' : 'border-transparent')}
+                                  aria-label={option.label}
+                                  title={option.label}
+                                >
+                                  <span className="h-4 w-4 rounded-full" style={{ backgroundColor: option.hex }} />
+                                </button>
+                              ))}
+                            </div>
+                          </fieldset>
+
+                          <label className="mt-2 grid gap-1 text-[0.68rem] font-black text-ink/45 dark:text-white/45">
+                            Location
+                            <select
+                              value={editFolderParent}
+                              onChange={(event) => setEditFolderParent(event.target.value)}
+                              className="focus-ring min-w-0 rounded-lg border border-ink/10 bg-white px-2.5 py-2 text-xs font-bold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+                            >
+                              <option value="root">Library root</option>
+                              {parentOptions.map((option) => (
+                                <option key={option.id} value={option.id}>{option.path_label}</option>
+                              ))}
+                            </select>
+                          </label>
+
+                          <div className="mt-3 flex justify-end gap-1">
+                            <button
+                              type="button"
+                              onClick={() => setRenamingFolderId('')}
+                              className="focus-ring px-2 py-1 text-[0.65rem] font-black text-ink/45 dark:text-white/45"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="submit"
+                              disabled={folderBusy || !renameValue.trim()}
+                              className="focus-ring rounded-md bg-ink px-2.5 py-1 text-[0.65rem] font-black text-white disabled:opacity-35 dark:bg-orange-400 dark:text-surface-950"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </form>
+                      );
+                    }
+
+                    return (
+                      <div
+                        key={folder.id}
+                        {...folderDropProps(folder.id, folder.name)}
+                        className={'group relative min-h-28 overflow-hidden rounded-2xl border transition ' + folderTileClass(dragActive)}
+                      >
+                        <span className="absolute inset-x-0 top-0 h-1.5" style={{ backgroundColor: color.hex }} />
+                        <button
+                          type="button"
+                          onClick={() => { setSelectedFolder(folder.id); setSearch(''); }}
+                          className="focus-ring flex h-full min-h-28 w-full items-center gap-3 p-4 pr-16 pt-5 text-left"
+                        >
+                          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl" style={{ backgroundColor: color.hex + '18', color: color.hex }}>
+                            <Folder className="h-5 w-5" />
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-black text-ink dark:text-white">{folder.name}</span>
+                            <span className="mt-1 block text-xs font-bold text-ink/45 dark:text-white/45">
+                              {totalActivities} {totalActivities === 1 ? 'activity' : 'activities'}
+                              {directChildren ? ' · ' + directChildren + (directChildren === 1 ? ' subfolder' : ' subfolders') : ''}
+                            </span>
+                          </span>
+                          <ChevronRight className="h-4 w-4 shrink-0 text-ink/25 dark:text-white/25" />
+                        </button>
+
+                        <div className="absolute right-2 top-3 flex gap-0.5 opacity-55 transition group-hover:opacity-100">
+                          <button
+                            type="button"
+                            onClick={() => startEditingFolder(folder)}
+                            className="focus-ring grid h-7 w-7 place-items-center rounded-lg bg-white/85 text-ink/45 shadow-sm hover:text-ink dark:bg-surface-950/70 dark:text-white/45 dark:hover:text-white"
+                            aria-label={'Edit ' + folder.name}
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeFolder(folder)}
+                            className="focus-ring grid h-7 w-7 place-items-center rounded-lg bg-white/85 text-red-600/65 shadow-sm hover:text-red-700 dark:bg-surface-950/70 dark:text-red-200/65 dark:hover:text-red-200"
+                            aria-label={'Delete ' + folder.name}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="mt-4 rounded-2xl border border-dashed border-ink/10 bg-white/45 px-4 py-5 text-sm font-semibold text-ink/45 dark:border-white/10 dark:bg-white/[0.02] dark:text-white/45">
+                  {currentFolder ? 'No subfolders here yet.' : 'No folders yet. Create one when you want to start organising the library.'}
+                </div>
+              )}
+
+              {draggedDraftId && visibleFolders.length ? (
+                <p className="mt-3 text-xs font-bold text-orange-800 dark:text-orange-200">Drop the activity onto a folder tile.</p>
+              ) : null}
+            </section>
+          ) : null}
 
           {availableTags.length ? (
             <section className="mt-4 rounded-[1.4rem] border border-ink/10 bg-white/65 px-4 py-3 dark:border-white/10 dark:bg-white/[0.025]">
