@@ -199,6 +199,29 @@
   margin-top: 1.75rem;
 }
 
+.register-journey__workspace.is-access-step {
+  width: min(100%, 54rem);
+  padding-top: clamp(1.8rem, 3.5vw, 3rem);
+}
+
+.register-journey__workspace.is-access-step .register-journey__scene-copy {
+  max-width: 36rem;
+}
+
+.register-journey__workspace.is-access-step .register-journey__scene-copy h1 {
+  font-size: clamp(2.75rem, 4.8vw, 4.2rem);
+  line-height: .98;
+}
+
+.register-journey__workspace.is-access-step .register-journey__scene-copy > p:last-child {
+  max-width: 34rem;
+  margin-top: .75rem;
+}
+
+.register-journey__workspace.is-access-step .register-journey__stage {
+  margin-top: 1.6rem;
+}
+
 .register-journey__scene-copy {
   max-width: 54rem;
 }
@@ -425,6 +448,75 @@
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.register-journey__access-form {
+  width: min(100%, 42rem);
+  padding: 1.5rem 0 0;
+  border-top: 1px solid rgba(18, 56, 74, .1);
+}
+
+.register-journey__access-identity {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.register-journey__access-identity > span:first-child {
+  box-shadow: 0 .75rem 1.8rem rgba(18, 56, 74, .09);
+}
+
+.register-journey__access-identity h2 {
+  margin: .25rem 0 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+  letter-spacing: -.025em;
+  line-height: 1.06;
+}
+
+.register-journey__access-identity p:last-child {
+  margin: .38rem 0 0;
+  color: var(--journey-ink-soft);
+  font-size: .73rem;
+  line-height: 1.55;
+}
+
+.register-journey__access-fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.register-journey__password-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.register-journey__password-grid .register-journey__field + .register-journey__field {
+  margin-top: 0;
+}
+
+.register-journey__access-form .register-journey__input {
+  min-height: 3.65rem;
+  background: rgba(255, 250, 244, .5);
+}
+
+.register-journey__legal--access {
+  max-width: 42rem;
+  margin-top: 1rem;
+}
+
+.register-journey__actions--access {
+  max-width: 42rem;
+  margin-top: 1.3rem;
+  padding-top: 1.2rem;
+}
+
+.register-journey__primary--access {
+  min-width: 11.5rem;
 }
 
 .register-journey__form--avatar {
@@ -768,6 +860,10 @@
 }
 
 @media (max-width: 900px) {
+  .register-journey__workspace.is-access-step {
+    width: min(100%, 40rem);
+  }
+
   .register-journey__workspace.is-avatar-step {
     width: min(100%, 42rem);
   }
@@ -850,6 +946,38 @@
 }
 
 @media (max-width: 640px) {
+  .register-journey__workspace.is-access-step .register-journey__scene-copy h1 {
+    font-size: clamp(2.5rem, 11vw, 3.35rem);
+  }
+
+  .register-journey__access-form {
+    padding-top: 1.2rem;
+  }
+
+  .register-journey__access-identity {
+    gap: .8rem;
+  }
+
+  .register-journey__access-identity h2 {
+    font-size: 1.28rem;
+  }
+
+  .register-journey__password-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .register-journey__password-grid .register-journey__field + .register-journey__field {
+    margin-top: 0;
+  }
+
+  .register-journey__actions--access {
+    align-items: center;
+  }
+
+  .register-journey__primary--access {
+    min-width: 0;
+  }
+
   .register-journey__workspace.is-avatar-step .register-journey__scene-copy h1 {
     font-size: clamp(2.55rem, 12vw, 3.5rem);
   }
