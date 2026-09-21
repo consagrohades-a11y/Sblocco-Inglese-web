@@ -468,12 +468,18 @@ export default function AdminExerciseBuilderLibrary() {
     setFolderBusy(true);
     setError('');
     try {
-      const folder = await createStudioFolder(newFolderName);
+      const parentId = currentFolder?.id || null;
+      const folder = await createStudioFolder(newFolderName, {
+        parentId,
+        colorKey: newFolderColor,
+      });
       setFolders((current) => [...current, folder].sort((a, b) => a.name.localeCompare(b.name)));
-      setSelectedFolder(folder.id);
       setNewFolderName('');
+      setNewFolderColor('orange');
       setNewFolderOpen(false);
-      setNotice(`Folder “${folder.name}” created.`);
+      setNotice(parentId
+        ? `Subfolder “${folder.name}” created inside ${currentFolder.name}.`
+        : `Folder “${folder.name}” created.`);
     } catch (nextError) {
       setError(nextError.message || 'Could not create this folder.');
     } finally {
@@ -481,41 +487,63 @@ export default function AdminExerciseBuilderLibrary() {
     }
   }
 
-  async function saveFolderName(folderId) {
+  async function saveFolder(folderId) {
     if (folderBusy || !renameValue.trim()) return;
     setFolderBusy(true);
     setError('');
     try {
-      const updated = await renameStudioFolder(folderId, renameValue);
+      const updated = await updateStudioFolder(folderId, {
+        name: renameValue,
+        colorKey: editFolderColor,
+        parentId: editFolderParent === 'root' ? null : editFolderParent,
+      });
       setFolders((current) => current
         .map((folder) => folder.id === folderId ? updated : folder)
         .sort((a, b) => a.name.localeCompare(b.name)));
       setRenamingFolderId('');
       setRenameValue('');
-      setNotice(`Folder renamed to “${updated.name}”.`);
+      setEditFolderColor('sand');
+      setEditFolderParent('root');
+      setNotice(`Folder “${updated.name}” updated.`);
     } catch (nextError) {
-      setError(nextError.message || 'Could not rename this folder.');
+      setError(nextError.message || 'Could not update this folder.');
     } finally {
       setFolderBusy(false);
     }
   }
 
+  function startEditingFolder(folder) {
+    setRenamingFolderId(folder.id);
+    setRenameValue(folder.name);
+    setEditFolderColor(folder.color_key || 'sand');
+    setEditFolderParent(folder.parent_id || 'root');
+  }
+
   async function removeFolder(folder) {
     if (folderBusy) return;
-    const count = folderCount(items, folder.id);
-    const message = count
-      ? `Delete “${folder.name}”? Its ${count} ${count === 1 ? 'activity' : 'activities'} will move to Unfiled.`
-      : `Delete “${folder.name}”? `;
-    if (!window.confirm(message)) return;
+    const directActivities = items.filter((item) => item.folder_id === folder.id).length;
+    const directChildren = folders.filter((item) => item.parent_id === folder.id).length;
+    const details = [
+      directActivities
+        ? `${directActivities} direct ${directActivities === 1 ? 'activity' : 'activities'} will move to Unfiled.`
+        : '',
+      directChildren
+        ? `${directChildren} ${directChildren === 1 ? 'subfolder' : 'subfolders'} will move to the Library root; their activities stay inside them.`
+        : '',
+    ].filter(Boolean).join(' ');
+
+    if (!window.confirm(`Delete “${folder.name}”? ${details || 'The folder is empty.'}`)) return;
 
     setFolderBusy(true);
     setError('');
     try {
       await deleteStudioFolder(folder.id);
-      setFolders((current) => current.filter((row) => row.id !== folder.id));
+      setFolders((current) => current
+        .filter((row) => row.id !== folder.id)
+        .map((row) => row.parent_id === folder.id ? { ...row, parent_id: null } : row));
       setItems((current) => current.map((item) => item.folder_id === folder.id ? { ...item, folder_id: null } : item));
-      if (selectedFolder === folder.id) setSelectedFolder('unfiled');
-      setNotice(`Folder “${folder.name}” deleted. Activities were kept.`);
+      if (selectedFolder === folder.id) setSelectedFolder('root');
+      setNotice(`Folder “${folder.name}” deleted. Content was kept.`);
     } catch (nextError) {
       setError(nextError.message || 'Could not delete this folder.');
     } finally {
@@ -616,21 +644,18 @@ export default function AdminExerciseBuilderLibrary() {
         event.preventDefault();
         moveDraft(
           draggedDraftId || event.dataTransfer.getData('text/plain'),
-          folderId === 'unfiled' ? null : folderId,
+          folderId,
           folderName,
         );
       },
     };
   }
 
-  function folderTileClass(active, dragActive = false) {
+  function folderTileClass(dragActive = false) {
     if (dragActive) {
-      return 'border-orange-400 bg-orange-50 text-orange-950 ring-2 ring-orange-100 dark:bg-orange-300/10 dark:text-orange-100 dark:ring-orange-300/10';
+      return 'border-orange-400 bg-orange-50 ring-2 ring-orange-100 dark:border-orange-300/50 dark:bg-orange-300/10 dark:ring-orange-300/10';
     }
-    if (active) {
-      return 'border-ink bg-ink text-white shadow-sm dark:border-orange-400 dark:bg-orange-400 dark:text-surface-950';
-    }
-    return 'border-ink/10 bg-white text-ink hover:border-orange-200 hover:bg-orange-50/40 dark:border-white/10 dark:bg-white/[0.03] dark:text-white dark:hover:border-orange-300/25 dark:hover:bg-orange-300/[0.04]';
+    return 'border-ink/10 bg-white hover:-translate-y-0.5 hover:border-ink/20 hover:shadow-md dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white/20';
   }
 
   return (
