@@ -17,7 +17,6 @@ import Reviews from './pages/Reviews';
 import CaseStudies from './pages/CaseStudies';
 import Contact from './pages/Contact';
 import Prenota from './pages/Prenota';
-import TrainersLanding from './pages/TrainersLanding';
 import LegalPage from './pages/LegalPage';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './auth/ProtectedRoute';
@@ -25,12 +24,6 @@ import AdminRoute from './auth/AdminRoute';
 import { useAuth } from './auth/AuthContext.jsx';
 import { legalPages } from './data/legalPages';
 
-const Trainer = lazy(() => import('./pages/Trainer'));
-const GeneralExpressionTrainer = lazy(() => import('./pages/GeneralExpressionTrainer'));
-const HospitalityExpressionTrainer = lazy(() => import('./pages/HospitalityExpressionTrainer'));
-const TravelExpressionTrainer = lazy(() => import('./pages/TravelExpressionTrainer'));
-const WordTrainer = lazy(() => import('./pages/WordTrainer'));
-const PracticeHub = lazy(() => import('./pages/PracticeHub'));
 const ExercisePlayer = lazy(() => import('./pages/ExercisePlayer'));
 const GrammarHub = lazy(() => import('./pages/GrammarHub'));
 const GrammarA1Hub = lazy(() => import('./pages/GrammarA1Hub'));
@@ -58,15 +51,6 @@ const AdminGroupDetail = lazy(() => import('./pages/AdminGroupDetail'));
 const AdminAssessmentLeads = lazy(() => import('./pages/AdminAssessmentLeads'));
 const AdminCreateAssignment = lazy(() => import('./pages/AdminCreateAssignment'));
 const AdminAssignmentContent = lazy(() => import('./pages/AdminAssignmentContent'));
-const AdminTrainerContent = lazy(() => import('./pages/AdminTrainerContent'));
-const AdminTrainerCardImport = lazy(() => import('./pages/AdminTrainerCardImport'));
-const AdminTrainerCardDelete = lazy(() => import('./pages/AdminTrainerCardDelete'));
-const AdminTravelTrainer = lazy(() => import('./pages/AdminTravelTrainer'));
-const AdminWordTrainerContent = lazy(() => import('./pages/AdminWordTrainerContent'));
-const AdminWordTrainerImport = lazy(() => import('./pages/AdminWordTrainerImport'));
-const AdminWordDecks = lazy(() => import('./pages/AdminWordDecks'));
-const AdminDecks = lazy(() => import('./pages/AdminDecks'));
-const AdminWordTrainerArchive = lazy(() => import('./pages/AdminWordTrainerArchive'));
 const AdminRecoveryContent = lazy(() => import('./pages/AdminRecoveryContent'));
 const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics'));
 const AdminLearnerAnalytics = lazy(() => import('./pages/AdminLearnerAnalytics'));
@@ -183,13 +167,10 @@ export default function App() {
             <Route path="/case-studies" element={<CaseStudies />} />
             <Route path="/contatti" element={<Contact />} />
             <Route path="/faq" element={<Navigate to="/contatti#faq" replace />} />
-            <Route path="/trainers" element={<TrainersLanding />} />
-            <Route path="/trainers/business-expression" element={<Trainer />} />
-            <Route path="/trainers/general-expression" element={<GeneralExpressionTrainer />} />
-            <Route path="/trainers/hospitality-expression" element={<HospitalityExpressionTrainer />} />
-            <Route path="/trainers/travel-expression" element={<TravelExpressionTrainer />} />
-            <Route path="/trainers/word-trainer" element={<WordTrainer />} />
-            <Route path="/practice" element={<ProtectedRoute><PracticeHub /></ProtectedRoute>} />
+            <Route path="/trainers" element={<Navigate to="/piattaforma" replace />} />
+            <Route path="/trainers/:legacyTrainer" element={<Navigate to="/piattaforma" replace />} />
+            <Route path="/trainer" element={<Navigate to="/piattaforma" replace />} />
+            <Route path="/practice" element={<ProtectedRoute><Navigate to="/assignments" replace /></ProtectedRoute>} />
             <Route path="/exercises" element={<ProtectedRoute><ExercisePlayer /></ProtectedRoute>} />
             <Route path="/collections" element={<ProtectedRoute><LearnerCollectionPath /></ProtectedRoute>} />
             <Route path="/grammar" element={<GrammarHub />} />
@@ -221,8 +202,8 @@ export default function App() {
             <Route path="/recupero-debito/preparazione" element={<ProtectedRoute><RecoveryReadiness /></ProtectedRoute>} />
             <Route path="/assignments" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
             <Route path="/attivita/esercizi" element={<ProtectedRoute><LearnerAssignments initialArea="exercises" /></ProtectedRoute>} />
-            <Route path="/attivita/srs" element={<ProtectedRoute><LearnerAssignments initialArea="srs" /></ProtectedRoute>} />
-            <Route path="/attivita/pratica-mirata" element={<ProtectedRoute><LearnerAssignments initialArea="practice" /></ProtectedRoute>} />
+            <Route path="/attivita/srs" element={<ProtectedRoute><Navigate to="/attivita/esercizi" replace /></ProtectedRoute>} />
+            <Route path="/attivita/pratica-mirata" element={<ProtectedRoute><Navigate to="/attivita/esercizi" replace /></ProtectedRoute>} />
             <Route path="/assignments/:assignmentId" element={<ProtectedRoute><LearnerAssignmentDetail /></ProtectedRoute>} />
             <Route path="/progressi" element={<ProtectedRoute><LearnerProgress /></ProtectedRoute>} />
             <Route path="/vocab-bank" element={<ProtectedRoute><LearnerVocabularyBank /></ProtectedRoute>} />
@@ -251,23 +232,11 @@ export default function App() {
               <Route path="content/exercises/collections" element={<Navigate to="/admin/content/exercises/library" replace />} />
               <Route path="content/exercises/results" element={<AdminExerciseResults />} />
               <Route path="content/exercises/maintenance" element={<Navigate to="/admin/content/exercises/library" replace />} />
-              <Route path="content/words" element={<AdminWordTrainerContent />} />
-              <Route path="content/words/import" element={<AdminWordTrainerImport />} />
-              <Route path="content/words/decks" element={<AdminWordDecks />} />
-              <Route path="content/words/archive" element={<AdminWordTrainerArchive />} />
-              <Route path="content/expressions" element={<AdminTrainerContent />} />
-              <Route path="content/expressions/import" element={<AdminTrainerCardImport />} />
-              <Route path="content/expressions/decks" element={<AdminDecks itemType="expression" domain="general" />} />
-              <Route path="content/expressions/archive" element={<AdminTrainerCardDelete />} />
-              <Route path="content/business-expressions" element={<AdminTrainerContent domain="business" />} />
-              <Route path="content/business-expressions/import" element={<AdminTrainerCardImport domain="business" />} />
-              <Route path="content/business-expressions/decks" element={<AdminDecks itemType="expression" domain="business" />} />
-              <Route path="content/business-expressions/archive" element={<AdminTrainerCardDelete domain="business" />} />
-              <Route path="content/hospitality-expressions" element={<AdminTrainerContent domain="hospitality" />} />
-              <Route path="content/hospitality-expressions/import" element={<AdminTrainerCardImport domain="hospitality" />} />
-              <Route path="content/hospitality-expressions/decks" element={<AdminDecks itemType="expression" domain="hospitality" />} />
-              <Route path="content/hospitality-expressions/archive" element={<AdminTrainerCardDelete domain="hospitality" />} />
-              <Route path="content/travel-expressions" element={<AdminTravelTrainer />} />
+              <Route path="content/words/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/expressions/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/business-expressions/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/hospitality-expressions/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/travel-expressions/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
               <Route path="assignments" element={<AdminAssignments />} />
               <Route path="activities/exercises" element={<AdminAssignments initialContentFilter="exercise" />} />
               <Route path="activities/srs" element={<AdminAssignments initialContentFilter="srs" />} />
@@ -281,7 +250,7 @@ export default function App() {
             </Route>
             <Route path="/levels/a1/be-basic-sentences" element={<A1UnitPage key="a1-be-basic-sentences" unitId="be-basic-sentences" />} />
             <Route path="/levels/a1/present-simple-normal-verbs" element={<A1UnitPage key="a1-present-simple-normal-verbs" unitId="present-simple-normal-verbs" />} />
-            <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
+
             <Route path="/prenota" element={<Prenota />} />
             <Route path="/privacy" element={<LegalPage page={legalPages.privacy} />} />
             <Route path="/privacy-policy" element={<LegalPage page={legalPages.privacy} />} />
