@@ -8,7 +8,7 @@ async function loadProfile(userId) {
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('display_name, interface_language, role, status')
+    .select('display_name, avatar_key, avatar_background_key, interface_language, role, status')
     .eq('id', userId)
     .maybeSingle();
 
