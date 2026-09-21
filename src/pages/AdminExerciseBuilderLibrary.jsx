@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
+  Download,
   FileJson2,
   Folder,
   FolderOpen,
@@ -17,7 +18,9 @@ import StudioQuickAssignPanel from '../components/admin/exercise-studio/StudioQu
 import {
   archiveStudioDraft,
   listStudioDrafts,
+  loadStudioDraft,
 } from '../lib/exerciseStudioDraftApi.js';
+import { downloadStudioActivityJson } from '../lib/exerciseStudioExport.js';
 import {
   createStudioFolder,
   deleteStudioFolder,
@@ -72,11 +75,13 @@ export default function AdminExerciseBuilderLibrary() {
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState('all');
   const [selectedFolder, setSelectedFolder] = useState('all');
+  const [selectedTag, setSelectedTag] = useState('all');
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [assignItem, setAssignItem] = useState(null);
   const [archivingId, setArchivingId] = useState('');
+  const [exportingId, setExportingId] = useState('');
   const [newFolderOpen, setNewFolderOpen] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [renamingFolderId, setRenamingFolderId] = useState('');
@@ -110,12 +115,21 @@ export default function AdminExerciseBuilderLibrary() {
     status === 'all' ? items : items.filter((item) => item.status === status)
   ), [items, status]);
 
+  const availableTags = useMemo(() => (
+    [...new Set(items.flatMap((item) => Array.isArray(item.tags) ? item.tags : []))]
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b))
+  ), [items]);
+
   const filtered = useMemo(() => {
     const needle = search.trim().toLocaleLowerCase();
 
     return statusFiltered.filter((item) => {
       if (selectedFolder === 'unfiled' && item.folder_id) return false;
       if (!['all', 'unfiled'].includes(selectedFolder) && item.folder_id !== selectedFolder) return false;
+
+      const tags = Array.isArray(item.tags) ? item.tags : [];
+      if (selectedTag !== 'all' && !tags.some((tag) => tag.toLocaleLowerCase() === selectedTag.toLocaleLowerCase())) return false;
 
       if (!needle) return true;
       const haystack = [
@@ -124,10 +138,11 @@ export default function AdminExerciseBuilderLibrary() {
         item.topic,
         item.level,
         item.activity_type,
+        ...tags,
       ].filter(Boolean).join(' ').toLocaleLowerCase();
       return haystack.includes(needle);
     });
-  }, [statusFiltered, search, selectedFolder]);
+  }, [statusFiltered, search, selectedFolder, selectedTag]);
 
   const counts = useMemo(() => ({
     all: items.length,
@@ -145,6 +160,21 @@ export default function AdminExerciseBuilderLibrary() {
     : selectedFolder === 'unfiled'
       ? 'Unfiled'
       : folders.find((folder) => folder.id === selectedFolder)?.name || 'Folder';
+
+  async function exportJson(item) {
+    if (exportingId) return;
+    setExportingId(item.id);
+    setError('');
+    try {
+      const draft = await loadStudioDraft(item.id);
+      downloadStudioActivityJson(draft.document);
+      setNotice(`${item.internal_title || 'Activity'} exported as JSON.`);
+    } catch (nextError) {
+      setError(nextError.message || 'Could not export this activity.');
+    } finally {
+      setExportingId('');
+    }
+  }
 
   async function archive(item) {
     if (archivingId) return;
@@ -291,7 +321,7 @@ export default function AdminExerciseBuilderLibrary() {
                   <input
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
-                    placeholder="Search title, topic, level..."
+                    placeholder="Search title, topic, level, tag..."
                     className="focus-ring w-full rounded-xl border border-ink/10 bg-white py-2.5 pl-9 pr-3 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
                   />
                 </div>
@@ -313,6 +343,29 @@ export default function AdminExerciseBuilderLibrary() {
                   ))}
                 </div>
               </div>
+
+              {availableTags.length ? (
+                <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-ink/10 pt-3 dark:border-white/10">
+                  <span className="mr-1 text-[0.68rem] font-black uppercase tracking-[0.12em] text-ink/35 dark:text-white/35">Tags</span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedTag('all')}
+                    className={`focus-ring rounded-full px-2.5 py-1.5 text-[0.68rem] font-black transition ${selectedTag === 'all' ? 'bg-orange-500 text-white' : 'bg-linen text-ink/55 hover:text-ink dark:bg-white/[0.06] dark:text-white/55 dark:hover:text-white'}`}
+                  >
+                    All
+                  </button>
+                  {availableTags.map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => setSelectedTag(tag)}
+                      className={`focus-ring rounded-full px-2.5 py-1.5 text-[0.68rem] font-black transition ${selectedTag === tag ? 'bg-orange-500 text-white' : 'bg-linen text-ink/55 hover:text-ink dark:bg-white/[0.06] dark:text-white/55 dark:hover:text-white'}`}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
             </div>
           </header>
 
@@ -479,7 +532,7 @@ export default function AdminExerciseBuilderLibrary() {
                     <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
                       {items.length
                         ? selectedFolder === 'all'
-                          ? 'Try another search or status.'
+                          ? 'Try another search, tag or status.'
                           : 'Move an existing activity here or create a new one.'
                         : 'Create the first curated activity manually or import a lesson generated with the Sblocco AI authoring kit.'}
                     </p>
@@ -523,11 +576,34 @@ export default function AdminExerciseBuilderLibrary() {
                           <h3 className="mt-1 text-xl font-black leading-tight text-ink dark:text-white">{item.internal_title || 'Untitled activity'}</h3>
                           {item.learner_title ? <p className="mt-2 text-sm font-bold text-ink/65 dark:text-white/65">{item.learner_title}</p> : null}
                           <p className="mt-3 text-xs font-semibold text-ink/45 dark:text-white/45">{item.topic || 'Topic not set'}{item.updated_at ? ` · Updated ${updatedLabel(item.updated_at)}` : ''}</p>
+                          {Array.isArray(item.tags) && item.tags.length ? (
+                            <div className="mt-3 flex flex-wrap gap-1.5">
+                              {item.tags.slice(0, 5).map((tag) => (
+                                <button
+                                  key={tag}
+                                  type="button"
+                                  onClick={() => setSelectedTag(tag)}
+                                  className="focus-ring rounded-full bg-linen px-2 py-1 text-[0.65rem] font-black text-ink/55 hover:text-orange-700 dark:bg-white/[0.06] dark:text-white/55 dark:hover:text-orange-200"
+                                >
+                                  {tag}
+                                </button>
+                              ))}
+                              {item.tags.length > 5 ? <span className="px-1 py-1 text-[0.65rem] font-black text-ink/30 dark:text-white/30">+{item.tags.length - 5}</span> : null}
+                            </div>
+                          ) : null}
                         </div>
 
                         <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-ink/10 pt-4 dark:border-white/10">
                           <Link to={`/admin/content/exercises/studio?draft=${item.id}`} className="focus-ring rounded-full bg-ink px-3.5 py-2 text-xs font-black text-white dark:bg-orange-400 dark:text-surface-950">Edit</Link>
                           <Link to={`/admin/content/exercises/studio?draft=${item.id}`} target="_blank" rel="noreferrer" className="focus-ring rounded-full border border-ink/10 px-3.5 py-2 text-xs font-black text-ink dark:border-white/10 dark:text-white">Preview</Link>
+                          <button
+                            type="button"
+                            disabled={exportingId === item.id}
+                            onClick={() => exportJson(item)}
+                            className="focus-ring inline-flex items-center gap-1.5 rounded-full border border-ink/10 px-3.5 py-2 text-xs font-black text-ink disabled:opacity-35 dark:border-white/10 dark:text-white"
+                          >
+                            <Download className="h-3.5 w-3.5" /> {exportingId === item.id ? 'Exporting' : 'Export JSON'}
+                          </button>
                           {item.status === 'published' && item.exercise_id ? (
                             <button type="button" onClick={() => setAssignItem(item)} className="focus-ring rounded-full border border-orange-300 bg-orange-50 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:bg-orange-300/[0.07] dark:text-orange-100">Assign</button>
                           ) : null}
