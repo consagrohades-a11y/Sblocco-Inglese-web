@@ -454,6 +454,7 @@ export default function Register() {
                     backgroundValue={avatarBackgroundKey}
                     onChange={setAvatarKey}
                     onBackgroundChange={setAvatarBackgroundKey}
+                    variant="bare"
                   />
                 </div>
 
