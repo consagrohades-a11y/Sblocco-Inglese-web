@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
+import LearnerAvatar from './learner/LearnerAvatar.jsx';
 import BrandLogo from './BrandLogo';
 import HomeEditorialLogo from './home/HomeEditorialLogo';
 import ThemeToggle from './ThemeToggle';
@@ -50,10 +51,9 @@ function isRouteActive(pathname, to) {
   return pathname === to || pathname.startsWith(`${to}/`);
 }
 
-function AccountMenu({ displayName, isAdmin, isLearner, onSignOut }) {
+function AccountMenu({ avatarKey, displayName, isAdmin, isLearner, onSignOut }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
-  const initial = displayName?.trim()?.charAt(0)?.toUpperCase() || 'A';
 
   useEffect(() => {
     function handlePointerDown(event) {
@@ -80,7 +80,7 @@ function AccountMenu({ displayName, isAdmin, isLearner, onSignOut }) {
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
-        <span className="grid h-8 w-8 place-items-center rounded-full bg-mint text-sm font-extrabold text-ink">{initial}</span>
+        <LearnerAvatar avatarKey={avatarKey} displayName={displayName} size="sm" eager />
         <ChevronDown aria-hidden="true" className={`h-3.5 w-3.5 text-ink/60 transition dark:text-white/65 ${open ? 'rotate-180' : ''}`} />
       </button>
 
@@ -116,7 +116,7 @@ function AccountMenu({ displayName, isAdmin, isLearner, onSignOut }) {
   );
 }
 
-function EditorialHomeNavbar({ displayName, isAdmin, isLearner, loading, mobileOpen, onSignOut, setMobileOpen, showThemeToggle = false, user }) {
+function EditorialHomeNavbar({ avatarKey, displayName, isAdmin, isLearner, loading, mobileOpen, onSignOut, setMobileOpen, showThemeToggle = false, user }) {
   return (
     <header className={`home-site-header ${showThemeToggle ? 'home-site-header--pathway' : ''}`}>
       <div className="home-site-header__inner">
@@ -131,7 +131,7 @@ function EditorialHomeNavbar({ displayName, isAdmin, isLearner, loading, mobileO
         <div className="home-site-header__actions">
           {showThemeToggle ? <ThemeToggle /> : null}
           {!loading && user ? (
-            <AccountMenu displayName={displayName} isAdmin={isAdmin} isLearner={isLearner} onSignOut={onSignOut} />
+            <AccountMenu avatarKey={avatarKey} displayName={displayName} isAdmin={isAdmin} isLearner={isLearner} onSignOut={onSignOut} />
           ) : !loading ? (
             <Link to="/login" className="home-site-header__login">Accedi</Link>
           ) : null}
@@ -180,6 +180,7 @@ export default function Navbar() {
   const isLearner = profile?.role === 'learner' && profile?.status === 'active';
   const isAdmin = profile?.role === 'admin' && profile?.status === 'active';
   const displayName = profile?.display_name || user?.user_metadata?.display_name || 'Account';
+  const avatarKey = profile?.avatar_key || null;
   const isEditorialPublicPage = location.pathname === '/' || location.pathname.startsWith('/percorsi/colloquio');
   const items = useMemo(() => (isLearner ? learnerItems : publicItems), [isLearner]);
   const routeParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
@@ -222,6 +223,7 @@ export default function Navbar() {
   if (!isLearner && isEditorialPublicPage) {
     return (
       <EditorialHomeNavbar
+        avatarKey={avatarKey}
         displayName={displayName}
         isAdmin={isAdmin}
         isLearner={isLearner}
@@ -282,7 +284,7 @@ export default function Navbar() {
           <ThemeToggle />
 
           {!loading && user ? (
-            <AccountMenu displayName={displayName} isAdmin={isAdmin} isLearner={isLearner} onSignOut={handleSignOut} />
+            <AccountMenu avatarKey={avatarKey} displayName={displayName} isAdmin={isAdmin} isLearner={isLearner} onSignOut={handleSignOut} />
           ) : !loading ? (
             <NavLink to="/login" className="focus-ring inline-flex h-10 items-center rounded-full border border-ink/15 bg-white/70 px-4 text-sm font-semibold text-ink/80 transition hover:bg-white hover:text-ink dark:border-white/12 dark:bg-white/[0.045] dark:text-white/80 dark:hover:bg-white/[0.08] dark:hover:text-white">
               Accedi
@@ -343,7 +345,7 @@ export default function Navbar() {
             {!loading && user ? (
               <>
                 <Link to="/account/settings" className="focus-ring mt-2 flex min-h-12 items-center gap-3 rounded-2xl border border-ink/12 bg-white px-4 py-3 text-base font-extrabold text-ink dark:border-white/12 dark:bg-white/[0.07] dark:text-white">
-                  <span className="grid h-8 w-8 place-items-center rounded-full bg-mint text-sm font-black text-ink">{displayName.charAt(0).toUpperCase()}</span>
+                  <LearnerAvatar avatarKey={avatarKey} displayName={displayName} size="sm" eager />
                   Account e impostazioni
                 </Link>
                 {isAdmin ? (
