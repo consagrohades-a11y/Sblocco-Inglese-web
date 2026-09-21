@@ -44,7 +44,7 @@ begin
     from public.exercise_studio_folders folder
     where folder.id = new.parent_id
 
-    union all
+    union
 
     select folder.id, folder.parent_id
     from public.exercise_studio_folders folder
