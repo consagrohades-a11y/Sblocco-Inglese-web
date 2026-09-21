@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
+import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 
 export default function AdminCreateAssignment() {
@@ -88,7 +89,7 @@ export default function AdminCreateAssignment() {
     });
   }
 
-  const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15';
+  const fieldClass = 'mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-clay focus:ring-4 focus:ring-clay/10 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-coral dark:focus:ring-coral/10';
 
   return (
     <>
@@ -98,27 +99,23 @@ export default function AdminCreateAssignment() {
       />
       <section className="section-shell py-12 lg:py-16">
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
-            <span className="eyebrow">Nuova assegnazione</span>
-            <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">1. Informazioni principali</h1>
-                <p className="mt-3 text-base leading-7 text-ink/70 dark:text-white/65">
-                  {loadingLearner
-                    ? 'Caricamento studente...'
-                    : learner
-                      ? `Prepara una nuova attività per ${learner.display_name || learner.email}. Nel passaggio successivo sceglierai deck, batch, esercizi e Trainer.`
-                      : 'Studente non trovato.'}
-                </p>
-              </div>
+          <AdminPageHeader
+            eyebrow="Assegnazioni"
+            title="Nuova assegnazione"
+            description={loadingLearner
+              ? 'Caricamento studente...'
+              : learner
+                ? `Prepara un’attività per ${learner.display_name || learner.email}. Nel passaggio successivo collegherai il contenuto Learning Studio e pubblicherai quando è pronto.`
+                : 'Studente non trovato.'}
+            actions={(
               <Link
                 to={`/admin/learners/${learnerId}`}
-                className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-black text-ink transition hover:bg-linen dark:border-white/20 dark:bg-white/10 dark:text-white"
+                className="focus-ring inline-flex min-h-10 items-center justify-center rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink transition hover:border-clay/35 hover:text-clay dark:border-white/15 dark:bg-white/[0.06] dark:text-white"
               >
                 Annulla
               </Link>
-            </div>
-          </div>
+            )}
+          />
 
           {error ? (
             <div className="mt-6 border-l-4 border-red-400 bg-red-50 p-5 text-sm font-bold leading-6 text-red-900">
@@ -185,12 +182,12 @@ export default function AdminCreateAssignment() {
                 </div>
               </section>
 
-              <section className="rounded-2xl border border-moss/20 bg-mint/25 p-5 dark:border-emerald-300/20 dark:bg-emerald-400/[0.06]">
+              <section className="rounded-2xl border border-clay/20 bg-clay/[0.055] p-5 dark:border-coral/20 dark:bg-coral/[0.06]">
                 <p className="text-sm font-black text-ink dark:text-white">Passaggio successivo</p>
                 <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/60">L’assegnazione verrà creata come bozza e si aprirà subito l’editor completo. Potrai aggiungere contenuti e pubblicarla senza tornare indietro.</p>
                 <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                   <Link to={`/admin/learners/${learnerId}`} className="focus-ring min-h-12 rounded-full border border-ink/15 bg-white px-6 py-3 text-center text-sm font-black text-ink transition hover:bg-linen dark:border-white/20 dark:bg-white/10 dark:text-white">Annulla</Link>
-                  <button type="button" disabled={submitting} onClick={createAssignment} className="focus-ring min-h-12 rounded-full bg-ink px-6 py-3 text-sm font-black text-white transition hover:bg-moss disabled:cursor-not-allowed disabled:opacity-50">
+                  <button type="button" disabled={submitting} onClick={createAssignment} className="focus-ring min-h-12 rounded-full bg-ink px-6 py-3 text-sm font-black text-white transition hover:bg-clay disabled:cursor-not-allowed disabled:opacity-50">
                     {submitting ? 'Creazione...' : 'Crea e scegli i contenuti'}
                   </button>
                 </div>
