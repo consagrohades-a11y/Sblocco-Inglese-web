@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
+import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
+import LearnerAvatarPicker from '../components/learner/LearnerAvatarPicker.jsx';
 import LearnerNotificationsPanel from '../components/learner/LearnerNotificationsPanel.jsx';
 import AuthNotice from '../components/auth/AuthNotice';
 import { useAuth } from '../auth/AuthContext.jsx';
@@ -116,12 +118,13 @@ function AssignmentCard({ assignment, index }) {
 }
 
 export default function Account() {
-  const { loading, profile, signOut, user } = useAuth();
+  const { loading, profile, refreshProfile, signOut, user } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [assignments, setAssignments] = useState([]);
   const [assignmentsLoading, setAssignmentsLoading] = useState(false);
+  const [avatarSaving, setAvatarSaving] = useState('');
 
   const isAdmin = profile?.role === 'admin' && profile?.status === 'active';
   const isLearner = profile?.role === 'learner' && profile?.status === 'active';
@@ -164,7 +167,34 @@ export default function Account() {
     navigate('/', { replace: true });
   }
 
+  async function handleAvatarChange(nextAvatarKey) {
+    if (!isLearner || !user?.id || avatarSaving || nextAvatarKey === profile?.avatar_key) return;
+
+    setError('');
+    setAvatarSaving(nextAvatarKey);
+
+    const { error: avatarError } = await supabase
+      .from('profiles')
+      .update({ avatar_key: nextAvatarKey })
+      .eq('id', user.id);
+
+    if (avatarError) {
+      setError('Non è stato possibile salvare il tuo avatar. Riprova.');
+      setAvatarSaving('');
+      return;
+    }
+
+    try {
+      await refreshProfile(user);
+    } catch {
+      setError('L avatar è stato salvato, ma il profilo non si è aggiornato correttamente. Ricarica la pagina.');
+    } finally {
+      setAvatarSaving('');
+    }
+  }
+
   const displayName = profile?.display_name || user?.user_metadata?.display_name || '';
+  const avatarKey = profile?.avatar_key || null;
   const firstName = useMemo(() => firstNameFromProfile(profile, user), [profile, user]);
   const language = languageLabels[profile?.interface_language] || profile?.interface_language;
   const role = roleLabels[profile?.role] || profile?.role;
@@ -272,6 +302,40 @@ export default function Account() {
             </main>
 
             <aside className="grid content-start gap-5">
+              {isLearner ? (
+                <section className="overflow-hidden rounded-3xl border border-coral/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-surface-900">
+                  <div className="flex items-center gap-4 p-6">
+                    <LearnerAvatar avatarKey={avatarKey} displayName={displayName || firstName} size="xl" eager />
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-clay dark:text-[#f7a98d]">Il tuo avatar</p>
+                      <h2 className="mt-1 text-lg font-black text-ink dark:text-white">
+                        {avatarKey ? 'Questo sei tu su Sblocco' : 'Scegli come apparire'}
+                      </h2>
+                      <p className="mt-1 text-sm leading-6 text-ink/60 dark:text-white/60">
+                        {avatarSaving
+                          ? 'Salvataggio in corso...'
+                          : avatarKey
+                            ? 'Puoi cambiarlo quando vuoi.'
+                            : 'Scegli uno dei 36 personaggi Sblocco.'}
+                      </p>
+                    </div>
+                  </div>
+                  <details className="group border-t border-ink/8 dark:border-white/8" open={!avatarKey}>
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-6 py-4 text-sm font-black text-ink dark:text-white [&::-webkit-details-marker]:hidden">
+                      <span>{avatarKey ? 'Cambia avatar' : 'Scegli il tuo avatar'}</span>
+                      <ChevronDown className="h-5 w-5 text-ink/60 transition group-open:rotate-180 dark:text-white/60" />
+                    </summary>
+                    <div className="border-t border-ink/8 p-5 dark:border-white/8">
+                      <LearnerAvatarPicker
+                        value={avatarKey}
+                        onChange={handleAvatarChange}
+                        disabled={Boolean(avatarSaving)}
+                      />
+                    </div>
+                  </details>
+                </section>
+              ) : null}
+
               <details className="group overflow-hidden rounded-3xl border border-[#c9b8dc]/45 bg-[#fffdf9] shadow-soft dark:border-[#9d83bd]/20 dark:bg-surface-900" open>
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-6 text-sm font-black text-ink dark:text-white [&::-webkit-details-marker]:hidden">
                   <span className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]"><UserRound className="h-5 w-5" /></span><span>Il tuo account</span></span>
