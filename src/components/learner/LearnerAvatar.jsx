@@ -10,6 +10,7 @@ const sizeClasses = {
   md: 'h-10 w-10 text-sm',
   lg: 'h-14 w-14 text-base',
   xl: 'h-20 w-20 text-xl',
+  '2xl': 'h-24 w-24 text-2xl',
 };
 
 function initialsFromName(value) {
