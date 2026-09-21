@@ -320,8 +320,12 @@ export default function Register() {
                 const active = step === number;
                 const complete = step > number;
                 return (
-                  <li key={item.label} className={active ? 'is-active' : complete ? 'is-complete' : ''}>
-                    <span>{complete ? <Check /> : number}</span>
+                  <li
+                    key={item.label}
+                    className={active ? 'is-active' : complete ? 'is-complete' : ''}
+                    aria-current={active ? 'step' : undefined}
+                  >
+                    <span aria-hidden="true">{complete ? <Check /> : number}</span>
                     <p>{item.label}</p>
                   </li>
                 );
@@ -341,6 +345,7 @@ export default function Register() {
             key={step}
             ref={stageRef}
             tabIndex={-1}
+            aria-live="polite"
             className={`register-journey__stage is-${direction}`}
           >
             {error ? <div className="register-journey__notice"><AuthNotice tone="error">{error}</AuthNotice></div> : null}
