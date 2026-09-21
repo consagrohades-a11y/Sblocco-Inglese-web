@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowDown, ArrowUp, ShieldOff, Trash2, UserCheck } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
+import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import LearnerDiagnosticPanel from '../components/admin/LearnerDiagnosticPanel.jsx';
 import LearnerNextLessonPanel from '../components/admin/LearnerNextLessonPanel.jsx';
 import LearnerNotesPanel from '../components/admin/LearnerNotesPanel.jsx';
@@ -152,7 +153,30 @@ export default function AdminLearnerDetail() {
           <LearnerNextLessonPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} />
           <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">
             <div className="grid content-start gap-6">
-              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900"><p className="text-xs font-bold uppercase tracking-wide text-moss">Profilo</p><div className="mt-3"><SummaryRow label="Nome" value={learner.display_name || 'Nome non impostato'} /><SummaryRow label="Email" value={learner.email} /><SummaryRow label="Stato account" value={statusLabels[learner.status] || learner.status} /><SummaryRow label="Lingua" value={languageLabels[learner.interface_language] || learner.interface_language} /><SummaryRow label="Fuso orario" value={learner.timezone} /><SummaryRow label="Registrazione" value={formatDate(learner.created_at, true)} /></div></section>
+              <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900">
+                <div className="flex items-center gap-4 border-b border-ink/10 pb-5 dark:border-white/10">
+                  <LearnerAvatar
+                    avatarKey={learner.avatar_key}
+                    backgroundKey={learner.avatar_background_key}
+                    displayName={learner.display_name || learner.email}
+                    size="xl"
+                    eager
+                  />
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wide text-moss">Profilo</p>
+                    <h2 className="mt-1 text-xl font-black text-ink dark:text-white">{learner.display_name || 'Nome non impostato'}</h2>
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <SummaryRow label="Email" value={learner.email} />
+                  <SummaryRow label="Professione" value={learner.profession || 'Non indicata'} />
+                  <SummaryRow label="Età" value={learner.age ? String(learner.age) + ' anni' : 'Non indicata'} />
+                  <SummaryRow label="Stato account" value={statusLabels[learner.status] || learner.status} />
+                  <SummaryRow label="Lingua" value={languageLabels[learner.interface_language] || learner.interface_language} />
+                  <SummaryRow label="Fuso orario" value={learner.timezone} />
+                  <SummaryRow label="Registrazione" value={formatDate(learner.created_at, true)} />
+                </div>
+              </section>
 
               <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900">
                 <p className="text-xs font-bold uppercase tracking-wide text-moss">Gestione account</p>

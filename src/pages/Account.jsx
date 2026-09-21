@@ -1,32 +1,21 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  ArrowRight,
-  BookOpen,
+  Briefcase,
   CalendarDays,
-  ChevronDown,
-  Clock3,
-  Globe2,
-  Heart,
-  Leaf,
-  ListChecks,
   LogOut,
   Mail,
   ShieldCheck,
-  Sparkles,
-  Star,
   UserRound,
+  X,
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
+import AuthNotice from '../components/auth/AuthNotice';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import LearnerAvatarPicker from '../components/learner/LearnerAvatarPicker.jsx';
-import LearnerNotificationsPanel from '../components/learner/LearnerNotificationsPanel.jsx';
-import AuthNotice from '../components/auth/AuthNotice';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { getAuthErrorMessage } from '../auth/authMessages';
 import { supabase } from '../lib/supabaseClient.js';
 
-const languageLabels = { it: 'Italiano', en: 'English' };
 const roleLabels = { learner: 'Studente', admin: 'Amministratore' };
 
 function firstNameFromProfile(profile, user) {
@@ -34,144 +23,105 @@ function firstNameFromProfile(profile, user) {
   return String(value).trim().split(/\s+/)[0] || 'studente';
 }
 
-function formatDate(value) {
-  if (!value) return null;
-  return new Intl.DateTimeFormat('it-IT', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(value));
-}
-
-function DetailRow({ icon: Icon, label, value, tone = 'coral' }) {
-  const tones = {
-    coral: 'bg-blush text-coral dark:bg-coral/10 dark:text-[#ff9678]',
-    sage: 'bg-[#e7efe7] text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]',
-    violet: 'bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]',
-    pink: 'bg-[#f8e7ed] text-[#9c5870] dark:bg-[#c57b93]/15 dark:text-[#e4aec0]',
-  };
-
+function InfoRow({ icon: Icon, label, value }) {
   return (
-    <div className="flex items-center gap-3 border-b border-ink/8 py-4 last:border-b-0 dark:border-white/8">
-      <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${tones[tone] || tones.coral}`}>
-        <Icon className="h-5 w-5" />
+    <div className="flex items-start gap-3 border-b border-[var(--learner-line)] py-4 last:border-b-0">
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[var(--learner-soft-orange)] text-[var(--learner-orange)]">
+        <Icon className="h-4 w-4" />
       </span>
       <div className="min-w-0">
-        <p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">{label}</p>
-        <p className="mt-1 break-words text-sm font-black text-ink dark:text-white">{value || '-'}</p>
+        <p className="text-[0.65rem] font-extrabold uppercase tracking-[0.1em] text-[var(--learner-muted)]">{label}</p>
+        <p className="mt-1 break-words text-sm font-bold text-[var(--learner-navy)]">{value || '-'}</p>
       </div>
     </div>
   );
 }
 
-function AssignmentCard({ assignment, index }) {
-  const accents = [
-    {
-      shell: 'border-coral/20 bg-gradient-to-br from-white via-white to-blush/55 dark:border-coral/20 dark:from-surface-900 dark:to-coral/[0.07]',
-      icon: 'bg-blush text-coral dark:bg-coral/10 dark:text-[#ff9678]',
-      pill: 'border-coral/20 bg-blush text-clay dark:border-coral/20 dark:bg-coral/10 dark:text-[#f7a98d]',
-    },
-    {
-      shell: 'border-[#a9bda9]/40 bg-gradient-to-br from-white via-white to-[#edf3ed] dark:border-[#8ba58b]/20 dark:from-surface-900 dark:to-[#8ba58b]/[0.07]',
-      icon: 'bg-[#e7efe7] text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]',
-      pill: 'border-[#a9bda9]/40 bg-[#e7efe7] text-[#617861] dark:border-[#8ba58b]/20 dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]',
-    },
-    {
-      shell: 'border-[#c9b8dc]/45 bg-gradient-to-br from-white via-white to-[#f2edf8] dark:border-[#9d83bd]/20 dark:from-surface-900 dark:to-[#9d83bd]/[0.07]',
-      icon: 'bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]',
-      pill: 'border-[#c9b8dc]/45 bg-[#eee8f8] text-[#745b91] dark:border-[#9d83bd]/20 dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]',
-    },
-  ];
-  const accent = accents[index % accents.length];
-
-  return (
-    <article className={`rounded-2xl border p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-soft ${accent.shell}`}>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex min-w-0 items-start gap-4">
-          <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl ${accent.icon}`}>
-            <BookOpen className="h-5 w-5" />
-          </span>
-          <div className="min-w-0">
-            <div className="flex flex-wrap gap-2">
-              <span className={`rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${accent.pill}`}>
-                {assignment.status === 'completed' ? 'Completata' : 'Da fare'}
-              </span>
-              {assignment.estimated_minutes ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/8 bg-white/70 px-2.5 py-1 text-[11px] font-black text-ink/65 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/65">
-                  <Clock3 className="h-3.5 w-3.5" />{assignment.estimated_minutes} min
-                </span>
-              ) : null}
-            </div>
-            <h3 className="mt-3 text-lg font-black text-ink dark:text-white">{assignment.title}</h3>
-            {assignment.learner_note ? <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink/65 dark:text-white/65">{assignment.learner_note}</p> : null}
-            {assignment.deadline_at ? <p className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-ink/65 dark:text-white/65"><CalendarDays className="h-4 w-4" />Entro {formatDate(assignment.deadline_at)}</p> : null}
-          </div>
-        </div>
-        <Link to={`/assignments/${assignment.id}`} className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-coral px-5 py-2.5 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-clay dark:bg-[#ff9678] dark:text-surface-950">
-          {assignment.status === 'completed' ? 'Rivedi' : 'Apri'}<ArrowRight className="h-4 w-4" />
-        </Link>
-      </div>
-    </article>
-  );
-}
-
 export default function Account() {
   const { loading, profile, refreshProfile, signOut, user } = useAuth();
-  const navigate = useNavigate();
   const [error, setError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [assignments, setAssignments] = useState([]);
-  const [assignmentsLoading, setAssignmentsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const [avatarOpen, setAvatarOpen] = useState(false);
   const [avatarSaving, setAvatarSaving] = useState('');
   const [avatarBackgroundSaving, setAvatarBackgroundSaving] = useState('');
+  const [form, setForm] = useState({
+    displayName: '',
+    profession: '',
+    age: '',
+  });
 
-  const isAdmin = profile?.role === 'admin' && profile?.status === 'active';
   const isLearner = profile?.role === 'learner' && profile?.status === 'active';
+  const displayName = profile?.display_name || user?.user_metadata?.display_name || '';
+  const firstName = useMemo(() => firstNameFromProfile(profile, user), [profile, user]);
+  const avatarKey = profile?.avatar_key || null;
+  const avatarBackgroundKey = profile?.avatar_background_key || null;
+  const role = roleLabels[profile?.role] || profile?.role || '-';
 
   useEffect(() => {
-    let active = true;
+    setForm({
+      displayName: profile?.display_name || '',
+      profession: profile?.profession || '',
+      age: profile?.age == null ? '' : String(profile.age),
+    });
+  }, [profile]);
 
-    async function loadAssignments() {
-      if (!isLearner) return;
-      setAssignmentsLoading(true);
-      const { data } = await supabase
-        .from('assignments')
-        .select('id, title, learner_note, status, required, deadline_at, estimated_minutes, created_at, display_order')
-        .in('status', ['published', 'completed'])
-        .order('display_order', { ascending: true })
-        .order('created_at', { ascending: false })
-        .limit(3);
+  async function handleProfileSubmit(event) {
+    event.preventDefault();
+    if (!user?.id || profileSaving) return;
 
-      if (active) {
-        setAssignments(data ?? []);
-        setAssignmentsLoading(false);
-      }
-    }
+    const nextDisplayName = form.displayName.trim();
+    const nextProfession = form.profession.trim();
+    const nextAge = form.age === '' ? null : Number(form.age);
 
-    loadAssignments();
-    return () => { active = false; };
-  }, [isLearner]);
-
-  async function handleSignOut() {
     setError('');
-    setSubmitting(true);
-    const { error: signOutError } = await signOut();
-    setSubmitting(false);
+    setMessage('');
 
-    if (signOutError) {
-      setError(getAuthErrorMessage(signOutError));
+    if (!nextDisplayName) {
+      setError('Inserisci il nome che vuoi usare su Sblocco.');
       return;
     }
 
-    navigate('/', { replace: true });
+    if (nextAge !== null && (!Number.isInteger(nextAge) || nextAge < 5 || nextAge > 120)) {
+      setError("L'età deve essere un numero valido.");
+      return;
+    }
+
+    setProfileSaving(true);
+
+    const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || profile?.timezone || 'Europe/Rome';
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({
+        display_name: nextDisplayName,
+        profession: isLearner ? (nextProfession || null) : profile?.profession || null,
+        age: isLearner ? nextAge : profile?.age ?? null,
+        timezone: detectedTimezone,
+      })
+      .eq('id', user.id);
+
+    if (updateError) {
+      setError('Non è stato possibile salvare il profilo. Riprova.');
+      setProfileSaving(false);
+      return;
+    }
+
+    try {
+      await refreshProfile(user);
+      setMessage('Profilo aggiornato.');
+    } catch {
+      setError('Il profilo è stato salvato, ma la pagina non si è aggiornata correttamente. Ricaricala.');
+    } finally {
+      setProfileSaving(false);
+    }
   }
 
   async function handleAvatarChange(nextAvatarKey) {
     if (!isLearner || !user?.id || avatarSaving || nextAvatarKey === profile?.avatar_key) return;
 
     setError('');
+    setMessage('');
     setAvatarSaving(nextAvatarKey);
 
     const { error: avatarError } = await supabase
@@ -188,7 +138,7 @@ export default function Account() {
     try {
       await refreshProfile(user);
     } catch {
-      setError("L'avatar è stato salvato, ma il profilo non si è aggiornato correttamente. Ricarica la pagina.");
+      setError("L'avatar è stato salvato, ma la pagina non si è aggiornata correttamente.");
     } finally {
       setAvatarSaving('');
     }
@@ -198,6 +148,7 @@ export default function Account() {
     if (!isLearner || !user?.id || avatarBackgroundSaving || nextBackgroundKey === profile?.avatar_background_key) return;
 
     setError('');
+    setMessage('');
     setAvatarBackgroundSaving(nextBackgroundKey);
 
     const { error: backgroundError } = await supabase
@@ -214,178 +165,239 @@ export default function Account() {
     try {
       await refreshProfile(user);
     } catch {
-      setError("Il colore è stato salvato, ma il profilo non si è aggiornato correttamente. Ricarica la pagina.");
+      setError('Il colore è stato salvato, ma la pagina non si è aggiornata correttamente.');
     } finally {
       setAvatarBackgroundSaving('');
     }
   }
 
-  const displayName = profile?.display_name || user?.user_metadata?.display_name || '';
-  const avatarKey = profile?.avatar_key || null;
-  const avatarBackgroundKey = profile?.avatar_background_key || null;
-  const firstName = useMemo(() => firstNameFromProfile(profile, user), [profile, user]);
-  const language = languageLabels[profile?.interface_language] || profile?.interface_language;
-  const role = roleLabels[profile?.role] || profile?.role;
-  const activeAssignments = assignments.filter((assignment) => assignment.status === 'published').length;
-  const nearestDeadline = assignments
-    .filter((assignment) => assignment.status === 'published' && assignment.deadline_at)
-    .sort((a, b) => new Date(a.deadline_at) - new Date(b.deadline_at))[0]?.deadline_at;
+  async function handleSignOut() {
+    setError('');
+    setSigningOut(true);
+    const { error: signOutError } = await signOut();
+    if (signOutError) {
+      setError(getAuthErrorMessage(signOutError));
+      setSigningOut(false);
+      return;
+    }
+    window.location.assign('/');
+  }
+
+  const inputClass = 'focus-ring mt-2 min-h-12 w-full rounded-xl border border-[var(--learner-line)] bg-[var(--learner-paper-raised)] px-4 py-3 text-sm font-semibold text-[var(--learner-navy)] outline-none transition placeholder:text-[var(--learner-muted)] focus:border-[var(--learner-orange)]';
 
   return (
-    <>
-      <SEO title={`${isLearner ? `Ciao, ${firstName}` : 'Account'} | Sblocco Inglese`} description="Il tuo spazio personale Sblocco Inglese." />
-      <section className="section-shell py-10 dark:bg-surface-950 lg:py-14">
-        <div className="mx-auto max-w-6xl">
-          <header className="relative overflow-hidden rounded-3xl border border-clay/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-surface-900">
-            <div className="pointer-events-none absolute -right-12 -top-16 h-56 w-56 rounded-full bg-[#eee8f8] blur-3xl dark:bg-[#9d83bd]/10" />
-            <div className="pointer-events-none absolute -bottom-20 left-16 h-52 w-52 rounded-full bg-blush blur-3xl dark:bg-coral/10" />
-            <Star className="pointer-events-none absolute right-10 top-8 h-8 w-8 rotate-12 fill-butter text-clay/55 dark:fill-clay/15 dark:text-[#f7a98d]/55" />
-            <Leaf className="pointer-events-none absolute right-28 top-24 h-9 w-9 -rotate-12 text-[#789078]/55 dark:text-[#b7cdb7]/40" strokeWidth={1.6} />
+    <div className="learner-editorial">
+      <SEO title="Account e impostazioni | Sblocco Inglese" description="Gestisci il tuo profilo Sblocco Inglese." />
 
-            <div className="relative p-6 sm:p-9 lg:p-11">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#c9b8dc]/45 bg-[#eee8f8] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-[#745b91] dark:border-[#9d83bd]/20 dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]">
-                <Sparkles className="h-3.5 w-3.5" />Il tuo spazio
-              </span>
-              <h1 className="mt-5 max-w-4xl text-3xl font-black leading-tight text-ink dark:text-white sm:text-5xl">
-                Ciao, <span className="text-coral dark:text-[#ff9678]">{firstName}</span>.{' '}
-                <span className="relative inline-block">
-                  <span className="relative z-10">Come stai?</span>
-                  <span className="absolute inset-x-0 bottom-1 h-3 -rotate-1 rounded-full bg-butter/90 dark:bg-clay/30" aria-hidden="true" />
-                </span>
-              </h1>
-              <p className="mt-4 max-w-3xl text-lg font-semibold leading-8 text-ink/65 dark:text-white/65">
-                Qui trovi ciò che devi fare oggi, i tuoi prossimi passi e le informazioni del tuo account.
-              </p>
-            </div>
+      <div className="learner-shell learner-dashboard">
+        <header className="border-b border-[var(--learner-line)] pb-7 pt-2">
+          <p className="learner-kicker">Il tuo spazio</p>
+          <h1 className="learner-display mt-2 text-4xl leading-none text-[var(--learner-navy)] sm:text-5xl">
+            Account e impostazioni
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--learner-muted)]">
+            Tieni aggiornate le informazioni essenziali del tuo profilo e scegli come apparire su Sblocco.
+          </p>
+        </header>
 
-            {isLearner ? (
-              <div className="relative grid gap-3 border-t border-clay/10 bg-linen/30 p-5 dark:border-white/10 dark:bg-white/[0.035] sm:grid-cols-3 sm:px-9 lg:px-11">
-                <div className="flex items-center gap-3 rounded-2xl border border-coral/15 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-blush text-coral dark:bg-coral/10 dark:text-[#ff9678]"><ListChecks className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Da fare</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{activeAssignments} attività</p></div>
-                </div>
-                <div className="flex items-center gap-3 rounded-2xl border border-[#a9bda9]/35 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#e7efe7] text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]"><Leaf className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Il tuo ritmo</p><p className="mt-1 text-sm font-black text-ink dark:text-white">Un passo alla volta</p></div>
-                </div>
-                <div className="flex items-center gap-3 rounded-2xl border border-[#c9b8dc]/40 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.06]">
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]"><CalendarDays className="h-5 w-5" /></span>
-                  <div><p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">Prossima scadenza</p><p className="mt-1 text-sm font-black text-ink dark:text-white">{nearestDeadline ? formatDate(nearestDeadline) : 'Nessuna urgenza'}</p></div>
-                </div>
-              </div>
-            ) : null}
-          </header>
+        {loading ? (
+          <div className="learner-panel learner-panel--main mt-5">
+            <p className="learner-muted text-sm font-semibold">Caricamento profilo...</p>
+          </div>
+        ) : null}
 
-          {isLearner ? (
-            <div className="mt-5 flex justify-end">
-              <Link to="/dashboard" className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-moss px-5 py-2.5 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-[#19947b]">
-                Torna alla dashboard <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          ) : null}
+        {error ? <div className="mt-5"><AuthNotice tone="error">{error}</AuthNotice></div> : null}
+        {message ? (
+          <div className="mt-5 border-l-4 border-[var(--learner-orange)] bg-[var(--learner-soft-orange)] px-4 py-3 text-sm font-bold text-[var(--learner-navy)]">
+            {message}
+          </div>
+        ) : null}
 
-          {isLearner ? <LearnerNotificationsPanel limit={3} /> : null}
-
-          {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 dark:border-white/10 dark:bg-surface-900 dark:text-white/65">Caricamento profilo...</div> : null}
-          {error ? <div className="mt-6"><AuthNotice tone="error">{error}</AuthNotice></div> : null}
-
-          <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(19rem,0.6fr)]">
-            <main className="grid gap-6">
+        {!loading ? (
+          <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.65fr)]">
+            <main className="learner-panel learner-panel--main">
               {isLearner ? (
-                <section className="rounded-3xl border border-clay/15 bg-[#fffdf9] p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div className="flex flex-col gap-5 border-b border-[var(--learner-line)] pb-6 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-5">
+                    <LearnerAvatar
+                      avatarKey={avatarKey}
+                      backgroundKey={avatarBackgroundKey}
+                      displayName={displayName || firstName}
+                      size="2xl"
+                      eager
+                    />
                     <div>
-                      <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-clay dark:text-[#f7a98d]"><Heart className="h-4 w-4" />Oggi</p>
-                      <h2 className="mt-2 text-2xl font-black text-ink dark:text-white sm:text-3xl">Cosa devi fare adesso</h2>
-                      <p className="mt-2 text-sm leading-6 text-ink/60 dark:text-white/60">Parti da qui e continua fino alla prossima lezione.</p>
-                    </div>
-                    <Link to="/assignments" className="inline-flex items-center gap-2 text-sm font-black text-clay underline dark:text-[#f7a98d]">Vedi tutte<ArrowRight className="h-4 w-4" /></Link>
-                  </div>
-
-                  {assignmentsLoading ? <p className="mt-6 text-sm font-bold text-ink/60 dark:text-white/60">Caricamento attività...</p> : null}
-                  {!assignmentsLoading && assignments.length === 0 ? (
-                    <div className="mt-6 rounded-2xl border border-dashed border-[#a9bda9]/45 bg-[#edf3ed] p-6 dark:border-[#8ba58b]/25 dark:bg-[#8ba58b]/[0.08]">
-                      <div className="flex items-start gap-3">
-                        <span className="grid h-10 w-10 place-items-center rounded-xl bg-white text-[#617861] dark:bg-white/10 dark:text-[#b7cdb7]"><Leaf className="h-5 w-5" /></span>
-                        <div><p className="text-sm font-black text-ink dark:text-white">Sei in pari</p><p className="mt-1 text-sm leading-6 text-ink/60 dark:text-white/60">Quando verrà pubblicata una nuova attività, apparirà qui.</p></div>
-                      </div>
-                    </div>
-                  ) : null}
-                  {!assignmentsLoading && assignments.length > 0 ? (
-                    <div className="mt-6 grid gap-4">
-                      {assignments.map((assignment, index) => <AssignmentCard key={assignment.id} assignment={assignment} index={index} />)}
-                    </div>
-                  ) : null}
-                </section>
-              ) : null}
-
-              {isAdmin ? (
-                <section className="rounded-3xl border border-[#a9bda9]/40 bg-gradient-to-br from-white to-[#edf3ed] p-7 shadow-soft dark:border-[#8ba58b]/20 dark:from-surface-900 dark:to-[#8ba58b]/[0.08]">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#e7efe7] px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-[#617861] dark:bg-[#8ba58b]/15 dark:text-[#b7cdb7]"><ShieldCheck className="h-4 w-4" />Accesso amministratore</span>
-                  <h2 className="mt-4 text-2xl font-black text-ink dark:text-white">Gestisci Sblocco Inglese</h2>
-                  <p className="mt-2 text-sm leading-6 text-ink/65 dark:text-white/65">Il tuo profilo può accedere agli strumenti di gestione della piattaforma.</p>
-                  <Link to="/admin" className="focus-ring mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#617861] px-5 py-2.5 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-[#506650]">Apri il pannello admin<ArrowRight className="h-4 w-4" /></Link>
-                </section>
-              ) : null}
-            </main>
-
-            <aside className="grid content-start gap-5">
-              {isLearner ? (
-                <section className="overflow-hidden rounded-3xl border border-coral/15 bg-[#fffdf9] shadow-soft dark:border-white/10 dark:bg-surface-900">
-                  <div className="flex items-center gap-4 p-6">
-                    <LearnerAvatar avatarKey={avatarKey} backgroundKey={avatarBackgroundKey} displayName={displayName || firstName} size="xl" eager />
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-clay dark:text-[#f7a98d]">Il tuo avatar</p>
-                      <h2 className="mt-1 text-lg font-black text-ink dark:text-white">
-                        {avatarKey ? 'Questo sei tu su Sblocco' : 'Scegli come apparire'}
+                      <p className="learner-kicker">Avatar</p>
+                      <h2 className="mt-1 font-serif text-2xl font-normal tracking-tight text-[var(--learner-navy)]">
+                        {avatarKey ? 'Il tuo profilo Sblocco' : 'Scegli il tuo personaggio'}
                       </h2>
-                      <p className="mt-1 text-sm leading-6 text-ink/60 dark:text-white/60">
-                        {avatarSaving || avatarBackgroundSaving
-                          ? 'Salvataggio in corso...'
-                          : avatarKey
-                            ? 'Puoi cambiare personaggio e colore quando vuoi.'
-                            : 'Scegli un personaggio e il colore del suo sfondo.'}
+                      <p className="mt-1 max-w-md text-sm leading-6 text-[var(--learner-muted)]">
+                        Personaggio e colore restano modificabili quando vuoi.
                       </p>
                     </div>
                   </div>
-                  <details className="group border-t border-ink/8 dark:border-white/8" open={!avatarKey}>
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-6 py-4 text-sm font-black text-ink dark:text-white [&::-webkit-details-marker]:hidden">
-                      <span>{avatarKey ? 'Cambia avatar' : 'Scegli il tuo avatar'}</span>
-                      <ChevronDown className="h-5 w-5 text-ink/60 transition group-open:rotate-180 dark:text-white/60" />
-                    </summary>
-                    <div className="border-t border-ink/8 p-5 dark:border-white/8">
-                      <LearnerAvatarPicker
-                        value={avatarKey}
-                        backgroundValue={avatarBackgroundKey}
-                        onChange={handleAvatarChange}
-                        onBackgroundChange={handleAvatarBackgroundChange}
-                        disabled={Boolean(avatarSaving || avatarBackgroundSaving)}
-                      />
-                    </div>
-                  </details>
-                </section>
+                  <button
+                    type="button"
+                    onClick={() => setAvatarOpen(true)}
+                    className="learner-secondary-button shrink-0"
+                  >
+                    {avatarKey ? 'Cambia avatar' : 'Scegli avatar'}
+                  </button>
+                </div>
               ) : null}
 
-              <details className="group overflow-hidden rounded-3xl border border-[#c9b8dc]/45 bg-[#fffdf9] shadow-soft dark:border-[#9d83bd]/20 dark:bg-surface-900" open>
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-6 text-sm font-black text-ink dark:text-white [&::-webkit-details-marker]:hidden">
-                  <span className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-[#eee8f8] text-[#745b91] dark:bg-[#9d83bd]/15 dark:text-[#cbb9df]"><UserRound className="h-5 w-5" /></span><span>Il tuo account</span></span>
-                  <ChevronDown className="h-5 w-5 text-ink/60 transition group-open:rotate-180 dark:text-white/60" />
-                </summary>
-                <div className="border-t border-ink/8 px-6 pb-2 dark:border-white/8">
-                  <DetailRow icon={UserRound} label="Nome" value={displayName} tone="coral" />
-                  <DetailRow icon={Mail} label="Email" value={user?.email} tone="pink" />
-                  <DetailRow icon={Globe2} label="Lingua" value={language} tone="sage" />
-                  <DetailRow icon={ShieldCheck} label="Tipo di account" value={role} tone="violet" />
+              <form onSubmit={handleProfileSubmit} className={isLearner ? 'pt-6' : ''}>
+                <div className="learner-panel__heading">
+                  <div>
+                    <span className="learner-panel__eyebrow">Profilo</span>
+                    <h2>Le tue informazioni</h2>
+                  </div>
                 </div>
-              </details>
 
-              <button type="button" disabled={submitting} onClick={handleSignOut} className="focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-clay/15 bg-white px-5 py-3 text-sm font-black text-clay shadow-sm transition hover:border-coral/35 hover:bg-blush/45 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/15 dark:bg-white/[0.06] dark:text-[#f7a98d] dark:hover:bg-coral/10">
-                <LogOut className="h-4 w-4" />{submitting ? 'Uscita in corso...' : 'Esci dall account'}
+                <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                  <label className="text-sm font-bold text-[var(--learner-navy)]">
+                    Nome
+                    <input
+                      className={inputClass}
+                      type="text"
+                      value={form.displayName}
+                      maxLength={80}
+                      autoComplete="name"
+                      onChange={(event) => setForm((current) => ({ ...current, displayName: event.target.value }))}
+                      placeholder="Come vuoi essere chiamato?"
+                    />
+                  </label>
+
+                  {isLearner ? (
+                    <label className="text-sm font-bold text-[var(--learner-navy)]">
+                      Professione
+                      <div className="relative">
+                        <Briefcase className="pointer-events-none absolute left-4 top-1/2 mt-1 h-4 w-4 -translate-y-1/2 text-[var(--learner-muted)]" />
+                        <input
+                          className={inputClass + ' pl-11'}
+                          type="text"
+                          value={form.profession}
+                          maxLength={80}
+                          onChange={(event) => setForm((current) => ({ ...current, profession: event.target.value }))}
+                          placeholder="Es. Software developer"
+                        />
+                      </div>
+                    </label>
+                  ) : null}
+
+                  {isLearner ? (
+                    <label className="text-sm font-bold text-[var(--learner-navy)]">
+                      Età
+                      <div className="relative">
+                        <CalendarDays className="pointer-events-none absolute left-4 top-1/2 mt-1 h-4 w-4 -translate-y-1/2 text-[var(--learner-muted)]" />
+                        <input
+                          className={inputClass + ' pl-11'}
+                          type="number"
+                          inputMode="numeric"
+                          min="5"
+                          max="120"
+                          value={form.age}
+                          onChange={(event) => setForm((current) => ({ ...current, age: event.target.value }))}
+                          placeholder="Es. 32"
+                        />
+                      </div>
+                    </label>
+                  ) : null}
+
+                </div>
+
+                <p className="mt-5 text-xs leading-5 text-[var(--learner-muted)]">
+                  Il fuso orario viene rilevato automaticamente dal dispositivo, così le scadenze restano corrette senza chiederti codici tecnici.
+                </p>
+
+                <div className="mt-6 flex justify-end">
+                  <button type="submit" disabled={profileSaving} className="learner-primary-button disabled:cursor-wait disabled:opacity-60">
+                    {profileSaving ? 'Salvataggio...' : 'Salva modifiche'}
+                  </button>
+                </div>
+              </form>
+            </main>
+
+            <aside className="learner-panel learner-panel--side self-start">
+              <div className="learner-panel__heading">
+                <div>
+                  <span className="learner-panel__eyebrow">Account</span>
+                  <h3>Dati di accesso</h3>
+                </div>
+              </div>
+
+              <div className="mt-2">
+                <InfoRow icon={Mail} label="Email" value={user?.email} />
+                <InfoRow icon={ShieldCheck} label="Tipo di account" value={role} />
+                <InfoRow icon={UserRound} label="Nome visualizzato" value={displayName || firstName} />
+              </div>
+
+              <button
+                type="button"
+                disabled={signingOut}
+                onClick={handleSignOut}
+                className="learner-secondary-button mt-5 w-full disabled:cursor-wait disabled:opacity-60"
+              >
+                <LogOut className="h-4 w-4" />
+                {signingOut ? 'Uscita...' : 'Esci dall account'}
               </button>
             </aside>
           </div>
+        ) : null}
+      </div>
+
+      {isLearner && avatarOpen ? (
+        <div
+          className="fixed inset-0 z-[70] overflow-y-auto bg-[#0e3045]/45 p-3 backdrop-blur-sm sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Scegli avatar"
+        >
+          <div className="mx-auto my-3 w-full max-w-5xl overflow-hidden rounded-[1.6rem] border border-white/20 bg-[#fbf4ed] shadow-2xl dark:bg-[#121714] sm:my-8">
+            <header className="flex items-start justify-between gap-4 border-b border-[var(--learner-line)] px-5 py-5 sm:px-7">
+              <div>
+                <p className="learner-kicker">Il tuo avatar</p>
+                <h2 className="learner-display mt-1 text-3xl text-[var(--learner-navy)] sm:text-4xl">Scegli come apparire</h2>
+                <p className="mt-2 text-sm text-[var(--learner-muted)]">Prima scegli il colore, poi il personaggio.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAvatarOpen(false)}
+                className="focus-ring grid h-11 w-11 shrink-0 place-items-center rounded-full border border-[var(--learner-line)] text-[var(--learner-navy)] transition hover:border-[var(--learner-orange)] hover:text-[var(--learner-orange)]"
+                aria-label="Chiudi selettore avatar"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </header>
+
+            <div className="p-5 sm:p-7">
+              <div className="mb-6 flex items-center gap-4 border-b border-[var(--learner-line)] pb-6">
+                <LearnerAvatar
+                  avatarKey={avatarKey}
+                  backgroundKey={avatarBackgroundKey}
+                  displayName={displayName || firstName}
+                  size="2xl"
+                  eager
+                />
+                <div>
+                  <p className="text-xs font-extrabold uppercase tracking-[0.1em] text-[var(--learner-muted)]">Anteprima</p>
+                  <p className="mt-1 text-sm font-bold text-[var(--learner-navy)]">
+                    {avatarSaving || avatarBackgroundSaving ? 'Salvataggio in corso...' : 'Le modifiche vengono salvate appena le scegli.'}
+                  </p>
+                </div>
+              </div>
+
+              <LearnerAvatarPicker
+                value={avatarKey}
+                backgroundValue={avatarBackgroundKey}
+                onChange={handleAvatarChange}
+                onBackgroundChange={handleAvatarBackgroundChange}
+                disabled={Boolean(avatarSaving || avatarBackgroundSaving)}
+              />
+            </div>
+          </div>
         </div>
-      </section>
-    </>
+      ) : null}
+    </div>
   );
 }
