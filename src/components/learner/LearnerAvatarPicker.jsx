@@ -19,20 +19,19 @@ export default function LearnerAvatarPicker({
     <div>
       <div>
         <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/55 dark:text-white/55">Sfondo</p>
-        <div className="mt-3 flex flex-wrap gap-3" role="list" aria-label="Scegli il colore di sfondo">
+        <div className="mt-3 flex flex-wrap gap-3" aria-label="Scegli il colore di sfondo">
           {LEARNER_AVATAR_BACKGROUNDS.map((background) => {
             const selected = selectedBackground === background.key;
             return (
               <button
                 key={background.key}
                 type="button"
-                role="listitem"
                 aria-label={`Sfondo ${background.label}`}
                 aria-pressed={selected}
                 title={background.label}
                 disabled={disabled}
                 onClick={() => onBackgroundChange?.(background.key)}
-                className={`focus-ring relative h-9 w-9 rounded-full border-2 transition hover:scale-105 disabled:cursor-wait disabled:opacity-60 ${selected
+                className={`focus-ring relative h-11 w-11 rounded-full border-2 transition hover:scale-105 disabled:cursor-wait disabled:opacity-60 ${selected
                   ? 'border-coral ring-2 ring-coral/25 ring-offset-2 ring-offset-white dark:ring-offset-surface-900'
                   : 'border-white shadow-[0_0_0_1px_rgba(24,34,31,0.16)] dark:border-surface-900 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.18)]'
                 }`}
@@ -55,19 +54,18 @@ export default function LearnerAvatarPicker({
 
       <div className="mt-6 border-t border-ink/8 pt-5 dark:border-white/8">
         <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/55 dark:text-white/55">Personaggio</p>
-        <div className="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-4" role="list" aria-label="Scegli il tuo avatar">
+        <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6" aria-label="Scegli il tuo avatar">
           {LEARNER_AVATARS.map((avatar, index) => {
             const selected = value === avatar.key;
             return (
               <button
                 key={avatar.key}
                 type="button"
-                role="listitem"
                 aria-label={`Scegli ${avatar.label}`}
                 aria-pressed={selected}
                 disabled={disabled}
                 onClick={() => onChange?.(avatar.key)}
-                className={`focus-ring group relative mx-auto grid h-16 w-16 place-items-center rounded-2xl border bg-white transition hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-60 dark:bg-white/[0.04] ${selected
+                className={`focus-ring group relative mx-auto grid min-h-32 w-full max-w-36 place-items-center rounded-2xl border bg-white p-3 transition hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-60 dark:bg-white/[0.04] ${selected
                   ? 'border-coral ring-2 ring-coral/30'
                   : 'border-ink/10 hover:border-coral/35 dark:border-white/10 dark:hover:border-coral/35'
                 }`}
@@ -76,7 +74,7 @@ export default function LearnerAvatarPicker({
                   avatarKey={avatar.key}
                   backgroundKey={selectedBackground}
                   displayName={String(index + 1)}
-                  size="lg"
+                  size="2xl"
                   className="transition group-hover:scale-[1.03]"
                 />
                 {selected ? (
