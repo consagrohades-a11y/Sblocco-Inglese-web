@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import AuthFormField from '../components/auth/AuthFormField';
+import AuthJourneyShell from '../components/auth/AuthJourneyShell.jsx';
 import AuthNotice from '../components/auth/AuthNotice';
-import AuthPageShell from '../components/auth/AuthPageShell';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { getAuthErrorMessage } from '../auth/authMessages';
 
@@ -28,20 +29,23 @@ export default function ForgotPassword() {
       return;
     }
 
-    setSuccess('Email di recupero inviata. Controlla la posta e segui il link di Supabase.');
+    setSuccess('Email inviata. Apri il link che trovi nella posta e scegli una nuova password.');
   }
 
   return (
-    <AuthPageShell
-      eyebrow="Account"
-      title="Recupera password"
-      description="Inserisci la tua email e riceverai un link per reimpostare la password."
-      footer={<Link className="text-moss underline" to="/login">Torna al login</Link>}
+    <AuthJourneyShell
+      eyebrow="Recupero accesso"
+      title="Rientriamo nel tuo spazio."
+      description="Inserisci l’email che usi per Sblocco. Ti mandiamo un link per scegliere una nuova password."
+      topAction={<Link className="register-journey__login-link" to="/login"><strong>Accedi</strong></Link>}
+      footer={<Link className="auth-journey__quiet-link" to="/login">Torna al login</Link>}
     >
-      <form className="grid gap-4" onSubmit={handleSubmit}>
+      <form className="auth-journey__form" onSubmit={handleSubmit}>
         {success ? <AuthNotice>{success}</AuthNotice> : null}
         {error ? <AuthNotice tone="error">{error}</AuthNotice> : null}
+
         <AuthFormField
+          variant="journey"
           label="Email"
           type="email"
           autoComplete="email"
@@ -49,14 +53,16 @@ export default function ForgotPassword() {
           required
           onChange={(event) => setEmail(event.target.value)}
         />
+
         <button
           type="submit"
           disabled={submitting}
-          className="focus-ring rounded-full bg-ink px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-moss disabled:cursor-not-allowed disabled:opacity-60"
+          className="register-journey__primary auth-journey__submit disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitting ? 'Invio in corso...' : 'Invia email di recupero'}
+          {submitting ? 'Invio in corso...' : 'Mandami il link'}
+          {!submitting ? <ArrowRight /> : null}
         </button>
       </form>
-    </AuthPageShell>
+    </AuthJourneyShell>
   );
 }

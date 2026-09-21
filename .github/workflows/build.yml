@@ -99,3 +99,6 @@ jobs:
 
       - name: Run Learning Studio vertical DB smoke
         run: psql -v ON_ERROR_STOP=1 -f scripts/sql/exercise-studio-vertical-smoke.sql
+
+      - name: Run registration profile DB canary
+        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/registration-profile-canary.sql

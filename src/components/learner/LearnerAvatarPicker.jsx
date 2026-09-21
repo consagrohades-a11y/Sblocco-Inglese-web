@@ -12,8 +12,10 @@ export default function LearnerAvatarPicker({
   onChange,
   onBackgroundChange,
   disabled = false,
+  variant = 'card',
 }) {
   const selectedBackground = backgroundValue || DEFAULT_LEARNER_AVATAR_BACKGROUND_KEY;
+  const bare = variant === 'bare';
 
   return (
     <div>
@@ -65,9 +67,11 @@ export default function LearnerAvatarPicker({
                 aria-pressed={selected}
                 disabled={disabled}
                 onClick={() => onChange?.(avatar.key)}
-                className={`focus-ring group relative mx-auto grid min-h-32 w-full max-w-36 place-items-center rounded-2xl border bg-white p-3 transition hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-60 dark:bg-white/[0.04] ${selected
+                className={`focus-ring group relative mx-auto grid min-h-32 w-full max-w-36 place-items-center rounded-2xl transition hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-60 ${bare ? 'border border-transparent bg-transparent p-1' : 'border bg-white p-3 dark:bg-white/[0.04]'} ${selected
                   ? 'border-coral ring-2 ring-coral/30'
-                  : 'border-ink/10 hover:border-coral/35 dark:border-white/10 dark:hover:border-coral/35'
+                  : bare
+                    ? 'hover:bg-coral/[0.035]'
+                    : 'border-ink/10 hover:border-coral/35 dark:border-white/10 dark:hover:border-coral/35'
                 }`}
               >
                 <LearnerAvatar
