@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import SEO from "../components/SEO";
+import AdminPageHeader from "../components/admin/AdminPageHeader.jsx";
 import {
   createEmptyGroupAssignmentBatch,
   loadLearnerGroup,
@@ -9,7 +10,7 @@ import {
 } from "../lib/learnerGroupsApi.js";
 
 const fieldClass =
-  "mt-2 min-w-0 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white";
+  "mt-2 min-w-0 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-clay dark:border-white/20 dark:bg-surface-800 dark:text-white";
 const statuses = {
   draft: "Bozza",
   active: "Attivo",
@@ -177,43 +178,34 @@ export default function AdminGroupDetail() {
       />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-7xl">
-          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <span className="eyebrow">
-                  {detail?.group?.public_id || "Gruppo"}
-                </span>
-                <h1 className="mt-4 text-3xl font-black sm:text-4xl">
-                  {detail?.group?.name || "Caricamento..."}
-                </h1>
-                <p className="mt-3 text-sm text-ink/60 dark:text-white/60">
-                  Membri, assegnazioni individuali e feedback restano separati
-                  per ogni studente.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
+          <AdminPageHeader
+            eyebrow="Gruppo"
+            title={detail?.group?.name || "Caricamento..."}
+            description="Membri, assegnazioni e feedback restano separati per ogni studente."
+            actions={(
+              <>
                 <Link
                   to="/admin/groups"
-                  className="rounded-full border border-ink/15 px-4 py-2.5 text-sm font-black dark:border-white/20"
+                  className="focus-ring rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink transition hover:border-clay/35 hover:text-clay dark:border-white/15 dark:bg-white/[0.06] dark:text-white"
                 >
-                  Tutti i gruppi
+                  Gruppi
                 </Link>
                 <Link
                   to={`/admin/assignments?group=${groupId}`}
-                  className="rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white dark:bg-emerald-300 dark:text-surface-950"
+                  className="focus-ring rounded-full bg-ink px-4 py-2 text-xs font-black text-white transition hover:bg-clay dark:bg-clay dark:hover:bg-coral"
                 >
                   Assegnazioni gruppo
                 </Link>
-              </div>
-            </div>
-          </header>
+              </>
+            )}
+          />
           {error ? (
             <div className="mt-5 border-l-4 border-red-400 bg-red-50 p-4 text-sm font-bold text-red-950 dark:border-red-300 dark:bg-red-300/10 dark:text-red-100">
               {error}
             </div>
           ) : null}
           {success ? (
-            <div className="mt-5 border-l-4 border-moss bg-mint/30 p-4 text-sm font-bold text-ink dark:bg-emerald-400/10 dark:text-emerald-100">
+            <div className="mt-5 border-l-4 border-clay bg-clay/[0.08] p-4 text-sm font-bold text-ink dark:bg-coral/10 dark:text-white">
               {success}
             </div>
           ) : null}
@@ -224,7 +216,7 @@ export default function AdminGroupDetail() {
           ) : (
             <div className="mt-6 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-2">
               <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900">
-                <p className="text-xs font-bold uppercase tracking-wide text-moss">
+                <p className="text-xs font-bold uppercase tracking-wide text-clay">
                   Identità
                 </p>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -234,16 +226,6 @@ export default function AdminGroupDetail() {
                       value={form.name}
                       onChange={(event) =>
                         setForm({ ...form, name: event.target.value })
-                      }
-                      className={fieldClass}
-                    />
-                  </label>
-                  <label className="text-xs font-black">
-                    Slug
-                    <input
-                      value={form.slug}
-                      onChange={(event) =>
-                        setForm({ ...form, slug: event.target.value })
                       }
                       className={fieldClass}
                     />
@@ -318,7 +300,7 @@ export default function AdminGroupDetail() {
                   type="button"
                   disabled={busy === "metadata"}
                   onClick={saveMetadata}
-                  className="mt-5 rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white disabled:opacity-50 dark:bg-emerald-300 dark:text-surface-950"
+                  className="mt-5 rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white disabled:opacity-50 dark:bg-clay dark:text-white"
                 >
                   Salva gruppo
                 </button>
@@ -326,7 +308,7 @@ export default function AdminGroupDetail() {
               <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900">
                 <div className="flex items-end justify-between">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wide text-moss">
+                    <p className="text-xs font-bold uppercase tracking-wide text-clay">
                       Membri
                     </p>
                     <h2 className="mt-1 text-2xl font-black">
@@ -464,7 +446,7 @@ export default function AdminGroupDetail() {
                 </button>
               </section>
               <section className="min-w-0 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm xl:col-span-2 dark:border-white/10 dark:bg-surface-900">
-                <p className="text-xs font-bold uppercase tracking-wide text-moss">
+                <p className="text-xs font-bold uppercase tracking-wide text-clay">
                   Batch e avanzamento
                 </p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
