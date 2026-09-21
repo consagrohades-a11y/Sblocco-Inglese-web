@@ -14,7 +14,7 @@ import {
 } from '../src/lib/exerciseStudioCompiler.js';
 import { stableShuffleWordOrderTokenInstances } from '../src/lib/wordOrderShuffle.js';
 import { parseStudioImport } from '../src/lib/exerciseStudioImport.js';
-import { buildStudioActivityExport } from '../src/lib/exerciseStudioExport.js';
+import { buildStudioActivitiesZip, buildStudioActivityExport } from '../src/lib/exerciseStudioExport.js';
 
 const requiredTypes = [
   'explanation',
@@ -173,6 +173,17 @@ const reimportedExport = parseStudioImport(JSON.stringify(exported));
 assert.equal(reimportedExport.publishable, true, reimportedExport.errors.map((item) => item.message).join('\n'));
 assert.deepEqual(reimportedExport.document.tags, raw.tags, 'Exported JSON must round-trip tags through Studio import.');
 assert.equal(reimportedExport.document.blocks.length, raw.blocks.length, 'Exported JSON must round-trip every authored block.');
+
+const bulkZip = buildStudioActivitiesZip([
+  normalized.document,
+  { ...normalized.document, internal_title: normalized.document.internal_title + ' Copy' },
+]);
+assert.ok(bulkZip instanceof Uint8Array, 'Bulk Studio export must create ZIP bytes.');
+assert.equal(new DataView(bulkZip.buffer, bulkZip.byteOffset, bulkZip.byteLength).getUint32(0, true), 0x04034b50, 'Bulk Studio export must start with a ZIP local-file header.');
+assert.ok(
+  new TextDecoder().decode(bulkZip).includes('.json'),
+  'Bulk Studio export must contain individually named JSON files.',
+);
 
 const repairCodes = new Set(normalized.repairs.map((repair) => repair.code));
 assert.ok(repairCodes.has('generated_activity_id'));
