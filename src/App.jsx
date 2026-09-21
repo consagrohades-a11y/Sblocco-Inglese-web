@@ -56,11 +56,6 @@ const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics'));
 const AdminLearnerAnalytics = lazy(() => import('./pages/AdminLearnerAnalytics'));
 const AdminExerciseBuilderLibrary = lazy(() => import('./pages/AdminExerciseBuilderLibrary'));
 const AdminExerciseStudio = lazy(() => import('./pages/AdminExerciseStudio'));
-const AdminExerciseDiagnostics = lazy(() => import('./pages/AdminExerciseDiagnostics'));
-const AdminExerciseDiagnosticImport = lazy(() => import('./pages/AdminExerciseDiagnosticImport'));
-const AdminExerciseQuestionBank = lazy(() => import('./pages/AdminExerciseQuestionBank'));
-const AdminExercisePools = lazy(() => import('./pages/AdminExercisePools'));
-const AdminExerciseQuestionEditor = lazy(() => import('./pages/AdminExerciseQuestionEditor'));
 const AdminExerciseResults = lazy(() => import('./pages/AdminExerciseResults'));
 const AdminAssignments = lazy(() => import('./pages/AdminAssignments'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
@@ -201,7 +196,7 @@ export default function App() {
             <Route path="/recupero-debito/come-funziona" element={<ProtectedRoute><RecoveryGuide /></ProtectedRoute>} />
             <Route path="/recupero-debito/preparazione" element={<ProtectedRoute><RecoveryReadiness /></ProtectedRoute>} />
             <Route path="/assignments" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
-            <Route path="/attivita/esercizi" element={<ProtectedRoute><LearnerAssignments initialArea="exercises" /></ProtectedRoute>} />
+            <Route path="/attivita/esercizi" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
             <Route path="/attivita/srs" element={<ProtectedRoute><Navigate to="/attivita/esercizi" replace /></ProtectedRoute>} />
             <Route path="/attivita/pratica-mirata" element={<ProtectedRoute><Navigate to="/attivita/esercizi" replace /></ProtectedRoute>} />
             <Route path="/assignments/:assignmentId" element={<ProtectedRoute><LearnerAssignmentDetail /></ProtectedRoute>} />
@@ -223,11 +218,11 @@ export default function App() {
               <Route path="content/exercises/review" element={<Navigate to="/admin/content/exercises/results" replace />} />
               <Route path="content/exercises/library" element={<AdminExerciseBuilderLibrary />} />
               <Route path="content/exercises/studio" element={<AdminExerciseStudio />} />
-              <Route path="content/exercises/diagnostics" element={<AdminExerciseDiagnostics />} />
-              <Route path="content/exercises/diagnostics/import" element={<AdminExerciseDiagnosticImport />} />
-              <Route path="content/exercises/questions" element={<AdminExerciseQuestionBank />} />
-              <Route path="content/exercises/questions/edit" element={<AdminExerciseQuestionEditor />} />
-              <Route path="content/exercises/pools" element={<AdminExercisePools />} />
+              <Route path="content/exercises/diagnostics" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/exercises/diagnostics/import" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/exercises/questions" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/exercises/questions/edit" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/exercises/pools" element={<Navigate to="/admin/content/exercises/library" replace />} />
               <Route path="content/exercises/composer" element={<Navigate to="/admin/content/exercises/studio" replace />} />
               <Route path="content/exercises/collections" element={<Navigate to="/admin/content/exercises/library" replace />} />
               <Route path="content/exercises/results" element={<AdminExerciseResults />} />
@@ -238,15 +233,15 @@ export default function App() {
               <Route path="content/hospitality-expressions/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
               <Route path="content/travel-expressions/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
               <Route path="assignments" element={<AdminAssignments />} />
-              <Route path="activities/exercises" element={<AdminAssignments initialContentFilter="exercise" />} />
-              <Route path="activities/srs" element={<AdminAssignments initialContentFilter="srs" />} />
-              <Route path="activities/practice" element={<AdminAssignments initialContentFilter="practice" />} />
+              <Route path="activities/exercises" element={<Navigate to="/admin/assignments" replace />} />
+              <Route path="activities/srs" element={<Navigate to="/admin/assignments" replace />} />
+              <Route path="activities/practice" element={<Navigate to="/admin/assignments" replace />} />
               <Route path="analytics" element={<AdminAnalytics />} />
               <Route path="analytics/learners/:learnerId" element={<AdminLearnerAnalytics />} />
               <Route path="settings" element={<Navigate to="/account/settings" replace />} />
-              <Route path="content/trainers" element={<Navigate to="/admin/content/expressions" replace />} />
-              <Route path="content/trainers/import" element={<Navigate to="/admin/content/expressions/import" replace />} />
-              <Route path="content/trainers/delete" element={<Navigate to="/admin/content/expressions/archive" replace />} />
+              <Route path="content/trainers" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/trainers/import" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/trainers/delete" element={<Navigate to="/admin/content/exercises/library" replace />} />
             </Route>
             <Route path="/levels/a1/be-basic-sentences" element={<A1UnitPage key="a1-be-basic-sentences" unitId="be-basic-sentences" />} />
             <Route path="/levels/a1/present-simple-normal-verbs" element={<A1UnitPage key="a1-present-simple-normal-verbs" unitId="present-simple-normal-verbs" />} />
