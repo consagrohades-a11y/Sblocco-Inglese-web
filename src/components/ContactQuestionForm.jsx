@@ -4,7 +4,7 @@ import { Send } from 'lucide-react';
 const questionFormUrl = 'https://forms.gle/mcss5TWTQj4jZ7ct7';
 const formAction = 'https://docs.google.com/forms/d/e/1FAIpQLSejCylow7ayRiVRnRxVJIuuZGJF0KmEAqNRsTufjxMVVnTXAA/formResponse';
 const consentText = '“Confermo di aver letto la Privacy Policy e autorizzo Sblocco Inglese a usare questi dati solo per rispondere alla mia richiesta.”';
-const doubtTypes = ['Simulazione da €39', 'Pagamento', 'Livello inglese', 'Corsi', 'Trainer Suite', 'Altro'];
+const doubtTypes = ['Simulazione da €39', 'Pagamento', 'Livello inglese', 'Corsi', 'Piattaforma', 'Altro'];
 
 const inputClass =
   'mt-2 w-full rounded-2xl border border-ink/10 bg-linen/60 px-4 py-3 text-sm font-semibold text-ink outline-none transition placeholder:text-ink/35 focus:border-moss focus:bg-white focus:ring-4 focus:ring-mint/30';
