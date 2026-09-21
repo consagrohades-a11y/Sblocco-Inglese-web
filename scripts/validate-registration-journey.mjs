@@ -18,6 +18,9 @@ function assertNotContains(source, fragment, message) {
 
 const register = read('src/pages/Register.jsx');
 const auth = read('src/auth/AuthContext.jsx');
+const login = read('src/pages/Login.jsx');
+const forgotPassword = read('src/pages/ForgotPassword.jsx');
+const updatePassword = read('src/pages/UpdatePassword.jsx');
 const app = read('src/App.jsx');
 const css = read('src/styles/registerJourney.css');
 const migration = read('supabase/migrations/20260921173500_registration_profile_metadata.sql');
@@ -47,9 +50,17 @@ for (const metadataField of ['profession:', 'age:', 'avatar_key:', 'avatar_backg
   assertContains(auth, metadataField, `Auth signup metadata is missing: ${metadataField}`);
 }
 
-assertContains(app, "location.pathname === '/register'", 'Registration must remain a standalone experience.');
-assertContains(app, '!isStandaloneExperience ? <Navbar /> : null', 'Standalone registration must not render the marketing navbar.');
-assertContains(app, '!isStandaloneExperience ? <Footer /> : null', 'Standalone registration must not render the marketing footer.');
+assertContains(app, "['/register', '/login', '/forgot-password', '/update-password']", 'The full auth journey must remain standalone.');
+assertContains(app, '!isStandaloneExperience ? <Navbar /> : null', 'Standalone auth must not render the marketing navbar.');
+assertContains(app, '!isStandaloneExperience ? <Footer /> : null', 'Standalone auth must not render the marketing footer.');
+
+for (const page of [login, forgotPassword, updatePassword]) {
+  assertContains(page, 'AuthJourneyShell', 'Auth continuation pages must use the Sblocco journey shell.');
+  assertNotContains(page, 'AuthPageShell', 'Old white-card auth shell must not return to the journey.');
+}
+
+assertContains(login, 'Entra nel mio spazio', 'Login should continue the onboarding language.');
+assertContains(css, '.auth-journey__layout {', 'Auth continuation layout styles are missing.');
 
 assertContains(css, '.register-journey__stage {', 'Registration journey stage styles are missing.');
 assertContains(css, 'background: transparent;', 'Registration journey should not reintroduce a white stage card.');
