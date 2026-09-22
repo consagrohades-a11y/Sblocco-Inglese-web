@@ -57,6 +57,13 @@ export async function archiveLearnerNotification(notificationId) {
   throwIfError(error);
 }
 
+export async function archiveLearnerReviewNotificationsForAttempt(attemptId) {
+  const { error } = await supabase.rpc("archive_learner_review_notifications_for_attempt", {
+    p_attempt_id: attemptId,
+  });
+  throwIfError(error);
+}
+
 export async function loadLearnerUnreadCount() {
   const { count, error } = await supabase
     .from("learner_notifications")
