@@ -57,6 +57,7 @@ const AdminLearnerAnalytics = lazy(() => import('./pages/AdminLearnerAnalytics')
 const AdminExerciseBuilderLibrary = lazy(() => import('./pages/AdminExerciseBuilderLibrary'));
 const AdminExerciseStudio = lazy(() => import('./pages/AdminExerciseStudio'));
 const AdminExerciseResults = lazy(() => import('./pages/AdminExerciseResults'));
+const AdminSpeakingActivities = lazy(() => import('./pages/AdminSpeakingActivities'));
 const AdminAssignments = lazy(() => import('./pages/AdminAssignments'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
@@ -226,6 +227,7 @@ export default function App() {
               <Route path="content/exercises/composer" element={<Navigate to="/admin/content/exercises/studio" replace />} />
               <Route path="content/exercises/collections" element={<Navigate to="/admin/content/exercises/library" replace />} />
               <Route path="content/exercises/results" element={<AdminExerciseResults />} />
+              <Route path="content/speaking-library" element={<AdminSpeakingActivities />} />
               <Route path="content/exercises/maintenance" element={<Navigate to="/admin/content/exercises/library" replace />} />
               <Route path="content/words/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
               <Route path="content/expressions/*" element={<Navigate to="/admin/content/exercises/library" replace />} />

@@ -8,6 +8,7 @@ import {
   ClipboardList,
   LayoutDashboard,
   Menu,
+  MessageCircleMore,
   PanelLeftClose,
   PanelLeftOpen,
   UserRound,
@@ -51,6 +52,7 @@ const navigationGroups = [
       { label: 'Crea attività', to: '/admin/content/exercises/studio', icon: Blocks },
       { label: 'Libreria attività', to: '/admin/content/exercises/library', icon: BookOpen },
       { label: 'Risultati e review', to: '/admin/content/exercises/results', icon: BarChart3 },
+      { label: 'Libreria speaking', to: '/admin/content/speaking-library', icon: MessageCircleMore },
     ],
   },
   {
