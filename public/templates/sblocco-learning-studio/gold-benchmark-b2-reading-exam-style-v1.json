@@ -1,0 +1,343 @@
+{
+  "_template": {
+    "template_id": "sblocco-learning-activity",
+    "template_version": 1,
+    "authoring_contract_version": 1
+  },
+  "activity": {
+    "internal_title": "B2 Reading | Exam-style Parts 5, 6 and 7",
+    "learner_title": "B2 Reading | Read closely, connect ideas, find evidence",
+    "description": "A substantial B2 reading practice that moves from close reading to text cohesion and multiple matching.",
+    "instructions": "Complete all three parts. Base every answer on evidence in the text. You will see corrections after submitting the full activity.",
+    "level": "B2",
+    "topic": "b2_reading",
+    "subtopic": "exam_style_reading",
+    "skills": [
+      "reading"
+    ],
+    "tags": [
+      "b2",
+      "reading",
+      "exam-style",
+      "part-5",
+      "part-6",
+      "part-7"
+    ],
+    "activity_type": "assessment",
+    "estimated_minutes": 50,
+    "settings": {
+      "instruction_language": "en",
+      "display_mode": "one_at_a_time",
+      "feedback_timing": "exercise_end",
+      "show_score": true,
+      "show_correct_answers": true,
+      "show_explanations": true,
+      "show_diagnostic_summary": true,
+      "allow_retry": true
+    },
+    "blocks": [
+      {
+        "type": "reading_comprehension",
+        "format": "b2_part5",
+        "title": "The return of repair culture",
+        "prompt": "Read the text and choose the best answer for questions 1–6.",
+        "instructions": "Choose A, B, C or D. Base your answer on the writer's meaning, not individual words.",
+        "primary_skill": "reading",
+        "learning_objective": "Understand detail, attitude, purpose and implied meaning in a B2 article.",
+        "passage": "For years, replacing a broken household item was often easier than repairing it. Cheap production, complicated electronics and the falling price of new goods all encouraged people to throw things away. Recently, however, repair cafés have begun appearing in many towns. Visitors bring lamps, radios, clothes or small appliances and sit with volunteers who help them work out what has gone wrong. The aim is not simply to save money. Organisers say the real value lies in helping people understand the objects they own and feel less dependent on buying new ones.\\n\\nThe atmosphere matters too. A repair café is usually closer to a community workshop than a commercial service. There is no guarantee that every object will be fixed, and volunteers may spend more time explaining a problem than solving it themselves. This can surprise visitors who arrive expecting to hand over a broken toaster and collect it ten minutes later. Yet that slower approach is deliberate: if owners take part in the repair, they are more likely to attempt simple fixes in future.\\n\\nCritics point out that some modern products are genuinely difficult to repair. Batteries may be glued in place, spare parts can be hard to obtain and manufacturers do not always publish technical information. Repair groups therefore also campaign for products to be designed differently. Their argument is that consumers should not need expert tools just to replace a part that naturally wears out.\\n\\nThe movement is still small compared with the market for new products, but its influence may be larger than the number of repaired objects suggests. Even when a repair fails, participants often leave with a clearer idea of why an item broke and what to look for when they eventually replace it. In that sense, the most important thing being repaired may be people's relationship with the things they buy.",
+        "items": [
+          {
+            "prompt": "What does the writer say has helped repair cafés become more attractive recently?",
+            "options": [
+              {
+                "text": "New household goods have become much more expensive everywhere.",
+                "is_correct": false
+              },
+              {
+                "text": "People are becoming interested in alternatives to automatically replacing broken items.",
+                "is_correct": true
+              },
+              {
+                "text": "Manufacturers now pay volunteers to repair old products.",
+                "is_correct": false
+              },
+              {
+                "text": "Most electronic products have become easier to open and repair.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The opening contrasts the old replace-first habit with a newer interest in repairing and understanding possessions."
+          },
+          {
+            "prompt": "Why might some first-time visitors be surprised by a repair café?",
+            "options": [
+              {
+                "text": "They are expected to buy specialist tools before receiving help.",
+                "is_correct": false
+              },
+              {
+                "text": "Volunteers refuse to work on ordinary household objects.",
+                "is_correct": false
+              },
+              {
+                "text": "The process may involve learning and participation rather than a quick repair service.",
+                "is_correct": true
+              },
+              {
+                "text": "They must repair other people's items before their own.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The writer says some visitors expect a quick hand-over service, but the café deliberately involves owners in the process."
+          },
+          {
+            "prompt": "What is implied about the volunteers' approach?",
+            "options": [
+              {
+                "text": "They consider future independence more valuable than doing every repair for the visitor.",
+                "is_correct": true
+              },
+              {
+                "text": "They avoid difficult repairs because they lack technical knowledge.",
+                "is_correct": false
+              },
+              {
+                "text": "They mainly want to demonstrate how skilled they are.",
+                "is_correct": false
+              },
+              {
+                "text": "They believe failed repairs should be hidden from visitors.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "Volunteers explain and involve owners so they may handle simple problems themselves later."
+          },
+          {
+            "prompt": "What problem with modern products do repair groups emphasise?",
+            "options": [
+              {
+                "text": "They use too many different colours and materials.",
+                "is_correct": false
+              },
+              {
+                "text": "They are often sold without any guarantee.",
+                "is_correct": false
+              },
+              {
+                "text": "Basic replaceable parts can be unnecessarily inaccessible.",
+                "is_correct": true
+              },
+              {
+                "text": "Consumers are given too much technical information.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The text mentions glued batteries, unavailable parts and the need for specialist tools."
+          },
+          {
+            "prompt": "How does the writer respond to the fact that the movement is still small?",
+            "options": [
+              {
+                "text": "By suggesting its effects can extend beyond the number of successful repairs.",
+                "is_correct": true
+              },
+              {
+                "text": "By arguing that it will soon replace normal retail completely.",
+                "is_correct": false
+              },
+              {
+                "text": "By admitting that most participants quickly lose interest.",
+                "is_correct": false
+              },
+              {
+                "text": "By claiming that failed repairs have no educational value.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The final paragraph explicitly argues that the influence may be larger than the number of objects fixed."
+          },
+          {
+            "prompt": "What is the main purpose of the final sentence?",
+            "options": [
+              {
+                "text": "To criticise people who cannot repair objects by themselves.",
+                "is_correct": false
+              },
+              {
+                "text": "To suggest that repair culture can change how people think about consumption.",
+                "is_correct": true
+              },
+              {
+                "text": "To show that most repaired objects have emotional value.",
+                "is_correct": false
+              },
+              {
+                "text": "To recommend a particular type of replacement product.",
+                "is_correct": false
+              }
+            ],
+            "feedback": "The sentence broadens 'repair' from objects to consumers' relationship with buying and ownership."
+          }
+        ],
+        "source_note": "Original Sblocco teaching text."
+      },
+      {
+        "type": "reading_comprehension",
+        "format": "b2_part6",
+        "title": "Learning to notice a city",
+        "prompt": "Choose the paragraph that fits each gap.",
+        "instructions": "There is one extra paragraph which you do not need to use.",
+        "primary_skill": "reading",
+        "learning_objective": "Follow cohesion, reference and development across a B2 text.",
+        "passage_parts": [
+          {
+            "type": "text",
+            "text": "When I moved to the city, I thought I already knew how to explore one. I would look up the famous buildings, save a few restaurants on my phone and plan the shortest route between them."
+          },
+          {
+            "type": "gap",
+            "correct_option_index": 2
+          },
+          {
+            "type": "text",
+            "text": "The first change was simple: I stopped wearing headphones on my walks. Without a podcast filling every quiet moment, I began hearing details I had previously edited out."
+          },
+          {
+            "type": "gap",
+            "correct_option_index": 5
+          },
+          {
+            "type": "text",
+            "text": "After that, I started choosing one ordinary street and walking its full length instead of heading towards a landmark."
+          },
+          {
+            "type": "gap",
+            "correct_option_index": 0
+          },
+          {
+            "type": "text",
+            "text": "This did not make every walk exciting. Some streets were exactly as uneventful as they first appeared."
+          },
+          {
+            "type": "gap",
+            "correct_option_index": 6
+          },
+          {
+            "type": "text",
+            "text": "I also began returning to the same places at different times of day."
+          },
+          {
+            "type": "gap",
+            "correct_option_index": 3
+          },
+          {
+            "type": "text",
+            "text": "Gradually, the city stopped feeling like a list of places I had either visited or failed to visit."
+          },
+          {
+            "type": "gap",
+            "correct_option_index": 1
+          },
+          {
+            "type": "text",
+            "text": "I still enjoy monuments and new restaurants. I simply no longer believe that seeing more places always means noticing more."
+          }
+        ],
+        "paragraph_options": [
+          {
+            "text": "That rule produced small discoveries: a workshop hidden behind a supermarket, a garden visible only through an open gate, and a café that seemed to exist mainly for bus drivers."
+          },
+          {
+            "text": "Instead, it became a collection of patterns I could recognise: when a bakery became busy, where teenagers gathered after school, and which square caught the last sunlight."
+          },
+          {
+            "text": "It was efficient, but after a few months I realised I could describe the attractions better than the neighbourhood where I actually lived."
+          },
+          {
+            "text": "A quiet square at nine in the morning could be noisy after work, while a street I had dismissed as dull became lively on market day."
+          },
+          {
+            "text": "For that reason, I decided to learn the local bus network before I explored anywhere on foot."
+          },
+          {
+            "text": "I noticed deliveries arriving, fragments of conversation from open windows and the different sounds made by old and new buildings when it rained."
+          },
+          {
+            "text": "But even an unremarkable walk made the next one easier to read, because I had a point of comparison rather than a blank space on the map."
+          }
+        ],
+        "source_note": "Original Sblocco teaching text."
+      },
+      {
+        "type": "reading_comprehension",
+        "format": "b2_part7",
+        "title": "Four people on learning something difficult",
+        "prompt": "Match statements 1–10 to sections A–D.",
+        "instructions": "A section may be used more than once.",
+        "primary_skill": "reading",
+        "learning_objective": "Match paraphrased statements to specific information, attitude and experience.",
+        "sections": [
+          {
+            "title": "Marta",
+            "text": "I started pottery because I wanted a hobby with no screen involved. At first I hated how slowly I improved. Then I realised that the clay gave immediate feedback: if I rushed, the shape collapsed. The biggest change came when I stopped taking photos of every finished piece. I became more interested in the process than in proving I had made something worth showing."
+          },
+          {
+            "title": "Leo",
+            "text": "I had played guitar casually for years, but joining a small band exposed all the things I could avoid when practising alone. I had to keep time even when I made a mistake and listen to other people instead of restarting. Rehearsals were uncomfortable for a while, but having others depend on me made my practice much more focused."
+          },
+          {
+            "title": "Nadia",
+            "text": "Learning to swim properly as an adult was mostly about unlearning panic. I knew the basic movements, but the moment I felt tired I became tense and wasted energy. A coach asked me to swim shorter distances much more slowly. It felt like going backwards, yet within weeks I could stay in the water longer because I was no longer fighting it."
+          },
+          {
+            "title": "Tom",
+            "text": "I began coding because it seemed useful for work. Online lessons made the early stages look wonderfully tidy: one problem, one solution. Real projects were messier. The useful lesson was learning not to treat an error message as a verdict on my ability. Now I expect to spend a large part of the process finding out why something does not work."
+          }
+        ],
+        "items": [
+          {
+            "prompt": "Who became more motivated because other people relied on them?",
+            "correct_section_index": 1
+          },
+          {
+            "prompt": "Who discovered that slowing down could produce better long-term performance?",
+            "correct_section_index": 2
+          },
+          {
+            "prompt": "Who became less interested in displaying the result to others?",
+            "correct_section_index": 0
+          },
+          {
+            "prompt": "Who learned to see failure information as a normal part of the activity?",
+            "correct_section_index": 3
+          },
+          {
+            "prompt": "Who says the activity revealed weaknesses that were easy to hide when alone?",
+            "correct_section_index": 1
+          },
+          {
+            "prompt": "Who had to change an emotional reaction before making technical progress?",
+            "correct_section_index": 2
+          },
+          {
+            "prompt": "Who originally chose the activity partly to escape a particular kind of technology?",
+            "correct_section_index": 0
+          },
+          {
+            "prompt": "Who found that beginner teaching materials gave an unrealistically neat picture of the activity?",
+            "correct_section_index": 3
+          },
+          {
+            "prompt": "Who describes the material itself as showing when they were working badly?",
+            "correct_section_index": 0
+          },
+          {
+            "prompt": "Who says restarting after every mistake was no longer an option?",
+            "correct_section_index": 1
+          }
+        ],
+        "source_note": "Original Sblocco teaching text."
+      }
+    ]
+  }
+}
