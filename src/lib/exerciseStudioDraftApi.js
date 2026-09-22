@@ -1,5 +1,5 @@
 import { supabase } from './supabaseClient.js';
-import { normalizeStudioDocument } from './exerciseStudioDocument.js';
+import { addStudioBlock, createStudioDocument, normalizeStudioDocument } from './exerciseStudioDocument.js';
 
 function metadataFromDocument(document) {
   return {
@@ -100,6 +100,52 @@ export async function createStudioDraft(rawDocument, { origin = 'manual', folder
 
   if (error) throw error;
   return data;
+}
+
+function remixStudioDocument(rawDocument) {
+  const source = normalizeStudioDocument(rawDocument).document;
+  let next = createStudioDocument({
+    internal_title: source.internal_title ? source.internal_title + ' · Remix' : 'Remix',
+    learner_title: source.learner_title,
+    description: source.description,
+    instructions: source.instructions,
+    level: source.level,
+    topic: source.topic,
+    subtopic: source.subtopic,
+    skills: source.skills,
+    tags: source.tags,
+    activity_type: source.activity_type,
+    estimated_minutes: source.estimated_minutes,
+    settings: { ...(source.settings || {}) },
+  });
+
+  next = {
+    ...next,
+    description: source.description,
+    instructions: source.instructions,
+    subtopic: source.subtopic,
+    skills: [...(source.skills || [])],
+    tags: [...(source.tags || [])],
+    estimated_minutes: source.estimated_minutes,
+    settings: { ...(source.settings || {}) },
+    status: 'draft',
+  };
+
+  for (const sourceBlock of source.blocks || []) {
+    const { id, sequence_index, ...blockContent } = sourceBlock;
+    next = addStudioBlock(next, sourceBlock.type, blockContent);
+  }
+
+  return next;
+}
+
+export async function remixStudioDraft(draftId) {
+  const source = await loadStudioDraft(draftId);
+  const remixedDocument = remixStudioDocument(source.document);
+  return createStudioDraft(remixedDocument, {
+    origin: 'duplicate',
+    folderId: source.folder_id || null,
+  });
 }
 
 export async function saveStudioDraft(draftId, rawDocument) {
