@@ -174,7 +174,8 @@ export default function AdminSpeakingActivities() {
       if (type !== 'all' && activity.activity_type !== type) return false;
       if (!needle) return true;
       const itemText = asArray(activity.prompts).map((item) => typeof item === 'string' ? item : item?.text).filter(Boolean);
-      return [activity.title, activity.summary, ...asArray(activity.goals), ...asArray(activity.tags), ...itemText]
+      const itemMetadata = asArray(activity.prompts).flatMap((item) => typeof item === 'string' ? [] : [...asArray(item?.context_tags), ...asArray(item?.language_targets)]);
+      return [activity.title, activity.summary, ...asArray(activity.goals), ...asArray(activity.tags), ...itemText, ...itemMetadata]
         .some((value) => String(value || '').toLowerCase().includes(needle));
     });
   }, [activities, favoritesOnly, level, query, type]);
@@ -263,7 +264,7 @@ export default function AdminSpeakingActivities() {
 
       <PreviewModal activity={preview} onClose={() => setPreview(null)} />
       <PresentationLauncher activity={presenting} onClose={() => setPresenting(null)} />
-      {(editor || editingNew) ? <SpeakingActivityEditorModal activity={editingNew ? null : editor} onClose={() => { setEditor(null); setEditingNew(false); }} onSaved={handleSaved} /> : null}
+      {(editor || editingNew) ? <SpeakingActivityEditorModal activity={editingNew ? null : editor} catalogActivities={activities} onClose={() => { setEditor(null); setEditingNew(false); }} onSaved={handleSaved} /> : null}
     </>
   );
 }

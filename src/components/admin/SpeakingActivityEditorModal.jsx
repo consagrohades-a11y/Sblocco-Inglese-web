@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
-import { Plus, Save, Trash2, X } from 'lucide-react';
+import { AlertTriangle, Plus, Save, Trash2, X } from 'lucide-react';
 import { createSpeakingActivity, updateSpeakingActivity } from '../../lib/adminSpeakingActivitiesApi.js';
+import { analyseSpeakingItemSet, duplicateReasonLabel } from '../../lib/speakingItemQuality.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
 
@@ -10,10 +11,17 @@ const emptyItem = () => ({
   student_support: '',
   challenge: '',
   teacher_note: '',
+  context_tags: [],
+  language_targets: [],
+  difficulty: 2,
 });
 
 function asArray(value) {
   return Array.isArray(value) ? value : [];
+}
+
+function cleanCsv(value) {
+  return Array.from(new Set(String(value || '').split(',').map((item) => item.trim()).filter(Boolean)));
 }
 
 function normaliseItem(item) {
@@ -24,6 +32,9 @@ function normaliseItem(item) {
     student_support: item?.student_support || item?.support || '',
     challenge: item?.challenge || '',
     teacher_note: item?.teacher_note || '',
+    context_tags: asArray(item?.context_tags),
+    language_targets: asArray(item?.language_targets),
+    difficulty: Math.min(5, Math.max(1, Number(item?.difficulty || 2))),
   };
 }
 
@@ -52,7 +63,31 @@ function LevelPicker({ value, onChange, compact = false }) {
   );
 }
 
-export default function SpeakingActivityEditorModal({ activity, onClose, onSaved }) {
+function ConflictList({ title, matches, blocking = false }) {
+  if (!matches.length) return null;
+  return (
+    <div className={`mx-5 mb-4 border-l-4 p-4 sm:mx-7 ${blocking ? 'border-red-500 bg-red-50 text-red-950 dark:bg-red-400/10 dark:text-red-100' : 'border-amber-500 bg-amber-50 text-amber-950 dark:bg-amber-300/10 dark:text-amber-100'}`}>
+      <div className="flex items-start gap-2">
+        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+        <div>
+          <p className="text-sm font-black">{title}</p>
+          <div className="mt-2 grid gap-2 text-xs font-semibold leading-5">
+            {matches.slice(0, 5).map((match, index) => (
+              <p key={`${match.reason}-${match.candidate.candidateIndex}-${match.existing.itemIndex}-${index}`}>
+                Item {match.candidate.candidateIndex + 1}: {duplicateReasonLabel(match.reason)} con
+                {' '}<strong>{match.existing.activityTitle || 'un’altra attività'}</strong>
+                {Number.isInteger(match.existing.itemIndex) ? ` · item ${match.existing.itemIndex + 1}` : ''}.
+              </p>
+            ))}
+            {matches.length > 5 ? <p>+ {matches.length - 5} altre corrispondenze.</p> : null}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function SpeakingActivityEditorModal({ activity, catalogActivities = [], onClose, onSaved }) {
   const [draft, setDraft] = useState(() => ({
     title: activity?.title || '',
     summary: activity?.summary || '',
@@ -73,17 +108,28 @@ export default function SpeakingActivityEditorModal({ activity, onClose, onSaved
   }));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [blockingConflicts, setBlockingConflicts] = useState([]);
+  const [contextWarnings, setContextWarnings] = useState([]);
+  const [allowContextualSave, setAllowContextualSave] = useState(false);
 
   const derivedLevels = useMemo(
     () => LEVELS.filter((level) => draft.prompts.some((item) => asArray(item.levels).includes(level))),
     [draft.prompts],
   );
 
+  function resetQualityGate() {
+    setBlockingConflicts([]);
+    setContextWarnings([]);
+    setAllowContextualSave(false);
+  }
+
   function setField(key, value) {
+    resetQualityGate();
     setDraft((current) => ({ ...current, [key]: value }));
   }
 
   function updateItem(index, patch) {
+    resetQualityGate();
     setDraft((current) => ({
       ...current,
       prompts: current.prompts.map((item, itemIndex) => itemIndex === index ? { ...item, ...patch } : item),
@@ -91,6 +137,7 @@ export default function SpeakingActivityEditorModal({ activity, onClose, onSaved
   }
 
   function removeItem(index) {
+    resetQualityGate();
     setDraft((current) => ({
       ...current,
       prompts: current.prompts.length === 1 ? current.prompts : current.prompts.filter((_, itemIndex) => itemIndex !== index),
@@ -99,11 +146,13 @@ export default function SpeakingActivityEditorModal({ activity, onClose, onSaved
 
   async function save() {
     setError('');
+    setBlockingConflicts([]);
     const title = draft.title.trim();
     if (!title) {
       setError('Inserisci un titolo.');
       return;
     }
+
     const cleanedItems = draft.prompts
       .map((item) => ({
         text: item.text.trim(),
@@ -111,6 +160,9 @@ export default function SpeakingActivityEditorModal({ activity, onClose, onSaved
         student_support: item.student_support.trim(),
         challenge: item.challenge.trim(),
         teacher_note: item.teacher_note.trim(),
+        context_tags: asArray(item.context_tags).map((value) => String(value).trim().toLowerCase()).filter(Boolean),
+        language_targets: asArray(item.language_targets).map((value) => String(value).trim().toLowerCase()).filter(Boolean),
+        difficulty: Math.min(5, Math.max(1, Number(item.difficulty || 2))),
       }))
       .filter((item) => item.text);
 
@@ -123,13 +175,28 @@ export default function SpeakingActivityEditorModal({ activity, onClose, onSaved
       return;
     }
 
+    const quality = analyseSpeakingItemSet(cleanedItems, catalogActivities, { excludeActivityId: activity?.id || null });
+    if (quality.blocking.length) {
+      setBlockingConflicts(quality.blocking);
+      setContextWarnings(quality.warnings);
+      setAllowContextualSave(false);
+      setError('Ci sono item che risultano duplicati o quasi identici. Modificali prima di salvare.');
+      return;
+    }
+    if (quality.warnings.length && !allowContextualSave) {
+      setContextWarnings(quality.warnings);
+      setAllowContextualSave(true);
+      setError('Ho trovato somiglianze contestuali. Non sono necessariamente duplicati: controllale e, se sono intenzionali, premi di nuovo “Salva comunque”.');
+      return;
+    }
+
     const payload = {
       title,
       summary: draft.summary.trim(),
       activity_type: draft.activity_type,
       levels: LEVELS.filter((level) => cleanedItems.some((item) => item.levels.includes(level))),
-      goals: draft.goalsText.split(',').map((item) => item.trim()).filter(Boolean),
-      tags: draft.tagsText.split(',').map((item) => item.trim()).filter(Boolean),
+      goals: cleanCsv(draft.goalsText),
+      tags: cleanCsv(draft.tagsText),
       duration_minutes: Math.max(1, Number.parseInt(draft.duration_minutes || '15', 10) || 15),
       group_size: draft.group_size.trim() || '1–2',
       instructions: draft.instructions.trim(),
@@ -198,7 +265,11 @@ export default function SpeakingActivityEditorModal({ activity, onClose, onSaved
 
             <section className="rounded-2xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-surface-900">
               <div className="flex flex-wrap items-end justify-between gap-3">
-                <div><p className="text-xs font-black uppercase tracking-wide text-clay dark:text-coral">Item</p><h3 className="mt-1 text-xl font-black">{draft.prompts.length} item</h3><p className="mt-1 text-xs font-semibold text-ink/55 dark:text-white/55">Ogni item può appartenere a più livelli.</p></div>
+                <div>
+                  <p className="text-xs font-black uppercase tracking-wide text-clay dark:text-coral">Item</p>
+                  <h3 className="mt-1 text-xl font-black">{draft.prompts.length} item</h3>
+                  <p className="mt-1 text-xs font-semibold text-ink/55 dark:text-white/55">Livelli multipli + metadati contestuali: servono al filtro anti-ripetizione, non allo studente.</p>
+                </div>
                 <button type="button" onClick={() => setField('prompts', [...draft.prompts, emptyItem()])} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full bg-ink px-4 py-2 text-xs font-black text-white dark:bg-clay"><Plus className="h-4 w-4" /> Aggiungi item</button>
               </div>
 
@@ -210,7 +281,27 @@ export default function SpeakingActivityEditorModal({ activity, onClose, onSaved
                       <button type="button" onClick={() => removeItem(index)} disabled={draft.prompts.length === 1} className="focus-ring grid h-9 w-9 place-items-center rounded-full border border-ink/10 text-ink/45 disabled:opacity-30 dark:border-white/10 dark:text-white/45" aria-label="Rimuovi item"><Trash2 className="h-3.5 w-3.5" /></button>
                     </div>
                     <textarea rows={3} value={item.text} onChange={(e) => updateItem(index, { text: e.target.value })} placeholder="Prompt / scenario / set di parole…" className="focus-ring mt-3 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-bold leading-6 dark:border-white/15 dark:bg-surface-900" />
-                    <div className="mt-4"><p className="mb-2 text-xs font-black text-ink/55 dark:text-white/55">Livelli — selezione multipla</p><LevelPicker value={item.levels} onChange={(levels) => updateItem(index, { levels })} compact /></div>
+
+                    <div className="mt-4">
+                      <p className="mb-2 text-xs font-black text-ink/55 dark:text-white/55">Livelli — selezione multipla</p>
+                      <LevelPicker value={item.levels} onChange={(levels) => updateItem(index, { levels })} compact />
+                    </div>
+
+                    <div className="mt-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_7rem]">
+                      <label>
+                        <span className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Contesti</span>
+                        <input value={asArray(item.context_tags).join(', ')} onChange={(e) => updateItem(index, { context_tags: cleanCsv(e.target.value) })} placeholder="work, travel, small-talk" className="focus-ring mt-1.5 w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-xs font-semibold dark:border-white/10 dark:bg-surface-900" />
+                      </label>
+                      <label>
+                        <span className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Target linguistici</span>
+                        <input value={asArray(item.language_targets).join(', ')} onChange={(e) => updateItem(index, { language_targets: cleanCsv(e.target.value) })} placeholder="requests, hedging" className="focus-ring mt-1.5 w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-xs font-semibold dark:border-white/10 dark:bg-surface-900" />
+                      </label>
+                      <label>
+                        <span className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Difficoltà 1–5</span>
+                        <input type="number" min="1" max="5" value={item.difficulty} onChange={(e) => updateItem(index, { difficulty: Number(e.target.value || 2) })} className="focus-ring mt-1.5 w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-xs font-semibold dark:border-white/10 dark:bg-surface-900" />
+                      </label>
+                    </div>
+
                     <div className="mt-4 grid gap-3 lg:grid-cols-3">
                       <label><span className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Supporto studente</span><textarea rows={3} value={item.student_support} onChange={(e) => updateItem(index, { student_support: e.target.value })} className="focus-ring mt-1.5 w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-xs font-semibold dark:border-white/10 dark:bg-surface-900" /></label>
                       <label><span className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Challenge studente</span><textarea rows={3} value={item.challenge} onChange={(e) => updateItem(index, { challenge: e.target.value })} className="focus-ring mt-1.5 w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-xs font-semibold dark:border-white/10 dark:bg-surface-900" /></label>
@@ -239,10 +330,15 @@ export default function SpeakingActivityEditorModal({ activity, onClose, onSaved
           </aside>
         </div>
 
+        <ConflictList title="Duplicati bloccati" matches={blockingConflicts} blocking />
+        <ConflictList title="Somiglianze contestuali da controllare" matches={contextWarnings} />
         {error ? <div className="mx-5 mb-4 border-l-4 border-red-400 bg-red-50 p-4 text-sm font-bold text-red-950 dark:bg-red-400/10 dark:text-red-100 sm:mx-7">{error}</div> : null}
+
         <footer className="sticky bottom-0 flex flex-wrap items-center justify-end gap-3 rounded-b-3xl border-t border-ink/10 bg-paper/95 px-5 py-4 backdrop-blur dark:border-white/10 dark:bg-surface-950/95 sm:px-7">
           <button type="button" onClick={onClose} className="focus-ring min-h-11 rounded-full border border-ink/15 bg-white px-5 text-sm font-black dark:border-white/15 dark:bg-white/[0.05]">Annulla</button>
-          <button type="button" onClick={save} disabled={saving} className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-40 dark:bg-clay"><Save className="h-4 w-4" /> {saving ? 'Salvataggio…' : 'Salva attività'}</button>
+          <button type="button" onClick={save} disabled={saving} className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-40 dark:bg-clay">
+            <Save className="h-4 w-4" /> {saving ? 'Salvataggio…' : allowContextualSave && contextWarnings.length ? 'Salva comunque' : 'Salva attività'}
+          </button>
         </footer>
       </div>
     </div>
