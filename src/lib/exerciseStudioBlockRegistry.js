@@ -243,9 +243,6 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       if (!items.length) issues.push(issue('required', 'Add at least one vocabulary item.', 'items'));
       items.forEach((item, index) => {
         const examples = list(Array.isArray(item?.examples) ? item.examples : item?.example ? [item.example] : []);
-        if (examples.length < 3) {
-          issues.push(issue('vocab_examples', 'Add at least 3 natural contexts for vocabulary item ' + (index + 1) + '.', 'items.' + index + '.examples', 'warning'));
-        }
         if (examples.length > 5) {
           issues.push(issue('vocab_examples', 'Keep the context pool to a maximum of 5 examples for vocabulary item ' + (index + 1) + '.', 'items.' + index + '.examples'));
         }
