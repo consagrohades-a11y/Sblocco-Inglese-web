@@ -1,11 +1,9 @@
 import React from 'react';
 import {
   BarChart3,
-  Bell,
   Blocks,
   BookOpen,
   ClipboardList,
-  UserPlus,
   Users,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -69,25 +67,6 @@ export default function AdminDashboard() {
           />
 
           <TeacherRadar />
-
-          <Link
-            to="/admin/notifications"
-            className="focus-ring mt-6 flex items-center gap-4 rounded-2xl border border-clay/20 bg-clay/[0.055] p-5 transition hover:border-clay/35 hover:bg-clay/[0.085] dark:border-coral/20 dark:bg-coral/[0.07]"
-          >
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-clay text-white dark:bg-coral">
-              <UserPlus className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-[0.68rem] font-black uppercase tracking-[0.12em] text-clay dark:text-coral">
-                Priorità
-              </span>
-              <strong className="mt-1 block text-lg font-black text-ink dark:text-white">Nuove registrazioni</strong>
-              <span className="mt-1 block text-sm leading-6 text-ink/65 dark:text-white/60">
-                Le nuove iscrizioni learner arrivano nelle notifiche e aprono direttamente il profilo dello studente.
-              </span>
-            </span>
-            <Bell className="h-5 w-5 shrink-0 text-clay dark:text-coral" aria-hidden="true" />
-          </Link>
 
           <div className="mt-8">
             <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-ink/45 dark:text-white/40">
