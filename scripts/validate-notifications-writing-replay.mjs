@@ -16,7 +16,11 @@ assert.match(shell, /AdminNotificationBell/);
 assert.match(bell, /setInterval\(refresh, 15000\)/);
 assert.doesNotMatch(bell, /subscribeToTeacherNotifications/);
 
-assert.match(results, /WritingCorrectionEditor/);
+assert.match(results, /WritingCorrectionWorkspace/);
+const writingWorkspace = read('src/components/exercises/WritingCorrectionWorkspace.jsx');
+assert.match(writingWorkspace, /Seleziona il testo/);
+assert.match(writingWorkspace, /Versione finale/);
+assert.match(writingWorkspace, /Vista studente/);
 assert.match(resultsApi, /admin_save_exercise_builder_written_corrections/);
 assert.match(renderer, /WritingCorrectionDisplay/);
 assert.match(migration, /teacher_correction jsonb/);
