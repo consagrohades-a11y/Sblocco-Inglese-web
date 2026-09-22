@@ -351,6 +351,64 @@ function ReadingComprehension({
 
   function update(key, value) { onChange({ ...values, [key]: value }); }
 
+  if (content.presentation === 'b2_part5') {
+    return (
+      <div className="grid gap-6">
+        <article className="exercise-reading">
+          <div className="exercise-reading__label"><BookOpen /><span>B2 reading · Multiple choice</span></div>
+          {content.title ? <h3>{content.title}</h3> : null}
+          <div className="exercise-reading__passage">{content.passage}</div>
+          {content.source_note ? <p className="exercise-reading__source">{content.source_note}</p> : null}
+        </article>
+
+        <section className="grid gap-4">
+          {(content.items || []).map((choiceItem, index) => {
+            const itemResult = itemResults[choiceItem.key] || null;
+            const selectedKey = values[choiceItem.key] || '';
+            const correctKey = typeof itemResult?.correct_answer === 'string' ? itemResult.correct_answer : null;
+
+            return (
+              <article key={choiceItem.key} className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.035] sm:p-5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="rounded-full bg-orange-100 px-2.5 py-1 text-[0.68rem] font-black text-orange-900 dark:bg-orange-300/10 dark:text-orange-100">Question {index + 1}</span>
+                  {itemResult?.status ? (
+                    <span className={`rounded-full px-2.5 py-1 text-[0.65rem] font-black ${itemResult.status === 'correct' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100' : 'bg-red-100 text-red-800 dark:bg-red-300/10 dark:text-red-100'}`}>
+                      {resultLabels[itemResult.status] || itemResult.status}
+                    </span>
+                  ) : null}
+                </div>
+                <p className="mt-3 text-base font-black leading-7 text-ink dark:text-white">{choiceItem.prompt}</p>
+                <div className="mt-3 grid gap-2">
+                  {(choiceItem.options || []).map((option, optionIndex) => {
+                    const selected = selectedKey === option.key;
+                    const correct = disabled && showCorrectAnswers && correctKey === option.key;
+                    const wrongSelected = disabled && selected && correctKey && correctKey !== option.key;
+                    return (
+                      <button
+                        key={option.key}
+                        type="button"
+                        disabled={disabled}
+                        onClick={() => update(choiceItem.key, option.key)}
+                        className={`focus-ring flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold leading-6 transition ${correct ? 'border-emerald-400 bg-emerald-50 text-emerald-950 dark:border-emerald-300/40 dark:bg-emerald-300/10 dark:text-emerald-100' : wrongSelected ? 'border-red-300 bg-red-50 text-red-950 dark:border-red-300/30 dark:bg-red-300/10 dark:text-red-100' : selected ? 'border-orange-400 bg-orange-50 text-ink dark:border-orange-300/40 dark:bg-orange-300/10 dark:text-white' : 'border-ink/10 bg-white text-ink/80 hover:border-orange-300 dark:border-white/10 dark:bg-white/[0.035] dark:text-white/80'}`}
+                      >
+                        <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-current/20 text-xs font-black">{String.fromCharCode(65 + optionIndex)}</span>
+                        <span className="min-w-0 flex-1">{option.text}</span>
+                        {correct ? <span className="shrink-0 font-black text-emerald-600 dark:text-emerald-300">✓</span> : null}
+                      </button>
+                    );
+                  })}
+                </div>
+                {showExplanations && itemResult?.explanation ? (
+                  <p className="mt-3 rounded-xl bg-linen/70 px-3 py-2 text-xs font-semibold leading-5 text-ink/70 dark:bg-white/[0.05] dark:text-white/70">{itemResult.explanation}</p>
+                ) : null}
+              </article>
+            );
+          })}
+        </section>
+      </div>
+    );
+  }
+
   if (content.presentation === 'b2_part6') {
     const paragraphs = Array.isArray(content.paragraph_options) ? content.paragraph_options : [];
     const parts = Array.isArray(content.passage_parts) ? content.passage_parts : [];
