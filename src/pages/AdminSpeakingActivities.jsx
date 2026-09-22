@@ -413,6 +413,7 @@ export default function AdminSpeakingActivities() {
   const [liveSession, setLiveSession] = useState(null);
   const [importOpen, setImportOpen] = useState(false);
   const [similarityOpen, setSimilarityOpen] = useState(null);
+  const [similarityByActivity, setSimilarityByActivity] = useState(() => new Map());
 
   async function load() {
     setLoading(true);
@@ -444,13 +445,64 @@ export default function AdminSpeakingActivities() {
     });
   }, [activities, favoritesOnly, level, query, type]);
 
-  const similarityByActivity = useMemo(() => {
-    const entries = activities.map((activity) => {
-      const prompts = asArray(activity.prompts);
-      if (!prompts.length) return [activity.id, { blocking: [], warnings: [] }];
-      return [activity.id, analyseSpeakingItemSet(prompts, activities, { excludeActivityId: activity.id })];
-    });
-    return new Map(entries);
+  useEffect(() => {
+    let cancelled = false;
+    let idleHandle = null;
+    let timerHandle = null;
+    let frameHandle = null;
+
+    setSimilarityByActivity(new Map());
+    if (!activities.length) return undefined;
+
+    const queue = [...activities];
+
+    function scheduleNext() {
+      if (cancelled || !queue.length) return;
+
+      if (typeof window.requestIdleCallback === 'function') {
+        idleHandle = window.requestIdleCallback(runChunk, { timeout: 350 });
+      } else {
+        timerHandle = window.setTimeout(() => runChunk(null), 0);
+      }
+    }
+
+    function runChunk(deadline) {
+      if (cancelled) return;
+
+      let processed = 0;
+      while (queue.length) {
+        const activity = queue.shift();
+        const prompts = asArray(activity.prompts);
+        const diagnostics = prompts.length
+          ? analyseSpeakingItemSet(prompts, activities, { excludeActivityId: activity.id })
+          : { blocking: [], warnings: [] };
+
+        if (cancelled) return;
+        setSimilarityByActivity((current) => {
+          const next = new Map(current);
+          next.set(activity.id, diagnostics);
+          return next;
+        });
+
+        processed += 1;
+        const hasIdleTime = deadline && typeof deadline.timeRemaining === 'function'
+          ? deadline.timeRemaining() > 8
+          : false;
+        if (processed >= 1 && !hasIdleTime) break;
+      }
+
+      scheduleNext();
+    }
+
+    // Let React paint the activity cards before doing any expensive similarity work.
+    frameHandle = window.requestAnimationFrame(scheduleNext);
+
+    return () => {
+      cancelled = true;
+      if (frameHandle != null) window.cancelAnimationFrame(frameHandle);
+      if (idleHandle != null && typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idleHandle);
+      if (timerHandle != null) window.clearTimeout(timerHandle);
+    };
   }, [activities]);
 
   async function toggleFavorite(activity) {
