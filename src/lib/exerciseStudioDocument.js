@@ -80,6 +80,36 @@ export function addStudioBlock(document, type, initial = {}, presetId = null) {
   };
 }
 
+export function createStudioRemixDocument(rawDocument) {
+  const source = normalizeStudioDocument(rawDocument).document;
+  let next = createStudioDocument({
+    internal_title: source.internal_title ? source.internal_title + ' · Remix' : 'Remix',
+    learner_title: source.learner_title,
+    level: source.level,
+    topic: source.topic,
+    activity_type: source.activity_type,
+  });
+
+  next = {
+    ...next,
+    description: source.description,
+    instructions: source.instructions,
+    subtopic: source.subtopic,
+    skills: [...(source.skills || [])],
+    tags: [...(source.tags || [])],
+    estimated_minutes: source.estimated_minutes,
+    settings: { ...(source.settings || {}) },
+    status: 'draft',
+  };
+
+  for (const sourceBlock of source.blocks || []) {
+    const { id, sequence_index, ...blockContent } = sourceBlock;
+    next = addStudioBlock(next, sourceBlock.type, blockContent);
+  }
+
+  return next;
+}
+
 export function normalizeStudioDocument(raw) {
   const source = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
   const repairs = [];
