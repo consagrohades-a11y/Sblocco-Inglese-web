@@ -233,6 +233,10 @@ function FinalResult({ payload, assignmentId, resourceId }) {
   const attemptsGoalMet =
     requiredAttempts === null ||
     Number(attempt.attempt_number || 0) >= requiredAttempts;
+  const remainingAttempts =
+    requiredAttempts === null
+      ? 0
+      : Math.max(0, requiredAttempts - Number(attempt.attempt_number || 0));
   const completionGoalMet =
     completionRule === "submitted" ||
     (completionRule === "passed" && scoreGoalMet) ||
@@ -291,7 +295,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                 Tentativo {attempt.attempt_number} completato
               </p>
               <p className="mt-2 text-sm font-semibold leading-6 text-amber-900/75 dark:text-amber-100/70">
-                Questa attività richiede {requiredAttempts} tentativi. Te ne {Number(attempt.attempt_number || 0) === 1 ? "manca" : "mancano"} {Math.max(0, requiredAttempts - Number(attempt.attempt_number || 0))}.
+                Questa attività richiede {requiredAttempts} tentativi. Te ne {remainingAttempts === 1 ? "manca" : "mancano"} {remainingAttempts}.
               </p>
             </div>
           ) : null}
