@@ -3,6 +3,7 @@ import { Bell, ChevronRight, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import {
+  archiveLearnerNotification,
   loadLearnerNotifications,
   loadLearnerUnreadCount,
   markAllLearnerNotificationsRead,
@@ -99,7 +100,15 @@ export default function LearnerNotificationBell({ mobile = false, onNavigate }) 
   }
 
   async function openNotification(notification) {
+    const operational = ['assignment_published', 'writing_review_published', 'exercise_review_published']
+      .includes(notification.notification_type);
     setOpen(false);
+    if (operational) {
+      setNotifications((current) => current.filter((item) => item.id !== notification.id));
+      archiveLearnerNotification(notification.id).catch(() => {
+        // Navigation should not be blocked by notification housekeeping.
+      });
+    }
     onNavigate?.();
     navigate(notification.route || '/assignments');
   }
