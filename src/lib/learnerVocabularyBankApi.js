@@ -91,12 +91,3 @@ export async function removeLearnerVocabularyBankItem(id) {
   if (error) throw error;
 }
 
-
-export async function recordVocabularyPractice(itemId, sentence) {
-  const { data, error } = await supabase.rpc('learner_record_vocab_practice', {
-    p_item_id: itemId,
-    p_sentence: sentence,
-  });
-  if (error) throw error;
-  return data;
-}
