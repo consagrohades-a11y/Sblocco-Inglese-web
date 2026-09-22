@@ -30,7 +30,7 @@ export default function StudioQuickAssignPanel({
   const [selectedGroupId, setSelectedGroupId] = useState('');
   const [deadline, setDeadline] = useState('');
   const [required, setRequired] = useState(true);
-  const [completionRule, setCompletionRule] = useState('passed');
+  const [completionRule, setCompletionRule] = useState('submitted');
   const [requiredScore, setRequiredScore] = useState(70);
   const [requiredAttempts, setRequiredAttempts] = useState(1);
   const [allowRetry, setAllowRetry] = useState(true);
@@ -293,12 +293,20 @@ export default function StudioQuickAssignPanel({
                       Required attempts
                       <input type="number" min="1" value={requiredAttempts} onChange={(event) => setRequiredAttempts(Math.max(1, Number(event.target.value) || 1))} className={inputClass} />
                     </label>
-                  ) : (
+                  ) : null}
+
+                  {completionRule === 'passed' ? (
                     <label className="grid gap-1.5 text-xs font-black uppercase tracking-[0.08em] text-ink/55 dark:text-white/55">
                       Minimum score
                       <input type="number" min="0" max="100" value={requiredScore} onChange={(event) => setRequiredScore(Math.max(0, Math.min(100, Number(event.target.value) || 0)))} className={inputClass} />
                     </label>
-                  )}
+                  ) : null}
+
+                  {completionRule === 'submitted' ? (
+                    <p className="rounded-xl bg-linen/60 px-3 py-2.5 text-xs font-semibold leading-5 text-ink/55 dark:bg-white/[0.04] dark:text-white/55">
+                      The activity counts as completed when the learner submits it. Score is still recorded separately.
+                    </p>
+                  ) : null}
 
                   <label className="flex items-center gap-3 text-sm font-black text-ink dark:text-white">
                     <input type="checkbox" checked={allowRetry} onChange={(event) => setAllowRetry(event.target.checked)} />
