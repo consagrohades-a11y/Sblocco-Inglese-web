@@ -716,6 +716,381 @@ function MultipleChoiceSetEditor({ block, patch }) {
   );
 }
 
+function makeUseOfEnglishTextParts() {
+  return Array.from({ length: 17 }, (_, index) => (
+    index % 2 === 0 ? { type: 'text', text: '' } : { type: 'gap' }
+  ));
+}
+
+function makeUseOfEnglishPart1Items() {
+  return Array.from({ length: 8 }, () => ({
+    options: Array.from({ length: 4 }, () => ({ text: '', is_correct: false })),
+    feedback: '',
+  }));
+}
+
+function makeUseOfEnglishOpenItems() {
+  return Array.from({ length: 8 }, () => ({ accepted_answers: [], feedback: '' }));
+}
+
+function makeUseOfEnglishPart3Prompts() {
+  return Array.from({ length: 8 }, () => ({ word: '' }));
+}
+
+function makeUseOfEnglishPart4Items() {
+  return Array.from({ length: 6 }, () => ({
+    lead_sentence: '',
+    keyword: '',
+    before_gap: '',
+    after_gap: '',
+    accepted_answers: [],
+    mark_parts: [[], []],
+    feedback: '',
+  }));
+}
+
+function UseOfEnglishTextPartsEditor({ parts = [], onChange }) {
+  const values = Array.isArray(parts) ? parts : [];
+  let gapNumber = 0;
+
+  return (
+    <div className="grid gap-2">
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Connected text</p>
+        <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
+          Write the text around the eight gaps. Gap numbers are generated automatically.
+        </p>
+      </div>
+      {values.map((part, index) => {
+        if (part.type === 'gap') {
+          gapNumber += 1;
+          return (
+            <div key={index} className="flex items-center gap-3 py-1">
+              <span className="h-px flex-1 bg-orange-200 dark:bg-orange-300/20" />
+              <span className="rounded-full bg-orange-500 px-3 py-1 text-[0.68rem] font-black text-white">Gap {gapNumber}</span>
+              <span className="h-px flex-1 bg-orange-200 dark:bg-orange-300/20" />
+            </div>
+          );
+        }
+
+        return (
+          <TextArea
+            key={index}
+            label={index === 0 ? 'Opening text' : index === values.length - 1 ? 'Closing text' : 'Text between gaps'}
+            value={part.text || ''}
+            onChange={(value) => onChange(values.map((item, current) => current === index ? { ...item, text: value } : item))}
+            rows={3}
+            placeholder="Write the text that remains visible around the gaps."
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function UseOfEnglishPart1Editor({ items = [], onChange }) {
+  const values = Array.isArray(items) ? items : [];
+
+  function patchOption(itemIndex, optionIndex, patchValue) {
+    onChange(values.map((item, currentItem) => {
+      if (currentItem !== itemIndex) return item;
+      const options = Array.isArray(item.options) ? item.options : [];
+      return {
+        ...item,
+        options: options.map((option, currentOption) => currentOption === optionIndex ? { ...option, ...patchValue } : option),
+      };
+    }));
+  }
+
+  function chooseCorrect(itemIndex, optionIndex) {
+    onChange(values.map((item, currentItem) => {
+      if (currentItem !== itemIndex) return item;
+      return {
+        ...item,
+        options: (item.options || []).map((option, currentOption) => ({
+          ...option,
+          is_correct: currentOption === optionIndex,
+        })),
+      };
+    }));
+  }
+
+  function patchItem(itemIndex, patchValue) {
+    onChange(values.map((item, current) => current === itemIndex ? { ...item, ...patchValue } : item));
+  }
+
+  return (
+    <div className="grid gap-3">
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Gap options</p>
+        <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
+          Four options per gap. Click A–D to mark the correct answer.
+        </p>
+      </div>
+      {values.map((item, itemIndex) => (
+        <section key={itemIndex} className="grid gap-2 rounded-2xl border border-ink/10 bg-white/65 p-3 dark:border-white/10 dark:bg-white/[0.025]">
+          <span className="w-fit rounded-full bg-orange-100 px-2.5 py-1 text-[0.68rem] font-black text-orange-900 dark:bg-orange-300/10 dark:text-orange-100">Gap {itemIndex + 1}</span>
+          {(item.options || []).map((option, optionIndex) => (
+            <div key={optionIndex} className="flex min-w-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={() => chooseCorrect(itemIndex, optionIndex)}
+                className={`focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-full border text-xs font-black ${option.is_correct ? 'border-orange-500 bg-orange-500 text-white' : 'border-ink/15 text-ink/45 dark:border-white/15 dark:text-white/45'}`}
+                aria-label={option.is_correct ? 'Correct answer' : 'Mark as correct'}
+              >
+                {String.fromCharCode(65 + optionIndex)}
+              </button>
+              <input
+                value={option.text || ''}
+                onChange={(event) => patchOption(itemIndex, optionIndex, { text: event.target.value })}
+                placeholder={`Option ${String.fromCharCode(65 + optionIndex)}`}
+                className="focus-ring min-w-0 flex-1 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+              />
+            </div>
+          ))}
+          <TextArea
+            label="Optional feedback"
+            value={item.feedback || ''}
+            onChange={(value) => patchItem(itemIndex, { feedback: value })}
+            rows={2}
+            hint="Explain the collocation, phrase or lexical distinction when useful."
+          />
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function UseOfEnglishOpenGapEditor({ items = [], prompts = null, onItemsChange, onPromptsChange }) {
+  const values = Array.isArray(items) ? items : [];
+  const promptValues = Array.isArray(prompts) ? prompts : null;
+
+  function patchItem(index, patchValue) {
+    onItemsChange(values.map((item, current) => current === index ? { ...item, ...patchValue } : item));
+  }
+
+  function patchPrompt(index, value) {
+    if (!promptValues || !onPromptsChange) return;
+    onPromptsChange(promptValues.map((item, current) => current === index ? { ...item, word: value } : item));
+  }
+
+  return (
+    <div className="grid gap-3">
+      {values.map((item, index) => (
+        <section key={index} className="grid gap-3 rounded-2xl border border-ink/10 bg-white/65 p-3 dark:border-white/10 dark:bg-white/[0.025]">
+          <span className="w-fit rounded-full bg-orange-100 px-2.5 py-1 text-[0.68rem] font-black text-orange-900 dark:bg-orange-300/10 dark:text-orange-100">Gap {index + 1}</span>
+          {promptValues ? (
+            <TextInput
+              label="Prompt word"
+              value={promptValues[index]?.word || ''}
+              onChange={(value) => patchPrompt(index, value)}
+              placeholder="e.g. COMPETE"
+              hint="The learner sees this base word and must change it."
+            />
+          ) : null}
+          <StringListEditor
+            label="Accepted answer"
+            items={item.accepted_answers || []}
+            onChange={(accepted_answers) => patchItem(index, { accepted_answers })}
+            placeholder="One-word answer"
+            hint="Add another only when more than one one-word answer is genuinely valid."
+          />
+          <TextArea
+            label="Optional feedback"
+            value={item.feedback || ''}
+            onChange={(value) => patchItem(index, { feedback: value })}
+            rows={2}
+          />
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function UseOfEnglishPart4Editor({ transformations = [], onChange }) {
+  const values = Array.isArray(transformations) ? transformations : [];
+
+  function patchItem(index, patchValue) {
+    onChange(values.map((item, current) => current === index ? { ...item, ...patchValue } : item));
+  }
+
+  function patchMarkPart(itemIndex, partIndex, acceptedAnswers) {
+    const item = values[itemIndex] || {};
+    const parts = Array.isArray(item.mark_parts) ? item.mark_parts : [[], []];
+    patchItem(itemIndex, {
+      mark_parts: parts.map((part, current) => current === partIndex ? acceptedAnswers : part),
+    });
+  }
+
+  return (
+    <div className="grid gap-3">
+      <div className="rounded-2xl border border-orange-200/70 bg-orange-50/45 p-4 dark:border-orange-300/15 dark:bg-orange-300/[0.04]">
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-orange-800 dark:text-orange-200">Part 4 marking</p>
+        <p className="mt-1 text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">
+          Each transformation is worth 2 points. Define the two answer parts separately so one correct part can earn 1 point.
+        </p>
+      </div>
+      {values.map((item, index) => (
+        <section key={index} className="grid gap-3 rounded-2xl border border-ink/10 bg-white/65 p-3 dark:border-white/10 dark:bg-white/[0.025]">
+          <span className="w-fit rounded-full bg-orange-100 px-2.5 py-1 text-[0.68rem] font-black text-orange-900 dark:bg-orange-300/10 dark:text-orange-100">Transformation {index + 1}</span>
+          <TextArea
+            label="First sentence"
+            value={item.lead_sentence || ''}
+            onChange={(value) => patchItem(index, { lead_sentence: value })}
+            rows={2}
+          />
+          <TextInput
+            label="Key word"
+            value={item.keyword || ''}
+            onChange={(value) => patchItem(index, { keyword: value.toUpperCase() })}
+            placeholder="e.g. SINCE"
+            hint="One word. The learner must use it unchanged."
+          />
+          <div className="grid gap-2 sm:grid-cols-2">
+            <TextArea
+              label="Second sentence before gap"
+              value={item.before_gap || ''}
+              onChange={(value) => patchItem(index, { before_gap: value })}
+              rows={2}
+            />
+            <TextArea
+              label="Second sentence after gap"
+              value={item.after_gap || ''}
+              onChange={(value) => patchItem(index, { after_gap: value })}
+              rows={2}
+            />
+          </div>
+          <StringListEditor
+            label="Complete accepted answers"
+            items={item.accepted_answers || []}
+            onChange={(accepted_answers) => patchItem(index, { accepted_answers })}
+            placeholder="2–5 words including the key word"
+            hint="Add full correct variants. The key word must remain unchanged."
+          />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <StringListEditor
+              label="Marking part 1"
+              items={item.mark_parts?.[0] || []}
+              onChange={(answers) => patchMarkPart(index, 0, answers)}
+              placeholder="Chunk worth 1 point"
+            />
+            <StringListEditor
+              label="Marking part 2"
+              items={item.mark_parts?.[1] || []}
+              onChange={(answers) => patchMarkPart(index, 1, answers)}
+              placeholder="Chunk worth 1 point"
+            />
+          </div>
+          <TextArea
+            label="Optional feedback"
+            value={item.feedback || ''}
+            onChange={(value) => patchItem(index, { feedback: value })}
+            rows={2}
+          />
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function UseOfEnglishEditor({ block, patch }) {
+  const format = block.format || 'b2_part1';
+
+  function changeFormat(nextFormat) {
+    if (nextFormat === format) return;
+
+    if (nextFormat === 'b2_part1') {
+      patch({
+        format: nextFormat,
+        primary_skill: 'vocabulary',
+        text_parts: makeUseOfEnglishTextParts(),
+        items: makeUseOfEnglishPart1Items(),
+        word_prompts: [],
+        transformations: [],
+      });
+      return;
+    }
+
+    if (nextFormat === 'b2_part2') {
+      patch({
+        format: nextFormat,
+        primary_skill: 'grammar',
+        text_parts: makeUseOfEnglishTextParts(),
+        items: makeUseOfEnglishOpenItems(),
+        word_prompts: [],
+        transformations: [],
+      });
+      return;
+    }
+
+    if (nextFormat === 'b2_part3') {
+      patch({
+        format: nextFormat,
+        primary_skill: 'vocabulary',
+        text_parts: makeUseOfEnglishTextParts(),
+        items: makeUseOfEnglishOpenItems(),
+        word_prompts: makeUseOfEnglishPart3Prompts(),
+        transformations: [],
+      });
+      return;
+    }
+
+    patch({
+      format: 'b2_part4',
+      primary_skill: 'grammar',
+      text_parts: [],
+      items: [],
+      word_prompts: [],
+      transformations: makeUseOfEnglishPart4Items(),
+    });
+  }
+
+  return (
+    <>
+      <TextInput label="Task title" value={block.title || ''} onChange={(value) => patch({ title: value })} />
+      <SelectInput
+        label="Use of English format"
+        value={format}
+        onChange={changeFormat}
+        options={[
+          ['b2_part1', 'B2 Part 1 · Multiple-choice cloze'],
+          ['b2_part2', 'B2 Part 2 · Open cloze'],
+          ['b2_part3', 'B2 Part 3 · Word formation'],
+          ['b2_part4', 'B2 Part 4 · Key word transformations'],
+        ]}
+        hint="The Studio generates item keys, numbering and scoring automatically."
+      />
+      <TextArea label="Task" value={block.prompt || ''} onChange={(value) => patch({ prompt: value })} rows={2} />
+      <TextInput label="Learner instruction" value={block.instructions || ''} onChange={(value) => patch({ instructions: value })} />
+
+      {format !== 'b2_part4' ? (
+        <UseOfEnglishTextPartsEditor parts={block.text_parts || []} onChange={(text_parts) => patch({ text_parts })} />
+      ) : null}
+
+      {format === 'b2_part1' ? (
+        <UseOfEnglishPart1Editor items={block.items || []} onChange={(items) => patch({ items })} />
+      ) : null}
+
+      {format === 'b2_part2' ? (
+        <UseOfEnglishOpenGapEditor items={block.items || []} onItemsChange={(items) => patch({ items })} />
+      ) : null}
+
+      {format === 'b2_part3' ? (
+        <UseOfEnglishOpenGapEditor
+          items={block.items || []}
+          prompts={block.word_prompts || []}
+          onItemsChange={(items) => patch({ items })}
+          onPromptsChange={(word_prompts) => patch({ word_prompts })}
+        />
+      ) : null}
+
+      {format === 'b2_part4' ? (
+        <UseOfEnglishPart4Editor transformations={block.transformations || []} onChange={(transformations) => patch({ transformations })} />
+      ) : null}
+    </>
+  );
+}
+
 function makeReadingPart5Items() {
   return Array.from({ length: 6 }, () => ({
     prompt: '',
@@ -1538,6 +1913,7 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
           <div className="grid min-w-0 gap-4">
         {block.type === 'open_answer_set' ? <OpenAnswerSetEditor block={block} patch={patch} /> : null}
         {block.type === 'multiple_choice_set' ? <MultipleChoiceSetEditor block={block} patch={patch} /> : null}
+        {block.type === 'use_of_english' ? <UseOfEnglishEditor block={block} patch={patch} /> : null}
         {block.type === 'reading_comprehension' ? <ReadingComprehensionEditor block={block} patch={patch} /> : null}
         {block.type === 'multiple_choice' ? <MultipleChoiceEditor block={block} patch={patch} /> : null}
         {block.type === 'gap_fill' ? <GapFillEditor block={block} patch={patch} /> : null}
