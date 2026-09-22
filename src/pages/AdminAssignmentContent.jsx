@@ -42,7 +42,7 @@ export default function AdminAssignmentContent() {
       ] = await Promise.all([
         supabase
           .from('assignments')
-          .select('id, learner_id, title, learner_note, reason, status, required, deadline_at, estimated_minutes, published_at, created_at, group_batch_id')
+          .select('id, learner_id, title, learner_note, reason, status, pending_status, required, deadline_at, estimated_minutes, published_at, created_at, group_batch_id')
           .eq('id', assignmentId)
           .eq('learner_id', learnerId)
           .maybeSingle(),
@@ -187,10 +187,29 @@ export default function AdminAssignmentContent() {
       }
     }
 
+    const { data: persistedAssignment, error: finalStatusError } = await supabase
+      .from('assignments')
+      .select('status, pending_status, published_at, deadline_at')
+      .eq('id', assignmentId)
+      .single();
+
+    if (finalStatusError) {
+      setSaving(false);
+      setError(`I contenuti sono stati salvati, ma non è stato possibile verificare lo stato finale: ${finalStatusError.message}`);
+      return;
+    }
+
+    if (nextStatus === 'published' && persistedAssignment.status !== 'published') {
+      setSaving(false);
+      setAssignment((current) => ({ ...current, ...persistedAssignment }));
+      setError('I contenuti sono stati salvati, ma la pubblicazione non è stata completata. Riprova dopo aver verificato che almeno un’attività sia selezionata.');
+      return;
+    }
+
     setSaving(false);
     setAssignment((current) => ({
       ...current,
-      status: nextStatus || current.status,
+      ...persistedAssignment,
       title: title.trim(),
       deadline_at: deadline ? new Date(deadline).toISOString() : null,
     }));
