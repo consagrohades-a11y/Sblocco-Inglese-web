@@ -113,6 +113,24 @@ export async function submitExerciseAttempt(attemptId) {
   return data;
 }
 
+export async function saveExerciseConfidence(attemptId, confidence) {
+  const { data, error } = await supabase.rpc('learner_set_exercise_confidence', {
+    p_attempt_id: attemptId,
+    p_confidence: confidence,
+  });
+  throwIfError(error);
+  return data;
+}
+
+export async function saveWritingRevision(attemptQuestionId, revisionText) {
+  const { data, error } = await supabase.rpc('learner_save_writing_revision', {
+    p_attempt_question_id: attemptQuestionId,
+    p_revision_text: revisionText,
+  });
+  throwIfError(error);
+  return data;
+}
+
 export async function loadPublishedExerciseCatalog() {
   const { data, error } = await supabase
     .from('exercise_builder_exercises')
