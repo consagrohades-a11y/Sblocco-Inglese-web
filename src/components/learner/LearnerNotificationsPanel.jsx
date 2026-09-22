@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
+  Archive,
   Bell,
   BookOpenCheck,
   CheckCheck,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
+  archiveLearnerNotification,
   loadLearnerMilestoneProgress,
   loadLearnerNotifications,
   markAllLearnerNotificationsRead,
@@ -63,12 +65,13 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [progress, setProgress] = useState(null);
+  const [showArchive, setShowArchive] = useState(false);
 
   const refresh = useCallback(async ({ quiet = false } = {}) => {
     if (!quiet) setLoading(true);
     try {
       const [result, milestoneProgress] = await Promise.all([
-        loadLearnerNotifications(limit),
+        loadLearnerNotifications(limit, { archived: showArchive }),
         loadLearnerMilestoneProgress(),
       ]);
       setNotifications(result.notifications);
@@ -83,7 +86,7 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
     } finally {
       if (!quiet) setLoading(false);
     }
-  }, [limit]);
+  }, [limit, showArchive]);
 
   useEffect(() => {
     refresh();
@@ -101,7 +104,13 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
 
   async function openNotification(notification) {
     try {
-      if (!notification.read_at) {
+      const operational = ["assignment_published", "writing_review_published", "exercise_review_published"]
+        .includes(notification.notification_type);
+      if (!showArchive && operational) {
+        await archiveLearnerNotification(notification.id);
+        setNotifications((current) => current.filter((item) => item.id !== notification.id));
+        if (!notification.read_at) setUnreadCount((current) => Math.max(0, current - 1));
+      } else if (!notification.read_at) {
         await markLearnerNotificationRead(notification.id);
         setNotifications((current) =>
           current.map((item) =>
@@ -152,20 +161,30 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
               I tuoi progressi
             </p>
             <h2 className="mt-1 text-xl font-black text-ink dark:text-white">
-              {unreadCount ? "Nuove attività e revisioni" : "I tuoi aggiornamenti"}
+              {showArchive ? "Archivio notifiche" : unreadCount ? "Nuove attività e revisioni" : "I tuoi aggiornamenti"}
             </h2>
           </div>
         </div>
-        {unreadCount ? (
+        <div className="flex flex-wrap items-center gap-3">
+          {!showArchive && unreadCount ? (
+            <button
+              type="button"
+              onClick={markAllRead}
+              className="inline-flex items-center gap-2 text-xs font-black text-clay underline dark:text-[#f0a27d]"
+            >
+              <CheckCheck className="h-4 w-4" />
+              Segna tutte come lette
+            </button>
+          ) : null}
           <button
             type="button"
-            onClick={markAllRead}
-            className="inline-flex items-center gap-2 self-start text-xs font-black text-clay underline dark:text-[#f0a27d]"
+            onClick={() => setShowArchive((value) => !value)}
+            className="inline-flex items-center gap-2 text-xs font-black text-ink/55 underline transition hover:text-clay dark:text-white/55 dark:hover:text-coral"
           >
-            <CheckCheck className="h-4 w-4" />
-            Segna tutte come lette
+            <Archive className="h-4 w-4" />
+            {showArchive ? "Torna agli aggiornamenti" : "Archivio"}
           </button>
-        ) : null}
+        </div>
       </header>
 
       {loading ? (
@@ -186,7 +205,7 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
       ) : null}
       {!loading && !error ? (
         <div className="divide-y divide-clay/15 dark:divide-white/10">
-          {!notifications.length ? <p className="p-6 text-sm font-semibold text-ink/60 dark:text-white/60">Qui compariranno nuove attività, correzioni e traguardi del tuo percorso.</p> : null}
+          {!notifications.length ? <p className="p-6 text-sm font-semibold text-ink/60 dark:text-white/60">{showArchive ? "Nessuna notifica archiviata." : "Qui compariranno nuove attività, correzioni e traguardi del tuo percorso."}</p> : null}
           {notifications.map((notification) => {
             const presentation = notificationPresentation(notification.notification_type, Boolean(notification.read_at));
             const NotificationIcon = presentation.Icon;
