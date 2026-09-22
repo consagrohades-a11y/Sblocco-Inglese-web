@@ -21,6 +21,7 @@ const adminNotifications = read('src/pages/AdminNotifications.jsx');
 const teacherNotificationApi = read('src/lib/teacherNotificationsApi.js');
 const smartArchiveMigration = read('supabase/migrations/20260922214549_smart_notification_archive.sql');
 const openedReviewMigration = read('supabase/migrations/20260922214924_archive_opened_learner_reviews.sql');
+const reviewPublishSyncMigration = read('supabase/migrations/20260922215156_sync_review_notification_publish_state.sql');
 const exercisePlayer = read('src/pages/ExercisePlayerV2.jsx');
 
 assert.match(shell, /AdminNotificationBell/);
@@ -62,6 +63,8 @@ assert.match(teacherNotificationApi, /archived_at/);
 assert.match(smartArchiveMigration, /archive_resolved_exercise_submission_notification/);
 assert.match(smartArchiveMigration, /notification_type <> 'learner_signed_up'/);
 assert.match(openedReviewMigration, /archive_learner_review_notifications_for_attempt/);
+assert.match(reviewPublishSyncMigration, /archived_at = null/);
+assert.match(reviewPublishSyncMigration, /archive_unpublished_review_notification/);
 assert.match(exercisePlayer, /archiveLearnerReviewNotificationsForAttempt/);
 assert.match(learnerNotificationMigration, /Nuova attività assegnata/);
 assert.match(learnerNotificationMigration, /writing_review_published/);
