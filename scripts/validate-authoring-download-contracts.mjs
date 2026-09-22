@@ -50,6 +50,7 @@ for (const [name, source] of [['exercise templates', commonContracts], ['educati
 const studioImport = read('src/components/admin/exercise-studio/StudioJsonImportPanel.jsx');
 assert.ok(studioImport.includes('universal-ai-authoring-kit-v1.json'), 'Studio must link to the JSON authoring kit.');
 assert.ok(studioImport.includes('b2-reading-authoring-kit-v1.json'), 'Studio must link to the B2 reading JSON authoring kit.');
+assert.ok(studioImport.includes('gold-benchmark-b2-reading-exam-style-v1.json'), 'Studio must link to the B2 reading gold benchmark.');
 assert.ok(!studioImport.includes('universal-ai-authoring-kit-v1.md'), 'Studio must not link to a Markdown authoring kit.');
 
 const speakingLibrary = read('src/pages/AdminSpeakingActivities.jsx');
