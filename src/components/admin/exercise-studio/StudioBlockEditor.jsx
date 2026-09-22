@@ -716,12 +716,11 @@ function MultipleChoiceSetEditor({ block, patch }) {
   );
 }
 
-function makeReadingPart5Items(existing = []) {
-  if (existing.length === 6) return existing;
-  return Array.from({ length: 6 }, (_, index) => existing[index] || ({
+function makeReadingPart5Items() {
+  return Array.from({ length: 6 }, () => ({
     prompt: '',
     options: [
-      { text: '', is_correct: true },
+      { text: '', is_correct: false },
       { text: '', is_correct: false },
       { text: '', is_correct: false },
       { text: '', is_correct: false },
@@ -730,8 +729,7 @@ function makeReadingPart5Items(existing = []) {
   }));
 }
 
-function makeReadingPart6Parts(existing = []) {
-  if (existing.some((part) => part?.type === 'gap')) return existing;
+function makeReadingPart6Parts() {
   return Array.from({ length: 13 }, (_, index) => (
     index % 2 === 0
       ? { type: 'text', text: '' }
@@ -739,19 +737,16 @@ function makeReadingPart6Parts(existing = []) {
   ));
 }
 
-function makeReadingPart6Options(existing = []) {
-  if (existing.length === 7) return existing;
-  return Array.from({ length: 7 }, (_, index) => existing[index] || ({ text: '' }));
+function makeReadingPart6Options() {
+  return Array.from({ length: 7 }, () => ({ text: '' }));
 }
 
-function makeReadingPart7Sections(existing = []) {
-  if (existing.length >= 3) return existing;
-  return Array.from({ length: 4 }, (_, index) => existing[index] || ({ title: '', text: '' }));
+function makeReadingPart7Sections() {
+  return Array.from({ length: 4 }, () => ({ title: '', text: '' }));
 }
 
-function makeReadingPart7Items(existing = []) {
-  if (existing.length === 10) return existing;
-  return Array.from({ length: 10 }, (_, index) => existing[index] || ({
+function makeReadingPart7Items() {
+  return Array.from({ length: 10 }, () => ({
     prompt: '',
     correct_section_index: null,
     feedback: '',
@@ -1014,7 +1009,7 @@ function ReadingComprehensionEditor({ block, patch }) {
     if (nextFormat === 'b2_part5') {
       patch({
         format: nextFormat,
-        items: makeReadingPart5Items(block.items || []),
+        items: makeReadingPart5Items(),
         passage_parts: [],
         paragraph_options: [],
         sections: [],
@@ -1026,8 +1021,8 @@ function ReadingComprehensionEditor({ block, patch }) {
       patch({
         format: nextFormat,
         items: [],
-        passage_parts: makeReadingPart6Parts(block.passage_parts || []),
-        paragraph_options: makeReadingPart6Options(block.paragraph_options || []),
+        passage_parts: makeReadingPart6Parts(),
+        paragraph_options: makeReadingPart6Options(),
         sections: [],
         primary_skill: 'reading',
       });
@@ -1036,8 +1031,8 @@ function ReadingComprehensionEditor({ block, patch }) {
     if (nextFormat === 'b2_part7') {
       patch({
         format: nextFormat,
-        items: makeReadingPart7Items(block.items || []),
-        sections: makeReadingPart7Sections(block.sections || []),
+        items: makeReadingPart7Items(),
+        sections: makeReadingPart7Sections(),
         passage_parts: [],
         paragraph_options: [],
         primary_skill: 'reading',
