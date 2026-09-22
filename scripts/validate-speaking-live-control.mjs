@@ -24,6 +24,14 @@ for (const command of ['previous', 'next', 'random', 'toggle-support', 'toggle-c
 
 assert.ok(presenter.includes('presenter-state'), 'Presenter must broadcast state back to the teacher controller.');
 assert.ok(presenter.includes('supportVisible'), 'Presenter must support teacher-controlled support reveal.');
+assert.ok(presenter.includes("useState(false)"), 'Student support must be hidden by default.');
+assert.ok(!presenter.includes('setSupportVisible(true)'), 'Changing game items must never auto-open student support.');
+assert.ok(presenter.includes('lg:h-[100dvh]'), 'Desktop presenter must fit the viewport height.');
+assert.ok(presenter.includes('lg:overflow-hidden'), 'Desktop presenter must prevent page-level scrolling.');
+assert.ok(presenter.includes("window.addEventListener('message'"), 'Presenter must accept direct window messages while unfocused.');
+assert.ok(presenter.includes('window.opener.postMessage'), 'Presenter must send state directly back to the teacher window.');
+assert.ok(controller.includes('session.studentWindow.postMessage'), 'Teacher controller must send commands directly to the student window.');
+assert.ok(controller.includes("window.addEventListener('message'"), 'Teacher controller must accept direct presenter state messages.');
 assert.ok(controller.includes('Teacher note') || controller.includes('Teacher note'.toLowerCase()), 'Controller must keep teacher notes teacher-side.');
 assert.ok(controller.includes('Lesson timer'), 'Controller must include a teacher timer.');
 assert.ok(controller.includes('Student screen connected'), 'Controller must expose connection status.');
