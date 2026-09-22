@@ -83,6 +83,8 @@ export default function StudioQuickAssignPanel({
   const selectedLearner = learners.find((learner) => learner.id === selectedLearnerId) || null;
   const selectedGroup = groups.find((group) => group.id === selectedGroupId) || null;
   const hasTarget = mode === 'group' ? Boolean(selectedGroupId) : Boolean(selectedLearnerId);
+  const retryRequiredByAttempts = completionRule === 'attempts' && requiredAttempts > 1;
+  const effectiveAllowRetry = retryRequiredByAttempts ? true : allowRetry;
 
   function commonPayload() {
     return {
@@ -93,7 +95,7 @@ export default function StudioQuickAssignPanel({
       completionRule,
       requiredScore,
       requiredAttempts,
-      allowRetry,
+      allowRetry: effectiveAllowRetry,
       showScore,
       showCorrectAnswers,
       showExplanations,
@@ -308,9 +310,21 @@ export default function StudioQuickAssignPanel({
                     </p>
                   ) : null}
 
-                  <label className="flex items-center gap-3 text-sm font-black text-ink dark:text-white">
-                    <input type="checkbox" checked={allowRetry} onChange={(event) => setAllowRetry(event.target.checked)} />
-                    Allow retry
+                  <label className="flex items-start gap-3 text-sm font-black text-ink dark:text-white">
+                    <input
+                      type="checkbox"
+                      checked={effectiveAllowRetry}
+                      disabled={retryRequiredByAttempts}
+                      onChange={(event) => setAllowRetry(event.target.checked)}
+                    />
+                    <span>
+                      Allow retry
+                      {retryRequiredByAttempts ? (
+                        <span className="mt-1 block text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
+                          Automatically enabled because more than one attempt is required.
+                        </span>
+                      ) : null}
+                    </span>
                   </label>
 
                   <div className="grid gap-2 text-sm font-bold text-ink/65 dark:text-white/65">
