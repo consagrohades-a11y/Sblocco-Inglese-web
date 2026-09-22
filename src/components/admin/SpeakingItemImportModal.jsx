@@ -74,24 +74,102 @@ function buildPlans(payload, activities) {
   });
 }
 
+function itemKey(groupIndex, itemIndex) {
+  return `${groupIndex}:${itemIndex}`;
+}
+
+function matchIsActive(match, plan, skippedItems) {
+  if (skippedItems.has(itemKey(plan.groupIndex, match.candidate.candidateIndex))) return false;
+  if (
+    match.existing.activityTitle === 'Questa attività'
+    && Number.isInteger(match.existing.itemIndex)
+    && skippedItems.has(itemKey(plan.groupIndex, match.existing.itemIndex))
+  ) return false;
+  return true;
+}
+
+function activePlanErrors(plan, skippedItems) {
+  return plan.errors.filter((message) => {
+    const itemMatch = String(message).match(/^Item (\d+):/);
+    if (!itemMatch) return true;
+    return !skippedItems.has(itemKey(plan.groupIndex, Number(itemMatch[1]) - 1));
+  });
+}
+
+function itemDiagnostic(plan, itemIndex, skippedItems) {
+  const key = itemKey(plan.groupIndex, itemIndex);
+  if (skippedItems.has(key)) return { severity: 'skip', label: 'Saltato' };
+
+  const blocking = plan.blocking.filter(
+    (match) => match.candidate.candidateIndex === itemIndex && matchIsActive(match, plan, skippedItems),
+  );
+  if (blocking.length) {
+    return {
+      severity: 'block',
+      label: duplicateReasonLabel(blocking[0].reason),
+      count: blocking.length,
+    };
+  }
+
+  const warnings = plan.warnings.filter(
+    (match) => match.candidate.candidateIndex === itemIndex && matchIsActive(match, plan, skippedItems),
+  );
+  if (warnings.length) {
+    return {
+      severity: 'warn',
+      label: duplicateReasonLabel(warnings[0].reason),
+      count: warnings.length,
+    };
+  }
+
+  return { severity: 'ready', label: 'Pronto' };
+}
+
 export default function SpeakingItemImportModal({ activities = [], onClose, onImported }) {
   const inputRef = useRef(null);
   const [fileName, setFileName] = useState('');
   const [plans, setPlans] = useState([]);
   const [parseError, setParseError] = useState('');
   const [allowWarnings, setAllowWarnings] = useState(false);
+  const [skippedItems, setSkippedItems] = useState(() => new Set());
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
 
-  const totals = useMemo(() => plans.reduce((acc, plan) => {
-    acc.items += plan.items.length;
-    acc.blocking += plan.blocking.length;
-    acc.warnings += plan.warnings.length;
-    acc.errors += plan.errors.length;
-    return acc;
-  }, { items: 0, blocking: 0, warnings: 0, errors: 0 }), [plans]);
+  const totals = useMemo(() => {
+    const summary = {
+      originalItems: 0,
+      items: 0,
+      skipped: 0,
+      blocking: 0,
+      warnings: 0,
+      errors: 0,
+    };
 
-  const canImport = plans.length > 0 && totals.items > 0 && totals.errors === 0 && totals.blocking === 0 && (totals.warnings === 0 || allowWarnings) && !saving;
+    plans.forEach((plan) => {
+      summary.originalItems += plan.items.length;
+      summary.errors += activePlanErrors(plan, skippedItems).length;
+
+      plan.items.forEach((_, itemIndex) => {
+        const diagnostic = itemDiagnostic(plan, itemIndex, skippedItems);
+        if (diagnostic.severity === 'skip') {
+          summary.skipped += 1;
+          return;
+        }
+        summary.items += 1;
+        if (diagnostic.severity === 'block') summary.blocking += 1;
+        if (diagnostic.severity === 'warn') summary.warnings += 1;
+      });
+    });
+
+    return summary;
+  }, [plans, skippedItems]);
+
+  const canImport = plans.length > 0
+    && totals.items > 0
+    && totals.errors === 0
+    && totals.blocking === 0
+    && (totals.warnings === 0 || allowWarnings)
+    && !saving;
 
   async function readFile(file) {
     if (!file) return;
@@ -100,12 +178,42 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
     setSaveError('');
     setPlans([]);
     setAllowWarnings(false);
+    setSkippedItems(new Set());
     try {
       const payload = JSON.parse(await file.text());
       setPlans(buildPlans(payload, activities));
     } catch (error) {
       setParseError(error.message || 'File JSON non valido.');
     }
+  }
+
+  function toggleSkipped(groupIndex, itemIndex) {
+    const key = itemKey(groupIndex, itemIndex);
+    setSkippedItems((current) => {
+      const next = new Set(current);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+    setAllowWarnings(false);
+  }
+
+  function skipMatches(mode) {
+    setSkippedItems((current) => {
+      const next = new Set(current);
+      plans.forEach((plan) => {
+        const matches = mode === 'blocking'
+          ? plan.blocking
+          : [...plan.blocking, ...plan.warnings];
+        matches.forEach((match) => {
+          if (matchIsActive(match, plan, next)) {
+            next.add(itemKey(plan.groupIndex, match.candidate.candidateIndex));
+          }
+        });
+      });
+      return next;
+    });
+    setAllowWarnings(false);
   }
 
   async function importItems() {
@@ -116,9 +224,16 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
     try {
       for (const plan of plans) {
         if (!plan.activity || !plan.items.length) continue;
+        const selectedItems = plan.items.filter((_, itemIndex) => !skippedItems.has(itemKey(plan.groupIndex, itemIndex)));
+        if (!selectedItems.length) continue;
+
         const current = updated.get(plan.activity.id) || plan.activity;
-        const prompts = [...asArray(current.prompts), ...plan.items];
-        const levels = LEVELS.filter((level) => prompts.some((item) => typeof item === 'string' ? asArray(current.levels).includes(level) : asArray(item?.levels).includes(level)));
+        const prompts = [...asArray(current.prompts), ...selectedItems];
+        const levels = LEVELS.filter((level) => prompts.some((item) => (
+          typeof item === 'string'
+            ? asArray(current.levels).includes(level)
+            : asArray(item?.levels).includes(level)
+        )));
         const saved = await updateSpeakingActivity(plan.activity.id, { prompts, levels });
         updated.set(saved.id, saved);
       }
@@ -133,12 +248,14 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
 
   return (
     <div className="fixed inset-0 z-[135] overflow-y-auto bg-ink/60 p-3 backdrop-blur-sm sm:p-6" role="dialog" aria-modal="true">
-      <div className="mx-auto my-6 max-w-3xl overflow-hidden rounded-3xl border border-white/10 bg-paper shadow-2xl dark:bg-surface-950">
+      <div className="mx-auto my-6 max-w-4xl overflow-hidden rounded-3xl border border-white/10 bg-paper shadow-2xl dark:bg-surface-950">
         <header className="flex items-start justify-between gap-4 border-b border-ink/10 px-5 py-5 dark:border-white/10 sm:px-7">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.15em] text-clay dark:text-coral">Speaking library</p>
             <h2 className="mt-1 text-2xl font-black">Importa nuovi item</h2>
-            <p className="mt-2 max-w-xl text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">Solo file .json. Gli item vengono aggiunti alle attività esistenti: nulla viene sovrascritto o cancellato.</p>
+            <p className="mt-2 max-w-xl text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">
+              Solo file .json. Controlla gli item segnalati e salta quelli che non vuoi importare. Nulla viene sovrascritto o cancellato.
+            </p>
           </div>
           <button type="button" onClick={onClose} className="focus-ring grid h-10 w-10 place-items-center rounded-full border border-ink/10 bg-white dark:border-white/10 dark:bg-white/10" aria-label="Chiudi"><X className="h-4 w-4" /></button>
         </header>
@@ -155,29 +272,84 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
 
           {plans.length ? (
             <div className="mt-5 grid gap-3">
-              <div className="flex flex-wrap gap-2">
-                <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black dark:bg-white/10">{totals.items} item</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black dark:bg-white/10">{totals.originalItems} nel file</span>
+                <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black dark:bg-white/10">{totals.items} da importare</span>
+                {totals.skipped ? <span className="rounded-full bg-ink/10 px-3 py-1.5 text-xs font-black text-ink/65 dark:bg-white/10 dark:text-white/70">{totals.skipped} saltati</span> : null}
                 {totals.blocking ? <span className="rounded-full bg-red-100 px-3 py-1.5 text-xs font-black text-red-800 dark:bg-red-400/10 dark:text-red-100">{totals.blocking} duplicati bloccanti</span> : null}
                 {totals.warnings ? <span className="rounded-full bg-amber-100 px-3 py-1.5 text-xs font-black text-amber-900 dark:bg-amber-300/10 dark:text-amber-100">{totals.warnings} somiglianze</span> : null}
                 {!totals.errors && !totals.blocking ? <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-black text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100"><CheckCircle2 className="h-3.5 w-3.5" /> Struttura valida</span> : null}
               </div>
 
-              {plans.map((plan) => (
-                <section key={plan.groupIndex} className="rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-surface-900">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="font-black">{plan.activity?.title || `Gruppo ${plan.groupIndex + 1}`}</p>
-                    <span className="text-xs font-black text-ink/45 dark:text-white/45">{plan.items.length} item</span>
-                  </div>
-                  {plan.errors.map((message) => <p key={message} className="mt-2 text-xs font-bold text-red-700 dark:text-red-200">• {message}</p>)}
-                  {plan.blocking.slice(0, 4).map((match, index) => <p key={index} className="mt-2 text-xs font-bold text-red-700 dark:text-red-200">• Item {match.candidate.candidateIndex + 1}: {duplicateReasonLabel(match.reason)} con <strong>{match.existing.activityTitle || 'libreria esistente'}</strong>.</p>)}
-                  {plan.warnings.slice(0, 4).map((match, index) => <p key={index} className="mt-2 flex gap-1.5 text-xs font-bold text-amber-800 dark:text-amber-200"><AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" /> Item {match.candidate.candidateIndex + 1}: {duplicateReasonLabel(match.reason)}.</p>)}
-                </section>
-              ))}
+              {(totals.blocking > 0 || totals.warnings > 0) ? (
+                <div className="flex flex-wrap gap-2">
+                  {totals.blocking > 0 ? (
+                    <button type="button" onClick={() => skipMatches('blocking')} className="focus-ring min-h-9 rounded-full border border-red-200 bg-red-50 px-3 text-xs font-black text-red-800 dark:border-red-300/20 dark:bg-red-300/[0.07] dark:text-red-100">
+                      Salta tutti i duplicati
+                    </button>
+                  ) : null}
+                  <button type="button" onClick={() => skipMatches('all')} className="focus-ring min-h-9 rounded-full border border-amber-200 bg-amber-50 px-3 text-xs font-black text-amber-900 dark:border-amber-300/20 dark:bg-amber-300/[0.07] dark:text-amber-100">
+                    Salta tutti i segnalati
+                  </button>
+                </div>
+              ) : null}
+
+              {plans.map((plan) => {
+                const activeErrors = activePlanErrors(plan, skippedItems);
+                const activeCount = plan.items.filter((_, itemIndex) => !skippedItems.has(itemKey(plan.groupIndex, itemIndex))).length;
+
+                return (
+                  <section key={plan.groupIndex} className="rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-surface-900">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="font-black">{plan.activity?.title || `Gruppo ${plan.groupIndex + 1}`}</p>
+                      <span className="text-xs font-black text-ink/45 dark:text-white/45">{activeCount}/{plan.items.length} da importare</span>
+                    </div>
+
+                    {activeErrors.map((message) => <p key={message} className="mt-2 text-xs font-bold text-red-700 dark:text-red-200">• {message}</p>)}
+
+                    {plan.items.length ? (
+                      <div className="mt-4 max-h-[30rem] overflow-y-auto rounded-xl border border-ink/10 dark:border-white/10">
+                        {plan.items.map((item, itemIndex) => {
+                          const diagnostic = itemDiagnostic(plan, itemIndex, skippedItems);
+                          const skipped = diagnostic.severity === 'skip';
+                          const statusClass = diagnostic.severity === 'block'
+                            ? 'bg-red-100 text-red-800 dark:bg-red-400/10 dark:text-red-100'
+                            : diagnostic.severity === 'warn'
+                              ? 'bg-amber-100 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100'
+                              : diagnostic.severity === 'skip'
+                                ? 'bg-ink/10 text-ink/55 dark:bg-white/10 dark:text-white/55'
+                                : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100';
+
+                          return (
+                            <div key={itemIndex} className={`flex gap-3 border-b border-ink/10 p-3 last:border-b-0 dark:border-white/10 ${skipped ? 'opacity-60' : ''}`}>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <span className="text-xs font-black text-ink/45 dark:text-white/45">Item {itemIndex + 1}</span>
+                                  <span className={`rounded-full px-2 py-0.5 text-[0.68rem] font-black ${statusClass}`}>{diagnostic.label}</span>
+                                  {diagnostic.count > 1 ? <span className="text-[0.68rem] font-bold text-ink/40 dark:text-white/40">+{diagnostic.count - 1} match</span> : null}
+                                </div>
+                                <p className={`mt-1.5 text-sm font-bold leading-5 ${skipped ? 'line-through' : ''}`}>{item.text || 'Item senza testo'}</p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => toggleSkipped(plan.groupIndex, itemIndex)}
+                                className="focus-ring h-9 shrink-0 rounded-full border border-ink/15 px-3 text-xs font-black dark:border-white/15"
+                              >
+                                {skipped ? 'Ripristina' : 'Salta'}
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : null}
+                  </section>
+                );
+              })}
 
               {totals.warnings > 0 && totals.blocking === 0 && totals.errors === 0 ? (
                 <label className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-950 dark:border-amber-300/20 dark:bg-amber-300/[0.07] dark:text-amber-100">
                   <input type="checkbox" checked={allowWarnings} onChange={(event) => setAllowWarnings(event.target.checked)} className="mt-1" />
-                  Ho controllato le somiglianze contestuali e voglio importarle comunque.
+                  Ho controllato gli item ancora segnalati e voglio importarli comunque.
                 </label>
               ) : null}
             </div>
@@ -185,8 +357,12 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
         </div>
 
         <footer className="flex items-center justify-between gap-3 border-t border-ink/10 bg-white px-5 py-4 dark:border-white/10 dark:bg-surface-900">
-          <p className="text-xs font-semibold text-ink/50 dark:text-white/50"><FileJson2 className="mr-1 inline h-3.5 w-3.5" /> Append-only + controllo duplicati.</p>
-          <button type="button" disabled={!canImport} onClick={importItems} className="focus-ring min-h-11 rounded-full bg-ink px-5 text-xs font-black text-white disabled:opacity-35 dark:bg-clay">{saving ? 'Importazione…' : `Importa ${totals.items || ''} item`}</button>
+          <p className="text-xs font-semibold text-ink/50 dark:text-white/50">
+            <FileJson2 className="mr-1 inline h-3.5 w-3.5" /> Append-only · puoi saltare singoli item prima dell'import.
+          </p>
+          <button type="button" disabled={!canImport} onClick={importItems} className="focus-ring min-h-11 rounded-full bg-ink px-5 text-xs font-black text-white disabled:opacity-35 dark:bg-clay">
+            {saving ? 'Importazione…' : `Importa ${totals.items || ''} item`}
+          </button>
         </footer>
       </div>
     </div>
