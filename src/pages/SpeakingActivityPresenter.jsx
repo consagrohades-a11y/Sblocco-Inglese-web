@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Dices, Sparkles } from 'lucide-react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
+import { connectSpeakingControl } from '../lib/speakingLiveControl.js';
 import { loadAdminLearnerDetail } from '../lib/adminLearnersApi.js';
 import {
   finishSpeakingSession,
@@ -109,12 +110,16 @@ export default function SpeakingActivityPresenter() {
   const [error, setError] = useState('');
   const [index, setIndex] = useState(0);
   const [challengeVisible, setChallengeVisible] = useState(false);
+  const [supportVisible, setSupportVisible] = useState(true);
   const [itemHistory, setItemHistory] = useState([]);
   const [historyReady, setHistoryReady] = useState(true);
   const [sessionId, setSessionId] = useState('');
   const shownThisSessionRef = useRef(new Set());
+  const controlConnectionRef = useRef(null);
+  const presenterStateRef = useRef(null);
 
   const learnerId = searchParams.get('learner') || '';
+  const controlId = searchParams.get('control') || '';
 
   const selectedLevels = useMemo(() => {
     const requested = String(searchParams.get('levels') || '')
@@ -238,19 +243,14 @@ export default function SpeakingActivityPresenter() {
   useEffect(() => {
     setIndex(0);
     setChallengeVisible(false);
+    setSupportVisible(true);
   }, [activityId, historyReady, learnerId, selectedLevels.join(',')]);
 
   useEffect(() => {
     function onKeyDown(event) {
       if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLSelectElement) return;
-      if (event.key === 'ArrowRight' && items.length) {
-        setIndex((current) => (current + 1) % items.length);
-        setChallengeVisible(false);
-      }
-      if (event.key === 'ArrowLeft' && items.length) {
-        setIndex((current) => (current - 1 + items.length) % items.length);
-        setChallengeVisible(false);
-      }
+      if (event.key === 'ArrowRight' && items.length) goNext();
+      if (event.key === 'ArrowLeft' && items.length) goPrevious();
     }
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
@@ -275,28 +275,126 @@ export default function SpeakingActivityPresenter() {
     });
   }, [current?.historyKey, current?.sourceIndex, current?.text, historyReady, sessionId]);
 
+  function goNext() {
+    if (!items.length) return;
+    setIndex((currentIndex) => (currentIndex + 1) % items.length);
+    setChallengeVisible(false);
+    setSupportVisible(true);
+  }
+
+  function goPrevious() {
+    if (!items.length) return;
+    setIndex((currentIndex) => (currentIndex - 1 + items.length) % items.length);
+    setChallengeVisible(false);
+    setSupportVisible(true);
+  }
+
   function chooseRandomIndex() {
     if (items.length < 2) return;
 
-    const candidates = items
-      .map((item, itemIndex) => ({
-        item,
-        itemIndex,
-        shown: shownThisSessionRef.current.has(item.historyKey),
-        recent: Number(item.priorUse?.recent_use_count || 0) > 0,
-      }))
-      .filter((candidate) => candidate.itemIndex !== index);
+    setIndex((currentIndex) => {
+      const candidates = items
+        .map((item, itemIndex) => ({
+          item,
+          itemIndex,
+          shown: shownThisSessionRef.current.has(item.historyKey),
+          recent: Number(item.priorUse?.recent_use_count || 0) > 0,
+        }))
+        .filter((candidate) => candidate.itemIndex !== currentIndex);
 
-    const freshUnseen = candidates.filter((candidate) => !candidate.shown && !candidate.recent);
-    const unseen = candidates.filter((candidate) => !candidate.shown);
-    const pool = freshUnseen.length ? freshUnseen : unseen.length ? unseen : candidates;
-    const next = pool[Math.floor(Math.random() * pool.length)];
+      const freshUnseen = candidates.filter((candidate) => !candidate.shown && !candidate.recent);
+      const unseen = candidates.filter((candidate) => !candidate.shown);
+      const pool = freshUnseen.length ? freshUnseen : unseen.length ? unseen : candidates;
+      const next = pool[Math.floor(Math.random() * pool.length)];
+      return next?.itemIndex ?? currentIndex;
+    });
 
-    if (next) {
-      setIndex(next.itemIndex);
-      setChallengeVisible(false);
-    }
+    setChallengeVisible(false);
+    setSupportVisible(true);
   }
+
+  const presenterState = useMemo(() => ({
+    activityId,
+    position: items.length ? index + 1 : 0,
+    total: items.length,
+    sourceIndex: current?.sourceIndex ?? null,
+    challengeVisible,
+    supportVisible,
+    hasChallenge: Boolean(current?.challenge),
+    hasSupport: Boolean(current?.student_support),
+  }), [
+    activityId,
+    challengeVisible,
+    current?.challenge,
+    current?.sourceIndex,
+    current?.student_support,
+    index,
+    items.length,
+    supportVisible,
+  ]);
+
+  useEffect(() => {
+    presenterStateRef.current = presenterState;
+    if (controlId && controlConnectionRef.current) {
+      controlConnectionRef.current.send({ type: 'presenter-state', state: presenterState });
+    }
+  }, [controlId, presenterState]);
+
+  useEffect(() => {
+    if (!controlId) return undefined;
+
+    const connection = connectSpeakingControl(controlId, (payload) => {
+      if (!payload?.type) return;
+
+      if (payload.type === 'next' && items.length) {
+        setIndex((currentIndex) => (currentIndex + 1) % items.length);
+        setChallengeVisible(false);
+        setSupportVisible(true);
+      } else if (payload.type === 'previous' && items.length) {
+        setIndex((currentIndex) => (currentIndex - 1 + items.length) % items.length);
+        setChallengeVisible(false);
+        setSupportVisible(true);
+      } else if (payload.type === 'random' && items.length > 1) {
+        setIndex((currentIndex) => {
+          const candidates = items
+            .map((item, itemIndex) => ({
+              item,
+              itemIndex,
+              shown: shownThisSessionRef.current.has(item.historyKey),
+              recent: Number(item.priorUse?.recent_use_count || 0) > 0,
+            }))
+            .filter((candidate) => candidate.itemIndex !== currentIndex);
+          const freshUnseen = candidates.filter((candidate) => !candidate.shown && !candidate.recent);
+          const unseen = candidates.filter((candidate) => !candidate.shown);
+          const pool = freshUnseen.length ? freshUnseen : unseen.length ? unseen : candidates;
+          return pool[Math.floor(Math.random() * pool.length)]?.itemIndex ?? currentIndex;
+        });
+        setChallengeVisible(false);
+        setSupportVisible(true);
+      } else if (payload.type === 'toggle-support') {
+        setSupportVisible((value) => !value);
+      } else if (payload.type === 'toggle-challenge') {
+        setChallengeVisible((value) => !value);
+      } else if (payload.type === 'sync-request') {
+        if (presenterStateRef.current) {
+          connection.send({ type: 'presenter-state', state: presenterStateRef.current });
+        }
+      } else if (payload.type === 'close-presenter') {
+        window.close();
+      }
+    });
+
+    controlConnectionRef.current = connection;
+    if (presenterStateRef.current) {
+      connection.send({ type: 'presenter-state', state: presenterStateRef.current });
+    }
+
+    return () => {
+      connection.send({ type: 'presenter-closed' });
+      connection.close();
+      if (controlConnectionRef.current === connection) controlConnectionRef.current = null;
+    };
+  }, [controlId, items]);
 
   if (loading || (learnerId && !historyReady)) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-ink dark:bg-surface-950 dark:text-white">Preparing speaking session…</div>;
   if (error || !activity) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-red-800 dark:bg-surface-950 dark:text-red-200">{error || 'Activity not found.'}</div>;
@@ -350,7 +448,7 @@ export default function SpeakingActivityPresenter() {
               <section className="min-w-0">
                 <div className="rounded-[2rem] bg-ink p-6 text-white sm:p-10">
                   <PromptBody item={current} style={activity.presenter_style} />
-                  {current.student_support ? (
+                  {current.student_support && supportVisible ? (
                     <div className="mt-8 rounded-2xl border border-white/15 bg-white/[0.07] p-5">
                       <p className="text-xs font-black uppercase tracking-[0.15em] text-white/50">Need a little help?</p>
                       <p className="mt-2 text-base font-bold leading-7 sm:text-lg">{current.student_support}</p>
@@ -399,10 +497,10 @@ export default function SpeakingActivityPresenter() {
           )}
 
           <footer className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-ink/10 pt-5 dark:border-white/10">
-            <button type="button" disabled={!items.length} onClick={() => { setIndex((currentIndex) => (currentIndex - 1 + items.length) % items.length); setChallengeVisible(false); }} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><ArrowLeft className="h-4 w-4" /> Previous</button>
+            <button type="button" disabled={!items.length} onClick={goPrevious} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><ArrowLeft className="h-4 w-4" /> Previous</button>
             <div className="flex flex-wrap gap-2">
               <button type="button" disabled={items.length < 2} onClick={chooseRandomIndex} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><Dices className="h-4 w-4" /> Random</button>
-              <button type="button" disabled={!items.length} onClick={() => { setIndex((currentIndex) => (currentIndex + 1) % items.length); setChallengeVisible(false); }} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-30 dark:bg-clay">Next <ArrowRight className="h-4 w-4" /></button>
+              <button type="button" disabled={!items.length} onClick={goNext} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-30 dark:bg-clay">Next <ArrowRight className="h-4 w-4" /></button>
             </div>
           </footer>
         </main>

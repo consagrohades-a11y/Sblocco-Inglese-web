@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Clock3,
   Eye,
@@ -14,8 +15,11 @@ import {
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import SpeakingActivityEditorModal from '../components/admin/SpeakingActivityEditorModal.jsx';
+import SpeakingLiveController from '../components/admin/SpeakingLiveController.jsx';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import { loadAdminLearners } from '../lib/adminLearnersApi.js';
+import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
+import { createSpeakingControlId } from '../lib/speakingLiveControl.js';
 import { loadSpeakingActivities, loadSpeakingActivityHistory, updateSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
@@ -102,10 +106,10 @@ function PreviewModal({ activity, onClose }) {
   );
 }
 
-function PresentationLauncher({ activity, onClose }) {
+function PresentationLauncher({ activity, initialLearnerId = '', onClose, onStartLive }) {
   const [levels, setLevels] = useState(() => asArray(activity?.levels));
   const [learners, setLearners] = useState([]);
-  const [learnerId, setLearnerId] = useState('');
+  const [learnerId, setLearnerId] = useState(initialLearnerId || '');
   const [learnerQuery, setLearnerQuery] = useState('');
   const [loadingLearners, setLoadingLearners] = useState(true);
   const [learnerError, setLearnerError] = useState('');
@@ -129,6 +133,11 @@ function PresentationLauncher({ activity, onClose }) {
     load();
     return () => { active = false; };
   }, []);
+
+  useEffect(() => {
+    setLearnerId(initialLearnerId || '');
+    setLearnerQuery('');
+  }, [activity?.id, initialLearnerId]);
 
   const filteredLearners = useMemo(() => {
     const needle = learnerQuery.trim().toLowerCase();
@@ -174,13 +183,37 @@ function PresentationLauncher({ activity, onClose }) {
 
   function open() {
     if (!levels.length) return;
+
+    const controlId = createSpeakingControlId();
     const params = new URLSearchParams({
       levels: LEVELS.filter((level) => levels.includes(level)).join(','),
+      control: controlId,
     });
     if (learnerId) params.set('learner', learnerId);
 
-    const url = `/admin/present/speaking/${activity.id}?${params.toString()}`;
-    window.open(url, `sblocco-speaking-${activity.id}`, 'popup=yes,width=1320,height=860,resizable=yes,scrollbars=yes');
+    const presenterUrl = `/admin/present/speaking/${activity.id}?${params.toString()}`;
+    const windowName = `sblocco-speaking-${controlId}`;
+    const studentWindow = window.open(
+      presenterUrl,
+      windowName,
+      'popup=yes,width=1320,height=860,resizable=yes,scrollbars=yes',
+    );
+
+    if (!studentWindow) {
+      setLearnerError('Il browser ha bloccato la finestra studente. Consenti i popup per Sblocco e riprova.');
+      return;
+    }
+
+    onStartLive?.({
+      activity,
+      learner: selectedLearner,
+      learnerId: learnerId || null,
+      levels: LEVELS.filter((level) => levels.includes(level)),
+      controlId,
+      presenterUrl,
+      windowName,
+      studentWindow,
+    });
     onClose();
   }
 
@@ -286,9 +319,9 @@ function PresentationLauncher({ activity, onClose }) {
           <p className="text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
             Solo la finestra di presentazione va condivisa: note e soluzioni restano nel pannello admin.
           </p>
-          <button type="button" disabled={!levels.length} onClick={open} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-35 dark:bg-clay">
+          <button type="button" disabled={!levels.length || Boolean(learnerId && !selectedLearner)} onClick={open} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-35 dark:bg-clay">
             <ExternalLink className="h-4 w-4" />
-            {firstName ? `Apri con ${firstName}` : 'Apri finestra studente'}
+            {learnerId && !selectedLearner ? 'Caricamento studente…' : firstName ? `Apri con ${firstName}` : 'Apri finestra studente'}
           </button>
         </div>
       </div>
@@ -297,6 +330,11 @@ function PresentationLauncher({ activity, onClose }) {
 }
 
 export default function AdminSpeakingActivities() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { getLearner } = useAdminLearnerContext();
+  const focusedLearnerId = searchParams.get('learner') || '';
+  const focusedLearner = focusedLearnerId ? getLearner(focusedLearnerId) : null;
+
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -308,6 +346,7 @@ export default function AdminSpeakingActivities() {
   const [editor, setEditor] = useState(null);
   const [editingNew, setEditingNew] = useState(false);
   const [presenting, setPresenting] = useState(null);
+  const [liveSession, setLiveSession] = useState(null);
 
   async function load() {
     setLoading(true);
@@ -360,6 +399,12 @@ export default function AdminSpeakingActivities() {
     setEditingNew(false);
   }
 
+  function clearFocusedLearner() {
+    const next = new URLSearchParams(searchParams);
+    next.delete('learner');
+    setSearchParams(next, { replace: true });
+  }
+
   return (
     <>
       <SEO title="Libreria speaking | Admin | Sblocco Inglese" description="Giochi e attività speaking riutilizzabili per le lezioni." />
@@ -376,6 +421,24 @@ export default function AdminSpeakingActivities() {
               </>
             )}
           />
+
+          {focusedLearner ? (
+            <div className="mt-6 flex flex-wrap items-center gap-4 rounded-3xl border border-clay/20 bg-blush/30 p-4 dark:border-coral/20 dark:bg-coral/[0.06] sm:p-5">
+              <LearnerAvatar
+                avatarKey={focusedLearner.avatar_key}
+                backgroundKey={focusedLearner.avatar_background_key}
+                displayName={focusedLearner.display_name || focusedLearner.email}
+                size="lg"
+                eager
+              />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-clay dark:text-coral">Speaking session</p>
+                <p className="mt-1 truncate text-xl font-black">Working with {String(focusedLearner.display_name || focusedLearner.email || '').trim().split(/\s+/)[0]}</p>
+                <p className="mt-1 text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">Scegli un gioco: lo studente sarà già selezionato quando premi Presenta.</p>
+              </div>
+              <button type="button" onClick={clearFocusedLearner} className="focus-ring min-h-10 rounded-full border border-ink/15 bg-white px-4 text-xs font-black dark:border-white/15 dark:bg-white/[0.05]">Cambia studente</button>
+            </div>
+          ) : null}
 
           <div className="mt-6 grid gap-3 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-surface-900 md:grid-cols-[minmax(0,1fr)_auto_auto_auto]">
             <label className="relative"><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35 dark:text-white/35" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cerca gioco, item, obiettivo o tag…" className="focus-ring w-full rounded-xl border border-ink/10 bg-paper py-2.5 pl-9 pr-3 text-sm font-semibold dark:border-white/10 dark:bg-white/[0.05]" /></label>
@@ -422,7 +485,13 @@ export default function AdminSpeakingActivities() {
       </section>
 
       <PreviewModal activity={preview} onClose={() => setPreview(null)} />
-      <PresentationLauncher activity={presenting} onClose={() => setPresenting(null)} />
+      <PresentationLauncher
+        activity={presenting}
+        initialLearnerId={focusedLearnerId}
+        onClose={() => setPresenting(null)}
+        onStartLive={setLiveSession}
+      />
+      <SpeakingLiveController session={liveSession} onEnd={() => setLiveSession(null)} />
       {(editor || editingNew) ? <SpeakingActivityEditorModal activity={editingNew ? null : editor} catalogActivities={activities} onClose={() => { setEditor(null); setEditingNew(false); }} onSaved={handleSaved} /> : null}
     </>
   );
