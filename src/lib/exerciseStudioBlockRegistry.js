@@ -1,6 +1,6 @@
 import { EXERCISE_BUILDER_LEVELS } from './exerciseBuilderSchemaV2.js';
 
-export const STUDIO_BLOCK_REGISTRY_VERSION = 1;
+export const STUDIO_BLOCK_REGISTRY_VERSION = 2;
 
 const text = (value) => typeof value === 'string' ? value.trim() : '';
 const list = (value) => Array.isArray(value) ? value.map((item) => text(item)).filter(Boolean) : [];
