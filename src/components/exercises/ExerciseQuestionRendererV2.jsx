@@ -351,6 +351,160 @@ function ReadingComprehension({
 
   function update(key, value) { onChange({ ...values, [key]: value }); }
 
+  if (content.presentation === 'b2_part6') {
+    const paragraphs = Array.isArray(content.paragraph_options) ? content.paragraph_options : [];
+    const parts = Array.isArray(content.passage_parts) ? content.passage_parts : [];
+    const usedKeys = new Set(Object.values(values).filter(Boolean));
+    let gapNumber = 0;
+
+    return (
+      <div className="grid gap-6">
+        <article className="exercise-reading">
+          <div className="exercise-reading__label"><BookOpen /><span>B2 reading · Gapped text</span></div>
+          {content.title ? <h3>{content.title}</h3> : null}
+          <div className="mt-5 grid gap-4">
+            {parts.map((part, index) => {
+              if (part.type !== 'gap') {
+                return <p key={index} className="whitespace-pre-wrap text-base font-semibold leading-8 text-ink/85 dark:text-white/85">{part.text}</p>;
+              }
+
+              gapNumber += 1;
+              const currentGap = gapNumber;
+              const itemKey = part.key || `gap_${currentGap}`;
+              const selectedKey = values[itemKey] || '';
+              const selectedParagraph = paragraphs.find((paragraph) => paragraph.key === selectedKey) || null;
+              const itemResult = itemResults[itemKey] || null;
+              const correctKey = typeof itemResult?.correct_answer === 'string' ? itemResult.correct_answer : null;
+              const correctParagraph = paragraphs.find((paragraph) => paragraph.key === correctKey) || null;
+
+              return (
+                <section key={itemKey} className="rounded-2xl border-2 border-dashed border-orange-300 bg-orange-50/55 p-4 dark:border-orange-300/30 dark:bg-orange-300/[0.055]">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="rounded-full bg-orange-500 px-2.5 py-1 text-[0.68rem] font-black uppercase tracking-wide text-white">Gap {currentGap}</span>
+                    {itemResult?.status ? (
+                      <span className={`rounded-full px-2.5 py-1 text-[0.65rem] font-black ${itemResult.status === 'correct' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100' : 'bg-red-100 text-red-800 dark:bg-red-300/10 dark:text-red-100'}`}>
+                        {resultLabels[itemResult.status] || itemResult.status}
+                      </span>
+                    ) : null}
+                  </div>
+
+                  {selectedParagraph ? (
+                    <div className="mt-3 rounded-xl bg-white px-4 py-3 text-sm font-semibold leading-7 text-ink shadow-sm dark:bg-white/[0.06] dark:text-white">
+                      <span className="mr-2 font-black text-orange-700 dark:text-orange-300">{selectedParagraph.label}</span>
+                      {selectedParagraph.text}
+                    </div>
+                  ) : (
+                    <p className="mt-3 text-sm font-bold text-ink/45 dark:text-white/45">Choose the paragraph that fits here.</p>
+                  )}
+
+                  {!disabled ? (
+                    <select
+                      value={selectedKey}
+                      onChange={(event) => update(itemKey, event.target.value)}
+                      className="focus-ring mt-3 w-full rounded-xl border border-ink/15 bg-white px-3 py-2.5 text-sm font-black text-ink dark:border-white/15 dark:bg-surface-900 dark:text-white"
+                    >
+                      <option value="">Choose paragraph…</option>
+                      {paragraphs.map((paragraph) => (
+                        <option
+                          key={paragraph.key}
+                          value={paragraph.key}
+                          disabled={usedKeys.has(paragraph.key) && paragraph.key !== selectedKey}
+                        >
+                          {paragraph.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : null}
+
+                  {disabled && showCorrectAnswers && correctParagraph && selectedKey !== correctKey ? (
+                    <div className="mt-3 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold leading-5 text-emerald-900 dark:bg-emerald-300/[0.08] dark:text-emerald-100">
+                      <span className="font-black">Correct paragraph {correctParagraph.label}:</span> {correctParagraph.text}
+                    </div>
+                  ) : null}
+                </section>
+              );
+            })}
+          </div>
+          {content.source_note ? <p className="exercise-reading__source">{content.source_note}</p> : null}
+        </article>
+
+        <section className="rounded-2xl border border-ink/10 bg-white/65 p-4 dark:border-white/10 dark:bg-white/[0.03]">
+          <p className="text-xs font-black uppercase tracking-[0.1em] text-ink/45 dark:text-white/45">Paragraph bank</p>
+          <div className="mt-3 grid gap-3">
+            {paragraphs.map((paragraph) => (
+              <article key={paragraph.key} className={`grid grid-cols-[2rem_minmax(0,1fr)] gap-3 rounded-xl border p-3 ${usedKeys.has(paragraph.key) ? 'border-orange-200 bg-orange-50/70 dark:border-orange-300/20 dark:bg-orange-300/[0.04]' : 'border-ink/10 bg-white dark:border-white/10 dark:bg-white/[0.035]'}`}>
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-ink text-xs font-black text-white dark:bg-clay">{paragraph.label}</span>
+                <p className="text-sm font-semibold leading-6 text-ink/75 dark:text-white/75">{paragraph.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  if (content.presentation === 'b2_part7') {
+    const sections = Array.isArray(content.sections) ? content.sections : [];
+
+    return (
+      <div className="grid gap-6">
+        <section className="grid gap-3">
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.1em] text-orange-600 dark:text-orange-300">
+            <BookOpen className="h-4 w-4" /> B2 reading · Multiple matching
+          </div>
+          {sections.map((section) => (
+            <article key={section.key} className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.035]">
+              <div className="flex items-start gap-3">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white dark:bg-clay">{section.label}</span>
+                <div className="min-w-0">
+                  {section.title ? <h3 className="text-base font-black text-ink dark:text-white">{section.title}</h3> : null}
+                  <p className={`${section.title ? 'mt-2' : ''} whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/75 dark:text-white/75`}>{section.text}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </section>
+
+        <section className="grid gap-3">
+          {(content.items || []).map((matchingItem, index) => {
+            const selectedKey = values[matchingItem.key] || '';
+            const itemResult = itemResults[matchingItem.key] || null;
+            const correctKey = typeof itemResult?.correct_answer === 'string' ? itemResult.correct_answer : null;
+
+            return (
+              <article key={matchingItem.key} className="rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-white/[0.035]">
+                <div className="flex items-start gap-3">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-orange-100 text-xs font-black text-orange-800 dark:bg-orange-300/10 dark:text-orange-100">{index + 1}</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-black leading-6 text-ink dark:text-white">{matchingItem.prompt}</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {sections.map((section) => {
+                        const selected = selectedKey === section.key;
+                        const correct = disabled && showCorrectAnswers && correctKey === section.key;
+                        const wrongSelected = disabled && selected && correctKey && correctKey !== section.key;
+                        return (
+                          <button
+                            key={section.key}
+                            type="button"
+                            disabled={disabled}
+                            onClick={() => update(matchingItem.key, section.key)}
+                            className={`focus-ring grid h-10 w-10 place-items-center rounded-full border text-xs font-black transition ${correct ? 'border-emerald-400 bg-emerald-50 text-emerald-800 dark:border-emerald-300/40 dark:bg-emerald-300/10 dark:text-emerald-100' : wrongSelected ? 'border-red-300 bg-red-50 text-red-800 dark:border-red-300/30 dark:bg-red-300/10 dark:text-red-100' : selected ? 'border-orange-500 bg-orange-500 text-white' : 'border-ink/15 bg-white text-ink/55 hover:border-orange-300 dark:border-white/15 dark:bg-white/[0.04] dark:text-white/55'}`}
+                          >
+                            {section.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      </div>
+    );
+  }
+
   if (content.presentation === 'open_answer_set') {
     return (
       <div className="grid gap-5">
