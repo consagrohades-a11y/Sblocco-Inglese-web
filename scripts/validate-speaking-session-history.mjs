@@ -42,5 +42,8 @@ assert.ok(presenter.includes('finishSpeakingSession'), 'Presenter must finish tr
 assert.ok(library.includes('loadSpeakingActivityHistory'), 'Launcher must load learner activity history.');
 assert.ok(library.includes('Smart no-repeat'), 'Launcher must explain smart no-repeat before opening the presenter.');
 assert.ok(library.includes('items_seen'), 'Launcher must show prior item usage for the selected learner.');
+assert.ok(library.includes('requestIdleCallback'), 'Speaking library must defer expensive similarity analysis until after first paint.');
+assert.ok(library.includes('setSimilarityByActivity'), 'Similarity diagnostics must be populated asynchronously.');
+assert.ok(!library.includes('const similarityByActivity = useMemo(() =>'), 'Speaking library must not block initial render with eager similarity analysis.');
 
 console.log('Speaking session history and no-repeat validation passed.');
