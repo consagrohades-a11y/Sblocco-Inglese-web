@@ -926,3 +926,52 @@ assert.equal(partialImport.publishable, false);
 assert.ok(partialImport.errors.some((item) => item.code === 'correct_answer'));
 
 console.log('Learning Studio foundation validated: registry, compiler, safe JSON import, automatic technical repair and publish preflight are coherent.');
+
+
+const quickAssignPanelSource = fs.readFileSync(
+  new URL('../src/components/admin/exercise-studio/StudioQuickAssignPanel.jsx', import.meta.url),
+  'utf8',
+);
+const quickAssignApiSource = fs.readFileSync(
+  new URL('../src/lib/exerciseStudioAssignmentApi.js', import.meta.url),
+  'utf8',
+);
+const retryGuardMigrationSource = fs.readFileSync(
+  new URL('../supabase/migrations/20260922215000_assignment_retry_guard.sql', import.meta.url),
+  'utf8',
+);
+const comprehensionSummaryMigrationSource = fs.readFileSync(
+  new URL('../supabase/migrations/20260922213500_comprehension_item_result_summaries.sql', import.meta.url),
+  'utf8',
+);
+
+assert.match(
+  quickAssignPanelSource,
+  /useState\('submitted'\)/,
+  'Studio Quick Assign must default completion to first submission.',
+);
+assert.match(
+  quickAssignApiSource,
+  /completionRule = 'submitted'/,
+  'Studio assignment API must default completion to first submission.',
+);
+assert.match(
+  quickAssignPanelSource,
+  /retryRequiredByAttempts/,
+  'Studio Quick Assign must auto-enable retry for multi-attempt completion.',
+);
+assert.match(
+  retryGuardMigrationSource,
+  /assignment_resources_retry_guard/,
+  'Database must guard multi-attempt assignments against disabled retry.',
+);
+assert.match(
+  comprehensionSummaryMigrationSource,
+  /exercise_builder_result_counts/,
+  'Comprehension summaries must count inner items.',
+);
+assert.match(
+  comprehensionSummaryMigrationSource,
+  /reading_comprehension.*listening_comprehension/,
+  'Inner-item summaries must cover reading and listening comprehension.',
+);
