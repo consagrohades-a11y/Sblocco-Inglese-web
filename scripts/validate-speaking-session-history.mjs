@@ -42,8 +42,10 @@ assert.ok(presenter.includes('finishSpeakingSession'), 'Presenter must finish tr
 assert.ok(library.includes('loadSpeakingActivityHistory'), 'Launcher must load learner activity history.');
 assert.ok(library.includes('Smart no-repeat'), 'Launcher must explain smart no-repeat before opening the presenter.');
 assert.ok(library.includes('items_seen'), 'Launcher must show prior item usage for the selected learner.');
-assert.ok(library.includes('requestIdleCallback'), 'Speaking library must defer expensive similarity analysis until after first paint.');
-assert.ok(library.includes('setSimilarityByActivity'), 'Similarity diagnostics must be populated asynchronously.');
-assert.ok(!library.includes('const similarityByActivity = useMemo(() =>'), 'Speaking library must not block initial render with eager similarity analysis.');
+assert.ok(!library.includes('analyseSpeakingItemSet'), 'Speaking library must not run similarity analysis while browsing activities.');
+assert.ok(!library.includes('similarityByActivity'), 'Speaking library must not compute or render similarity counts.');
+const importModal = read('src/components/admin/SpeakingItemImportModal.jsx');
+assert.ok(importModal.includes('analyseSpeakingItemSet'), 'Similarity analysis must remain available during item import.');
+assert.ok(importModal.includes('Somiglia a'), 'Import review must show concrete possible matches instead of library-wide counts.');
 
 console.log('Speaking session history and no-repeat validation passed.');
