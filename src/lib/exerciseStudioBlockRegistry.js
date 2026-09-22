@@ -587,6 +587,65 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
   reading_comprehension: definition({
     type: 'reading_comprehension', label: 'Reading Comprehension · B2 Exam Style', category: 'practice',
     capabilities: { automaticGrading: true },
+    presets: [
+      {
+        id: 'b2_part5',
+        label: 'B2 Part 5',
+        description: 'Long text · 6 questions · 4 options',
+        initial: {
+          format: 'b2_part5',
+          title: 'B2 Reading | Part 5',
+          prompt: 'Read the text and choose the best answer for questions 1–6.',
+          instructions: 'Choose A, B, C or D. Base every answer on evidence in the text.',
+          primary_skill: 'reading',
+          learning_objective: 'Understand detail, attitude, purpose and implied meaning in a B2 text.',
+          items: Array.from({ length: 6 }, () => ({
+            prompt: '',
+            options: Array.from({ length: 4 }, () => ({ text: '', is_correct: false })),
+            feedback: '',
+          })),
+        },
+      },
+      {
+        id: 'b2_part6',
+        label: 'B2 Part 6',
+        description: 'Gapped text · 6 gaps · 7 paragraphs',
+        initial: {
+          format: 'b2_part6',
+          title: 'B2 Reading | Part 6',
+          prompt: 'Choose the paragraph that fits each gap.',
+          instructions: 'There is one extra paragraph which you do not need to use.',
+          primary_skill: 'reading',
+          learning_objective: 'Understand cohesion, reference and development in a B2 text.',
+          passage_parts: Array.from({ length: 13 }, (_, index) => (
+            index % 2 === 0
+              ? { type: 'text', text: '' }
+              : { type: 'gap', correct_option_index: null }
+          )),
+          paragraph_options: Array.from({ length: 7 }, () => ({ text: '' })),
+          items: [],
+        },
+      },
+      {
+        id: 'b2_part7',
+        label: 'B2 Part 7',
+        description: 'Multiple matching · 10 statements',
+        initial: {
+          format: 'b2_part7',
+          title: 'B2 Reading | Part 7',
+          prompt: 'Match statements 1–10 to the correct section.',
+          instructions: 'A section may be used more than once.',
+          primary_skill: 'reading',
+          learning_objective: 'Locate and match specific information, opinion and attitude across B2 text sections.',
+          sections: Array.from({ length: 4 }, () => ({ title: '', text: '' })),
+          items: Array.from({ length: 10 }, () => ({
+            prompt: '',
+            correct_section_index: null,
+            feedback: '',
+          })),
+        },
+      },
+    ],
     createDefault: () => ({
       title: '',
       prompt: 'Read the text and answer the questions.',
@@ -982,10 +1041,18 @@ export function getStudioBlockDefinition(type) {
   return STUDIO_BLOCK_REGISTRY[type] || null;
 }
 
-export function createDefaultStudioBlock(type) {
+export function createDefaultStudioBlock(type, presetId = null) {
   const block = getStudioBlockDefinition(type);
   if (!block) throw new Error('Unsupported Studio block type: ' + type);
-  return { type, ...block.createDefault() };
+  const preset = presetId
+    ? (Array.isArray(block.presets) ? block.presets.find((item) => item.id === presetId) : null)
+    : null;
+  if (presetId && !preset) throw new Error('Unsupported Studio block preset: ' + type + '/' + presetId);
+  return {
+    type,
+    ...block.createDefault(),
+    ...(preset?.initial || {}),
+  };
 }
 
 export function normalizeStudioBlock(block) {
