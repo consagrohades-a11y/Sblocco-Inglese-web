@@ -215,19 +215,40 @@ function PreviewBlock({ block, document, index, total, selected, onSelect }) {
   );
 }
 
-function EmptyCanvas({ onAdd }) {
+function EmptyCanvas({ onAdd, onQuickStart }) {
+  const readingPresets = [
+    ['b2_part5', 'B2 Part 5', 'Long text · 6 questions'],
+    ['b2_part6', 'B2 Part 6', 'Gapped text · 6 gaps'],
+    ['b2_part7', 'B2 Part 7', 'Multiple matching · 10 items'],
+  ];
+
   return (
     <div className="grid min-h-[48vh] place-items-center rounded-[2rem] border border-dashed border-ink/15 bg-white/70 p-8 text-center dark:border-white/15 dark:bg-white/[0.025]">
-      <div className="max-w-md">
+      <div className="w-full max-w-xl">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-orange-100 text-orange-700 dark:bg-orange-300/10 dark:text-orange-200">
           <Sparkles className="h-6 w-6" />
         </span>
         <h2 className="mt-5 text-2xl font-black text-ink dark:text-white">Start with what you want to teach.</h2>
         <p className="mt-2 text-sm font-semibold leading-6 text-ink/60 dark:text-white/60">
-          Add an explanation, rule, activity, media source or production task. Sblocco will handle the technical structure underneath.
+          Add any supported block, or start a B2 reading activity with the correct structure already prepared.
         </p>
-        <button type="button" onClick={onAdd} className="focus-ring mt-5 inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-orange-600">
-          <Plus className="h-4 w-4" /> Add first block
+
+        <div className="mt-5 grid gap-2 sm:grid-cols-3">
+          {readingPresets.map(([presetId, label, description]) => (
+            <button
+              key={presetId}
+              type="button"
+              onClick={() => onQuickStart(presetId)}
+              className="focus-ring rounded-2xl border border-orange-200 bg-orange-50/65 px-4 py-3 text-left transition hover:border-orange-400 hover:bg-orange-50 dark:border-orange-300/20 dark:bg-orange-300/[0.05] dark:hover:border-orange-300/40"
+            >
+              <span className="block text-sm font-black text-orange-900 dark:text-orange-100">{label}</span>
+              <span className="mt-1 block text-[0.7rem] font-semibold leading-5 text-ink/45 dark:text-white/45">{description}</span>
+            </button>
+          ))}
+        </div>
+
+        <button type="button" onClick={onAdd} className="focus-ring mt-5 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-ink/90 dark:bg-orange-400 dark:text-surface-950">
+          <Plus className="h-4 w-4" /> Browse all blocks
         </button>
       </div>
     </div>
@@ -867,7 +888,7 @@ export default function AdminExerciseStudio() {
                     />
                   ))}
                 </ExerciseCanvas>
-              ) : <EmptyCanvas onAdd={() => setPaletteOpen(true)} />}
+              ) : <EmptyCanvas onAdd={() => setPaletteOpen(true)} onQuickStart={(presetId) => addBlock('reading_comprehension', presetId)} />}
             </div>
           </main>
 
