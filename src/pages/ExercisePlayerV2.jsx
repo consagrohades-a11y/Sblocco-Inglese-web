@@ -21,6 +21,7 @@ import {
   ExerciseProgressHeader,
 } from "../components/exercises/ExerciseExperience.jsx";
 import { normalizeExerciseAnswerForSave } from "../lib/exerciseAnswerNormalization.js";
+import { archiveLearnerReviewNotificationsForAttempt } from "../lib/learnerNotificationsApi.js";
 import {
   completeExerciseSection,
   checkExerciseQuestion,
@@ -569,6 +570,11 @@ export default function ExercisePlayerV2() {
         if (!active) return;
         setPayload(result);
         setShowIntro(result.attempt?.status !== "submitted");
+        if (result.attempt?.status === "submitted" && result.attempt?.review_status === "approved") {
+          archiveLearnerReviewNotificationsForAttempt(result.attempt.id).catch(() => {
+            // Result viewing must not be blocked by notification housekeeping.
+          });
+        }
         if (startNew && result.attempt?.status === "in_progress")
           window.history.replaceState(
             window.history.state,
