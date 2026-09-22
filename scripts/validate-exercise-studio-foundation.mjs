@@ -937,11 +937,11 @@ const quickAssignApiSource = fs.readFileSync(
   'utf8',
 );
 const retryGuardMigrationSource = fs.readFileSync(
-  new URL('../supabase/migrations/20260922215000_assignment_retry_guard.sql', import.meta.url),
+  new URL('../supabase/migrations/20260922193603_assignment_retry_guard.sql', import.meta.url),
   'utf8',
 );
 const comprehensionSummaryMigrationSource = fs.readFileSync(
-  new URL('../supabase/migrations/20260922213500_comprehension_item_result_summaries.sql', import.meta.url),
+  new URL('../supabase/migrations/20260922193322_comprehension_item_result_summaries.sql', import.meta.url),
   'utf8',
 );
 
@@ -978,7 +978,7 @@ assert.match(
 
 
 const assignmentProgressRetryMigrationSource = fs.readFileSync(
-  new URL('../supabase/migrations/20260922220500_assignment_progress_retry_stability.sql', import.meta.url),
+  new URL('../supabase/migrations/20260922194016_assignment_progress_retry_stability.sql', import.meta.url),
   'utf8',
 );
 const assignmentProgressApiSource = fs.readFileSync(
