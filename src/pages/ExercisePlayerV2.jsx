@@ -62,28 +62,47 @@ function hasMeaningfulValue(value) {
   return Boolean(String(value).trim());
 }
 
-function answerIsEmpty(answer, question) {
+function answerMissingCount(answer, question) {
   const type = question?.type;
-  if (type === "content_block") return false;
-  if (type === "audio_response") return !answer?.file_id;
+  if (type === "content_block") return 0;
+  if (type === "audio_response") return answer?.file_id ? 0 : 1;
+
   if (type === "dialogue_roleplay") {
-    if (!answer?.role_key) return true;
+    if (!answer?.role_key) return 1;
     if (question?.content?.response_mode !== "audio_per_turn")
-      return !hasMeaningfulValue(answer?.turns);
+      return hasMeaningfulValue(answer?.turns) ? 0 : 1;
+
     const learnerTurns = (question.content.turns || []).filter(
       (turn) =>
-        turn.speaker === answer.role_key && turn.learner_response !== false,
+        turn.speaker === answer.role_key &&
+        turn.learner_response !== false &&
+        turn.required !== false,
     );
-    if (!learnerTurns.length) return true;
-    return learnerTurns.some(
-      (turn) => turn.required !== false && !answer?.turns?.[turn.key]?.file_id,
-    );
+    if (!learnerTurns.length) return 1;
+    return learnerTurns.filter(
+      (turn) => !answer?.turns?.[turn.key]?.file_id,
+    ).length;
   }
-  if (type === "reading_comprehension") {
+
+  if (type === "reading_comprehension" || type === "listening_comprehension") {
     const items = question?.content?.items || [];
-    return !items.some((item) => hasMeaningfulValue(answer?.[item.key]));
+    if (!items.length) return hasMeaningfulValue(answer) ? 0 : 1;
+    return items.filter((item) => !hasMeaningfulValue(answer?.[item.key])).length;
   }
-  return !hasMeaningfulValue(answer);
+
+  return hasMeaningfulValue(answer) ? 0 : 1;
+}
+
+function answerIsEmpty(answer, question) {
+  const type = question?.type;
+
+  if (type === "reading_comprehension" || type === "listening_comprehension") {
+    const items = question?.content?.items || [];
+    if (!items.length) return answerMissingCount(answer, question) > 0;
+    return items.every((item) => !hasMeaningfulValue(answer?.[item.key]));
+  }
+
+  return answerMissingCount(answer, question) > 0;
 }
 
 function transcriptBeforeQuestion(payload, targetSectionIndex, targetQuestionIndex) {
@@ -634,13 +653,14 @@ export default function ExercisePlayerV2() {
 
   async function finishSection() {
     if (!currentSection || busy) return;
-    const unanswered = currentSection.questions.filter((item) =>
-      answerIsEmpty(item.answer, item.question),
-    ).length;
+    const unanswered = currentSection.questions.reduce(
+      (sum, item) => sum + answerMissingCount(item.answer, item.question),
+      0,
+    );
     if (
       unanswered &&
       !window.confirm(
-        `Hai lasciato ${unanswered} ${unanswered === 1 ? "attività" : "attività"} senza risposta. Vuoi continuare?`,
+        `Hai lasciato ${unanswered} ${unanswered === 1 ? "risposta" : "risposte"} in bianco. Vuoi continuare comunque?`,
       )
     )
       return;
