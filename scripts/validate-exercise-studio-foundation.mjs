@@ -31,6 +31,7 @@ const requiredTypes = [
   'media',
   'multiple_choice',
   'multiple_choice_set',
+  'reading_comprehension',
   'open_answer_set',
   'practice_selection',
   'translation',
@@ -470,6 +471,125 @@ const invalidOpenAnswerSet = preflightStudioDocument({
 });
 assert.equal(invalidOpenAnswerSet.valid, false);
 assert.ok(invalidOpenAnswerSet.errors.some((item) => item.code === 'accepted_answer'));
+
+const b2Part5 = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'B2 Part 5 reading',
+  learner_title: 'Close reading',
+  level: 'B2',
+  topic: 'reading',
+  blocks: [{
+    type: 'reading_comprehension',
+    format: 'b2_part5',
+    title: 'Working differently',
+    prompt: 'Read the text and choose the best answer.',
+    passage: 'A complete original B2 passage with enough evidence for every question.',
+    items: Array.from({ length: 6 }, (_, index) => ({
+      prompt: 'Question ' + (index + 1),
+      options: [
+        { text: 'A' + index, is_correct: index % 4 === 0 },
+        { text: 'B' + index, is_correct: index % 4 === 1 },
+        { text: 'C' + index, is_correct: index % 4 === 2 },
+        { text: 'D' + index, is_correct: index % 4 === 3 },
+      ],
+    })),
+  }],
+});
+assert.equal(b2Part5.valid, true, b2Part5.errors.map((item) => item.message).join('\n'));
+const b2Part5Question = b2Part5.runtime.exercise.sections[0].questions[0];
+assert.equal(b2Part5Question.type, 'reading_comprehension');
+assert.equal(b2Part5Question.content.presentation, 'b2_part5');
+assert.equal(b2Part5Question.content.items.length, 6);
+assert.ok(b2Part5Question.content.items.every((item) => item.points === 2));
+assert.ok(b2Part5Question.content.items.every((item) => item.options.length === 4));
+
+const part6Parts = [];
+for (let index = 0; index < 6; index += 1) {
+  part6Parts.push({ type: 'text', text: 'Visible section ' + (index + 1) + '.' });
+  part6Parts.push({ type: 'gap', correct_option_index: index });
+}
+part6Parts.push({ type: 'text', text: 'Final visible section.' });
+
+const b2Part6 = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'B2 Part 6 reading',
+  learner_title: 'Gapped text',
+  level: 'B2',
+  topic: 'reading',
+  blocks: [{
+    type: 'reading_comprehension',
+    format: 'b2_part6',
+    title: 'How ideas connect',
+    prompt: 'Choose the paragraph that fits each gap.',
+    passage_parts: part6Parts,
+    paragraph_options: Array.from({ length: 7 }, (_, index) => ({ text: 'Paragraph option ' + String.fromCharCode(65 + index) + '.' })),
+  }],
+});
+assert.equal(b2Part6.valid, true, b2Part6.errors.map((item) => item.message).join('\n'));
+const b2Part6Question = b2Part6.runtime.exercise.sections[0].questions[0];
+assert.equal(b2Part6Question.content.presentation, 'b2_part6');
+assert.equal(b2Part6Question.content.items.length, 6);
+assert.equal(b2Part6Question.content.paragraph_options.length, 7);
+assert.ok(b2Part6Question.content.items.every((item) => item.points === 2));
+assert.equal(b2Part6Question.content.items[0].options.filter((option) => option.is_correct).length, 1);
+
+const b2Part7 = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'B2 Part 7 reading',
+  learner_title: 'Multiple matching',
+  level: 'B2',
+  topic: 'reading',
+  blocks: [{
+    type: 'reading_comprehension',
+    format: 'b2_part7',
+    title: 'Different viewpoints',
+    prompt: 'Match each statement to a section.',
+    sections: [
+      { title: 'First person', text: 'Section A text with clear evidence.' },
+      { title: 'Second person', text: 'Section B text with clear evidence.' },
+      { title: 'Third person', text: 'Section C text with clear evidence.' },
+      { title: 'Fourth person', text: 'Section D text with clear evidence.' },
+    ],
+    items: Array.from({ length: 10 }, (_, index) => ({
+      prompt: 'Statement ' + (index + 1),
+      correct_section_index: index % 4,
+    })),
+  }],
+});
+assert.equal(b2Part7.valid, true, b2Part7.errors.map((item) => item.message).join('\n'));
+const b2Part7Question = b2Part7.runtime.exercise.sections[0].questions[0];
+assert.equal(b2Part7Question.content.presentation, 'b2_part7');
+assert.equal(b2Part7Question.content.sections.length, 4);
+assert.equal(b2Part7Question.content.items.length, 10);
+assert.ok(b2Part7Question.content.items.every((item) => item.points === 1));
+
+const unresolvedB2Answer = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'Incomplete B2 Part 7',
+  learner_title: 'Incomplete matching',
+  level: 'B2',
+  topic: 'reading',
+  blocks: [{
+    type: 'reading_comprehension',
+    format: 'b2_part7',
+    prompt: 'Match.',
+    sections: [
+      { text: 'Section A.' },
+      { text: 'Section B.' },
+      { text: 'Section C.' },
+    ],
+    items: Array.from({ length: 10 }, (_, index) => ({
+      prompt: 'Statement ' + (index + 1),
+      correct_section_index: index === 0 ? null : index % 3,
+    })),
+  }],
+});
+assert.equal(unresolvedB2Answer.valid, false);
+assert.ok(unresolvedB2Answer.errors.some((item) => item.code === 'correct_answer'));
 
 const invalidVocabBankTag = preflightStudioDocument({
   schema_version: 1,
