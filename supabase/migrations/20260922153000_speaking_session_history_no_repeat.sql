@@ -46,6 +46,22 @@ create index if not exists admin_speaking_item_usage_signature_idx
 alter table public.admin_speaking_sessions enable row level security;
 alter table public.admin_speaking_item_usage enable row level security;
 
+drop policy if exists "No direct speaking session access" on public.admin_speaking_sessions;
+create policy "No direct speaking session access"
+on public.admin_speaking_sessions
+for all
+to authenticated
+using (false)
+with check (false);
+
+drop policy if exists "No direct speaking usage access" on public.admin_speaking_item_usage;
+create policy "No direct speaking usage access"
+on public.admin_speaking_item_usage
+for all
+to authenticated
+using (false)
+with check (false);
+
 -- These are implementation tables. Frontend access goes through the RPCs below.
 revoke all on table public.admin_speaking_sessions from public, anon, authenticated;
 revoke all on table public.admin_speaking_item_usage from public, anon, authenticated;
