@@ -96,7 +96,7 @@ function PreviewModal({ activity, onClose }) {
           <aside className="grid content-start gap-4">
             <div className="rounded-2xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-surface-900">
               <p className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Livelli item</p>
-              <div className="mt-3 flex flex-wrap gap-2">{asArray(current?.levels).map((level) => <span key={level} className="rounded-full bg-linen px-2 py-1 text-[0.68rem] font-black dark:bg-white/10">{level}</span>)}</div>
+              <div className="mt-3 flex flex-wrap gap-2">{asArray(current?.levels).map((level) => <span key={level} className="rounded-full bg-linen px-2.5 py-1 text-xs font-black dark:bg-white/10">{level}</span>)}</div>
             </div>
             {current?.challenge ? <div className="rounded-2xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-surface-900"><p className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Challenge studente</p><p className="mt-2 text-sm font-bold leading-6">{current.challenge}</p></div> : null}
             <div className="rounded-2xl border border-clay/20 bg-blush/35 p-5 dark:border-coral/20 dark:bg-coral/[0.06]">
@@ -482,7 +482,7 @@ export default function AdminSpeakingActivities() {
 
                     <div className="mt-auto grid grid-cols-2 gap-2 pt-5">
                       <button type="button" onClick={() => setPreview(activity)} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/15 px-3 text-[0.7rem] font-black dark:border-white/15"><Eye className="h-4 w-4" /> Anteprima</button>
-                      <button type="button" onClick={() => setEditor(activity)} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-ink/15 px-4 text-xs font-black dark:border-white/15"><Pencil className="h-4 w-4" /> Modifica</button>
+                      <button type="button" onClick={() => setEditor(activity)} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/15 px-3 text-[0.7rem] font-black dark:border-white/15"><Pencil className="h-4 w-4" /> Modifica</button>
                       <button type="button" onClick={() => setPresenting(activity)} className="focus-ring col-span-2 inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-ink px-3 text-xs font-black text-white dark:bg-clay"><ExternalLink className="h-4 w-4" /> Presenta in nuova finestra</button>
                     </div>
                   </article>
