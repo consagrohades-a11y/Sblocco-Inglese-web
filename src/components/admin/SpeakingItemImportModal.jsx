@@ -108,6 +108,7 @@ function itemDiagnostic(plan, itemIndex, skippedItems) {
       severity: 'block',
       label: duplicateReasonLabel(blocking[0].reason),
       count: blocking.length,
+      matches: blocking,
     };
   }
 
@@ -119,6 +120,7 @@ function itemDiagnostic(plan, itemIndex, skippedItems) {
       severity: 'warn',
       label: duplicateReasonLabel(warnings[0].reason),
       count: warnings.length,
+      matches: warnings,
     };
   }
 
@@ -329,6 +331,37 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
                                   {diagnostic.count > 1 ? <span className="text-[0.68rem] font-bold text-ink/40 dark:text-white/40">+{diagnostic.count - 1} match</span> : null}
                                 </div>
                                 <p className={`mt-1.5 text-sm font-bold leading-5 ${skipped ? 'line-through' : ''}`}>{item.text || 'Item senza testo'}</p>
+
+                                {!skipped && asArray(diagnostic.matches).length ? (
+                                  <div className="mt-3 grid gap-2">
+                                    <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-ink/45 dark:text-white/45">
+                                      Somiglia a
+                                    </p>
+                                    {diagnostic.matches.slice(0, 4).map((match, matchIndex) => {
+                                      const sameImport = match.existing.activityTitle === 'Questa attività';
+                                      const sourceLabel = sameImport
+                                        ? `Questo file · item ${Number(match.existing.itemIndex) + 1}`
+                                        : `${match.existing.activityTitle || 'Libreria esistente'}${Number.isInteger(match.existing.itemIndex) ? ` · item ${match.existing.itemIndex + 1}` : ''}`;
+
+                                      return (
+                                        <div key={matchIndex} className="rounded-xl border border-ink/10 bg-paper/70 px-3 py-2.5 dark:border-white/10 dark:bg-white/[0.04]">
+                                          <div className="flex flex-wrap items-center gap-2">
+                                            <span className="text-[0.68rem] font-black text-clay dark:text-coral">{sourceLabel}</span>
+                                            <span className="text-[0.65rem] font-bold text-ink/40 dark:text-white/40">{duplicateReasonLabel(match.reason)}</span>
+                                          </div>
+                                          <p className="mt-1 text-xs font-semibold leading-5 text-ink/70 dark:text-white/70">
+                                            {match.existing.text || 'Testo non disponibile'}
+                                          </p>
+                                        </div>
+                                      );
+                                    })}
+                                    {diagnostic.matches.length > 4 ? (
+                                      <p className="text-[0.68rem] font-bold text-ink/45 dark:text-white/45">
+                                        +{diagnostic.matches.length - 4} altre somiglianze
+                                      </p>
+                                    ) : null}
+                                  </div>
+                                ) : null}
                               </div>
                               <button
                                 type="button"
