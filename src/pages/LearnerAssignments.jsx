@@ -15,6 +15,7 @@ import LearnerNextLessonCard from '../components/learner/LearnerNextLessonCard.j
 import LearnerNotificationsPanel from '../components/learner/LearnerNotificationsPanel.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { supabase } from '../lib/supabaseClient.js';
+import { decorateLearnerAssignmentsWithProgress } from '../lib/assignmentProgressApi.js';
 
 function formatDate(value) {
   if (!value) return null;
@@ -35,6 +36,7 @@ function firstNameFromProfile(profile, user) {
 const statusLabels = {
   published: 'Da fare ora',
   completed: 'Completata',
+  review: 'Consegnata · in valutazione',
 };
 
 function SummaryCard({ icon: Icon, label, value, detail }) {
@@ -56,7 +58,8 @@ function ProgressRing({ value }) {
 }
 
 function AssignmentCard({ assignment, index }) {
-  const completed = assignment.status === 'completed';
+  const learnerState = assignment.learner_state || assignment.status;
+  const completed = ['completed', 'review'].includes(learnerState);
 
   return (
     <li className={`learner-assignment-overview-row ${completed ? 'is-completed' : ''}`}>
@@ -65,7 +68,7 @@ function AssignmentCard({ assignment, index }) {
       </span>
       <span className="learner-standard-assignment-list__icon"><BookOpen aria-hidden="true" /></span>
       <span className="learner-standard-assignment-list__copy">
-        <small>{statusLabels[assignment.status] || assignment.status}</small>
+        <small>{statusLabels[learnerState] || learnerState}</small>
         <strong>{assignment.title}</strong>
         <p>{assignment.learner_note || (assignment.required
           ? 'Attività obbligatoria assegnata dal tuo insegnante.'
@@ -76,7 +79,7 @@ function AssignmentCard({ assignment, index }) {
         {assignment.deadline_at ? <><CalendarClock aria-hidden="true" />{formatDate(assignment.deadline_at)}</> : null}
       </span>
       <Link to={`/assignments/${assignment.id}`} className={completed ? 'learner-secondary-button' : 'learner-primary-button'}>
-        {completed ? 'Rivedi' : index === 0 ? 'Inizia' : 'Apri'} <ArrowRight aria-hidden="true" size={15} />
+        {learnerState === 'review' ? 'In valutazione' : completed ? 'Rivedi' : index === 0 ? 'Inizia' : 'Apri'} <ArrowRight aria-hidden="true" size={15} />
       </Link>
     </li>
   );
@@ -120,10 +123,12 @@ export default function LearnerAssignments({ previewAssignments = null, previewN
           Number(a.display_order || 0) - Number(b.display_order || 0)
           || new Date(b.created_at || 0) - new Date(a.created_at || 0)
         ));
-        setAssignments(ordered);
+        const decorated = await decorateLearnerAssignmentsWithProgress(ordered);
+        if (!active) return;
+        setAssignments(decorated);
       }
 
-      setLoading(false);
+      if (active) setLoading(false);
     }
 
     loadAssignments();
@@ -137,13 +142,14 @@ export default function LearnerAssignments({ previewAssignments = null, previewN
     () => previewName || firstNameFromProfile(profile, user),
     [previewName, profile, user],
   );
-  const activeCount = assignments.filter((assignment) => assignment.status === 'published').length;
-  const completedCount = assignments.filter((assignment) => assignment.status === 'completed').length;
+  const assignmentState = (assignment) => assignment.learner_state || assignment.status;
+  const activeCount = assignments.filter((assignment) => assignmentState(assignment) === 'published').length;
+  const completedCount = assignments.filter((assignment) => ['completed', 'review'].includes(assignmentState(assignment))).length;
   const estimatedMinutes = assignments
-    .filter((assignment) => assignment.status === 'published')
+    .filter((assignment) => assignmentState(assignment) === 'published')
     .reduce((sum, assignment) => sum + Number(assignment.estimated_minutes || 0), 0);
   const nearestDeadline = assignments
-    .filter((assignment) => assignment.status === 'published' && assignment.deadline_at)
+    .filter((assignment) => assignmentState(assignment) === 'published' && assignment.deadline_at)
     .sort((a, b) => new Date(a.deadline_at) - new Date(b.deadline_at))[0]?.deadline_at;
   const completionPercent = assignments.length
     ? Math.round((completedCount / assignments.length) * 100)
