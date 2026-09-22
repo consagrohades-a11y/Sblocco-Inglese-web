@@ -19,6 +19,8 @@ declare
   v_required_score numeric;
   v_completion_rule text;
   v_passed boolean;
+  v_best_score numeric;
+  v_progress_score numeric;
   v_total integer := 0;
   v_done integer := 0;
   v_resources jsonb := '[]'::jsonb;
@@ -78,11 +80,20 @@ begin
           attempt.status = 'submitted'
           and attempt.score is not null
           and attempt.score >= v_required_score
-        ), false)
-      into v_submitted_count, v_passed
+        ), false),
+        max(attempt.score) filter (
+          where attempt.status = 'submitted'
+            and attempt.score is not null
+        )
+      into v_submitted_count, v_passed, v_best_score
       from public.exercise_builder_attempts attempt
       where attempt.assignment_resource_id = v_resource.id
         and attempt.learner_id = v_assignment.learner_id;
+
+      v_progress_score := case
+        when v_completion_rule = 'passed' then v_best_score
+        else v_latest_submitted.score
+      end;
 
       if v_latest_submitted.id is not null
         and coalesce((v_latest_submitted.result_summary ->> 'pending_review')::integer, 0) > 0 then
@@ -129,7 +140,7 @@ begin
       'resource_type', v_resource.resource_type,
       'state', v_state,
       'score', case
-        when v_resource.resource_type = 'custom_exercise' then v_latest_submitted.score
+        when v_resource.resource_type = 'custom_exercise' then v_progress_score
         else null
       end,
       'completed_items', coalesce(v_resource.collection_completed_items, 0),
