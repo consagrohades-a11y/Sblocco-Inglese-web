@@ -697,6 +697,29 @@ assert.ok(
   'Gold assessment should include sentence construction.',
 );
 
+const goldReading = fs.readFileSync(
+  new URL('../public/templates/sblocco-learning-studio/gold-benchmark-b2-reading-exam-style-v1.json', import.meta.url),
+  'utf8',
+);
+const importedGoldReading = parseStudioImport(goldReading);
+assert.equal(
+  importedGoldReading.publishable,
+  true,
+  importedGoldReading.errors.map((item) => item.message).join('\n'),
+);
+assert.equal(importedGoldReading.needs_attention_blocks, 0);
+assert.equal(importedGoldReading.document.level, 'B2');
+assert.equal(importedGoldReading.document.blocks.length, 3);
+assert.deepEqual(
+  importedGoldReading.document.blocks.map((block) => block.type),
+  ['reading_comprehension', 'reading_comprehension', 'reading_comprehension'],
+);
+assert.deepEqual(
+  importedGoldReading.document.blocks.map((block) => block.format),
+  ['b2_part5', 'b2_part6', 'b2_part7'],
+);
+assertNoEmDashTitles(importedGoldReading.document, 'Gold B2 reading');
+
 const goldListening = fs.readFileSync(
   new URL('../public/templates/sblocco-learning-studio/gold-benchmark-b2-listening-vocabulary-chunks-v1.json', import.meta.url),
   'utf8',
