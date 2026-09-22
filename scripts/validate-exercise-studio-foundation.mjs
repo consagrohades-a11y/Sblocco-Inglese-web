@@ -1015,3 +1015,20 @@ assert.match(
   /Inizia tentativo/,
   'Learner result UI must explain required retry progression.',
 );
+
+
+assert.match(
+  exercisePlayerSource,
+  /function answerMissingCount\(answer, question\)/,
+  'Learner player must count unanswered inner comprehension items.',
+);
+assert.match(
+  exercisePlayerSource,
+  /reading_comprehension.*listening_comprehension/s,
+  'Inner unanswered counting must cover reading and listening comprehension.',
+);
+assert.match(
+  exercisePlayerSource,
+  /risposte.*in bianco/,
+  'Learner must be warned about unanswered comprehension subitems before continuing.',
+);
