@@ -87,19 +87,21 @@ function compareItems(candidate, existing) {
     return { severity: 'block', reason: 'exact', tokenSimilarity: 1, surfaceSimilarity: 1 };
   }
 
-  if (surfaceSimilarity >= 0.92 || tokenSimilarity >= 0.84) {
+  // Boilerplate-heavy activities can share a large amount of surface text
+  // without being duplicates (for example "Explain: ... You cannot say: ...").
+  // Exact/near-text blocking therefore requires strong lexical overlap too.
+  if (tokenSimilarity >= 0.86 || (surfaceSimilarity >= 0.94 && tokenSimilarity >= 0.60)) {
     return { severity: 'block', reason: 'near_text', tokenSimilarity, surfaceSimilarity };
   }
 
-  if (sameContext && sameTarget && (surfaceSimilarity >= 0.74 || tokenSimilarity >= 0.58)) {
-    return { severity: 'block', reason: 'same_context_same_target', tokenSimilarity, surfaceSimilarity };
-  }
-
-  if (sameContext && sameTarget && (surfaceSimilarity >= 0.56 || tokenSimilarity >= 0.36)) {
+  // Shared context + shared language target is useful metadata, not a duplicate
+  // condition by itself. Keep it as a warning only when the actual prompt also
+  // overlaps meaningfully.
+  if (sameContext && sameTarget && (tokenSimilarity >= 0.50 || (surfaceSimilarity >= 0.82 && tokenSimilarity >= 0.32))) {
     return { severity: 'warn', reason: 'contextual_similarity', tokenSimilarity, surfaceSimilarity };
   }
 
-  if (sameContext && (surfaceSimilarity >= 0.72 || tokenSimilarity >= 0.52)) {
+  if (sameContext && (tokenSimilarity >= 0.55 || (surfaceSimilarity >= 0.86 && tokenSimilarity >= 0.38))) {
     return { severity: 'warn', reason: 'same_context_similar_prompt', tokenSimilarity, surfaceSimilarity };
   }
 
@@ -179,7 +181,6 @@ export function duplicateReasonLabel(reason) {
   return {
     exact: 'testo identico',
     near_text: 'formulazione quasi identica',
-    same_context_same_target: 'stesso contesto + stesso obiettivo linguistico',
     contextual_similarity: 'molto simile nello stesso contesto e obiettivo',
     same_context_similar_prompt: 'prompt molto simile nello stesso contesto',
   }[reason] || 'possibile duplicato';
