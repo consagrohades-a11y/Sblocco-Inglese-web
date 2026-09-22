@@ -379,14 +379,17 @@ export default function AdminExerciseStudio() {
     setDocument((current) => changedDraft(current, patch));
   }
 
-  function addBlock(type) {
+  function addBlock(type, presetId = null) {
     setPublishNotice('');
     setImportNotice('');
     setAssignmentNotice('');
     setDocument((current) => {
-      const next = addStudioBlock(current, type);
+      const next = addStudioBlock(current, type, {}, presetId);
       const newBlock = next.blocks[next.blocks.length - 1];
       const selectedIndex = current.blocks.findIndex((block) => block.id === selectedBlockId);
+      const isFreshB2ReadingPreset = type === 'reading_comprehension'
+        && String(presetId || '').startsWith('b2_')
+        && current.blocks.length === 0;
 
       if (selectedIndex >= 0) {
         const blocks = [...current.blocks];
@@ -396,7 +399,16 @@ export default function AdminExerciseStudio() {
       }
 
       setSelectedBlockId(newBlock.id);
-      return { ...next, status: current.status === 'published' ? 'draft' : current.status };
+      return {
+        ...next,
+        ...(isFreshB2ReadingPreset ? {
+          level: 'B2',
+          topic: current.topic || 'b2_reading',
+          skills: [...new Set([...(current.skills || []), 'reading'])],
+          activity_type: current.activity_type === 'lesson' ? 'assessment' : current.activity_type,
+        } : {}),
+        status: current.status === 'published' ? 'draft' : current.status,
+      };
     });
     setPaletteOpen(false);
   }
