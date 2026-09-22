@@ -279,7 +279,7 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
                 <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black dark:bg-white/10">{totals.items} da importare</span>
                 {totals.skipped ? <span className="rounded-full bg-ink/10 px-3 py-1.5 text-xs font-black text-ink/65 dark:bg-white/10 dark:text-white/70">{totals.skipped} saltati</span> : null}
                 {totals.blocking ? <span className="rounded-full bg-red-100 px-3 py-1.5 text-xs font-black text-red-800 dark:bg-red-400/10 dark:text-red-100">{totals.blocking} duplicati bloccanti</span> : null}
-                {totals.warnings ? <span className="rounded-full bg-amber-100 px-3 py-1.5 text-xs font-black text-amber-900 dark:bg-amber-300/10 dark:text-amber-100">{totals.warnings} somiglianze</span> : null}
+                {totals.warnings ? <span className="rounded-full bg-amber-100 px-3 py-1.5 text-xs font-black text-amber-900 dark:bg-amber-300/10 dark:text-amber-100">{totals.warnings} segnalazioni da controllare</span> : null}
                 {!totals.errors && !totals.blocking ? <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-black text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100"><CheckCircle2 className="h-3.5 w-3.5" /> Struttura valida</span> : null}
               </div>
 
@@ -291,7 +291,7 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
                     </button>
                   ) : null}
                   <button type="button" onClick={() => skipMatches('all')} className="focus-ring min-h-9 rounded-full border border-amber-200 bg-amber-50 px-3 text-xs font-black text-amber-900 dark:border-amber-300/20 dark:bg-amber-300/[0.07] dark:text-amber-100">
-                    Salta tutti i segnalati
+                    Salta tutti i match segnalati
                   </button>
                 </div>
               ) : null}
@@ -357,7 +357,7 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
                                     })}
                                     {diagnostic.matches.length > 4 ? (
                                       <p className="text-[0.68rem] font-bold text-ink/45 dark:text-white/45">
-                                        +{diagnostic.matches.length - 4} altre somiglianze
+                                        +{diagnostic.matches.length - 4} altre segnalazioni da controllare
                                       </p>
                                     ) : null}
                                   </div>
