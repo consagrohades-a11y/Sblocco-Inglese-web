@@ -21,6 +21,7 @@ import SpeakingLiveController from '../components/admin/SpeakingLiveController.j
 import SpeakingItemImportModal from '../components/admin/SpeakingItemImportModal.jsx';
 import SpeakingPromptContent from '../components/speaking/SpeakingPromptContent.jsx';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
+import LearnerQuickFacts from '../components/admin/LearnerQuickFacts.jsx';
 import { loadAdminLearners } from '../lib/adminLearnersApi.js';
 import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
 import { createSpeakingControlId } from '../lib/speakingLiveControl.js';
@@ -256,9 +257,7 @@ function PresentationLauncher({ activity, initialLearnerId = '', onClose, onStar
                 <p className="mt-0.5 text-xs font-bold text-clay dark:text-coral">
                   {firstName ? `Working with ${firstName}` : 'Student selected'}
                 </p>
-                {selectedLearner.admin_context_note ? (
-                  <p className="mt-1 line-clamp-2 text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">{selectedLearner.admin_context_note}</p>
-                ) : null}
+                <p className="mt-1 line-clamp-2 text-xs font-semibold leading-5 text-ink/55 dark:text-white/55"><LearnerQuickFacts learner={selectedLearner} /></p>
                 <p className="mt-1.5 text-[0.68rem] font-bold leading-5 text-ink/45 dark:text-white/45">
                   {historyLoading
                     ? 'Controllo storico…'
