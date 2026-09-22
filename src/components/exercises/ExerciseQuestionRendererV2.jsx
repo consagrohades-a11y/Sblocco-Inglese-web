@@ -811,7 +811,7 @@ function ReadingComprehension({
               <p className="text-[0.7rem] font-black uppercase tracking-[0.1em] text-orange-500">Example {index + 1}</p>
               <p className="mt-2 text-base font-black leading-7 text-ink dark:text-white">{choiceItem.prompt}</p>
               <div className="mt-3 grid gap-2">
-                {(choiceItem.options || []).map((option, optionIndex) => {
+                {displayOptions.map((option, optionIndex) => {
                   const selected = selectedKey === option.key;
                   const correct = disabled && showCorrectAnswers && correctKey === option.key;
                   const incorrectSelection = disabled && itemResult && selected && correctKey && correctKey !== option.key;
