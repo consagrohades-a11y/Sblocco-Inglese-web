@@ -87,7 +87,7 @@ function PreviewModal({ activity, onClose }) {
               <div className="mt-7 grid min-h-[18rem] place-items-center"><SpeakingPromptContent item={current || { text: 'Nessun item' }} style={activity.presenter_style} compact /></div>
               {current?.student_support ? <div className="mt-7 rounded-2xl border border-white/15 bg-white/[0.07] p-4"><p className="text-xs font-black uppercase tracking-wide text-white/50">Support</p><p className="mt-2 text-sm font-bold leading-6">{current.student_support}</p></div> : null}
             </div>
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap gap-1.5">
               <button type="button" disabled={!items.length} onClick={() => setIndex((value) => (value - 1 + items.length) % items.length)} className="focus-ring min-h-10 rounded-full border border-ink/15 bg-white px-4 text-xs font-black dark:border-white/15 dark:bg-white/[0.05]">← Prima</button>
               <button type="button" disabled={!items.length} onClick={() => setIndex((value) => (value + 1) % items.length)} className="focus-ring min-h-10 rounded-full bg-ink px-4 text-xs font-black text-white dark:bg-clay">Dopo →</button>
             </div>
@@ -96,7 +96,7 @@ function PreviewModal({ activity, onClose }) {
           <aside className="grid content-start gap-4">
             <div className="rounded-2xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-surface-900">
               <p className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Livelli item</p>
-              <div className="mt-3 flex flex-wrap gap-2">{asArray(current?.levels).map((level) => <span key={level} className="rounded-full bg-linen px-2.5 py-1 text-xs font-black dark:bg-white/10">{level}</span>)}</div>
+              <div className="mt-3 flex flex-wrap gap-2">{asArray(current?.levels).map((level) => <span key={level} className="rounded-full bg-linen px-2 py-1 text-[0.68rem] font-black dark:bg-white/10">{level}</span>)}</div>
             </div>
             {current?.challenge ? <div className="rounded-2xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-surface-900"><p className="text-xs font-black uppercase tracking-wide text-ink/50 dark:text-white/50">Challenge studente</p><p className="mt-2 text-sm font-bold leading-6">{current.challenge}</p></div> : null}
             <div className="rounded-2xl border border-clay/20 bg-blush/35 p-5 dark:border-coral/20 dark:bg-coral/[0.06]">
@@ -418,7 +418,7 @@ export default function AdminSpeakingActivities() {
     <>
       <SEO title="Libreria speaking | Admin | Sblocco Inglese" description="Giochi e attività speaking riutilizzabili per le lezioni." />
       <section className="section-shell py-8 lg:py-10">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[96rem]">
           <AdminPageHeader
             eyebrow="Live teaching"
             title="Libreria speaking"
@@ -462,28 +462,28 @@ export default function AdminSpeakingActivities() {
           {loading ? <p className="mt-6 text-sm font-bold text-ink/55 dark:text-white/55">Caricamento attività…</p> : null}
 
           {!loading && filtered.length ? (
-            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6">
               {filtered.map((activity) => {
                 const counts = itemCounts(activity);
                 return (
-                  <article key={activity.id} className="flex min-h-[27rem] flex-col rounded-3xl border border-ink/10 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-clay/25 dark:border-white/10 dark:bg-surface-900">
+                  <article key={activity.id} className="flex min-h-[24rem] flex-col rounded-3xl border border-ink/10 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-clay/25 dark:border-white/10 dark:bg-surface-900">
                     <div className="flex items-start justify-between gap-3">
-                      <div><p className="text-xs font-black uppercase tracking-[0.14em] text-clay dark:text-coral">{typeLabels[activity.activity_type] || activity.activity_type}</p><h2 className="mt-2 text-xl font-black leading-tight">{activity.title}</h2></div>
+                      <div className="min-w-0"><p className="text-[0.68rem] font-black uppercase tracking-[0.13em] text-clay dark:text-coral">{typeLabels[activity.activity_type] || activity.activity_type}</p><h2 className="mt-2 text-lg font-black leading-tight">{activity.title}</h2></div>
                       <button type="button" onClick={() => toggleFavorite(activity)} className="focus-ring grid h-10 w-10 shrink-0 place-items-center rounded-full border border-ink/10 dark:border-white/10" aria-label={activity.favorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}><Heart className={`h-4 w-4 ${activity.favorite ? 'fill-clay text-clay' : 'text-ink/40 dark:text-white/40'}`} /></button>
                     </div>
 
-                    <p className="mt-3 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">{activity.summary}</p>
+                    <p className="mt-3 text-[0.82rem] font-semibold leading-5 text-ink/65 dark:text-white/65">{activity.summary}</p>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {asArray(activity.levels).map((item) => <span key={item} className="rounded-full bg-linen px-2.5 py-1 text-xs font-black dark:bg-white/10">{item} · {counts[item] || 0}</span>)}
-                      {activity.duration_minutes ? <span className="inline-flex items-center gap-1 rounded-full bg-linen px-2.5 py-1 text-xs font-black dark:bg-white/10"><Clock3 className="h-3 w-3" />{activity.duration_minutes} min</span> : null}
+                      {activity.duration_minutes ? <span className="inline-flex items-center gap-1 rounded-full bg-linen px-2 py-1 text-[0.68rem] font-black dark:bg-white/10"><Clock3 className="h-3 w-3" />{activity.duration_minutes} min</span> : null}
                     </div>
 
-                    <div className="mt-5"><p className="text-xs font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Speaking focus</p><div className="mt-2 flex flex-wrap gap-2">{asArray(activity.goals).slice(0, 4).map((goal) => <span key={goal} className="rounded-full bg-mint/60 px-2.5 py-1 text-xs font-black dark:bg-emerald-300/10 dark:text-emerald-100">{goal}</span>)}</div></div>
+                    <div className="mt-4"><p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Speaking focus</p><div className="mt-2 flex flex-wrap gap-1.5">{asArray(activity.goals).slice(0, 4).map((goal) => <span key={goal} className="rounded-full bg-mint/60 px-2 py-1 text-[0.68rem] font-black dark:bg-emerald-300/10 dark:text-emerald-100">{goal}</span>)}</div></div>
 
-                    <div className="mt-auto grid grid-cols-2 gap-2 pt-6">
-                      <button type="button" onClick={() => setPreview(activity)} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-ink/15 px-4 text-xs font-black dark:border-white/15"><Eye className="h-4 w-4" /> Anteprima</button>
+                    <div className="mt-auto grid grid-cols-2 gap-2 pt-5">
+                      <button type="button" onClick={() => setPreview(activity)} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/15 px-3 text-[0.7rem] font-black dark:border-white/15"><Eye className="h-4 w-4" /> Anteprima</button>
                       <button type="button" onClick={() => setEditor(activity)} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-ink/15 px-4 text-xs font-black dark:border-white/15"><Pencil className="h-4 w-4" /> Modifica</button>
-                      <button type="button" onClick={() => setPresenting(activity)} className="focus-ring col-span-2 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-ink px-5 text-sm font-black text-white dark:bg-clay"><ExternalLink className="h-4 w-4" /> Presenta in nuova finestra</button>
+                      <button type="button" onClick={() => setPresenting(activity)} className="focus-ring col-span-2 inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-ink px-3 text-xs font-black text-white dark:bg-clay"><ExternalLink className="h-4 w-4" /> Presenta in nuova finestra</button>
                     </div>
                   </article>
                 );
