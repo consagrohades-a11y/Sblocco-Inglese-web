@@ -445,6 +445,14 @@ export default function AdminSpeakingActivities() {
     });
   }, [activities, favoritesOnly, level, query, type]);
 
+  const similarityCatalogKey = useMemo(() => activities.map((activity) => JSON.stringify({
+    id: activity.id,
+    prompts: activity.prompts,
+    levels: activity.levels,
+    goals: activity.goals,
+    tags: activity.tags,
+  })).join('|'), [activities]);
+
   useEffect(() => {
     let cancelled = false;
     let idleHandle = null;
@@ -503,7 +511,7 @@ export default function AdminSpeakingActivities() {
       if (idleHandle != null && typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idleHandle);
       if (timerHandle != null) window.clearTimeout(timerHandle);
     };
-  }, [activities]);
+  }, [similarityCatalogKey]);
 
   async function toggleFavorite(activity) {
     const next = !activity.favorite;
