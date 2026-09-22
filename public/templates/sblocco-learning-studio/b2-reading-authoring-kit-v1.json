@@ -12,6 +12,13 @@
     "markdown_fences": false,
     "commentary_outside_file": false
   },
+  "agent_instructions": [
+    "Treat this file as direct operating instructions. Follow it; do not turn it into a prompt for the user to copy.",
+    "Use the user's requested topic, learner profile, CEFR level and source material together with this B2 Reading contract.",
+    "When final importable content is requested, create and attach one downloadable .json file only.",
+    "Do not paste the generated JSON payload into the chat body.",
+    "If source material is provided, ground every source-dependent question in that material and do not invent unsupported details."
+  ],
   "purpose": "Create original B2 reading-comprehension activities for Sblocco Learning Studio using standard reading or exam-style Part 5, Part 6 and Part 7 mechanics.",
   "non_negotiable_rules": [
     "Return one downloadable JSON file only when generating an activity.",
