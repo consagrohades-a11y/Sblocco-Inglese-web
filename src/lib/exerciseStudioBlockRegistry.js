@@ -567,6 +567,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       instructions: text(block.instructions),
       content: {
         presentation: 'choice_set',
+        shuffle_options: 'stable_attempt',
         passage: text(block.instructions) || text(block.prompt) || 'Complete the grouped multiple-choice practice.',
         title: text(block.title) || null,
         source_note: null,
