@@ -123,18 +123,22 @@ export default function SpeakingLiveController({ session, onEnd }) {
 
   function command(type) {
     const payload = { type };
-    channelRef.current?.send(payload);
-    if (session?.studentWindow && !session.studentWindow.closed) {
+    const studentWindow = session?.studentWindow;
+
+    if (studentWindow && !studentWindow.closed) {
       try {
-        session.studentWindow.postMessage({
+        studentWindow.postMessage({
           source: 'sblocco-speaking-control',
           controlId: session.controlId,
           payload,
         }, window.location.origin);
+        return;
       } catch {
-        // The existing control channel remains available as fallback.
+        // Fall through to the existing control channel.
       }
     }
+
+    channelRef.current?.send(payload);
   }
 
   function focusStudentWindow() {
