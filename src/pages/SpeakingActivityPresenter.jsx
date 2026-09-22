@@ -1,0 +1,233 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import { ArrowLeft, ArrowRight, Dices, Sparkles } from 'lucide-react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import SEO from '../components/SEO';
+import { loadSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
+
+const LEVELS = ['A1','A2','B1','B2','C1','C2'];
+
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function normaliseItem(item, fallbackLevels = []) {
+  if (typeof item === 'string') return { text: item, levels: fallbackLevels, student_support: '', challenge: '' };
+  return {
+    text: item?.text || '',
+    levels: asArray(item?.levels).length ? asArray(item.levels) : fallbackLevels,
+    student_support: item?.student_support || item?.support || '',
+    challenge: item?.challenge || '',
+  };
+}
+
+function PromptBody({ item, style }) {
+  if (style === 'odd_one_out') {
+    const choices = item.text.split('·').map((part) => part.trim()).filter(Boolean);
+    if (choices.length > 1) {
+      return (
+        <div className="grid gap-3 sm:grid-cols-2">
+          {choices.map((choice, index) => (
+            <div key={`${choice}-${index}`} className="grid min-h-28 place-items-center rounded-2xl border border-white/15 bg-white/[0.07] p-5 text-center text-2xl font-black sm:text-3xl">
+              {choice}
+            </div>
+          ))}
+        </div>
+      );
+    }
+  }
+
+  if (style === 'taboo') {
+    const match = item.text.match(/^(.+?)\s*(?:\||—)\s*forbidden:\s*(.+)$/i);
+    if (match) {
+      const forbidden = match[2].split(',').map((word) => word.trim()).filter(Boolean);
+      return (
+        <div>
+          <p className="text-center text-4xl font-black sm:text-6xl">{match[1].trim()}</p>
+          <div className="mt-8">
+            <p className="text-center text-xs font-black uppercase tracking-[0.16em] text-white/55">Do not say</p>
+            <div className="mt-3 flex flex-wrap justify-center gap-2">
+              {forbidden.map((word) => <span key={word} className="rounded-full border border-white/20 bg-white/[0.08] px-4 py-2 text-sm font-black">{word}</span>)}
+            </div>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  if (style === 'repair') {
+    return (
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.16em] text-white/50">Original line</p>
+        <p className="mt-4 text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>
+      </div>
+    );
+  }
+
+  if (style === 'story') {
+    return (
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.16em] text-white/50">Story seed</p>
+        <p className="mt-4 text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>
+      </div>
+    );
+  }
+
+  return <p className="text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>;
+}
+
+export default function SpeakingActivityPresenter() {
+  const { activityId } = useParams();
+  const [searchParams] = useSearchParams();
+  const [activity, setActivity] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [index, setIndex] = useState(0);
+  const [challengeVisible, setChallengeVisible] = useState(false);
+
+  const selectedLevels = useMemo(() => {
+    const requested = String(searchParams.get('levels') || '')
+      .split(',')
+      .map((level) => level.trim().toUpperCase())
+      .filter((level) => LEVELS.includes(level));
+    return Array.from(new Set(requested));
+  }, [searchParams]);
+
+  useEffect(() => {
+    let active = true;
+    async function load() {
+      setLoading(true);
+      setError('');
+      try {
+        const data = await loadSpeakingActivity(activityId);
+        if (active) setActivity(data);
+      } catch (loadError) {
+        if (active) setError(loadError.message || 'Non è stato possibile aprire la presentazione.');
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+    load();
+    return () => { active = false; };
+  }, [activityId]);
+
+  const items = useMemo(() => {
+    if (!activity) return [];
+    const normalised = asArray(activity.prompts).map((item) => normaliseItem(item, asArray(activity.levels)));
+    if (!selectedLevels.length) return normalised;
+    return normalised.filter((item) => asArray(item.levels).some((level) => selectedLevels.includes(level)));
+  }, [activity, selectedLevels]);
+
+  useEffect(() => {
+    setIndex(0);
+    setChallengeVisible(false);
+  }, [activityId, selectedLevels.join(',')]);
+
+  useEffect(() => {
+    function onKeyDown(event) {
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLSelectElement) return;
+      if (event.key === 'ArrowRight' && items.length) {
+        setIndex((current) => (current + 1) % items.length);
+        setChallengeVisible(false);
+      }
+      if (event.key === 'ArrowLeft' && items.length) {
+        setIndex((current) => (current - 1 + items.length) % items.length);
+        setChallengeVisible(false);
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [items.length]);
+
+  if (loading) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-ink dark:bg-surface-950 dark:text-white">Loading speaking activity…</div>;
+  if (error || !activity) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-red-800 dark:bg-surface-950 dark:text-red-200">{error || 'Activity not found.'}</div>;
+
+  const current = items[index] || null;
+  const steps = asArray(activity.student_steps);
+  const language = asArray(activity.useful_language);
+
+  return (
+    <>
+      <SEO title={`${activity.title} | Presentazione speaking`} description="Student-facing speaking activity." />
+      <div className="min-h-screen bg-paper text-ink dark:bg-surface-950 dark:text-white">
+        <main className="mx-auto max-w-[1500px] px-4 py-5 sm:px-7 sm:py-7">
+          <header className="flex flex-wrap items-start justify-between gap-4 border-b border-ink/10 pb-5 dark:border-white/10">
+            <div className="min-w-0">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-clay dark:text-coral">Speaking activity</p>
+              <h1 className="mt-2 text-3xl font-black leading-tight sm:text-5xl">{activity.title}</h1>
+              {activity.student_intro ? <p className="mt-3 max-w-4xl text-base font-semibold leading-7 text-ink/65 dark:text-white/65 sm:text-lg">{activity.student_intro}</p> : null}
+            </div>
+            <div className="rounded-full border border-ink/10 bg-white px-4 py-2 text-xs font-black dark:border-white/10 dark:bg-white/[0.05]">
+              {items.length ? `${index + 1} / ${items.length}` : '0 / 0'}
+            </div>
+          </header>
+
+          {!items.length ? (
+            <div className="mt-8 rounded-3xl border border-dashed border-ink/15 bg-white p-10 text-center dark:border-white/15 dark:bg-surface-900">
+              <Sparkles className="mx-auto h-7 w-7 text-clay" />
+              <p className="mt-3 text-lg font-black">No items match the selected level combination.</p>
+            </div>
+          ) : (
+            <div className="mt-7 grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(20rem,0.65fr)]">
+              <section className="min-w-0">
+                <div className="rounded-[2rem] bg-ink p-6 text-white sm:p-10">
+                  <PromptBody item={current} style={activity.presenter_style} />
+                  {current.student_support ? (
+                    <div className="mt-8 rounded-2xl border border-white/15 bg-white/[0.07] p-5">
+                      <p className="text-xs font-black uppercase tracking-[0.15em] text-white/50">Need a little help?</p>
+                      <p className="mt-2 text-base font-bold leading-7 sm:text-lg">{current.student_support}</p>
+                    </div>
+                  ) : null}
+                </div>
+
+                {current.challenge ? (
+                  <div className="mt-4 rounded-2xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-surface-900">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Extra challenge</p>
+                      <button type="button" onClick={() => setChallengeVisible((value) => !value)} className="focus-ring min-h-10 rounded-full border border-ink/15 px-4 text-xs font-black dark:border-white/15">
+                        {challengeVisible ? 'Hide' : 'Reveal'}
+                      </button>
+                    </div>
+                    {challengeVisible ? <p className="mt-3 text-lg font-black leading-7">{current.challenge}</p> : null}
+                  </div>
+                ) : null}
+              </section>
+
+              <aside className="grid content-start gap-5">
+                {steps.length ? (
+                  <section className="rounded-3xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-surface-900 sm:p-6">
+                    <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Your task</p>
+                    <div className="mt-4 grid gap-3">
+                      {steps.map((step, stepIndex) => (
+                        <div key={`${stepIndex}-${step}`} className="flex gap-3">
+                          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-linen text-xs font-black dark:bg-white/10">{stepIndex + 1}</span>
+                          <p className="pt-0.5 text-sm font-bold leading-6">{step}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
+
+                {language.length ? (
+                  <section className="rounded-3xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-surface-900 sm:p-6">
+                    <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Useful language</p>
+                    <div className="mt-4 grid gap-2">
+                      {language.map((phrase) => <div key={phrase} className="rounded-xl bg-linen/70 px-4 py-3 text-sm font-black leading-6 dark:bg-white/[0.06]">{phrase}</div>)}
+                    </div>
+                  </section>
+                ) : null}
+              </aside>
+            </div>
+          )}
+
+          <footer className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-ink/10 pt-5 dark:border-white/10">
+            <button type="button" disabled={!items.length} onClick={() => { setIndex((currentIndex) => (currentIndex - 1 + items.length) % items.length); setChallengeVisible(false); }} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><ArrowLeft className="h-4 w-4" /> Previous</button>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" disabled={items.length < 2} onClick={() => { let next = index; while (next === index) next = Math.floor(Math.random() * items.length); setIndex(next); setChallengeVisible(false); }} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><Dices className="h-4 w-4" /> Random</button>
+              <button type="button" disabled={!items.length} onClick={() => { setIndex((currentIndex) => (currentIndex + 1) % items.length); setChallengeVisible(false); }} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-30 dark:bg-clay">Next <ArrowRight className="h-4 w-4" /></button>
+            </div>
+          </footer>
+        </main>
+      </div>
+    </>
+  );
+}

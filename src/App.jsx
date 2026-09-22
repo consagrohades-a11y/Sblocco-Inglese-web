@@ -58,6 +58,7 @@ const AdminExerciseBuilderLibrary = lazy(() => import('./pages/AdminExerciseBuil
 const AdminExerciseStudio = lazy(() => import('./pages/AdminExerciseStudio'));
 const AdminExerciseResults = lazy(() => import('./pages/AdminExerciseResults'));
 const AdminSpeakingActivities = lazy(() => import('./pages/AdminSpeakingActivities'));
+const SpeakingActivityPresenter = lazy(() => import('./pages/SpeakingActivityPresenter'));
 const AdminAssignments = lazy(() => import('./pages/AdminAssignments'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
@@ -203,6 +204,7 @@ export default function App() {
             <Route path="/assignments/:assignmentId" element={<ProtectedRoute><LearnerAssignmentDetail /></ProtectedRoute>} />
             <Route path="/progressi" element={<ProtectedRoute><LearnerProgress /></ProtectedRoute>} />
             <Route path="/vocab-bank" element={<ProtectedRoute><LearnerVocabularyBank /></ProtectedRoute>} />
+            <Route path="/admin/present/speaking/:activityId" element={<AdminRoute><SpeakingActivityPresenter /></AdminRoute>} />
             <Route path="/admin" element={<AdminRoute><AdminShell /></AdminRoute>}>
               <Route index element={<AdminDashboard />} />
               <Route path="notifications" element={<AdminNotifications />} />
