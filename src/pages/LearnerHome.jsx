@@ -28,6 +28,7 @@ import {
   recoveryModeForExamDate,
 } from '../lib/recoveryPlanEngine.js';
 import { supabase } from '../lib/supabaseClient.js';
+import { decorateLearnerAssignmentsWithProgress } from '../lib/assignmentProgressApi.js';
 import '../styles/learnerEditorial.css';
 
 function firstNameFromProfile(profile, user) {
@@ -74,15 +75,18 @@ function GenericDashboard({ firstName }) {
         .order('created_at', { ascending: false })
         .limit(100);
       if (!active) return;
-      setAssignments(assignmentResponse.data || []);
+      const decorated = await decorateLearnerAssignmentsWithProgress(assignmentResponse.data || []);
+      if (!active) return;
+      setAssignments(decorated);
       setLoading(false);
     }
     load();
     return () => { active = false; };
   }, []);
 
-  const open = assignments.filter((item) => item.status === 'published');
-  const completed = assignments.filter((item) => item.status === 'completed');
+  const stateOf = (item) => item.learner_state || item.status;
+  const open = assignments.filter((item) => stateOf(item) === 'published');
+  const completed = assignments.filter((item) => ['completed', 'review'].includes(stateOf(item)));
   const primaryAssignment = open[0] || null;
   const laterAssignments = open.slice(1, 3);
   const completion = assignments.length ? Math.round((completed.length / assignments.length) * 100) : 0;
