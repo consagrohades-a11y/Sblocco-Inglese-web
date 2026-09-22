@@ -21,7 +21,7 @@ npm run generate:exercise-templates  # rigenera public/templates/*.json da src/l
 - Non ci sono linter né test suite configurati: la verifica è `npm run build` + gli script `validate:*`.
 - Lockfile: `pnpm-lock.yaml` (workspace pnpm); la CI usa `npm install`. Se aggiungi dipendenze, aggiorna il lockfile pnpm.
 - CI (`.github/workflows/build.yml`): Node 24, validate+build, e **applica tutte le migrazioni in ordine su Postgres 16**. Le migrazioni esistenti non si modificano mai: solo nuovi file `supabase/migrations/<timestamp>_*.sql`.
-- Deploy: Vercel collegato a GitHub (`main`). `api/send-assessment-result.js` è una serverless function Vercel.
+- Deploy: Vercel collegato a GitHub (`main`). **Seguire sempre `AGENTS.md` per la disciplina di deploy: GitHub Actions per i commit intermedi, una preview Vercel a milestone, poi promote dello stesso artifact quando possibile.** `api/send-assessment-result.js` è una serverless function Vercel.
 - Env richieste (`.env`): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` (validate all'avvio in `src/main.js`).
 
 ## Stack e architettura
@@ -147,6 +147,7 @@ Il sito è due prodotti in uno: vetrina marketing curata (funnel simulazione →
 - Prima di ogni merge: `npm run build`; se tocchi dati trainer anche `npm run validate:srs`.
 - Schema DB: solo nuove migrazioni con timestamp successivo all'ultima; la CI le applica in ordine e deve restare verde.
 - Le RPC admin richiedono `is_admin()`: testare le pagine admin con un account con `profiles.role` adeguato.
+- **Deploy Vercel:** non consumare un build per ogni commit. Seguire la regola project-wide in `AGENTS.md`: commit intermedi → GitHub checks; release candidate → una preview; preview verificata → promote/production senza rebuild quando possibile.
 
 ## Documentazione di riferimento
 

@@ -324,7 +324,7 @@ Avoid scattering the same business fact across many files. When possible, centra
 
 ## 14. Build/deployment notes
 
-The project is deployed through Vercel from GitHub. Pushing to the connected branch should trigger redeploy.
+The project is deployed through Vercel from GitHub. **Deployment frequency is intentionally controlled. Follow `AGENTS.md`: intermediate commits should rely on GitHub Actions; create one Vercel preview at a meaningful verification milestone and promote the validated artifact to production when possible. Do not treat every commit as deploy-worthy.**
 
 Before committing meaningful changes, run:
 
@@ -354,6 +354,7 @@ When Codex edits this project:
 8. Keep mobile responsiveness and sticky CTA behavior in mind.
 9. Reuse existing components and brand colors.
 10. When changing pricing/offers, update all repeated references consistently.
+11. Follow `AGENTS.md` deployment discipline: avoid one Vercel build per intermediate commit; use GitHub checks during development and one preview per release candidate.
 
 ## 16. One-sentence project memory
 
