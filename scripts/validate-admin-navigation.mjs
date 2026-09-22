@@ -14,6 +14,8 @@ function assertNotContains(source, fragment, message) {
 
 const shell = read('src/components/AdminShell.jsx');
 const dashboard = read('src/pages/AdminDashboard.jsx');
+const teacherRadar = read('src/components/admin/TeacherRadar.jsx');
+const studioLibrary = read('src/pages/AdminExerciseBuilderLibrary.jsx');
 const app = read('src/App.jsx');
 const navbar = read('src/components/Navbar.jsx');
 const footer = read('src/components/Footer.jsx');
@@ -63,6 +65,15 @@ for (const retiredDashboardItem of [
 ]) {
   assertNotContains(dashboard, retiredDashboardItem, `Retired dashboard item returned: ${retiredDashboardItem}`);
 }
+
+assertContains(dashboard, '<TeacherRadar />', 'Admin dashboard must surface the Teacher Radar.');
+assertContains(teacherRadar, "review_status === 'unreviewed'", 'Teacher Radar must prioritize unresolved reviews.');
+assertContains(teacherRadar, "notification_type === 'learner_signed_up'", 'Teacher Radar must surface new learner registrations.');
+assertContains(learnerHome, 'assignmentResumeTarget', 'Learner home must compute an exact resume target.');
+assertContains(learnerHome, "'in_progress'", 'Learner resume must prioritize in-progress resources.');
+assertContains(learnerHome, "'not_started'", 'Learner resume must fall back to the next unstarted resource.');
+assertContains(studioLibrary, 'Remix', 'Studio Library must expose one-click Remix.');
+assertContains(studioLibrary, 'remixStudioDraft', 'Studio Library Remix must use the safe draft duplication API.');
 
 assertContains(app, '<Route path="settings" element={<Navigate to="/account/settings" replace />} />', 'Admin settings placeholder must redirect to real account settings.');
 assertContains(app, '<Route path="content" element={<Navigate to="/admin/content/exercises/library" replace />} />', 'Legacy admin content overview must redirect to Learning Studio library.');
