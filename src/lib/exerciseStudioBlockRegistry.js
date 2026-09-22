@@ -613,7 +613,11 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
         options: optionList(item?.options).map((option, optionIndex) => ({ ...option, key: 'option_' + (optionIndex + 1) })),
         accepted_answers: list(item?.accepted_answers),
         feedback: text(item?.feedback),
-        correct_section_index: Number.isInteger(Number(item?.correct_section_index)) ? Number(item.correct_section_index) : null,
+        correct_section_index: item?.correct_section_index !== null
+          && item?.correct_section_index !== ''
+          && Number.isInteger(Number(item?.correct_section_index))
+          ? Number(item.correct_section_index)
+          : null,
       }));
       const paragraphOptions = (Array.isArray(block.paragraph_options) ? block.paragraph_options : []).map((item, index) => ({
         key: 'paragraph_' + (index + 1),
@@ -626,7 +630,11 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
           return {
             type: 'gap',
             key: 'gap_' + gapIndex,
-            correct_option_index: Number.isInteger(Number(part?.correct_option_index)) ? Number(part.correct_option_index) : null,
+            correct_option_index: part?.correct_option_index !== null
+              && part?.correct_option_index !== ''
+              && Number.isInteger(Number(part?.correct_option_index))
+              ? Number(part.correct_option_index)
+              : null,
           };
         }
         return { type: 'text', text: text(part?.text ?? part) };
