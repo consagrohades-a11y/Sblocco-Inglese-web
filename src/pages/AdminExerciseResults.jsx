@@ -14,8 +14,8 @@ import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
 
 const statusLabels = {
   unreviewed: 'Da revisionare',
-  reviewed: 'Revisionato',
-  approved: 'Approvato',
+  reviewed: 'Revisione pronta',
+  approved: 'Pubblicata allo studente',
 };
 const resultLabels = {
   correct: 'Corretta',
@@ -252,8 +252,10 @@ export default function AdminExerciseResults() {
     setReviews((current) => ({ ...current, [questionId]: { ...current[questionId], ...patch } }));
   }
 
-  async function saveReview() {
+  async function saveReview(targetStatus = null) {
     if (!detail?.attempt?.id) return;
+    const nextStatus = targetStatus
+      || (detail.attempt.review_status === 'approved' ? 'approved' : 'reviewed');
     setSaving(true); setError(''); setSuccess('');
     try {
       const dirtyReviews = Object.values(reviews).filter((review) => review.dirty);
@@ -261,14 +263,19 @@ export default function AdminExerciseResults() {
         attemptId: detail.attempt.id,
         reviews: dirtyReviews,
         teacherNote,
-        reviewStatus,
+        reviewStatus: nextStatus,
       });
       setDetail(updated);
       setReviews(buildReviewState(updated));
       setTeacherNote(updated.attempt?.teacher_note || '');
-      setSuccess(updated.attempt?.score === null || updated.attempt?.score === undefined
-        ? 'Revisione salvata. Il punteggio resta in attesa finché tutte le produzioni manuali non sono valutate.'
-        : `Revisione salvata. Nuovo punteggio: ${Math.round(Number(updated.attempt.score))}%.`);
+      setReviewStatus(updated.attempt?.review_status || nextStatus);
+      if (nextStatus === 'approved') {
+        setSuccess('Risultati pubblicati allo studente. La correzione e il punteggio finale sono ora visibili.');
+      } else {
+        setSuccess(updated.attempt?.score === null || updated.attempt?.score === undefined
+          ? 'Revisione salvata. Il punteggio resta in attesa finché tutte le produzioni manuali non sono valutate.'
+          : `Revisione pronta. Punteggio calcolato: ${Math.round(Number(updated.attempt.score))}%. Lo studente non lo vede ancora.`);
+      }
       await loadList();
     } catch (saveError) { setError(saveError.message || 'Non è stato possibile salvare la revisione.'); }
     finally { setSaving(false); }
@@ -294,7 +301,7 @@ export default function AdminExerciseResults() {
 
         <main className="min-w-0">
           {!detail ? <div className="rounded-2xl border border-dashed border-ink/15 bg-white p-8 text-sm text-ink/65 dark:border-white/15 dark:bg-surface-900 dark:text-white/65">Seleziona un tentativo.</div> : <div className="grid gap-6">
-            <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-8"><div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"><div><p className="text-xs font-bold uppercase tracking-wide text-clay dark:text-coral">{detail.exercise?.public_id} · tentativo {detail.attempt.attempt_number}</p><h2 className="mt-2 text-3xl font-black text-ink dark:text-white">{detail.exercise?.title}</h2><p className="mt-2 text-sm font-bold text-ink/65 dark:text-white/65">{detail.attempt.learner_name} · {detail.attempt.assignment_title || 'Nessuna attività collegata'} · {formatDate(detail.attempt.submitted_at)}</p>{getNote(detail.attempt.learner_id) ? <p className="mt-1 text-xs font-bold leading-5 text-clay dark:text-coral">{getNote(detail.attempt.learner_id)}</p> : null}</div><div className="text-right">{detail.attempt.score === null || detail.attempt.score === undefined ? <><p className="text-xl font-black text-clay dark:text-coral">Punteggio in attesa</p><p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">La consegna è completa; manca la review manuale.</p></> : <><p className={`text-5xl font-black ${scoreClass(detail.attempt.score)}`}>{Math.round(Number(detail.attempt.score))}%</p><p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">{Number(detail.attempt.earned_points || 0).toFixed(1)} / {Number(detail.attempt.max_points || 0).toFixed(1)} punti</p></>}</div></div><div className="mt-6 grid gap-4 sm:grid-cols-2"><label className="text-xs font-black text-ink/60 dark:text-white/60">Stato revisione<select value={reviewStatus} onChange={(event) => setReviewStatus(event.target.value)} className={`${fieldClass} mt-2 w-full`}>{Object.entries(statusLabels).map(([value,label]) => <option key={value} value={value}>{label}</option>)}</select></label><label className="text-xs font-black text-ink/60 dark:text-white/60 sm:col-span-2">Nota generale dell’insegnante<textarea rows={3} value={teacherNote} onChange={(event) => setTeacherNote(event.target.value)} className={`${fieldClass} mt-2 w-full`} /></label></div></section>
+            <section className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-8"><div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"><div><p className="text-xs font-bold uppercase tracking-wide text-clay dark:text-coral">{detail.exercise?.public_id} · tentativo {detail.attempt.attempt_number}</p><h2 className="mt-2 text-3xl font-black text-ink dark:text-white">{detail.exercise?.title}</h2><p className="mt-2 text-sm font-bold text-ink/65 dark:text-white/65">{detail.attempt.learner_name} · {detail.attempt.assignment_title || 'Nessuna attività collegata'} · {formatDate(detail.attempt.submitted_at)}</p>{getNote(detail.attempt.learner_id) ? <p className="mt-1 text-xs font-bold leading-5 text-clay dark:text-coral">{getNote(detail.attempt.learner_id)}</p> : null}</div><div className="text-right">{detail.attempt.score === null || detail.attempt.score === undefined ? <><p className="text-xl font-black text-clay dark:text-coral">Punteggio in attesa</p><p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">La consegna è completa; manca la review manuale.</p></> : <><p className={`text-5xl font-black ${scoreClass(detail.attempt.score)}`}>{Math.round(Number(detail.attempt.score))}%</p><p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">{Number(detail.attempt.earned_points || 0).toFixed(1)} / {Number(detail.attempt.max_points || 0).toFixed(1)} punti</p></>}</div></div><div className="mt-6 grid gap-4 sm:grid-cols-2"><div className="text-xs font-black text-ink/60 dark:text-white/60">Stato revisione<div className="mt-2 flex min-h-11 items-center rounded-xl border border-ink/10 bg-linen/50 px-4 dark:border-white/10 dark:bg-white/[0.04]"><span className={`rounded-full px-3 py-1.5 text-xs font-black ${reviewBadge(detail.attempt.review_status)}`}>{statusLabels[detail.attempt.review_status] || detail.attempt.review_status}</span></div></div><label className="text-xs font-black text-ink/60 dark:text-white/60 sm:col-span-2">Nota generale dell’insegnante<textarea rows={3} value={teacherNote} onChange={(event) => setTeacherNote(event.target.value)} className={`${fieldClass} mt-2 w-full`} /></label></div></section>
 
             {detail.attempt.review_status === 'approved' ? (
               <div className="rounded-2xl border border-clay/25 bg-clay/[0.06] px-5 py-4 text-sm font-semibold leading-6 text-ink dark:border-coral/25 dark:bg-coral/[0.07] dark:text-white">
@@ -306,7 +313,7 @@ export default function AdminExerciseResults() {
 
             {(detail.sections || []).map((section) => <section key={section.id} className="grid gap-4"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-wide text-clay dark:text-coral">Sezione {section.sequence_index + 1}</p><h2 className="mt-1 text-2xl font-black text-ink dark:text-white">{section.title}</h2></div><p className="text-sm font-black text-ink/65 dark:text-white/65">{Number(section.earned_points || 0).toFixed(1)} / {Number(section.max_points || 0).toFixed(1)}</p></div>{(section.questions || []).map((item) => <QuestionReviewCard key={item.id} item={item} review={reviews[item.id]} onChange={(patch) => updateReview(item.id, patch)} />)}</section>)}
 
-            <div className="sticky bottom-4 z-20 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white/95 p-4 shadow-xl backdrop-blur dark:border-white/10 dark:bg-surface-900/95"><p className="text-xs font-bold text-ink/65 dark:text-white/65">{Object.values(reviews).filter((review) => review.dirty).length} domande modificate</p><button type="button" disabled={saving} onClick={saveReview} className="rounded-full bg-ink px-6 py-3 text-sm font-black text-white transition hover:bg-clay disabled:opacity-40 dark:bg-clay dark:text-white dark:hover:bg-coral">{saving ? 'Salvataggio...' : detail.attempt.review_status === 'approved' ? 'Aggiorna correzione pubblicata' : 'Salva revisione e ricalcola'}</button></div>
+            <div className="sticky bottom-4 z-20 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white/95 p-4 shadow-xl backdrop-blur dark:border-white/10 dark:bg-surface-900/95"><div><p className="text-xs font-bold text-ink/65 dark:text-white/65">{Object.values(reviews).filter((review) => review.dirty).length} domande modificate</p>{detail.attempt.review_status === 'reviewed' ? <p className="mt-1 text-[0.68rem] font-bold text-clay dark:text-coral">La revisione è pronta ma lo studente non la vede ancora.</p> : null}</div><div className="flex flex-wrap items-center gap-2">{detail.attempt.review_status === 'reviewed' ? <button type="button" disabled={saving} onClick={() => saveReview()} className="rounded-full border border-ink/15 bg-white px-5 py-3 text-sm font-black text-ink transition hover:border-clay hover:text-clay disabled:opacity-40 dark:border-white/15 dark:bg-white/[0.05] dark:text-white">Salva modifiche</button> : null}<button type="button" disabled={saving} onClick={() => saveReview(detail.attempt.review_status === 'reviewed' ? 'approved' : null)} className="rounded-full bg-ink px-6 py-3 text-sm font-black text-white transition hover:bg-clay disabled:opacity-40 dark:bg-clay dark:text-white dark:hover:bg-coral">{saving ? 'Salvataggio...' : detail.attempt.review_status === 'approved' ? 'Aggiorna correzione pubblicata' : detail.attempt.review_status === 'reviewed' ? 'Pubblica risultati allo studente' : 'Salva revisione'}</button></div></div>
           </div>}
         </main>
       </div>
