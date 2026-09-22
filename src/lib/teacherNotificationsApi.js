@@ -4,16 +4,23 @@ function throwIfError(error) {
   if (error) throw error;
 }
 
-export async function loadTeacherNotifications(limit = 40) {
+export async function loadTeacherNotifications(limit = 40, { archived = false } = {}) {
+  let listQuery = supabase
+    .from('teacher_notifications')
+    .select('id, notification_type, title, message, route, related_learner_id, related_attempt_id, metadata, created_at, read_at, archived_at')
+    .order(archived ? 'archived_at' : 'created_at', { ascending: false })
+    .limit(limit);
+
+  listQuery = archived
+    ? listQuery.not('archived_at', 'is', null)
+    : listQuery.is('archived_at', null);
+
   const [listResult, unreadResult, learnersResult] = await Promise.all([
-    supabase
-      .from('teacher_notifications')
-      .select('id, notification_type, title, message, route, related_learner_id, related_attempt_id, metadata, created_at, read_at')
-      .order('created_at', { ascending: false })
-      .limit(limit),
+    listQuery,
     supabase
       .from('teacher_notifications')
       .select('id', { count: 'exact', head: true })
+      .is('archived_at', null)
       .is('read_at', null),
     supabase.rpc('admin_list_learners'),
   ]);
@@ -40,6 +47,7 @@ export async function loadTeacherUnreadCount() {
   const { count, error } = await supabase
     .from('teacher_notifications')
     .select('id', { count: 'exact', head: true })
+    .is('archived_at', null)
     .is('read_at', null);
 
   throwIfError(error);
@@ -55,6 +63,13 @@ export async function markTeacherNotificationRead(notificationId) {
 
 export async function markAllTeacherNotificationsRead() {
   const { error } = await supabase.rpc('mark_all_teacher_notifications_read');
+  throwIfError(error);
+}
+
+export async function archiveTeacherNotification(notificationId) {
+  const { error } = await supabase.rpc('archive_teacher_notification', {
+    p_notification_id: notificationId,
+  });
   throwIfError(error);
 }
 
