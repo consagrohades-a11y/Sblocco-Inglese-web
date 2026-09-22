@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
+import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 import { loadAssignmentGroupLinks } from '../lib/learnerGroupsApi.js';
 
@@ -180,27 +181,20 @@ function AssignmentCard({ assignment, busy, onStatusChange }) {
   );
 }
 
-const areaHeadings = {
-  exercise: ['Esercizi assegnati', 'Exercise Builder e raccolte di esercizi, separati dal ripasso e dalla pratica sulle parole.'],
-  srs: ['Ripasso SRS', 'Percorsi di memoria con card programmate dal sistema in base alla data di ripasso.'],
-  practice: ['Pratica mirata', 'Quiz sulle parole e sui deck scelti direttamente dall’insegnante.'],
-};
 
 function matchesContentFilter(assignment, filter) {
   if (filter === 'with_content') return Boolean(assignment.has_content);
   if (filter === 'without_content') return !assignment.has_content;
   if (filter === 'exercise') return (assignment.resource_types || []).some((type) => ['custom_exercise', 'exercise_collection', 'grammar_unit'].includes(type));
-  if (filter === 'srs') return Number(assignment.study_item_count || 0) > 0;
-  if (filter === 'practice') return (assignment.resource_types || []).includes('practice_session');
   return true;
 }
 
-export default function AdminAssignments({ initialContentFilter = 'all' }) {
+export default function AdminAssignments() {
   const [searchParams] = useSearchParams();
   const [assignments, setAssignments] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('active');
-  const [contentFilter, setContentFilter] = useState(initialContentFilter);
+  const [contentFilter, setContentFilter] = useState('all');
   const [groupFilter, setGroupFilter] = useState(searchParams.get('group') || 'all');
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
@@ -225,9 +219,7 @@ export default function AdminAssignments({ initialContentFilter = 'all' }) {
   }
 
   useEffect(() => { loadAssignments(); }, []);
-  useEffect(() => { setContentFilter(initialContentFilter); }, [initialContentFilter]);
-
-  const countScope = useMemo(() => assignments.filter((assignment) => matchesContentFilter(assignment, initialContentFilter)), [assignments, initialContentFilter]);
+  const countScope = assignments;
   const counts = useMemo(() => countScope.reduce((result, assignment) => ({
     ...result,
     [assignment.status]: (result[assignment.status] || 0) + 1,
@@ -268,27 +260,24 @@ export default function AdminAssignments({ initialContentFilter = 'all' }) {
     setBusyId(null);
   }
 
-  const areaHeading = areaHeadings[initialContentFilter];
-
   return (
     <>
       <SEO title="Assegnazioni | Admin | Sblocco Inglese" description="Gestisci tutte le assegnazioni da una sola pagina." />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-7xl">
-          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
-            <span className="eyebrow">Studenti</span>
-            <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <h1 className="text-3xl font-black text-ink dark:text-white sm:text-4xl">{areaHeading?.[0] || 'Assegnazioni'}</h1>
-                <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
-                  {areaHeading?.[1] || 'Controlla tutte le attività, apri direttamente l’editor e modifica lo stato senza passare dal profilo di ogni studente.'}
-                </p>
-              </div>
-              <Link to="/admin/learners" className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white hover:bg-moss dark:bg-emerald-300 dark:text-surface-950">
+          <AdminPageHeader
+            eyebrow="Studenti"
+            title="Assegnazioni"
+            description="Controlla tutte le attività assegnate e apri direttamente ciò che devi modificare."
+            actions={(
+              <Link
+                to="/admin/learners"
+                className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-ink px-4 py-2 text-xs font-black text-white transition hover:bg-clay dark:bg-clay dark:hover:bg-coral"
+              >
                 Scegli uno studente<ChevronRight className="h-4 w-4" />
               </Link>
-            </div>
-          </header>
+            )}
+          />
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {[
@@ -298,7 +287,7 @@ export default function AdminAssignments({ initialContentFilter = 'all' }) {
               ['completed', 'Completate', counts.completed],
               ['archived', 'Archiviate', counts.archived],
             ].map(([value, label, count]) => (
-              <button key={value} type="button" onClick={() => setStatusFilter(value)} className={`rounded-xl border p-4 text-left transition ${statusFilter === value ? 'border-moss bg-mint/45 dark:border-emerald-300/35 dark:bg-emerald-300/10' : 'border-ink/10 bg-white hover:border-moss/30 dark:border-white/10 dark:bg-surface-900'}`}>
+              <button key={value} type="button" onClick={() => setStatusFilter(value)} className={`rounded-xl border p-4 text-left transition ${statusFilter === value ? 'border-clay bg-clay/[0.08] dark:border-coral/35 dark:bg-coral/10' : 'border-ink/10 bg-white hover:border-clay/30 dark:border-white/10 dark:bg-surface-900'}`}>
                 <p className="text-2xl font-black text-ink dark:text-white">{count}</p>
                 <p className="mt-1 text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">{label}</p>
               </button>
@@ -309,9 +298,9 @@ export default function AdminAssignments({ initialContentFilter = 'all' }) {
             <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_13rem_15rem_14rem_auto]">
               <label className="relative">
                 <Search className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-ink/35 dark:text-white/35" />
-                <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cerca studente, email o assegnazione" className="w-full rounded-xl border border-ink/15 bg-white py-3 pl-10 pr-4 text-sm font-semibold outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white" />
+                <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cerca studente, email o assegnazione" className="w-full rounded-xl border border-ink/15 bg-white py-3 pl-10 pr-4 text-sm font-semibold outline-none focus:border-clay dark:border-white/20 dark:bg-surface-800 dark:text-white" />
               </label>
-              <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white">
+              <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-clay dark:border-white/20 dark:bg-surface-800 dark:text-white">
                 <option value="all">Tutti gli stati</option>
                 <option value="active">Attive e bozze</option>
                 <option value="published">Attive</option>
@@ -320,23 +309,21 @@ export default function AdminAssignments({ initialContentFilter = 'all' }) {
                 <option value="completed">Completate</option>
                 <option value="archived">Archiviate</option>
               </select>
-              <select value={contentFilter} onChange={(event) => setContentFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white">
+              <select value={contentFilter} onChange={(event) => setContentFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-clay dark:border-white/20 dark:bg-surface-800 dark:text-white">
                 <option value="all">Tutti i contenuti</option>
                 <option value="with_content">Con contenuti</option>
                 <option value="without_content">Senza contenuti</option>
                 <option value="exercise">Con esercizio</option>
-                <option value="srs">Con ripasso SRS</option>
-                <option value="practice">Con pratica mirata</option>
               </select>
-              <select value={groupFilter} onChange={(event) => setGroupFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white"><option value="all">Tutti i gruppi</option>{groups.map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select>
-              <button type="button" onClick={() => { setSearch(''); setStatusFilter('active'); setContentFilter(initialContentFilter); setGroupFilter('all'); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-ink/15 px-4 text-sm font-black text-ink dark:border-white/20 dark:text-white">
+              <select value={groupFilter} onChange={(event) => setGroupFilter(event.target.value)} className="rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-black outline-none focus:border-clay dark:border-white/20 dark:bg-surface-800 dark:text-white"><option value="all">Tutti i gruppi</option>{groups.map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select>
+              <button type="button" onClick={() => { setSearch(''); setStatusFilter('active'); setContentFilter('all'); setGroupFilter('all'); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-ink/15 px-4 text-sm font-black text-ink dark:border-white/20 dark:text-white">
                 <Filter className="h-4 w-4" />Azzera
               </button>
             </div>
           </section>
 
           {error ? <div className="mt-5 border-l-4 border-red-400 bg-red-50 p-4 text-sm font-bold text-red-950 dark:bg-red-400/10 dark:text-red-100">{error}</div> : null}
-          {success ? <div className="mt-5 border-l-4 border-moss bg-mint/30 p-4 text-sm font-bold text-ink dark:bg-emerald-400/10 dark:text-emerald-100">{success}</div> : null}
+          {success ? <div className="mt-5 border-l-4 border-clay bg-clay/[0.08] p-4 text-sm font-bold text-ink dark:bg-coral/10 dark:text-white">{success}</div> : null}
 
           <div className="mt-5 grid gap-4">
             {loading ? <div className="rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/60 dark:border-white/10 dark:bg-surface-900 dark:text-white/60">Caricamento assegnazioni...</div> : null}

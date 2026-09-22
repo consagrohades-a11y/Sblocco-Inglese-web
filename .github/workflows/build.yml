@@ -27,9 +27,6 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Validate SRS cards
-        run: npm run validate:srs
-
       - name: Validate Recovery retake freshness
         run: node scripts/validate-recovery-topic-retake-freshness.mjs
 

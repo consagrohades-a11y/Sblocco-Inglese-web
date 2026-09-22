@@ -50,25 +50,28 @@ const guidedResult = validateExerciseBuilderJson(exerciseBuilderTemplates.guided
 expect(guidedResult.errors.length === 0, `guided exercise authoring contract failed: ${guidedResult.errors.join(' | ')}`);
 expect(guidedResult.authoring?.status === 'verified', 'guided exercise provenance was not verified.');
 
-const builderSource = await readFile(new URL('../src/pages/AdminExerciseBuilder.jsx', import.meta.url), 'utf8');
+const studioSource = await readFile(new URL('../src/pages/AdminExerciseStudio.jsx', import.meta.url), 'utf8');
 for (const token of [
-  "'educational_content_block'",
-  "'guided_exercise'",
-  'rawPayload: validation.parsed',
-  'sourceAdjustments',
-  'Template verificato',
+  'StudioJsonImportPanel',
+  'preflightStudioDocument',
+  'normalizeStudioDocument',
+  'publishStudioDraft',
+  '<ExerciseQuestionRenderer',
+  'Ready to publish',
+  'Import JSON',
 ]) {
-  expect(builderSource.includes(token), `Admin Exercise Builder is missing workflow guard: ${token}`);
+  expect(studioSource.includes(token), `Learning Studio is missing workflow guard: ${token}`);
 }
 
-const reviewSource = await readFile(new URL('../src/pages/AdminExerciseBuilderReview.jsx', import.meta.url), 'utf8');
+const importSource = await readFile(new URL('../src/components/admin/exercise-studio/StudioJsonImportPanel.jsx', import.meta.url), 'utf8');
 for (const token of [
-  'ImportedItemPreview',
-  '<ExerciseQuestionRenderer',
-  'Anteprima learner',
-  'JSON normalizzato',
+  'parseStudioImport',
+  'repair safe omissions',
+  'need attention',
+  'universal-ai-authoring-kit-v1.md',
+  'Import to Studio',
 ]) {
-  expect(reviewSource.includes(token), `Review queue is missing learner-preview guard: ${token}`);
+  expect(importSource.includes(token), `Studio JSON import is missing workflow guard: ${token}`);
 }
 
 if (failures.length) {
@@ -77,4 +80,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log('Validated AI wrapper cleanup, authoring provenance, legacy fallback, visible template access and learner-renderer preview.');
+console.log('Validated AI wrapper cleanup, authoring provenance, Studio import repair, publish preflight and learner-renderer preview.');

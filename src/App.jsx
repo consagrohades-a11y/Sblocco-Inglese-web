@@ -17,7 +17,6 @@ import Reviews from './pages/Reviews';
 import CaseStudies from './pages/CaseStudies';
 import Contact from './pages/Contact';
 import Prenota from './pages/Prenota';
-import TrainersLanding from './pages/TrainersLanding';
 import LegalPage from './pages/LegalPage';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './auth/ProtectedRoute';
@@ -25,12 +24,6 @@ import AdminRoute from './auth/AdminRoute';
 import { useAuth } from './auth/AuthContext.jsx';
 import { legalPages } from './data/legalPages';
 
-const Trainer = lazy(() => import('./pages/Trainer'));
-const GeneralExpressionTrainer = lazy(() => import('./pages/GeneralExpressionTrainer'));
-const HospitalityExpressionTrainer = lazy(() => import('./pages/HospitalityExpressionTrainer'));
-const TravelExpressionTrainer = lazy(() => import('./pages/TravelExpressionTrainer'));
-const WordTrainer = lazy(() => import('./pages/WordTrainer'));
-const PracticeHub = lazy(() => import('./pages/PracticeHub'));
 const ExercisePlayer = lazy(() => import('./pages/ExercisePlayer'));
 const GrammarHub = lazy(() => import('./pages/GrammarHub'));
 const GrammarA1Hub = lazy(() => import('./pages/GrammarA1Hub'));
@@ -58,33 +51,12 @@ const AdminGroupDetail = lazy(() => import('./pages/AdminGroupDetail'));
 const AdminAssessmentLeads = lazy(() => import('./pages/AdminAssessmentLeads'));
 const AdminCreateAssignment = lazy(() => import('./pages/AdminCreateAssignment'));
 const AdminAssignmentContent = lazy(() => import('./pages/AdminAssignmentContent'));
-const AdminTrainerContent = lazy(() => import('./pages/AdminTrainerContent'));
-const AdminTrainerCardImport = lazy(() => import('./pages/AdminTrainerCardImport'));
-const AdminTrainerCardDelete = lazy(() => import('./pages/AdminTrainerCardDelete'));
-const AdminTravelTrainer = lazy(() => import('./pages/AdminTravelTrainer'));
-const AdminWordTrainerContent = lazy(() => import('./pages/AdminWordTrainerContent'));
-const AdminWordTrainerImport = lazy(() => import('./pages/AdminWordTrainerImport'));
-const AdminWordDecks = lazy(() => import('./pages/AdminWordDecks'));
-const AdminDecks = lazy(() => import('./pages/AdminDecks'));
-const AdminWordTrainerArchive = lazy(() => import('./pages/AdminWordTrainerArchive'));
-const AdminContentOverview = lazy(() => import('./pages/AdminContentOverview'));
 const AdminRecoveryContent = lazy(() => import('./pages/AdminRecoveryContent'));
-const AdminSectionOverview = lazy(() => import('./pages/AdminSectionOverview'));
 const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics'));
 const AdminLearnerAnalytics = lazy(() => import('./pages/AdminLearnerAnalytics'));
-const AdminExerciseBuilder = lazy(() => import('./pages/AdminExerciseBuilder'));
-const AdminExerciseBuilderReview = lazy(() => import('./pages/AdminExerciseBuilderReview'));
 const AdminExerciseBuilderLibrary = lazy(() => import('./pages/AdminExerciseBuilderLibrary'));
 const AdminExerciseStudio = lazy(() => import('./pages/AdminExerciseStudio'));
-const AdminExerciseDiagnostics = lazy(() => import('./pages/AdminExerciseDiagnostics'));
-const AdminExerciseDiagnosticImport = lazy(() => import('./pages/AdminExerciseDiagnosticImport'));
-const AdminExerciseQuestionBank = lazy(() => import('./pages/AdminExerciseQuestionBank'));
-const AdminExercisePools = lazy(() => import('./pages/AdminExercisePools'));
-const AdminExerciseComposer = lazy(() => import('./pages/AdminExerciseComposer'));
-const AdminExerciseQuestionEditor = lazy(() => import('./pages/AdminExerciseQuestionEditor'));
-const AdminExerciseCollections = lazy(() => import('./pages/AdminExerciseCollections'));
 const AdminExerciseResults = lazy(() => import('./pages/AdminExerciseResults'));
-const AdminExerciseMaintenance = lazy(() => import('./pages/AdminExerciseMaintenance'));
 const AdminAssignments = lazy(() => import('./pages/AdminAssignments'));
 const LearnerAssignments = lazy(() => import('./pages/LearnerAssignments'));
 const LearnerAssignmentDetail = lazy(() => import('./pages/LearnerAssignmentDetail'));
@@ -190,13 +162,10 @@ export default function App() {
             <Route path="/case-studies" element={<CaseStudies />} />
             <Route path="/contatti" element={<Contact />} />
             <Route path="/faq" element={<Navigate to="/contatti#faq" replace />} />
-            <Route path="/trainers" element={<TrainersLanding />} />
-            <Route path="/trainers/business-expression" element={<Trainer />} />
-            <Route path="/trainers/general-expression" element={<GeneralExpressionTrainer />} />
-            <Route path="/trainers/hospitality-expression" element={<HospitalityExpressionTrainer />} />
-            <Route path="/trainers/travel-expression" element={<TravelExpressionTrainer />} />
-            <Route path="/trainers/word-trainer" element={<WordTrainer />} />
-            <Route path="/practice" element={<ProtectedRoute><PracticeHub /></ProtectedRoute>} />
+            <Route path="/trainers" element={<Navigate to="/piattaforma" replace />} />
+            <Route path="/trainers/:legacyTrainer" element={<Navigate to="/piattaforma" replace />} />
+            <Route path="/trainer" element={<Navigate to="/piattaforma" replace />} />
+            <Route path="/practice" element={<ProtectedRoute><Navigate to="/assignments" replace /></ProtectedRoute>} />
             <Route path="/exercises" element={<ProtectedRoute><ExercisePlayer /></ProtectedRoute>} />
             <Route path="/collections" element={<ProtectedRoute><LearnerCollectionPath /></ProtectedRoute>} />
             <Route path="/grammar" element={<GrammarHub />} />
@@ -227,9 +196,9 @@ export default function App() {
             <Route path="/recupero-debito/come-funziona" element={<ProtectedRoute><RecoveryGuide /></ProtectedRoute>} />
             <Route path="/recupero-debito/preparazione" element={<ProtectedRoute><RecoveryReadiness /></ProtectedRoute>} />
             <Route path="/assignments" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
-            <Route path="/attivita/esercizi" element={<ProtectedRoute><LearnerAssignments initialArea="exercises" /></ProtectedRoute>} />
-            <Route path="/attivita/srs" element={<ProtectedRoute><LearnerAssignments initialArea="srs" /></ProtectedRoute>} />
-            <Route path="/attivita/pratica-mirata" element={<ProtectedRoute><LearnerAssignments initialArea="practice" /></ProtectedRoute>} />
+            <Route path="/attivita/esercizi" element={<ProtectedRoute><LearnerAssignments /></ProtectedRoute>} />
+            <Route path="/attivita/srs" element={<ProtectedRoute><Navigate to="/attivita/esercizi" replace /></ProtectedRoute>} />
+            <Route path="/attivita/pratica-mirata" element={<ProtectedRoute><Navigate to="/attivita/esercizi" replace /></ProtectedRoute>} />
             <Route path="/assignments/:assignmentId" element={<ProtectedRoute><LearnerAssignmentDetail /></ProtectedRoute>} />
             <Route path="/progressi" element={<ProtectedRoute><LearnerProgress /></ProtectedRoute>} />
             <Route path="/vocab-bank" element={<ProtectedRoute><LearnerVocabularyBank /></ProtectedRoute>} />
@@ -243,52 +212,40 @@ export default function App() {
               <Route path="leads" element={<AdminAssessmentLeads />} />
               <Route path="learners/:learnerId/assignments/new" element={<AdminCreateAssignment />} />
               <Route path="learners/:learnerId/assignments/:assignmentId/content" element={<AdminAssignmentContent />} />
-              <Route path="content" element={<AdminContentOverview />} />
+              <Route path="content" element={<Navigate to="/admin/content/exercises/library" replace />} />
               <Route path="content/recovery" element={<AdminRecoveryContent />} />
-              <Route path="content/exercises" element={<AdminExerciseBuilder />} />
-              <Route path="content/exercises/review" element={<AdminExerciseBuilderReview />} />
+              <Route path="content/exercises" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/exercises/review" element={<Navigate to="/admin/content/exercises/results" replace />} />
               <Route path="content/exercises/library" element={<AdminExerciseBuilderLibrary />} />
               <Route path="content/exercises/studio" element={<AdminExerciseStudio />} />
-              <Route path="content/exercises/diagnostics" element={<AdminExerciseDiagnostics />} />
-              <Route path="content/exercises/diagnostics/import" element={<AdminExerciseDiagnosticImport />} />
-              <Route path="content/exercises/questions" element={<AdminExerciseQuestionBank />} />
-              <Route path="content/exercises/questions/edit" element={<AdminExerciseQuestionEditor />} />
-              <Route path="content/exercises/pools" element={<AdminExercisePools />} />
-              <Route path="content/exercises/composer" element={<AdminExerciseComposer />} />
-              <Route path="content/exercises/collections" element={<AdminExerciseCollections />} />
+              <Route path="content/exercises/diagnostics" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/exercises/diagnostics/import" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/exercises/questions" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/exercises/questions/edit" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/exercises/pools" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/exercises/composer" element={<Navigate to="/admin/content/exercises/studio" replace />} />
+              <Route path="content/exercises/collections" element={<Navigate to="/admin/content/exercises/library" replace />} />
               <Route path="content/exercises/results" element={<AdminExerciseResults />} />
-              <Route path="content/exercises/maintenance" element={<AdminExerciseMaintenance />} />
-              <Route path="content/words" element={<AdminWordTrainerContent />} />
-              <Route path="content/words/import" element={<AdminWordTrainerImport />} />
-              <Route path="content/words/decks" element={<AdminWordDecks />} />
-              <Route path="content/words/archive" element={<AdminWordTrainerArchive />} />
-              <Route path="content/expressions" element={<AdminTrainerContent />} />
-              <Route path="content/expressions/import" element={<AdminTrainerCardImport />} />
-              <Route path="content/expressions/decks" element={<AdminDecks itemType="expression" domain="general" />} />
-              <Route path="content/expressions/archive" element={<AdminTrainerCardDelete />} />
-              <Route path="content/business-expressions" element={<AdminTrainerContent domain="business" />} />
-              <Route path="content/business-expressions/import" element={<AdminTrainerCardImport domain="business" />} />
-              <Route path="content/business-expressions/decks" element={<AdminDecks itemType="expression" domain="business" />} />
-              <Route path="content/business-expressions/archive" element={<AdminTrainerCardDelete domain="business" />} />
-              <Route path="content/hospitality-expressions" element={<AdminTrainerContent domain="hospitality" />} />
-              <Route path="content/hospitality-expressions/import" element={<AdminTrainerCardImport domain="hospitality" />} />
-              <Route path="content/hospitality-expressions/decks" element={<AdminDecks itemType="expression" domain="hospitality" />} />
-              <Route path="content/hospitality-expressions/archive" element={<AdminTrainerCardDelete domain="hospitality" />} />
-              <Route path="content/travel-expressions" element={<AdminTravelTrainer />} />
-              <Route path="assignments" element={<AdminSectionOverview section="assignments" />} />
-              <Route path="activities/exercises" element={<AdminAssignments initialContentFilter="exercise" />} />
-              <Route path="activities/srs" element={<AdminAssignments initialContentFilter="srs" />} />
-              <Route path="activities/practice" element={<AdminAssignments initialContentFilter="practice" />} />
+              <Route path="content/exercises/maintenance" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/words/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/expressions/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/business-expressions/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/hospitality-expressions/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/travel-expressions/*" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="assignments" element={<AdminAssignments />} />
+              <Route path="activities/exercises" element={<Navigate to="/admin/assignments" replace />} />
+              <Route path="activities/srs" element={<Navigate to="/admin/assignments" replace />} />
+              <Route path="activities/practice" element={<Navigate to="/admin/assignments" replace />} />
               <Route path="analytics" element={<AdminAnalytics />} />
               <Route path="analytics/learners/:learnerId" element={<AdminLearnerAnalytics />} />
-              <Route path="settings" element={<AdminSectionOverview section="settings" />} />
-              <Route path="content/trainers" element={<Navigate to="/admin/content/expressions" replace />} />
-              <Route path="content/trainers/import" element={<Navigate to="/admin/content/expressions/import" replace />} />
-              <Route path="content/trainers/delete" element={<Navigate to="/admin/content/expressions/archive" replace />} />
+              <Route path="settings" element={<Navigate to="/account/settings" replace />} />
+              <Route path="content/trainers" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/trainers/import" element={<Navigate to="/admin/content/exercises/library" replace />} />
+              <Route path="content/trainers/delete" element={<Navigate to="/admin/content/exercises/library" replace />} />
             </Route>
             <Route path="/levels/a1/be-basic-sentences" element={<A1UnitPage key="a1-be-basic-sentences" unitId="be-basic-sentences" />} />
             <Route path="/levels/a1/present-simple-normal-verbs" element={<A1UnitPage key="a1-present-simple-normal-verbs" unitId="present-simple-normal-verbs" />} />
-            <Route path="/trainer" element={<Navigate to="/trainers/business-expression" replace />} />
+
             <Route path="/prenota" element={<Prenota />} />
             <Route path="/privacy" element={<LegalPage page={legalPages.privacy} />} />
             <Route path="/privacy-policy" element={<LegalPage page={legalPages.privacy} />} />

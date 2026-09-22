@@ -1,14 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 import { loadLearnerGroups } from '../lib/learnerGroupsApi.js';
-
-const languageLabels = {
-  it: 'Italiano',
-  en: 'English',
-};
 
 const statusLabels = {
   active: 'Attivo',
@@ -109,21 +105,19 @@ export default function AdminLearners() {
       />
       <section className="section-shell py-12 lg:py-16">
         <div className="mx-auto max-w-6xl">
-          <div className="flex flex-col gap-5 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-6 shadow-soft sm:p-8 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <span className="eyebrow">Amministrazione</span>
-              <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-4xl">Studenti</h1>
-              <p className="mt-3 max-w-2xl text-base leading-7 text-ink/70 dark:text-white/65">
-                Cerca gli account learner, distingui i percorsi standard da Recupero Debito e apri il profilo su cui vuoi lavorare.
-              </p>
-            </div>
-            <Link
-              to="/admin"
-              className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white dark:border-white/20 dark:bg-white/10 dark:text-white px-5 py-2.5 text-sm font-black text-ink transition hover:bg-linen"
-            >
-              Torna al pannello admin
-            </Link>
-          </div>
+          <AdminPageHeader
+            eyebrow="Studenti"
+            title="Studenti"
+            description="Cerca un learner, apri il profilo e passa direttamente ad assegnazioni, attività e progressi."
+            actions={(
+              <Link
+                to="/admin/groups"
+                className="focus-ring inline-flex min-h-10 items-center justify-center rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink transition hover:border-clay/35 hover:text-clay dark:border-white/15 dark:bg-white/[0.06] dark:text-white"
+              >
+                Gestisci gruppi
+              </Link>
+            )}
+          />
 
           <div className="mt-6 grid gap-4 rounded-2xl border border-ink/10 bg-white dark:border-white/10 dark:bg-surface-900 p-5 shadow-sm md:grid-cols-[minmax(0,1fr)_auto_auto_auto]">
             <label className="block">
@@ -133,7 +127,7 @@ export default function AdminLearners() {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Nome o email"
-                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15"
+                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-clay focus:ring-4 focus:ring-clay/10 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-coral dark:focus:ring-coral/10"
               />
             </label>
 
@@ -142,7 +136,7 @@ export default function AdminLearners() {
               <select
                 value={status}
                 onChange={(event) => setStatus(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss focus:ring-4 focus:ring-mint/40 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-emerald-300 dark:focus:ring-emerald-400/15"
+                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-clay focus:ring-4 focus:ring-clay/10 dark:border-white/20 dark:bg-surface-800 dark:text-white dark:focus:border-coral dark:focus:ring-coral/10"
               >
                 <option value="all">Tutti</option>
                 <option value="active">Attivi</option>
@@ -156,7 +150,7 @@ export default function AdminLearners() {
               <select
                 value={recoveryFilter}
                 onChange={(event) => setRecoveryFilter(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white"
+                className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-clay dark:border-white/20 dark:bg-surface-800 dark:text-white"
               >
                 <option value="all">Tutti i percorsi</option>
                 <option value="recovery">Recupero Debito</option>
@@ -166,7 +160,7 @@ export default function AdminLearners() {
 
             <label className="block md:min-w-52">
               <span className="text-xs font-bold uppercase tracking-wide text-ink/65 dark:text-white/65">Gruppo</span>
-              <select value={groupId} onChange={(event) => setGroupId(event.target.value)} className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-moss dark:border-white/20 dark:bg-surface-800 dark:text-white">
+              <select value={groupId} onChange={(event) => setGroupId(event.target.value)} className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold text-ink outline-none focus:border-clay dark:border-white/20 dark:bg-surface-800 dark:text-white">
                 <option value="all">Tutti i gruppi</option>
                 {groups.map((group) => <option key={group.id} value={group.id}>{group.name}</option>)}
               </select>
@@ -228,9 +222,9 @@ export default function AdminLearners() {
                       <p className="text-sm font-bold text-ink/65 dark:text-white/60">
                         {recovery?.has_access
                           ? recoveryStatusLabels[recovery.enrollment_status] || 'Accesso pronto'
-                          : languageLabels[learner.interface_language] || learner.interface_language || '-'}
+                          : 'Standard'}
                       </p>
-                      <span className="text-sm font-black text-moss">Apri profilo</span>
+                      <span className="text-sm font-black text-clay">Apri profilo</span>
                     </Link>
                   );
                 })}

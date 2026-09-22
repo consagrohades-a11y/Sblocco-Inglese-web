@@ -46,37 +46,45 @@ import {
 } from '../lib/exerciseStudioFolderApi.js';
 
 const STATUS_OPTIONS = [
-  ['all', 'All'],
-  ['draft', 'Drafts'],
-  ['published', 'Published'],
-  ['archived', 'Archived'],
+  ['all', 'Tutte'],
+  ['draft', 'Bozze'],
+  ['published', 'Pubblicate'],
+  ['archived', 'Archiviate'],
 ];
 
 const SORT_OPTIONS = [
-  ['recent', 'Recently edited'],
-  ['published', 'Recently published'],
-  ['newest', 'Newest created'],
+  ['recent', 'Modificate di recente'],
+  ['published', 'Pubblicate di recente'],
+  ['newest', 'Create di recente'],
   ['az', 'A–Z'],
   ['za', 'Z–A'],
-  ['level', 'Level'],
+  ['level', 'Livello'],
 ];
 
 const LEVELS = ['A0', 'A1', 'A1+', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2', 'Mixed'];
 const LEVEL_ORDER = Object.fromEntries(LEVELS.map((level, index) => [level, index]));
 
 const ACTIVITY_TYPES = [
-  ['exercise', 'Exercise'],
-  ['lesson', 'Lesson'],
-  ['mini_course', 'Mini-course'],
-  ['listening_lesson', 'Listening lesson'],
-  ['assessment', 'Assessment'],
+  ['exercise', 'Esercizio'],
+  ['lesson', 'Lezione'],
+  ['mini_course', 'Mini-corso'],
+  ['listening_lesson', 'Lezione listening'],
+  ['assessment', 'Valutazione'],
 ];
 
 const ORIGINS = [
-  ['manual', 'Manual'],
-  ['ai_import', 'AI / JSON import'],
-  ['duplicate', 'Duplicated'],
+  ['manual', 'Manuale'],
+  ['ai_import', 'Import AI / JSON'],
+  ['duplicate', 'Duplicata'],
 ];
+
+function statusLabel(status) {
+  return {
+    draft: 'Bozza',
+    published: 'Pubblicata',
+    archived: 'Archiviata',
+  }[status] || status;
+}
 
 function statusClass(status) {
   if (status === 'published') return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-200';
@@ -85,11 +93,11 @@ function statusClass(status) {
 }
 
 function originLabel(origin) {
-  return ORIGINS.find(([value]) => value === origin)?.[1] || 'Manual';
+  return ORIGINS.find(([value]) => value === origin)?.[1] || 'Manuale';
 }
 
 function activityTypeLabel(type) {
-  return ACTIVITY_TYPES.find(([value]) => value === type)?.[1] || String(type || 'Activity').replaceAll('_', ' ');
+  return ACTIVITY_TYPES.find(([value]) => value === type)?.[1] || String(type || 'Attività').replaceAll('_', ' ');
 }
 
 function updatedLabel(value) {
@@ -245,7 +253,7 @@ export default function AdminExerciseBuilderLibrary() {
       setItems(draftRows);
       setFolders(folderRows);
     } catch (nextError) {
-      setError(nextError.message || 'Could not load the Learning Studio library.');
+      setError(nextError.message || 'Non è stato possibile caricare la libreria Learning Studio.');
     } finally {
       setLoading(false);
     }
@@ -349,12 +357,12 @@ export default function AdminExerciseBuilderLibrary() {
   const importHref = `/admin/content/exercises/studio?import=1${folderQuery}`;
   const isGlobalSearch = selectedFolder === 'root' && Boolean(search.trim());
   const selectedFolderLabel = selectedFolder === 'pinned'
-    ? 'Pinned'
+    ? 'In evidenza'
     : isGlobalSearch
-      ? 'Search results'
+      ? 'Risultati ricerca'
       : currentFolder
-        ? 'Activities'
-        : 'Unfiled';
+        ? 'Attività'
+        : 'Senza cartella';
   const pinnedCount = items.filter((item) => Boolean(item.pinned_at)).length;
   const unfiledCount = items.filter((item) => !item.folder_id).length;
 
@@ -384,9 +392,9 @@ export default function AdminExerciseBuilderLibrary() {
     try {
       const draft = await loadStudioDraft(item.id);
       downloadStudioActivityJson(draft.document);
-      setNotice(`${item.internal_title || 'Activity'} exported as JSON.`);
+      setNotice(`${item.internal_title || 'Attività'} esportata come JSON.`);
     } catch (nextError) {
-      setError(nextError.message || 'Could not export this activity.');
+      setError(nextError.message || 'Non è stato possibile esportare questa attività.');
     } finally {
       setExportingId('');
     }
@@ -402,9 +410,9 @@ export default function AdminExerciseBuilderLibrary() {
         drafts.map((draft) => draft.document),
         'sblocco-learning-activities.zip',
       );
-      setNotice(`${drafts.length} ${drafts.length === 1 ? 'activity' : 'activities'} exported as one ZIP.`);
+      setNotice(`${drafts.length} ${drafts.length === 1 ? 'attività' : 'attività'} exported as one ZIP.`);
     } catch (nextError) {
-      setError(nextError.message || 'Could not export the selected activities.');
+      setError(nextError.message || 'Non è stato possibile esportare le attività selezionate.');
     } finally {
       setBulkBusy('');
     }
@@ -417,9 +425,9 @@ export default function AdminExerciseBuilderLibrary() {
     try {
       await archiveStudioDraft(item.id);
       setItems((current) => current.map((row) => row.id === item.id ? { ...row, status: 'archived' } : row));
-      setNotice(`${item.internal_title || 'Activity'} archived.`);
+      setNotice(`${item.internal_title || 'Attività'} archiviata.`);
     } catch (nextError) {
-      setError(nextError.message || 'Could not archive this activity.');
+      setError(nextError.message || 'Non è stato possibile archiviare questa attività.');
     } finally {
       setArchivingId('');
     }
@@ -428,7 +436,7 @@ export default function AdminExerciseBuilderLibrary() {
   async function archiveSelected() {
     const archiveable = selectedItems.filter((item) => item.status !== 'archived');
     if (!archiveable.length || bulkBusy) return;
-    if (!window.confirm(`Archive ${archiveable.length} selected ${archiveable.length === 1 ? 'activity' : 'activities'}?`)) return;
+    if (!window.confirm(`Archive ${archiveable.length} selected ${archiveable.length === 1 ? 'attività' : 'attività'}?`)) return;
 
     setBulkBusy('archive');
     setError('');
@@ -437,7 +445,7 @@ export default function AdminExerciseBuilderLibrary() {
       const ids = new Set(archiveable.map((item) => item.id));
       setItems((current) => current.map((item) => ids.has(item.id) ? { ...item, status: 'archived' } : item));
       setSelectedIds([]);
-      setNotice(`${archiveable.length} ${archiveable.length === 1 ? 'activity' : 'activities'} archived.`);
+      setNotice(`${archiveable.length} ${archiveable.length === 1 ? 'attività' : 'attività'} archived.`);
     } catch (nextError) {
       setError(nextError.message || 'Could not archive all selected activities.');
       await load();
@@ -454,9 +462,9 @@ export default function AdminExerciseBuilderLibrary() {
       const pinned = !item.pinned_at;
       const result = await setStudioDraftPinned(item.id, pinned);
       setItems((current) => current.map((row) => row.id === item.id ? { ...row, pinned_at: result.pinned_at } : row));
-      setNotice(pinned ? 'Activity pinned.' : 'Activity unpinned.');
+      setNotice(pinned ? 'Attività fissata in evidenza.' : 'Attività rimossa da In evidenza.');
     } catch (nextError) {
-      setError(nextError.message || 'Could not update this pin.');
+      setError(nextError.message || 'Non è stato possibile aggiornare In evidenza.');
     } finally {
       setPinningId('');
     }
@@ -478,10 +486,10 @@ export default function AdminExerciseBuilderLibrary() {
       setNewFolderColor('orange');
       setNewFolderOpen(false);
       setNotice(parentId
-        ? `Subfolder “${folder.name}” created inside ${currentFolder.name}.`
-        : `Folder “${folder.name}” created.`);
+        ? `Sottocartella “${folder.name}” creata dentro ${currentFolder.name}.`
+        : `Cartella “${folder.name}” creata.`);
     } catch (nextError) {
-      setError(nextError.message || 'Could not create this folder.');
+      setError(nextError.message || 'Non è stato possibile creare la cartella.');
     } finally {
       setFolderBusy(false);
     }
@@ -504,9 +512,9 @@ export default function AdminExerciseBuilderLibrary() {
       setRenameValue('');
       setEditFolderColor('sand');
       setEditFolderParent('root');
-      setNotice(`Folder “${updated.name}” updated.`);
+      setNotice(`Cartella “${updated.name}” aggiornata.`);
     } catch (nextError) {
-      setError(nextError.message || 'Could not update this folder.');
+      setError(nextError.message || 'Non è stato possibile aggiornare la cartella.');
     } finally {
       setFolderBusy(false);
     }
@@ -525,7 +533,7 @@ export default function AdminExerciseBuilderLibrary() {
     const directChildren = folders.filter((item) => item.parent_id === folder.id).length;
     const details = [
       directActivities
-        ? `${directActivities} direct ${directActivities === 1 ? 'activity' : 'activities'} will move to Unfiled.`
+        ? `${directActivities} direct ${directActivities === 1 ? 'attività' : 'attività'} will move to Unfiled.`
         : '',
       directChildren
         ? `${directChildren} ${directChildren === 1 ? 'subfolder' : 'subfolders'} will move to the Library root; their activities stay inside them.`
@@ -543,15 +551,15 @@ export default function AdminExerciseBuilderLibrary() {
         .map((row) => row.parent_id === folder.id ? { ...row, parent_id: null } : row));
       setItems((current) => current.map((item) => item.folder_id === folder.id ? { ...item, folder_id: null } : item));
       if (selectedFolder === folder.id) setSelectedFolder('root');
-      setNotice(`Folder “${folder.name}” deleted. Content was kept.`);
+      setNotice(`Cartella “${folder.name}” eliminata. Le attività sono state mantenute.`);
     } catch (nextError) {
-      setError(nextError.message || 'Could not delete this folder.');
+      setError(nextError.message || 'Non è stato possibile eliminare la cartella.');
     } finally {
       setFolderBusy(false);
     }
   }
 
-  async function moveDraft(draftId, folderId, folderName = 'Unfiled') {
+  async function moveDraft(draftId, folderId, folderName = 'Senza cartella') {
     if (!draftId) return;
     setError('');
     try {
@@ -559,16 +567,16 @@ export default function AdminExerciseBuilderLibrary() {
       setItems((current) => current.map((item) => item.id === draftId
         ? { ...item, folder_id: moved.folder_id, updated_at: moved.updated_at }
         : item));
-      setNotice(`Activity moved to ${folderName}.`);
+      setNotice(`Attività spostata in ${folderName}.`);
     } catch (nextError) {
-      setError(nextError.message || 'Could not move this activity.');
+      setError(nextError.message || 'Non è stato possibile spostare questa attività.');
     } finally {
       setDraggedDraftId('');
       setDragOverFolder('');
     }
   }
 
-  async function moveSelected(folderId, folderName = 'Unfiled') {
+  async function moveSelected(folderId, folderName = 'Senza cartella') {
     if (!selectedIds.length || bulkBusy) return;
     setBulkBusy('move');
     setError('');
@@ -580,9 +588,9 @@ export default function AdminExerciseBuilderLibrary() {
         return row ? { ...item, folder_id: row.folder_id, updated_at: row.updated_at } : item;
       }));
       setSelectedIds([]);
-      setNotice(`${moved.length} ${moved.length === 1 ? 'activity' : 'activities'} moved to ${folderName}.`);
+      setNotice(`${moved.length} ${moved.length === 1 ? 'attività' : 'attività'} moved to ${folderName}.`);
     } catch (nextError) {
-      setError(nextError.message || 'Could not move the selected activities.');
+      setError(nextError.message || 'Non è stato possibile spostare le attività selezionate.');
     } finally {
       setBulkBusy('');
     }
@@ -603,9 +611,9 @@ export default function AdminExerciseBuilderLibrary() {
         return row ? { ...item, tags: Array.isArray(row.tags) ? row.tags : [], updated_at: row.updated_at } : item;
       }));
       setBulkTagValue('');
-      setNotice(`Tag “${tag}” added to ${changed.length} ${changed.length === 1 ? 'activity' : 'activities'}.`);
+      setNotice(`Tag “${tag}” added to ${changed.length} ${changed.length === 1 ? 'attività' : 'attività'}.`);
     } catch (nextError) {
-      setError(nextError.message || 'Could not add the tag.');
+      setError(nextError.message || 'Non è stato possibile aggiungere il tag.');
     } finally {
       setBulkBusy('');
     }
@@ -623,9 +631,9 @@ export default function AdminExerciseBuilderLibrary() {
         return row ? { ...item, tags: Array.isArray(row.tags) ? row.tags : [], updated_at: row.updated_at } : item;
       }));
       if (selectedTag.toLocaleLowerCase() === tag.toLocaleLowerCase()) setSelectedTag('all');
-      setNotice(`Tag “${tag}” removed from the selected activities.`);
+      setNotice(`Tag “${tag}” rimosso dalle attività selezionate.`);
     } catch (nextError) {
-      setError(nextError.message || 'Could not remove the tag.');
+      setError(nextError.message || 'Non è stato possibile rimuovere il tag.');
     } finally {
       setBulkBusy('');
     }
@@ -661,8 +669,8 @@ export default function AdminExerciseBuilderLibrary() {
   return (
     <>
       <SEO
-        title="Learning Studio Library | Sblocco Inglese"
-        description="Organise, search, edit, publish and assign Sblocco learning activities."
+        title="Libreria Learning Studio | Sblocco Inglese"
+        description="Organizza, cerca, modifica, pubblica e assegna le attività Sblocco."
       />
 
       <section className="min-h-screen bg-[#f7f3eb] py-6 dark:bg-surface-950 lg:py-8">
@@ -671,9 +679,9 @@ export default function AdminExerciseBuilderLibrary() {
             <div className="grid gap-5 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-orange-700 dark:text-orange-300">Sblocco Learning Studio</p>
-                <h1 className="mt-2 text-3xl font-black tracking-tight text-ink dark:text-white sm:text-4xl">Your learning library</h1>
+                <h1 className="mt-2 text-3xl font-black tracking-tight text-ink dark:text-white sm:text-4xl">La tua libreria attività</h1>
                 <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
-                  Find, organise and reuse activities without touching technical metadata.
+                  Trova, organizza e riusa le attività senza occuparti di dati tecnici.
                 </p>
               </div>
 
@@ -694,7 +702,7 @@ export default function AdminExerciseBuilderLibrary() {
                   <input
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
-                    placeholder="Search title, topic, level, tag..."
+                    placeholder="Cerca titolo, argomento, livello o tag..."
                     className="focus-ring w-full rounded-xl border border-ink/10 bg-white py-2.5 pl-9 pr-3 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
                   />
                 </div>
@@ -734,7 +742,7 @@ export default function AdminExerciseBuilderLibrary() {
                     {filtersOpen ? (
                       <div className="absolute right-0 top-full z-40 mt-2 w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-ink/10 bg-white p-4 shadow-xl dark:border-white/10 dark:bg-surface-900">
                         <div className="flex items-center justify-between gap-3">
-                          <p className="text-xs font-black uppercase tracking-[0.12em] text-ink/45 dark:text-white/45">Filter activities</p>
+                          <p className="text-xs font-black uppercase tracking-[0.12em] text-ink/45 dark:text-white/45">Filtra attività</p>
                           {activeFilterCount ? (
                             <button type="button" onClick={() => { setLevelFilter('all'); setTypeFilter('all'); setOriginFilter('all'); }} className="text-[0.68rem] font-black text-orange-700 dark:text-orange-300">
                               Clear
@@ -745,21 +753,21 @@ export default function AdminExerciseBuilderLibrary() {
                           <label className="grid gap-1.5 text-xs font-black text-ink/55 dark:text-white/55">
                             Level
                             <select value={levelFilter} onChange={(event) => setLevelFilter(event.target.value)} className="focus-ring rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-bold text-ink dark:border-white/10 dark:bg-white/[0.06] dark:text-white">
-                              <option value="all">All levels</option>
+                              <option value="all">Tutti i livelli</option>
                               {LEVELS.map((level) => <option key={level} value={level}>{level}</option>)}
                             </select>
                           </label>
                           <label className="grid gap-1.5 text-xs font-black text-ink/55 dark:text-white/55">
                             Activity type
                             <select value={typeFilter} onChange={(event) => setTypeFilter(event.target.value)} className="focus-ring rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-bold text-ink dark:border-white/10 dark:bg-white/[0.06] dark:text-white">
-                              <option value="all">All types</option>
+                              <option value="all">Tutti i tipi</option>
                               {ACTIVITY_TYPES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
                           </label>
                           <label className="grid gap-1.5 text-xs font-black text-ink/55 dark:text-white/55">
                             Origin
                             <select value={originFilter} onChange={(event) => setOriginFilter(event.target.value)} className="focus-ring rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-bold text-ink dark:border-white/10 dark:bg-white/[0.06] dark:text-white">
-                              <option value="all">All origins</option>
+                              <option value="all">Tutte le origini</option>
                               {ORIGINS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
                           </label>
@@ -774,7 +782,7 @@ export default function AdminExerciseBuilderLibrary() {
                       value={sort}
                       onChange={(event) => setSort(event.target.value)}
                       className="focus-ring appearance-none rounded-full border border-ink/10 bg-white py-2 pl-8 pr-8 text-xs font-black text-ink/65 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/65"
-                      aria-label="Sort activities"
+                      aria-label="Ordina attività"
                     >
                       {SORT_OPTIONS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                     </select>
@@ -785,7 +793,7 @@ export default function AdminExerciseBuilderLibrary() {
 
               {(selectedTag !== 'all' || activeFilterCount) ? (
                 <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-ink/10 pt-3 dark:border-white/10">
-                  <span className="mr-1 text-[0.68rem] font-black uppercase tracking-[0.1em] text-ink/35 dark:text-white/35">Active</span>
+                  <span className="mr-1 text-[0.68rem] font-black uppercase tracking-[0.1em] text-ink/35 dark:text-white/35">Attivi</span>
                   {selectedTag !== 'all' ? (
                     <button type="button" onClick={() => setSelectedTag('all')} className="focus-ring inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-2.5 py-1.5 text-[0.68rem] font-black text-orange-900 dark:bg-orange-300/10 dark:text-orange-100">
                       Tag: {selectedTag} <X className="h-3 w-3" />
@@ -821,7 +829,7 @@ export default function AdminExerciseBuilderLibrary() {
             <section className="mt-5 rounded-[1.6rem] border border-ink/10 bg-white/75 p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.025] sm:p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <nav className="flex flex-wrap items-center gap-1 text-[0.68rem] font-black text-ink/40 dark:text-white/40" aria-label="Folder breadcrumb">
+                  <nav className="flex flex-wrap items-center gap-1 text-[0.68rem] font-black text-ink/40 dark:text-white/40" aria-label="Percorso cartelle">
                     <button
                       type="button"
                       onClick={() => { setSelectedFolder('root'); setSearch(''); }}
@@ -845,15 +853,15 @@ export default function AdminExerciseBuilderLibrary() {
 
                   <div className="mt-2">
                     <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">
-                      {currentFolder ? 'Subfolders' : 'Folders'}
+                      {currentFolder ? 'Sottocartelle' : 'Cartelle'}
                     </p>
                     <h2 className="mt-1 text-xl font-black text-ink dark:text-white">
-                      {currentFolder ? currentFolder.name : 'Your folders'}
+                      {currentFolder ? currentFolder.name : 'Le tue cartelle'}
                     </h2>
                     <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">
                       {currentFolder
-                        ? 'Only this folder’s direct activities appear below. Open a subfolder to go deeper.'
-                        : 'Your main library stays quiet: folders first, then only activities that have not been filed yet.'}
+                        ? 'Qui sotto compaiono solo le attività direttamente in questa cartella. Apri una sottocartella per continuare.'
+                        : 'La libreria principale resta pulita: prima le cartelle, poi solo le attività ancora senza cartella.'}
                     </p>
                   </div>
                 </div>
@@ -871,7 +879,7 @@ export default function AdminExerciseBuilderLibrary() {
                     onClick={() => setNewFolderOpen((current) => !current)}
                     className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-3.5 py-2 text-xs font-black text-ink/65 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/65"
                   >
-                    <FolderPlus className="h-3.5 w-3.5" /> {currentFolder ? 'New subfolder' : 'New folder'}
+                    <FolderPlus className="h-3.5 w-3.5" /> {currentFolder ? 'Nuova sottocartella' : 'Nuova cartella'}
                   </button>
                 </div>
               </div>
@@ -886,13 +894,13 @@ export default function AdminExerciseBuilderLibrary() {
                         maxLength={80}
                         value={newFolderName}
                         onChange={(event) => setNewFolderName(event.target.value)}
-                        placeholder={currentFolder ? 'Subfolder name' : 'Folder name'}
+                        placeholder={currentFolder ? 'Nome sottocartella' : 'Nome cartella'}
                         className="focus-ring min-w-0 rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-bold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
                       />
                     </label>
 
                     <fieldset className="min-w-0">
-                      <legend className="mb-1.5 text-xs font-black text-ink/55 dark:text-white/55">Colour</legend>
+                      <legend className="mb-1.5 text-xs font-black text-ink/55 dark:text-white/55">Colore</legend>
                       <div className="flex flex-wrap gap-1.5">
                         {FOLDER_COLORS.map((color) => (
                           <button
@@ -959,7 +967,7 @@ export default function AdminExerciseBuilderLibrary() {
                           </label>
 
                           <fieldset className="mt-2">
-                            <legend className="mb-1 text-[0.68rem] font-black text-ink/45 dark:text-white/45">Colour</legend>
+                            <legend className="mb-1 text-[0.68rem] font-black text-ink/45 dark:text-white/45">Colore</legend>
                             <div className="flex flex-wrap gap-1">
                               {FOLDER_COLORS.map((option) => (
                                 <button
@@ -983,7 +991,7 @@ export default function AdminExerciseBuilderLibrary() {
                               onChange={(event) => setEditFolderParent(event.target.value)}
                               className="focus-ring min-w-0 rounded-lg border border-ink/10 bg-white px-2.5 py-2 text-xs font-bold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
                             >
-                              <option value="root">Library root</option>
+                              <option value="root">Radice libreria</option>
                               {parentOptions.map((option) => (
                                 <option key={option.id} value={option.id}>{option.path_label}</option>
                               ))}
@@ -1028,8 +1036,8 @@ export default function AdminExerciseBuilderLibrary() {
                           <span className="min-w-0 flex-1">
                             <span className="block truncate text-sm font-black text-ink dark:text-white">{folder.name}</span>
                             <span className="mt-1 block text-xs font-bold text-ink/45 dark:text-white/45">
-                              {totalActivities} {totalActivities === 1 ? 'activity' : 'activities'}
-                              {directChildren ? ' · ' + directChildren + (directChildren === 1 ? ' subfolder' : ' subfolders') : ''}
+                              {totalActivities} {totalActivities === 1 ? 'attività' : 'attività'}
+                              {directChildren ? ' · ' + directChildren + (directChildren === 1 ? ' sottocartella' : ' sottocartelle') : ''}
                             </span>
                           </span>
                           <ChevronRight className="h-4 w-4 shrink-0 text-ink/25 dark:text-white/25" />
@@ -1059,12 +1067,12 @@ export default function AdminExerciseBuilderLibrary() {
                 </div>
               ) : (
                 <div className="mt-4 rounded-2xl border border-dashed border-ink/10 bg-white/45 px-4 py-5 text-sm font-semibold text-ink/45 dark:border-white/10 dark:bg-white/[0.02] dark:text-white/45">
-                  {currentFolder ? 'No subfolders here yet.' : 'No folders yet. Create one when you want to start organising the library.'}
+                  {currentFolder ? 'Non ci sono ancora sottocartelle.' : 'Non ci sono ancora cartelle. Creane una quando vuoi iniziare a organizzare la libreria.'}
                 </div>
               )}
 
               {draggedDraftId && visibleFolders.length ? (
-                <p className="mt-3 text-xs font-bold text-orange-800 dark:text-orange-200">Drop the activity onto a folder tile.</p>
+                <p className="mt-3 text-xs font-bold text-orange-800 dark:text-orange-200">Trascina l’attività sopra una cartella.</p>
               ) : null}
             </section>
           ) : null}
@@ -1078,7 +1086,7 @@ export default function AdminExerciseBuilderLibrary() {
               >
                 <span className="flex items-center gap-2">
                   <Tag className="h-4 w-4 text-orange-600 dark:text-orange-300" />
-                  <span className="text-xs font-black uppercase tracking-[0.12em] text-ink/55 dark:text-white/55">Tags</span>
+                  <span className="text-xs font-black uppercase tracking-[0.12em] text-ink/55 dark:text-white/55">Tag</span>
                   <span className="rounded-full bg-linen px-2 py-0.5 text-[0.65rem] font-black text-ink/40 dark:bg-white/[0.06] dark:text-white/40">{availableTags.length}</span>
                   {!tagsOpen && selectedTag !== 'all' ? (
                     <span className="rounded-full bg-orange-100 px-2 py-0.5 text-[0.65rem] font-black normal-case tracking-normal text-orange-900 dark:bg-orange-300/10 dark:text-orange-100">{selectedTag}</span>
@@ -1116,7 +1124,7 @@ export default function AdminExerciseBuilderLibrary() {
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">
-                    {isGlobalSearch ? 'Across the library' : currentFolder ? 'Directly in this folder' : selectedFolder === 'pinned' ? 'Quick access' : 'Not inside a folder'}
+                    {isGlobalSearch ? 'In tutta la libreria' : currentFolder ? 'Direttamente in questa cartella' : selectedFolder === 'pinned' ? 'Accesso rapido' : 'Senza cartella'}
                   </p>
                   {selectedFolder === 'pinned' ? (
                     <button
@@ -1132,7 +1140,7 @@ export default function AdminExerciseBuilderLibrary() {
                 {currentFolder ? (
                   <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">{currentFolder.name}</p>
                 ) : selectedFolder === 'root' && !isGlobalSearch ? (
-                  <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">{unfiledCount} total unfiled</p>
+                  <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">{unfiledCount} senza cartella</p>
                 ) : null}
               </div>
               <div className="flex items-center gap-3">
@@ -1141,7 +1149,7 @@ export default function AdminExerciseBuilderLibrary() {
                     Select all visible
                   </button>
                 ) : null}
-                <p className="text-xs font-semibold text-ink/45 dark:text-white/45">{filtered.length} {filtered.length === 1 ? 'activity' : 'activities'}</p>
+                <p className="text-xs font-semibold text-ink/45 dark:text-white/45">{filtered.length} {filtered.length === 1 ? 'attività' : 'attività'}</p>
               </div>
             </div>
 
@@ -1149,7 +1157,7 @@ export default function AdminExerciseBuilderLibrary() {
               <div className="sticky top-3 z-30 mt-3 flex flex-wrap items-center gap-2 rounded-2xl border border-ink/10 bg-[#fffdf8]/95 p-3 shadow-lg backdrop-blur dark:border-white/10 dark:bg-surface-900/95">
                 <div className="mr-1 flex items-center gap-2">
                   <span className="grid h-7 w-7 place-items-center rounded-full bg-orange-500 text-white"><Check className="h-3.5 w-3.5" /></span>
-                  <span className="text-sm font-black text-ink dark:text-white">{selectedIds.length} selected</span>
+                  <span className="text-sm font-black text-ink dark:text-white">{selectedIds.length} selezionate</span>
                 </div>
 
                 <details className="relative">
@@ -1157,7 +1165,7 @@ export default function AdminExerciseBuilderLibrary() {
                     <MoveRight className="h-3.5 w-3.5" /> Move
                   </summary>
                   <div className="absolute left-0 top-full z-40 mt-2 w-56 overflow-hidden rounded-xl border border-ink/10 bg-white p-1.5 shadow-xl dark:border-white/10 dark:bg-surface-900">
-                    <button type="button" onClick={(event) => { moveSelected(null, 'Unfiled'); event.currentTarget.closest('details')?.removeAttribute('open'); }} className="focus-ring flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-bold text-ink/65 hover:bg-linen dark:text-white/65 dark:hover:bg-white/[0.06]">
+                    <button type="button" onClick={(event) => { moveSelected(null, 'Senza cartella'); event.currentTarget.closest('details')?.removeAttribute('open'); }} className="focus-ring flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-bold text-ink/65 hover:bg-linen dark:text-white/65 dark:hover:bg-white/[0.06]">
                       <Inbox className="h-3.5 w-3.5" /> Unfiled
                     </button>
                     {folderOptions.map((folder) => (
@@ -1173,8 +1181,8 @@ export default function AdminExerciseBuilderLibrary() {
                     <Tag className="h-3.5 w-3.5" /> Add tag
                   </summary>
                   <form onSubmit={addTagToSelected} className="absolute left-0 top-full z-40 mt-2 flex w-72 gap-2 rounded-xl border border-ink/10 bg-white p-2 shadow-xl dark:border-white/10 dark:bg-surface-900">
-                    <input value={bulkTagValue} onChange={(event) => setBulkTagValue(event.target.value)} placeholder="Tag name" className="focus-ring min-w-0 flex-1 rounded-lg border border-ink/10 bg-white px-3 py-2 text-xs font-bold text-ink dark:border-white/10 dark:bg-white/[0.06] dark:text-white" />
-                    <button type="submit" disabled={!bulkTagValue.trim() || Boolean(bulkBusy)} className="focus-ring rounded-lg bg-ink px-3 py-2 text-xs font-black text-white disabled:opacity-35 dark:bg-orange-400 dark:text-surface-950">Add</button>
+                    <input value={bulkTagValue} onChange={(event) => setBulkTagValue(event.target.value)} placeholder="Nome tag" className="focus-ring min-w-0 flex-1 rounded-lg border border-ink/10 bg-white px-3 py-2 text-xs font-bold text-ink dark:border-white/10 dark:bg-white/[0.06] dark:text-white" />
+                    <button type="submit" disabled={!bulkTagValue.trim() || Boolean(bulkBusy)} className="focus-ring rounded-lg bg-ink px-3 py-2 text-xs font-black text-white disabled:opacity-35 dark:bg-orange-400 dark:text-surface-950">Aggiungi</button>
                   </form>
                 </details>
 
@@ -1187,7 +1195,7 @@ export default function AdminExerciseBuilderLibrary() {
                       <button key={tag} type="button" onClick={(event) => { removeTagFromSelected(tag); event.currentTarget.closest('details')?.removeAttribute('open'); }} className="focus-ring block w-full rounded-lg px-3 py-2 text-left text-xs font-bold text-ink/65 hover:bg-linen dark:text-white/65 dark:hover:bg-white/[0.06]">
                         {tag}
                       </button>
-                    )) : <p className="px-3 py-2 text-xs font-semibold text-ink/40 dark:text-white/40">No tags on the selected activities.</p>}
+                    )) : <p className="px-3 py-2 text-xs font-semibold text-ink/40 dark:text-white/40">Nessun tag nelle attività selezionate.</p>}
                   </div>
                 </details>
 
@@ -1206,7 +1214,7 @@ export default function AdminExerciseBuilderLibrary() {
             ) : null}
 
             {loading ? (
-              <div className="mt-4 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/55 dark:border-white/10 dark:bg-white/[0.03] dark:text-white/55">Loading Studio library...</div>
+              <div className="mt-4 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/55 dark:border-white/10 dark:bg-white/[0.03] dark:text-white/55">Caricamento libreria Studio...</div>
             ) : null}
 
             {!loading && filtered.length === 0 ? (
@@ -1214,25 +1222,25 @@ export default function AdminExerciseBuilderLibrary() {
                 <div className="max-w-lg">
                   <h3 className="text-xl font-black text-ink dark:text-white">
                     {!items.length
-                      ? 'The library is clean and empty.'
+                      ? 'La libreria è vuota.'
                       : isGlobalSearch
-                        ? 'No search matches.'
+                        ? 'Nessun risultato per questa ricerca.'
                         : selectedFolder === 'pinned'
-                          ? 'Nothing pinned yet.'
+                          ? 'Nessuna attività in evidenza.'
                           : currentFolder
-                            ? 'No activities directly in this folder.'
-                            : 'Everything here is filed.'}
+                            ? 'Nessuna attività direttamente in questa cartella.'
+                            : 'Tutte le attività sono già organizzate in cartelle.'}
                   </h3>
                   <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
                     {!items.length
-                      ? 'Create the first curated activity manually or import one with the Sblocco AI authoring kit.'
+                      ? 'Crea la prima attività manualmente oppure importala con il kit AI Sblocco.'
                       : isGlobalSearch
-                        ? 'Try another search term or clear one of the active filters.'
+                        ? 'Prova un’altra ricerca o rimuovi uno dei filtri attivi.'
                         : selectedFolder === 'pinned'
-                          ? 'Use the star on an activity whenever you want it in quick access.'
+                          ? 'Usa la stella su un’attività per aggiungerla all’accesso rapido.'
                           : currentFolder
-                            ? 'Its subfolders stay above. New activities created here will be filed into this folder automatically.'
-                            : 'There are no unfiled activities. Open a folder above, or create a new activity when you need one.'}
+                            ? 'Le sottocartelle restano sopra. Le nuove attività create qui verranno inserite automaticamente in questa cartella.'
+                            : 'Non ci sono attività senza cartella. Apri una cartella oppure crea una nuova attività.'}
                   </p>
                   {!items.length ? (
                     <Link to={newActivityHref} className="focus-ring mt-4 inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-black text-white">
@@ -1246,7 +1254,7 @@ export default function AdminExerciseBuilderLibrary() {
             {!loading && filtered.length ? (
               <div className="mt-4 grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
                 {filtered.map((item) => {
-                  const itemFolderPath = item.folder_id ? folderPathLabel(folders, item.folder_id) : 'Unfiled';
+                  const itemFolderPath = item.folder_id ? folderPathLabel(folders, item.folder_id) : 'Senza cartella';
                   const selected = selectedSet.has(item.id);
 
                   return (
@@ -1272,9 +1280,9 @@ export default function AdminExerciseBuilderLibrary() {
                             checked={selected}
                             onChange={() => toggleSelected(item.id)}
                             className="h-4 w-4 accent-orange-500"
-                            aria-label={`Select ${item.internal_title || 'activity'}`}
+                            aria-label={`Seleziona ${item.internal_title || 'attività'}`}
                           />
-                          <span className="sr-only">Select activity</span>
+                          <span className="sr-only">Seleziona attività</span>
                         </label>
 
                         <button
@@ -1286,15 +1294,15 @@ export default function AdminExerciseBuilderLibrary() {
                               ? 'bg-orange-100 text-orange-700 dark:bg-orange-300/10 dark:text-orange-200'
                               : 'text-ink/25 hover:bg-linen hover:text-orange-600 dark:text-white/25 dark:hover:bg-white/[0.06] dark:hover:text-orange-200'
                           }`}
-                          aria-label={item.pinned_at ? 'Unpin activity' : 'Pin activity'}
-                          title={item.pinned_at ? 'Unpin' : 'Pin'}
+                          aria-label={item.pinned_at ? 'Rimuovi da In evidenza' : 'Metti in evidenza'}
+                          title={item.pinned_at ? 'Rimuovi da In evidenza' : 'Metti in evidenza'}
                         >
                           <Star className={`h-4 w-4 ${item.pinned_at ? 'fill-current' : ''}`} />
                         </button>
                       </div>
 
                       <div className="mt-2 flex flex-wrap items-center gap-2">
-                        <span className={`rounded-full px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-wide ${statusClass(item.status)}`}>{item.status}</span>
+                        <span className={`rounded-full px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-wide ${statusClass(item.status)}`}>{statusLabel(item.status)}</span>
                         <span className="rounded-full bg-linen px-2.5 py-1 text-[0.65rem] font-black text-ink/55 dark:bg-white/[0.06] dark:text-white/55">{item.level}</span>
                         <span className="rounded-full bg-orange-50 px-2.5 py-1 text-[0.65rem] font-black text-orange-800 dark:bg-orange-300/[0.07] dark:text-orange-100">{originLabel(item.origin)}</span>
                       </div>
@@ -1305,9 +1313,9 @@ export default function AdminExerciseBuilderLibrary() {
                           <span className="truncate">{itemFolderPath}</span>
                         </div>
                         <p className="mt-2 text-[0.65rem] font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">{activityTypeLabel(item.activity_type)}</p>
-                        <h3 className="mt-1 text-xl font-black leading-tight text-ink dark:text-white">{item.internal_title || 'Untitled activity'}</h3>
+                        <h3 className="mt-1 text-xl font-black leading-tight text-ink dark:text-white">{item.internal_title || 'Attività senza titolo'}</h3>
                         {item.learner_title ? <p className="mt-2 text-sm font-bold text-ink/65 dark:text-white/65">{item.learner_title}</p> : null}
-                        <p className="mt-3 text-xs font-semibold text-ink/45 dark:text-white/45">{item.topic || 'Topic not set'}{item.updated_at ? ` · Updated ${updatedLabel(item.updated_at)}` : ''}</p>
+                        <p className="mt-3 text-xs font-semibold text-ink/45 dark:text-white/45">{item.topic || 'Argomento non impostato'}{item.updated_at ? ` · Modificata ${updatedLabel(item.updated_at)}` : ''}</p>
 
                         {Array.isArray(item.tags) && item.tags.length ? (
                           <div className="mt-3 flex flex-wrap gap-1.5">
@@ -1327,14 +1335,14 @@ export default function AdminExerciseBuilderLibrary() {
                       </div>
 
                       <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-ink/10 pt-4 dark:border-white/10">
-                        <Link to={`/admin/content/exercises/studio?draft=${item.id}`} className="focus-ring rounded-full bg-ink px-3.5 py-2 text-xs font-black text-white dark:bg-orange-400 dark:text-surface-950">Edit</Link>
-                        <Link to={`/admin/content/exercises/studio?draft=${item.id}`} target="_blank" rel="noreferrer" className="focus-ring rounded-full border border-ink/10 px-3.5 py-2 text-xs font-black text-ink dark:border-white/10 dark:text-white">Preview</Link>
+                        <Link to={`/admin/content/exercises/studio?draft=${item.id}`} className="focus-ring rounded-full bg-ink px-3.5 py-2 text-xs font-black text-white dark:bg-orange-400 dark:text-surface-950">Modifica</Link>
+                        <Link to={`/admin/content/exercises/studio?draft=${item.id}`} target="_blank" rel="noreferrer" className="focus-ring rounded-full border border-ink/10 px-3.5 py-2 text-xs font-black text-ink dark:border-white/10 dark:text-white">Anteprima</Link>
                         {item.status === 'published' && item.exercise_id ? (
-                          <button type="button" onClick={() => setAssignItem(item)} className="focus-ring rounded-full border border-orange-300 bg-orange-50 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:bg-orange-300/[0.07] dark:text-orange-100">Assign</button>
+                          <button type="button" onClick={() => setAssignItem(item)} className="focus-ring rounded-full border border-orange-300 bg-orange-50 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:bg-orange-300/[0.07] dark:text-orange-100">Assegna</button>
                         ) : null}
 
                         <details className="relative ml-auto">
-                          <summary className="focus-ring grid h-9 w-9 cursor-pointer list-none place-items-center rounded-full border border-ink/10 text-ink/45 hover:text-ink dark:border-white/10 dark:text-white/45 dark:hover:text-white" aria-label="More actions">
+                          <summary className="focus-ring grid h-9 w-9 cursor-pointer list-none place-items-center rounded-full border border-ink/10 text-ink/45 hover:text-ink dark:border-white/10 dark:text-white/45 dark:hover:text-white" aria-label="Altre azioni">
                             <MoreHorizontal className="h-4 w-4" />
                           </summary>
                           <div className="absolute bottom-full right-0 z-30 mb-2 w-60 overflow-hidden rounded-xl border border-ink/10 bg-white p-1.5 shadow-xl dark:border-white/10 dark:bg-surface-900">
@@ -1358,7 +1366,7 @@ export default function AdminExerciseBuilderLibrary() {
                                 <button
                                   type="button"
                                   onClick={(event) => {
-                                    moveDraft(item.id, null, 'Unfiled');
+                                    moveDraft(item.id, null, 'Senza cartella');
                                     event.currentTarget.closest('details')?.parentElement?.closest('details')?.removeAttribute('open');
                                   }}
                                   className="focus-ring flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-bold text-ink/55 hover:bg-linen dark:text-white/55 dark:hover:bg-white/[0.06]"
@@ -1409,7 +1417,7 @@ export default function AdminExerciseBuilderLibrary() {
       {assignItem?.exercise_id ? (
         <StudioQuickAssignPanel
           exerciseId={assignItem.exercise_id}
-          activityTitle={assignItem.learner_title || assignItem.internal_title || 'Sblocco activity'}
+          activityTitle={assignItem.learner_title || assignItem.internal_title || 'Attività Sblocco'}
           onClose={() => setAssignItem(null)}
           onAssigned={({ learner, group, result, mode }) => {
             setNotice(

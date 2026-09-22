@@ -29,12 +29,7 @@
       (function () {
         try {
           var saved = window.localStorage.getItem('sblocco_theme');
-          var dark =
-            saved === 'dark' ||
-            (saved !== 'light' &&
-              window.matchMedia &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches);
-          if (dark && window.location.pathname !== '/') {
+          if (saved === 'dark' && window.location.pathname !== '/') {
             document.documentElement.classList.add('dark');
           }
         } catch (error) {

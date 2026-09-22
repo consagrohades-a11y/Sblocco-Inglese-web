@@ -4,8 +4,8 @@
  * Route-scoped compatibility layer for the entire learner-facing product.
  *
  * Goals:
- * - one visual grammar across dashboard, assignments, exercises, trainers,
- *   practice, progress, collections, grammar, recovery and account;
+ * - one visual grammar across dashboard, assignments, exercises,
+ *   progress, collections, grammar, recovery and account;
  * - warm editorial light mode and deep-navy editorial dark mode;
  * - preserve interaction semantics and existing learning logic;
  * - progressively retire one-off LMS card styling without requiring a risky
@@ -315,41 +315,6 @@ html.sblocco-learner-experience[data-learning-surface="exercise"] main .section-
   max-width: 15ch;
   font-size: clamp(3rem, 7vw, 5rem) !important;
   line-height: 0.94 !important;
-}
-
-/* Trainer + SRS ----------------------------------------------------------- */
-html.sblocco-learner-experience[data-learning-surface="trainer"] main,
-html.sblocco-learner-experience[data-learning-surface="practice"] main {
-  min-height: calc(100vh - 4rem);
-}
-
-html.sblocco-learner-experience[data-learning-surface="trainer"] main :where(article, section)[class*="rounded-lg"],
-html.sblocco-learner-experience[data-learning-surface="practice"] main :where(article, section)[class*="rounded-lg"] {
-  border-radius: 0.55rem !important;
-}
-
-html.sblocco-learner-experience[data-learning-surface="trainer"] main article[class*="shadow-soft"],
-html.sblocco-learner-experience[data-learning-surface="practice"] main section[class*="shadow-soft"] {
-  border-color: var(--lx-line) !important;
-  background: color-mix(in srgb, var(--lx-raised) 95%, transparent) !important;
-  box-shadow: var(--lx-shadow) !important;
-}
-
-html.sblocco-learner-experience[data-learning-surface="trainer"] main article h2,
-html.sblocco-learner-experience[data-learning-surface="practice"] main h1,
-html.sblocco-learner-experience[data-learning-surface="practice"] main h2 {
-  font-family: var(--lx-display);
-  font-weight: 400 !important;
-}
-
-html.sblocco-learner-experience[data-learning-surface="trainer"] main article h2 {
-  font-size: clamp(2.4rem, 5vw, 4rem) !important;
-  letter-spacing: -0.04em !important;
-}
-
-html.sblocco-learner-experience[data-learning-surface="trainer"] main article > div:first-child,
-html.sblocco-learner-experience[data-learning-surface="practice"] main [class*="border-moss/15"][class*="bg-gradient"] {
-  border-color: var(--lx-line) !important;
 }
 
 /* Progress: remove the old forced-dark page in light mode ---------------- */

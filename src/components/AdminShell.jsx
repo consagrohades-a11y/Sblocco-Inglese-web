@@ -5,19 +5,11 @@ import {
   Blocks,
   BookOpen,
   ChevronDown,
-  CircleHelp,
   ClipboardList,
-  Dumbbell,
-  FileCheck2,
-  Languages,
   LayoutDashboard,
   Menu,
-  MessageSquareText,
   PanelLeftClose,
   PanelLeftOpen,
-  Plane,
-  Settings,
-  Target,
   UserRound,
   Users,
   X,
@@ -30,8 +22,8 @@ import { useAuth } from '../auth/AuthContext.jsx';
 const navigationGroups = [
   {
     id: 'home',
-    label: 'Home admin',
-    description: 'Riepilogo generale',
+    label: 'Workspace',
+    description: 'Panoramica e aggiornamenti',
     icon: LayoutDashboard,
     items: [
       { label: 'Dashboard', to: '/admin', icon: LayoutDashboard, end: true },
@@ -41,92 +33,35 @@ const navigationGroups = [
   {
     id: 'learners',
     label: 'Studenti',
-    description: 'Account e attività assegnate',
+    description: 'Profili, gruppi e assegnazioni',
     icon: Users,
     items: [
-      { label: 'Elenco studenti', to: '/admin/learners', icon: Users },
-      { label: 'Gruppi e cohort', to: '/admin/groups', icon: Users },
+      { label: 'Studenti', to: '/admin/learners', icon: Users },
+      { label: 'Gruppi', to: '/admin/groups', icon: Users },
       { label: 'Assegnazioni', to: '/admin/assignments', icon: ClipboardList },
     ],
   },
   {
-    id: 'learning-areas',
-    label: 'Attività didattiche',
-    description: 'Esercizi, SRS e pratica mirata',
-    icon: Dumbbell,
-    items: [
-      { label: 'Esercizi assegnati', to: '/admin/activities/exercises', icon: ClipboardList },
-      { label: 'Ripasso SRS', to: '/admin/activities/srs', icon: Dumbbell },
-      { label: 'Pratica mirata', to: '/admin/activities/practice', icon: Target },
-    ],
-  },
-  {
-    id: 'words',
-    label: 'Parole',
-    description: 'Word Trainer, batch e deck',
-    icon: Languages,
-    items: [
-      { label: 'Libreria e modifica', to: '/admin/content/words', icon: BookOpen, end: true },
-      { label: 'Importa e gestisci batch', to: '/admin/content/words/import', icon: FileCheck2 },
-      { label: 'Deck di parole', to: '/admin/content/words/decks', icon: Blocks },
-      { label: 'Archivio parole', to: '/admin/content/words/archive', icon: FileCheck2 },
-    ],
-  },
-  {
-    id: 'expressions',
-    label: 'Espressioni',
-    description: 'General, Business, Hospitality e Travel',
-    icon: MessageSquareText,
-    items: [
-      { label: 'Espressioni generali', to: '/admin/content/expressions', icon: MessageSquareText },
-      { label: 'Espressioni business', to: '/admin/content/business-expressions', icon: MessageSquareText },
-      { label: 'Espressioni hospitality', to: '/admin/content/hospitality-expressions', icon: MessageSquareText },
-      { label: 'Travel Trainer', to: '/admin/content/travel-expressions', icon: Plane },
-    ],
-  },
-  {
-    id: 'questions',
-    label: 'Domande',
-    description: 'Banca, modifica, pool e diagnosi',
-    icon: CircleHelp,
-    items: [
-      { label: 'Banca domande', to: '/admin/content/exercises/questions', icon: BookOpen, end: true },
-      { label: 'Modifica domande', to: '/admin/content/exercises/questions/edit', icon: FileCheck2 },
-      { label: 'Gruppi di domande', to: '/admin/content/exercises/pools', icon: Blocks },
-      { label: 'Regole diagnostiche', to: '/admin/content/exercises/diagnostics', icon: BarChart3, end: true },
-      { label: 'Importa diagnostica', to: '/admin/content/exercises/diagnostics/import', icon: FileCheck2 },
-    ],
-  },
-  {
-    id: 'exercises',
-    label: 'Esercizi',
-    description: 'Creazione, pubblicazione e risultati',
+    id: 'studio',
+    label: 'Learning Studio',
+    description: 'Crea, organizza e revisiona',
     icon: Blocks,
     items: [
-      { label: 'Learning Studio', to: '/admin/content/exercises/studio', icon: Blocks },
-      { label: 'Libreria', to: '/admin/content/exercises/library', icon: BookOpen },
-      { label: 'Risultati studenti', to: '/admin/content/exercises/results', icon: BarChart3 },
+      { label: 'Crea attività', to: '/admin/content/exercises/studio', icon: Blocks },
+      { label: 'Libreria attività', to: '/admin/content/exercises/library', icon: BookOpen },
+      { label: 'Risultati e review', to: '/admin/content/exercises/results', icon: BarChart3 },
     ],
   },
   {
     id: 'analysis',
     label: 'Analisi',
-    description: 'Attività, progressi e risultati',
+    description: 'Progressi e andamento',
     icon: BarChart3,
     items: [
-      { label: 'Attività e risultati', to: '/admin/analytics', icon: BarChart3 },
+      { label: 'Analisi studenti', to: '/admin/analytics', icon: BarChart3 },
     ],
   },
-  {
-    id: 'settings',
-    label: 'Impostazioni',
-    description: 'Tema e account admin',
-    icon: Settings,
-    items: [
-      { label: 'Tema e account', to: '/admin/settings', icon: Settings },
-    ],
-  },
-];
+]
 
 function getInitialSidebarState() {
   if (typeof window === 'undefined') return false;
@@ -134,12 +69,12 @@ function getInitialSidebarState() {
 }
 
 function getInitialOpenGroups() {
-  if (typeof window === 'undefined') return ['home', 'learners'];
+  if (typeof window === 'undefined') return ['home', 'learners', 'studio'];
   try {
     const stored = JSON.parse(window.localStorage.getItem('sblocco_admin_groups') || '[]');
-    return Array.isArray(stored) && stored.length ? stored : ['home', 'learners'];
+    return Array.isArray(stored) && stored.length ? stored.filter((id) => navigationGroups.some((group) => group.id === id)) : ['home', 'learners', 'studio'];
   } catch {
-    return ['home', 'learners'];
+    return ['home', 'learners', 'studio'];
   }
 }
 
@@ -310,7 +245,7 @@ export default function AdminShell() {
           ) : (
             <div className="mt-2">
               <p className="text-xs font-bold uppercase tracking-[0.15em] text-emerald-200/75">Pannello admin</p>
-              <p className="mt-1 text-[0.68rem] font-semibold text-white/70">Scegli un’area e poi lo strumento.</p>
+              <p className="mt-1 text-[0.68rem] font-semibold text-white/70">Tutto ciò che serve per gestire studenti e attività.</p>
             </div>
           )}
         </div>

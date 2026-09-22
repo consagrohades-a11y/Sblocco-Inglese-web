@@ -3,11 +3,9 @@ import {
   Activity,
   AlertTriangle,
   BookOpenCheck,
-  Brain,
   ChevronLeft,
   ClipboardList,
   RefreshCw,
-  Target,
   UserRound,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
@@ -100,52 +98,32 @@ function PercentBar({ value, tone = "bg-emerald-500" }) {
 
 function ActivityChart({ rows }) {
   const visible = rows.slice(-30);
-  const maximum = Math.max(
-    1,
-    ...visible.map(
-      (row) =>
-        Number(row.srs_reviews || 0) + Number(row.exercise_attempts || 0),
-    ),
-  );
+  const maximum = Math.max(1, ...visible.map((row) => Number(row.exercise_attempts || 0)));
+
   return (
     <div className="mt-6 overflow-x-auto pb-2">
-      <div
-        className="flex min-w-[720px] items-end gap-2"
-        style={{ height: 190 }}
-      >
+      <div className="flex min-w-[720px] items-end gap-2" style={{ height: 190 }}>
         {visible.map((row, index) => {
-          const reviews = Number(row.srs_reviews || 0);
           const attempts = Number(row.exercise_attempts || 0);
-          const total = reviews + attempts;
-          const height = Math.max(
-            total ? 8 : 2,
-            Math.round((total / maximum) * 150),
-          );
+          const height = Math.max(attempts ? 8 : 2, Math.round((attempts / maximum) * 150));
           const label = new Intl.DateTimeFormat("it-IT", {
             day: "2-digit",
             month: "short",
           }).format(new Date(`${row.date}T12:00:00`));
+
           return (
             <div
               key={row.date}
               className="flex min-w-0 flex-1 flex-col items-center justify-end gap-2"
-              title={`${label}: ${reviews} ripassi, ${attempts} esercizi`}
+              title={`${label}: ${attempts} esercizi`}
             >
               <div
-                className="flex w-full max-w-7 flex-col justify-end overflow-hidden rounded-t-md bg-ink/5 dark:bg-white/5"
+                className="flex w-full max-w-7 items-end overflow-hidden rounded-t-md bg-ink/5 dark:bg-white/5"
                 style={{ height }}
               >
-                <div
-                  className="bg-violet-500"
-                  style={{ height: total ? `${(attempts / total) * 100}%` : 0 }}
-                />
-                <div
-                  className="bg-emerald-500"
-                  style={{ height: total ? `${(reviews / total) * 100}%` : 0 }}
-                />
+                <div className="w-full bg-orange-500" style={{ height: attempts ? "100%" : 0 }} />
               </div>
-              {index % Math.max(1, Math.floor(visible.length / 7)) === 0 ||
-              index === visible.length - 1 ? (
+              {index % Math.max(1, Math.floor(visible.length / 7)) === 0 || index === visible.length - 1 ? (
                 <span className="whitespace-nowrap text-[0.6rem] font-black text-ink/60 dark:text-white/60">
                   {label}
                 </span>
@@ -188,6 +166,7 @@ export default function AdminLearnerAnalytics() {
 
   const profile = data?.profile || {};
   const overview = data?.overview || {};
+  const recentExerciseActivity = (data?.recent_activity || []).filter((item) => item.activity_type !== "srs_review");
   const pageTitle = profile.learner_name || "Analisi studente";
 
   return (
@@ -269,38 +248,30 @@ export default function AdminLearnerAnalytics() {
             <>
               <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 <Metric
-                  icon={Brain}
-                  label="Ripassi SRS"
-                  value={number(overview.srs_reviews)}
-                  detail={`${number(overview.srs_success_rate, 1)}% corretti o quasi`}
-                />
-                <Metric
                   icon={BookOpenCheck}
                   label="Esercizi inviati"
                   value={number(overview.exercise_attempts)}
-                  detail={
-                    overview.average_exercise_score === null
-                      ? "Nessun punteggio"
-                      : `${number(overview.average_exercise_score, 1)}% media`
-                  }
-                  tone="violet"
-                />
-                <Metric
-                  icon={Target}
-                  label="Card da seguire"
-                  value={number(overview.struggling_cards)}
-                  detail={`${number(overview.due_cards)} dovute su ${number(overview.introduced_cards)}`}
+                  detail="tentativi registrati nel periodo"
                   tone="coral"
                 />
                 <Metric
+                  icon={Activity}
+                  label="Media esercizi"
+                  value={overview.average_exercise_score === null ? "—" : `${number(overview.average_exercise_score, 1)}%`}
+                  detail="punteggio medio degli esercizi valutati"
+                />
+                <Metric
                   icon={AlertTriangle}
-                  label="Azioni aperte"
-                  value={number(
-                    Number(overview.overdue_assignments || 0) +
-                      Number(overview.pending_reviews || 0),
-                  )}
-                  detail={`${number(overview.overdue_assignments)} scadute · ${number(overview.pending_reviews)} revisioni`}
+                  label="Scadenze superate"
+                  value={number(overview.overdue_assignments)}
+                  detail="assegnazioni ancora aperte oltre la scadenza"
                   tone="amber"
+                />
+                <Metric
+                  icon={ClipboardList}
+                  label="Revisioni aperte"
+                  value={number(overview.pending_reviews)}
+                  detail="produzioni ancora da rivedere"
                 />
               </div>
 
@@ -316,11 +287,7 @@ export default function AdminLearnerAnalytics() {
                   </div>
                   <div className="flex gap-4 text-xs font-black text-ink/65 dark:text-white/65">
                     <span className="inline-flex items-center gap-2">
-                      <i className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                      SRS
-                    </span>
-                    <span className="inline-flex items-center gap-2">
-                      <i className="h-2.5 w-2.5 rounded-full bg-violet-500" />
+                      <i className="h-2.5 w-2.5 rounded-full bg-orange-500" />
                       Esercizi
                     </span>
                   </div>
@@ -328,47 +295,7 @@ export default function AdminLearnerAnalytics() {
                 <ActivityChart rows={data.daily_activity || []} />
               </section>
 
-              <div className="mt-6 grid gap-6 xl:grid-cols-2">
-                <section className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
-                  <p className="text-xs font-bold uppercase tracking-wide text-amber-700 dark:text-amber-300">
-                    SRS
-                  </p>
-                  <h2 className="mt-1 text-xl font-black">
-                    Card più difficili
-                  </h2>
-                  <div className="mt-5 divide-y divide-ink/10 dark:divide-white/10">
-                    {(data.difficult_cards || []).map((card) => (
-                      <article
-                        key={card.id}
-                        className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
-                      >
-                        <div>
-                          <p className="text-xs font-black text-moss dark:text-emerald-300">
-                            {card.public_id} · {card.level} · {card.item_type}
-                          </p>
-                          <h3 className="mt-1 font-black">
-                            {card.display_target}
-                          </h3>
-                          <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
-                            {number(card.review_count)} ripassi ·{" "}
-                            {number(card.incorrect_count)} errori ·{" "}
-                            {number(card.nearly_correct_count)} quasi
-                          </p>
-                        </div>
-                        <PercentBar
-                          value={card.difficulty_rate}
-                          tone="bg-amber-500"
-                        />
-                      </article>
-                    ))}
-                    {!(data.difficult_cards || []).length ? (
-                      <p className="py-6 text-sm font-bold text-ink/65 dark:text-white/65">
-                        Nessun ripasso nel periodo.
-                      </p>
-                    ) : null}
-                  </div>
-                </section>
-
+              <div className="mt-6">
                 <section className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
                   <p className="text-xs font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                     Exercise Builder
@@ -540,16 +467,14 @@ export default function AdminLearnerAnalytics() {
                   <ClipboardList className="h-6 w-6 text-moss dark:text-emerald-300" />
                 </div>
                 <div className="mt-5 divide-y divide-ink/10 dark:divide-white/10">
-                  {(data.recent_activity || []).map((item) => (
+                  {recentExerciseActivity.map((item) => (
                     <article
                       key={`${item.activity_type}-${item.reference_id}`}
                       className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between"
                     >
                       <div>
                         <p className="text-xs font-bold uppercase tracking-wide text-ink/60 dark:text-white/60">
-                          {item.activity_type === "srs_review"
-                            ? "Ripasso SRS"
-                            : "Esercizio"}
+                          Esercizio
                         </p>
                         <h3 className="mt-1 font-black">{item.title}</h3>
                         <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
@@ -568,7 +493,7 @@ export default function AdminLearnerAnalytics() {
                       </div>
                     </article>
                   ))}
-                  {!(data.recent_activity || []).length ? (
+                  {!recentExerciseActivity.length ? (
                     <p className="py-6 text-sm font-bold text-ink/65 dark:text-white/65">
                       Nessuna attività nel periodo.
                     </p>

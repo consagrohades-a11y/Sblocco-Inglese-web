@@ -10,7 +10,7 @@ function LearnerFooter() {
         <BrandLogo to="/assignments" compact light />
         <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-white/65" aria-label="Collegamenti studente a piè di pagina">
           <Link className="transition hover:text-white" to="/assignments">Attività</Link>
-          <Link className="transition hover:text-white" to="/trainers">Trainer</Link>
+          <Link className="transition hover:text-white" to="/vocab-bank">Vocabolario</Link>
           <Link className="transition hover:text-white" to="/progressi">Progressi</Link>
           <Link className="transition hover:text-white" to="/account/settings">Account</Link>
           <Link className="transition hover:text-white" to="/privacy-policy">Privacy</Link>
@@ -42,7 +42,7 @@ export default function Footer() {
         <div className={isHomepage ? 'home-public-footer__links' : 'grid content-start gap-2.5 text-sm'}>
           <p className={isHomepage ? 'home-public-footer__heading' : 'text-xs font-bold uppercase tracking-[0.12em] text-mint/90'}>Pagine</p>
           <Link className={isHomepage ? '' : 'text-white/70 hover:text-white'} to="/percorsi">Corsi</Link>
-          <Link className={isHomepage ? '' : 'text-white/70 hover:text-white'} to="/trainers">Trainer</Link>
+          <Link className={isHomepage ? '' : 'text-white/70 hover:text-white'} to="/piattaforma">Piattaforma</Link>
           <Link className={isHomepage ? '' : 'text-white/70 hover:text-white'} to="/grammar">English Foundations</Link>
           <Link className={isHomepage ? '' : 'text-white/70 hover:text-white'} to="/recensioni">Founder</Link>
         </div>

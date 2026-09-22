@@ -7,7 +7,7 @@ import {
   Headphones,
   MessageSquareText,
   Mic2,
-  Repeat2,
+  BookOpenText,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
@@ -35,9 +35,9 @@ const features = [
     text: 'Puoi riaprire le correzioni, riascoltare ciò che hai consegnato e capire cosa rendere più chiaro nella prova successiva.',
   },
   {
-    icon: Repeat2,
-    title: 'Le espressioni tornano nel Trainer',
-    text: 'Il materiale importante viene riproposto nel tempo. Le frasi più difficili tornano prima, quelle già stabili tornano più avanti.',
+    icon: BookOpenText,
+    title: 'Il linguaggio utile resta raccolto',
+    text: 'Parole e chunk incontrati nelle attività finiscono nel tuo Vocabolario, così puoi ritrovarli senza cercare tra esercizi e messaggi vecchi.',
   },
   {
     icon: BarChart3,
@@ -48,11 +48,11 @@ const features = [
 
 const learnerFlow = [
   ['01', 'Apri la missione della settimana', 'Vedi subito l’obiettivo, il lavoro richiesto e la scadenza.'],
-  ['02', 'Prepari il linguaggio', 'Ripassi espressioni e strutture utili prima di affrontare la situazione.'],
+  ['02', 'Prepari il linguaggio', 'Dentro la stessa attività trovi teoria, esempi e supporto prima di affrontare la prova.'],
   ['03', 'Ascolti e reagisci', 'Capisci le informazioni importanti e produci una risposta pertinente.'],
   ['04', 'Consegni la prova', 'Invii testo o registrazione direttamente dalla piattaforma.'],
   ['05', 'Ricevi la revisione', 'Una notifica ti porta al feedback, ai commenti e al punteggio aggiornato.'],
-  ['06', 'Ripeti ciò che serve', 'Il Trainer riprende il linguaggio più importante e lo rende parte della pratica successiva.'],
+  ['06', 'Ritrovi ciò che hai imparato', 'Parole e chunk utili restano nel tuo Vocabolario e il percorso continua dall’attività successiva.'],
 ];
 
 export default function Platform() {
@@ -60,7 +60,7 @@ export default function Platform() {
     <>
       <SEO
         title="La piattaforma Sblocco Inglese"
-        description="Attività ordinate, listening, roleplay vocali, feedback umano, Trainer e progressi in un’unica area studente."
+        description="Attività ordinate, listening, roleplay vocali, feedback umano, vocabolario e progressi in un’unica area studente."
       />
 
       <section className="relative overflow-hidden bg-ink text-white">
@@ -74,7 +74,7 @@ export default function Platform() {
               Tra una lezione e l’altra non devi chiederti da dove ricominciare.
             </h1>
             <p className="mt-6 max-w-3xl text-lg font-semibold leading-8 text-white/75 sm:text-xl">
-              La piattaforma raccoglie il percorso in un unico posto: attività, listening, roleplay vocali, Trainer, feedback e
+              La piattaforma raccoglie il percorso in un unico posto: attività, listening, roleplay vocali, vocabolario, feedback e
               progressi. Non sostituisce il lavoro con l’insegnante. Gli dà continuità.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -105,7 +105,7 @@ export default function Platform() {
             <div className="mt-6 grid gap-3">
               {[
                 ['Listening', 'Capisci bisogni, preferenze e vincoli'],
-                ['Trainer', '18 espressioni per fare domande e consigliare'],
+                ['Linguaggio', '18 espressioni integrate nell’attività per fare domande e consigliare'],
                 ['Roleplay', 'Rispondi vocalmente al cliente, turno per turno'],
                 ['Feedback', 'Revisione su chiarezza, tono e linguaggio'],
               ].map(([label, text], index) => (
@@ -193,7 +193,7 @@ export default function Platform() {
               <h3 className="mt-3 text-2xl font-black">Ho visto i tuoi esercizi.</h3>
               <p className="mt-4 text-sm font-semibold leading-7 text-white/65">
                 Apri il roleplay per ascoltare di nuovo le tue risposte, leggere i commenti sui singoli turni e vedere quali
-                espressioni riprendere nel Trainer.
+                espressioni ritrovare nel tuo Vocabolario.
               </p>
               <div className="mt-6 rounded-2xl border border-white/12 bg-white/[0.07] p-5">
                 <p className="text-sm font-black">Punto forte</p>

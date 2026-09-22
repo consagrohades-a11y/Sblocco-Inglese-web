@@ -223,7 +223,8 @@ assert.match(learnerHome, /!access\?\.entitled \? <GenericDashboard/);
 assert.match(learnerHome, /function GenericDashboard/);
 assert.match(learnerHome, /Continua da qui/);
 assert.match(learnerHome, /Word & Chunk Bank/);
-assert.match(learnerHome, /Pratica mirata/);
+assert.match(learnerHome, /Tre aree/);
+assert.doesNotMatch(learnerHome, /Pratica mirata|Ripasso SRS|Word Trainer|Expression Trainer/);
 
 // R: Recovery curriculum and production content are source-controlled and importable.
 const recoveryCurriculum = JSON.parse(readFileSync('content/recovery/curriculum-years-1-3.json', 'utf8'));

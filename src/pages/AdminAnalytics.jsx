@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
+import AdminPageHeader from "../components/admin/AdminPageHeader.jsx";
 import { loadAdminLearningAnalytics } from "../lib/adminAnalyticsApi.js";
 import { loadLearnerGroups } from "../lib/learnerGroupsApi.js";
 
@@ -43,28 +44,18 @@ function formatDate(value, fallback = "Mai") {
   }).format(new Date(value));
 }
 
-function Metric({ icon: Icon, label, value, detail, tone = "emerald" }) {
-  const tones = {
-    emerald:
-      "border-emerald-200 bg-emerald-50 text-emerald-950 dark:border-emerald-300/20 dark:bg-emerald-400/[0.08] dark:text-emerald-100",
-    violet:
-      "border-violet-200 bg-violet-50 text-violet-950 dark:border-violet-300/20 dark:bg-violet-400/[0.08] dark:text-violet-100",
-    amber:
-      "border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-300/20 dark:bg-amber-400/[0.08] dark:text-amber-100",
-    coral:
-      "border-orange-200 bg-orange-50 text-orange-950 dark:border-orange-300/20 dark:bg-orange-400/[0.08] dark:text-orange-100",
-  };
+function Metric({ icon: Icon, label, value, detail }) {
   return (
-    <article className={`rounded-2xl border p-5 shadow-sm ${tones[tone]}`}>
+    <article className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.045]">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide opacity-60">
+          <p className="text-xs font-bold uppercase tracking-wide text-ink/45 dark:text-white/40">
             {label}
           </p>
-          <p className="mt-2 text-3xl font-black">{value}</p>
-          <p className="mt-1 text-xs font-bold opacity-60">{detail}</p>
+          <p className="mt-2 text-3xl font-black text-ink dark:text-white">{value}</p>
+          <p className="mt-1 text-xs font-bold text-ink/50 dark:text-white/45">{detail}</p>
         </div>
-        <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/70 shadow-sm dark:bg-black/15">
+        <span className="grid h-11 w-11 place-items-center rounded-xl bg-clay/[0.08] text-clay dark:bg-coral/10 dark:text-coral">
           <Icon className="h-5 w-5" />
         </span>
       </div>
@@ -111,7 +102,7 @@ function ActivityChart({ rows }) {
                 style={{ height }}
               >
                 <div
-                  className="bg-violet-500"
+                  className="bg-clay"
                   style={{
                     height: total
                       ? `${Math.max(0, (attempts / total) * 100)}%`
@@ -119,7 +110,7 @@ function ActivityChart({ rows }) {
                   }}
                 />
                 <div
-                  className="bg-emerald-500"
+                  className="bg-ink/70 dark:bg-white/60"
                   style={{
                     height: total
                       ? `${Math.max(0, (reviews / total) * 100)}%`
@@ -143,7 +134,7 @@ function ActivityChart({ rows }) {
   );
 }
 
-function PercentBar({ value, tone = "bg-emerald-500" }) {
+function PercentBar({ value, tone = "bg-ink/70 dark:bg-white/60" }) {
   const safe = Math.max(0, Math.min(100, Number(value || 0)));
   return (
     <div className="min-w-28">
@@ -258,23 +249,16 @@ export default function AdminAnalytics() {
       />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-[1500px]">
-          <header className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-8">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <span className="eyebrow">Analisi</span>
-                <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-4xl">
-                  Attività e risultati
-                </h1>
-                <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/65 dark:text-white/65">
-                  Una vista operativa su assegnazioni, ripassi SRS, Exercise
-                  Builder e segnali che richiedono attenzione.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
+          <AdminPageHeader
+            eyebrow="Analisi"
+            title="Attività e risultati"
+            description="Una vista operativa su assegnazioni, attività, risultati e segnali che richiedono attenzione."
+            actions={(
+              <>
                 <select
                   value={period}
                   onChange={(event) => setPeriod(Number(event.target.value))}
-                  className="rounded-full border border-ink/15 bg-white px-4 py-2.5 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"
+                  className="rounded-full border border-ink/15 bg-white px-4 py-2.5 text-xs font-black text-ink dark:border-white/20 dark:bg-white/[0.07] dark:text-white"
                 >
                   {periodOptions.map((item) => (
                     <option key={item.value} value={item.value}>
@@ -286,16 +270,14 @@ export default function AdminAnalytics() {
                   type="button"
                   disabled={loading}
                   onClick={load}
-                  className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white disabled:opacity-40 dark:bg-emerald-300 dark:text-surface-950"
+                  className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2.5 text-xs font-black text-white transition hover:bg-clay disabled:opacity-40 dark:bg-clay dark:hover:bg-coral"
                 >
-                  <RefreshCw
-                    className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
-                  />
+                  <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
                   Aggiorna
                 </button>
-              </div>
-            </div>
-          </header>
+              </>
+            )}
+          />
 
           {error ? (
             <div className="mt-5 border-l-4 border-red-400 bg-red-50 p-5 text-sm font-bold leading-6 text-red-950">
@@ -350,7 +332,7 @@ export default function AdminAnalytics() {
               <section className="mt-6 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">
+                    <p className="text-xs font-bold uppercase tracking-wide text-clay dark:text-coral">
                       Attività giornaliera
                     </p>
                     <h2 className="mt-1 text-2xl font-black text-ink dark:text-white">
@@ -359,11 +341,11 @@ export default function AdminAnalytics() {
                   </div>
                   <div className="flex gap-4 text-xs font-black text-ink/65 dark:text-white/65">
                     <span className="inline-flex items-center gap-2">
-                      <i className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                      <i className="h-2.5 w-2.5 rounded-full bg-ink/70 dark:bg-white/60" />
                       SRS
                     </span>
                     <span className="inline-flex items-center gap-2">
-                      <i className="h-2.5 w-2.5 rounded-full bg-violet-500" />
+                      <i className="h-2.5 w-2.5 rounded-full bg-clay" />
                       Esercizi
                     </span>
                   </div>
@@ -375,7 +357,7 @@ export default function AdminAnalytics() {
                 <div className="border-b border-ink/10 p-5 dark:border-white/10 sm:p-7">
                   <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wide text-moss dark:text-emerald-300">
+                      <p className="text-xs font-bold uppercase tracking-wide text-clay dark:text-coral">
                         Studenti
                       </p>
                       <h2 className="mt-1 text-2xl font-black text-ink dark:text-white">
@@ -557,7 +539,7 @@ export default function AdminAnalytics() {
                         className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
                       >
                         <div>
-                          <p className="text-xs font-black text-moss dark:text-emerald-300">
+                          <p className="text-xs font-black text-clay dark:text-coral">
                             {card.public_id} · {card.level} · {card.item_type}
                           </p>
                           <h3 className="mt-1 font-black text-ink dark:text-white">
@@ -623,7 +605,7 @@ export default function AdminAnalytics() {
                         </div>
                         <PercentBar
                           value={exercise.pass_rate}
-                          tone="bg-violet-500"
+                          tone="bg-clay"
                         />
                       </article>
                     ))}

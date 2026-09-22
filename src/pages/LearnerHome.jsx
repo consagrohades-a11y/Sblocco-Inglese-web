@@ -61,39 +61,20 @@ function ProgressRing({ value, label = 'preparazione' }) {
 function GenericDashboard({ firstName }) {
   const [loading, setLoading] = useState(true);
   const [assignments, setAssignments] = useState([]);
-  const [reviewCount, setReviewCount] = useState(0);
-  const [dueCount, setDueCount] = useState(0);
-  const [activeDays, setActiveDays] = useState(new Set());
 
   useEffect(() => {
     let active = true;
     async function load() {
       setLoading(true);
-      const sevenDaysAgo = new Date(Date.now() - 6 * 86_400_000).toISOString();
-      const [assignmentResponse, reviewResponse, dueResponse] = await Promise.all([
-        supabase
-          .from('assignments')
-          .select('id, title, learner_note, status, deadline_at, estimated_minutes, created_at, display_order')
-          .in('status', ['published', 'completed'])
-          .order('display_order', { ascending: true })
-          .order('created_at', { ascending: false })
-          .limit(100),
-        supabase
-          .from('learner_review_history')
-          .select('id, created_at')
-          .gte('created_at', sevenDaysAgo)
-          .order('created_at', { ascending: false }),
-        supabase
-          .from('learner_srs_state')
-          .select('id', { count: 'exact', head: true })
-          .lte('due_at', new Date().toISOString()),
-      ]);
+      const assignmentResponse = await supabase
+        .from('assignments')
+        .select('id, title, learner_note, status, deadline_at, estimated_minutes, created_at, display_order')
+        .in('status', ['published', 'completed'])
+        .order('display_order', { ascending: true })
+        .order('created_at', { ascending: false })
+        .limit(100);
       if (!active) return;
       setAssignments(assignmentResponse.data || []);
-      const reviews = reviewResponse.data || [];
-      setReviewCount(reviews.length);
-      setDueCount(dueResponse.count || 0);
-      setActiveDays(new Set(reviews.map((item) => new Date(item.created_at).toISOString().slice(0, 10))));
       setLoading(false);
     }
     load();
@@ -105,16 +86,6 @@ function GenericDashboard({ firstName }) {
   const primaryAssignment = open[0] || null;
   const laterAssignments = open.slice(1, 3);
   const completion = assignments.length ? Math.round((completed.length / assignments.length) * 100) : 0;
-  const week = Array.from({ length: 7 }, (_, offset) => {
-    const date = new Date(Date.now() - (6 - offset) * 86_400_000);
-    const key = date.toISOString().slice(0, 10);
-    return {
-      active: activeDays.has(key),
-      key,
-      label: new Intl.DateTimeFormat('it-IT', { weekday: 'narrow' }).format(date),
-    };
-  });
-
   const destinations = [
     {
       key: 'learn',
@@ -126,17 +97,6 @@ function GenericDashboard({ firstName }) {
       action: 'Apri',
       secondaryTo: '/percorsi',
       secondaryLabel: 'Corsi',
-    },
-    {
-      key: 'review',
-      icon: RefreshCw,
-      label: 'Ripassa',
-      title: 'Ripassa ciò che deve tornare',
-      detail: dueCount ? `${dueCount} ${dueCount === 1 ? 'card pronta' : 'card pronte'} per il ripasso SRS.` : 'Nessuna card urgente in questo momento.',
-      to: '/attivita/srs',
-      action: 'Ripassa',
-      secondaryTo: '/attivita/pratica-mirata',
-      secondaryLabel: 'Pratica mirata',
     },
     {
       key: 'vocabulary',
@@ -152,7 +112,7 @@ function GenericDashboard({ firstName }) {
       icon: Target,
       label: 'Progressi',
       title: 'Guarda cosa stai consolidando',
-      detail: `${completed.length} completate · ${reviewCount} ripassi negli ultimi 7 giorni.`,
+      detail: `${completed.length} completate · ${open.length} ancora da fare.`,
       to: '/progressi',
       action: 'Vedi',
     },
@@ -192,8 +152,8 @@ function GenericDashboard({ firstName }) {
           ) : (
             <>
               <h2 className="learner-display">Sei in pari.</h2>
-              <p className="learner-continue-panel__description">Non hai attività assegnate da completare. Puoi usare Review o Vocabulary per consolidare ciò che hai già incontrato.</p>
-              <Link to="/attivita/srs" className="learner-secondary-button learner-continue-panel__action">Vai al ripasso <ArrowRight aria-hidden="true" size={16} /></Link>
+              <p className="learner-continue-panel__description">Non hai attività assegnate da completare. Puoi ritrovare parole e chunk che hai incontrato nel tuo Vocabolario.</p>
+              <Link to="/vocab-bank" className="learner-secondary-button learner-continue-panel__action">Apri il vocabolario <ArrowRight aria-hidden="true" size={16} /></Link>
             </>
           )}
 
@@ -227,7 +187,7 @@ function GenericDashboard({ firstName }) {
             <p className="learner-kicker">Il tuo spazio</p>
             <h2 className="learner-display">Scegli cosa vuoi fare.</h2>
           </div>
-          <p>Quattro aree, senza dover capire come funziona il sistema dietro.</p>
+          <p>Tre aree, senza dover capire come funziona il sistema dietro.</p>
         </div>
 
         <div className="learner-destination-list">
@@ -251,16 +211,6 @@ function GenericDashboard({ firstName }) {
         </div>
       </section>
 
-      <section className="learner-week-calm">
-        <div>
-          <p className="learner-kicker">Questa settimana</p>
-          <h2 className="learner-display">{activeDays.size} {activeDays.size === 1 ? 'giorno attivo' : 'giorni attivi'}</h2>
-          <p>Una fotografia del ritmo, non un voto e non una serie da proteggere.</p>
-        </div>
-        <div className="learner-week-calm__days" aria-label="Attività di ripasso negli ultimi sette giorni">
-          {week.map((day) => <span key={day.key} className={day.active ? 'is-active' : ''}><i aria-hidden="true" />{day.label}</span>)}
-        </div>
-      </section>
     </div>
   );
 }

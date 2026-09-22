@@ -7,10 +7,8 @@ const LEARNER_SURFACES = [
   { key: 'assignment-detail', match: (path) => /^\/assignments\/[^/]+$/.test(path) },
   { key: 'assignments', match: (path) => path === '/assignments' || path.startsWith('/attivita/') },
   { key: 'exercise', match: (path) => path === '/exercises' },
-  { key: 'practice', match: (path) => path === '/practice' },
   { key: 'collection', match: (path) => path === '/collections' },
   { key: 'progress', match: (path) => path === '/progressi' },
-  { key: 'trainer', match: (path) => path === '/trainers' || path.startsWith('/trainers/') },
   { key: 'grammar', match: (path) => path === '/grammar' || path.startsWith('/grammar/') },
   { key: 'account', match: (path) => path === '/account' },
 ];
@@ -22,10 +20,9 @@ function learnerSurfaceForPath(pathname) {
 /**
  * Applies the Sblocco editorial learner design as a route-level invariant.
  *
- * This deliberately does not depend on the user's auth role. Several learner
- * tools (trainers and grammar resources) can be visited publicly, and their
- * visual language should not change after login. Admin routes are never
- * included here and therefore keep their utility-first presentation.
+ * This deliberately does not depend on the user's auth role. Some learner
+ * resources, such as grammar pages, can be visited publicly and should keep
+ * the same visual language after login. Admin routes are never included here.
  */
 export default function LearnerExperienceBoundary() {
   const location = useLocation();

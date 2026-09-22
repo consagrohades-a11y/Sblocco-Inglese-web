@@ -6,11 +6,7 @@ export const THEME_CHANGE_EVENT = 'sblocco-theme-change';
 function getInitialTheme() {
   if (typeof window === 'undefined') return false;
 
-  const savedTheme = window.localStorage.getItem('sblocco_theme');
-  if (savedTheme === 'dark') return true;
-  if (savedTheme === 'light') return false;
-
-  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+  return window.localStorage.getItem('sblocco_theme') === 'dark';
 }
 
 export default function ThemeToggle({ mobile = false }) {
