@@ -223,21 +223,54 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
     normalize: (block) => ({
       ...block,
       title: text(block.title), body: text(block.body),
-      items: (Array.isArray(block.items) ? block.items : []).map((item) => ({
-        term: text(item?.term),
-        meaning: text(item?.meaning),
-        translation: text(item?.translation),
-        example: text(item?.example),
-      })).filter((item) => item.term),
+      items: (Array.isArray(block.items) ? block.items : []).map((item) => {
+        const examples = list(Array.isArray(item?.examples) ? item.examples : item?.example ? [item.example] : []);
+        const displayExampleIndex = Math.max(0, Math.min(examples.length - 1, Number.isInteger(item?.display_example_index) ? item.display_example_index : 0));
+        return {
+          term: text(item?.term),
+          kind: ['word', 'chunk'].includes(item?.kind) ? item.kind : (text(item?.term).includes(' ') ? 'chunk' : 'word'),
+          meaning: text(item?.meaning),
+          translation: text(item?.translation),
+          examples,
+          display_example_index: examples.length ? displayExampleIndex : 0,
+          example: examples[displayExampleIndex] || '',
+        };
+      }).filter((item) => item.term),
     }),
-    validate: (block) => Array.isArray(block.items) && block.items.some((item) => text(item?.term))
-      ? [] : [issue('required', 'Add at least one vocabulary item.', 'items')],
+    validate: (block) => {
+      const items = Array.isArray(block.items) ? block.items.filter((item) => text(item?.term)) : [];
+      const issues = [];
+      if (!items.length) issues.push(issue('required', 'Add at least one vocabulary item.', 'items'));
+      items.forEach((item, index) => {
+        const examples = list(Array.isArray(item?.examples) ? item.examples : item?.example ? [item.example] : []);
+        if (examples.length < 3) {
+          issues.push(issue('vocab_examples', 'Add at least 3 natural contexts for vocabulary item ' + (index + 1) + '.', 'items.' + index + '.examples', 'warning'));
+        }
+        if (examples.length > 5) {
+          issues.push(issue('vocab_examples', 'Keep the context pool to a maximum of 5 examples for vocabulary item ' + (index + 1) + '.', 'items.' + index + '.examples'));
+        }
+      });
+      return issues;
+    },
     compile: (block, context) => theoryQuestion(block, context, 'vocabulary', {
       items: (block.items || []).map((item) => {
-        const parts = [item.term, item.meaning || item.translation, item.example].filter(Boolean);
+        const examples = list(Array.isArray(item?.examples) ? item.examples : item?.example ? [item.example] : []);
+        const displayIndex = Math.max(0, Math.min(examples.length - 1, Number.isInteger(item?.display_example_index) ? item.display_example_index : 0));
+        const visibleExample = examples[displayIndex] || text(item?.example);
+        const parts = [item.term, item.meaning || item.translation, visibleExample].filter(Boolean);
         return parts.join(' — ');
       }),
-      entries: block.items || [],
+      entries: (block.items || []).map((item) => {
+        const examples = list(Array.isArray(item?.examples) ? item.examples : item?.example ? [item.example] : []);
+        const displayIndex = Math.max(0, Math.min(examples.length - 1, Number.isInteger(item?.display_example_index) ? item.display_example_index : 0));
+        return {
+          ...item,
+          kind: ['word', 'chunk'].includes(item?.kind) ? item.kind : (text(item?.term).includes(' ') ? 'chunk' : 'word'),
+          examples,
+          display_example_index: displayIndex,
+          example: examples[displayIndex] || text(item?.example),
+        };
+      }),
     }),
   }),
   language_bank: definition({
