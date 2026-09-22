@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowDown, ArrowUp, ShieldOff, Trash2, UserCheck } from 'lucide-react';
+import { ArrowDown, ArrowUp, MessageCircleMore, ShieldOff, Trash2, UserCheck } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
@@ -150,9 +150,14 @@ export default function AdminLearnerDetail() {
                 Studenti
               </Link>
               {learner && learner.status === 'active' ? (
-                <Link to={`/admin/learners/${learnerId}/assignments/new`} className="focus-ring inline-flex min-h-10 items-center justify-center rounded-full bg-ink px-4 py-2 text-xs font-black text-white transition hover:bg-clay dark:bg-clay dark:hover:bg-coral">
-                  Nuova assegnazione
-                </Link>
+                <>
+                  <Link to={`/admin/content/speaking-library?learner=${learnerId}`} className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-clay/30 bg-blush/40 px-4 py-2 text-xs font-black text-clay transition hover:bg-blush dark:border-coral/30 dark:bg-coral/[0.08] dark:text-coral">
+                    <MessageCircleMore className="h-4 w-4" /> Start speaking
+                  </Link>
+                  <Link to={`/admin/learners/${learnerId}/assignments/new`} className="focus-ring inline-flex min-h-10 items-center justify-center rounded-full bg-ink px-4 py-2 text-xs font-black text-white transition hover:bg-clay dark:bg-clay dark:hover:bg-coral">
+                    Nuova assegnazione
+                  </Link>
+                </>
               ) : null}
             </>
           )}
