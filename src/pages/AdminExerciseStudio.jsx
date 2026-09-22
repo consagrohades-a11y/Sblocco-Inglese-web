@@ -405,7 +405,6 @@ export default function AdminExerciseStudio() {
           level: 'B2',
           topic: current.topic || 'b2_reading',
           skills: [...new Set([...(current.skills || []), 'reading'])],
-          activity_type: current.activity_type === 'lesson' ? 'assessment' : current.activity_type,
         } : {}),
         status: current.status === 'published' ? 'draft' : current.status,
       };
