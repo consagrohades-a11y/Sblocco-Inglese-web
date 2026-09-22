@@ -351,6 +351,184 @@ function ReadingComprehension({
 
   function update(key, value) { onChange({ ...values, [key]: value }); }
 
+  if (['b2_uoe_part1', 'b2_uoe_part2', 'b2_uoe_part3'].includes(content.presentation)) {
+    const parts = Array.isArray(content.text_parts) ? content.text_parts : [];
+    const items = Array.isArray(content.items) ? content.items : [];
+    const prompts = Object.fromEntries(
+      (Array.isArray(content.word_prompts) ? content.word_prompts : []).map((item) => [item.key, item.word]),
+    );
+    const partNumber = content.presentation.replace('b2_uoe_part', '');
+    const partLabel = partNumber === '1'
+      ? 'Multiple-choice cloze'
+      : partNumber === '2'
+        ? 'Open cloze'
+        : 'Word formation';
+
+    return (
+      <div className="grid gap-6">
+        <article className="exercise-reading">
+          <div className="exercise-reading__label"><BookOpen /><span>B2 Use of English · Part {partNumber} · {partLabel}</span></div>
+          {content.title ? <h3>{content.title}</h3> : null}
+          <div className="mt-5 whitespace-pre-wrap text-base font-semibold leading-10 text-ink/85 dark:text-white/85">
+            {parts.map((part, index) => {
+              if (part.type !== 'gap') return <React.Fragment key={index}>{part.text} </React.Fragment>;
+
+              const item = items.find((candidate) => candidate.key === part.key) || null;
+              const itemResult = itemResults[part.key] || null;
+              const selected = values[part.key] || '';
+              const accepted = Array.isArray(itemResult?.correct_answer)
+                ? itemResult.correct_answer
+                : itemResult?.correct_answer
+                  ? [itemResult.correct_answer]
+                  : [];
+              const gapNumber = Number(String(part.key || '').replace(/\D/g, '')) || index + 1;
+
+              if (content.presentation === 'b2_uoe_part1') {
+                return (
+                  <span key={part.key || index} className="mx-1 inline-flex max-w-full items-center gap-1 align-middle">
+                    <span className="text-xs font-black text-orange-700 dark:text-orange-300">{gapNumber}</span>
+                    <select
+                      value={selected}
+                      disabled={disabled}
+                      onChange={(event) => update(part.key, event.target.value)}
+                      className="focus-ring max-w-[18rem] rounded-lg border border-orange-200 bg-orange-50 px-2 py-1.5 text-sm font-black text-ink dark:border-orange-300/20 dark:bg-orange-300/[0.06] dark:text-white"
+                      aria-label={`Gap ${gapNumber}`}
+                    >
+                      <option value="">Choose…</option>
+                      {(item?.options || []).map((option, optionIndex) => (
+                        <option key={option.key} value={option.key}>
+                          {String.fromCharCode(65 + optionIndex)} · {option.text}
+                        </option>
+                      ))}
+                    </select>
+                  </span>
+                );
+              }
+
+              return (
+                <span key={part.key || index} className="mx-1 inline-flex max-w-full items-center gap-1 align-middle">
+                  <span className="text-xs font-black text-orange-700 dark:text-orange-300">{gapNumber}</span>
+                  <input
+                    value={selected}
+                    disabled={disabled}
+                    onChange={(event) => update(part.key, event.target.value)}
+                    className="focus-ring w-32 rounded-lg border border-orange-200 bg-orange-50 px-2 py-1.5 text-sm font-black text-ink dark:border-orange-300/20 dark:bg-orange-300/[0.06] dark:text-white"
+                    aria-label={`Gap ${gapNumber}`}
+                    autoComplete="off"
+                    spellCheck={false}
+                  />
+                  {content.presentation === 'b2_uoe_part3' && prompts[part.key] ? (
+                    <span className="rounded-md bg-ink/5 px-1.5 py-0.5 text-[0.65rem] font-black uppercase tracking-wide text-ink/55 dark:bg-white/10 dark:text-white/55">
+                      {prompts[part.key]}
+                    </span>
+                  ) : null}
+                  {disabled && showCorrectAnswers && accepted.length && !accepted.some((candidate) => String(candidate).toLocaleLowerCase() === String(selected).trim().toLocaleLowerCase()) ? (
+                    <span className="rounded-md bg-emerald-50 px-1.5 py-0.5 text-[0.68rem] font-black text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100">
+                      {accepted[0]}
+                    </span>
+                  ) : null}
+                </span>
+              );
+            })}
+          </div>
+        </article>
+
+        {disabled ? (
+          <section className="grid gap-2 sm:grid-cols-2">
+            {items.map((item, index) => {
+              const itemResult = itemResults[item.key] || null;
+              const status = itemResult?.status;
+              const correctAnswer = Array.isArray(itemResult?.correct_answer)
+                ? itemResult.correct_answer.join(' / ')
+                : itemResult?.correct_answer;
+              return (
+                <article key={item.key} className="rounded-xl border border-ink/10 bg-white/65 p-3 dark:border-white/10 dark:bg-white/[0.03]">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-black text-ink/55 dark:text-white/55">Gap {index + 1}</span>
+                    {status ? <span className={`rounded-full px-2 py-1 text-[0.62rem] font-black ${status === 'correct' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100' : status === 'nearly_correct' ? 'bg-amber-100 text-amber-800 dark:bg-amber-300/10 dark:text-amber-100' : 'bg-red-100 text-red-800 dark:bg-red-300/10 dark:text-red-100'}`}>{resultLabels[status] || status}</span> : null}
+                  </div>
+                  {showCorrectAnswers && correctAnswer ? (
+                    <p className="mt-2 text-xs font-semibold leading-5 text-ink/65 dark:text-white/65"><span className="font-black">Answer:</span> {correctAnswer}</p>
+                  ) : null}
+                  {showExplanations && itemResult?.explanation ? (
+                    <p className="mt-2 text-xs font-semibold italic leading-5 text-ink/55 dark:text-white/55">{itemResult.explanation}</p>
+                  ) : null}
+                </article>
+              );
+            })}
+          </section>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (content.presentation === 'b2_uoe_part4') {
+    const transformations = Array.isArray(content.transformations) ? content.transformations : [];
+    return (
+      <div className="grid gap-4">
+        <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.1em] text-orange-600 dark:text-orange-300">
+          <BookOpen className="h-4 w-4" /> B2 Use of English · Part 4 · Key word transformations
+        </div>
+
+        {transformations.map((transformation, index) => {
+          const itemResult = itemResults[transformation.key] || null;
+          const value = values[transformation.key] || '';
+          const wordCount = String(value).trim() ? String(value).trim().split(/\s+/).length : 0;
+          const accepted = Array.isArray(itemResult?.correct_answer) ? itemResult.correct_answer : [];
+          return (
+            <article key={transformation.key} className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.035]">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="rounded-full bg-orange-100 px-2.5 py-1 text-[0.68rem] font-black text-orange-900 dark:bg-orange-300/10 dark:text-orange-100">Transformation {index + 1}</span>
+                {itemResult ? (
+                  <span className={`rounded-full px-2.5 py-1 text-[0.65rem] font-black ${itemResult.status === 'correct' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100' : itemResult.status === 'nearly_correct' ? 'bg-amber-100 text-amber-800 dark:bg-amber-300/10 dark:text-amber-100' : 'bg-red-100 text-red-800 dark:bg-red-300/10 dark:text-red-100'}`}>
+                    {Number(itemResult.earned_points || 0).toFixed(0)} / {Number(itemResult.max_points || 2).toFixed(0)} pt
+                  </span>
+                ) : null}
+              </div>
+
+              <p className="mt-4 text-sm font-bold leading-7 text-ink/80 dark:text-white/80">{transformation.lead_sentence}</p>
+              <div className="mt-3">
+                <span className="rounded-lg bg-ink px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-white dark:bg-clay">
+                  {transformation.keyword}
+                </span>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-sm font-semibold leading-7 text-ink/80 dark:text-white/80">
+                <span>{transformation.before_gap}</span>
+                <input
+                  value={value}
+                  disabled={disabled}
+                  onChange={(event) => update(transformation.key, event.target.value)}
+                  className="focus-ring min-w-[12rem] flex-1 rounded-xl border border-orange-200 bg-orange-50 px-3 py-2 font-black text-ink dark:border-orange-300/20 dark:bg-orange-300/[0.06] dark:text-white"
+                  placeholder="2–5 words"
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+                <span>{transformation.after_gap}</span>
+              </div>
+              {!disabled ? (
+                <p className={`mt-2 text-[0.68rem] font-bold ${wordCount && (wordCount < 2 || wordCount > 5) ? 'text-red-700 dark:text-red-200' : 'text-ink/40 dark:text-white/40'}`}>
+                  {wordCount || 0} words · use 2–5 words including {transformation.keyword}
+                </p>
+              ) : null}
+
+              {disabled && showCorrectAnswers && accepted.length ? (
+                <div className="mt-3 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold leading-5 text-emerald-900 dark:bg-emerald-300/[0.08] dark:text-emerald-100">
+                  <span className="font-black">Accepted answer:</span> {accepted.join(' / ')}
+                </div>
+              ) : null}
+              {showExplanations && itemResult?.explanation ? (
+                <p className="mt-3 rounded-xl bg-linen/70 px-3 py-2 text-xs font-semibold italic leading-5 text-ink/70 dark:bg-white/[0.05] dark:text-white/70">
+                  {itemResult.explanation}
+                </p>
+              ) : null}
+            </article>
+          );
+        })}
+      </div>
+    );
+  }
+
   if (content.presentation === 'b2_part5') {
     return (
       <div className="grid gap-6">
