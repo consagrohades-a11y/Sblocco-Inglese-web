@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { AlertTriangle, Plus, Save, Sparkles, Trash2, X } from 'lucide-react';
-import SpeakingItemGeneratorPanel from './SpeakingItemGeneratorPanel.jsx';
+import { AlertTriangle, Plus, Save, Trash2, X } from 'lucide-react';
 import { createSpeakingActivity, updateSpeakingActivity } from '../../lib/adminSpeakingActivitiesApi.js';
 import { analyseSpeakingItemSet, duplicateReasonLabel } from '../../lib/speakingItemQuality.js';
 
@@ -84,31 +83,11 @@ function ConflictList({ title, matches, blocking = false }) {
           </div>
         </div>
       </div>
-
-      {showGenerator ? (
-        <SpeakingItemGeneratorPanel
-          activity={{
-            ...activity,
-            title: draft.title || activity?.title,
-            summary: draft.summary,
-            activity_type: draft.activity_type,
-            levels: derivedLevels.length ? derivedLevels : asArray(activity?.levels),
-            goals: cleanCsv(draft.goalsText),
-            tags: cleanCsv(draft.tagsText),
-            instructions: draft.instructions,
-            prompts: draft.prompts,
-            presenter_style: draft.presenter_style,
-          }}
-          catalogActivities={catalogActivities}
-          onAddItems={addGeneratedItems}
-          onClose={() => setShowGenerator(false)}
-        />
-      ) : null}
     </div>
   );
 }
 
-export default function SpeakingActivityEditorModal({ activity, catalogActivities = [], openGenerator = false, onClose, onSaved }) {
+export default function SpeakingActivityEditorModal({ activity, catalogActivities = [], onClose, onSaved }) {
   const [draft, setDraft] = useState(() => ({
     title: activity?.title || '',
     summary: activity?.summary || '',
@@ -132,7 +111,6 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
   const [blockingConflicts, setBlockingConflicts] = useState([]);
   const [contextWarnings, setContextWarnings] = useState([]);
   const [allowContextualSave, setAllowContextualSave] = useState(false);
-  const [showGenerator, setShowGenerator] = useState(Boolean(openGenerator && activity?.id));
 
   const derivedLevels = useMemo(
     () => LEVELS.filter((level) => draft.prompts.some((item) => asArray(item.levels).includes(level))),
@@ -164,15 +142,6 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
       ...current,
       prompts: current.prompts.length === 1 ? current.prompts : current.prompts.filter((_, itemIndex) => itemIndex !== index),
     }));
-  }
-
-  function addGeneratedItems(items) {
-    resetQualityGate();
-    setDraft((current) => ({
-      ...current,
-      prompts: [...current.prompts, ...asArray(items).map(normaliseItem)],
-    }));
-    setShowGenerator(false);
   }
 
   async function save() {
@@ -301,14 +270,7 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
                   <h3 className="mt-1 text-xl font-black">{draft.prompts.length} item</h3>
                   <p className="mt-1 text-xs font-semibold text-ink/55 dark:text-white/55">Livelli multipli + metadati contestuali: servono al filtro anti-ripetizione, non allo studente.</p>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {activity?.id ? (
-                    <button type="button" onClick={() => setShowGenerator(true)} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-clay/30 bg-blush/45 px-4 py-2 text-xs font-black text-clay transition hover:bg-blush dark:border-coral/30 dark:bg-coral/[0.08] dark:text-coral">
-                      <Sparkles className="h-4 w-4" /> Generate with AI
-                    </button>
-                  ) : null}
-                  <button type="button" onClick={() => setField('prompts', [...draft.prompts, emptyItem()])} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full bg-ink px-4 py-2 text-xs font-black text-white dark:bg-clay"><Plus className="h-4 w-4" /> Aggiungi item</button>
-                </div>
+                <button type="button" onClick={() => setField('prompts', [...draft.prompts, emptyItem()])} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full bg-ink px-4 py-2 text-xs font-black text-white dark:bg-clay"><Plus className="h-4 w-4" /> Aggiungi item</button>
               </div>
 
               <div className="mt-5 grid gap-4">
@@ -379,26 +341,6 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
           </button>
         </footer>
       </div>
-
-      {showGenerator ? (
-        <SpeakingItemGeneratorPanel
-          activity={{
-            ...activity,
-            title: draft.title || activity?.title,
-            summary: draft.summary,
-            activity_type: draft.activity_type,
-            levels: derivedLevels.length ? derivedLevels : asArray(activity?.levels),
-            goals: cleanCsv(draft.goalsText),
-            tags: cleanCsv(draft.tagsText),
-            instructions: draft.instructions,
-            prompts: draft.prompts,
-            presenter_style: draft.presenter_style,
-          }}
-          catalogActivities={catalogActivities}
-          onAddItems={addGeneratedItems}
-          onClose={() => setShowGenerator(false)}
-        />
-      ) : null}
     </div>
   );
 }
