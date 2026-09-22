@@ -65,12 +65,12 @@ export function createStudioDocument(initial = {}) {
   };
 }
 
-export function addStudioBlock(document, type, initial = {}) {
+export function addStudioBlock(document, type, initial = {}, presetId = null) {
   if (!STUDIO_BLOCK_TYPES.includes(type)) throw new Error('Unsupported Studio block type: ' + type);
   const block = {
     id: createStudioSystemId('block'),
     type,
-    ...createDefaultStudioBlock(type),
+    ...createDefaultStudioBlock(type, presetId),
     ...initial,
   };
 
