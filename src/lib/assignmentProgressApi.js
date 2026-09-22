@@ -32,15 +32,14 @@ export async function loadLearnerAssignmentProgressMap(assignments = [], batchSi
 }
 
 export function learnerAssignmentState(assignment, progress) {
-  if (assignment?.status === 'completed') return 'completed';
-
   const resources = Array.isArray(progress?.resources) ? progress.resources : [];
   const total = Number(progress?.total_activities || 0);
   const completed = Number(progress?.completed_activities || 0);
   const allDone = total > 0 && completed >= total;
   const waitingForReview = resources.some((resource) => resource?.state === 'review');
 
-  if (allDone && waitingForReview) return 'review';
+  if (waitingForReview && allDone) return 'review';
+  if (assignment?.status === 'completed') return 'completed';
   if (allDone) return 'completed';
   return 'published';
 }
