@@ -11,6 +11,7 @@ import {
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
+import TeacherRadar from '../components/admin/TeacherRadar.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 
 const primaryAreas = [
@@ -66,6 +67,8 @@ export default function AdminDashboard() {
             title={`Ciao ${displayName}`}
             description="Gestisci studenti, attività, assegnazioni e risultati da un unico spazio."
           />
+
+          <TeacherRadar />
 
           <Link
             to="/admin/notifications"
