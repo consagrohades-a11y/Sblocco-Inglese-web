@@ -58,7 +58,7 @@ export default function SpeakingLiveController({ session, onEnd }) {
   useEffect(() => {
     if (!session?.controlId) return undefined;
 
-    const connection = connectSpeakingControl(session.controlId, (payload) => {
+    function handlePresenterPayload(payload) {
       if (!payload) return;
 
       if (payload.type === 'presenter-closed') {
@@ -71,24 +71,49 @@ export default function SpeakingLiveController({ session, onEnd }) {
       setConnected(true);
       if (disconnectTimerRef.current) window.clearTimeout(disconnectTimerRef.current);
       disconnectTimerRef.current = window.setTimeout(() => setConnected(false), 6500);
-    });
-
-    channelRef.current = connection;
-
-    function requestSync() {
-      connection.send({ type: 'sync-request' });
     }
 
+    const connection = connectSpeakingControl(session.controlId, handlePresenterPayload);
+    channelRef.current = connection;
+
+    function sendDirect(payload) {
+      if (!session.studentWindow || session.studentWindow.closed) return;
+      try {
+        session.studentWindow.postMessage({
+          source: 'sblocco-speaking-control',
+          controlId: session.controlId,
+          payload,
+        }, window.location.origin);
+      } catch {
+        // BroadcastChannel/localStorage remain the fallback.
+      }
+    }
+
+    function requestSync() {
+      const payload = { type: 'sync-request' };
+      connection.send(payload);
+      sendDirect(payload);
+    }
+
+    function onDirectMessage(event) {
+      if (event.origin !== window.location.origin) return;
+      const envelope = event.data;
+      if (envelope?.source !== 'sblocco-speaking-control' || envelope.controlId !== session.controlId) return;
+      handlePresenterPayload(envelope.payload);
+    }
+
+    window.addEventListener('message', onDirectMessage);
     requestSync();
     const syncTimer = window.setInterval(requestSync, 4000);
 
     return () => {
       window.clearInterval(syncTimer);
       if (disconnectTimerRef.current) window.clearTimeout(disconnectTimerRef.current);
+      window.removeEventListener('message', onDirectMessage);
       connection.close();
       channelRef.current = null;
     };
-  }, [session?.controlId]);
+  }, [session?.controlId, session?.studentWindow]);
 
   useEffect(() => {
     if (!timerRunning) return undefined;
@@ -97,7 +122,19 @@ export default function SpeakingLiveController({ session, onEnd }) {
   }, [timerRunning]);
 
   function command(type) {
-    channelRef.current?.send({ type });
+    const payload = { type };
+    channelRef.current?.send(payload);
+    if (session?.studentWindow && !session.studentWindow.closed) {
+      try {
+        session.studentWindow.postMessage({
+          source: 'sblocco-speaking-control',
+          controlId: session.controlId,
+          payload,
+        }, window.location.origin);
+      } catch {
+        // The existing control channel remains available as fallback.
+      }
+    }
   }
 
   function focusStudentWindow() {
