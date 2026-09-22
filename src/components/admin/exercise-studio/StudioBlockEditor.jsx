@@ -716,6 +716,417 @@ function MultipleChoiceSetEditor({ block, patch }) {
   );
 }
 
+function makeReadingPart5Items(existing = []) {
+  if (existing.length === 6) return existing;
+  return Array.from({ length: 6 }, (_, index) => existing[index] || ({
+    prompt: '',
+    options: [
+      { text: '', is_correct: true },
+      { text: '', is_correct: false },
+      { text: '', is_correct: false },
+      { text: '', is_correct: false },
+    ],
+    feedback: '',
+  }));
+}
+
+function makeReadingPart6Parts(existing = []) {
+  if (existing.some((part) => part?.type === 'gap')) return existing;
+  return Array.from({ length: 13 }, (_, index) => (
+    index % 2 === 0
+      ? { type: 'text', text: '' }
+      : { type: 'gap', correct_option_index: null }
+  ));
+}
+
+function makeReadingPart6Options(existing = []) {
+  if (existing.length === 7) return existing;
+  return Array.from({ length: 7 }, (_, index) => existing[index] || ({ text: '' }));
+}
+
+function makeReadingPart7Sections(existing = []) {
+  if (existing.length >= 3) return existing;
+  return Array.from({ length: 4 }, (_, index) => existing[index] || ({ title: '', text: '' }));
+}
+
+function makeReadingPart7Items(existing = []) {
+  if (existing.length === 10) return existing;
+  return Array.from({ length: 10 }, (_, index) => existing[index] || ({
+    prompt: '',
+    correct_section_index: null,
+    feedback: '',
+  }));
+}
+
+function ReadingChoiceItemsEditor({ items = [], onChange, fixedFour = false }) {
+  const values = Array.isArray(items) ? items : [];
+
+  function patchItem(index, itemPatch) {
+    onChange(values.map((item, current) => current === index ? { ...item, ...itemPatch } : item));
+  }
+
+  function patchOption(itemIndex, optionIndex, optionPatch) {
+    const item = values[itemIndex] || {};
+    const options = Array.isArray(item.options) ? item.options : [];
+    patchItem(itemIndex, {
+      options: options.map((option, current) => current === optionIndex ? { ...option, ...optionPatch } : option),
+    });
+  }
+
+  function chooseCorrect(itemIndex, optionIndex) {
+    const item = values[itemIndex] || {};
+    const options = Array.isArray(item.options) ? item.options : [];
+    patchItem(itemIndex, {
+      options: options.map((option, current) => ({ ...option, is_correct: current === optionIndex })),
+    });
+  }
+
+  return (
+    <div className="grid min-w-0 gap-3">
+      {values.map((item, itemIndex) => {
+        const options = Array.isArray(item.options) ? item.options : [];
+        return (
+          <section key={item.key || itemIndex} className="grid min-w-0 gap-3 rounded-2xl border border-ink/10 bg-white/65 p-3 dark:border-white/10 dark:bg-white/[0.025]">
+            <div className="flex items-center justify-between gap-2">
+              <span className="rounded-full bg-orange-100 px-2.5 py-1 text-[0.68rem] font-black text-orange-900 dark:bg-orange-300/10 dark:text-orange-100">
+                Question {itemIndex + 1}
+              </span>
+              {!fixedFour ? (
+                <button type="button" onClick={() => onChange(values.filter((_, current) => current !== itemIndex))} className="focus-ring grid h-8 w-8 place-items-center rounded-lg text-ink/45 hover:bg-red-50 hover:text-red-700 dark:text-white/45 dark:hover:bg-red-300/10 dark:hover:text-red-200" aria-label={`Remove question ${itemIndex + 1}`}>
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              ) : null}
+            </div>
+
+            <TextArea
+              label="Question"
+              value={item.prompt || ''}
+              onChange={(value) => patchItem(itemIndex, { prompt: value })}
+              rows={2}
+              placeholder="Ask about detail, attitude, purpose, implication or main idea."
+            />
+
+            <div className="grid gap-2">
+              {options.map((option, optionIndex) => (
+                <div key={option.key || optionIndex} className="flex min-w-0 items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => chooseCorrect(itemIndex, optionIndex)}
+                    className={`focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-full border text-xs font-black ${option.is_correct ? 'border-orange-500 bg-orange-500 text-white' : 'border-ink/15 text-ink/45 dark:border-white/15 dark:text-white/45'}`}
+                    aria-label={option.is_correct ? 'Correct answer' : 'Mark as correct'}
+                  >
+                    {String.fromCharCode(65 + optionIndex)}
+                  </button>
+                  <input
+                    value={option.text || ''}
+                    onChange={(event) => patchOption(itemIndex, optionIndex, { text: event.target.value })}
+                    placeholder={`Option ${String.fromCharCode(65 + optionIndex)}`}
+                    className="focus-ring min-w-0 flex-1 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+                  />
+                  {!fixedFour ? (
+                    <button type="button" onClick={() => patchItem(itemIndex, { options: options.filter((_, current) => current !== optionIndex) })} className="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-xl text-ink/45 hover:bg-red-50 hover:text-red-700 dark:text-white/45 dark:hover:bg-red-300/10 dark:hover:text-red-200" aria-label="Remove option">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  ) : null}
+                </div>
+              ))}
+              {!fixedFour ? (
+                <button type="button" onClick={() => patchItem(itemIndex, { options: [...options, { text: '', is_correct: false }] })} className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-ink/10 px-3 py-1.5 text-[0.7rem] font-black text-ink/60 dark:border-white/10 dark:text-white/60">
+                  <Plus className="h-3.5 w-3.5" /> Add option
+                </button>
+              ) : null}
+            </div>
+
+            <TextArea
+              label="Optional feedback"
+              value={item.feedback || ''}
+              onChange={(value) => patchItem(itemIndex, { feedback: value })}
+              rows={2}
+              hint="Explain the evidence in the text rather than only revealing the answer."
+            />
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
+function ReadingPart6Editor({ block, patch }) {
+  const parts = Array.isArray(block.passage_parts) ? block.passage_parts : [];
+  const paragraphs = Array.isArray(block.paragraph_options) ? block.paragraph_options : [];
+  let gapCounter = 0;
+
+  function patchPart(index, partPatch) {
+    patch({ passage_parts: parts.map((part, current) => current === index ? { ...part, ...partPatch } : part) });
+  }
+
+  function patchParagraph(index, value) {
+    patch({ paragraph_options: paragraphs.map((item, current) => current === index ? { ...item, text: value } : item) });
+  }
+
+  return (
+    <>
+      <div className="rounded-2xl border border-orange-200/70 bg-orange-50/45 p-4 dark:border-orange-300/15 dark:bg-orange-300/[0.04]">
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-orange-800 dark:text-orange-200">B2 Part 6 structure</p>
+        <p className="mt-1 text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">
+          Six paragraphs are removed from the text. Add seven options below: one remains unused.
+        </p>
+      </div>
+
+      <div className="grid gap-3">
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Reading text</p>
+        {parts.map((part, index) => {
+          if (part.type === 'gap') {
+            gapCounter += 1;
+            const gapNumber = gapCounter;
+            return (
+              <div key={index} className="grid gap-2 rounded-2xl border-2 border-dashed border-orange-300 bg-orange-50/50 p-3 dark:border-orange-300/30 dark:bg-orange-300/[0.05]">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-black text-orange-800 dark:text-orange-200">Gap {gapNumber}</span>
+                  <button type="button" onClick={() => patch({ passage_parts: parts.filter((_, current) => current !== index) })} className="focus-ring text-[0.68rem] font-black text-red-700 dark:text-red-200">Remove</button>
+                </div>
+                <SelectInput
+                  label="Correct missing paragraph"
+                  value={Number.isInteger(part.correct_option_index) ? String(part.correct_option_index) : ''}
+                  onChange={(value) => patchPart(index, { correct_option_index: value === '' ? null : Number(value) })}
+                  options={[
+                    ['', 'Choose the correct paragraph'],
+                    ...paragraphs.map((_, optionIndex) => [String(optionIndex), `Paragraph ${String.fromCharCode(65 + optionIndex)}`]),
+                  ]}
+                  hint="Students will see paragraph letters; the system keeps the internal keys."
+                />
+              </div>
+            );
+          }
+          return (
+            <div key={index} className="grid gap-2 rounded-2xl border border-ink/10 bg-white/65 p-3 dark:border-white/10 dark:bg-white/[0.025]">
+              <TextArea
+                label="Text section"
+                value={part.text || ''}
+                onChange={(value) => patchPart(index, { text: value })}
+                rows={5}
+                placeholder="Text that remains visible before or after a missing paragraph."
+              />
+              <button type="button" onClick={() => patch({ passage_parts: parts.filter((_, current) => current !== index) })} className="focus-ring w-fit text-[0.68rem] font-black text-red-700 dark:text-red-200">Remove section</button>
+            </div>
+          );
+        })}
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={() => patch({ passage_parts: [...parts, { type: 'text', text: '' }] })} className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink/10 px-3 py-2 text-xs font-black text-ink/65 dark:border-white/10 dark:text-white/65">
+            <Plus className="h-3.5 w-3.5" /> Text section
+          </button>
+          <button type="button" onClick={() => patch({ passage_parts: [...parts, { type: 'gap', correct_option_index: null }] })} className="focus-ring inline-flex items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200">
+            <Plus className="h-3.5 w-3.5" /> Missing paragraph
+          </button>
+        </div>
+      </div>
+
+      <div className="grid gap-3">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Paragraph bank</p>
+          <p className="mt-1 text-xs font-semibold text-ink/45 dark:text-white/45">For exam-style B2 practice use exactly seven paragraphs.</p>
+        </div>
+        {paragraphs.map((paragraph, index) => (
+          <div key={index} className="grid grid-cols-[2rem_minmax(0,1fr)] items-start gap-2">
+            <span className="grid h-8 w-8 place-items-center rounded-full bg-ink text-xs font-black text-white dark:bg-clay">{String.fromCharCode(65 + index)}</span>
+            <TextArea
+              label={`Paragraph ${String.fromCharCode(65 + index)}`}
+              value={paragraph.text || ''}
+              onChange={(value) => patchParagraph(index, value)}
+              rows={4}
+            />
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function ReadingPart7Editor({ block, patch }) {
+  const sections = Array.isArray(block.sections) ? block.sections : [];
+  const items = Array.isArray(block.items) ? block.items : [];
+
+  function patchSection(index, sectionPatch) {
+    patch({ sections: sections.map((section, current) => current === index ? { ...section, ...sectionPatch } : section) });
+  }
+
+  function patchItem(index, itemPatch) {
+    patch({ items: items.map((item, current) => current === index ? { ...item, ...itemPatch } : item) });
+  }
+
+  return (
+    <>
+      <div className="rounded-2xl border border-orange-200/70 bg-orange-50/45 p-4 dark:border-orange-300/15 dark:bg-orange-300/[0.04]">
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-orange-800 dark:text-orange-200">B2 Part 7 structure</p>
+        <p className="mt-1 text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">
+          Learners match ten statements to the text sections. A section can be used more than once.
+        </p>
+      </div>
+
+      <div className="grid gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Text sections</p>
+          <button type="button" onClick={() => patch({ sections: [...sections, { title: '', text: '' }] })} className="focus-ring inline-flex items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200">
+            <Plus className="h-3.5 w-3.5" /> Add section
+          </button>
+        </div>
+        {sections.map((section, index) => (
+          <section key={index} className="grid gap-2 rounded-2xl border border-ink/10 bg-white/65 p-3 dark:border-white/10 dark:bg-white/[0.025]">
+            <div className="flex items-center justify-between gap-2">
+              <span className="rounded-full bg-ink px-2.5 py-1 text-[0.68rem] font-black text-white dark:bg-clay">Section {String.fromCharCode(65 + index)}</span>
+              <button type="button" onClick={() => patch({ sections: sections.filter((_, current) => current !== index) })} className="focus-ring grid h-8 w-8 place-items-center rounded-lg text-ink/45 hover:bg-red-50 hover:text-red-700 dark:text-white/45 dark:hover:bg-red-300/10 dark:hover:text-red-200" aria-label="Remove section">
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+            <TextInput label="Optional section title" value={section.title || ''} onChange={(value) => patchSection(index, { title: value })} />
+            <TextArea label="Text" value={section.text || ''} onChange={(value) => patchSection(index, { text: value })} rows={6} />
+          </section>
+        ))}
+      </div>
+
+      <div className="grid gap-3">
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Statements to match</p>
+        {items.map((item, index) => (
+          <section key={index} className="grid gap-3 rounded-2xl border border-ink/10 bg-linen/25 p-3 dark:border-white/10 dark:bg-white/[0.03]">
+            <span className="text-[0.68rem] font-black text-orange-700 dark:text-orange-300">Statement {index + 1}</span>
+            <TextArea label="Statement" value={item.prompt || ''} onChange={(value) => patchItem(index, { prompt: value })} rows={2} />
+            <SelectInput
+              label="Matching section"
+              value={Number.isInteger(item.correct_section_index) ? String(item.correct_section_index) : ''}
+              onChange={(value) => patchItem(index, { correct_section_index: value === '' ? null : Number(value) })}
+              options={[
+                ['', 'Choose section'],
+                ...sections.map((_, sectionIndex) => [String(sectionIndex), `Section ${String.fromCharCode(65 + sectionIndex)}`]),
+              ]}
+            />
+          </section>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function ReadingComprehensionEditor({ block, patch }) {
+  const format = block.format || 'standard';
+
+  function changeFormat(nextFormat) {
+    if (nextFormat === format) return;
+    if (nextFormat === 'b2_part5') {
+      patch({
+        format: nextFormat,
+        items: makeReadingPart5Items(block.items || []),
+        passage_parts: [],
+        paragraph_options: [],
+        sections: [],
+        primary_skill: 'reading',
+      });
+      return;
+    }
+    if (nextFormat === 'b2_part6') {
+      patch({
+        format: nextFormat,
+        items: [],
+        passage_parts: makeReadingPart6Parts(block.passage_parts || []),
+        paragraph_options: makeReadingPart6Options(block.paragraph_options || []),
+        sections: [],
+        primary_skill: 'reading',
+      });
+      return;
+    }
+    if (nextFormat === 'b2_part7') {
+      patch({
+        format: nextFormat,
+        items: makeReadingPart7Items(block.items || []),
+        sections: makeReadingPart7Sections(block.sections || []),
+        passage_parts: [],
+        paragraph_options: [],
+        primary_skill: 'reading',
+      });
+      return;
+    }
+    patch({ format: 'standard', passage_parts: [], paragraph_options: [], sections: [], primary_skill: 'reading' });
+  }
+
+  const items = Array.isArray(block.items) ? block.items : [];
+
+  return (
+    <>
+      <TextInput label="Reading title" value={block.title || ''} onChange={(value) => patch({ title: value })} placeholder="Optional title shown above the text" />
+      <SelectInput
+        label="Reading format"
+        value={format}
+        onChange={changeFormat}
+        options={[
+          ['standard', 'Standard reading comprehension'],
+          ['b2_part5', 'B2 exam style · Part 5 · Multiple choice'],
+          ['b2_part6', 'B2 exam style · Part 6 · Gapped text'],
+          ['b2_part7', 'B2 exam style · Part 7 · Multiple matching'],
+        ]}
+        hint="One Reading block, different learner interactions. Technical keys and scoring are generated automatically."
+      />
+      <TextArea label="Task" value={block.prompt || ''} onChange={(value) => patch({ prompt: value })} rows={2} />
+      <TextInput label="Learner instruction" value={block.instructions || ''} onChange={(value) => patch({ instructions: value })} />
+
+      {(format === 'standard' || format === 'b2_part5') ? (
+        <LongTextEditor
+          label="Reading passage"
+          value={block.passage || ''}
+          onChange={(value) => patch({ passage: value })}
+          hint={format === 'b2_part5' ? 'For B2 Part 5, write one substantial original text with enough evidence for six questions.' : 'Use original or licensed teaching material.'}
+          placeholder="Paste or write the complete reading text here."
+        />
+      ) : null}
+
+      {format === 'b2_part5' ? (
+        <>
+          <div className="rounded-2xl border border-orange-200/70 bg-orange-50/45 p-4 dark:border-orange-300/15 dark:bg-orange-300/[0.04]">
+            <p className="text-xs font-black uppercase tracking-[0.08em] text-orange-800 dark:text-orange-200">B2 Part 5</p>
+            <p className="mt-1 text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">
+              Six questions, four options each. Each correct answer is worth 2 points automatically.
+            </p>
+          </div>
+          <ReadingChoiceItemsEditor items={items} onChange={(nextItems) => patch({ items: nextItems })} fixedFour />
+        </>
+      ) : null}
+
+      {format === 'b2_part6' ? <ReadingPart6Editor block={block} patch={patch} /> : null}
+      {format === 'b2_part7' ? <ReadingPart7Editor block={block} patch={patch} /> : null}
+
+      {format === 'standard' ? (
+        <>
+          <ReadingChoiceItemsEditor items={items} onChange={(nextItems) => patch({ items: nextItems })} />
+          <button
+            type="button"
+            onClick={() => patch({
+              items: [...items, {
+                type: 'multiple_choice',
+                prompt: '',
+                options: [
+                  { text: '', is_correct: true },
+                  { text: '', is_correct: false },
+                  { text: '', is_correct: false },
+                ],
+                feedback: '',
+              }],
+            })}
+            className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200"
+          >
+            <Plus className="h-3.5 w-3.5" /> Add question
+          </button>
+        </>
+      ) : null}
+
+      <TextInput
+        label="Source note"
+        value={block.source_note || ''}
+        onChange={(value) => patch({ source_note: value })}
+        placeholder="Optional source / adaptation note"
+        hint="Use original or properly licensed texts. Do not paste protected exam passages."
+      />
+    </>
+  );
+}
+
 function MultipleChoiceEditor({ block, patch }) {
   const options = Array.isArray(block.options) ? block.options : [];
   function patchOption(index, optionPatch) {
@@ -1132,6 +1543,7 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
           <div className="grid min-w-0 gap-4">
         {block.type === 'open_answer_set' ? <OpenAnswerSetEditor block={block} patch={patch} /> : null}
         {block.type === 'multiple_choice_set' ? <MultipleChoiceSetEditor block={block} patch={patch} /> : null}
+        {block.type === 'reading_comprehension' ? <ReadingComprehensionEditor block={block} patch={patch} /> : null}
         {block.type === 'multiple_choice' ? <MultipleChoiceEditor block={block} patch={patch} /> : null}
         {block.type === 'gap_fill' ? <GapFillEditor block={block} patch={patch} /> : null}
         {block.type === 'word_order' ? (
