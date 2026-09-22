@@ -3,6 +3,7 @@ import {
   Archive,
   ArrowUpDown,
   Check,
+  Copy,
   ChevronDown,
   ChevronRight,
   Download,
@@ -22,7 +23,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import StudioQuickAssignPanel from '../components/admin/exercise-studio/StudioQuickAssignPanel.jsx';
 import {
@@ -30,6 +31,7 @@ import {
   bulkPatchStudioDraftTags,
   listStudioDrafts,
   loadStudioDraft,
+  remixStudioDraft,
   setStudioDraftPinned,
 } from '../lib/exerciseStudioDraftApi.js';
 import {
@@ -210,6 +212,7 @@ function optionLabel(options, value) {
 }
 
 export default function AdminExerciseBuilderLibrary() {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [folders, setFolders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -229,6 +232,7 @@ export default function AdminExerciseBuilderLibrary() {
   const [archivingId, setArchivingId] = useState('');
   const [exportingId, setExportingId] = useState('');
   const [pinningId, setPinningId] = useState('');
+  const [remixingId, setRemixingId] = useState('');
   const [newFolderOpen, setNewFolderOpen] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [newFolderColor, setNewFolderColor] = useState('orange');
@@ -416,6 +420,19 @@ export default function AdminExerciseBuilderLibrary() {
       setError(nextError.message || 'Non è stato possibile esportare le attività selezionate.');
     } finally {
       setBulkBusy('');
+    }
+  }
+
+  async function remix(item) {
+    if (remixingId) return;
+    setRemixingId(item.id);
+    setError('');
+    try {
+      const created = await remixStudioDraft(item.id);
+      navigate('/admin/content/exercises/studio?draft=' + created.id);
+    } catch (nextError) {
+      setError(nextError.message || 'Non è stato possibile creare il Remix.');
+      setRemixingId('');
     }
   }
 
@@ -1338,6 +1355,16 @@ export default function AdminExerciseBuilderLibrary() {
                       <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-ink/10 pt-4 dark:border-white/10">
                         <Link to={`/admin/content/exercises/studio?draft=${item.id}`} className="focus-ring rounded-full bg-ink px-3.5 py-2 text-xs font-black text-white dark:bg-orange-400 dark:text-surface-950">Modifica</Link>
                         <Link to={`/admin/content/exercises/studio?draft=${item.id}`} target="_blank" rel="noreferrer" className="focus-ring rounded-full border border-ink/10 px-3.5 py-2 text-xs font-black text-ink dark:border-white/10 dark:text-white">Anteprima</Link>
+                        <button
+                          type="button"
+                          disabled={remixingId === item.id}
+                          onClick={() => remix(item)}
+                          className="focus-ring inline-flex items-center gap-1.5 rounded-full border border-clay/25 bg-clay/[0.055] px-3.5 py-2 text-xs font-black text-clay transition hover:bg-clay/[0.1] disabled:opacity-35 dark:border-coral/20 dark:bg-coral/[0.06] dark:text-coral"
+                          title="Crea una nuova bozza indipendente con nuovi ID tecnici"
+                        >
+                          <Copy className="h-3.5 w-3.5" />
+                          {remixingId === item.id ? 'Creo…' : 'Remix'}
+                        </button>
                         {item.status === 'published' && item.exercise_id ? (
                           <button type="button" onClick={() => setAssignItem(item)} className="focus-ring rounded-full border border-orange-300 bg-orange-50 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:bg-orange-300/[0.07] dark:text-orange-100">Assegna</button>
                         ) : null}
