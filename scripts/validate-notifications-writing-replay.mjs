@@ -32,11 +32,18 @@ assert.doesNotMatch(bell, /subscribeToTeacherNotifications/);
 
 assert.match(results, /WritingCorrectionWorkspace/);
 const writingWorkspace = read('src/components/exercises/WritingCorrectionWorkspace.jsx');
+const writingDisplay = read('src/components/exercises/WritingCorrectionDisplay.jsx');
 assert.match(writingWorkspace, /Seleziona il testo/);
 assert.match(writingWorkspace, /Versione finale/);
 assert.match(writingWorkspace, /Vista studente/);
 assert.match(writingWorkspace, /Annulla ultima/);
 assert.match(writingWorkspace, /Correzioni create/);
+assert.match(writingDisplay, /const CATEGORY_STYLES/);
+assert.match(writingDisplay, /grammar:/);
+assert.match(writingDisplay, /vocabulary:/);
+assert.match(writingDisplay, /punctuation:/);
+assert.match(writingDisplay, /styleForCategory/);
+assert.match(writingDisplay, /I colori indicano il tipo di errore/);
 assert.match(results, /Aggiorna correzione pubblicata/);
 assert.match(results, /Revisione pronta/);
 assert.match(results, /Pubblicata allo studente/);
