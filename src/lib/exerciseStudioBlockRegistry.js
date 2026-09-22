@@ -584,6 +584,249 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       grading: { mode: 'per_item', weight: 1, nearly_correct_multiplier: 0.5 },
     }),
   }),
+  reading_comprehension: definition({
+    type: 'reading_comprehension', label: 'Reading Comprehension · B2 Exam Style', category: 'practice',
+    capabilities: { automaticGrading: true },
+    createDefault: () => ({
+      title: '',
+      prompt: 'Read the text and answer the questions.',
+      instructions: 'Read for general meaning first, then return to the text for evidence.',
+      primary_skill: 'reading',
+      learning_objective: 'Understand main ideas, detail, attitude, purpose and implied meaning in a B2 text.',
+      format: 'standard',
+      passage: '',
+      source_note: '',
+      items: [],
+      passage_parts: [],
+      paragraph_options: [],
+      sections: [],
+    }),
+    normalize: (block) => {
+      const format = ['standard', 'b2_part5', 'b2_part6', 'b2_part7'].includes(block.format) ? block.format : 'standard';
+      const rawItems = Array.isArray(block.items) ? block.items : [];
+      const normalizedItems = rawItems.map((item, index) => ({
+        key: 'item_' + (index + 1),
+        prompt: text(item?.prompt),
+        type: format === 'standard' && ['short_answer', 'multiple_select', 'true_false'].includes(item?.type)
+          ? item.type
+          : 'multiple_choice',
+        options: optionList(item?.options).map((option, optionIndex) => ({ ...option, key: 'option_' + (optionIndex + 1) })),
+        accepted_answers: list(item?.accepted_answers),
+        feedback: text(item?.feedback),
+        correct_section_index: Number.isInteger(Number(item?.correct_section_index)) ? Number(item.correct_section_index) : null,
+      }));
+      const paragraphOptions = (Array.isArray(block.paragraph_options) ? block.paragraph_options : []).map((item, index) => ({
+        key: 'paragraph_' + (index + 1),
+        text: typeof item === 'string' ? text(item) : text(item?.text),
+      }));
+      let gapIndex = 0;
+      const passageParts = (Array.isArray(block.passage_parts) ? block.passage_parts : []).map((part) => {
+        if (part?.type === 'gap') {
+          gapIndex += 1;
+          return {
+            type: 'gap',
+            key: 'gap_' + gapIndex,
+            correct_option_index: Number.isInteger(Number(part?.correct_option_index)) ? Number(part.correct_option_index) : null,
+          };
+        }
+        return { type: 'text', text: text(part?.text ?? part) };
+      });
+      const sections = (Array.isArray(block.sections) ? block.sections : []).map((section, index) => ({
+        key: 'section_' + (index + 1),
+        title: text(section?.title),
+        text: typeof section === 'string' ? text(section) : text(section?.text),
+      }));
+      return {
+        ...block,
+        title: text(block.title),
+        prompt: text(block.prompt),
+        instructions: text(block.instructions),
+        learning_objective: text(block.learning_objective),
+        format,
+        passage: text(block.passage),
+        source_note: text(block.source_note),
+        items: normalizedItems,
+        passage_parts: passageParts,
+        paragraph_options: paragraphOptions,
+        sections,
+      };
+    },
+    validate: (block) => {
+      const issues = [];
+      const format = block.format || 'standard';
+      const items = Array.isArray(block.items) ? block.items : [];
+      if (!text(block.prompt)) issues.push(issue('required', 'Add the reading task.', 'prompt'));
+
+      if (format === 'standard' || format === 'b2_part5') {
+        if (!text(block.passage)) issues.push(issue('required', 'Add the reading passage.', 'passage'));
+      }
+
+      if (format === 'b2_part5') {
+        if (items.length !== 6) issues.push(issue('b2_part5_count', 'B2 Part 5 needs exactly 6 questions.', 'items'));
+        items.forEach((item, index) => {
+          const options = optionList(item?.options);
+          if (!text(item?.prompt)) issues.push(issue('required', 'Question ' + (index + 1) + ' needs a prompt.', 'items.' + index + '.prompt'));
+          if (options.length !== 4) issues.push(issue('b2_part5_options', 'Question ' + (index + 1) + ' needs exactly 4 options.', 'items.' + index + '.options'));
+          if (options.filter((option) => option.is_correct).length !== 1) issues.push(issue('correct_answer', 'Question ' + (index + 1) + ' needs exactly one correct answer.', 'items.' + index + '.options'));
+        });
+      } else if (format === 'b2_part6') {
+        const parts = Array.isArray(block.passage_parts) ? block.passage_parts : [];
+        const gaps = parts.filter((part) => part?.type === 'gap');
+        const paragraphs = Array.isArray(block.paragraph_options) ? block.paragraph_options : [];
+        if (!parts.some((part) => part?.type === 'text' && text(part.text))) issues.push(issue('required', 'Add the surrounding reading text.', 'passage_parts'));
+        if (gaps.length !== 6) issues.push(issue('b2_part6_gap_count', 'B2 Part 6 needs exactly 6 gaps.', 'passage_parts'));
+        if (paragraphs.length !== 7) issues.push(issue('b2_part6_option_count', 'B2 Part 6 needs 7 paragraph options: 6 answers and 1 extra paragraph.', 'paragraph_options'));
+        paragraphs.forEach((paragraph, index) => {
+          if (!text(paragraph?.text)) issues.push(issue('required', 'Paragraph option ' + (index + 1) + ' needs text.', 'paragraph_options.' + index));
+        });
+        gaps.forEach((gap, index) => {
+          if (!Number.isInteger(gap?.correct_option_index) || gap.correct_option_index < 0 || gap.correct_option_index >= paragraphs.length) {
+            issues.push(issue('correct_answer', 'Gap ' + (index + 1) + ' needs a correct paragraph.', 'passage_parts'));
+          }
+        });
+      } else if (format === 'b2_part7') {
+        const sections = Array.isArray(block.sections) ? block.sections : [];
+        if (sections.length < 3) issues.push(issue('b2_part7_sections', 'Add at least 3 text sections for B2 Part 7.', 'sections'));
+        sections.forEach((section, index) => {
+          if (!text(section?.text)) issues.push(issue('required', 'Section ' + String.fromCharCode(65 + index) + ' needs text.', 'sections.' + index));
+        });
+        if (items.length !== 10) issues.push(issue('b2_part7_count', 'B2 Part 7 needs exactly 10 matching statements.', 'items'));
+        items.forEach((item, index) => {
+          if (!text(item?.prompt)) issues.push(issue('required', 'Statement ' + (index + 1) + ' needs text.', 'items.' + index + '.prompt'));
+          if (!Number.isInteger(item?.correct_section_index) || item.correct_section_index < 0 || item.correct_section_index >= sections.length) {
+            issues.push(issue('correct_answer', 'Statement ' + (index + 1) + ' needs a matching section.', 'items.' + index + '.correct_section_index'));
+          }
+        });
+      } else {
+        if (!items.length) issues.push(issue('minimum', 'Add at least one comprehension question.', 'items'));
+        items.forEach((item, index) => {
+          if (!text(item?.prompt)) issues.push(issue('required', 'Question ' + (index + 1) + ' needs a prompt.', 'items.' + index + '.prompt'));
+          if (item?.type === 'short_answer') {
+            if (!list(item?.accepted_answers).length) issues.push(issue('accepted_answer', 'Question ' + (index + 1) + ' needs an accepted answer.', 'items.' + index + '.accepted_answers'));
+          } else {
+            const options = optionList(item?.options);
+            if (options.length < 2) issues.push(issue('minimum', 'Question ' + (index + 1) + ' needs at least two options.', 'items.' + index + '.options'));
+            if (item?.type === 'multiple_select') {
+              if (!options.some((option) => option.is_correct)) issues.push(issue('correct_answer', 'Question ' + (index + 1) + ' needs at least one correct answer.', 'items.' + index + '.options'));
+            } else if (options.filter((option) => option.is_correct).length !== 1) {
+              issues.push(issue('correct_answer', 'Question ' + (index + 1) + ' needs exactly one correct answer.', 'items.' + index + '.options'));
+            }
+          }
+        });
+      }
+      return issues;
+    },
+    compile: (block, context) => {
+      const format = block.format || 'standard';
+      const passageParts = Array.isArray(block.passage_parts) ? block.passage_parts : [];
+      const paragraphs = Array.isArray(block.paragraph_options) ? block.paragraph_options : [];
+      const sections = Array.isArray(block.sections) ? block.sections : [];
+      let items = Array.isArray(block.items) ? block.items : [];
+      let passage = text(block.passage);
+
+      if (format === 'b2_part5') {
+        items = items.map((item, index) => ({
+          key: 'item_' + (index + 1),
+          type: 'multiple_choice',
+          prompt: text(item.prompt),
+          points: 2,
+          options: optionList(item.options).map((option, optionIndex) => ({ ...option, key: 'option_' + (optionIndex + 1) })),
+          feedback: text(item.feedback) || null,
+        }));
+      } else if (format === 'b2_part6') {
+        let gapCounter = 0;
+        passage = passageParts.map((part) => {
+          if (part.type === 'gap') {
+            gapCounter += 1;
+            return '[Gap ' + gapCounter + ']';
+          }
+          return text(part.text);
+        }).filter(Boolean).join('\n\n');
+        items = passageParts.filter((part) => part.type === 'gap').map((gap, index) => ({
+          key: 'gap_' + (index + 1),
+          type: 'multiple_choice',
+          prompt: 'Gap ' + (index + 1),
+          points: 2,
+          options: paragraphs.map((paragraph, optionIndex) => ({
+            key: 'paragraph_' + (optionIndex + 1),
+            text: 'Paragraph ' + String.fromCharCode(65 + optionIndex),
+            is_correct: optionIndex === gap.correct_option_index,
+          })),
+        }));
+      } else if (format === 'b2_part7') {
+        passage = sections.map((section, index) => (
+          String.fromCharCode(65 + index) + '. ' + [text(section.title), text(section.text)].filter(Boolean).join('\n')
+        )).join('\n\n');
+        items = items.map((item, index) => ({
+          key: 'item_' + (index + 1),
+          type: 'multiple_choice',
+          prompt: text(item.prompt),
+          points: 1,
+          options: sections.map((section, sectionIndex) => ({
+            key: 'section_' + (sectionIndex + 1),
+            text: String.fromCharCode(65 + sectionIndex),
+            is_correct: sectionIndex === item.correct_section_index,
+          })),
+          feedback: text(item.feedback) || null,
+        }));
+      } else {
+        items = items.map((item, index) => {
+          const type = ['multiple_choice', 'multiple_select', 'true_false', 'short_answer'].includes(item.type) ? item.type : 'multiple_choice';
+          return {
+            key: 'item_' + (index + 1),
+            type,
+            prompt: text(item.prompt),
+            points: Number(item.points) > 0 ? Number(item.points) : 1,
+            ...(type === 'short_answer'
+              ? { accepted_answers: list(item.accepted_answers) }
+              : { options: optionList(item.options).map((option, optionIndex) => ({ ...option, key: 'option_' + (optionIndex + 1) })) }),
+            feedback: text(item.feedback) || null,
+          };
+        });
+      }
+
+      return commonQuestion(block, context, {
+        type: 'reading_comprehension',
+        title: text(block.title) || 'Reading comprehension',
+        primary_skill: 'reading',
+        learning_objective: text(block.learning_objective) || (
+          format === 'b2_part6'
+            ? 'Understand text structure, cohesion and development in a B2 reading text.'
+            : format === 'b2_part7'
+              ? 'Locate and match specific information, opinion and attitude across a B2 text.'
+              : 'Understand main ideas, detail, attitude, purpose and implied meaning in a reading text.'
+        ),
+        prompt: text(block.prompt) || 'Read the text and answer the questions.',
+        instructions: text(block.instructions),
+        content: {
+          presentation: format,
+          title: text(block.title) || null,
+          passage,
+          source_note: text(block.source_note) || null,
+          items,
+          ...(format === 'b2_part6' ? {
+            passage_parts: passageParts.map((part, index) => part.type === 'gap'
+              ? { type: 'gap', key: part.key || 'gap_' + (index + 1) }
+              : { type: 'text', text: text(part.text) }),
+            paragraph_options: paragraphs.map((paragraph, index) => ({
+              key: 'paragraph_' + (index + 1),
+              label: String.fromCharCode(65 + index),
+              text: text(paragraph.text),
+            })),
+          } : {}),
+          ...(format === 'b2_part7' ? {
+            sections: sections.map((section, index) => ({
+              key: 'section_' + (index + 1),
+              label: String.fromCharCode(65 + index),
+              title: text(section.title) || null,
+              text: text(section.text),
+            })),
+          } : {}),
+        },
+        grading: { mode: 'per_item', weight: 1, nearly_correct_multiplier: 0.5 },
+      });
+    },
+  }),
   multiple_choice: definition({
     type: 'multiple_choice', label: 'Multiple Choice · Single', category: 'practice',
     capabilities: { automaticGrading: true },
