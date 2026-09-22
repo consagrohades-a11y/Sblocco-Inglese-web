@@ -74,9 +74,26 @@ export default function AdminNotifications() {
   }, []);
 
   useEffect(() => {
-    refresh();
+    let active = true;
+    async function initialise() {
+      await refresh();
+      if (!active) return;
+      try {
+        await markAllTeacherNotificationsRead();
+        if (!active) return;
+        const readAt = new Date().toISOString();
+        setNotifications((current) => current.map((item) => ({ ...item, read_at: item.read_at || readAt })));
+        setUnreadCount(0);
+      } catch {
+        // Reading the notification center should not fail the page if marking read fails.
+      }
+    }
+    initialise();
     const timer = window.setInterval(() => refresh({ quiet: true }), 30000);
-    return () => window.clearInterval(timer);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+    };
   }, [refresh]);
 
   async function openNotification(notification) {

@@ -20,6 +20,7 @@ import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
 import { loadAssignmentGroupLinks } from '../lib/learnerGroupsApi.js';
+import { decorateLearnerAssignmentsWithProgress } from '../lib/assignmentProgressApi.js';
 
 const statusLabels = {
   draft: 'Bozza',
@@ -64,6 +65,15 @@ function isOverdue(assignment) {
 function AssignmentCard({ assignment, busy, onStatusChange }) {
   const { getNote } = useAdminLearnerContext();
   const overdue = isOverdue(assignment);
+  const progress = Number(assignment.learner_progress_percent || 0);
+  const learnerState = assignment.learner_state || assignment.status;
+  const progressLabel = learnerState === 'review'
+    ? 'Consegnata · da revisionare'
+    : progress >= 100
+      ? 'Completata'
+      : progress > 0
+        ? 'In corso'
+        : 'Non iniziata';
   const resources = (assignment.resource_types || []).map((type) => resourceTypeLabels[type] || type);
   if (Number(assignment.study_item_count || 0) > 0) resources.push(`${assignment.study_item_count} card SRS`);
 
@@ -117,6 +127,21 @@ function AssignmentCard({ assignment, busy, onStatusChange }) {
               </span>
             ) : null}
           </div>
+
+          {assignment.has_content ? (
+            <div className="mt-4 rounded-xl border border-ink/10 bg-linen/35 px-4 py-3 dark:border-white/10 dark:bg-white/[0.035]">
+              <div className="flex items-center justify-between gap-3 text-xs font-black">
+                <span className="text-ink/60 dark:text-white/60">{progressLabel}</span>
+                <span className="text-ink dark:text-white">{Math.round(progress)}%</span>
+              </div>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-ink/10 dark:bg-white/10">
+                <div className="h-full rounded-full bg-clay transition-[width] dark:bg-coral" style={{ width: `${Math.max(0, Math.min(100, progress))}%` }} />
+              </div>
+              {learnerState === 'review' ? (
+                <p className="mt-2 text-[0.68rem] font-bold text-clay dark:text-coral">Completamento 100% · il punteggio resta separato finché non termini la review.</p>
+              ) : null}
+            </div>
+          ) : null}
 
           {resources.length ? (
             <div className="mt-4 flex flex-wrap gap-2">
@@ -217,7 +242,9 @@ export default function AdminAssignments() {
       setError(`Non è stato possibile caricare le assegnazioni${queryError.message ? `: ${queryError.message}` : '.'}`);
     } else {
       const links = new Map(groupLinks.map((link) => [link.assignment_id, link]));
-      setAssignments((data || []).map((assignment) => ({ ...assignment, ...(links.get(assignment.id) || {}) })));
+      const withGroups = (data || []).map((assignment) => ({ ...assignment, ...(links.get(assignment.id) || {}) }));
+      const decorated = await decorateLearnerAssignmentsWithProgress(withGroups);
+      setAssignments(decorated);
     }
     setLoading(false);
   }

@@ -11,6 +11,7 @@ import {
 import { Link, useParams } from "react-router-dom";
 import SEO from "../components/SEO";
 import { loadAdminLearnerAnalytics } from "../lib/adminAnalyticsApi.js";
+import { decorateLearnerAssignmentsWithProgress } from "../lib/assignmentProgressApi.js";
 
 const periodOptions = [
   { value: 7, label: "7 giorni" },
@@ -149,7 +150,9 @@ export default function AdminLearnerAnalytics() {
     setLoading(true);
     setError("");
     try {
-      setData(await loadAdminLearnerAnalytics(learnerId, period));
+      const loaded = await loadAdminLearnerAnalytics(learnerId, period);
+      const assignments = await decorateLearnerAssignmentsWithProgress(loaded?.assignments || []);
+      setData({ ...loaded, assignments });
     } catch (loadError) {
       setError(
         loadError.message ||
@@ -378,20 +381,18 @@ export default function AdminLearnerAnalytics() {
                             </div>
                           </div>
                           <div className="mt-3 flex flex-wrap items-center gap-4">
+                            <div>
+                              <p className="mb-1 text-[0.65rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">
+                                {assignment.learner_state === "review" ? "Consegnata · da revisionare" : "Completamento"}
+                              </p>
+                              <PercentBar value={assignment.learner_progress_percent} tone="bg-clay" />
+                            </div>
                             <span className="text-xs font-bold text-ink/65 dark:text-white/65">
-                              Ultimo punteggio:{" "}
+                              Punteggio:{" "}
                               {assignment.latest_score === null
-                                ? "-"
+                                ? "in attesa"
                                 : `${number(assignment.latest_score, 1)}%`}
                             </span>
-                            {Number(assignment.collection_progress) > 0 ? (
-                              <div className="w-32">
-                                <PercentBar
-                                  value={assignment.collection_progress}
-                                  tone="bg-cyan-500"
-                                />
-                              </div>
-                            ) : null}
                             <Link
                               to={`/admin/learners/${learnerId}/assignments/${assignment.id}/content`}
                               className="ml-auto text-xs font-black text-moss underline dark:text-emerald-300"

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext.jsx';
-import { loadTeacherUnreadCount } from '../../lib/teacherNotificationsApi.js';
+import { loadTeacherUnreadCount, markAllTeacherNotificationsRead } from '../../lib/teacherNotificationsApi.js';
 
 export default function AdminNotificationBell({ compact = false, onNavigate, tone = 'dark' }) {
   const { user } = useAuth();
@@ -32,6 +32,14 @@ export default function AdminNotificationBell({ compact = false, onNavigate, ton
     };
   }, [refresh, user?.id]);
 
+  function openNotifications() {
+    setUnreadCount(0);
+    markAllTeacherNotificationsRead().catch(() => {
+      // A later refresh reconciles the badge if the write fails.
+    });
+    onNavigate?.();
+  }
+
   if (compact) {
     const compactClass = tone === 'light'
       ? 'border-ink/15 bg-white text-ink shadow-sm hover:border-clay hover:text-clay dark:border-white/15 dark:bg-white/10 dark:text-white'
@@ -40,9 +48,9 @@ export default function AdminNotificationBell({ compact = false, onNavigate, ton
     return (
       <Link
         to="/admin/notifications"
-        onClick={onNavigate}
+        onClick={openNotifications}
         className={`focus-ring relative inline-flex h-11 w-11 items-center justify-center rounded-full border transition ${compactClass}`}
-        aria-label={unreadCount ? `Notifiche, ${unreadCount} non lette` : 'Notifiche'}
+        aria-label={unreadCount ? `Notifiche, ${unreadCount} nuove` : 'Notifiche'}
         title="Notifiche"
       >
         <Bell aria-hidden="true" className="h-5 w-5" />
@@ -58,7 +66,7 @@ export default function AdminNotificationBell({ compact = false, onNavigate, ton
   return (
     <Link
       to="/admin/notifications"
-      onClick={onNavigate}
+      onClick={openNotifications}
       className="focus-ring mt-2 flex min-h-10 items-center justify-between gap-3 rounded-xl border border-white/15 px-3 py-2 text-xs font-black text-white/85 transition hover:bg-white/10 hover:text-white"
     >
       <span className="flex items-center gap-2">

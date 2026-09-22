@@ -15,9 +15,13 @@ const learnerNotifications = read('src/components/learner/LearnerNotificationsPa
 const learnerBell = read('src/components/learner/LearnerNotificationBell.jsx');
 const learnerNotificationApi = read('src/lib/learnerNotificationsApi.js');
 const learnerNotificationMigration = read('supabase/migrations/20260922184917_learner_assignment_and_writing_notifications.sql');
+const progressMigration = read('supabase/migrations/20260922211221_assignment_progress_completion_percent.sql');
+const assignmentsPage = read('src/pages/AdminAssignments.jsx');
 
 assert.match(shell, /AdminNotificationBell/);
 assert.match(bell, /setInterval\(refresh, 15000\)/);
+assert.match(bell, /markAllTeacherNotificationsRead/);
+assert.match(bell, /setUnreadCount\(0\)/);
 assert.doesNotMatch(bell, /subscribeToTeacherNotifications/);
 
 assert.match(results, /WritingCorrectionWorkspace/);
@@ -25,6 +29,9 @@ const writingWorkspace = read('src/components/exercises/WritingCorrectionWorkspa
 assert.match(writingWorkspace, /Seleziona il testo/);
 assert.match(writingWorkspace, /Versione finale/);
 assert.match(writingWorkspace, /Vista studente/);
+assert.match(writingWorkspace, /Annulla ultima/);
+assert.match(writingWorkspace, /Correzioni create/);
+assert.match(results, /Aggiorna correzione pubblicata/);
 assert.match(resultsApi, /admin_save_exercise_builder_written_corrections/);
 assert.match(renderer, /WritingCorrectionDisplay/);
 assert.match(migration, /teacher_correction jsonb/);
@@ -34,12 +41,18 @@ assert.match(learnerNotifications, /assignment_published/);
 assert.match(learnerNotifications, /writing_review_published/);
 assert.match(learnerNotifications, /learner-notifications/);
 assert.match(learnerBell, /loadLearnerUnreadCount/);
+assert.match(learnerBell, /markAllLearnerNotificationsRead/);
+assert.match(learnerBell, /setUnreadCount\(0\)/);
 assert.match(learnerBell, /attivita\/esercizi#learner-notifications/);
 assert.match(learnerNotificationApi, /related_assignment_id/);
 assert.match(learnerNotificationMigration, /Nuova attività assegnata/);
 assert.match(learnerNotificationMigration, /writing_review_published/);
 assert.match(learnerNotificationMigration, /learner_assignment_notification_route/);
 assert.match(learnerNotificationMigration, /assignment_resources_refresh_learner_notification/);
+assert.match(progressMigration, /'progress_percent'/);
+assert.match(progressMigration, /v_state in \('completed', 'review'\) then 100/);
+assert.match(assignmentsPage, /learner_progress_percent/);
+assert.match(assignmentsPage, /Consegnata · da revisionare/);
 
 assert.match(replay, /Sblocco Replay/);
 assert.match(replay, /Me lo ricordavo/);

@@ -12,6 +12,7 @@ import LearnerQuickFacts from '../components/admin/LearnerQuickFacts.jsx';
 import LearnerRecoveryPanel from '../components/admin/LearnerRecoveryPanel.jsx';
 import LearnerVocabularyBankPanel from '../components/admin/learner/LearnerVocabularyBankPanel.jsx';
 import { supabase } from '../lib/supabaseClient.js';
+import { decorateLearnerAssignmentsWithProgress } from '../lib/assignmentProgressApi.js';
 
 const statusLabels = {
   active: 'Attivo', suspended: 'Sospeso', deleted: 'Rimosso',
@@ -51,8 +52,19 @@ export default function AdminLearnerDetail() {
       setLoading(true); setError('');
       const { data, error: rpcError } = await supabase.rpc('admin_get_learner_detail', { target_learner_id: learnerId });
       if (!active) return;
-      if (rpcError) { setError('Non è stato possibile caricare lo studente.'); setLearner(null); }
-      else setLearner(data?.[0] ?? null);
+      if (rpcError) {
+        setError('Non è stato possibile caricare lo studente.');
+        setLearner(null);
+      } else {
+        const loadedLearner = data?.[0] ?? null;
+        if (loadedLearner) {
+          const decoratedAssignments = await decorateLearnerAssignmentsWithProgress(loadedLearner.assignments || []);
+          if (!active) return;
+          setLearner({ ...loadedLearner, assignments: decoratedAssignments });
+        } else {
+          setLearner(null);
+        }
+      }
       setLoading(false);
     }
     loadLearner();
@@ -272,6 +284,29 @@ export default function AdminLearnerDetail() {
                           <span>{assignment.required ? 'Obbligatoria' : 'Facoltativa'}</span>
                           {assignment.estimated_minutes ? <span>{assignment.estimated_minutes} min stimati</span> : null}
                           {assignment.deadline_at ? <span>Scadenza: {formatDate(assignment.deadline_at, true)}</span> : null}
+                        </div>
+                        <div className="mt-4 rounded-xl border border-ink/10 bg-linen/35 px-4 py-3 dark:border-white/10 dark:bg-white/[0.035]">
+                          <div className="flex items-center justify-between gap-3 text-xs font-black">
+                            <span className="text-ink/60 dark:text-white/60">
+                              {assignment.learner_state === 'review'
+                                ? 'Consegnata · da revisionare'
+                                : Number(assignment.learner_progress_percent || 0) >= 100
+                                  ? 'Completata'
+                                  : Number(assignment.learner_progress_percent || 0) > 0
+                                    ? 'In corso'
+                                    : 'Non iniziata'}
+                            </span>
+                            <span className="text-ink dark:text-white">{Math.round(Number(assignment.learner_progress_percent || 0))}%</span>
+                          </div>
+                          <div className="mt-2 h-2 overflow-hidden rounded-full bg-ink/10 dark:bg-white/10">
+                            <div
+                              className="h-full rounded-full bg-clay transition-[width] dark:bg-coral"
+                              style={{ width: `${Math.max(0, Math.min(100, Number(assignment.learner_progress_percent || 0)))}%` }}
+                            />
+                          </div>
+                          {assignment.learner_state === 'review' ? (
+                            <p className="mt-2 text-[0.68rem] font-bold text-clay dark:text-coral">Completamento 100% · punteggio in attesa della tua review.</p>
+                          ) : null}
                         </div>
                         <Link to={`/admin/learners/${learnerId}/assignments/${assignment.id}/content`} className="focus-ring mt-4 inline-flex min-h-10 items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-black text-white transition hover:bg-clay">Apri e modifica</Link>
                       </article>

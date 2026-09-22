@@ -100,7 +100,9 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
   const [draft, setDraft] = useState(null);
   const [activeReasonIndex, setActiveReasonIndex] = useState(null);
   const [selectionError, setSelectionError] = useState('');
+  const [undoCount, setUndoCount] = useState(0);
   const textRef = useRef(null);
+  const undoStackRef = useRef([]);
 
   const segments = useMemo(() => selectableSegments(text, value.reasons), [text, value.reasons]);
   const correctedText = useMemo(
@@ -113,6 +115,26 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
     acc[key] = (acc[key] || 0) + 1;
     return acc;
   }, {}), [value.reasons]);
+
+  function snapshotValue() {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function pushUndoSnapshot() {
+    undoStackRef.current = [...undoStackRef.current.slice(-19), snapshotValue()];
+    setUndoCount(undoStackRef.current.length);
+  }
+
+  function undoLast() {
+    const previous = undoStackRef.current.at(-1);
+    if (!previous) return;
+    undoStackRef.current = undoStackRef.current.slice(0, -1);
+    setUndoCount(undoStackRef.current.length);
+    setDraft(null);
+    setActiveReasonIndex(null);
+    setSelectionError('');
+    onChange(previous);
+  }
 
   function emit(nextReasons = value.reasons, patch = {}) {
     onChange({
@@ -194,6 +216,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
     if (Number.isInteger(activeReasonIndex)) nextReasons[activeReasonIndex] = nextReason;
     else nextReasons.push(nextReason);
 
+    pushUndoSnapshot();
     emit(nextReasons);
     setDraft(null);
     setActiveReasonIndex(null);
@@ -201,6 +224,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
 
   function removeReason(index) {
     const nextReasons = value.reasons.filter((_, currentIndex) => currentIndex !== index);
+    pushUndoSnapshot();
     emit(nextReasons, { corrected_text: correctedFromReasons(text, nextReasons, text) });
     if (activeReasonIndex === index) {
       setDraft(null);
@@ -209,6 +233,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
   }
 
   function resetAll() {
+    pushUndoSnapshot();
     setDraft(null);
     setActiveReasonIndex(null);
     setSelectionError('');
@@ -224,14 +249,21 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
           <p className="text-[0.66rem] font-black uppercase tracking-[0.14em] text-clay dark:text-coral">Revisore scritto</p>
           <h3 className="mt-1 text-xl font-black text-ink dark:text-white">Seleziona il testo. Correggi solo ciò che serve.</h3>
           <p className="mt-1 max-w-2xl text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
-            Evidenzia un passaggio nella risposta: categoria, sostituzione e spiegazione restano collegate a quel punto preciso.
+            Evidenzia un passaggio nella risposta. Le correzioni già create restano sempre modificabili: cliccale nel testo o riaprile dall’elenco.
           </p>
         </div>
-        {hasCorrection ? (
-          <button type="button" onClick={resetAll} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/10 bg-white px-4 text-xs font-black text-ink/55 hover:border-clay hover:text-clay dark:border-white/10 dark:bg-white/[0.04] dark:text-white/60">
-            <RotateCcw className="h-3.5 w-3.5" /> Azzera
-          </button>
-        ) : null}
+        <div className="flex flex-wrap items-center gap-2">
+          {undoCount ? (
+            <button type="button" onClick={undoLast} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-clay/25 bg-white px-4 text-xs font-black text-clay hover:bg-clay/[0.05] dark:border-coral/25 dark:bg-white/[0.04] dark:text-coral">
+              <RotateCcw className="h-3.5 w-3.5" /> Annulla ultima
+            </button>
+          ) : null}
+          {hasCorrection ? (
+            <button type="button" onClick={resetAll} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/10 bg-white px-4 text-xs font-black text-ink/55 hover:border-clay hover:text-clay dark:border-white/10 dark:bg-white/[0.04] dark:text-white/60">
+              <Trash2 className="h-3.5 w-3.5" /> Azzera tutto
+            </button>
+          ) : null}
+        </div>
       </header>
 
       <div className="border-b border-[#eadbd1] px-5 py-3 dark:border-white/10 sm:px-6">
@@ -355,12 +387,40 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
                 </div>
               </>
             ) : (
-              <div className="grid min-h-[22rem] place-items-center text-center">
-                <div className="max-w-[16rem]">
-                  <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#f3e6de] text-clay dark:bg-coral/10 dark:text-coral"><Sparkles className="h-5 w-5" /></span>
-                  <h4 className="mt-4 font-editorial text-2xl text-ink dark:text-white">Seleziona un passaggio.</h4>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-ink/50 dark:text-white/50">La correzione comparirà qui senza riempire la pagina di form.</p>
-                </div>
+              <div className="min-h-[22rem]">
+                {value.reasons.length ? (
+                  <div>
+                    <p className="text-[0.66rem] font-black uppercase tracking-[0.13em] text-clay dark:text-coral">Correzioni create</p>
+                    <p className="mt-1 text-sm font-semibold leading-6 text-ink/50 dark:text-white/50">Puoi riaprirle, modificarle o eliminarle anche dopo aver salvato la review.</p>
+                    <div className="mt-4 grid gap-2">
+                      {value.reasons.map((reason, index) => {
+                        const categoryLabel = CATEGORIES.find(([key]) => key === (reason.category || 'other'))?.[1] || 'Altro';
+                        return (
+                          <div key={`${index}:${reason.start ?? ''}:${reason.end ?? ''}`} className="rounded-xl border border-[#eadbd1] bg-white p-3.5 dark:border-white/10 dark:bg-surface-900">
+                            <div className="flex items-start gap-3">
+                              <button type="button" onClick={() => openReason(index)} className="focus-ring min-w-0 flex-1 text-left">
+                                <span className="block text-[0.62rem] font-black uppercase tracking-wide text-clay dark:text-coral">{categoryLabel}</span>
+                                <span className="mt-1 block truncate text-sm font-bold text-[#87351f] line-through decoration-2 dark:text-[#ffc1ae]">{reason.original || text.slice(Number(reason.start || 0), Number(reason.end || 0))}</span>
+                                {reason.corrected ? <span className="mt-1 block truncate text-sm font-black italic text-[#234f67] dark:text-[#cfe8f5]">→ {reason.corrected}</span> : null}
+                              </button>
+                              <button type="button" onClick={() => removeReason(index)} className="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#d9b7aa] text-[#87351f] dark:border-[#ffc1ae]/20 dark:text-[#ffc1ae]" aria-label="Elimina correzione">
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid min-h-[22rem] place-items-center text-center">
+                    <div className="max-w-[16rem]">
+                      <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#f3e6de] text-clay dark:bg-coral/10 dark:text-coral"><Sparkles className="h-5 w-5" /></span>
+                      <h4 className="mt-4 font-editorial text-2xl text-ink dark:text-white">Seleziona un passaggio.</h4>
+                      <p className="mt-2 text-sm font-semibold leading-6 text-ink/50 dark:text-white/50">La correzione comparirà qui senza riempire la pagina di form.</p>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </aside>
