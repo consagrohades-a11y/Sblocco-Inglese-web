@@ -17,6 +17,7 @@ import {
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import LearnerAvatar from './learner/LearnerAvatar.jsx';
+import LearnerNotificationBell from './learner/LearnerNotificationBell.jsx';
 import BrandLogo from './BrandLogo';
 import HomeEditorialLogo from './home/HomeEditorialLogo';
 import ThemeToggle from './ThemeToggle';
@@ -277,6 +278,8 @@ export default function Navbar() {
             </Link>
           )}
 
+          {isLearner ? <LearnerNotificationBell /> : null}
+
           <ThemeToggle />
 
           {!loading && user ? (
@@ -328,6 +331,8 @@ export default function Navbar() {
                 </NavLink>
               );
             })}
+
+            {isLearner ? <LearnerNotificationBell mobile onNavigate={() => setMobileOpen(false)} /> : null}
 
             {!isLearner ? (
               <Link to="/assessment" className="focus-ring mt-2 flex min-h-12 items-center justify-between rounded-2xl bg-moss px-4 py-3 text-base font-black text-white">

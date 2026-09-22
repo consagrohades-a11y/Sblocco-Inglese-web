@@ -69,6 +69,13 @@ export default function StudioJsonImportPanel({ onClose, onImport }) {
                 Download authoring JSON
               </a>
               <a
+                href="/templates/sblocco-learning-studio/b2-reading-authoring-kit-v1.json"
+                download
+                className="focus-ring rounded-full border border-orange-300 bg-white/70 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:bg-white/[0.04] dark:text-orange-100"
+              >
+                B2 Reading authoring JSON
+              </a>
+              <a
                 href="/templates/sblocco-learning-studio/learning-activity-template-v1.json"
                 download
                 className="focus-ring rounded-full border border-ink/10 bg-white/70 px-3.5 py-2 text-xs font-black text-ink/70 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/70"
@@ -97,6 +104,20 @@ export default function StudioJsonImportPanel({ onClose, onImport }) {
                   className="focus-ring rounded-full border border-orange-300 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:text-orange-100"
                 >
                   B2 listening + chunks
+                </a>
+                <a
+                  href="/templates/sblocco-learning-studio/gold-benchmark-b2-reading-exam-style-v1.json"
+                  download
+                  className="focus-ring rounded-full border border-orange-300 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:text-orange-100"
+                >
+                  B2 reading exam-style
+                </a>
+                <a
+                  href="/templates/sblocco-learning-studio/gold-benchmark-b2-reading-exam-style-v1.json"
+                  download
+                  className="focus-ring rounded-full border border-orange-300 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:text-orange-100"
+                >
+                  B2 reading · Parts 5–7
                 </a>
                 <a
                   href="/templates/sblocco-learning-studio/learning-activity-example-v1.json"

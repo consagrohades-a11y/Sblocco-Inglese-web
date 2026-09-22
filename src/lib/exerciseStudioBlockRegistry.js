@@ -1,6 +1,6 @@
 import { EXERCISE_BUILDER_LEVELS } from './exerciseBuilderSchemaV2.js';
 
-export const STUDIO_BLOCK_REGISTRY_VERSION = 1;
+export const STUDIO_BLOCK_REGISTRY_VERSION = 3;
 
 const text = (value) => typeof value === 'string' ? value.trim() : '';
 const list = (value) => Array.isArray(value) ? value.map((item) => text(item)).filter(Boolean) : [];
@@ -9,6 +9,7 @@ const positiveInteger = (value, fallback) => {
   const parsed = Number(value);
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 };
+const cloneJsonValue = (value) => value == null ? value : JSON.parse(JSON.stringify(value));
 const slug = (value, fallback = 'item') => text(value)
   .toLocaleLowerCase()
   .normalize('NFKD')
@@ -566,6 +567,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       instructions: text(block.instructions),
       content: {
         presentation: 'choice_set',
+        shuffle_options: 'stable_attempt',
         passage: text(block.instructions) || text(block.prompt) || 'Complete the grouped multiple-choice practice.',
         title: text(block.title) || null,
         source_note: null,
@@ -583,6 +585,635 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       },
       grading: { mode: 'per_item', weight: 1, nearly_correct_multiplier: 0.5 },
     }),
+  }),
+  use_of_english: definition({
+    type: 'use_of_english', label: 'B2 Use of English · Exam Style', category: 'practice',
+    capabilities: { automaticGrading: true },
+    presets: [
+      {
+        id: 'b2_part1',
+        label: 'B2 Part 1',
+        description: 'Multiple-choice cloze · 8 gaps',
+        initial: {
+          format: 'b2_part1',
+          title: 'B2 Use of English | Part 1',
+          prompt: 'Read the text and choose the best answer for gaps 1–8.',
+          instructions: 'Choose A, B, C or D for each gap.',
+          primary_skill: 'vocabulary',
+          learning_objective: 'Use collocation, fixed phrases, phrasal verbs and lexical precision in context.',
+          text_parts: Array.from({ length: 17 }, (_, index) => (
+            index % 2 === 0 ? { type: 'text', text: '' } : { type: 'gap' }
+          )),
+          items: Array.from({ length: 8 }, () => ({
+            options: Array.from({ length: 4 }, () => ({ text: '', is_correct: false })),
+            feedback: '',
+          })),
+        },
+      },
+      {
+        id: 'b2_part2',
+        label: 'B2 Part 2',
+        description: 'Open cloze · 8 one-word gaps',
+        initial: {
+          format: 'b2_part2',
+          title: 'B2 Use of English | Part 2',
+          prompt: 'Complete gaps 1–8 with one word in each gap.',
+          instructions: 'Write one word only for each gap.',
+          primary_skill: 'grammar',
+          learning_objective: 'Control grammar and high-frequency lexical grammar in connected text.',
+          text_parts: Array.from({ length: 17 }, (_, index) => (
+            index % 2 === 0 ? { type: 'text', text: '' } : { type: 'gap' }
+          )),
+          items: Array.from({ length: 8 }, () => ({ accepted_answers: [], feedback: '' })),
+        },
+      },
+      {
+        id: 'b2_part3',
+        label: 'B2 Part 3',
+        description: 'Word formation · 8 gaps',
+        initial: {
+          format: 'b2_part3',
+          title: 'B2 Use of English | Part 3',
+          prompt: 'Use the word given to form a word that fits each gap.',
+          instructions: 'Change the prompt word as needed.',
+          primary_skill: 'vocabulary',
+          learning_objective: 'Use affixation, internal change and word-class knowledge in context.',
+          text_parts: Array.from({ length: 17 }, (_, index) => (
+            index % 2 === 0 ? { type: 'text', text: '' } : { type: 'gap' }
+          )),
+          word_prompts: Array.from({ length: 8 }, () => ({ word: '' })),
+          items: Array.from({ length: 8 }, () => ({ accepted_answers: [], feedback: '' })),
+        },
+      },
+      {
+        id: 'b2_part4',
+        label: 'B2 Part 4',
+        description: 'Key word transformations · 6 items',
+        initial: {
+          format: 'b2_part4',
+          title: 'B2 Use of English | Part 4',
+          prompt: 'Complete the second sentence so that it means the same as the first.',
+          instructions: 'Use the key word unchanged. Write 2–5 words, including the key word.',
+          primary_skill: 'grammar',
+          learning_objective: 'Reformulate meaning accurately using B2 grammar and vocabulary.',
+          transformations: Array.from({ length: 6 }, () => ({
+            lead_sentence: '',
+            keyword: '',
+            before_gap: '',
+            after_gap: '',
+            accepted_answers: [],
+            mark_parts: [[], []],
+            feedback: '',
+          })),
+        },
+      },
+    ],
+    createDefault: () => ({
+      title: '',
+      prompt: 'Complete the Use of English task.',
+      instructions: '',
+      primary_skill: 'grammar',
+      learning_objective: '',
+      format: 'b2_part1',
+      text_parts: [],
+      items: [],
+      word_prompts: [],
+      transformations: [],
+    }),
+    normalize: (block) => {
+      const format = ['b2_part1', 'b2_part2', 'b2_part3', 'b2_part4'].includes(block.format)
+        ? block.format
+        : 'b2_part1';
+
+      let gapIndex = 0;
+      const textParts = (Array.isArray(block.text_parts) ? block.text_parts : []).map((part) => {
+        if (part?.type === 'gap') {
+          gapIndex += 1;
+          return { type: 'gap', key: 'item_' + gapIndex };
+        }
+        return { type: 'text', text: text(part?.text ?? part) };
+      });
+
+      const items = (Array.isArray(block.items) ? block.items : []).map((item, index) => ({
+        key: 'item_' + (index + 1),
+        options: optionList(item?.options).map((option, optionIndex) => ({
+          ...option,
+          key: 'option_' + (optionIndex + 1),
+        })),
+        accepted_answers: list(item?.accepted_answers),
+        feedback: text(item?.feedback),
+      }));
+
+      const wordPrompts = (Array.isArray(block.word_prompts) ? block.word_prompts : []).map((item, index) => ({
+        key: 'item_' + (index + 1),
+        word: typeof item === 'string' ? text(item) : text(item?.word),
+      }));
+
+      const transformations = (Array.isArray(block.transformations) ? block.transformations : []).map((item, index) => ({
+        key: 'item_' + (index + 1),
+        lead_sentence: text(item?.lead_sentence),
+        keyword: text(item?.keyword).toUpperCase(),
+        before_gap: text(item?.before_gap),
+        after_gap: text(item?.after_gap),
+        accepted_answers: list(item?.accepted_answers),
+        mark_parts: (Array.isArray(item?.mark_parts) ? item.mark_parts : [[], []])
+          .slice(0, 2)
+          .map((part) => list(Array.isArray(part) ? part : part?.accepted_answers)),
+        feedback: text(item?.feedback),
+      }));
+
+      return {
+        ...block,
+        title: text(block.title),
+        prompt: text(block.prompt),
+        instructions: text(block.instructions),
+        primary_skill: text(block.primary_skill),
+        learning_objective: text(block.learning_objective),
+        format,
+        text_parts: textParts,
+        items,
+        word_prompts: wordPrompts,
+        transformations,
+      };
+    },
+    validate: (block) => {
+      const issues = [];
+      const format = block.format || 'b2_part1';
+      const textParts = Array.isArray(block.text_parts) ? block.text_parts : [];
+      const gaps = textParts.filter((part) => part?.type === 'gap');
+      const items = Array.isArray(block.items) ? block.items : [];
+
+      if (!text(block.prompt)) issues.push(issue('required', 'Add the Use of English task.', 'prompt'));
+
+      if (format !== 'b2_part4') {
+        if (!textParts.some((part) => part?.type === 'text' && text(part.text))) {
+          issues.push(issue('required', 'Add the connected text around the gaps.', 'text_parts'));
+        }
+        if (gaps.length !== 8) issues.push(issue('b2_uoe_gap_count', 'B2 Parts 1–3 need exactly 8 gaps.', 'text_parts'));
+        if (items.length !== 8) issues.push(issue('b2_uoe_item_count', 'B2 Parts 1–3 need exactly 8 answer items.', 'items'));
+      }
+
+      if (format === 'b2_part1') {
+        items.forEach((item, index) => {
+          const options = optionList(item?.options);
+          if (options.length !== 4) issues.push(issue('b2_part1_options', 'Gap ' + (index + 1) + ' needs exactly 4 options.', 'items.' + index + '.options'));
+          if (options.filter((option) => option.is_correct).length !== 1) {
+            issues.push(issue('correct_answer', 'Gap ' + (index + 1) + ' needs exactly one correct answer.', 'items.' + index + '.options'));
+          }
+        });
+      }
+
+      if (format === 'b2_part2' || format === 'b2_part3') {
+        items.forEach((item, index) => {
+          const answers = list(item?.accepted_answers);
+          if (!answers.length) issues.push(issue('accepted_answer', 'Gap ' + (index + 1) + ' needs at least one accepted answer.', 'items.' + index + '.accepted_answers'));
+          if (answers.some((answer) => answer.split(/\s+/).filter(Boolean).length !== 1)) {
+            issues.push(issue('one_word_answer', 'Gap ' + (index + 1) + ' must accept one-word answers only.', 'items.' + index + '.accepted_answers'));
+          }
+        });
+      }
+
+      if (format === 'b2_part3') {
+        const prompts = Array.isArray(block.word_prompts) ? block.word_prompts : [];
+        if (prompts.length !== 8) issues.push(issue('b2_part3_prompt_count', 'B2 Part 3 needs exactly 8 prompt words.', 'word_prompts'));
+        prompts.forEach((item, index) => {
+          if (!text(item?.word)) issues.push(issue('required', 'Gap ' + (index + 1) + ' needs a prompt word.', 'word_prompts.' + index + '.word'));
+        });
+      }
+
+      if (format === 'b2_part4') {
+        const transformations = Array.isArray(block.transformations) ? block.transformations : [];
+        if (transformations.length !== 6) issues.push(issue('b2_part4_count', 'B2 Part 4 needs exactly 6 transformations.', 'transformations'));
+        transformations.forEach((item, index) => {
+          if (!text(item?.lead_sentence)) issues.push(issue('required', 'Transformation ' + (index + 1) + ' needs the first sentence.', 'transformations.' + index + '.lead_sentence'));
+          if (!text(item?.keyword)) issues.push(issue('required', 'Transformation ' + (index + 1) + ' needs a key word.', 'transformations.' + index + '.keyword'));
+          if (!text(item?.before_gap) && !text(item?.after_gap)) issues.push(issue('required', 'Transformation ' + (index + 1) + ' needs the second sentence around the gap.', 'transformations.' + index));
+          const answers = list(item?.accepted_answers);
+          if (!answers.length) issues.push(issue('accepted_answer', 'Transformation ' + (index + 1) + ' needs at least one complete accepted answer.', 'transformations.' + index + '.accepted_answers'));
+          answers.forEach((answer) => {
+            const count = answer.split(/\s+/).filter(Boolean).length;
+            if (count < 2 || count > 5) issues.push(issue('word_limit', 'Accepted Part 4 answers must contain 2–5 words.', 'transformations.' + index + '.accepted_answers'));
+            if (text(item?.keyword) && !answer.toLocaleLowerCase().split(/\s+/).includes(text(item.keyword).toLocaleLowerCase())) {
+              issues.push(issue('keyword_required', 'Accepted Part 4 answers must include the key word unchanged.', 'transformations.' + index + '.accepted_answers'));
+            }
+          });
+          const parts = Array.isArray(item?.mark_parts) ? item.mark_parts : [];
+          if (parts.length !== 2 || parts.some((part) => !list(part).length)) {
+            issues.push(issue('mark_parts', 'Transformation ' + (index + 1) + ' needs two marking parts for partial credit.', 'transformations.' + index + '.mark_parts'));
+          }
+        });
+      }
+
+      return issues;
+    },
+    compile: (block, context) => {
+      const format = block.format || 'b2_part1';
+      const textParts = Array.isArray(block.text_parts) ? block.text_parts : [];
+      const wordPrompts = Array.isArray(block.word_prompts) ? block.word_prompts : [];
+      const transformations = Array.isArray(block.transformations) ? block.transformations : [];
+      const passage = format === 'b2_part4'
+        ? ''
+        : textParts.map((part, index) => (
+          part.type === 'gap'
+            ? '[' + (textParts.slice(0, index + 1).filter((candidate) => candidate.type === 'gap').length) + ']'
+            : text(part.text)
+        )).filter(Boolean).join(' ');
+
+      let compiledItems = [];
+      if (format === 'b2_part1') {
+        compiledItems = (block.items || []).map((item, index) => ({
+          key: 'item_' + (index + 1),
+          type: 'multiple_choice',
+          prompt: 'Gap ' + (index + 1),
+          points: 1,
+          options: optionList(item.options).map((option, optionIndex) => ({
+            ...option,
+            key: 'option_' + (optionIndex + 1),
+          })),
+          feedback: text(item.feedback) || null,
+        }));
+      } else if (format === 'b2_part2' || format === 'b2_part3') {
+        compiledItems = (block.items || []).map((item, index) => ({
+          key: 'item_' + (index + 1),
+          type: 'short_answer',
+          prompt: 'Gap ' + (index + 1),
+          points: 1,
+          accepted_answers: list(item.accepted_answers),
+          feedback: text(item.feedback) || null,
+        }));
+      } else {
+        compiledItems = transformations.map((item, index) => ({
+          key: 'item_' + (index + 1),
+          type: 'key_word_transformation',
+          prompt: 'Transformation ' + (index + 1),
+          points: 2,
+          keyword: text(item.keyword),
+          accepted_answers: list(item.accepted_answers),
+          mark_parts: (Array.isArray(item.mark_parts) ? item.mark_parts : []).map((part) => list(part)),
+          feedback: text(item.feedback) || null,
+        }));
+      }
+
+      const primarySkill = format === 'b2_part1' || format === 'b2_part3' ? 'vocabulary' : 'grammar';
+
+      return commonQuestion(block, context, {
+        type: 'reading_comprehension',
+        title: text(block.title) || 'B2 Use of English',
+        primary_skill: primarySkill,
+        learning_objective: text(block.learning_objective) || (
+          format === 'b2_part1'
+            ? 'Use collocation, fixed phrases, phrasal verbs and lexical precision in context.'
+            : format === 'b2_part2'
+              ? 'Control grammar and high-frequency lexical grammar in connected text.'
+              : format === 'b2_part3'
+                ? 'Use word formation accurately in connected text.'
+                : 'Reformulate meaning accurately using B2 grammar and vocabulary.'
+        ),
+        prompt: text(block.prompt) || 'Complete the Use of English task.',
+        instructions: text(block.instructions),
+        content: {
+          presentation: 'b2_uoe_' + format.replace('b2_', ''),
+          title: text(block.title) || null,
+          passage,
+          items: compiledItems,
+          ...(format !== 'b2_part4' ? {
+            text_parts: textParts.map((part, index) => part.type === 'gap'
+              ? {
+                  type: 'gap',
+                  key: 'item_' + (textParts.slice(0, index + 1).filter((candidate) => candidate.type === 'gap').length),
+                }
+              : { type: 'text', text: text(part.text) }),
+          } : {}),
+          ...(format === 'b2_part3' ? {
+            word_prompts: wordPrompts.map((item, index) => ({
+              key: 'item_' + (index + 1),
+              word: text(item.word),
+            })),
+          } : {}),
+          ...(format === 'b2_part4' ? {
+            transformations: transformations.map((item, index) => ({
+              key: 'item_' + (index + 1),
+              lead_sentence: text(item.lead_sentence),
+              keyword: text(item.keyword),
+              before_gap: text(item.before_gap),
+              after_gap: text(item.after_gap),
+              word_min: 2,
+              word_max: 5,
+            })),
+          } : {}),
+        },
+        grading: {
+          mode: 'per_item',
+          weight: 1,
+          nearly_correct_multiplier: format === 'b2_part1' ? 0.5 : 0,
+        },
+      });
+    },
+  }),
+  reading_comprehension: definition({
+    type: 'reading_comprehension', label: 'Reading Comprehension · B2 Exam Style', category: 'practice',
+    capabilities: { automaticGrading: true },
+    presets: [
+      {
+        id: 'b2_part5',
+        label: 'B2 Part 5',
+        description: 'Long text · 6 questions · 4 options',
+        initial: {
+          format: 'b2_part5',
+          title: 'B2 Reading | Part 5',
+          prompt: 'Read the text and choose the best answer for questions 1–6.',
+          instructions: 'Choose A, B, C or D. Base every answer on evidence in the text.',
+          primary_skill: 'reading',
+          learning_objective: 'Understand detail, attitude, purpose and implied meaning in a B2 text.',
+          items: Array.from({ length: 6 }, () => ({
+            prompt: '',
+            options: Array.from({ length: 4 }, () => ({ text: '', is_correct: false })),
+            feedback: '',
+          })),
+        },
+      },
+      {
+        id: 'b2_part6',
+        label: 'B2 Part 6',
+        description: 'Gapped text · 6 gaps · 7 paragraphs',
+        initial: {
+          format: 'b2_part6',
+          title: 'B2 Reading | Part 6',
+          prompt: 'Choose the paragraph that fits each gap.',
+          instructions: 'There is one extra paragraph which you do not need to use.',
+          primary_skill: 'reading',
+          learning_objective: 'Understand cohesion, reference and development in a B2 text.',
+          passage_parts: Array.from({ length: 13 }, (_, index) => (
+            index % 2 === 0
+              ? { type: 'text', text: '' }
+              : { type: 'gap', correct_option_index: null }
+          )),
+          paragraph_options: Array.from({ length: 7 }, () => ({ text: '' })),
+          items: [],
+        },
+      },
+      {
+        id: 'b2_part7',
+        label: 'B2 Part 7',
+        description: 'Multiple matching · 10 statements',
+        initial: {
+          format: 'b2_part7',
+          title: 'B2 Reading | Part 7',
+          prompt: 'Match statements 1–10 to the correct section.',
+          instructions: 'A section may be used more than once.',
+          primary_skill: 'reading',
+          learning_objective: 'Locate and match specific information, opinion and attitude across B2 text sections.',
+          sections: Array.from({ length: 4 }, () => ({ title: '', text: '' })),
+          items: Array.from({ length: 10 }, () => ({
+            prompt: '',
+            correct_section_index: null,
+            feedback: '',
+          })),
+        },
+      },
+    ],
+    createDefault: () => ({
+      title: '',
+      prompt: 'Read the text and answer the questions.',
+      instructions: 'Read for general meaning first, then return to the text for evidence.',
+      primary_skill: 'reading',
+      learning_objective: 'Understand main ideas, detail, attitude, purpose and implied meaning in a B2 text.',
+      format: 'standard',
+      passage: '',
+      source_note: '',
+      items: [],
+      passage_parts: [],
+      paragraph_options: [],
+      sections: [],
+    }),
+    normalize: (block) => {
+      const format = ['standard', 'b2_part5', 'b2_part6', 'b2_part7'].includes(block.format) ? block.format : 'standard';
+      const rawItems = Array.isArray(block.items) ? block.items : [];
+      const normalizedItems = rawItems.map((item, index) => ({
+        key: 'item_' + (index + 1),
+        prompt: text(item?.prompt),
+        type: 'multiple_choice',
+        options: optionList(item?.options).map((option, optionIndex) => ({ ...option, key: 'option_' + (optionIndex + 1) })),
+        accepted_answers: list(item?.accepted_answers),
+        feedback: text(item?.feedback),
+        correct_section_index: item?.correct_section_index !== null
+          && item?.correct_section_index !== ''
+          && Number.isInteger(Number(item?.correct_section_index))
+          ? Number(item.correct_section_index)
+          : null,
+      }));
+      const paragraphOptions = (Array.isArray(block.paragraph_options) ? block.paragraph_options : []).map((item, index) => ({
+        key: 'paragraph_' + (index + 1),
+        text: typeof item === 'string' ? text(item) : text(item?.text),
+      }));
+      let gapIndex = 0;
+      const passageParts = (Array.isArray(block.passage_parts) ? block.passage_parts : []).map((part) => {
+        if (part?.type === 'gap') {
+          gapIndex += 1;
+          return {
+            type: 'gap',
+            key: 'gap_' + gapIndex,
+            correct_option_index: part?.correct_option_index !== null
+              && part?.correct_option_index !== ''
+              && Number.isInteger(Number(part?.correct_option_index))
+              ? Number(part.correct_option_index)
+              : null,
+          };
+        }
+        return { type: 'text', text: text(part?.text ?? part) };
+      });
+      const sections = (Array.isArray(block.sections) ? block.sections : []).map((section, index) => ({
+        key: 'section_' + (index + 1),
+        title: text(section?.title),
+        text: typeof section === 'string' ? text(section) : text(section?.text),
+      }));
+      return {
+        ...block,
+        title: text(block.title),
+        prompt: text(block.prompt),
+        instructions: text(block.instructions),
+        learning_objective: text(block.learning_objective),
+        format,
+        passage: text(block.passage),
+        source_note: text(block.source_note),
+        items: normalizedItems,
+        passage_parts: passageParts,
+        paragraph_options: paragraphOptions,
+        sections,
+      };
+    },
+    validate: (block) => {
+      const issues = [];
+      const format = block.format || 'standard';
+      const items = Array.isArray(block.items) ? block.items : [];
+      if (!text(block.prompt)) issues.push(issue('required', 'Add the reading task.', 'prompt'));
+
+      if (format === 'standard' || format === 'b2_part5') {
+        if (!text(block.passage)) issues.push(issue('required', 'Add the reading passage.', 'passage'));
+      }
+
+      if (format === 'b2_part5') {
+        if (items.length !== 6) issues.push(issue('b2_part5_count', 'B2 Part 5 needs exactly 6 questions.', 'items'));
+        items.forEach((item, index) => {
+          const options = optionList(item?.options);
+          if (!text(item?.prompt)) issues.push(issue('required', 'Question ' + (index + 1) + ' needs a prompt.', 'items.' + index + '.prompt'));
+          if (options.length !== 4) issues.push(issue('b2_part5_options', 'Question ' + (index + 1) + ' needs exactly 4 options.', 'items.' + index + '.options'));
+          if (options.filter((option) => option.is_correct).length !== 1) issues.push(issue('correct_answer', 'Question ' + (index + 1) + ' needs exactly one correct answer.', 'items.' + index + '.options'));
+        });
+      } else if (format === 'b2_part6') {
+        const parts = Array.isArray(block.passage_parts) ? block.passage_parts : [];
+        const gaps = parts.filter((part) => part?.type === 'gap');
+        const paragraphs = Array.isArray(block.paragraph_options) ? block.paragraph_options : [];
+        if (!parts.some((part) => part?.type === 'text' && text(part.text))) issues.push(issue('required', 'Add the surrounding reading text.', 'passage_parts'));
+        if (gaps.length !== 6) issues.push(issue('b2_part6_gap_count', 'B2 Part 6 needs exactly 6 gaps.', 'passage_parts'));
+        if (paragraphs.length !== 7) issues.push(issue('b2_part6_option_count', 'B2 Part 6 needs 7 paragraph options: 6 answers and 1 extra paragraph.', 'paragraph_options'));
+        paragraphs.forEach((paragraph, index) => {
+          if (!text(paragraph?.text)) issues.push(issue('required', 'Paragraph option ' + (index + 1) + ' needs text.', 'paragraph_options.' + index));
+        });
+        gaps.forEach((gap, index) => {
+          if (!Number.isInteger(gap?.correct_option_index) || gap.correct_option_index < 0 || gap.correct_option_index >= paragraphs.length) {
+            issues.push(issue('correct_answer', 'Gap ' + (index + 1) + ' needs a correct paragraph.', 'passage_parts'));
+          }
+        });
+      } else if (format === 'b2_part7') {
+        const sections = Array.isArray(block.sections) ? block.sections : [];
+        if (sections.length < 3) issues.push(issue('b2_part7_sections', 'Add at least 3 text sections for B2 Part 7.', 'sections'));
+        sections.forEach((section, index) => {
+          if (!text(section?.text)) issues.push(issue('required', 'Section ' + String.fromCharCode(65 + index) + ' needs text.', 'sections.' + index));
+        });
+        if (items.length !== 10) issues.push(issue('b2_part7_count', 'B2 Part 7 needs exactly 10 matching statements.', 'items'));
+        items.forEach((item, index) => {
+          if (!text(item?.prompt)) issues.push(issue('required', 'Statement ' + (index + 1) + ' needs text.', 'items.' + index + '.prompt'));
+          if (!Number.isInteger(item?.correct_section_index) || item.correct_section_index < 0 || item.correct_section_index >= sections.length) {
+            issues.push(issue('correct_answer', 'Statement ' + (index + 1) + ' needs a matching section.', 'items.' + index + '.correct_section_index'));
+          }
+        });
+      } else {
+        if (!items.length) issues.push(issue('minimum', 'Add at least one comprehension question.', 'items'));
+        items.forEach((item, index) => {
+          if (!text(item?.prompt)) issues.push(issue('required', 'Question ' + (index + 1) + ' needs a prompt.', 'items.' + index + '.prompt'));
+          if (item?.type === 'short_answer') {
+            if (!list(item?.accepted_answers).length) issues.push(issue('accepted_answer', 'Question ' + (index + 1) + ' needs an accepted answer.', 'items.' + index + '.accepted_answers'));
+          } else {
+            const options = optionList(item?.options);
+            if (options.length < 2) issues.push(issue('minimum', 'Question ' + (index + 1) + ' needs at least two options.', 'items.' + index + '.options'));
+            if (item?.type === 'multiple_select') {
+              if (!options.some((option) => option.is_correct)) issues.push(issue('correct_answer', 'Question ' + (index + 1) + ' needs at least one correct answer.', 'items.' + index + '.options'));
+            } else if (options.filter((option) => option.is_correct).length !== 1) {
+              issues.push(issue('correct_answer', 'Question ' + (index + 1) + ' needs exactly one correct answer.', 'items.' + index + '.options'));
+            }
+          }
+        });
+      }
+      return issues;
+    },
+    compile: (block, context) => {
+      const format = block.format || 'standard';
+      const passageParts = Array.isArray(block.passage_parts) ? block.passage_parts : [];
+      const paragraphs = Array.isArray(block.paragraph_options) ? block.paragraph_options : [];
+      const sections = Array.isArray(block.sections) ? block.sections : [];
+      let items = Array.isArray(block.items) ? block.items : [];
+      let passage = text(block.passage);
+
+      if (format === 'b2_part5') {
+        items = items.map((item, index) => ({
+          key: 'item_' + (index + 1),
+          type: 'multiple_choice',
+          prompt: text(item.prompt),
+          points: 2,
+          options: optionList(item.options).map((option, optionIndex) => ({ ...option, key: 'option_' + (optionIndex + 1) })),
+          feedback: text(item.feedback) || null,
+        }));
+      } else if (format === 'b2_part6') {
+        let gapCounter = 0;
+        passage = passageParts.map((part) => {
+          if (part.type === 'gap') {
+            gapCounter += 1;
+            return '[Gap ' + gapCounter + ']';
+          }
+          return text(part.text);
+        }).filter(Boolean).join('\n\n');
+        items = passageParts.filter((part) => part.type === 'gap').map((gap, index) => ({
+          key: 'gap_' + (index + 1),
+          type: 'multiple_choice',
+          prompt: 'Gap ' + (index + 1),
+          points: 2,
+          options: paragraphs.map((paragraph, optionIndex) => ({
+            key: 'paragraph_' + (optionIndex + 1),
+            text: 'Paragraph ' + String.fromCharCode(65 + optionIndex),
+            is_correct: optionIndex === gap.correct_option_index,
+          })),
+        }));
+      } else if (format === 'b2_part7') {
+        passage = sections.map((section, index) => (
+          String.fromCharCode(65 + index) + '. ' + [text(section.title), text(section.text)].filter(Boolean).join('\n')
+        )).join('\n\n');
+        items = items.map((item, index) => ({
+          key: 'item_' + (index + 1),
+          type: 'multiple_choice',
+          prompt: text(item.prompt),
+          points: 1,
+          options: sections.map((section, sectionIndex) => ({
+            key: 'section_' + (sectionIndex + 1),
+            text: String.fromCharCode(65 + sectionIndex),
+            is_correct: sectionIndex === item.correct_section_index,
+          })),
+          feedback: text(item.feedback) || null,
+        }));
+      } else {
+        items = items.map((item, index) => {
+          return {
+            key: 'item_' + (index + 1),
+            type: 'multiple_choice',
+            prompt: text(item.prompt),
+            points: Number(item.points) > 0 ? Number(item.points) : 1,
+            options: optionList(item.options).map((option, optionIndex) => ({ ...option, key: 'option_' + (optionIndex + 1) })),
+            feedback: text(item.feedback) || null,
+          };
+        });
+      }
+
+      return commonQuestion(block, context, {
+        type: 'reading_comprehension',
+        title: text(block.title) || 'Reading comprehension',
+        primary_skill: 'reading',
+        learning_objective: text(block.learning_objective) || (
+          format === 'b2_part6'
+            ? 'Understand text structure, cohesion and development in a B2 reading text.'
+            : format === 'b2_part7'
+              ? 'Locate and match specific information, opinion and attitude across a B2 text.'
+              : 'Understand main ideas, detail, attitude, purpose and implied meaning in a reading text.'
+        ),
+        prompt: text(block.prompt) || 'Read the text and answer the questions.',
+        instructions: text(block.instructions),
+        content: {
+          presentation: format,
+          title: text(block.title) || null,
+          passage,
+          source_note: text(block.source_note) || null,
+          items,
+          ...(format === 'b2_part6' ? {
+            passage_parts: passageParts.map((part, index) => part.type === 'gap'
+              ? { type: 'gap', key: part.key || 'gap_' + (index + 1) }
+              : { type: 'text', text: text(part.text) }),
+            paragraph_options: paragraphs.map((paragraph, index) => ({
+              key: 'paragraph_' + (index + 1),
+              label: String.fromCharCode(65 + index),
+              text: text(paragraph.text),
+            })),
+          } : {}),
+          ...(format === 'b2_part7' ? {
+            sections: sections.map((section, index) => ({
+              key: 'section_' + (index + 1),
+              label: String.fromCharCode(65 + index),
+              title: text(section.title) || null,
+              text: text(section.text),
+            })),
+          } : {}),
+        },
+        grading: { mode: 'per_item', weight: 1, nearly_correct_multiplier: 0.5 },
+      });
+    },
   }),
   multiple_choice: definition({
     type: 'multiple_choice', label: 'Multiple Choice · Single', category: 'practice',
@@ -736,10 +1367,18 @@ export function getStudioBlockDefinition(type) {
   return STUDIO_BLOCK_REGISTRY[type] || null;
 }
 
-export function createDefaultStudioBlock(type) {
+export function createDefaultStudioBlock(type, presetId = null) {
   const block = getStudioBlockDefinition(type);
   if (!block) throw new Error('Unsupported Studio block type: ' + type);
-  return { type, ...block.createDefault() };
+  const preset = presetId
+    ? (Array.isArray(block.presets) ? block.presets.find((item) => item.id === presetId) : null)
+    : null;
+  if (presetId && !preset) throw new Error('Unsupported Studio block preset: ' + type + '/' + presetId);
+  return {
+    type,
+    ...block.createDefault(),
+    ...cloneJsonValue(preset?.initial || {}),
+  };
 }
 
 export function normalizeStudioBlock(block) {

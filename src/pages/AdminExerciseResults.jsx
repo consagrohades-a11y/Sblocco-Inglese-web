@@ -66,11 +66,31 @@ function buildReviewState(detail) {
   return result;
 }
 
+function nestedAutomaticSummary(result) {
+  const items = Array.isArray(result?.correct_answer) ? result.correct_answer : [];
+  const statusItems = items.filter((entry) => entry && typeof entry === 'object' && entry.status);
+  if (!statusItems.length) return null;
+
+  const correct = statusItems.filter((entry) => entry.status === 'correct').length;
+  const nearly = statusItems.filter((entry) => entry.status === 'nearly_correct').length;
+  const incorrect = statusItems.filter((entry) => entry.status === 'incorrect').length;
+  const unanswered = statusItems.filter((entry) => entry.status === 'unanswered').length;
+
+  return {
+    total: statusItems.length,
+    correct,
+    nearly,
+    incorrect,
+    unanswered,
+  };
+}
+
 function QuestionReviewCard({ item, review, onChange }) {
   const automatic = item.automatic_result || item.result || {};
   const effective = item.result || {};
   const maximum = Number(effective.max_points ?? automatic.max_points ?? 0);
   const overridden = item.teacher_status_override !== null || item.teacher_points_override !== null;
+  const nestedSummary = nestedAutomaticSummary(automatic);
 
   return (
     <article className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-6">
@@ -80,7 +100,11 @@ function QuestionReviewCard({ item, review, onChange }) {
           <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">Versione {String(item.question_version_id).slice(0, 8)}</p>
         </div>
         <div className="flex flex-wrap gap-2 text-xs font-black">
-          <span className="rounded-full bg-linen px-3 py-1.5 text-ink/60 dark:bg-white/10 dark:text-white/60">Automatico: {resultLabels[automatic.status] || automatic.status}</span>
+          <span className="rounded-full bg-linen px-3 py-1.5 text-ink/60 dark:bg-white/10 dark:text-white/60">
+            {nestedSummary
+              ? `Automatico: ${nestedSummary.correct}/${nestedSummary.total} corrette`
+              : `Automatico: ${resultLabels[automatic.status] || automatic.status}`}
+          </span>
           {overridden ? <span className="rounded-full bg-clay/[0.08] px-3 py-1.5 text-clay dark:bg-coral/10 dark:text-coral">Override docente</span> : null}
         </div>
       </div>

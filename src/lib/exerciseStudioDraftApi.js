@@ -1,5 +1,5 @@
 import { supabase } from './supabaseClient.js';
-import { normalizeStudioDocument } from './exerciseStudioDocument.js';
+import { createStudioRemixDocument, normalizeStudioDocument } from './exerciseStudioDocument.js';
 
 function metadataFromDocument(document) {
   return {
@@ -100,6 +100,15 @@ export async function createStudioDraft(rawDocument, { origin = 'manual', folder
 
   if (error) throw error;
   return data;
+}
+
+export async function remixStudioDraft(draftId) {
+  const source = await loadStudioDraft(draftId);
+  const remixedDocument = createStudioRemixDocument(source.document);
+  return createStudioDraft(remixedDocument, {
+    origin: 'duplicate',
+    folderId: source.folder_id || null,
+  });
 }
 
 export async function saveStudioDraft(draftId, rawDocument) {

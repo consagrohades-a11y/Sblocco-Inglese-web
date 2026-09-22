@@ -59,6 +59,46 @@ function ProgressRing({ value, label = 'preparazione' }) {
   );
 }
 
+function assignmentResumeTarget(assignment) {
+  if (!assignment?.id) return null;
+  const resources = (assignment.assignment_resources || [])
+    .filter((resource) => !resource.collection_parent_resource_id)
+    .sort((a, b) => Number(a.sequence_index || 0) - Number(b.sequence_index || 0));
+  const progressRows = Array.isArray(assignment.learner_progress?.resources)
+    ? assignment.learner_progress.resources
+    : [];
+  const progressById = new Map(progressRows.map((row) => [row.resource_id, row]));
+  const active = resources.find((resource) => progressById.get(resource.id)?.state === 'in_progress')
+    || resources.find((resource) => progressById.get(resource.id)?.state === 'not_started')
+    || null;
+
+  if (!active) {
+    return {
+      to: '/assignments/' + assignment.id,
+      label: 'Continua',
+      resourceTitle: '',
+    };
+  }
+
+  let to = '/assignments/' + assignment.id;
+  if (active.resource_type === 'custom_exercise') {
+    to = '/exercises?assignmentId=' + assignment.id + '&resourceId=' + active.id;
+  } else if (active.resource_type === 'exercise_collection') {
+    to = '/collections?assignmentId=' + assignment.id + '&resourceId=' + active.id;
+  } else if (active.resource_type === 'practice_session') {
+    to = '/practice?assignmentId=' + assignment.id + '&resourceId=' + active.id;
+  } else if (active.route) {
+    to = active.route;
+  }
+
+  const state = progressById.get(active.id)?.state;
+  return {
+    to,
+    label: state === 'in_progress' ? 'Riprendi da qui' : 'Inizia da qui',
+    resourceTitle: active.title || '',
+  };
+}
+
 function GenericDashboard({ firstName }) {
   const [loading, setLoading] = useState(true);
   const [assignments, setAssignments] = useState([]);
@@ -69,7 +109,7 @@ function GenericDashboard({ firstName }) {
       setLoading(true);
       const assignmentResponse = await supabase
         .from('assignments')
-        .select('id, title, learner_note, status, deadline_at, estimated_minutes, created_at, display_order')
+        .select('id, title, learner_note, status, deadline_at, estimated_minutes, created_at, display_order, assignment_resources(id, title, resource_type, route, sequence_index, collection_parent_resource_id)')
         .in('status', ['published', 'completed'])
         .order('display_order', { ascending: true })
         .order('created_at', { ascending: false })
@@ -88,6 +128,7 @@ function GenericDashboard({ firstName }) {
   const open = assignments.filter((item) => stateOf(item) === 'published');
   const completed = assignments.filter((item) => ['completed', 'review'].includes(stateOf(item)));
   const primaryAssignment = open[0] || null;
+  const primaryResume = primaryAssignment ? assignmentResumeTarget(primaryAssignment) : null;
   const laterAssignments = open.slice(1, 3);
   const completion = assignments.length ? Math.round((completed.length / assignments.length) * 100) : 0;
   const destinations = [
@@ -149,8 +190,11 @@ function GenericDashboard({ firstName }) {
                 {primaryAssignment.estimated_minutes ? <span><Clock3 aria-hidden="true" />~ {primaryAssignment.estimated_minutes} min</span> : null}
                 {primaryAssignment.deadline_at ? <span><CalendarDays aria-hidden="true" />{formatDate(primaryAssignment.deadline_at)}</span> : null}
               </div>
-              <Link to={`/assignments/${primaryAssignment.id}`} className="learner-primary-button learner-continue-panel__action">
-                Continua <ArrowRight aria-hidden="true" size={16} />
+              {primaryResume?.resourceTitle ? (
+                <p className="learner-panel__eyebrow">Prossimo passo · {primaryResume.resourceTitle}</p>
+              ) : null}
+              <Link to={primaryResume?.to || ('/assignments/' + primaryAssignment.id)} className="learner-primary-button learner-continue-panel__action">
+                {primaryResume?.label || 'Continua'} <ArrowRight aria-hidden="true" size={16} />
               </Link>
             </>
           ) : (

@@ -6,6 +6,9 @@ import {
 } from '../src/lib/exerciseStudioBlockRegistry.js';
 import {
   EXERCISE_STUDIO_SCHEMA_VERSION,
+  addStudioBlock,
+  createStudioDocument,
+  createStudioRemixDocument,
   normalizeStudioDocument,
 } from '../src/lib/exerciseStudioDocument.js';
 import {
@@ -13,6 +16,7 @@ import {
   preflightStudioDocument,
 } from '../src/lib/exerciseStudioCompiler.js';
 import { stableShuffleWordOrderTokenInstances } from '../src/lib/wordOrderShuffle.js';
+import { stableShuffleChoiceOptions } from '../src/lib/choiceOptionShuffle.js';
 import { parseStudioImport } from '../src/lib/exerciseStudioImport.js';
 import { buildStudioActivitiesZip, buildStudioActivityExport } from '../src/lib/exerciseStudioExport.js';
 
@@ -31,6 +35,7 @@ const requiredTypes = [
   'media',
   'multiple_choice',
   'multiple_choice_set',
+  'reading_comprehension',
   'open_answer_set',
   'practice_selection',
   'translation',
@@ -48,6 +53,91 @@ for (const type of requiredTypes) {
   }
   assert.ok(definition.capabilities?.learnerRenderer, type + ' must declare its learner renderer.');
 }
+
+const authoredChoiceOptions = [
+  { key: 'option_1', text: 'A' },
+  { key: 'option_2', text: 'B' },
+  { key: 'option_3', text: 'C' },
+  { key: 'option_4', text: 'D' },
+];
+const shuffledChoiceA = stableShuffleChoiceOptions(authoredChoiceOptions, 'stable_attempt', 'attempt-1:item-1');
+const shuffledChoiceAAgain = stableShuffleChoiceOptions(authoredChoiceOptions, 'stable_attempt', 'attempt-1:item-1');
+const shuffledChoiceB = stableShuffleChoiceOptions(authoredChoiceOptions, 'stable_attempt', 'attempt-2:item-1');
+assert.deepEqual(
+  shuffledChoiceA.map((option) => option.key),
+  shuffledChoiceAAgain.map((option) => option.key),
+  'Multiple-choice option order must stay stable within one attempt.',
+);
+assert.notDeepEqual(
+  shuffledChoiceA.map((option) => option.key),
+  authoredChoiceOptions.map((option) => option.key),
+  'Stable shuffle must not accidentally preserve the authored option order.',
+);
+assert.ok(
+  shuffledChoiceB.some((option, index) => option.key !== shuffledChoiceA[index]?.key)
+    || shuffledChoiceB.length < 3,
+  'Different attempt seeds should be able to produce a different option order.',
+);
+
+const freshReadingActivity = createStudioDocument({
+  internal_title: '',
+  learner_title: '',
+  level: 'B2',
+  topic: 'b2_reading',
+  activity_type: 'lesson',
+  skills: ['reading'],
+});
+const part5PresetActivity = addStudioBlock(freshReadingActivity, 'reading_comprehension', {}, 'b2_part5');
+assert.equal(part5PresetActivity.blocks[0].format, 'b2_part5');
+assert.equal(part5PresetActivity.blocks[0].items.length, 6);
+assert.ok(part5PresetActivity.blocks[0].items.every((item) => item.options.length === 4));
+assert.ok(part5PresetActivity.blocks[0].items.every((item) => item.options.every((option) => option.is_correct === false)));
+assert.equal(part5PresetActivity.activity_type, 'lesson', 'Reading preset must not change teacher-owned activity type.');
+
+const part6PresetActivity = addStudioBlock(freshReadingActivity, 'reading_comprehension', {}, 'b2_part6');
+assert.equal(part6PresetActivity.blocks[0].passage_parts.filter((part) => part.type === 'gap').length, 6);
+assert.equal(part6PresetActivity.blocks[0].paragraph_options.length, 7);
+assert.ok(part6PresetActivity.blocks[0].passage_parts.filter((part) => part.type === 'gap').every((part) => part.correct_option_index === null));
+
+const part7PresetActivity = addStudioBlock(freshReadingActivity, 'reading_comprehension', {}, 'b2_part7');
+assert.equal(part7PresetActivity.blocks[0].sections.length, 4);
+assert.equal(part7PresetActivity.blocks[0].items.length, 10);
+assert.ok(part7PresetActivity.blocks[0].items.every((item) => item.correct_section_index === null));
+
+const remixSource = addStudioBlock(
+  createStudioDocument({
+    internal_title: 'B2 Reading Master',
+    learner_title: 'Reading Master',
+    level: 'B2',
+    topic: 'reading',
+    activity_type: 'lesson',
+    tags: ['reading', 'master'],
+  }),
+  'reading_comprehension',
+  {
+    title: 'Original reading',
+    format: 'b2_part5',
+    passage: 'Original content.',
+    items: Array.from({ length: 6 }, (_, index) => ({
+      prompt: 'Question ' + (index + 1),
+      options: Array.from({ length: 4 }, (_, optionIndex) => ({
+        text: 'Option ' + (optionIndex + 1),
+        is_correct: optionIndex === 0,
+      })),
+    })),
+  },
+);
+const remixA = createStudioRemixDocument(remixSource);
+const remixB = createStudioRemixDocument(remixSource);
+assert.notEqual(remixA.id, remixSource.id, 'Remix must generate a fresh activity ID.');
+assert.notEqual(remixA.internal_code, remixSource.internal_code, 'Remix must generate a fresh internal code.');
+assert.notEqual(remixA.blocks[0].id, remixSource.blocks[0].id, 'Remix must generate fresh block IDs.');
+assert.notEqual(remixA.id, remixB.id, 'Separate remixes must not share activity IDs.');
+assert.notEqual(remixA.blocks[0].id, remixB.blocks[0].id, 'Separate remixes must not share block IDs.');
+assert.equal(remixA.status, 'draft');
+assert.equal(remixA.learner_title, remixSource.learner_title);
+assert.equal(remixA.blocks[0].passage, remixSource.blocks[0].passage);
+assert.match(remixA.internal_title, /Remix$/);
 
 const raw = {
   schema_version: EXERCISE_STUDIO_SCHEMA_VERSION,
@@ -231,6 +321,7 @@ assert.deepEqual(questionTypes, [
 
 const groupedChoiceQuestion = preflight.runtime.exercise.sections[0].questions[3];
 assert.equal(groupedChoiceQuestion.content.presentation, 'choice_set');
+assert.equal(groupedChoiceQuestion.content.shuffle_options, 'stable_attempt');
 assert.equal(groupedChoiceQuestion.grading.mode, 'per_item');
 assert.equal(groupedChoiceQuestion.content.items.length, 2);
 assert.equal(groupedChoiceQuestion.content.items[0].key, 'item_1');
@@ -471,6 +562,125 @@ const invalidOpenAnswerSet = preflightStudioDocument({
 assert.equal(invalidOpenAnswerSet.valid, false);
 assert.ok(invalidOpenAnswerSet.errors.some((item) => item.code === 'accepted_answer'));
 
+const b2Part5 = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'B2 Part 5 reading',
+  learner_title: 'Close reading',
+  level: 'B2',
+  topic: 'reading',
+  blocks: [{
+    type: 'reading_comprehension',
+    format: 'b2_part5',
+    title: 'Working differently',
+    prompt: 'Read the text and choose the best answer.',
+    passage: 'A complete original B2 passage with enough evidence for every question.',
+    items: Array.from({ length: 6 }, (_, index) => ({
+      prompt: 'Question ' + (index + 1),
+      options: [
+        { text: 'A' + index, is_correct: index % 4 === 0 },
+        { text: 'B' + index, is_correct: index % 4 === 1 },
+        { text: 'C' + index, is_correct: index % 4 === 2 },
+        { text: 'D' + index, is_correct: index % 4 === 3 },
+      ],
+    })),
+  }],
+});
+assert.equal(b2Part5.valid, true, b2Part5.errors.map((item) => item.message).join('\n'));
+const b2Part5Question = b2Part5.runtime.exercise.sections[0].questions[0];
+assert.equal(b2Part5Question.type, 'reading_comprehension');
+assert.equal(b2Part5Question.content.presentation, 'b2_part5');
+assert.equal(b2Part5Question.content.items.length, 6);
+assert.ok(b2Part5Question.content.items.every((item) => item.points === 2));
+assert.ok(b2Part5Question.content.items.every((item) => item.options.length === 4));
+
+const part6Parts = [];
+for (let index = 0; index < 6; index += 1) {
+  part6Parts.push({ type: 'text', text: 'Visible section ' + (index + 1) + '.' });
+  part6Parts.push({ type: 'gap', correct_option_index: index });
+}
+part6Parts.push({ type: 'text', text: 'Final visible section.' });
+
+const b2Part6 = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'B2 Part 6 reading',
+  learner_title: 'Gapped text',
+  level: 'B2',
+  topic: 'reading',
+  blocks: [{
+    type: 'reading_comprehension',
+    format: 'b2_part6',
+    title: 'How ideas connect',
+    prompt: 'Choose the paragraph that fits each gap.',
+    passage_parts: part6Parts,
+    paragraph_options: Array.from({ length: 7 }, (_, index) => ({ text: 'Paragraph option ' + String.fromCharCode(65 + index) + '.' })),
+  }],
+});
+assert.equal(b2Part6.valid, true, b2Part6.errors.map((item) => item.message).join('\n'));
+const b2Part6Question = b2Part6.runtime.exercise.sections[0].questions[0];
+assert.equal(b2Part6Question.content.presentation, 'b2_part6');
+assert.equal(b2Part6Question.content.items.length, 6);
+assert.equal(b2Part6Question.content.paragraph_options.length, 7);
+assert.ok(b2Part6Question.content.items.every((item) => item.points === 2));
+assert.equal(b2Part6Question.content.items[0].options.filter((option) => option.is_correct).length, 1);
+
+const b2Part7 = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'B2 Part 7 reading',
+  learner_title: 'Multiple matching',
+  level: 'B2',
+  topic: 'reading',
+  blocks: [{
+    type: 'reading_comprehension',
+    format: 'b2_part7',
+    title: 'Different viewpoints',
+    prompt: 'Match each statement to a section.',
+    sections: [
+      { title: 'First person', text: 'Section A text with clear evidence.' },
+      { title: 'Second person', text: 'Section B text with clear evidence.' },
+      { title: 'Third person', text: 'Section C text with clear evidence.' },
+      { title: 'Fourth person', text: 'Section D text with clear evidence.' },
+    ],
+    items: Array.from({ length: 10 }, (_, index) => ({
+      prompt: 'Statement ' + (index + 1),
+      correct_section_index: index % 4,
+    })),
+  }],
+});
+assert.equal(b2Part7.valid, true, b2Part7.errors.map((item) => item.message).join('\n'));
+const b2Part7Question = b2Part7.runtime.exercise.sections[0].questions[0];
+assert.equal(b2Part7Question.content.presentation, 'b2_part7');
+assert.equal(b2Part7Question.content.sections.length, 4);
+assert.equal(b2Part7Question.content.items.length, 10);
+assert.ok(b2Part7Question.content.items.every((item) => item.points === 1));
+
+const unresolvedB2Answer = preflightStudioDocument({
+  schema_version: 1,
+  kind: 'learning_activity',
+  internal_title: 'Incomplete B2 Part 7',
+  learner_title: 'Incomplete matching',
+  level: 'B2',
+  topic: 'reading',
+  blocks: [{
+    type: 'reading_comprehension',
+    format: 'b2_part7',
+    prompt: 'Match.',
+    sections: [
+      { text: 'Section A.' },
+      { text: 'Section B.' },
+      { text: 'Section C.' },
+    ],
+    items: Array.from({ length: 10 }, (_, index) => ({
+      prompt: 'Statement ' + (index + 1),
+      correct_section_index: index === 0 ? null : index % 3,
+    })),
+  }],
+});
+assert.equal(unresolvedB2Answer.valid, false);
+assert.ok(unresolvedB2Answer.errors.some((item) => item.code === 'correct_answer'));
+
 const invalidVocabBankTag = preflightStudioDocument({
   schema_version: 1,
   kind: 'learning_activity',
@@ -577,6 +787,29 @@ assert.ok(
   'Gold assessment should include sentence construction.',
 );
 
+const goldReading = fs.readFileSync(
+  new URL('../public/templates/sblocco-learning-studio/gold-benchmark-b2-reading-exam-style-v1.json', import.meta.url),
+  'utf8',
+);
+const importedGoldReading = parseStudioImport(goldReading);
+assert.equal(
+  importedGoldReading.publishable,
+  true,
+  importedGoldReading.errors.map((item) => item.message).join('\n'),
+);
+assert.equal(importedGoldReading.needs_attention_blocks, 0);
+assert.equal(importedGoldReading.document.level, 'B2');
+assert.equal(importedGoldReading.document.blocks.length, 3);
+assert.deepEqual(
+  importedGoldReading.document.blocks.map((block) => block.type),
+  ['reading_comprehension', 'reading_comprehension', 'reading_comprehension'],
+);
+assert.deepEqual(
+  importedGoldReading.document.blocks.map((block) => block.format),
+  ['b2_part5', 'b2_part6', 'b2_part7'],
+);
+assertNoEmDashTitles(importedGoldReading.document, 'Gold B2 reading');
+
 const goldListening = fs.readFileSync(
   new URL('../public/templates/sblocco-learning-studio/gold-benchmark-b2-listening-vocabulary-chunks-v1.json', import.meta.url),
   'utf8',
@@ -609,6 +842,25 @@ assert.ok(
   importedGoldListening.document.blocks.some((block) => block.type === 'practice_selection'),
   'Gold listening should support learner vocabulary-bank selection.',
 );
+
+const goldReading = fs.readFileSync(
+  new URL('../public/templates/sblocco-learning-studio/gold-benchmark-b2-reading-exam-style-v1.json', import.meta.url),
+  'utf8',
+);
+const importedGoldReading = parseStudioImport(goldReading);
+assert.equal(
+  importedGoldReading.publishable,
+  true,
+  importedGoldReading.errors.map((item) => item.message).join('\n'),
+);
+assert.equal(importedGoldReading.document.level, 'B2');
+assert.equal(importedGoldReading.document.activity_type, 'assessment');
+assert.equal(importedGoldReading.document.blocks.length, 3);
+assert.deepEqual(
+  importedGoldReading.document.blocks.map((block) => block.format),
+  ['b2_part5', 'b2_part6', 'b2_part7'],
+);
+assertNoEmDashTitles(importedGoldReading.document, 'Gold B2 reading');
 
 const hostileTechnicalFields = parseStudioImport(JSON.stringify({
   _template: {
@@ -737,3 +989,109 @@ assert.equal(partialImport.publishable, false);
 assert.ok(partialImport.errors.some((item) => item.code === 'correct_answer'));
 
 console.log('Learning Studio foundation validated: registry, compiler, safe JSON import, automatic technical repair and publish preflight are coherent.');
+
+
+const quickAssignPanelSource = fs.readFileSync(
+  new URL('../src/components/admin/exercise-studio/StudioQuickAssignPanel.jsx', import.meta.url),
+  'utf8',
+);
+const quickAssignApiSource = fs.readFileSync(
+  new URL('../src/lib/exerciseStudioAssignmentApi.js', import.meta.url),
+  'utf8',
+);
+const retryGuardMigrationSource = fs.readFileSync(
+  new URL('../supabase/migrations/20260922193603_assignment_retry_guard.sql', import.meta.url),
+  'utf8',
+);
+const comprehensionSummaryMigrationSource = fs.readFileSync(
+  new URL('../supabase/migrations/20260922193322_comprehension_item_result_summaries.sql', import.meta.url),
+  'utf8',
+);
+
+assert.match(
+  quickAssignPanelSource,
+  /useState\('submitted'\)/,
+  'Studio Quick Assign must default completion to first submission.',
+);
+assert.match(
+  quickAssignApiSource,
+  /completionRule = 'submitted'/,
+  'Studio assignment API must default completion to first submission.',
+);
+assert.match(
+  quickAssignPanelSource,
+  /retryRequiredByAttempts/,
+  'Studio Quick Assign must auto-enable retry for multi-attempt completion.',
+);
+assert.match(
+  retryGuardMigrationSource,
+  /assignment_resources_retry_guard/,
+  'Database must guard multi-attempt assignments against disabled retry.',
+);
+assert.match(
+  comprehensionSummaryMigrationSource,
+  /exercise_builder_result_counts/,
+  'Comprehension summaries must count inner items.',
+);
+assert.match(
+  comprehensionSummaryMigrationSource,
+  /reading_comprehension.*listening_comprehension/,
+  'Inner-item summaries must cover reading and listening comprehension.',
+);
+
+
+const assignmentProgressRetryMigrationSource = fs.readFileSync(
+  new URL('../supabase/migrations/20260922194016_assignment_progress_retry_stability.sql', import.meta.url),
+  'utf8',
+);
+const assignmentProgressApiSource = fs.readFileSync(
+  new URL('../src/lib/assignmentProgressApi.js', import.meta.url),
+  'utf8',
+);
+const exercisePlayerSource = fs.readFileSync(
+  new URL('../src/pages/ExercisePlayerV2.jsx', import.meta.url),
+  'utf8',
+);
+
+assert.match(
+  assignmentProgressRetryMigrationSource,
+  /v_latest_submitted/,
+  'Assignment progress must retain the latest submitted attempt while a retry is in progress.',
+);
+assert.match(
+  assignmentProgressRetryMigrationSource,
+  /v_completion_rule = 'submitted' and v_submitted_count >= 1/,
+  'Submitted completion must remain monotonic across retries.',
+);
+assert.ok(
+  assignmentProgressApiSource.indexOf("if (waitingForReview && allDone) return 'review';")
+    < assignmentProgressApiSource.indexOf("if (assignment?.status === 'completed') return 'completed';"),
+  'Learner summary state must preserve a new review state even after prior completion.',
+);
+assert.match(
+  exercisePlayerSource,
+  /obiettivo non raggiunto/,
+  'Learner result UI must explain an unmet score goal.',
+);
+assert.match(
+  exercisePlayerSource,
+  /Inizia tentativo/,
+  'Learner result UI must explain required retry progression.',
+);
+
+
+assert.match(
+  exercisePlayerSource,
+  /function answerMissingCount\(answer, question\)/,
+  'Learner player must count unanswered inner comprehension items.',
+);
+assert.match(
+  exercisePlayerSource,
+  /reading_comprehension.*listening_comprehension/s,
+  'Inner unanswered counting must cover reading and listening comprehension.',
+);
+assert.match(
+  exercisePlayerSource,
+  /risposte.*in bianco/,
+  'Learner must be warned about unanswered comprehension subitems before continuing.',
+);

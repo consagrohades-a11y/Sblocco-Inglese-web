@@ -62,28 +62,47 @@ function hasMeaningfulValue(value) {
   return Boolean(String(value).trim());
 }
 
-function answerIsEmpty(answer, question) {
+function answerMissingCount(answer, question) {
   const type = question?.type;
-  if (type === "content_block") return false;
-  if (type === "audio_response") return !answer?.file_id;
+  if (type === "content_block") return 0;
+  if (type === "audio_response") return answer?.file_id ? 0 : 1;
+
   if (type === "dialogue_roleplay") {
-    if (!answer?.role_key) return true;
+    if (!answer?.role_key) return 1;
     if (question?.content?.response_mode !== "audio_per_turn")
-      return !hasMeaningfulValue(answer?.turns);
+      return hasMeaningfulValue(answer?.turns) ? 0 : 1;
+
     const learnerTurns = (question.content.turns || []).filter(
       (turn) =>
-        turn.speaker === answer.role_key && turn.learner_response !== false,
+        turn.speaker === answer.role_key &&
+        turn.learner_response !== false &&
+        turn.required !== false,
     );
-    if (!learnerTurns.length) return true;
-    return learnerTurns.some(
-      (turn) => turn.required !== false && !answer?.turns?.[turn.key]?.file_id,
-    );
+    if (!learnerTurns.length) return 1;
+    return learnerTurns.filter(
+      (turn) => !answer?.turns?.[turn.key]?.file_id,
+    ).length;
   }
-  if (type === "reading_comprehension") {
+
+  if (type === "reading_comprehension" || type === "listening_comprehension") {
     const items = question?.content?.items || [];
-    return !items.some((item) => hasMeaningfulValue(answer?.[item.key]));
+    if (!items.length) return hasMeaningfulValue(answer) ? 0 : 1;
+    return items.filter((item) => !hasMeaningfulValue(answer?.[item.key])).length;
   }
-  return !hasMeaningfulValue(answer);
+
+  return hasMeaningfulValue(answer) ? 0 : 1;
+}
+
+function answerIsEmpty(answer, question) {
+  const type = question?.type;
+
+  if (type === "reading_comprehension" || type === "listening_comprehension") {
+    const items = question?.content?.items || [];
+    if (!items.length) return answerMissingCount(answer, question) > 0;
+    return items.every((item) => !hasMeaningfulValue(answer?.[item.key]));
+  }
+
+  return answerMissingCount(answer, question) > 0;
 }
 
 function transcriptBeforeQuestion(payload, targetSectionIndex, targetQuestionIndex) {
@@ -208,6 +227,33 @@ function ResultBreakdown({ summary }) {
   );
 }
 
+function b2ReadingPartScores(payload) {
+  const rows = [];
+  (payload?.sections || []).forEach((section) => {
+    (section.questions || []).forEach((item) => {
+      const presentation = item?.question?.content?.presentation;
+      if (!['b2_part5', 'b2_part6', 'b2_part7'].includes(presentation)) return;
+      const result = item?.result || {};
+      rows.push({
+        id: item.id || presentation,
+        label: presentation === 'b2_part5'
+          ? 'Part 5 · Multiple choice'
+          : presentation === 'b2_part6'
+            ? 'Part 6 · Gapped text'
+            : 'Part 7 · Multiple matching',
+        shortLabel: presentation === 'b2_part5'
+          ? 'Part 5'
+          : presentation === 'b2_part6'
+            ? 'Part 6'
+            : 'Part 7',
+        earned: Number(result.earned_points || 0),
+        max: Number(result.max_points || 0),
+      });
+    });
+  });
+  return rows;
+}
+
 function FinalResult({ payload, assignmentId, resourceId }) {
   const attempt = payload.attempt;
   const settings = payload.exercise.settings || {};
@@ -217,11 +263,39 @@ function FinalResult({ payload, assignmentId, resourceId }) {
   const awaitingPublishedReview =
     pending > 0 || attempt.review_status === "reviewed";
   const hasAutoPoints = Number(attempt.max_points || 0) > 0;
+  const completion = attempt.completion || {};
+  const readingPartScores = b2ReadingPartScores(payload);
+  const completionRule = completion.rule || "submitted";
+  const scoreValue = attempt.score === null ? null : Number(attempt.score || 0);
   const goalScore =
-    attempt.completion?.rule === "passed" &&
-    attempt.completion.required_score != null
-      ? Number(attempt.completion.required_score)
+    completionRule === "passed" && completion.required_score != null
+      ? Number(completion.required_score)
       : null;
+  const requiredAttempts =
+    completionRule === "attempts" && completion.required_attempts != null
+      ? Number(completion.required_attempts)
+      : null;
+  const scoreGoalMet =
+    goalScore === null || (scoreValue !== null && scoreValue >= goalScore);
+  const attemptsGoalMet =
+    requiredAttempts === null ||
+    Number(attempt.attempt_number || 0) >= requiredAttempts;
+  const remainingAttempts =
+    requiredAttempts === null
+      ? 0
+      : Math.max(0, requiredAttempts - Number(attempt.attempt_number || 0));
+  const completionGoalMet =
+    completionRule === "submitted" ||
+    (completionRule === "passed" && scoreGoalMet) ||
+    (completionRule === "attempts" && attemptsGoalMet);
+  const needsMoreWork = !awaitingPublishedReview && !completionGoalMet;
+  const resultBadgeLabel = awaitingPublishedReview
+    ? "Consegnato, valutazione in arrivo"
+    : completionRule === "passed" && !scoreGoalMet
+      ? "Consegnato · obiettivo non raggiunto"
+      : completionRule === "attempts" && !attemptsGoalMet
+        ? `Tentativo ${attempt.attempt_number} completato`
+        : "Esercizio completato";
 
   return (
     <section className="learner-exercise-page section-shell py-10 lg:py-14">
@@ -229,20 +303,50 @@ function FinalResult({ payload, assignmentId, resourceId }) {
       <div className="mx-auto max-w-4xl">
         <article className="exercise-activity p-7 sm:p-10">
           <span
-            className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${awaitingPublishedReview ? "bg-sky-100 text-sky-800 dark:bg-sky-300/10 dark:text-sky-200" : "bg-blush text-clay dark:bg-coral/10 dark:text-[#f7a98d]"}`}
+            className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+              awaitingPublishedReview
+                ? "bg-sky-100 text-sky-800 dark:bg-sky-300/10 dark:text-sky-200"
+                : needsMoreWork
+                  ? "bg-amber-100 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100"
+                  : "bg-blush text-clay dark:bg-coral/10 dark:text-[#f7a98d]"
+            }`}
           >
             {awaitingPublishedReview ? (
               <Clock3 className="h-4 w-4" />
+            ) : needsMoreWork ? (
+              <CircleAlert className="h-4 w-4" />
             ) : (
               <CheckCircle2 className="h-4 w-4" />
             )}
-            {awaitingPublishedReview
-              ? "Consegnato, valutazione in arrivo"
-              : "Esercizio completato"}
+            {resultBadgeLabel}
           </span>
           <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-5xl">
             {payload.exercise.title}
           </h1>
+
+          {!awaitingPublishedReview && completionRule === "passed" && !scoreGoalMet ? (
+            <div className="mt-7 rounded-2xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-300/20 dark:bg-amber-300/[0.07]">
+              <p className="text-lg font-black text-amber-950 dark:text-amber-100">
+                Hai completato il tentativo, ma non hai ancora raggiunto l’obiettivo
+              </p>
+              <p className="mt-2 text-sm font-semibold leading-6 text-amber-900/75 dark:text-amber-100/70">
+                Hai ottenuto {Math.round(scoreValue || 0)}%. Per completare questa attività serve almeno {Math.round(goalScore)}%.
+                {settings.allow_retry !== false ? " Puoi riprovare quando vuoi." : ""}
+              </p>
+            </div>
+          ) : null}
+
+          {!awaitingPublishedReview && completionRule === "attempts" && !attemptsGoalMet ? (
+            <div className="mt-7 rounded-2xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-300/20 dark:bg-amber-300/[0.07]">
+              <p className="text-lg font-black text-amber-950 dark:text-amber-100">
+                Tentativo {attempt.attempt_number} completato
+              </p>
+              <p className="mt-2 text-sm font-semibold leading-6 text-amber-900/75 dark:text-amber-100/70">
+                Questa attività richiede {requiredAttempts} tentativi. Te ne {remainingAttempts === 1 ? "manca" : "mancano"} {remainingAttempts}.
+              </p>
+            </div>
+          ) : null}
+
           {awaitingPublishedReview ? (
             <div className="mt-7 border-y border-sky-200 bg-sky-50 p-5 dark:border-sky-300/20 dark:bg-sky-400/[0.07]">
               <p className="text-lg font-black text-sky-950 dark:text-sky-100">
@@ -279,6 +383,23 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                 ) : null}
               </div>
               <ResultBreakdown summary={summary} />
+              {readingPartScores.length ? (
+                <div className="mt-5 grid gap-2 sm:grid-cols-3">
+                  {readingPartScores.map((part) => {
+                    const percent = part.max > 0 ? Math.round((part.earned / part.max) * 100) : 0;
+                    return (
+                      <div key={part.id} className="rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-white/[0.04]">
+                        <p className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">{part.shortLabel}</p>
+                        <p className="mt-1 text-sm font-black text-ink dark:text-white">{part.label.split(' · ')[1]}</p>
+                        <div className="mt-3 flex items-end justify-between gap-3">
+                          <span className="text-2xl font-black text-ink dark:text-white">{part.earned.toFixed(0)}<span className="text-sm text-ink/35 dark:text-white/35">/{part.max.toFixed(0)}</span></span>
+                          <span className="text-xs font-black text-ink/45 dark:text-white/45">{percent}%</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : null}
               <p className="mt-3 text-xs font-semibold leading-5 text-ink/60 dark:text-white/60">
                 Il punteggio è la percentuale di punti ottenuti sul totale: ogni
                 attività può valere più punti e le risposte quasi corrette
@@ -323,7 +444,11 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                 to={`/exercises?assignmentId=${assignmentId}&resourceId=${resourceId}&newAttempt=1`}
                 className="rounded-full border border-clay/20 bg-white px-5 py-3 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"
               >
-                Nuovo tentativo
+                {completionRule === "passed" && !scoreGoalMet
+                  ? "Riprova per raggiungere l’obiettivo"
+                  : completionRule === "attempts" && !attemptsGoalMet
+                    ? `Inizia tentativo ${Number(attempt.attempt_number || 0) + 1}`
+                    : "Nuovo tentativo"}
               </Link>
             ) : null}
             <Link
@@ -573,13 +698,14 @@ export default function ExercisePlayerV2() {
 
   async function finishSection() {
     if (!currentSection || busy) return;
-    const unanswered = currentSection.questions.filter((item) =>
-      answerIsEmpty(item.answer, item.question),
-    ).length;
+    const unanswered = currentSection.questions.reduce(
+      (sum, item) => sum + answerMissingCount(item.answer, item.question),
+      0,
+    );
     if (
       unanswered &&
       !window.confirm(
-        `Hai lasciato ${unanswered} ${unanswered === 1 ? "attività" : "attività"} senza risposta. Vuoi continuare?`,
+        `Hai lasciato ${unanswered} ${unanswered === 1 ? "risposta" : "risposte"} in bianco. Vuoi continuare comunque?`,
       )
     )
       return;
