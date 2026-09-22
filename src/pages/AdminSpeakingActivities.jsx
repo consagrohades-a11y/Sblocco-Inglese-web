@@ -2,11 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Clock3,
+  Download,
   Eye,
   ExternalLink,
   Heart,
   Pencil,
   Plus,
+  Upload,
   RefreshCw,
   Search,
   Sparkles,
@@ -16,6 +18,8 @@ import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import SpeakingActivityEditorModal from '../components/admin/SpeakingActivityEditorModal.jsx';
 import SpeakingLiveController from '../components/admin/SpeakingLiveController.jsx';
+import SpeakingItemImportModal from '../components/admin/SpeakingItemImportModal.jsx';
+import SpeakingPromptContent from '../components/speaking/SpeakingPromptContent.jsx';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import { loadAdminLearners } from '../lib/adminLearnersApi.js';
 import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
@@ -79,7 +83,7 @@ function PreviewModal({ activity, onClose }) {
                 <p className="text-xs font-black uppercase tracking-[0.15em] text-white/55">Student screen</p>
                 <p className="text-xs font-black text-white/55">{items.length ? `${index + 1}/${items.length}` : '0/0'}</p>
               </div>
-              <p className="mt-7 whitespace-pre-wrap text-3xl font-black leading-tight sm:text-4xl">{current?.text || 'Nessun item'}</p>
+              <div className="mt-7 grid min-h-[18rem] place-items-center"><SpeakingPromptContent item={current || { text: 'Nessun item' }} style={activity.presenter_style} compact /></div>
               {current?.student_support ? <div className="mt-7 rounded-2xl border border-white/15 bg-white/[0.07] p-4"><p className="text-xs font-black uppercase tracking-wide text-white/50">Support</p><p className="mt-2 text-sm font-bold leading-6">{current.student_support}</p></div> : null}
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -347,6 +351,7 @@ export default function AdminSpeakingActivities() {
   const [editingNew, setEditingNew] = useState(false);
   const [presenting, setPresenting] = useState(null);
   const [liveSession, setLiveSession] = useState(null);
+  const [importOpen, setImportOpen] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -399,6 +404,11 @@ export default function AdminSpeakingActivities() {
     setEditingNew(false);
   }
 
+  function handleImported(savedActivities) {
+    const savedById = new Map(asArray(savedActivities).map((activity) => [activity.id, activity]));
+    setActivities((current) => current.map((activity) => savedById.get(activity.id) || activity));
+  }
+
   function clearFocusedLearner() {
     const next = new URLSearchParams(searchParams);
     next.delete('learner');
@@ -416,6 +426,8 @@ export default function AdminSpeakingActivities() {
             description="Crea una volta, riusa in lezione. Ogni attività può contenere molti item, e ogni item può appartenere a più livelli."
             actions={(
               <>
+                <a href="/templates/sblocco-speaking-authoring-kit-v1.json" download className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black dark:border-white/15 dark:bg-white/[0.06]"><Download className="h-4 w-4" /> Authoring JSON</a>
+                <button type="button" onClick={() => setImportOpen(true)} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-clay/30 bg-blush/40 px-4 py-2 text-xs font-black text-clay dark:border-coral/30 dark:bg-coral/[0.08] dark:text-coral"><Upload className="h-4 w-4" /> Importa item</button>
                 <button type="button" onClick={() => setEditingNew(true)} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full bg-ink px-4 py-2 text-xs font-black text-white dark:bg-clay"><Plus className="h-4 w-4" /> Nuova attività</button>
                 <button type="button" onClick={load} disabled={loading} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black dark:border-white/15 dark:bg-white/[0.06]"><RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} /> Aggiorna</button>
               </>
@@ -492,6 +504,7 @@ export default function AdminSpeakingActivities() {
         onStartLive={setLiveSession}
       />
       <SpeakingLiveController session={liveSession} onEnd={() => setLiveSession(null)} />
+      {importOpen ? <SpeakingItemImportModal activities={activities} onClose={() => setImportOpen(false)} onImported={handleImported} /> : null}
       {(editor || editingNew) ? <SpeakingActivityEditorModal activity={editingNew ? null : editor} catalogActivities={activities} onClose={() => { setEditor(null); setEditingNew(false); }} onSaved={handleSaved} /> : null}
     </>
   );

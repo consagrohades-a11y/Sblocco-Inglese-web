@@ -10,7 +10,7 @@ const studioEditor = read('src/components/admin/exercise-studio/StudioBlockEdito
 const registry = read('src/lib/exerciseStudioBlockRegistry.js');
 const replay = read('src/components/vocabulary/VocabularyReplay.jsx');
 const vocabApi = read('src/lib/learnerVocabularyBankApi.js');
-const authoringKit = read('public/templates/sblocco-learning-studio/universal-ai-authoring-kit-v1.md');
+const authoringKit = read('public/templates/sblocco-learning-studio/universal-ai-authoring-kit-v1.json');
 const migration = read('supabase/migrations/20260922133000_vocabulary_context_pools.sql');
 
 assert.ok(documentModel.includes("'vocabulary_exercise'"), 'Studio must expose vocabulary_exercise as a first-class activity type.');

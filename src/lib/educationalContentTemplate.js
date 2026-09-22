@@ -8,11 +8,14 @@ export const educationalContentBlockAuthoringGuide = {
   workflow: [
     'Read this entire _template object before generating content.',
     'Use the pedagogical contract that matches question.content.variant.',
-    'Return one complete JSON object with the same top-level structure.',
+    'Create and attach one downloadable .json file with the same top-level structure. Do not paste the JSON payload into chat.',
     'Keep _template in the returned file so the template remains self-contained when downloaded or reused.',
   ],
   generation_contract: {
     output: 'valid_json_only',
+    delivery: 'downloadable_json_file_only',
+    file_extension: '.json',
+    chat_output: 'no_payload_or_commentary',
     markdown_fences: false,
     comments: false,
     preserve_top_level_metadata: true,

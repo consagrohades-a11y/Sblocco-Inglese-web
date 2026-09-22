@@ -158,7 +158,7 @@ export default function AdminNotifications() {
                       key={notification.id}
                       type="button"
                       onClick={() => openNotification(notification)}
-                      className={`flex w-full items-start gap-4 px-5 py-5 text-left transition hover:bg-linen/45 dark:hover:bg-white/[0.04] sm:px-6 ${notification.read_at ? 'opacity-65' : notification.notification_type === 'learner_signed_up' ? 'bg-clay/[0.08] dark:bg-clay/[0.09]' : 'bg-clay/[0.035] dark:bg-clay/[0.045]'}`}
+                      className={`flex w-full items-start gap-4 px-5 py-5 text-left transition hover:bg-linen/45 dark:hover:bg-white/[0.04] sm:px-6 ${notification.read_at ? 'bg-white dark:bg-surface-900' : notification.notification_type === 'learner_signed_up' ? 'bg-clay/[0.08] dark:bg-clay/[0.09]' : 'bg-clay/[0.035] dark:bg-clay/[0.045]'}`}
                     >
                       <NotificationAvatar notification={notification} />
                       <span className="min-w-0 flex-1">
@@ -200,7 +200,7 @@ export default function AdminNotifications() {
                           {formatDate(notification.created_at)}
                         </span>
                       </span>
-                      <ChevronRight className="mt-3 h-4 w-4 shrink-0 text-ink/30 dark:text-white/30" aria-hidden="true" />
+                      <ChevronRight className="mt-3 h-4 w-4 shrink-0 text-ink/45 dark:text-white/45" aria-hidden="true" />
                     </button>
                   );
                 })}

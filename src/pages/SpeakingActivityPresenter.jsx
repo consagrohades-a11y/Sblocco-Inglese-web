@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Dices, Sparkles } from 'lucide-react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
+import SpeakingPromptContent from '../components/speaking/SpeakingPromptContent.jsx';
 import { connectSpeakingControl } from '../lib/speakingLiveControl.js';
 import { loadAdminLearnerDetail } from '../lib/adminLearnersApi.js';
 import {
@@ -446,8 +447,8 @@ export default function SpeakingActivityPresenter() {
           ) : (
             <div className="mt-7 grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(20rem,0.65fr)]">
               <section className="min-w-0">
-                <div className="rounded-[2rem] bg-ink p-6 text-white sm:p-10">
-                  <PromptBody item={current} style={activity.presenter_style} />
+                <div className="grid min-h-[22rem] place-items-center rounded-[2rem] bg-ink p-6 text-center text-white sm:p-10">
+                  <div className="w-full"><SpeakingPromptContent item={current} style={activity.presenter_style} /></div>
                   {current.student_support && supportVisible ? (
                     <div className="mt-8 rounded-2xl border border-white/15 bg-white/[0.07] p-5">
                       <p className="text-xs font-black uppercase tracking-[0.15em] text-white/50">Need a little help?</p>
