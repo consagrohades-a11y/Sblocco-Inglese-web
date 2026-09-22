@@ -51,8 +51,14 @@ const notifications = read('src/pages/AdminNotifications.jsx');
 assert.ok(speakingLibrary.includes('sblocco-speaking-authoring-kit-v1.json'), 'Speaking library must expose the downloadable JSON authoring kit.');
 assert.ok(speakingLibrary.includes('SpeakingItemImportModal'), 'Speaking library must expose file import.');
 assert.ok(speakingImport.includes('accept=".json,application/json,text/json"'), 'Speaking importer must accept JSON files.');
-assert.ok(speakingImport.includes('prompts = [...asArray(current.prompts), ...plan.items]'), 'Speaking import must append rather than replace existing items.');
+assert.ok(
+  speakingImport.includes('prompts = [...asArray(current.prompts), ...selectedItems]')
+    || speakingImport.includes('prompts = [...asArray(current.prompts), ...plan.items]'),
+  'Speaking import must append selected items rather than replace existing items.',
+);
 assert.ok(speakingImport.includes('analyseSpeakingItemSet'), 'Speaking import must run the duplicate/context quality gate.');
+assert.ok(speakingImport.includes("'Salta'"), 'Speaking import must let admins skip individual items.');
+assert.ok(speakingImport.includes('Salta tutti i duplicati'), 'Speaking import must support bulk skipping blocking duplicates.');
 
 assert.ok(speakingPrompt.includes('splitBadGood'), 'Speaking prompt renderer must support Bad/Good split cards.');
 assert.ok(speakingPrompt.includes('text-center'), 'Speaking prompts must remain centered.');
