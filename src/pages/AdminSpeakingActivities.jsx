@@ -272,6 +272,7 @@ export default function AdminSpeakingActivities() {
   const [preview, setPreview] = useState(null);
   const [editor, setEditor] = useState(null);
   const [editingNew, setEditingNew] = useState(false);
+  const [openGeneratorOnEdit, setOpenGeneratorOnEdit] = useState(false);
   const [presenting, setPresenting] = useState(null);
 
   async function load() {
@@ -323,6 +324,7 @@ export default function AdminSpeakingActivities() {
     });
     setEditor(null);
     setEditingNew(false);
+    setOpenGeneratorOnEdit(false);
   }
 
   return (
@@ -373,7 +375,8 @@ export default function AdminSpeakingActivities() {
 
                     <div className="mt-auto grid grid-cols-2 gap-2 pt-6">
                       <button type="button" onClick={() => setPreview(activity)} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-ink/15 px-4 text-xs font-black dark:border-white/15"><Eye className="h-4 w-4" /> Anteprima</button>
-                      <button type="button" onClick={() => setEditor(activity)} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-ink/15 px-4 text-xs font-black dark:border-white/15"><Pencil className="h-4 w-4" /> Modifica</button>
+                      <button type="button" onClick={() => { setOpenGeneratorOnEdit(false); setEditor(activity); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-ink/15 px-4 text-xs font-black dark:border-white/15"><Pencil className="h-4 w-4" /> Modifica</button>
+                      <button type="button" onClick={() => { setOpenGeneratorOnEdit(true); setEditor(activity); }} className="focus-ring col-span-2 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-clay/30 bg-blush/40 px-4 text-xs font-black text-clay dark:border-coral/30 dark:bg-coral/[0.07] dark:text-coral"><Sparkles className="h-4 w-4" /> Genera nuovi item</button>
                       <button type="button" onClick={() => setPresenting(activity)} className="focus-ring col-span-2 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-ink px-5 text-sm font-black text-white dark:bg-clay"><ExternalLink className="h-4 w-4" /> Presenta in nuova finestra</button>
                     </div>
                   </article>
@@ -388,7 +391,7 @@ export default function AdminSpeakingActivities() {
 
       <PreviewModal activity={preview} onClose={() => setPreview(null)} />
       <PresentationLauncher activity={presenting} onClose={() => setPresenting(null)} />
-      {(editor || editingNew) ? <SpeakingActivityEditorModal activity={editingNew ? null : editor} catalogActivities={activities} onClose={() => { setEditor(null); setEditingNew(false); }} onSaved={handleSaved} /> : null}
+      {(editor || editingNew) ? <SpeakingActivityEditorModal activity={editingNew ? null : editor} catalogActivities={activities} openGenerator={openGeneratorOnEdit} onClose={() => { setEditor(null); setEditingNew(false); setOpenGeneratorOnEdit(false); }} onSaved={handleSaved} /> : null}
     </>
   );
 }

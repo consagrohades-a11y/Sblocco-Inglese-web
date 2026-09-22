@@ -44,3 +44,42 @@ export async function updateSpeakingActivity(id, patch) {
   if (error) throw error;
   return data;
 }
+
+
+export async function generateSpeakingItems({
+  activity,
+  levels,
+  count,
+  contexts = [],
+  extraDirection = '',
+  catalogue = [],
+}) {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError) throw sessionError;
+
+  const accessToken = sessionData?.session?.access_token;
+  if (!accessToken) throw new Error('Sessione admin non disponibile.');
+
+  const response = await fetch('/api/speaking-items-generate', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      activity,
+      levels,
+      count,
+      contexts,
+      extraDirection,
+      catalogue,
+    }),
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(payload?.error || 'AI generation failed.');
+  }
+
+  return payload;
+}
