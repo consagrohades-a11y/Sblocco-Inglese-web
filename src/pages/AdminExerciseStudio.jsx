@@ -50,6 +50,7 @@ import { deleteStudioContentMedia } from '../lib/exerciseStudioMediaApi.js';
 const LEVELS = ['A0', 'A1', 'A1+', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2', 'Mixed'];
 const ACTIVITY_TYPES = [
   ['exercise', 'Exercise'],
+  ['vocabulary_exercise', 'Vocabulary exercise'],
   ['lesson', 'Lesson'],
   ['mini_course', 'Mini-course'],
   ['listening_lesson', 'Listening lesson'],
