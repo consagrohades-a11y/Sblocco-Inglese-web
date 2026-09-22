@@ -62,7 +62,7 @@ export default function StudioQuickAssignPanel({
   const filteredLearners = useMemo(() => {
     const needle = search.trim().toLocaleLowerCase();
     if (!needle) return learners;
-    return learners.filter((learner) => [learner.display_name, learner.email]
+    return learners.filter((learner) => [learner.display_name, learner.email, learner.admin_context_note]
       .filter(Boolean)
       .join(' ')
       .toLocaleLowerCase()
@@ -230,6 +230,7 @@ export default function StudioQuickAssignPanel({
                       >
                         <span className="min-w-0">
                           <span className="block truncate text-sm font-black text-ink dark:text-white">{learner.display_name || learner.email || 'Learner'}</span>
+                          {learner.admin_context_note ? <span className="mt-0.5 block line-clamp-2 text-xs font-bold leading-5 text-orange-700 dark:text-orange-300">{learner.admin_context_note}</span> : null}
                           {learner.email && learner.display_name ? <span className="mt-0.5 block truncate text-xs font-semibold text-ink/45 dark:text-white/45">{learner.email}</span> : null}
                         </span>
                         <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border ${active ? 'border-orange-500 bg-orange-500 text-white' : 'border-ink/15 dark:border-white/15'}`}>{active ? '✓' : ''}</span>

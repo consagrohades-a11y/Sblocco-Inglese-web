@@ -90,7 +90,7 @@ export default function AdminLearners() {
       const matchesRecovery = recoveryFilter === 'all'
         || (recoveryFilter === 'recovery' && recovery?.has_access)
         || (recoveryFilter === 'standard' && !recovery?.has_access);
-      const matchesQuery = !normalizedQuery || [learner.display_name, learner.email]
+      const matchesQuery = !normalizedQuery || [learner.display_name, learner.email, learner.admin_context_note]
         .some((value) => String(value ?? '').toLowerCase().includes(normalizedQuery));
 
       return matchesStatus && matchesGroup && matchesRecovery && matchesQuery;
@@ -205,7 +205,8 @@ export default function AdminLearners() {
                         />
                         <div className="min-w-0">
                           <p className="truncate text-base font-black text-ink dark:text-white">{learner.display_name || 'Nome non impostato'}</p>
-                          <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">Registrato il {formatDate(learner.created_at)}</p>
+                          {learner.admin_context_note ? <p className="mt-1 line-clamp-2 text-xs font-bold leading-5 text-clay dark:text-coral">{learner.admin_context_note}</p> : null}
+                          <p className="mt-1 text-xs font-bold text-ink/55 dark:text-white/55">Registrato il {formatDate(learner.created_at)}</p>
                         </div>
                       </div>
                       <p className="break-all text-sm font-semibold text-ink/70 dark:text-white/65">{learner.email || '-'}</p>

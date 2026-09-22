@@ -20,6 +20,7 @@ import BrandLogo from './BrandLogo';
 import ThemeToggle from './ThemeToggle';
 import AdminNotificationBell from './admin/AdminNotificationBell.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
+import { AdminLearnerContextProvider } from '../context/AdminLearnerContext.jsx';
 
 const navigationGroups = [
   {
@@ -340,7 +341,9 @@ export default function AdminShell() {
       ) : null}
 
       <div className={`min-w-0 overflow-x-clip transition-[padding] duration-200 ${effectiveSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
-        <Outlet />
+        <AdminLearnerContextProvider>
+          <Outlet />
+        </AdminLearnerContextProvider>
       </div>
     </div>
   );

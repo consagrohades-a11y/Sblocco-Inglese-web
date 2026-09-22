@@ -18,6 +18,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import { supabase } from '../lib/supabaseClient.js';
+import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
 import { loadAssignmentGroupLinks } from '../lib/learnerGroupsApi.js';
 
 const statusLabels = {
@@ -95,6 +96,7 @@ function AssignmentCard({ assignment, busy, onStatusChange }) {
             {assignment.learner_name}
             {assignment.learner_email ? <span className="font-semibold text-ink/60 no-underline dark:text-white/60">{assignment.learner_email}</span> : null}
           </Link>
+          {getNote(assignment.learner_id) ? <p className="mt-1 text-xs font-bold leading-5 text-clay dark:text-coral">{getNote(assignment.learner_id)}</p> : null}
 
           <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold text-ink/60 dark:text-white/60">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-linen px-3 py-1.5 dark:bg-white/10">
@@ -190,6 +192,7 @@ function matchesContentFilter(assignment, filter) {
 }
 
 export default function AdminAssignments() {
+  const { getNote } = useAdminLearnerContext();
   const [searchParams] = useSearchParams();
   const [assignments, setAssignments] = useState([]);
   const [search, setSearch] = useState('');
@@ -237,11 +240,11 @@ export default function AdminAssignments() {
       if (!matchesContentFilter(assignment, contentFilter)) return false;
       if (groupFilter !== 'all' && assignment.group_id !== groupFilter) return false;
       if (!term) return true;
-      return [assignment.title, assignment.learner_name, assignment.learner_email]
+      return [assignment.title, assignment.learner_name, assignment.learner_email, getNote(assignment.learner_id)]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(term));
     });
-  }, [assignments, search, statusFilter, contentFilter, groupFilter]);
+  }, [assignments, search, statusFilter, contentFilter, groupFilter, getNote]);
 
   async function changeStatus(assignment, nextStatus) {
     setBusyId(assignment.id);
