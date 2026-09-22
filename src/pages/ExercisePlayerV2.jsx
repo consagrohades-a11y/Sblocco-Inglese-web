@@ -217,11 +217,34 @@ function FinalResult({ payload, assignmentId, resourceId }) {
   const awaitingPublishedReview =
     pending > 0 || attempt.review_status === "reviewed";
   const hasAutoPoints = Number(attempt.max_points || 0) > 0;
+  const completion = attempt.completion || {};
+  const completionRule = completion.rule || "submitted";
+  const scoreValue = attempt.score === null ? null : Number(attempt.score || 0);
   const goalScore =
-    attempt.completion?.rule === "passed" &&
-    attempt.completion.required_score != null
-      ? Number(attempt.completion.required_score)
+    completionRule === "passed" && completion.required_score != null
+      ? Number(completion.required_score)
       : null;
+  const requiredAttempts =
+    completionRule === "attempts" && completion.required_attempts != null
+      ? Number(completion.required_attempts)
+      : null;
+  const scoreGoalMet =
+    goalScore === null || (scoreValue !== null && scoreValue >= goalScore);
+  const attemptsGoalMet =
+    requiredAttempts === null ||
+    Number(attempt.attempt_number || 0) >= requiredAttempts;
+  const completionGoalMet =
+    completionRule === "submitted" ||
+    (completionRule === "passed" && scoreGoalMet) ||
+    (completionRule === "attempts" && attemptsGoalMet);
+  const needsMoreWork = !awaitingPublishedReview && !completionGoalMet;
+  const resultBadgeLabel = awaitingPublishedReview
+    ? "Consegnato, valutazione in arrivo"
+    : completionRule === "passed" && !scoreGoalMet
+      ? "Consegnato · obiettivo non raggiunto"
+      : completionRule === "attempts" && !attemptsGoalMet
+        ? `Tentativo ${attempt.attempt_number} completato`
+        : "Esercizio completato";
 
   return (
     <section className="learner-exercise-page section-shell py-10 lg:py-14">
@@ -229,20 +252,50 @@ function FinalResult({ payload, assignmentId, resourceId }) {
       <div className="mx-auto max-w-4xl">
         <article className="exercise-activity p-7 sm:p-10">
           <span
-            className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${awaitingPublishedReview ? "bg-sky-100 text-sky-800 dark:bg-sky-300/10 dark:text-sky-200" : "bg-blush text-clay dark:bg-coral/10 dark:text-[#f7a98d]"}`}
+            className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+              awaitingPublishedReview
+                ? "bg-sky-100 text-sky-800 dark:bg-sky-300/10 dark:text-sky-200"
+                : needsMoreWork
+                  ? "bg-amber-100 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100"
+                  : "bg-blush text-clay dark:bg-coral/10 dark:text-[#f7a98d]"
+            }`}
           >
             {awaitingPublishedReview ? (
               <Clock3 className="h-4 w-4" />
+            ) : needsMoreWork ? (
+              <CircleAlert className="h-4 w-4" />
             ) : (
               <CheckCircle2 className="h-4 w-4" />
             )}
-            {awaitingPublishedReview
-              ? "Consegnato, valutazione in arrivo"
-              : "Esercizio completato"}
+            {resultBadgeLabel}
           </span>
           <h1 className="mt-4 text-3xl font-black text-ink dark:text-white sm:text-5xl">
             {payload.exercise.title}
           </h1>
+
+          {!awaitingPublishedReview && completionRule === "passed" && !scoreGoalMet ? (
+            <div className="mt-7 rounded-2xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-300/20 dark:bg-amber-300/[0.07]">
+              <p className="text-lg font-black text-amber-950 dark:text-amber-100">
+                Hai completato il tentativo, ma non hai ancora raggiunto l’obiettivo
+              </p>
+              <p className="mt-2 text-sm font-semibold leading-6 text-amber-900/75 dark:text-amber-100/70">
+                Hai ottenuto {Math.round(scoreValue || 0)}%. Per completare questa attività serve almeno {Math.round(goalScore)}%.
+                {settings.allow_retry !== false ? " Puoi riprovare quando vuoi." : ""}
+              </p>
+            </div>
+          ) : null}
+
+          {!awaitingPublishedReview && completionRule === "attempts" && !attemptsGoalMet ? (
+            <div className="mt-7 rounded-2xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-300/20 dark:bg-amber-300/[0.07]">
+              <p className="text-lg font-black text-amber-950 dark:text-amber-100">
+                Tentativo {attempt.attempt_number} completato
+              </p>
+              <p className="mt-2 text-sm font-semibold leading-6 text-amber-900/75 dark:text-amber-100/70">
+                Questa attività richiede {requiredAttempts} tentativi. Te ne {Number(attempt.attempt_number || 0) === 1 ? "manca" : "mancano"} {Math.max(0, requiredAttempts - Number(attempt.attempt_number || 0))}.
+              </p>
+            </div>
+          ) : null}
+
           {awaitingPublishedReview ? (
             <div className="mt-7 border-y border-sky-200 bg-sky-50 p-5 dark:border-sky-300/20 dark:bg-sky-400/[0.07]">
               <p className="text-lg font-black text-sky-950 dark:text-sky-100">
@@ -323,7 +376,11 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                 to={`/exercises?assignmentId=${assignmentId}&resourceId=${resourceId}&newAttempt=1`}
                 className="rounded-full border border-clay/20 bg-white px-5 py-3 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"
               >
-                Nuovo tentativo
+                {completionRule === "passed" && !scoreGoalMet
+                  ? "Riprova per raggiungere l’obiettivo"
+                  : completionRule === "attempts" && !attemptsGoalMet
+                    ? `Inizia tentativo ${Number(attempt.attempt_number || 0) + 1}`
+                    : "Nuovo tentativo"}
               </Link>
             ) : null}
             <Link
