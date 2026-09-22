@@ -227,6 +227,33 @@ function ResultBreakdown({ summary }) {
   );
 }
 
+function b2ReadingPartScores(payload) {
+  const rows = [];
+  (payload?.sections || []).forEach((section) => {
+    (section.questions || []).forEach((item) => {
+      const presentation = item?.question?.content?.presentation;
+      if (!['b2_part5', 'b2_part6', 'b2_part7'].includes(presentation)) return;
+      const result = item?.result || {};
+      rows.push({
+        id: item.id || presentation,
+        label: presentation === 'b2_part5'
+          ? 'Part 5 · Multiple choice'
+          : presentation === 'b2_part6'
+            ? 'Part 6 · Gapped text'
+            : 'Part 7 · Multiple matching',
+        shortLabel: presentation === 'b2_part5'
+          ? 'Part 5'
+          : presentation === 'b2_part6'
+            ? 'Part 6'
+            : 'Part 7',
+        earned: Number(result.earned_points || 0),
+        max: Number(result.max_points || 0),
+      });
+    });
+  });
+  return rows;
+}
+
 function FinalResult({ payload, assignmentId, resourceId }) {
   const attempt = payload.attempt;
   const settings = payload.exercise.settings || {};
@@ -237,6 +264,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
     pending > 0 || attempt.review_status === "reviewed";
   const hasAutoPoints = Number(attempt.max_points || 0) > 0;
   const completion = attempt.completion || {};
+  const readingPartScores = b2ReadingPartScores(payload);
   const completionRule = completion.rule || "submitted";
   const scoreValue = attempt.score === null ? null : Number(attempt.score || 0);
   const goalScore =
@@ -355,6 +383,23 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                 ) : null}
               </div>
               <ResultBreakdown summary={summary} />
+              {readingPartScores.length ? (
+                <div className="mt-5 grid gap-2 sm:grid-cols-3">
+                  {readingPartScores.map((part) => {
+                    const percent = part.max > 0 ? Math.round((part.earned / part.max) * 100) : 0;
+                    return (
+                      <div key={part.id} className="rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-white/[0.04]">
+                        <p className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">{part.shortLabel}</p>
+                        <p className="mt-1 text-sm font-black text-ink dark:text-white">{part.label.split(' · ')[1]}</p>
+                        <div className="mt-3 flex items-end justify-between gap-3">
+                          <span className="text-2xl font-black text-ink dark:text-white">{part.earned.toFixed(0)}<span className="text-sm text-ink/35 dark:text-white/35">/{part.max.toFixed(0)}</span></span>
+                          <span className="text-xs font-black text-ink/45 dark:text-white/45">{percent}%</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : null}
               <p className="mt-3 text-xs font-semibold leading-5 text-ink/60 dark:text-white/60">
                 Il punteggio è la percentuale di punti ottenuti sul totale: ogni
                 attività può valere più punti e le risposte quasi corrette
