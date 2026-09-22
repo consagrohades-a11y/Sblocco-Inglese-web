@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
+  Archive,
   Bell,
   CheckCheck,
   ChevronRight,
@@ -58,11 +59,12 @@ export default function AdminNotifications() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showArchive, setShowArchive] = useState(false);
 
   const refresh = useCallback(async ({ quiet = false } = {}) => {
     if (!quiet) setLoading(true);
     try {
-      const result = await loadTeacherNotifications(60);
+      const result = await loadTeacherNotifications(60, { archived: showArchive });
       setNotifications(result.notifications);
       setUnreadCount(result.unreadCount);
       setError('');
@@ -71,13 +73,13 @@ export default function AdminNotifications() {
     } finally {
       if (!quiet) setLoading(false);
     }
-  }, []);
+  }, [showArchive]);
 
   useEffect(() => {
     let active = true;
     async function initialise() {
       await refresh();
-      if (!active) return;
+      if (!active || showArchive) return;
       try {
         await markAllTeacherNotificationsRead();
         if (!active) return;
@@ -94,7 +96,7 @@ export default function AdminNotifications() {
       active = false;
       window.clearInterval(timer);
     };
-  }, [refresh]);
+  }, [refresh, showArchive]);
 
   async function openNotification(notification) {
     try {
@@ -129,18 +131,32 @@ export default function AdminNotifications() {
         <div className="mx-auto max-w-5xl">
           <AdminPageHeader
             eyebrow="Workspace"
-            title="Notifiche"
-            description="Le nuove registrazioni hanno priorità. Da qui apri direttamente il profilo learner o il risultato che richiede attenzione."
-            actions={unreadCount ? (
-              <button
-                type="button"
-                onClick={markAllRead}
-                className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink transition hover:border-clay hover:text-clay dark:border-white/15 dark:bg-white/[0.06] dark:text-white"
-              >
-                <CheckCheck className="h-4 w-4" aria-hidden="true" />
-                Segna tutte come lette
-              </button>
-            ) : null}
+            title={showArchive ? "Archivio notifiche" : "Notifiche"}
+            description={showArchive
+              ? "Qui trovi le notifiche operative già risolte. Le registrazioni non vengono archiviate automaticamente."
+              : "In primo piano restano solo le notifiche ancora rilevanti. Le consegne già gestite passano automaticamente in archivio."}
+            actions={(
+              <div className="flex flex-wrap items-center gap-2">
+                {!showArchive && unreadCount ? (
+                  <button
+                    type="button"
+                    onClick={markAllRead}
+                    className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink transition hover:border-clay hover:text-clay dark:border-white/15 dark:bg-white/[0.06] dark:text-white"
+                  >
+                    <CheckCheck className="h-4 w-4" aria-hidden="true" />
+                    Segna tutte come lette
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => setShowArchive((value) => !value)}
+                  className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink transition hover:border-clay hover:text-clay dark:border-white/15 dark:bg-white/[0.06] dark:text-white"
+                >
+                  <Archive className="h-4 w-4" aria-hidden="true" />
+                  {showArchive ? "Torna alle recenti" : "Archivio"}
+                </button>
+              </div>
+            )}
           />
 
           {error ? (
@@ -159,9 +175,9 @@ export default function AdminNotifications() {
                 <span className="grid h-12 w-12 place-items-center rounded-full bg-clay/10 text-clay">
                   <Bell className="h-5 w-5" aria-hidden="true" />
                 </span>
-                <h2 className="mt-4 text-lg font-black text-ink dark:text-white">Tutto tranquillo</h2>
+                <h2 className="mt-4 text-lg font-black text-ink dark:text-white">{showArchive ? 'Archivio vuoto' : 'Tutto tranquillo'}</h2>
                 <p className="mt-1 max-w-md text-sm leading-6 text-ink/60 dark:text-white/60">
-                  Qui compariranno le nuove iscrizioni degli studenti e gli esercizi consegnati.
+                  {showArchive ? 'Le notifiche operative risolte compariranno qui.' : 'Qui restano le nuove iscrizioni e le attività che richiedono ancora attenzione.'}
                 </p>
               </div>
             ) : null}
