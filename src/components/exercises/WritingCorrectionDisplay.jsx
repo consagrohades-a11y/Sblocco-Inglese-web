@@ -25,7 +25,7 @@ function DiffText({ segments, view }) {
             return (
               <mark
                 key={index}
-                className="rounded-sm bg-[#f5ddd4] px-0.5 text-[#87351f] line-through decoration-2 dark:bg-[#8a3d2a]/25 dark:text-[#ffc1ae]"
+                className="rounded-sm bg-[#f5ddd4] px-0.5 font-black text-[#87351f] line-through decoration-2 dark:bg-[#8a3d2a]/25 dark:text-[#ffc1ae]"
               >
                 {segment.text}
               </mark>
@@ -34,7 +34,7 @@ function DiffText({ segments, view }) {
           return (
             <mark
               key={index}
-              className="rounded-sm bg-[#dce8ef] px-0.5 text-[#163d55] underline decoration-2 underline-offset-2 dark:bg-[#7aa4bc]/20 dark:text-[#cfe8f5]"
+              className="rounded-sm bg-[#dce8ef] px-0.5 font-black italic text-[#163d55] underline decoration-2 underline-offset-2 dark:bg-[#7aa4bc]/20 dark:text-[#cfe8f5]"
             >
               {segment.text}
             </mark>
@@ -98,7 +98,7 @@ export default function WritingCorrectionDisplay({ originalText = '', correction
                     </span>
                   ) : null}
                 </div>
-                {reason?.reason ? <p className="mt-2 text-sm font-semibold leading-6 text-ink/70 dark:text-white/70">{reason.reason}</p> : null}
+                {reason?.reason ? <p className="mt-2 text-sm font-semibold italic leading-6 text-ink/70 dark:text-white/70">{reason.reason}</p> : null}
               </article>
             ))}
           </div>
