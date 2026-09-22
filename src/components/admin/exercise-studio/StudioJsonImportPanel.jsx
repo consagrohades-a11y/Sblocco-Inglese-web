@@ -110,6 +110,13 @@ export default function StudioJsonImportPanel({ onClose, onImport }) {
                   download
                   className="focus-ring rounded-full border border-orange-300 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:text-orange-100"
                 >
+                  B2 reading exam-style
+                </a>
+                <a
+                  href="/templates/sblocco-learning-studio/gold-benchmark-b2-reading-exam-style-v1.json"
+                  download
+                  className="focus-ring rounded-full border border-orange-300 px-3.5 py-2 text-xs font-black text-orange-900 dark:border-orange-300/30 dark:text-orange-100"
+                >
                   B2 reading · Parts 5–7
                 </a>
                 <a
