@@ -4,18 +4,25 @@ function throwIfError(error) {
   if (error) throw error;
 }
 
-export async function loadLearnerNotifications(limit = 20) {
+export async function loadLearnerNotifications(limit = 20, { archived = false } = {}) {
+  let listQuery = supabase
+    .from("learner_notifications")
+    .select(
+      "id, notification_type, milestone_key, title, message, route, related_attempt_id, related_assignment_id, created_at, read_at, archived_at",
+    )
+    .order(archived ? "archived_at" : "created_at", { ascending: false })
+    .limit(limit);
+
+  listQuery = archived
+    ? listQuery.not("archived_at", "is", null)
+    : listQuery.is("archived_at", null);
+
   const [listResult, unreadResult] = await Promise.all([
-    supabase
-      .from("learner_notifications")
-      .select(
-        "id, notification_type, milestone_key, title, message, route, related_attempt_id, related_assignment_id, created_at, read_at",
-      )
-      .order("created_at", { ascending: false })
-      .limit(limit),
+    listQuery,
     supabase
       .from("learner_notifications")
       .select("id", { count: "exact", head: true })
+      .is("archived_at", null)
       .is("read_at", null),
   ]);
   throwIfError(listResult.error || unreadResult.error);
@@ -43,11 +50,18 @@ export async function markAllLearnerNotificationsRead() {
   throwIfError(error);
 }
 
+export async function archiveLearnerNotification(notificationId) {
+  const { error } = await supabase.rpc("archive_learner_notification", {
+    p_notification_id: notificationId,
+  });
+  throwIfError(error);
+}
 
 export async function loadLearnerUnreadCount() {
   const { count, error } = await supabase
     .from("learner_notifications")
     .select("id", { count: "exact", head: true })
+    .is("archived_at", null)
     .is("read_at", null);
   throwIfError(error);
   return count || 0;
