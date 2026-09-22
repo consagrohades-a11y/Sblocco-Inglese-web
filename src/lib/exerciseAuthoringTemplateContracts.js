@@ -312,12 +312,15 @@ export function buildExerciseAuthoringContract({ key, entityType, template }) {
     workflow: [
       'Read this entire _template object before editing the example payload.',
       'Use the example payload as a structural reference, then replace its pedagogical content with the material requested by the user.',
-      'Return one complete JSON object with the same top-level structure and no prose before or after it.',
+      'Create and attach one downloadable .json file containing the complete JSON object. Do not paste the JSON payload into chat and do not add prose outside the file.',
       'Keep _template unchanged in the returned JSON so the file remains self-contained when reused in another chat.',
       'Before returning, run the validation_checklist mentally and fix every failed item.',
     ],
     generation_contract: {
       output: 'valid_json_only',
+      delivery: 'downloadable_json_file_only',
+      file_extension: '.json',
+      chat_output: 'no_payload_or_commentary',
       markdown_fences: false,
       comments: false,
       preserve_top_level_metadata: true,

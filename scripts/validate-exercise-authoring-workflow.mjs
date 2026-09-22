@@ -68,7 +68,7 @@ for (const token of [
   'parseStudioImport',
   'repair safe omissions',
   'need attention',
-  'universal-ai-authoring-kit-v1.md',
+  'universal-ai-authoring-kit-v1.json',
   'Import to Studio',
 ]) {
   expect(importSource.includes(token), `Studio JSON import is missing workflow guard: ${token}`);
