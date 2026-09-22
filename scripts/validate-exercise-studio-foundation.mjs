@@ -6,6 +6,8 @@ import {
 } from '../src/lib/exerciseStudioBlockRegistry.js';
 import {
   EXERCISE_STUDIO_SCHEMA_VERSION,
+  addStudioBlock,
+  createStudioDocument,
   normalizeStudioDocument,
 } from '../src/lib/exerciseStudioDocument.js';
 import {
@@ -49,6 +51,31 @@ for (const type of requiredTypes) {
   }
   assert.ok(definition.capabilities?.learnerRenderer, type + ' must declare its learner renderer.');
 }
+
+const freshReadingActivity = createStudioDocument({
+  internal_title: '',
+  learner_title: '',
+  level: 'B2',
+  topic: 'b2_reading',
+  activity_type: 'lesson',
+  skills: ['reading'],
+});
+const part5PresetActivity = addStudioBlock(freshReadingActivity, 'reading_comprehension', {}, 'b2_part5');
+assert.equal(part5PresetActivity.blocks[0].format, 'b2_part5');
+assert.equal(part5PresetActivity.blocks[0].items.length, 6);
+assert.ok(part5PresetActivity.blocks[0].items.every((item) => item.options.length === 4));
+assert.ok(part5PresetActivity.blocks[0].items.every((item) => item.options.every((option) => option.is_correct === false)));
+assert.equal(part5PresetActivity.activity_type, 'lesson', 'Reading preset must not change teacher-owned activity type.');
+
+const part6PresetActivity = addStudioBlock(freshReadingActivity, 'reading_comprehension', {}, 'b2_part6');
+assert.equal(part6PresetActivity.blocks[0].passage_parts.filter((part) => part.type === 'gap').length, 6);
+assert.equal(part6PresetActivity.blocks[0].paragraph_options.length, 7);
+assert.ok(part6PresetActivity.blocks[0].passage_parts.filter((part) => part.type === 'gap').every((part) => part.correct_option_index === null));
+
+const part7PresetActivity = addStudioBlock(freshReadingActivity, 'reading_comprehension', {}, 'b2_part7');
+assert.equal(part7PresetActivity.blocks[0].sections.length, 4);
+assert.equal(part7PresetActivity.blocks[0].items.length, 10);
+assert.ok(part7PresetActivity.blocks[0].items.every((item) => item.correct_section_index === null));
 
 const raw = {
   schema_version: EXERCISE_STUDIO_SCHEMA_VERSION,
