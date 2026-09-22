@@ -9,7 +9,7 @@ export async function loadLearnerNotifications(limit = 20) {
     supabase
       .from("learner_notifications")
       .select(
-        "id, notification_type, milestone_key, title, message, route, related_attempt_id, created_at, read_at",
+        "id, notification_type, milestone_key, title, message, route, related_attempt_id, related_assignment_id, created_at, read_at",
       )
       .order("created_at", { ascending: false })
       .limit(limit),
@@ -41,4 +41,14 @@ export async function markLearnerNotificationRead(notificationId) {
 export async function markAllLearnerNotificationsRead() {
   const { error } = await supabase.rpc("mark_all_learner_notifications_read");
   throwIfError(error);
+}
+
+
+export async function loadLearnerUnreadCount() {
+  const { count, error } = await supabase
+    .from("learner_notifications")
+    .select("id", { count: "exact", head: true })
+    .is("read_at", null);
+  throwIfError(error);
+  return count || 0;
 }
