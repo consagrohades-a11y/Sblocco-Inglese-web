@@ -12,8 +12,9 @@ function readJson(path) {
 const universal = readJson('public/templates/sblocco-learning-studio/universal-ai-authoring-kit-v1.json');
 const grammar = readJson('public/templates/sblocco-learning-studio/grammar-mini-course-authoring-kit-v1.json');
 const speaking = readJson('public/templates/sblocco-speaking-authoring-kit-v1.json');
+const b2Reading = readJson('public/templates/sblocco-learning-studio/b2-reading-authoring-kit-v1.json');
 
-for (const [name, kit] of [['universal', universal], ['grammar', grammar], ['speaking', speaking]]) {
+for (const [name, kit] of [['universal', universal], ['grammar', grammar], ['speaking', speaking], ['b2 reading', b2Reading]]) {
   assert.equal(kit.delivery_contract?.mode, 'downloadable_json_file_only', `${name} authoring kit must require downloadable JSON delivery.`);
   assert.equal(kit.delivery_contract?.file_extension, '.json', `${name} authoring kit must require .json files.`);
   assert.equal(kit.delivery_contract?.chat_payload, false, `${name} authoring kit must prohibit pasted JSON payloads.`);
@@ -25,6 +26,13 @@ for (const [name, kit] of [['universal', universal], ['grammar', grammar], ['spe
 
 assert.equal(Object.keys(speaking.activity_mechanics || {}).length, 59, 'Speaking authoring kit must document all 59 activities.');
 assert.equal(speaking.import_contract?.entity_type, 'speaking_item_batch', 'Speaking kit must document the import batch contract.');
+assert.equal(b2Reading.block_registry_version, 2, 'B2 reading kit must target Block Registry v2.');
+assert.ok(b2Reading.completed_examples?.b2_part5, 'B2 reading kit must include a completed Part 5 example.');
+assert.ok(b2Reading.completed_examples?.b2_part6, 'B2 reading kit must include a completed Part 6 example.');
+assert.ok(b2Reading.completed_examples?.b2_part7, 'B2 reading kit must include a completed Part 7 example.');
+assert.equal(b2Reading.completed_examples.b2_part5.items.length, 6, 'B2 Part 5 example must have 6 questions.');
+assert.equal(b2Reading.completed_examples.b2_part6.paragraph_options.length, 7, 'B2 Part 6 example must have 7 paragraph options.');
+assert.equal(b2Reading.completed_examples.b2_part7.items.length, 10, 'B2 Part 7 example must have 10 statements.');
 assert.ok(!JSON.stringify(speaking).includes('Ready-to-use generation prompt'), 'Downloadable speaking kit must not contain a copyable prompt section.');
 
 assert.equal(fs.existsSync(new URL('../public/templates/sblocco-learning-studio/universal-ai-authoring-kit-v1.md', import.meta.url)), false, 'Universal authoring kit must no longer be exposed as Markdown.');
@@ -41,6 +49,7 @@ for (const [name, source] of [['exercise templates', commonContracts], ['educati
 
 const studioImport = read('src/components/admin/exercise-studio/StudioJsonImportPanel.jsx');
 assert.ok(studioImport.includes('universal-ai-authoring-kit-v1.json'), 'Studio must link to the JSON authoring kit.');
+assert.ok(studioImport.includes('b2-reading-authoring-kit-v1.json'), 'Studio must link to the B2 reading JSON authoring kit.');
 assert.ok(!studioImport.includes('universal-ai-authoring-kit-v1.md'), 'Studio must not link to a Markdown authoring kit.');
 
 const speakingLibrary = read('src/pages/AdminSpeakingActivities.jsx');
