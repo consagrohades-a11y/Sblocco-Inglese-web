@@ -66,6 +66,7 @@ const LEVEL_ORDER = Object.fromEntries(LEVELS.map((level, index) => [level, inde
 
 const ACTIVITY_TYPES = [
   ['exercise', 'Esercizio'],
+  ['vocabulary_exercise', 'Esercizio vocabolario'],
   ['lesson', 'Lezione'],
   ['mini_course', 'Mini-corso'],
   ['listening_lesson', 'Lezione listening'],
