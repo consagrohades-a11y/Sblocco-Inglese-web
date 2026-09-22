@@ -3,6 +3,8 @@ import { ArrowDown, ArrowUp, ShieldOff, Trash2, UserCheck } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
+import AdminLearnerContextSubtitle from '../components/admin/AdminLearnerContextSubtitle.jsx';
+import LearnerContextNoteEditor from '../components/admin/LearnerContextNoteEditor.jsx';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import LearnerDiagnosticPanel from '../components/admin/LearnerDiagnosticPanel.jsx';
 import LearnerNextLessonPanel from '../components/admin/LearnerNextLessonPanel.jsx';
@@ -157,11 +159,18 @@ export default function AdminLearnerDetail() {
           )}
         />
 
+        {learner ? <AdminLearnerContextSubtitle learnerId={learnerId} note={learner.admin_context_note} className="mt-3 max-w-3xl" /> : null}
+
         {loading ? <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6 text-sm font-bold text-ink/65 shadow-sm dark:border-white/10 dark:bg-surface-900 dark:text-white/60">Caricamento studente...</div> : null}
         {error ? <div className="mt-6 border-l-4 border-red-400 bg-red-50 p-5 text-sm font-bold leading-6 text-red-900">{error}</div> : null}
         {accountMessage ? <div className="mt-6 border-l-4 border-clay bg-clay/[0.08] p-5 text-sm font-bold text-ink dark:bg-coral/10 dark:text-white">{accountMessage}</div> : null}
 
         {!loading && !error && learner ? <div className="mt-6 grid gap-6">
+          <LearnerContextNoteEditor
+            learnerId={learnerId}
+            value={learner.admin_context_note}
+            onSaved={(admin_context_note) => setLearner((current) => ({ ...current, admin_context_note }))}
+          />
           <LearnerRecoveryPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} disabled={learner.status === 'deleted'} />
           <LearnerNextLessonPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} />
           <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">
