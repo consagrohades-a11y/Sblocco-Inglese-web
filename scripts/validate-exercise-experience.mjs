@@ -108,6 +108,27 @@ requireText(
   'educational content normalization',
 );
 
+requireText(
+  sources['src/pages/ExercisePlayerV2.jsx'],
+  'b2ReadingPartScores',
+  'B2 reading result scorecards',
+);
+requireText(
+  sources['src/pages/ExercisePlayerV2.jsx'],
+  'Part 5 · Multiple choice',
+  'B2 Part 5 result label',
+);
+requireText(
+  sources['src/pages/ExercisePlayerV2.jsx'],
+  'Part 6 · Gapped text',
+  'B2 Part 6 result label',
+);
+requireText(
+  sources['src/pages/ExercisePlayerV2.jsx'],
+  'Part 7 · Multiple matching',
+  'B2 Part 7 result label',
+);
+
 if (sources['src/components/exercises/ExerciseExperience.jsx'].includes('<footer className="exercise-action-bar"')) {
   failures.push('Exercise action bar must not use the site footer element; it can inherit the global navy footer treatment.');
 }
