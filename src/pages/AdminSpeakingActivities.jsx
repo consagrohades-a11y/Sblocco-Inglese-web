@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
+  AlertTriangle,
   Clock3,
   Download,
   Eye,
@@ -25,6 +26,7 @@ import LearnerQuickFacts from '../components/admin/LearnerQuickFacts.jsx';
 import { loadAdminLearners } from '../lib/adminLearnersApi.js';
 import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
 import { createSpeakingControlId } from '../lib/speakingLiveControl.js';
+import { analyseSpeakingItemSet, duplicateReasonLabel } from '../lib/speakingItemQuality.js';
 import { loadSpeakingActivities, loadSpeakingActivityHistory, updateSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
@@ -56,6 +58,65 @@ function normaliseItem(item, fallbackLevels = []) {
 function itemCounts(activity) {
   const items = asArray(activity.prompts).map((item) => normaliseItem(item, asArray(activity.levels)));
   return Object.fromEntries(LEVELS.map((level) => [level, items.filter((item) => asArray(item.levels).includes(level)).length]));
+}
+
+function SimilarityModal({ activity, diagnostics, onClose }) {
+  if (!activity || !diagnostics) return null;
+  const matches = [...asArray(diagnostics.blocking), ...asArray(diagnostics.warnings)];
+
+  return (
+    <div className="fixed inset-0 z-[128] overflow-y-auto bg-ink/55 p-3 backdrop-blur-sm sm:p-6" role="dialog" aria-modal="true">
+      <div className="mx-auto my-5 max-w-4xl overflow-hidden rounded-3xl border border-white/10 bg-paper shadow-2xl dark:bg-surface-950">
+        <header className="flex items-start justify-between gap-4 border-b border-ink/10 px-5 py-5 dark:border-white/10 sm:px-7">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.15em] text-clay dark:text-coral">Controllo somiglianze</p>
+            <h2 className="mt-1 text-2xl font-black">{activity.title}</h2>
+            <p className="mt-2 text-sm font-semibold leading-6 text-ink/60 dark:text-white/60">
+              Vedi esattamente quale item assomiglia a quale, da dove arriva e perché è stato segnalato.
+            </p>
+          </div>
+          <button type="button" onClick={onClose} className="focus-ring grid h-10 w-10 place-items-center rounded-full border border-ink/10 bg-white dark:border-white/10 dark:bg-white/10" aria-label="Chiudi"><X className="h-4 w-4" /></button>
+        </header>
+
+        <div className="p-5 sm:p-7">
+          <div className="flex flex-wrap gap-2">
+            {diagnostics.blocking.length ? <span className="rounded-full bg-red-100 px-3 py-1.5 text-xs font-black text-red-800 dark:bg-red-400/10 dark:text-red-100">{diagnostics.blocking.length} duplicati forti</span> : null}
+            {diagnostics.warnings.length ? <span className="rounded-full bg-amber-100 px-3 py-1.5 text-xs font-black text-amber-900 dark:bg-amber-300/10 dark:text-amber-100">{diagnostics.warnings.length} somiglianze</span> : null}
+          </div>
+
+          <div className="mt-5 grid gap-3">
+            {matches.map((match, index) => {
+              const blocking = match.severity === 'block';
+              const source = match.existing.activityTitle === 'Questa attività'
+                ? `Questa attività · item ${Number(match.existing.itemIndex) + 1}`
+                : `${match.existing.activityTitle || 'Libreria'}${Number.isInteger(match.existing.itemIndex) ? ` · item ${match.existing.itemIndex + 1}` : ''}`;
+
+              return (
+                <article key={index} className={`rounded-2xl border p-4 ${blocking ? 'border-red-200 bg-red-50/70 dark:border-red-300/20 dark:bg-red-300/[0.06]' : 'border-amber-200 bg-amber-50/70 dark:border-amber-300/20 dark:bg-amber-300/[0.05]'}`}>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full bg-white px-2.5 py-1 text-[0.66rem] font-black text-ink/55 shadow-sm dark:bg-white/10 dark:text-white/60">Item {Number(match.candidate.candidateIndex) + 1}</span>
+                    <span className={`rounded-full px-2.5 py-1 text-[0.66rem] font-black ${blocking ? 'bg-red-100 text-red-800 dark:bg-red-400/10 dark:text-red-100' : 'bg-amber-100 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100'}`}>{duplicateReasonLabel(match.reason)}</span>
+                  </div>
+
+                  <div className="mt-4 grid gap-3 md:grid-cols-[minmax(0,1fr)_2rem_minmax(0,1fr)] md:items-center">
+                    <div className="rounded-xl border border-ink/10 bg-white p-3.5 dark:border-white/10 dark:bg-white/[0.035]">
+                      <p className="text-[0.62rem] font-black uppercase tracking-wide text-ink/40 dark:text-white/40">Questo item</p>
+                      <p className="mt-1.5 text-sm font-bold leading-6 text-ink dark:text-white">{match.candidate.text}</p>
+                    </div>
+                    <div className="hidden text-center text-lg font-black text-ink/25 dark:text-white/25 md:block">↔</div>
+                    <div className="rounded-xl border border-ink/10 bg-white p-3.5 dark:border-white/10 dark:bg-white/[0.035]">
+                      <p className="text-[0.62rem] font-black uppercase tracking-wide text-clay dark:text-coral">{source}</p>
+                      <p className="mt-1.5 text-sm font-bold leading-6 text-ink dark:text-white">{match.existing.text || 'Testo non disponibile'}</p>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function PreviewModal({ activity, onClose }) {
@@ -351,6 +412,7 @@ export default function AdminSpeakingActivities() {
   const [presenting, setPresenting] = useState(null);
   const [liveSession, setLiveSession] = useState(null);
   const [importOpen, setImportOpen] = useState(false);
+  const [similarityOpen, setSimilarityOpen] = useState(null);
 
   async function load() {
     setLoading(true);
@@ -381,6 +443,15 @@ export default function AdminSpeakingActivities() {
         .some((value) => String(value || '').toLowerCase().includes(needle));
     });
   }, [activities, favoritesOnly, level, query, type]);
+
+  const similarityByActivity = useMemo(() => {
+    const entries = activities.map((activity) => {
+      const prompts = asArray(activity.prompts);
+      if (!prompts.length) return [activity.id, { blocking: [], warnings: [] }];
+      return [activity.id, analyseSpeakingItemSet(prompts, activities, { excludeActivityId: activity.id })];
+    });
+    return new Map(entries);
+  }, [activities]);
 
   async function toggleFavorite(activity) {
     const next = !activity.favorite;
@@ -465,6 +536,8 @@ export default function AdminSpeakingActivities() {
             <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6">
               {filtered.map((activity) => {
                 const counts = itemCounts(activity);
+                const diagnostics = similarityByActivity.get(activity.id) || { blocking: [], warnings: [] };
+                const similarityCount = diagnostics.blocking.length + diagnostics.warnings.length;
                 return (
                   <article key={activity.id} className="flex min-h-[24rem] flex-col rounded-3xl border border-ink/10 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-clay/25 dark:border-white/10 dark:bg-surface-900">
                     <div className="flex items-start justify-between gap-3">
@@ -473,6 +546,16 @@ export default function AdminSpeakingActivities() {
                     </div>
 
                     <p className="mt-3 text-[0.82rem] font-semibold leading-5 text-ink/65 dark:text-white/65">{activity.summary}</p>
+                    {similarityCount ? (
+                      <button
+                        type="button"
+                        onClick={() => setSimilarityOpen(activity)}
+                        className={`focus-ring mt-3 inline-flex min-h-8 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.68rem] font-black ${diagnostics.blocking.length ? 'border-red-200 bg-red-50 text-red-800 dark:border-red-300/20 dark:bg-red-300/[0.07] dark:text-red-100' : 'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-300/20 dark:bg-amber-300/[0.07] dark:text-amber-100'}`}
+                      >
+                        <AlertTriangle className="h-3.5 w-3.5" />
+                        {similarityCount} {diagnostics.blocking.length ? 'match da controllare' : 'item simili'}
+                      </button>
+                    ) : null}
                     <div className="mt-4 flex flex-wrap gap-2">
                       {asArray(activity.levels).map((item) => <span key={item} className="rounded-full bg-linen px-2.5 py-1 text-xs font-black dark:bg-white/10">{item} · {counts[item] || 0}</span>)}
                       {activity.duration_minutes ? <span className="inline-flex items-center gap-1 rounded-full bg-linen px-2 py-1 text-[0.68rem] font-black dark:bg-white/10"><Clock3 className="h-3 w-3" />{activity.duration_minutes} min</span> : null}
@@ -496,6 +579,11 @@ export default function AdminSpeakingActivities() {
       </section>
 
       <PreviewModal activity={preview} onClose={() => setPreview(null)} />
+      <SimilarityModal
+        activity={similarityOpen}
+        diagnostics={similarityOpen ? similarityByActivity.get(similarityOpen.id) : null}
+        onClose={() => setSimilarityOpen(null)}
+      />
       <PresentationLauncher
         activity={presenting}
         initialLearnerId={focusedLearnerId}
