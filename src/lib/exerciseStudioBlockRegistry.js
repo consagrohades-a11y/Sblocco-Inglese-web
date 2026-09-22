@@ -607,9 +607,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       const normalizedItems = rawItems.map((item, index) => ({
         key: 'item_' + (index + 1),
         prompt: text(item?.prompt),
-        type: format === 'standard' && ['short_answer', 'multiple_select', 'true_false'].includes(item?.type)
-          ? item.type
-          : 'multiple_choice',
+        type: 'multiple_choice',
         options: optionList(item?.options).map((option, optionIndex) => ({ ...option, key: 'option_' + (optionIndex + 1) })),
         accepted_answers: list(item?.accepted_answers),
         feedback: text(item?.feedback),
@@ -779,15 +777,12 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
         }));
       } else {
         items = items.map((item, index) => {
-          const type = ['multiple_choice', 'multiple_select', 'true_false', 'short_answer'].includes(item.type) ? item.type : 'multiple_choice';
           return {
             key: 'item_' + (index + 1),
-            type,
+            type: 'multiple_choice',
             prompt: text(item.prompt),
             points: Number(item.points) > 0 ? Number(item.points) : 1,
-            ...(type === 'short_answer'
-              ? { accepted_answers: list(item.accepted_answers) }
-              : { options: optionList(item.options).map((option, optionIndex) => ({ ...option, key: 'option_' + (optionIndex + 1) })) }),
+            options: optionList(item.options).map((option, optionIndex) => ({ ...option, key: 'option_' + (optionIndex + 1) })),
             feedback: text(item.feedback) || null,
           };
         });
