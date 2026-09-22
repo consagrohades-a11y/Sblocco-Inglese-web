@@ -163,7 +163,7 @@ export default function AdminLearnerDetail() {
         {accountMessage ? <div className="mt-6 border-l-4 border-clay bg-clay/[0.08] p-5 text-sm font-bold text-ink dark:bg-coral/10 dark:text-white">{accountMessage}</div> : null}
 
         {!loading && !error && learner ? <div className="mt-6 grid gap-6">
-          <LearnerContextNoteEditor learnerId={learnerId} initialNote={learner.admin_context_note || ''} />
+          <LearnerContextNoteEditor learnerId={learnerId} initialNote={learner.admin_context_note || ''} onSaved={(admin_context_note) => setLearner((current) => ({ ...current, admin_context_note }))} />
           <LearnerRecoveryPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} disabled={learner.status === 'deleted'} />
           <LearnerNextLessonPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} />
           <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">

@@ -62,6 +62,7 @@ function isOverdue(assignment) {
 }
 
 function AssignmentCard({ assignment, busy, onStatusChange }) {
+  const { getNote } = useAdminLearnerContext();
   const overdue = isOverdue(assignment);
   const resources = (assignment.resource_types || []).map((type) => resourceTypeLabels[type] || type);
   if (Number(assignment.study_item_count || 0) > 0) resources.push(`${assignment.study_item_count} card SRS`);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Save } from 'lucide-react';
 import { useAdminLearnerContext } from '../../context/AdminLearnerContext.jsx';
 
-export default function LearnerContextNoteEditor({ learnerId, initialNote = '' }) {
+export default function LearnerContextNoteEditor({ learnerId, initialNote = '', onSaved }) {
   const { saveContextNote } = useAdminLearnerContext();
   const [draft, setDraft] = useState(initialNote || '');
   const [saving, setSaving] = useState(false);
@@ -20,6 +20,7 @@ export default function LearnerContextNoteEditor({ learnerId, initialNote = '' }
       const saved = await saveContextNote(learnerId, draft);
       setDraft(saved || '');
       setMessage('Promemoria aggiornato.');
+      onSaved?.(saved || '');
     } catch (saveError) {
       setError(saveError.message || 'Non è stato possibile salvare il promemoria.');
     } finally {
