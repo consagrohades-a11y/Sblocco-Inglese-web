@@ -44,3 +44,50 @@ export async function updateSpeakingActivity(id, patch) {
   if (error) throw error;
   return data;
 }
+
+
+export async function startSpeakingSession({ learnerId, activityId, levels = [] }) {
+  const { data, error } = await supabase.rpc('admin_start_speaking_session', {
+    p_learner_id: learnerId,
+    p_activity_id: activityId,
+    p_levels: levels,
+  });
+  if (error) throw error;
+  return data;
+}
+
+export async function recordSpeakingItem({ sessionId, itemText, itemIndex = null }) {
+  const { data, error } = await supabase.rpc('admin_record_speaking_item', {
+    p_session_id: sessionId,
+    p_item_text: itemText,
+    p_item_index: itemIndex,
+  });
+  if (error) throw error;
+  return data;
+}
+
+export async function loadSpeakingItemHistory(learnerId, activityId, recentDays = 60) {
+  const { data, error } = await supabase.rpc('admin_get_speaking_item_history', {
+    p_learner_id: learnerId,
+    p_activity_id: activityId,
+    p_recent_days: recentDays,
+  });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function loadSpeakingActivityHistory(learnerId) {
+  const { data, error } = await supabase.rpc('admin_get_speaking_activity_history', {
+    p_learner_id: learnerId,
+  });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function finishSpeakingSession(sessionId) {
+  if (!sessionId) return;
+  const { error } = await supabase.rpc('admin_finish_speaking_session', {
+    p_session_id: sessionId,
+  });
+  if (error) throw error;
+}

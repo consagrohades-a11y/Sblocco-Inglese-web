@@ -16,7 +16,7 @@ import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import SpeakingActivityEditorModal from '../components/admin/SpeakingActivityEditorModal.jsx';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import { loadAdminLearners } from '../lib/adminLearnersApi.js';
-import { loadSpeakingActivities, updateSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
+import { loadSpeakingActivities, loadSpeakingActivityHistory, updateSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
 const typeLabels = {
@@ -109,6 +109,8 @@ function PresentationLauncher({ activity, onClose }) {
   const [learnerQuery, setLearnerQuery] = useState('');
   const [loadingLearners, setLoadingLearners] = useState(true);
   const [learnerError, setLearnerError] = useState('');
+  const [activityHistory, setActivityHistory] = useState(null);
+  const [historyLoading, setHistoryLoading] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -138,6 +140,31 @@ function PresentationLauncher({ activity, onClose }) {
   }, [learnerQuery, learners]);
 
   const selectedLearner = learners.find((learner) => learner.id === learnerId) || null;
+
+  useEffect(() => {
+    let active = true;
+
+    if (!learnerId || !activity?.id) {
+      setActivityHistory(null);
+      setHistoryLoading(false);
+      return () => { active = false; };
+    }
+
+    setHistoryLoading(true);
+    loadSpeakingActivityHistory(learnerId)
+      .then((rows) => {
+        if (!active) return;
+        setActivityHistory(rows.find((row) => row.activity_id === activity.id) || null);
+      })
+      .catch(() => {
+        if (active) setActivityHistory(null);
+      })
+      .finally(() => {
+        if (active) setHistoryLoading(false);
+      });
+
+    return () => { active = false; };
+  }, [activity?.id, learnerId]);
 
   if (!activity) return null;
 
@@ -195,6 +222,14 @@ function PresentationLauncher({ activity, onClose }) {
                 {selectedLearner.admin_context_note ? (
                   <p className="mt-1 line-clamp-2 text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">{selectedLearner.admin_context_note}</p>
                 ) : null}
+                <p className="mt-1.5 text-[0.68rem] font-bold leading-5 text-ink/45 dark:text-white/45">
+                  {historyLoading
+                    ? 'Controllo storico…'
+                    : activityHistory
+                      ? `Questo gioco: ${activityHistory.session_count} session${Number(activityHistory.session_count) === 1 ? 'e' : 'i'} · ${activityHistory.items_seen} item già visti · ultima ${new Intl.DateTimeFormat('it-IT', { day: '2-digit', month: 'short' }).format(new Date(activityHistory.last_session_at))}`
+                      : 'Questo gioco non risulta ancora usato con questo studente.'}
+                </p>
+                <p className="mt-0.5 text-[0.68rem] font-bold text-clay dark:text-coral">Smart no-repeat: evita prima gli item usati negli ultimi 60 giorni.</p>
               </div>
               <button type="button" onClick={() => setLearnerId('')} className="focus-ring min-h-9 rounded-full border border-ink/10 px-3 text-xs font-black dark:border-white/10">Cambia</button>
             </div>

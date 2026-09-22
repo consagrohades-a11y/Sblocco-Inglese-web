@@ -1,24 +1,47 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, Dices, Sparkles } from 'lucide-react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import { loadAdminLearnerDetail } from '../lib/adminLearnersApi.js';
-import { loadSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
+import {
+  finishSpeakingSession,
+  loadSpeakingActivity,
+  loadSpeakingItemHistory,
+  recordSpeakingItem,
+  startSpeakingSession,
+} from '../lib/adminSpeakingActivitiesApi.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
+const RECENT_ITEM_DAYS = 60;
 
 function asArray(value) {
   return Array.isArray(value) ? value : [];
 }
 
-function normaliseItem(item, fallbackLevels = []) {
-  if (typeof item === 'string') return { text: item, levels: fallbackLevels, student_support: '', challenge: '' };
+function normaliseHistoryText(value) {
+  return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+function normaliseItem(item, fallbackLevels = [], sourceIndex = null) {
+  if (typeof item === 'string') {
+    return {
+      text: item,
+      levels: fallbackLevels,
+      student_support: '',
+      challenge: '',
+      sourceIndex,
+      historyKey: normaliseHistoryText(item),
+    };
+  }
+  const text = item?.text || '';
   return {
-    text: item?.text || '',
+    text,
     levels: asArray(item?.levels).length ? asArray(item.levels) : fallbackLevels,
     student_support: item?.student_support || item?.support || '',
     challenge: item?.challenge || '',
+    sourceIndex,
+    historyKey: normaliseHistoryText(text),
   };
 }
 
@@ -86,6 +109,10 @@ export default function SpeakingActivityPresenter() {
   const [error, setError] = useState('');
   const [index, setIndex] = useState(0);
   const [challengeVisible, setChallengeVisible] = useState(false);
+  const [itemHistory, setItemHistory] = useState([]);
+  const [historyReady, setHistoryReady] = useState(true);
+  const [sessionId, setSessionId] = useState('');
+  const shownThisSessionRef = useRef(new Set());
 
   const learnerId = searchParams.get('learner') || '';
 
@@ -117,36 +144,101 @@ export default function SpeakingActivityPresenter() {
 
   useEffect(() => {
     let active = true;
+    let openedSessionId = '';
+
+    shownThisSessionRef.current = new Set();
+    setSessionId('');
+    setItemHistory([]);
 
     if (!learnerId) {
       setLearner(null);
+      setHistoryReady(true);
       return () => { active = false; };
     }
 
-    async function loadLearner() {
+    setHistoryReady(false);
+
+    async function prepareLearnerSession() {
       try {
-        const data = await loadAdminLearnerDetail(learnerId);
-        if (active) setLearner(data);
-      } catch {
-        if (active) setLearner(null);
+        const [learnerData, history] = await Promise.all([
+          loadAdminLearnerDetail(learnerId),
+          loadSpeakingItemHistory(learnerId, activityId, RECENT_ITEM_DAYS),
+        ]);
+
+        if (!active) return;
+
+        setLearner(learnerData);
+        setItemHistory(history);
+
+        if (learnerData) {
+          try {
+            openedSessionId = await startSpeakingSession({
+              learnerId,
+              activityId,
+              levels: selectedLevels,
+            });
+            if (active) setSessionId(openedSessionId);
+          } catch (sessionError) {
+            console.warn('Speaking session history could not be started.', sessionError);
+          }
+        }
+      } catch (loadError) {
+        if (active) {
+          setLearner(null);
+          setItemHistory([]);
+          console.warn('Speaking learner history could not be loaded.', loadError);
+        }
+      } finally {
+        if (active) setHistoryReady(true);
       }
     }
 
-    loadLearner();
-    return () => { active = false; };
-  }, [learnerId]);
+    prepareLearnerSession();
+
+    return () => {
+      active = false;
+      if (openedSessionId) finishSpeakingSession(openedSessionId).catch(() => {});
+    };
+  }, [activityId, learnerId, selectedLevels.join(',')]);
 
   const items = useMemo(() => {
     if (!activity) return [];
-    const normalised = asArray(activity.prompts).map((item) => normaliseItem(item, asArray(activity.levels)));
-    if (!selectedLevels.length) return normalised;
-    return normalised.filter((item) => asArray(item.levels).some((level) => selectedLevels.includes(level)));
-  }, [activity, selectedLevels]);
+
+    const historyByText = new Map(
+      asArray(itemHistory).map((entry) => [normaliseHistoryText(entry.item_text), entry]),
+    );
+
+    const eligible = asArray(activity.prompts)
+      .map((item, sourceIndex) => normaliseItem(item, asArray(activity.levels), sourceIndex))
+      .filter((item) => !selectedLevels.length || asArray(item.levels).some((level) => selectedLevels.includes(level)))
+      .map((item) => ({
+        ...item,
+        priorUse: historyByText.get(item.historyKey) || null,
+      }));
+
+    if (!learnerId || !historyReady) return eligible;
+
+    return [...eligible].sort((left, right) => {
+      const leftRecent = Number(left.priorUse?.recent_use_count || 0) > 0;
+      const rightRecent = Number(right.priorUse?.recent_use_count || 0) > 0;
+      if (leftRecent !== rightRecent) return leftRecent ? 1 : -1;
+
+      const leftSeen = Boolean(left.priorUse);
+      const rightSeen = Boolean(right.priorUse);
+      if (leftSeen !== rightSeen) return leftSeen ? 1 : -1;
+
+      if (!leftSeen && !rightSeen) return left.sourceIndex - right.sourceIndex;
+
+      const leftTime = new Date(left.priorUse?.last_used_at || 0).getTime();
+      const rightTime = new Date(right.priorUse?.last_used_at || 0).getTime();
+      return leftTime - rightTime;
+    });
+  }, [activity, historyReady, itemHistory, learnerId, selectedLevels]);
 
   useEffect(() => {
     setIndex(0);
     setChallengeVisible(false);
-  }, [activityId, selectedLevels.join(',')]);
+  }, [activityId, historyReady, learnerId, selectedLevels.join(',')]);
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -164,10 +256,51 @@ export default function SpeakingActivityPresenter() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [items.length]);
 
-  if (loading) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-ink dark:bg-surface-950 dark:text-white">Loading speaking activity…</div>;
+  const current = items[index] || items[0] || null;
+
+  useEffect(() => {
+    if (!sessionId || !current?.text || !historyReady) return;
+
+    const key = current.historyKey || normaliseHistoryText(current.text);
+    if (!key || shownThisSessionRef.current.has(key)) return;
+
+    shownThisSessionRef.current.add(key);
+    recordSpeakingItem({
+      sessionId,
+      itemText: current.text,
+      itemIndex: current.sourceIndex,
+    }).catch((recordError) => {
+      shownThisSessionRef.current.delete(key);
+      console.warn('Speaking item history could not be recorded.', recordError);
+    });
+  }, [current?.historyKey, current?.sourceIndex, current?.text, historyReady, sessionId]);
+
+  function chooseRandomIndex() {
+    if (items.length < 2) return;
+
+    const candidates = items
+      .map((item, itemIndex) => ({
+        item,
+        itemIndex,
+        shown: shownThisSessionRef.current.has(item.historyKey),
+        recent: Number(item.priorUse?.recent_use_count || 0) > 0,
+      }))
+      .filter((candidate) => candidate.itemIndex !== index);
+
+    const freshUnseen = candidates.filter((candidate) => !candidate.shown && !candidate.recent);
+    const unseen = candidates.filter((candidate) => !candidate.shown);
+    const pool = freshUnseen.length ? freshUnseen : unseen.length ? unseen : candidates;
+    const next = pool[Math.floor(Math.random() * pool.length)];
+
+    if (next) {
+      setIndex(next.itemIndex);
+      setChallengeVisible(false);
+    }
+  }
+
+  if (loading || (learnerId && !historyReady)) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-ink dark:bg-surface-950 dark:text-white">Preparing speaking session…</div>;
   if (error || !activity) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-red-800 dark:bg-surface-950 dark:text-red-200">{error || 'Activity not found.'}</div>;
 
-  const current = items[index] || null;
   const steps = asArray(activity.student_steps);
   const language = asArray(activity.useful_language);
   const firstName = String(learner?.display_name || learner?.email || '').trim().split(/\\s+/)[0];
@@ -268,7 +401,7 @@ export default function SpeakingActivityPresenter() {
           <footer className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-ink/10 pt-5 dark:border-white/10">
             <button type="button" disabled={!items.length} onClick={() => { setIndex((currentIndex) => (currentIndex - 1 + items.length) % items.length); setChallengeVisible(false); }} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><ArrowLeft className="h-4 w-4" /> Previous</button>
             <div className="flex flex-wrap gap-2">
-              <button type="button" disabled={items.length < 2} onClick={() => { let next = index; while (next === index) next = Math.floor(Math.random() * items.length); setIndex(next); setChallengeVisible(false); }} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><Dices className="h-4 w-4" /> Random</button>
+              <button type="button" disabled={items.length < 2} onClick={chooseRandomIndex} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><Dices className="h-4 w-4" /> Random</button>
               <button type="button" disabled={!items.length} onClick={() => { setIndex((currentIndex) => (currentIndex + 1) % items.length); setChallengeVisible(false); }} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-30 dark:bg-clay">Next <ArrowRight className="h-4 w-4" /></button>
             </div>
           </footer>
