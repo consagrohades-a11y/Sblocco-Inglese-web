@@ -9,6 +9,7 @@ const positiveInteger = (value, fallback) => {
   const parsed = Number(value);
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 };
+const cloneJsonValue = (value) => value == null ? value : JSON.parse(JSON.stringify(value));
 const slug = (value, fallback = 'item') => text(value)
   .toLocaleLowerCase()
   .normalize('NFKD')
@@ -1051,7 +1052,7 @@ export function createDefaultStudioBlock(type, presetId = null) {
   return {
     type,
     ...block.createDefault(),
-    ...(preset?.initial || {}),
+    ...cloneJsonValue(preset?.initial || {}),
   };
 }
 
