@@ -111,7 +111,7 @@ export default function SpeakingActivityPresenter() {
   const [error, setError] = useState('');
   const [index, setIndex] = useState(0);
   const [challengeVisible, setChallengeVisible] = useState(false);
-  const [supportVisible, setSupportVisible] = useState(true);
+  const [supportVisible, setSupportVisible] = useState(false);
   const [itemHistory, setItemHistory] = useState([]);
   const [historyReady, setHistoryReady] = useState(true);
   const [sessionId, setSessionId] = useState('');
@@ -121,6 +121,19 @@ export default function SpeakingActivityPresenter() {
 
   const learnerId = searchParams.get('learner') || '';
   const controlId = searchParams.get('control') || '';
+
+  function postStateToController(payload) {
+    if (!controlId || !window.opener || window.opener.closed) return;
+    try {
+      window.opener.postMessage({
+        source: 'sblocco-speaking-control',
+        controlId,
+        payload,
+      }, window.location.origin);
+    } catch {
+      // BroadcastChannel/localStorage remain available as fallback.
+    }
+  }
 
   const selectedLevels = useMemo(() => {
     const requested = String(searchParams.get('levels') || '')
@@ -244,7 +257,7 @@ export default function SpeakingActivityPresenter() {
   useEffect(() => {
     setIndex(0);
     setChallengeVisible(false);
-    setSupportVisible(true);
+    setSupportVisible(false);
   }, [activityId, historyReady, learnerId, selectedLevels.join(',')]);
 
   useEffect(() => {
@@ -280,14 +293,14 @@ export default function SpeakingActivityPresenter() {
     if (!items.length) return;
     setIndex((currentIndex) => (currentIndex + 1) % items.length);
     setChallengeVisible(false);
-    setSupportVisible(true);
+    setSupportVisible(false);
   }
 
   function goPrevious() {
     if (!items.length) return;
     setIndex((currentIndex) => (currentIndex - 1 + items.length) % items.length);
     setChallengeVisible(false);
-    setSupportVisible(true);
+    setSupportVisible(false);
   }
 
   function chooseRandomIndex() {
@@ -311,7 +324,7 @@ export default function SpeakingActivityPresenter() {
     });
 
     setChallengeVisible(false);
-    setSupportVisible(true);
+    setSupportVisible(false);
   }
 
   const presenterState = useMemo(() => ({
@@ -337,24 +350,35 @@ export default function SpeakingActivityPresenter() {
   useEffect(() => {
     presenterStateRef.current = presenterState;
     if (controlId && controlConnectionRef.current) {
-      controlConnectionRef.current.send({ type: 'presenter-state', state: presenterState });
+      const payload = { type: 'presenter-state', state: presenterState };
+      controlConnectionRef.current.send(payload);
+      postStateToController(payload);
     }
   }, [controlId, presenterState]);
 
   useEffect(() => {
     if (!controlId) return undefined;
 
-    const connection = connectSpeakingControl(controlId, (payload) => {
+    let connection = null;
+
+    function sendPresenterState() {
+      if (!presenterStateRef.current) return;
+      const payload = { type: 'presenter-state', state: presenterStateRef.current };
+      connection?.send(payload);
+      postStateToController(payload);
+    }
+
+    function handleControlPayload(payload) {
       if (!payload?.type) return;
 
       if (payload.type === 'next' && items.length) {
         setIndex((currentIndex) => (currentIndex + 1) % items.length);
         setChallengeVisible(false);
-        setSupportVisible(true);
+        setSupportVisible(false);
       } else if (payload.type === 'previous' && items.length) {
         setIndex((currentIndex) => (currentIndex - 1 + items.length) % items.length);
         setChallengeVisible(false);
-        setSupportVisible(true);
+        setSupportVisible(false);
       } else if (payload.type === 'random' && items.length > 1) {
         setIndex((currentIndex) => {
           const candidates = items
@@ -371,32 +395,41 @@ export default function SpeakingActivityPresenter() {
           return pool[Math.floor(Math.random() * pool.length)]?.itemIndex ?? currentIndex;
         });
         setChallengeVisible(false);
-        setSupportVisible(true);
+        setSupportVisible(false);
       } else if (payload.type === 'toggle-support') {
         setSupportVisible((value) => !value);
       } else if (payload.type === 'toggle-challenge') {
         setChallengeVisible((value) => !value);
       } else if (payload.type === 'sync-request') {
-        if (presenterStateRef.current) {
-          connection.send({ type: 'presenter-state', state: presenterStateRef.current });
-        }
+        sendPresenterState();
       } else if (payload.type === 'close-presenter') {
         window.close();
       }
-    });
-
-    controlConnectionRef.current = connection;
-    if (presenterStateRef.current) {
-      connection.send({ type: 'presenter-state', state: presenterStateRef.current });
     }
 
+    connection = connectSpeakingControl(controlId, handleControlPayload);
+    controlConnectionRef.current = connection;
+
+    function onDirectMessage(event) {
+      if (event.origin !== window.location.origin) return;
+      const envelope = event.data;
+      if (envelope?.source !== 'sblocco-speaking-control' || envelope.controlId !== controlId) return;
+      handleControlPayload(envelope.payload);
+    }
+
+    window.addEventListener('message', onDirectMessage);
+
+    sendPresenterState();
+
     return () => {
-      connection.send({ type: 'presenter-closed' });
+      const closedPayload = { type: 'presenter-closed' };
+      connection.send(closedPayload);
+      postStateToController(closedPayload);
       connection.close();
+      window.removeEventListener('message', onDirectMessage);
       if (controlConnectionRef.current === connection) controlConnectionRef.current = null;
     };
   }, [controlId, items]);
-
   if (loading || (learnerId && !historyReady)) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-ink dark:bg-surface-950 dark:text-white">Preparing speaking session…</div>;
   if (error || !activity) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-red-800 dark:bg-surface-950 dark:text-red-200">{error || 'Activity not found.'}</div>;
 
@@ -407,22 +440,22 @@ export default function SpeakingActivityPresenter() {
   return (
     <>
       <SEO title={`${activity.title} | Presentazione speaking`} description="Student-facing speaking activity." />
-      <div className="min-h-screen bg-paper text-ink dark:bg-surface-950 dark:text-white">
-        <main className="mx-auto max-w-[1500px] px-4 py-5 sm:px-7 sm:py-7">
-          <header className="border-b border-ink/10 pb-6 dark:border-white/10">
+      <div className="min-h-screen bg-paper text-ink dark:bg-surface-950 dark:text-white lg:h-[100dvh] lg:min-h-0 lg:overflow-hidden">
+        <main className="mx-auto max-w-[1500px] px-4 py-4 sm:px-6 lg:grid lg:h-full lg:grid-rows-[auto_minmax(0,1fr)_auto] lg:gap-4 lg:px-7 lg:py-4">
+          <header className="border-b border-ink/10 pb-4 dark:border-white/10">
             {learner ? (
-              <div className="mb-6 flex items-center gap-4 rounded-3xl border border-ink/10 bg-white px-4 py-4 dark:border-white/10 dark:bg-surface-900 sm:px-5">
+              <div className="mb-3 flex items-center gap-3 rounded-2xl border border-ink/10 bg-white px-3 py-2.5 dark:border-white/10 dark:bg-surface-900">
                 <LearnerAvatar
                   avatarKey={learner.avatar_key}
                   backgroundKey={learner.avatar_background_key}
                   displayName={learner.display_name || learner.email}
-                  size="lg"
+                  size="md"
                   eager
                   className="ring-2 ring-paper dark:ring-surface-900"
                 />
                 <div className="min-w-0">
                   <p className="text-xs font-black uppercase tracking-[0.16em] text-clay dark:text-coral">Ready?</p>
-                  <p className="mt-1 truncate text-2xl font-black sm:text-3xl">{firstName ? `${firstName}, let's play!` : "Let's play!"}</p>
+                  <p className="mt-0.5 truncate text-lg font-black sm:text-xl">{firstName ? `${firstName}, let's play!` : "Let's play!"}</p>
                 </div>
               </div>
             ) : null}
@@ -430,8 +463,8 @@ export default function SpeakingActivityPresenter() {
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="min-w-0">
                 <p className="text-xs font-black uppercase tracking-[0.18em] text-clay dark:text-coral">Speaking activity</p>
-                <h1 className="mt-2 text-3xl font-black leading-tight sm:text-5xl">{activity.title}</h1>
-                {activity.student_intro ? <p className="mt-3 max-w-4xl text-base font-semibold leading-7 text-ink/65 dark:text-white/65 sm:text-lg">{activity.student_intro}</p> : null}
+                <h1 className="mt-1 text-2xl font-black leading-tight sm:text-3xl lg:text-4xl">{activity.title}</h1>
+                {activity.student_intro ? <p className="mt-1.5 max-w-4xl text-sm font-semibold leading-5 text-ink/65 dark:text-white/65 lg:line-clamp-2">{activity.student_intro}</p> : null}
               </div>
               <div className="rounded-full border border-ink/10 bg-white px-4 py-2 text-xs font-black dark:border-white/10 dark:bg-white/[0.05]">
                 {items.length ? `${index + 1} / ${items.length}` : '0 / 0'}
@@ -445,12 +478,12 @@ export default function SpeakingActivityPresenter() {
               <p className="mt-3 text-lg font-black">No items match the selected level combination.</p>
             </div>
           ) : (
-            <div className="mt-7 grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(20rem,0.65fr)]">
-              <section className="min-w-0">
-                <div className="grid min-h-[22rem] place-items-center rounded-[2rem] bg-ink p-6 text-center text-white sm:p-10">
+            <div className="mt-5 grid gap-4 lg:min-h-0 lg:overflow-hidden xl:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
+              <section className="min-w-0 lg:flex lg:min-h-0 lg:flex-col">
+                <div className="flex min-h-[20rem] flex-col justify-center rounded-[2rem] bg-ink p-5 text-center text-white sm:p-7 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
                   <div className="w-full"><SpeakingPromptContent item={current} style={activity.presenter_style} /></div>
                   {current.student_support && supportVisible ? (
-                    <div className="mt-8 rounded-2xl border border-white/15 bg-white/[0.07] p-5">
+                    <div className="mt-5 rounded-2xl border border-white/15 bg-white/[0.07] p-4">
                       <p className="text-xs font-black uppercase tracking-[0.15em] text-white/50">Need a little help?</p>
                       <p className="mt-2 text-base font-bold leading-7 sm:text-lg">{current.student_support}</p>
                     </div>
@@ -458,23 +491,23 @@ export default function SpeakingActivityPresenter() {
                 </div>
 
                 {current.challenge ? (
-                  <div className="mt-4 rounded-2xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-surface-900">
+                  <div className="mt-3 shrink-0 rounded-2xl border border-ink/10 bg-white px-4 py-3 dark:border-white/10 dark:bg-surface-900">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Extra challenge</p>
                       <button type="button" onClick={() => setChallengeVisible((value) => !value)} className="focus-ring min-h-10 rounded-full border border-ink/15 px-4 text-xs font-black dark:border-white/15">
                         {challengeVisible ? 'Hide' : 'Reveal'}
                       </button>
                     </div>
-                    {challengeVisible ? <p className="mt-3 text-lg font-black leading-7">{current.challenge}</p> : null}
+                    {challengeVisible ? <p className="mt-2 text-base font-black leading-6">{current.challenge}</p> : null}
                   </div>
                 ) : null}
               </section>
 
-              <aside className="grid content-start gap-5">
+              <aside className="grid content-start gap-3 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
                 {steps.length ? (
-                  <section className="rounded-3xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-surface-900 sm:p-6">
+                  <section className="rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-surface-900">
                     <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Your task</p>
-                    <div className="mt-4 grid gap-3">
+                    <div className="mt-3 grid gap-2">
                       {steps.map((step, stepIndex) => (
                         <div key={`${stepIndex}-${step}`} className="flex gap-3">
                           <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-linen text-xs font-black dark:bg-white/10">{stepIndex + 1}</span>
@@ -486,10 +519,10 @@ export default function SpeakingActivityPresenter() {
                 ) : null}
 
                 {language.length ? (
-                  <section className="rounded-3xl border border-ink/10 bg-white p-5 dark:border-white/10 dark:bg-surface-900 sm:p-6">
+                  <section className="rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-surface-900">
                     <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Useful language</p>
-                    <div className="mt-4 grid gap-2">
-                      {language.map((phrase) => <div key={phrase} className="rounded-xl bg-linen/70 px-4 py-3 text-sm font-black leading-6 dark:bg-white/[0.06]">{phrase}</div>)}
+                    <div className="mt-3 grid gap-1.5">
+                      {language.map((phrase) => <div key={phrase} className="rounded-xl bg-linen/70 px-3 py-2 text-sm font-black leading-5 dark:bg-white/[0.06]">{phrase}</div>)}
                     </div>
                   </section>
                 ) : null}
@@ -497,11 +530,11 @@ export default function SpeakingActivityPresenter() {
             </div>
           )}
 
-          <footer className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-ink/10 pt-5 dark:border-white/10">
-            <button type="button" disabled={!items.length} onClick={goPrevious} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><ArrowLeft className="h-4 w-4" /> Previous</button>
+          <footer className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-ink/10 pt-3 dark:border-white/10 lg:mt-0">
+            <button type="button" disabled={!items.length} onClick={goPrevious} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><ArrowLeft className="h-4 w-4" /> Previous</button>
             <div className="flex flex-wrap gap-2">
-              <button type="button" disabled={items.length < 2} onClick={chooseRandomIndex} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><Dices className="h-4 w-4" /> Random</button>
-              <button type="button" disabled={!items.length} onClick={goNext} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-30 dark:bg-clay">Next <ArrowRight className="h-4 w-4" /></button>
+              <button type="button" disabled={items.length < 2} onClick={chooseRandomIndex} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><Dices className="h-4 w-4" /> Random</button>
+              <button type="button" disabled={!items.length} onClick={goNext} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-30 dark:bg-clay">Next <ArrowRight className="h-4 w-4" /></button>
             </div>
           </footer>
         </main>
