@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import SEO from '../components/SEO';
 import { supabase } from '../lib/supabaseClient.js';
+import { decorateLearnerAssignmentsWithProgress } from '../lib/assignmentProgressApi.js';
 
 function formatDeadline(value) {
   if (!value) return null;
@@ -64,9 +65,11 @@ export default function LearnerProgress() {
         setAssignments([]);
         setError('Non è stato possibile aggiornare i progressi. Riprova tra poco.');
       } else {
-        setAssignments(data || []);
+        const decorated = await decorateLearnerAssignmentsWithProgress(data || []);
+        if (!active) return;
+        setAssignments(decorated);
       }
-      setLoading(false);
+      if (active) setLoading(false);
     }
 
     loadProgress();
@@ -74,8 +77,9 @@ export default function LearnerProgress() {
   }, [user?.id]);
 
   const stats = useMemo(() => {
-    const open = assignments.filter((item) => item.status === 'published');
-    const completed = assignments.filter((item) => item.status === 'completed');
+    const stateOf = (item) => item.learner_state || item.status;
+    const open = assignments.filter((item) => stateOf(item) === 'published');
+    const completed = assignments.filter((item) => ['completed', 'review'].includes(stateOf(item)));
     const completion = assignments.length ? Math.round((completed.length / assignments.length) * 100) : 0;
     const minutes = open.reduce((sum, item) => sum + Number(item.estimated_minutes || 0), 0);
     const nearest = open
@@ -225,7 +229,7 @@ export default function LearnerProgress() {
                       </span>
                       <div className="min-w-0">
                         <p className="truncate font-black text-ink dark:text-white">{assignment.title}</p>
-                        <p className="mt-1 text-xs font-semibold text-ink/50 dark:text-white/50">Completata</p>
+                        <p className="mt-1 text-xs font-semibold text-ink/50 dark:text-white/50">{(assignment.learner_state || assignment.status) === 'review' ? 'Consegnata · in valutazione' : 'Completata'}</p>
                       </div>
                     </Link>
                   ))}
