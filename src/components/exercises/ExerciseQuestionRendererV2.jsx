@@ -18,6 +18,7 @@ import {
   wordOrderTerminalPunctuation,
 } from '../../lib/wordOrderPresentation.js';
 import { stableShuffleWordOrderTokenInstances } from '../../lib/wordOrderShuffle.js';
+import { stableShuffleChoiceOptions } from '../../lib/choiceOptionShuffle.js';
 import EducationalContentBlock from './EducationalContentBlock.jsx';
 import SbloccoSelect from './SbloccoSelect.jsx';
 import WritingCorrectionDisplay from './WritingCorrectionDisplay.jsx';
@@ -342,6 +343,7 @@ function ReadingComprehension({
   result = null,
   showCorrectAnswers = false,
   showExplanations = false,
+  shuffleSeed = 'preview',
 }) {
   const content = question.content || {};
   const values = answer && typeof answer === 'object' && !Array.isArray(answer) ? answer : {};
@@ -557,7 +559,7 @@ function ReadingComprehension({
                 </div>
                 <p className="mt-3 text-base font-black leading-7 text-ink dark:text-white">{choiceItem.prompt}</p>
                 <div className="mt-3 grid gap-2">
-                  {(choiceItem.options || []).map((option, optionIndex) => {
+                  {displayOptions.map((option, optionIndex) => {
                     const selected = selectedKey === option.key;
                     const correct = disabled && showCorrectAnswers && correctKey === option.key;
                     const wrongSelected = disabled && selected && correctKey && correctKey !== option.key;
@@ -798,6 +800,11 @@ function ReadingComprehension({
           const itemResult = itemResults[choiceItem.key] || null;
           const selectedKey = values[choiceItem.key];
           const correctKey = typeof itemResult?.correct_answer === 'string' ? itemResult.correct_answer : null;
+          const displayOptions = stableShuffleChoiceOptions(
+            choiceItem.options || [],
+            content.shuffle_options,
+            shuffleSeed + ':' + choiceItem.key,
+          );
 
           return (
             <section key={choiceItem.key} className="border-t border-ink/10 pt-5 first:border-t-0 first:pt-0 dark:border-white/10">
@@ -1017,7 +1024,7 @@ export default function ExerciseQuestionRendererV2({
     if (type === 'written_response') return <div className="grid gap-4"><WrittenResponse question={question} answer={answer} onChange={onChange} disabled={disabled} /><RubricPreview rubric={question.content?.rubric} /></div>;
     if (type === 'dialogue_roleplay') return <DialogueRoleplay question={question} answer={answer} onChange={onChange} disabled={disabled} attemptId={attemptId} attemptQuestionId={item?.id} teacherTurnReviews={item?.teacher_turn_reviews} />;
     if (type === 'audio_response') return <AudioRecorder question={question} answer={answer} onChange={onChange} disabled={disabled} attemptId={attemptId} attemptQuestionId={item?.id} />;
-    if (type === 'reading_comprehension') return <ReadingComprehension question={question} answer={answer} onChange={onChange} disabled={disabled} result={result} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} />;
+    if (type === 'reading_comprehension') return <ReadingComprehension question={question} answer={answer} onChange={onChange} disabled={disabled} result={result} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} shuffleSeed={`${attemptId || 'preview'}:${item?.question_version_id || item?.id || question.client_key || 'reading'}`} />;
     return <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100">Tipologia non supportata: {type || 'sconosciuta'}.</p>;
   }, [type, question, answer, onChange, disabled, attemptId, item?.id, item?.teacher_turn_reviews, result, showCorrectAnswers, showExplanations]);
 
