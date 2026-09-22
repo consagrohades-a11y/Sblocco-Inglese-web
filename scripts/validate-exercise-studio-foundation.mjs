@@ -975,3 +975,43 @@ assert.match(
   /reading_comprehension.*listening_comprehension/,
   'Inner-item summaries must cover reading and listening comprehension.',
 );
+
+
+const assignmentProgressRetryMigrationSource = fs.readFileSync(
+  new URL('../supabase/migrations/20260922220500_assignment_progress_retry_stability.sql', import.meta.url),
+  'utf8',
+);
+const assignmentProgressApiSource = fs.readFileSync(
+  new URL('../src/lib/assignmentProgressApi.js', import.meta.url),
+  'utf8',
+);
+const exercisePlayerSource = fs.readFileSync(
+  new URL('../src/pages/ExercisePlayerV2.jsx', import.meta.url),
+  'utf8',
+);
+
+assert.match(
+  assignmentProgressRetryMigrationSource,
+  /v_latest_submitted/,
+  'Assignment progress must retain the latest submitted attempt while a retry is in progress.',
+);
+assert.match(
+  assignmentProgressRetryMigrationSource,
+  /v_completion_rule = 'submitted' and v_submitted_count >= 1/,
+  'Submitted completion must remain monotonic across retries.',
+);
+assert.ok(
+  assignmentProgressApiSource.indexOf("if (waitingForReview && allDone) return 'review';")
+    < assignmentProgressApiSource.indexOf("if (assignment?.status === 'completed') return 'completed';"),
+  'Learner summary state must preserve a new review state even after prior completion.',
+);
+assert.match(
+  exercisePlayerSource,
+  /obiettivo non raggiunto/,
+  'Learner result UI must explain an unmet score goal.',
+);
+assert.match(
+  exercisePlayerSource,
+  /Inizia tentativo/,
+  'Learner result UI must explain required retry progression.',
+);
