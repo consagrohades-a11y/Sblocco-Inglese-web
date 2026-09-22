@@ -68,7 +68,9 @@ assert.ok(
 );
 assert.ok(speakingImport.includes('analyseSpeakingItemSet'), 'Speaking import must run the duplicate/context quality gate.');
 assert.ok(speakingImport.includes("'Salta'"), 'Speaking import must let admins skip individual items.');
-assert.ok(speakingImport.includes('Salta tutti i duplicati'), 'Speaking import must support bulk skipping blocking duplicates.');
+assert.ok(speakingImport.includes('Importa comunque'), 'Speaking import must let the teacher explicitly accept a flagged item.');
+assert.ok(speakingImport.includes('totals.unresolved === 0'), 'Speaking import must require a decision for every flagged item before import.');
+assert.ok(!speakingLibrary.includes('analyseSpeakingItemSet'), 'Speaking library browsing must not run similarity analysis.');
 
 assert.ok(speakingPrompt.includes('splitBadGood'), 'Speaking prompt renderer must support Bad/Good split cards.');
 assert.ok(speakingPrompt.includes('text-center'), 'Speaking prompts must remain centered.');
