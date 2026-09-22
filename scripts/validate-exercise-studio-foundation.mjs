@@ -16,6 +16,7 @@ import {
   preflightStudioDocument,
 } from '../src/lib/exerciseStudioCompiler.js';
 import { stableShuffleWordOrderTokenInstances } from '../src/lib/wordOrderShuffle.js';
+import { stableShuffleChoiceOptions } from '../src/lib/choiceOptionShuffle.js';
 import { parseStudioImport } from '../src/lib/exerciseStudioImport.js';
 import { buildStudioActivitiesZip, buildStudioActivityExport } from '../src/lib/exerciseStudioExport.js';
 
@@ -52,6 +53,31 @@ for (const type of requiredTypes) {
   }
   assert.ok(definition.capabilities?.learnerRenderer, type + ' must declare its learner renderer.');
 }
+
+const authoredChoiceOptions = [
+  { key: 'option_1', text: 'A' },
+  { key: 'option_2', text: 'B' },
+  { key: 'option_3', text: 'C' },
+  { key: 'option_4', text: 'D' },
+];
+const shuffledChoiceA = stableShuffleChoiceOptions(authoredChoiceOptions, 'stable_attempt', 'attempt-1:item-1');
+const shuffledChoiceAAgain = stableShuffleChoiceOptions(authoredChoiceOptions, 'stable_attempt', 'attempt-1:item-1');
+const shuffledChoiceB = stableShuffleChoiceOptions(authoredChoiceOptions, 'stable_attempt', 'attempt-2:item-1');
+assert.deepEqual(
+  shuffledChoiceA.map((option) => option.key),
+  shuffledChoiceAAgain.map((option) => option.key),
+  'Multiple-choice option order must stay stable within one attempt.',
+);
+assert.notDeepEqual(
+  shuffledChoiceA.map((option) => option.key),
+  authoredChoiceOptions.map((option) => option.key),
+  'Stable shuffle must not accidentally preserve the authored option order.',
+);
+assert.ok(
+  shuffledChoiceB.some((option, index) => option.key !== shuffledChoiceA[index]?.key)
+    || shuffledChoiceB.length < 3,
+  'Different attempt seeds should be able to produce a different option order.',
+);
 
 const freshReadingActivity = createStudioDocument({
   internal_title: '',
@@ -295,6 +321,7 @@ assert.deepEqual(questionTypes, [
 
 const groupedChoiceQuestion = preflight.runtime.exercise.sections[0].questions[3];
 assert.equal(groupedChoiceQuestion.content.presentation, 'choice_set');
+assert.equal(groupedChoiceQuestion.content.shuffle_options, 'stable_attempt');
 assert.equal(groupedChoiceQuestion.grading.mode, 'per_item');
 assert.equal(groupedChoiceQuestion.content.items.length, 2);
 assert.equal(groupedChoiceQuestion.content.items[0].key, 'item_1');
