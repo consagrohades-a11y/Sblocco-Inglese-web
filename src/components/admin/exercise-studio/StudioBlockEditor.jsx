@@ -345,7 +345,7 @@ function VocabularyEditor({ items = [], onChange }) {
       <div>
         <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Vocabulary items</p>
         <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
-          Keep the expression, meaning, Italian support and example visually separate.
+          Each word or chunk keeps a reusable pool of 3–5 natural contexts. Only one is shown in the lesson; the full pool follows the item into Bank and Replay.
         </p>
       </div>
 
@@ -383,6 +383,16 @@ function VocabularyEditor({ items = [], onChange }) {
               />
             </label>
 
+            <div className="grid min-w-0 gap-1.5 border-b border-ink/10 px-3 py-3 dark:border-white/10">
+              <span className={fieldLabel('Type')}>Word or chunk</span>
+              <StudioSelect
+                value={item.kind || ((item.term || '').trim().includes(' ') ? 'chunk' : 'word')}
+                onChange={(value) => patch(index, { kind: value })}
+                options={[['word', 'Word'], ['chunk', 'Chunk']]}
+                ariaLabel={`Vocabulary type for item ${index + 1}`}
+              />
+            </div>
+
             <label className="grid min-w-0 gap-1.5 border-b border-ink/10 px-3 py-3 dark:border-white/10">
               <span className={fieldLabel('Meaning')}>Meaning</span>
               <textarea
@@ -404,23 +414,41 @@ function VocabularyEditor({ items = [], onChange }) {
               />
             </label>
 
-            <label className="grid min-w-0 gap-1.5 px-3 py-3">
-              <span className={fieldLabel('Example')}>Example in context</span>
-              <textarea
-                rows={2}
-                value={item.example || ''}
-                onChange={(event) => patch(index, { example: event.target.value })}
-                placeholder="Show how the expression is actually used."
-                className="focus-ring min-w-0 resize-y rounded-xl border border-ink/10 bg-linen/35 px-3 py-2.5 text-sm font-semibold italic leading-6 text-ink shadow-sm dark:border-white/10 dark:bg-white/[0.035] dark:text-white"
+            <div className="grid min-w-0 gap-3 px-3 py-3">
+              <StringListEditor
+                label="Context pool"
+                items={Array.isArray(item.examples) ? item.examples : item.example ? [item.example] : []}
+                onChange={(examples) => patch(index, {
+                  examples,
+                  example: examples[Math.max(0, Math.min(examples.length - 1, Number(item.display_example_index) || 0))] || '',
+                })}
+                placeholder="A natural sentence using the target item"
+                hint="Aim for 3–5 genuinely different contexts. Sblocco stores them all for future retrieval practice."
               />
-            </label>
+              {(Array.isArray(item.examples) ? item.examples : item.example ? [item.example] : []).length ? (
+                <SelectInput
+                  label="Example shown in this exercise"
+                  value={String(Math.max(0, Math.min((item.examples || [item.example]).length - 1, Number(item.display_example_index) || 0)))}
+                  onChange={(value) => {
+                    const examples = Array.isArray(item.examples) ? item.examples : item.example ? [item.example] : [];
+                    const display_example_index = Number(value) || 0;
+                    patch(index, {
+                      display_example_index,
+                      example: examples[display_example_index] || '',
+                    });
+                  }}
+                  options={(Array.isArray(item.examples) ? item.examples : item.example ? [item.example] : []).map((example, exampleIndex) => [String(exampleIndex), `Context ${exampleIndex + 1}: ${example.slice(0, 64)}`])}
+                  hint="Learners see one context here. Replay can use the others later."
+                />
+              ) : null}
+            </div>
           </div>
         </section>
       ))}
 
       <button
         type="button"
-        onClick={() => onChange([...values, { term: '', meaning: '', translation: '', example: '' }])}
+        onClick={() => onChange([...values, { term: '', kind: 'word', meaning: '', translation: '', examples: ['', '', ''], display_example_index: 0, example: '' }])}
         className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 hover:bg-orange-50 dark:border-orange-300/30 dark:text-orange-200"
       >
         <Plus className="h-3.5 w-3.5" /> Add word or chunk

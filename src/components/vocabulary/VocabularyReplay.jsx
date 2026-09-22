@@ -11,7 +11,7 @@ function shuffle(values) {
 }
 
 function exampleCue(item) {
-  const example = String(item?.example || '').trim();
+  const example = String(item?._replay_example || item?.example || '').trim();
   const term = String(item?.display_text || '').trim();
   if (!example || !term) return '';
   const escaped = term.replace(/[.*+?^$(){}|[\]\\]/g, '\\$&');
@@ -20,10 +20,13 @@ function exampleCue(item) {
 }
 
 function cueFor(item) {
+  const example = exampleCue(item);
+  if (item?._replay_mode === 'example' && example) return { label: 'Completa la frase', text: example };
+  if (item?._replay_mode === 'meaning' && item?.english_meaning) return { label: 'Parti dal significato', text: item.english_meaning };
+  if (item?._replay_mode === 'italian' && item?.italian_support) return { label: 'Parti dall’italiano', text: item.italian_support };
+  if (example) return { label: 'Completa la frase', text: example };
   if (item?.italian_support) return { label: 'Parti dall’italiano', text: item.italian_support };
   if (item?.english_meaning) return { label: 'Parti dal significato', text: item.english_meaning };
-  const example = exampleCue(item);
-  if (example) return { label: 'Completa la frase', text: example };
   const first = String(item?.display_text || '').trim().charAt(0).toUpperCase();
   return {
     label: item?.bank_kind === 'chunk' ? 'Ricostruisci il chunk' : 'Richiama la parola',
@@ -47,7 +50,23 @@ export default function VocabularyReplay({ items = [] }) {
   const [finished, setFinished] = useState(false);
 
   function start() {
-    setSession(shuffle(reviewable).slice(0, Math.min(5, reviewable.length)));
+    const nextSession = shuffle(reviewable).slice(0, Math.min(5, reviewable.length)).map((item) => {
+      const pool = Array.isArray(item.examples) && item.examples.length
+        ? item.examples.filter((example) => String(example || '').trim())
+        : item.example ? [item.example] : [];
+      const replayExample = pool.length ? pool[Math.floor(Math.random() * pool.length)] : '';
+      const modes = [
+        item.italian_support ? 'italian' : null,
+        item.english_meaning ? 'meaning' : null,
+        replayExample ? 'example' : null,
+      ].filter(Boolean);
+      return {
+        ...item,
+        _replay_example: replayExample,
+        _replay_mode: modes.length ? modes[Math.floor(Math.random() * modes.length)] : null,
+      };
+    });
+    setSession(nextSession);
     setIndex(0);
     setRevealed(false);
     setKnown(0);
@@ -154,7 +173,7 @@ export default function VocabularyReplay({ items = [] }) {
                   {current.bank_kind === 'chunk' ? 'Il chunk' : 'La parola'}
                 </p>
                 <p className="mt-2 text-3xl font-black leading-tight text-ink dark:text-white">{current.display_text}</p>
-                {current.example ? <p className="mt-3 border-l-2 border-orange-400 pl-3 text-sm font-semibold italic leading-6 text-ink/65 dark:text-white/65">{current.example}</p> : null}
+                {(current._replay_example || current.example) ? <p className="mt-3 border-l-2 border-orange-400 pl-3 text-sm font-semibold italic leading-6 text-ink/65 dark:text-white/65">{current._replay_example || current.example}</p> : null}
 
                 <div className="mt-5 flex flex-wrap gap-2">
                   <button

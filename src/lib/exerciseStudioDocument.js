@@ -10,7 +10,7 @@ import {
 export const EXERCISE_STUDIO_SCHEMA_VERSION = 1;
 export const EXERCISE_STUDIO_KIND = 'learning_activity';
 export const EXERCISE_STUDIO_STATUSES = ['draft', 'published', 'archived'];
-export const EXERCISE_STUDIO_ACTIVITY_TYPES = ['exercise', 'lesson', 'mini_course', 'listening_lesson', 'assessment'];
+export const EXERCISE_STUDIO_ACTIVITY_TYPES = ['exercise', 'vocabulary_exercise', 'lesson', 'mini_course', 'listening_lesson', 'assessment'];
 
 const text = (value) => typeof value === 'string' ? value.trim() : '';
 const stringList = (value) => Array.isArray(value) ? [...new Set(value.map((item) => text(item)).filter(Boolean))] : [];

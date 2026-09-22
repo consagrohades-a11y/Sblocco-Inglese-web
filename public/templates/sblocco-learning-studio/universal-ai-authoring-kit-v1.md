@@ -10,7 +10,7 @@
 
 Create high-quality, importable Sblocco Inglese Learning Activities for Italian-speaking English learners.
 
-A Learning Activity may be a quick exercise, lesson, mini-course, listening lesson or assessment. These are compositions of the same block system. Do not invent a different schema for different lesson types.
+A Learning Activity may be a quick exercise, vocabulary exercise, lesson, mini-course, listening lesson or assessment. These are compositions of the same block system. Do not invent a different schema for different lesson types.
 
 The teacher/AI makes pedagogical decisions. Sblocco makes technical decisions.
 
@@ -80,7 +80,7 @@ Sblocco generates, repairs or derives these.
 `A0`, `A1`, `A1+`, `A2`, `B1`, `B1+`, `B2`, `C1`, `C2`, `Mixed`.
 
 ### Allowed activity types
-`exercise`, `lesson`, `mini_course`, `listening_lesson`, `assessment`.
+`exercise`, `vocabulary_exercise`, `lesson`, `mini_course`, `listening_lesson`, `assessment`.
 
 ### Allowed skills
 `grammar`, `vocabulary`, `reading`, `writing`, `functional_language`, `spelling`, `word_order`, `speaking`, `listening`, `interaction`.
@@ -349,14 +349,28 @@ Required: `left_body`, `right_body`.
   "items": [
     {
       "term": "reschedule",
+      "kind": "word",
       "meaning": "arrange something for a different time",
       "translation": "riprogrammare / spostare",
-      "example": "Can we reschedule the meeting?"
+      "examples": [
+        "Can we reschedule the meeting?",
+        "I need to reschedule my dentist appointment.",
+        "They rescheduled the interview for next Tuesday."
+      ],
+      "display_example_index": 0
     }
   ]
 }
 ```
 Required: at least one item with `term`.
+
+For every vocabulary item:
+- set `kind` to `word` or `chunk`;
+- generate **3–5 natural, genuinely different context sentences** in `examples`;
+- use `display_example_index` to choose which one is shown in the original exercise;
+- do not create near-duplicate sentences that merely swap names or nouns;
+- vary useful context, collocation, tense or pragmatic situation while preserving the target meaning;
+- the full context pool is retained for the learner's Word & Chunk Bank and Sblocco Replay.
 
 ### G. `language_bank`
 Reusable expressions.
@@ -648,8 +662,8 @@ Avoid:
 - 2 practice items after 5 theory blocks;
 - testing untaught exceptions.
 
-### Vocabulary lesson
-Use when lexical growth is central.
+### Vocabulary exercise / lesson
+Use when lexical growth is central. For a standalone vocabulary-only activity, set `activity_type` to `vocabulary_exercise`. **Media, listening and transcripts are not required.**
 
 Default shape:
 ```text
@@ -663,6 +677,9 @@ context
 ```
 
 Requirements:
+- a vocabulary-only exercise may contain no media blocks at all;
+- every target vocabulary item should normally have a reusable 3–5 sentence context pool;
+- only one pool example needs to be shown during the original teaching block;
 - level-sensitive lexical load;
 - individual words must not disappear at lower levels;
 - retrieval after teaching;

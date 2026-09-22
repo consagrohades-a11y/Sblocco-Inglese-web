@@ -7,7 +7,7 @@ function normalizeBankText(value) {
 export async function loadLearnerVocabularyBank(learnerId = null) {
   let query = supabase
     .from('learner_vocab_bank_items')
-    .select('id, learner_id, bank_kind, display_text, english_meaning, italian_support, example, level, topic, source_activity_title, encounter_count, self_added, activity_added, self_added_at, first_seen_at, last_seen_at')
+    .select('id, learner_id, bank_kind, display_text, english_meaning, italian_support, example, examples, level, topic, source_activity_title, encounter_count, practice_count, last_practiced_at, last_practice_sentence, self_added, activity_added, self_added_at, first_seen_at, last_seen_at')
     .order('last_seen_at', { ascending: false });
 
   if (learnerId) query = query.eq('learner_id', learnerId);
@@ -54,7 +54,7 @@ export async function addSelfVocabularyBankItem({
         self_added_at: new Date().toISOString(),
       })
       .eq('id', existing.id)
-      .select('id, learner_id, bank_kind, display_text, english_meaning, italian_support, example, level, topic, source_activity_title, encounter_count, self_added, activity_added, self_added_at, first_seen_at, last_seen_at')
+      .select('id, learner_id, bank_kind, display_text, english_meaning, italian_support, example, examples, level, topic, source_activity_title, encounter_count, practice_count, last_practiced_at, last_practice_sentence, self_added, activity_added, self_added_at, first_seen_at, last_seen_at')
       .single();
 
     if (error) throw error;
@@ -70,11 +70,12 @@ export async function addSelfVocabularyBankItem({
       english_meaning: String(englishMeaning || '').trim() || null,
       italian_support: String(italianSupport || '').trim() || null,
       example: String(example || '').trim() || null,
+      examples: String(example || '').trim() ? [String(example).trim()] : [],
       topic: String(topic || '').trim() || null,
       self_added: true,
       activity_added: false,
     })
-    .select('id, learner_id, bank_kind, display_text, english_meaning, italian_support, example, level, topic, source_activity_title, encounter_count, self_added, activity_added, self_added_at, first_seen_at, last_seen_at')
+    .select('id, learner_id, bank_kind, display_text, english_meaning, italian_support, example, examples, level, topic, source_activity_title, encounter_count, practice_count, last_practiced_at, last_practice_sentence, self_added, activity_added, self_added_at, first_seen_at, last_seen_at')
     .single();
 
   if (error) throw error;
@@ -89,3 +90,4 @@ export async function removeLearnerVocabularyBankItem(id) {
 
   if (error) throw error;
 }
+
