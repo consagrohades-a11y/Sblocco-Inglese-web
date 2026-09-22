@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, Dices, Sparkles } from 'lucide-react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
+import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
+import { loadAdminLearnerDetail } from '../lib/adminLearnersApi.js';
 import { loadSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
@@ -79,10 +81,13 @@ export default function SpeakingActivityPresenter() {
   const { activityId } = useParams();
   const [searchParams] = useSearchParams();
   const [activity, setActivity] = useState(null);
+  const [learner, setLearner] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [index, setIndex] = useState(0);
   const [challengeVisible, setChallengeVisible] = useState(false);
+
+  const learnerId = searchParams.get('learner') || '';
 
   const selectedLevels = useMemo(() => {
     const requested = String(searchParams.get('levels') || '')
@@ -109,6 +114,27 @@ export default function SpeakingActivityPresenter() {
     load();
     return () => { active = false; };
   }, [activityId]);
+
+  useEffect(() => {
+    let active = true;
+
+    if (!learnerId) {
+      setLearner(null);
+      return () => { active = false; };
+    }
+
+    async function loadLearner() {
+      try {
+        const data = await loadAdminLearnerDetail(learnerId);
+        if (active) setLearner(data);
+      } catch {
+        if (active) setLearner(null);
+      }
+    }
+
+    loadLearner();
+    return () => { active = false; };
+  }, [learnerId]);
 
   const items = useMemo(() => {
     if (!activity) return [];
@@ -144,20 +170,40 @@ export default function SpeakingActivityPresenter() {
   const current = items[index] || null;
   const steps = asArray(activity.student_steps);
   const language = asArray(activity.useful_language);
+  const firstName = String(learner?.display_name || learner?.email || '').trim().split(/\\s+/)[0];
 
   return (
     <>
       <SEO title={`${activity.title} | Presentazione speaking`} description="Student-facing speaking activity." />
       <div className="min-h-screen bg-paper text-ink dark:bg-surface-950 dark:text-white">
         <main className="mx-auto max-w-[1500px] px-4 py-5 sm:px-7 sm:py-7">
-          <header className="flex flex-wrap items-start justify-between gap-4 border-b border-ink/10 pb-5 dark:border-white/10">
-            <div className="min-w-0">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-clay dark:text-coral">Speaking activity</p>
-              <h1 className="mt-2 text-3xl font-black leading-tight sm:text-5xl">{activity.title}</h1>
-              {activity.student_intro ? <p className="mt-3 max-w-4xl text-base font-semibold leading-7 text-ink/65 dark:text-white/65 sm:text-lg">{activity.student_intro}</p> : null}
-            </div>
-            <div className="rounded-full border border-ink/10 bg-white px-4 py-2 text-xs font-black dark:border-white/10 dark:bg-white/[0.05]">
-              {items.length ? `${index + 1} / ${items.length}` : '0 / 0'}
+          <header className="border-b border-ink/10 pb-6 dark:border-white/10">
+            {learner ? (
+              <div className="mb-6 flex items-center gap-4 rounded-3xl border border-ink/10 bg-white px-4 py-4 dark:border-white/10 dark:bg-surface-900 sm:px-5">
+                <LearnerAvatar
+                  avatarKey={learner.avatar_key}
+                  backgroundKey={learner.avatar_background_key}
+                  displayName={learner.display_name || learner.email}
+                  size="lg"
+                  eager
+                  className="ring-2 ring-paper dark:ring-surface-900"
+                />
+                <div className="min-w-0">
+                  <p className="text-xs font-black uppercase tracking-[0.16em] text-clay dark:text-coral">Ready?</p>
+                  <p className="mt-1 truncate text-2xl font-black sm:text-3xl">{firstName ? `${firstName}, let's play!` : "Let's play!"}</p>
+                </div>
+              </div>
+            ) : null}
+
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-clay dark:text-coral">Speaking activity</p>
+                <h1 className="mt-2 text-3xl font-black leading-tight sm:text-5xl">{activity.title}</h1>
+                {activity.student_intro ? <p className="mt-3 max-w-4xl text-base font-semibold leading-7 text-ink/65 dark:text-white/65 sm:text-lg">{activity.student_intro}</p> : null}
+              </div>
+              <div className="rounded-full border border-ink/10 bg-white px-4 py-2 text-xs font-black dark:border-white/10 dark:bg-white/[0.05]">
+                {items.length ? `${index + 1} / ${items.length}` : '0 / 0'}
+              </div>
             </div>
           </header>
 

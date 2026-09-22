@@ -14,6 +14,8 @@ import {
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import SpeakingActivityEditorModal from '../components/admin/SpeakingActivityEditorModal.jsx';
+import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
+import { loadAdminLearners } from '../lib/adminLearnersApi.js';
 import { loadSpeakingActivities, updateSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
@@ -102,6 +104,41 @@ function PreviewModal({ activity, onClose }) {
 
 function PresentationLauncher({ activity, onClose }) {
   const [levels, setLevels] = useState(() => asArray(activity?.levels));
+  const [learners, setLearners] = useState([]);
+  const [learnerId, setLearnerId] = useState('');
+  const [learnerQuery, setLearnerQuery] = useState('');
+  const [loadingLearners, setLoadingLearners] = useState(true);
+  const [learnerError, setLearnerError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    async function load() {
+      setLoadingLearners(true);
+      setLearnerError('');
+      try {
+        const rows = await loadAdminLearners();
+        if (active) setLearners(rows.filter((learner) => learner.status === 'active'));
+      } catch (error) {
+        if (active) setLearnerError(error.message || 'Non è stato possibile caricare gli studenti.');
+      } finally {
+        if (active) setLoadingLearners(false);
+      }
+    }
+    load();
+    return () => { active = false; };
+  }, []);
+
+  const filteredLearners = useMemo(() => {
+    const needle = learnerQuery.trim().toLowerCase();
+    if (!needle) return learners.slice(0, 10);
+    return learners
+      .filter((learner) => [learner.display_name, learner.email, learner.admin_context_note]
+        .some((value) => String(value || '').toLowerCase().includes(needle)))
+      .slice(0, 10);
+  }, [learnerQuery, learners]);
+
+  const selectedLearner = learners.find((learner) => learner.id === learnerId) || null;
+
   if (!activity) return null;
 
   function toggle(level) {
@@ -110,27 +147,114 @@ function PresentationLauncher({ activity, onClose }) {
 
   function open() {
     if (!levels.length) return;
-    const url = `/admin/present/speaking/${activity.id}?levels=${encodeURIComponent(LEVELS.filter((level) => levels.includes(level)).join(','))}`;
+    const params = new URLSearchParams({
+      levels: LEVELS.filter((level) => levels.includes(level)).join(','),
+    });
+    if (learnerId) params.set('learner', learnerId);
+
+    const url = `/admin/present/speaking/${activity.id}?${params.toString()}`;
     window.open(url, `sblocco-speaking-${activity.id}`, 'popup=yes,width=1320,height=860,resizable=yes,scrollbars=yes');
     onClose();
   }
 
+  const firstName = String(selectedLearner?.display_name || selectedLearner?.email || '')
+    .trim()
+    .split(/\s+/)[0];
+
   return (
-    <div className="fixed inset-0 z-[125] grid place-items-center bg-ink/55 p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
-      <div className="w-full max-w-lg rounded-3xl border border-white/10 bg-paper p-6 shadow-2xl dark:bg-surface-950 sm:p-7">
+    <div className="fixed inset-0 z-[125] overflow-y-auto bg-ink/55 p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+      <div className="mx-auto my-8 w-full max-w-2xl rounded-3xl border border-white/10 bg-paper p-6 shadow-2xl dark:bg-surface-950 sm:p-7">
         <div className="flex items-start justify-between gap-3">
-          <div><p className="text-xs font-black uppercase tracking-[0.15em] text-clay dark:text-coral">Presenta</p><h2 className="mt-1 text-2xl font-black">{activity.title}</h2></div>
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.15em] text-clay dark:text-coral">Presenta</p>
+            <h2 className="mt-1 text-2xl font-black">{activity.title}</h2>
+          </div>
           <button type="button" onClick={onClose} className="focus-ring grid h-10 w-10 place-items-center rounded-full border border-ink/10 dark:border-white/10" aria-label="Chiudi"><X className="h-4 w-4" /></button>
         </div>
-        <p className="mt-4 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">Scegli uno o più livelli. La nuova finestra mostrerà solo gli item compatibili e nessuna nota o soluzione docente.</p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {asArray(activity.levels).map((level) => {
-            const active = levels.includes(level);
-            return <button key={level} type="button" onClick={() => toggle(level)} className={`focus-ring min-h-10 rounded-full border px-4 text-xs font-black ${active ? 'border-clay bg-blush text-clay dark:border-coral/40 dark:bg-coral/10 dark:text-coral' : 'border-ink/15 bg-white text-ink/55 dark:border-white/15 dark:bg-white/[0.04] dark:text-white/55'}`} aria-pressed={active}>{level}</button>;
-          })}
-        </div>
-        <div className="mt-6 flex justify-end">
-          <button type="button" disabled={!levels.length} onClick={open} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-35 dark:bg-clay"><ExternalLink className="h-4 w-4" /> Apri finestra studente</button>
+
+        <section className="mt-6 rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-white/[0.04]">
+          <p className="text-xs font-black uppercase tracking-[0.12em] text-ink/45 dark:text-white/45">Con chi lavori?</p>
+          <p className="mt-1 text-sm font-semibold leading-6 text-ink/60 dark:text-white/60">
+            Se scegli uno studente, la finestra condivisa userà il suo avatar e lo saluterà per nome.
+          </p>
+
+          {selectedLearner ? (
+            <div className="mt-4 flex items-center gap-3 rounded-2xl border border-clay/20 bg-blush/35 p-3 dark:border-coral/20 dark:bg-coral/[0.06]">
+              <LearnerAvatar
+                avatarKey={selectedLearner.avatar_key}
+                backgroundKey={selectedLearner.avatar_background_key}
+                displayName={selectedLearner.display_name || selectedLearner.email}
+                size="lg"
+                eager
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-base font-black">{selectedLearner.display_name || selectedLearner.email}</p>
+                <p className="mt-0.5 text-xs font-bold text-clay dark:text-coral">
+                  {firstName ? `Working with ${firstName}` : 'Student selected'}
+                </p>
+                {selectedLearner.admin_context_note ? (
+                  <p className="mt-1 line-clamp-2 text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">{selectedLearner.admin_context_note}</p>
+                ) : null}
+              </div>
+              <button type="button" onClick={() => setLearnerId('')} className="focus-ring min-h-9 rounded-full border border-ink/10 px-3 text-xs font-black dark:border-white/10">Cambia</button>
+            </div>
+          ) : (
+            <>
+              <input
+                type="search"
+                value={learnerQuery}
+                onChange={(event) => setLearnerQuery(event.target.value)}
+                placeholder="Cerca studente…"
+                className="focus-ring mt-4 w-full rounded-xl border border-ink/15 bg-paper px-4 py-3 text-sm font-semibold dark:border-white/15 dark:bg-white/[0.05]"
+              />
+              {loadingLearners ? <p className="mt-3 text-xs font-bold text-ink/45 dark:text-white/45">Caricamento studenti…</p> : null}
+              {learnerError ? <p className="mt-3 text-xs font-bold text-red-700 dark:text-red-200">{learnerError}</p> : null}
+              {!loadingLearners && !learnerError ? (
+                <div className="mt-3 max-h-56 overflow-y-auto rounded-xl border border-ink/10 dark:border-white/10">
+                  {filteredLearners.map((learner) => (
+                    <button
+                      key={learner.id}
+                      type="button"
+                      onClick={() => { setLearnerId(learner.id); setLearnerQuery(''); }}
+                      className="focus-ring flex w-full items-center gap-3 border-b border-ink/10 px-3 py-3 text-left last:border-b-0 hover:bg-linen/45 dark:border-white/10 dark:hover:bg-white/[0.04]"
+                    >
+                      <LearnerAvatar
+                        avatarKey={learner.avatar_key}
+                        backgroundKey={learner.avatar_background_key}
+                        displayName={learner.display_name || learner.email}
+                        size="md"
+                      />
+                      <span className="min-w-0 flex-1">
+                        <strong className="block truncate text-sm font-black">{learner.display_name || learner.email}</strong>
+                        {learner.admin_context_note ? <span className="mt-0.5 block truncate text-xs font-semibold text-ink/45 dark:text-white/45">{learner.admin_context_note}</span> : null}
+                      </span>
+                    </button>
+                  ))}
+                  {!filteredLearners.length ? <p className="p-4 text-xs font-bold text-ink/45 dark:text-white/45">Nessuno studente trovato.</p> : null}
+                </div>
+              ) : null}
+            </>
+          )}
+        </section>
+
+        <section className="mt-5">
+          <p className="text-xs font-black uppercase tracking-[0.12em] text-ink/45 dark:text-white/45">Livelli da mostrare</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {asArray(activity.levels).map((level) => {
+              const active = levels.includes(level);
+              return <button key={level} type="button" onClick={() => toggle(level)} className={`focus-ring min-h-10 rounded-full border px-4 text-xs font-black ${active ? 'border-clay bg-blush text-clay dark:border-coral/40 dark:bg-coral/10 dark:text-coral' : 'border-ink/15 bg-white text-ink/55 dark:border-white/15 dark:bg-white/[0.04] dark:text-white/55'}`} aria-pressed={active}>{level}</button>;
+            })}
+          </div>
+        </section>
+
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
+            Solo la finestra di presentazione va condivisa: note e soluzioni restano nel pannello admin.
+          </p>
+          <button type="button" disabled={!levels.length} onClick={open} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-35 dark:bg-clay">
+            <ExternalLink className="h-4 w-4" />
+            {firstName ? `Apri con ${firstName}` : 'Apri finestra studente'}
+          </button>
         </div>
       </div>
     </div>

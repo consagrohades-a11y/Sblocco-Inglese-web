@@ -9,6 +9,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
+import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import {
   loadTeacherNotifications,
   markAllTeacherNotificationsRead,
@@ -31,6 +32,22 @@ function NotificationIcon({ type }) {
     <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-clay/10 text-clay dark:bg-clay/15 dark:text-[#f0a27d]">
       <Icon className="h-4.5 w-4.5" aria-hidden="true" />
     </span>
+  );
+}
+
+function NotificationAvatar({ notification }) {
+  const learner = notification.learner;
+  if (!learner) return <NotificationIcon type={notification.notification_type} />;
+
+  return (
+    <LearnerAvatar
+      avatarKey={learner.avatar_key}
+      backgroundKey={learner.avatar_background_key}
+      displayName={learner.display_name || learner.email || notification.title}
+      size="md"
+      eager
+      className="ring-2 ring-white shadow-sm dark:ring-surface-900"
+    />
   );
 }
 
@@ -133,40 +150,60 @@ export default function AdminNotifications() {
 
             {!loading ? (
               <div className="divide-y divide-ink/10 dark:divide-white/10">
-                {notifications.map((notification) => (
-                  <button
-                    key={notification.id}
-                    type="button"
-                    onClick={() => openNotification(notification)}
-                    className={`flex w-full items-start gap-4 px-5 py-5 text-left transition hover:bg-linen/45 dark:hover:bg-white/[0.04] sm:px-6 ${notification.read_at ? 'opacity-65' : notification.notification_type === 'learner_signed_up' ? 'bg-clay/[0.08] dark:bg-clay/[0.09]' : 'bg-clay/[0.035] dark:bg-clay/[0.045]'}`}
-                  >
-                    <NotificationIcon type={notification.notification_type} />
-                    <span className="min-w-0 flex-1">
-                      <span className="flex flex-wrap items-center gap-2">
-                        <strong className="text-sm font-black text-ink dark:text-white">{notification.title}</strong>
-                        {notification.notification_type === 'learner_signed_up' ? (
-                          <span className="rounded-full border border-clay/20 bg-clay/[0.08] px-2 py-1 text-[0.6rem] font-black uppercase tracking-wide text-clay dark:border-coral/20 dark:bg-coral/10 dark:text-coral">
-                            Registrazione
-                          </span>
-                        ) : null}
-                        {!notification.read_at ? (
-                          <span className="rounded-full bg-clay/10 px-2 py-1 text-[0.62rem] font-black uppercase tracking-wide text-clay dark:bg-clay/15 dark:text-[#f0a27d]">
-                            Nuovo
-                          </span>
-                        ) : null}
-                      </span>
-                      {notification.message ? (
-                        <span className="mt-1 block text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">
-                          {notification.message}
+                {notifications.map((notification) => {
+                  const learner = notification.learner;
+                  const learnerName = learner?.display_name || learner?.email || null;
+                  return (
+                    <button
+                      key={notification.id}
+                      type="button"
+                      onClick={() => openNotification(notification)}
+                      className={`flex w-full items-start gap-4 px-5 py-5 text-left transition hover:bg-linen/45 dark:hover:bg-white/[0.04] sm:px-6 ${notification.read_at ? 'opacity-65' : notification.notification_type === 'learner_signed_up' ? 'bg-clay/[0.08] dark:bg-clay/[0.09]' : 'bg-clay/[0.035] dark:bg-clay/[0.045]'}`}
+                    >
+                      <NotificationAvatar notification={notification} />
+                      <span className="min-w-0 flex-1">
+                        <span className="flex flex-wrap items-center gap-2">
+                          <strong className="text-sm font-black text-ink dark:text-white">
+                            {learnerName || notification.title}
+                          </strong>
+                          {notification.notification_type === 'learner_signed_up' ? (
+                            <span className="rounded-full border border-clay/20 bg-clay/[0.08] px-2 py-1 text-[0.6rem] font-black uppercase tracking-wide text-clay dark:border-coral/20 dark:bg-coral/10 dark:text-coral">
+                              Registrazione
+                            </span>
+                          ) : null}
+                          {!notification.read_at ? (
+                            <span className="rounded-full bg-clay/10 px-2 py-1 text-[0.62rem] font-black uppercase tracking-wide text-clay dark:bg-clay/15 dark:text-[#f0a27d]">
+                              Nuovo
+                            </span>
+                          ) : null}
                         </span>
-                      ) : null}
-                      <span className="mt-2 block text-xs font-bold text-ink/40 dark:text-white/40">
-                        {formatDate(notification.created_at)}
+
+                        {learnerName ? (
+                          <span className="mt-1 block text-xs font-black uppercase tracking-[0.08em] text-ink/40 dark:text-white/40">
+                            {notification.title}
+                          </span>
+                        ) : null}
+
+                        {notification.message ? (
+                          <span className="mt-1 block text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">
+                            {notification.message}
+                          </span>
+                        ) : null}
+
+                        {learner?.admin_context_note ? (
+                          <span className="mt-1.5 block text-xs font-bold leading-5 text-clay dark:text-coral">
+                            {learner.admin_context_note}
+                          </span>
+                        ) : null}
+
+                        <span className="mt-2 block text-xs font-bold text-ink/40 dark:text-white/40">
+                          {formatDate(notification.created_at)}
+                        </span>
                       </span>
-                    </span>
-                    <ChevronRight className="mt-3 h-4 w-4 shrink-0 text-ink/30 dark:text-white/30" aria-hidden="true" />
-                  </button>
-                ))}
+                      <ChevronRight className="mt-3 h-4 w-4 shrink-0 text-ink/30 dark:text-white/30" aria-hidden="true" />
+                    </button>
+                  );
+                })}
               </div>
             ) : null}
           </div>
