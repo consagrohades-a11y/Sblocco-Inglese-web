@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
+import AdminLearnerContextSubtitle from '../components/admin/AdminLearnerContextSubtitle.jsx';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 import { loadLearnerGroups } from '../lib/learnerGroupsApi.js';
@@ -90,7 +91,7 @@ export default function AdminLearners() {
       const matchesRecovery = recoveryFilter === 'all'
         || (recoveryFilter === 'recovery' && recovery?.has_access)
         || (recoveryFilter === 'standard' && !recovery?.has_access);
-      const matchesQuery = !normalizedQuery || [learner.display_name, learner.email]
+      const matchesQuery = !normalizedQuery || [learner.display_name, learner.email, learner.admin_context_note]
         .some((value) => String(value ?? '').toLowerCase().includes(normalizedQuery));
 
       return matchesStatus && matchesGroup && matchesRecovery && matchesQuery;
@@ -205,6 +206,7 @@ export default function AdminLearners() {
                         />
                         <div className="min-w-0">
                           <p className="truncate text-base font-black text-ink dark:text-white">{learner.display_name || 'Nome non impostato'}</p>
+                          <AdminLearnerContextSubtitle learnerId={learner.id} note={learner.admin_context_note} />
                           <p className="mt-1 text-xs font-bold text-ink/60 dark:text-white/60">Registrato il {formatDate(learner.created_at)}</p>
                         </div>
                       </div>

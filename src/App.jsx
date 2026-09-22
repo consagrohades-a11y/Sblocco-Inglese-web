@@ -44,6 +44,7 @@ const Account = lazy(() => import('./pages/Account'));
 const AdminShell = lazy(() => import('./components/AdminShell'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AdminNotifications = lazy(() => import('./pages/AdminNotifications'));
+const AdminSpeakingActivities = lazy(() => import('./pages/AdminSpeakingActivities'));
 const AdminLearners = lazy(() => import('./pages/AdminLearners'));
 const AdminLearnerDetail = lazy(() => import('./pages/AdminLearnerDetail'));
 const AdminGroups = lazy(() => import('./pages/AdminGroups'));
@@ -205,6 +206,7 @@ export default function App() {
             <Route path="/admin" element={<AdminRoute><AdminShell /></AdminRoute>}>
               <Route index element={<AdminDashboard />} />
               <Route path="notifications" element={<AdminNotifications />} />
+              <Route path="teaching/activities" element={<AdminSpeakingActivities />} />
               <Route path="learners" element={<AdminLearners />} />
               <Route path="learners/:learnerId" element={<AdminLearnerDetail />} />
               <Route path="groups" element={<AdminGroups />} />

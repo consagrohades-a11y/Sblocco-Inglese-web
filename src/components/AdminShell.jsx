@@ -8,6 +8,7 @@ import {
   ClipboardList,
   LayoutDashboard,
   Menu,
+  MessageCircleMore,
   PanelLeftClose,
   PanelLeftOpen,
   UserRound,
@@ -43,6 +44,15 @@ const navigationGroups = [
     ],
   },
   {
+    id: 'teaching',
+    label: 'Lezione',
+    description: 'Giochi e attività live',
+    icon: MessageCircleMore,
+    items: [
+      { label: 'Libreria speaking', to: '/admin/teaching/activities', icon: MessageCircleMore },
+    ],
+  },
+  {
     id: 'studio',
     label: 'Learning Studio',
     description: 'Crea, organizza e revisiona',
@@ -70,12 +80,12 @@ function getInitialSidebarState() {
 }
 
 function getInitialOpenGroups() {
-  if (typeof window === 'undefined') return ['home', 'learners', 'studio'];
+  if (typeof window === 'undefined') return ['home', 'learners', 'teaching', 'studio'];
   try {
     const stored = JSON.parse(window.localStorage.getItem('sblocco_admin_groups') || '[]');
-    return Array.isArray(stored) && stored.length ? stored.filter((id) => navigationGroups.some((group) => group.id === id)) : ['home', 'learners', 'studio'];
+    return Array.isArray(stored) && stored.length ? stored.filter((id) => navigationGroups.some((group) => group.id === id)) : ['home', 'learners', 'teaching', 'studio'];
   } catch {
-    return ['home', 'learners', 'studio'];
+    return ['home', 'learners', 'teaching', 'studio'];
   }
 }
 
