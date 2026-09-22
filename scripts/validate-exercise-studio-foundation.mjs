@@ -8,6 +8,7 @@ import {
   EXERCISE_STUDIO_SCHEMA_VERSION,
   addStudioBlock,
   createStudioDocument,
+  createStudioRemixDocument,
   normalizeStudioDocument,
 } from '../src/lib/exerciseStudioDocument.js';
 import {
@@ -76,6 +77,41 @@ const part7PresetActivity = addStudioBlock(freshReadingActivity, 'reading_compre
 assert.equal(part7PresetActivity.blocks[0].sections.length, 4);
 assert.equal(part7PresetActivity.blocks[0].items.length, 10);
 assert.ok(part7PresetActivity.blocks[0].items.every((item) => item.correct_section_index === null));
+
+const remixSource = addStudioBlock(
+  createStudioDocument({
+    internal_title: 'B2 Reading Master',
+    learner_title: 'Reading Master',
+    level: 'B2',
+    topic: 'reading',
+    activity_type: 'lesson',
+    tags: ['reading', 'master'],
+  }),
+  'reading_comprehension',
+  {
+    title: 'Original reading',
+    format: 'b2_part5',
+    passage: 'Original content.',
+    items: Array.from({ length: 6 }, (_, index) => ({
+      prompt: 'Question ' + (index + 1),
+      options: Array.from({ length: 4 }, (_, optionIndex) => ({
+        text: 'Option ' + (optionIndex + 1),
+        is_correct: optionIndex === 0,
+      })),
+    })),
+  },
+);
+const remixA = createStudioRemixDocument(remixSource);
+const remixB = createStudioRemixDocument(remixSource);
+assert.notEqual(remixA.id, remixSource.id, 'Remix must generate a fresh activity ID.');
+assert.notEqual(remixA.internal_code, remixSource.internal_code, 'Remix must generate a fresh internal code.');
+assert.notEqual(remixA.blocks[0].id, remixSource.blocks[0].id, 'Remix must generate fresh block IDs.');
+assert.notEqual(remixA.id, remixB.id, 'Separate remixes must not share activity IDs.');
+assert.notEqual(remixA.blocks[0].id, remixB.blocks[0].id, 'Separate remixes must not share block IDs.');
+assert.equal(remixA.status, 'draft');
+assert.equal(remixA.learner_title, remixSource.learner_title);
+assert.equal(remixA.blocks[0].passage, remixSource.blocks[0].passage);
+assert.match(remixA.internal_title, /Remix$/);
 
 const raw = {
   schema_version: EXERCISE_STUDIO_SCHEMA_VERSION,
