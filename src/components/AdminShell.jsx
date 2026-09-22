@@ -8,6 +8,7 @@ import {
   ClipboardList,
   LayoutDashboard,
   Menu,
+  MessageCircleMore,
   PanelLeftClose,
   PanelLeftOpen,
   UserRound,
@@ -19,6 +20,7 @@ import BrandLogo from './BrandLogo';
 import ThemeToggle from './ThemeToggle';
 import AdminNotificationBell from './admin/AdminNotificationBell.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
+import { AdminLearnerContextProvider } from '../context/AdminLearnerContext.jsx';
 
 const navigationGroups = [
   {
@@ -51,6 +53,7 @@ const navigationGroups = [
       { label: 'Crea attività', to: '/admin/content/exercises/studio', icon: Blocks },
       { label: 'Libreria attività', to: '/admin/content/exercises/library', icon: BookOpen },
       { label: 'Risultati e review', to: '/admin/content/exercises/results', icon: BarChart3 },
+      { label: 'Libreria speaking', to: '/admin/content/speaking-library', icon: MessageCircleMore },
     ],
   },
   {
@@ -338,7 +341,9 @@ export default function AdminShell() {
       ) : null}
 
       <div className={`min-w-0 overflow-x-clip transition-[padding] duration-200 ${effectiveSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
-        <Outlet />
+        <AdminLearnerContextProvider>
+          <Outlet />
+        </AdminLearnerContextProvider>
       </div>
     </div>
   );
