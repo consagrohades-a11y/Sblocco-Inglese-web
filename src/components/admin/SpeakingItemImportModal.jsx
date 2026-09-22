@@ -66,7 +66,7 @@ function buildPlans(payload, activities) {
     });
     const items = normalised.map(({ _invalidLevels, ...item }) => item);
     const quality = errors.length ? { blocking: [], warnings: [] } : analyseSpeakingItemSet(items, workingCatalog);
-    if (!errors.length && !quality.blocking.length) {
+    if (!errors.length) {
       const target = workingCatalog.find((candidate) => candidate.id === activity.id);
       target.prompts = [...asArray(target.prompts), ...items];
     }
@@ -132,7 +132,7 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
   const [fileName, setFileName] = useState('');
   const [plans, setPlans] = useState([]);
   const [parseError, setParseError] = useState('');
-  const [allowWarnings, setAllowWarnings] = useState(false);
+  const [acceptedItems, setAcceptedItems] = useState(() => new Set());
   const [skippedItems, setSkippedItems] = useState(() => new Set());
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
@@ -142,8 +142,8 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
       originalItems: 0,
       items: 0,
       skipped: 0,
-      blocking: 0,
-      warnings: 0,
+      flagged: 0,
+      unresolved: 0,
       errors: 0,
     };
 
@@ -158,19 +158,20 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
           return;
         }
         summary.items += 1;
-        if (diagnostic.severity === 'block') summary.blocking += 1;
-        if (diagnostic.severity === 'warn') summary.warnings += 1;
+        if (diagnostic.severity === 'block' || diagnostic.severity === 'warn') {
+          summary.flagged += 1;
+          if (!acceptedItems.has(itemKey(plan.groupIndex, itemIndex))) summary.unresolved += 1;
+        }
       });
     });
 
     return summary;
-  }, [plans, skippedItems]);
+  }, [acceptedItems, plans, skippedItems]);
 
   const canImport = plans.length > 0
     && totals.items > 0
     && totals.errors === 0
-    && totals.blocking === 0
-    && (totals.warnings === 0 || allowWarnings)
+    && totals.unresolved === 0
     && !saving;
 
   async function readFile(file) {
@@ -179,7 +180,7 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
     setParseError('');
     setSaveError('');
     setPlans([]);
-    setAllowWarnings(false);
+    setAcceptedItems(new Set());
     setSkippedItems(new Set());
     try {
       const payload = JSON.parse(await file.text());
@@ -197,25 +198,22 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
       else next.add(key);
       return next;
     });
-    setAllowWarnings(false);
-  }
-
-  function skipMatches(mode) {
-    setSkippedItems((current) => {
+    setAcceptedItems((current) => {
       const next = new Set(current);
-      plans.forEach((plan) => {
-        const matches = mode === 'blocking'
-          ? plan.blocking
-          : [...plan.blocking, ...plan.warnings];
-        matches.forEach((match) => {
-          if (matchIsActive(match, plan, next)) {
-            next.add(itemKey(plan.groupIndex, match.candidate.candidateIndex));
-          }
-        });
-      });
+      next.delete(key);
       return next;
     });
-    setAllowWarnings(false);
+  }
+
+  function acceptFlaggedItem(groupIndex, itemIndex) {
+    const key = itemKey(groupIndex, itemIndex);
+    setSkippedItems((current) => {
+      if (!current.has(key)) return current;
+      const next = new Set(current);
+      next.delete(key);
+      return next;
+    });
+    setAcceptedItems((current) => new Set(current).add(key));
   }
 
   async function importItems() {
@@ -256,7 +254,7 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
             <p className="text-xs font-black uppercase tracking-[0.15em] text-clay dark:text-coral">Speaking library</p>
             <h2 className="mt-1 text-2xl font-black">Importa nuovi item</h2>
             <p className="mt-2 max-w-xl text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">
-              Solo file .json. Controlla gli item segnalati e salta quelli che non vuoi importare. Nulla viene sovrascritto o cancellato.
+              Solo file .json. Le somiglianze sono segnalazioni, non decisioni automatiche: per ogni item puoi importare comunque oppure saltarlo. Nulla viene sovrascritto o cancellato.
             </p>
           </div>
           <button type="button" onClick={onClose} className="focus-ring grid h-10 w-10 place-items-center rounded-full border border-ink/10 bg-white dark:border-white/10 dark:bg-white/10" aria-label="Chiudi"><X className="h-4 w-4" /></button>
@@ -278,23 +276,10 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
                 <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black dark:bg-white/10">{totals.originalItems} nel file</span>
                 <span className="rounded-full bg-linen px-3 py-1.5 text-xs font-black dark:bg-white/10">{totals.items} da importare</span>
                 {totals.skipped ? <span className="rounded-full bg-ink/10 px-3 py-1.5 text-xs font-black text-ink/65 dark:bg-white/10 dark:text-white/70">{totals.skipped} saltati</span> : null}
-                {totals.blocking ? <span className="rounded-full bg-red-100 px-3 py-1.5 text-xs font-black text-red-800 dark:bg-red-400/10 dark:text-red-100">{totals.blocking} duplicati bloccanti</span> : null}
-                {totals.warnings ? <span className="rounded-full bg-amber-100 px-3 py-1.5 text-xs font-black text-amber-900 dark:bg-amber-300/10 dark:text-amber-100">{totals.warnings} segnalazioni da controllare</span> : null}
-                {!totals.errors && !totals.blocking ? <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-black text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100"><CheckCircle2 className="h-3.5 w-3.5" /> Struttura valida</span> : null}
+                {totals.flagged ? <span className="rounded-full bg-amber-100 px-3 py-1.5 text-xs font-black text-amber-900 dark:bg-amber-300/10 dark:text-amber-100">{totals.flagged} segnalati</span> : null}
+                {totals.unresolved ? <span className="rounded-full bg-clay/10 px-3 py-1.5 text-xs font-black text-clay dark:bg-coral/10 dark:text-coral">{totals.unresolved} da decidere</span> : null}
+                {!totals.errors && !totals.unresolved ? <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-black text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100"><CheckCircle2 className="h-3.5 w-3.5" /> Pronto per l'import</span> : null}
               </div>
-
-              {(totals.blocking > 0 || totals.warnings > 0) ? (
-                <div className="flex flex-wrap gap-2">
-                  {totals.blocking > 0 ? (
-                    <button type="button" onClick={() => skipMatches('blocking')} className="focus-ring min-h-9 rounded-full border border-red-200 bg-red-50 px-3 text-xs font-black text-red-800 dark:border-red-300/20 dark:bg-red-300/[0.07] dark:text-red-100">
-                      Salta tutti i duplicati
-                    </button>
-                  ) : null}
-                  <button type="button" onClick={() => skipMatches('all')} className="focus-ring min-h-9 rounded-full border border-amber-200 bg-amber-50 px-3 text-xs font-black text-amber-900 dark:border-amber-300/20 dark:bg-amber-300/[0.07] dark:text-amber-100">
-                    Salta tutti i match segnalati
-                  </button>
-                </div>
-              ) : null}
 
               {plans.map((plan) => {
                 const activeErrors = activePlanErrors(plan, skippedItems);
@@ -313,8 +298,13 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
                       <div className="mt-4 max-h-[30rem] overflow-y-auto rounded-xl border border-ink/10 dark:border-white/10">
                         {plan.items.map((item, itemIndex) => {
                           const diagnostic = itemDiagnostic(plan, itemIndex, skippedItems);
+                          const key = itemKey(plan.groupIndex, itemIndex);
                           const skipped = diagnostic.severity === 'skip';
-                          const statusClass = diagnostic.severity === 'block'
+                          const flagged = diagnostic.severity === 'block' || diagnostic.severity === 'warn';
+                          const accepted = flagged && acceptedItems.has(key);
+                          const statusClass = accepted
+                            ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100'
+                            : diagnostic.severity === 'block'
                             ? 'bg-red-100 text-red-800 dark:bg-red-400/10 dark:text-red-100'
                             : diagnostic.severity === 'warn'
                               ? 'bg-amber-100 text-amber-900 dark:bg-amber-300/10 dark:text-amber-100'
@@ -327,7 +317,7 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
                               <div className="min-w-0 flex-1">
                                 <div className="flex flex-wrap items-center gap-2">
                                   <span className="text-xs font-black text-ink/45 dark:text-white/45">Item {itemIndex + 1}</span>
-                                  <span className={`rounded-full px-2 py-0.5 text-[0.68rem] font-black ${statusClass}`}>{diagnostic.label}</span>
+                                  <span className={`rounded-full px-2 py-0.5 text-[0.68rem] font-black ${statusClass}`}>{accepted ? 'Scelto: importa' : diagnostic.label}</span>
                                   {diagnostic.count > 1 ? <span className="text-[0.68rem] font-bold text-ink/40 dark:text-white/40">+{diagnostic.count - 1} match</span> : null}
                                 </div>
                                 <p className={`mt-1.5 text-sm font-bold leading-5 ${skipped ? 'line-through' : ''}`}>{item.text || 'Item senza testo'}</p>
@@ -363,13 +353,24 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
                                   </div>
                                 ) : null}
                               </div>
-                              <button
-                                type="button"
-                                onClick={() => toggleSkipped(plan.groupIndex, itemIndex)}
-                                className="focus-ring h-9 shrink-0 rounded-full border border-ink/15 px-3 text-xs font-black dark:border-white/15"
-                              >
-                                {skipped ? 'Ripristina' : 'Salta'}
-                              </button>
+                              <div className="flex shrink-0 flex-col gap-2">
+                                {flagged && !skipped ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => acceptFlaggedItem(plan.groupIndex, itemIndex)}
+                                    className={`focus-ring h-9 rounded-full px-3 text-xs font-black ${accepted ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-300/10 dark:text-emerald-100' : 'bg-ink text-white dark:bg-clay'}`}
+                                  >
+                                    {accepted ? 'Importa ✓' : 'Importa comunque'}
+                                  </button>
+                                ) : null}
+                                <button
+                                  type="button"
+                                  onClick={() => toggleSkipped(plan.groupIndex, itemIndex)}
+                                  className="focus-ring h-9 rounded-full border border-ink/15 px-3 text-xs font-black dark:border-white/15"
+                                >
+                                  {skipped ? 'Ripristina' : 'Salta'}
+                                </button>
+                              </div>
                             </div>
                           );
                         })}
@@ -379,19 +380,13 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
                 );
               })}
 
-              {totals.warnings > 0 && totals.blocking === 0 && totals.errors === 0 ? (
-                <label className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-950 dark:border-amber-300/20 dark:bg-amber-300/[0.07] dark:text-amber-100">
-                  <input type="checkbox" checked={allowWarnings} onChange={(event) => setAllowWarnings(event.target.checked)} className="mt-1" />
-                  Ho controllato gli item ancora segnalati e voglio importarli comunque.
-                </label>
-              ) : null}
             </div>
           ) : null}
         </div>
 
         <footer className="flex items-center justify-between gap-3 border-t border-ink/10 bg-white px-5 py-4 dark:border-white/10 dark:bg-surface-900">
           <p className="text-xs font-semibold text-ink/50 dark:text-white/50">
-            <FileJson2 className="mr-1 inline h-3.5 w-3.5" /> Append-only · puoi saltare singoli item prima dell'import.
+            <FileJson2 className="mr-1 inline h-3.5 w-3.5" /> Append-only · ogni segnalazione resta una scelta pedagogica tua.
           </p>
           <button type="button" disabled={!canImport} onClick={importItems} className="focus-ring min-h-11 rounded-full bg-ink px-5 text-xs font-black text-white disabled:opacity-35 dark:bg-clay">
             {saving ? 'Importazione…' : `Importa ${totals.items || ''} item`}
