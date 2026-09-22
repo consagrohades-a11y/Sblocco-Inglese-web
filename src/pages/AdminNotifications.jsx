@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
+import LearnerQuickFacts from '../components/admin/LearnerQuickFacts.jsx';
 import {
   loadTeacherNotifications,
   markAllTeacherNotificationsRead,
@@ -190,9 +191,9 @@ export default function AdminNotifications() {
                           </span>
                         ) : null}
 
-                        {learner?.admin_context_note ? (
-                          <span className="mt-1.5 block text-xs font-bold leading-5 text-clay dark:text-coral">
-                            {learner.admin_context_note}
+                        {learner ? (
+                          <span className="mt-1.5 block text-xs font-bold leading-5 text-ink/60 dark:text-white/60">
+                            <LearnerQuickFacts learner={learner} />
                           </span>
                         ) : null}
 

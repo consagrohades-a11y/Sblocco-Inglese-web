@@ -8,6 +8,7 @@ import LearnerDiagnosticPanel from '../components/admin/LearnerDiagnosticPanel.j
 import LearnerNextLessonPanel from '../components/admin/LearnerNextLessonPanel.jsx';
 import LearnerNotesPanel from '../components/admin/LearnerNotesPanel.jsx';
 import LearnerContextNoteEditor from '../components/admin/LearnerContextNoteEditor.jsx';
+import LearnerQuickFacts from '../components/admin/LearnerQuickFacts.jsx';
 import LearnerRecoveryPanel from '../components/admin/LearnerRecoveryPanel.jsx';
 import LearnerVocabularyBankPanel from '../components/admin/learner/LearnerVocabularyBankPanel.jsx';
 import { supabase } from '../lib/supabaseClient.js';
@@ -143,7 +144,7 @@ export default function AdminLearnerDetail() {
         <AdminPageHeader
           eyebrow="Studente"
           title={pageTitle}
-          description={learner?.admin_context_note || 'Profilo, assegnazioni, risultati e gestione dell’accesso.'}
+          description={learner ? <LearnerQuickFacts learner={learner} fallback="Profilo, assegnazioni, risultati e gestione dell’accesso." /> : 'Profilo, assegnazioni, risultati e gestione dell’accesso.'}
           actions={(
             <>
               <Link to="/admin/learners" className="focus-ring inline-flex min-h-10 items-center justify-center rounded-full border border-ink/15 bg-white px-4 py-2 text-xs font-black text-ink transition hover:border-clay/35 hover:text-clay dark:border-white/15 dark:bg-white/[0.06] dark:text-white">
@@ -168,7 +169,7 @@ export default function AdminLearnerDetail() {
         {accountMessage ? <div className="mt-6 border-l-4 border-clay bg-clay/[0.08] p-5 text-sm font-bold text-ink dark:bg-coral/10 dark:text-white">{accountMessage}</div> : null}
 
         {!loading && !error && learner ? <div className="mt-6 grid gap-6">
-          <LearnerContextNoteEditor learnerId={learnerId} initialNote={learner.admin_context_note || ''} onSaved={(admin_context_note) => setLearner((current) => ({ ...current, admin_context_note }))} />
+          <LearnerContextNoteEditor learnerId={learnerId} initialNote={learner.admin_context_note || ''} learner={learner} onSaved={(admin_context_note) => setLearner((current) => ({ ...current, admin_context_note }))} />
           <LearnerRecoveryPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} disabled={learner.status === 'deleted'} />
           <LearnerNextLessonPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} />
           <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">

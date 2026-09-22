@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Save } from 'lucide-react';
 import { useAdminLearnerContext } from '../../context/AdminLearnerContext.jsx';
+import { learnerContextSeed } from './LearnerQuickFacts.jsx';
 
-export default function LearnerContextNoteEditor({ learnerId, initialNote = '', onSaved }) {
+export default function LearnerContextNoteEditor({ learnerId, initialNote = '', learner = null, onSaved }) {
   const { saveContextNote } = useAdminLearnerContext();
-  const [draft, setDraft] = useState(initialNote || '');
+  const seed = learnerContextSeed(learner);
+  const [draft, setDraft] = useState(initialNote || seed || '');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
-  useEffect(() => setDraft(initialNote || ''), [initialNote, learnerId]);
+  useEffect(() => setDraft(initialNote || learnerContextSeed(learner) || ''), [initialNote, learner, learnerId]);
 
   async function save() {
     if (saving) return;
@@ -34,7 +36,7 @@ export default function LearnerContextNoteEditor({ learnerId, initialNote = '', 
         <div>
           <p className="text-xs font-black uppercase tracking-wide text-clay dark:text-coral">Promemoria rapido</p>
           <p className="mt-1 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">
-            Compare sotto il nome dello studente nelle viste admin. Usalo per identità, obiettivi e bisogni essenziali.
+            Professione ed età vengono mostrate automaticamente. Usa questo campo solo per obiettivi, preferenze e bisogni essenziali che vuoi ricordare.
           </p>
         </div>
         <span className="text-xs font-black text-ink/45 dark:text-white/45">{draft.length}/280</span>
@@ -44,7 +46,7 @@ export default function LearnerContextNoteEditor({ learnerId, initialNote = '', 
         maxLength={280}
         value={draft}
         onChange={(event) => { setDraft(event.target.value); setMessage(''); }}
-        placeholder="Es. Tech Back Office Manager · A1 · viaggio · pronuncia/lettura · vuole più sicurezza nel dialogo"
+        placeholder="Es. A1 · viaggio · pronuncia/lettura · vuole più sicurezza nel dialogo"
         className="focus-ring mt-4 w-full resize-y rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-semibold leading-6 text-ink dark:border-white/15 dark:bg-surface-900 dark:text-white"
       />
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
