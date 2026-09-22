@@ -13,9 +13,7 @@ export default function Home() {
     root.classList.remove('dark');
 
     return () => {
-      const savedTheme = window.localStorage.getItem('sblocco_theme');
-      const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-      if (savedTheme === 'dark' || (savedTheme !== 'light' && prefersDark)) {
+      if (window.localStorage.getItem('sblocco_theme') === 'dark') {
         root.classList.add('dark');
       }
     };
