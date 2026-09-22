@@ -753,6 +753,25 @@ assert.ok(
   'Gold listening should support learner vocabulary-bank selection.',
 );
 
+const goldReading = fs.readFileSync(
+  new URL('../public/templates/sblocco-learning-studio/gold-benchmark-b2-reading-exam-style-v1.json', import.meta.url),
+  'utf8',
+);
+const importedGoldReading = parseStudioImport(goldReading);
+assert.equal(
+  importedGoldReading.publishable,
+  true,
+  importedGoldReading.errors.map((item) => item.message).join('\n'),
+);
+assert.equal(importedGoldReading.document.level, 'B2');
+assert.equal(importedGoldReading.document.activity_type, 'assessment');
+assert.equal(importedGoldReading.document.blocks.length, 3);
+assert.deepEqual(
+  importedGoldReading.document.blocks.map((block) => block.format),
+  ['b2_part5', 'b2_part6', 'b2_part7'],
+);
+assertNoEmDashTitles(importedGoldReading.document, 'Gold B2 reading');
+
 const hostileTechnicalFields = parseStudioImport(JSON.stringify({
   _template: {
     template_id: 'sblocco-grammar-mini-course',
