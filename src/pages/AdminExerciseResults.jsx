@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import ExerciseDiagnosticSummary from '../components/exercises/ExerciseDiagnosticSummary.jsx';
 import ExerciseQuestionRenderer from '../components/exercises/ExerciseQuestionRenderer.jsx';
+import WritingCorrectionDisplay from '../components/exercises/WritingCorrectionDisplay.jsx';
 import {
   loadExerciseAttemptDetail,
   loadExerciseAttemptResults,
@@ -53,12 +55,203 @@ function buildReviewState(detail) {
         status: effective.status || 'unanswered',
         earnedPoints: Number(effective.earned_points || 0),
         comment: question.teacher_comment || '',
+        correction: question.teacher_correction && typeof question.teacher_correction === 'object'
+          ? question.teacher_correction
+          : {},
         clearOverride: false,
         dirty: false,
       };
     });
   });
   return result;
+}
+
+const WRITING_CORRECTION_CATEGORIES = [
+  ['grammar', 'Grammatica'],
+  ['vocabulary', 'Lessico'],
+  ['spelling', 'Ortografia'],
+  ['punctuation', 'Punteggiatura'],
+  ['style', 'Stile'],
+  ['clarity', 'Chiarezza'],
+  ['register', 'Registro'],
+  ['structure', 'Struttura'],
+  ['other', 'Altro'],
+];
+
+function normalizeWritingCorrection(correction) {
+  return {
+    corrected_text: typeof correction?.corrected_text === 'string' ? correction.corrected_text : '',
+    summary: typeof correction?.summary === 'string' ? correction.summary : '',
+    reasons: Array.isArray(correction?.reasons) ? correction.reasons : [],
+  };
+}
+
+function WritingCorrectionEditor({ originalText, correction, onChange }) {
+  const value = normalizeWritingCorrection(correction);
+  const visibleCorrectedText = value.corrected_text || String(originalText || '');
+  const hasDraft = Boolean(value.corrected_text.trim() || value.summary.trim() || value.reasons.length);
+
+  function emit(patch) {
+    onChange({
+      ...value,
+      corrected_text: visibleCorrectedText,
+      ...patch,
+    });
+  }
+
+  function updateReason(index, patch) {
+    const reasons = value.reasons.map((reason, currentIndex) => (
+      currentIndex === index ? { ...reason, ...patch } : reason
+    ));
+    emit({ reasons });
+  }
+
+  function addReason() {
+    emit({
+      reasons: [
+        ...value.reasons,
+        { category: 'grammar', original: '', corrected: '', reason: '' },
+      ],
+    });
+  }
+
+  function removeReason(index) {
+    emit({ reasons: value.reasons.filter((_, currentIndex) => currentIndex !== index) });
+  }
+
+  return (
+    <section className="mt-5 overflow-hidden rounded-2xl border border-[#d8c5b8] bg-[#fffaf5] dark:border-white/10 dark:bg-white/[0.035]">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[#eadbd1] px-4 py-4 dark:border-white/10 sm:px-5">
+        <div>
+          <p className="text-[0.66rem] font-black uppercase tracking-[0.13em] text-clay dark:text-coral">Correzione scritta visuale</p>
+          <h3 className="mt-1 text-base font-black text-ink dark:text-white">Correggi il testo, poi spiega solo i cambiamenti che contano.</h3>
+          <p className="mt-1 text-xs font-semibold leading-5 text-ink/50 dark:text-white/50">
+            Lo studente vedrà il confronto soltanto quando la review sarà approvata.
+          </p>
+        </div>
+        {hasDraft ? (
+          <button
+            type="button"
+            onClick={() => onChange({})}
+            className="focus-ring inline-flex min-h-9 items-center gap-2 rounded-full border border-ink/10 bg-white px-3 py-2 text-xs font-black text-ink/55 transition hover:border-clay hover:text-clay dark:border-white/10 dark:bg-white/[0.04] dark:text-white/60"
+          >
+            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+            Azzera
+          </button>
+        ) : null}
+      </div>
+
+      <div className="grid gap-4 p-4 sm:p-5">
+        <label className="text-xs font-black text-ink/60 dark:text-white/60">
+          Versione corretta
+          <textarea
+            rows={8}
+            value={visibleCorrectedText}
+            onChange={(event) => emit({ corrected_text: event.target.value })}
+            className={`${fieldClass} mt-2 w-full resize-y leading-7`}
+            placeholder="Riscrivi qui la versione corretta..."
+          />
+        </label>
+
+        <label className="text-xs font-black text-ink/60 dark:text-white/60">
+          Messaggio chiave <span className="font-semibold opacity-60">(opzionale)</span>
+          <textarea
+            rows={2}
+            value={value.summary}
+            onChange={(event) => emit({ summary: event.target.value })}
+            className={`${fieldClass} mt-2 w-full resize-y`}
+            placeholder="Es. Il contenuto è chiaro: lavoriamo soprattutto su tempi verbali e collocazioni."
+          />
+        </label>
+
+        <div>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-black text-ink/60 dark:text-white/60">Motivi della correzione</p>
+              <p className="mt-1 text-xs font-semibold text-ink/40 dark:text-white/40">Aggiungi solo quelli utili a evitare lo stesso errore in futuro.</p>
+            </div>
+            <button
+              type="button"
+              onClick={addReason}
+              className="focus-ring inline-flex min-h-9 items-center gap-2 rounded-full bg-ink px-3.5 py-2 text-xs font-black text-white transition hover:bg-clay dark:bg-clay"
+            >
+              <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+              Aggiungi motivo
+            </button>
+          </div>
+
+          {value.reasons.length ? (
+            <div className="mt-3 grid gap-3">
+              {value.reasons.map((reason, index) => (
+                <article key={index} className="rounded-xl border border-ink/10 bg-white/80 p-3.5 dark:border-white/10 dark:bg-white/[0.035]">
+                  <div className="grid gap-3 lg:grid-cols-[10rem_minmax(0,1fr)_minmax(0,1fr)_auto]">
+                    <label className="text-[0.65rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">
+                      Area
+                      <select
+                        value={reason.category || 'other'}
+                        onChange={(event) => updateReason(index, { category: event.target.value })}
+                        className={`${fieldClass} mt-1.5 w-full`}
+                      >
+                        {WRITING_CORRECTION_CATEGORIES.map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+                      </select>
+                    </label>
+                    <label className="text-[0.65rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">
+                      Prima
+                      <input
+                        value={reason.original || ''}
+                        onChange={(event) => updateReason(index, { original: event.target.value })}
+                        className={`${fieldClass} mt-1.5 w-full`}
+                        placeholder="es. I have went"
+                      />
+                    </label>
+                    <label className="text-[0.65rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">
+                      Dopo
+                      <input
+                        value={reason.corrected || ''}
+                        onChange={(event) => updateReason(index, { corrected: event.target.value })}
+                        className={`${fieldClass} mt-1.5 w-full`}
+                        placeholder="es. I have gone"
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => removeReason(index)}
+                      className="focus-ring mt-5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-ink/10 text-ink/45 transition hover:border-clay hover:text-clay dark:border-white/10 dark:text-white/45"
+                      aria-label="Rimuovi motivo"
+                      title="Rimuovi motivo"
+                    >
+                      <Trash2 className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                  </div>
+                  <label className="mt-3 block text-[0.65rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">
+                    Perché
+                    <textarea
+                      rows={2}
+                      value={reason.reason || ''}
+                      onChange={(event) => updateReason(index, { reason: event.target.value })}
+                      className={`${fieldClass} mt-1.5 w-full resize-y`}
+                      placeholder="Spiega la regola o il motivo in modo breve e riutilizzabile."
+                    />
+                  </label>
+                </article>
+              ))}
+            </div>
+          ) : null}
+        </div>
+
+        {hasDraft ? (
+          <WritingCorrectionDisplay
+            originalText={String(originalText || '')}
+            correction={{
+              ...value,
+              corrected_text: visibleCorrectedText,
+            }}
+            compact
+          />
+        ) : null}
+      </div>
+    </section>
+  );
 }
 
 function QuestionReviewCard({ item, review, onChange }) {
@@ -134,6 +327,14 @@ function QuestionReviewCard({ item, review, onChange }) {
         />
         Ripristina la correzione automatica
       </label>
+
+      {item.question?.type === 'written_response' ? (
+        <WritingCorrectionEditor
+          originalText={typeof item.answer === 'string' ? item.answer : ''}
+          correction={review.correction}
+          onChange={(correction) => onChange({ correction, dirty: true })}
+        />
+      ) : null}
     </article>
   );
 }

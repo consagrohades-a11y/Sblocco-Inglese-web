@@ -43,12 +43,23 @@ export async function saveExerciseAttemptReview({
     earned_points: review.earnedPoints ?? null,
     comment: review.comment || null,
     turn_reviews: review.turnReviews || {},
+    correction: review.correction || {},
   }));
-  const { error: turnError } = await supabase.rpc('admin_save_exercise_builder_attempt_turn_reviews', {
-    p_attempt_id: attemptId,
-    p_reviews: normalizedReviews,
-  });
+  const [{ error: turnError }, { error: correctionError }] = await Promise.all([
+    supabase.rpc('admin_save_exercise_builder_attempt_turn_reviews', {
+      p_attempt_id: attemptId,
+      p_reviews: normalizedReviews,
+    }),
+    supabase.rpc('admin_save_exercise_builder_written_corrections', {
+      p_attempt_id: attemptId,
+      p_corrections: normalizedReviews.map((review) => ({
+        attempt_question_id: review.attempt_question_id,
+        correction: review.correction || {},
+      })),
+    }),
+  ]);
   throwIfError(turnError);
+  throwIfError(correctionError);
   const { data, error } = await supabase.rpc('admin_save_exercise_builder_attempt_review', {
     p_attempt_id: attemptId,
     p_reviews: normalizedReviews,

@@ -20,6 +20,7 @@ import {
 import { stableShuffleWordOrderTokenInstances } from '../../lib/wordOrderShuffle.js';
 import EducationalContentBlock from './EducationalContentBlock.jsx';
 import SbloccoSelect from './SbloccoSelect.jsx';
+import WritingCorrectionDisplay from './WritingCorrectionDisplay.jsx';
 import {
   ExerciseChoice,
   ExerciseFeedbackPanel,
@@ -635,5 +636,24 @@ export default function ExerciseQuestionRendererV2({
     : question.content?.presentation === 'open_answer_set'
       ? 'open_answer_set'
       : type;
-  return <div><ExercisePrompt type={displayType} prompt={question.prompt} instructions={question.instructions} />{input}<ResultPanel question={question} result={result} teacherComment={item?.teacher_comment} showScore={showScore} showCorrectAnswers={showCorrectAnswers} showExplanations={showExplanations} /></div>;
+  return (
+    <div>
+      <ExercisePrompt type={displayType} prompt={question.prompt} instructions={question.instructions} />
+      {input}
+      <ResultPanel
+        question={question}
+        result={result}
+        teacherComment={item?.teacher_comment}
+        showScore={showScore}
+        showCorrectAnswers={showCorrectAnswers}
+        showExplanations={showExplanations}
+      />
+      {type === 'written_response' ? (
+        <WritingCorrectionDisplay
+          originalText={typeof answer === 'string' ? answer : ''}
+          correction={item?.teacher_correction || {}}
+        />
+      ) : null}
+    </div>
+  );
 }

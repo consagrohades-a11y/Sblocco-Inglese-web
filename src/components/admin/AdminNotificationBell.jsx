@@ -2,10 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext.jsx';
-import {
-  loadTeacherUnreadCount,
-  subscribeToTeacherNotifications,
-} from '../../lib/teacherNotificationsApi.js';
+import { loadTeacherUnreadCount } from '../../lib/teacherNotificationsApi.js';
 
 export default function AdminNotificationBell({ compact = false, onNavigate, tone = 'dark' }) {
   const { user } = useAuth();
@@ -20,12 +17,18 @@ export default function AdminNotificationBell({ compact = false, onNavigate, ton
   }, []);
 
   useEffect(() => {
+    if (!user?.id) return undefined;
+
     refresh();
-    const unsubscribe = subscribeToTeacherNotifications(user?.id, refresh);
-    const timer = window.setInterval(refresh, 60000);
+    const timer = window.setInterval(refresh, 15000);
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') refresh();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
     return () => {
-      unsubscribe();
       window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, [refresh, user?.id]);
 
