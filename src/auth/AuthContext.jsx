@@ -1,7 +1,12 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '../lib/supabaseClient.js';
 
 const AuthContext = createContext(null);
+const PROFILE_RETRY_DELAYS = [0, 180, 420, 800];
+
+function wait(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
 
 async function loadProfile(userId) {
   if (!userId) return null;
@@ -19,28 +24,98 @@ async function loadProfile(userId) {
   return data;
 }
 
+async function loadProfileWithRetry(userId) {
+  let lastError = null;
+
+  for (const delay of PROFILE_RETRY_DELAYS) {
+    if (delay) await wait(delay);
+
+    try {
+      const nextProfile = await loadProfile(userId);
+      if (nextProfile) return nextProfile;
+      lastError = null;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (lastError) throw lastError;
+  return null;
+}
+
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [profileError, setProfileError] = useState('');
   const [loading, setLoading] = useState(true);
+  const profileRequestRef = useRef(0);
 
-  const refreshProfile = useCallback(async (activeUser = user) => {
+  const hydrateProfile = useCallback(async (activeUser) => {
+    const requestId = ++profileRequestRef.current;
+
     if (!activeUser) {
       setProfile(null);
+      setProfileError('');
       return null;
     }
 
-    const nextProfile = await loadProfile(activeUser.id);
-    setProfile(nextProfile);
-    return nextProfile;
-  }, [user]);
+    try {
+      const nextProfile = await loadProfileWithRetry(activeUser.id);
+      if (requestId !== profileRequestRef.current) return null;
+
+      setProfile(nextProfile);
+      setProfileError(nextProfile ? '' : 'missing');
+      return nextProfile;
+    } catch {
+      if (requestId !== profileRequestRef.current) return null;
+
+      setProfile(null);
+      setProfileError('unavailable');
+      return null;
+    }
+  }, []);
+
+  const refreshProfile = useCallback(async (activeUser = user) => {
+    if (!activeUser) {
+      profileRequestRef.current += 1;
+      setProfile(null);
+      setProfileError('');
+      return null;
+    }
+
+    setLoading(true);
+    try {
+      return await hydrateProfile(activeUser);
+    } finally {
+      setLoading(false);
+    }
+  }, [hydrateProfile, user]);
 
   useEffect(() => {
     let active = true;
 
-    async function initialiseAuth() {
+    async function applySession(nextSession) {
+      if (!active) return;
+
+      const nextUser = nextSession?.user ?? null;
+      setSession(nextSession ?? null);
+      setUser(nextUser);
+
+      if (!nextUser) {
+        profileRequestRef.current += 1;
+        setProfile(null);
+        setProfileError('');
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
+      await hydrateProfile(nextUser);
+      if (active) setLoading(false);
+    }
+
+    async function initialiseAuth() {
       const { data, error } = await supabase.auth.getSession();
 
       if (!active) return;
@@ -49,69 +124,31 @@ export function AuthProvider({ children }) {
         setSession(null);
         setUser(null);
         setProfile(null);
+        setProfileError('');
         setLoading(false);
         return;
       }
 
-      const nextSession = data.session ?? null;
-
-      try {
-        const nextProfile = nextSession?.user ? await loadProfile(nextSession.user.id) : null;
-
-        if (nextSession?.user && !nextProfile) {
-          await supabase.auth.signOut({ scope: 'local' });
-          if (!active) return;
-          setSession(null);
-          setUser(null);
-          setProfile(null);
-          return;
-        }
-
-        setSession(nextSession);
-        setUser(nextSession?.user ?? null);
-        setProfile(nextProfile);
-      } catch {
-        setSession(null);
-        setUser(null);
-        setProfile(null);
-      } finally {
-        if (active) setLoading(false);
-      }
+      await applySession(data.session ?? null);
     }
 
     initialiseAuth();
 
-    const { data: listener } = supabase.auth.onAuthStateChange(async (event, nextSession) => {
-      try {
-        const nextProfile = nextSession?.user ? await loadProfile(nextSession.user.id) : null;
-
-        if (nextSession?.user && !nextProfile) {
-          if (event !== 'SIGNED_OUT') {
-            await supabase.auth.signOut({ scope: 'local' });
-          }
-          setSession(null);
-          setUser(null);
-          setProfile(null);
-          return;
-        }
-
-        setSession(nextSession);
-        setUser(nextSession?.user ?? null);
-        setProfile(nextProfile);
-      } catch {
-        setSession(null);
-        setUser(null);
-        setProfile(null);
-      } finally {
-        setLoading(false);
-      }
+    const { data: listener } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      // Supabase explicitly recommends keeping this callback synchronous.
+      // Defer profile/database work so auth state changes cannot deadlock the client.
+      window.setTimeout(() => {
+        if (!active) return;
+        applySession(nextSession);
+      }, 0);
     });
 
     return () => {
       active = false;
+      profileRequestRef.current += 1;
       listener.subscription.unsubscribe();
     };
-  }, []);
+  }, [hydrateProfile]);
 
   const signUp = useCallback(({
     displayName,
@@ -147,7 +184,7 @@ export function AuthProvider({ children }) {
 
   const requestPasswordReset = useCallback(({ email }) =>
     supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/update-password`,
+      redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
     }), []);
 
   const updatePassword = useCallback(({ password }) =>
@@ -157,6 +194,7 @@ export function AuthProvider({ children }) {
     session,
     user,
     profile,
+    profileError,
     loading,
     refreshProfile,
     signUp,
@@ -164,7 +202,19 @@ export function AuthProvider({ children }) {
     signOut,
     requestPasswordReset,
     updatePassword,
-  }), [session, user, profile, loading, refreshProfile, signUp, signIn, signOut, requestPasswordReset, updatePassword]);
+  }), [
+    session,
+    user,
+    profile,
+    profileError,
+    loading,
+    refreshProfile,
+    signUp,
+    signIn,
+    signOut,
+    requestPasswordReset,
+    updatePassword,
+  ]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

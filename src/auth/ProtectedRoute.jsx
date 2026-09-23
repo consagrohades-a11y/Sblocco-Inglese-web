@@ -3,7 +3,14 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext.jsx';
 
 export default function ProtectedRoute({ children }) {
-  const { loading, user, profile, signOut } = useAuth();
+  const {
+    loading,
+    user,
+    profile,
+    profileError,
+    refreshProfile,
+    signOut,
+  } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -20,7 +27,43 @@ export default function ProtectedRoute({ children }) {
     return <Navigate to="/login" replace state={{ from: `${location.pathname}${location.search}${location.hash}` }} />;
   }
 
-  if (profile && profile.status !== 'active') {
+  if (!profile) {
+    const missing = profileError === 'missing';
+
+    return (
+      <section className="section-shell py-16">
+        <div className="mx-auto max-w-2xl rounded-2xl border border-ink/10 bg-white p-7 text-center shadow-soft dark:border-white/10 dark:bg-surface-900 sm:p-9">
+          <span className="eyebrow">Accesso account</span>
+          <h1 className="mt-4 text-3xl font-black text-ink dark:text-white">
+            {missing ? 'Stiamo completando il tuo profilo.' : 'Non riesco a caricare il tuo profilo.'}
+          </h1>
+          <p className="mt-4 text-base leading-7 text-ink/65 dark:text-white/60">
+            {missing
+              ? 'Il tuo accesso è valido. Aspetta un momento e riprova: non devi registrarti di nuovo.'
+              : 'La sessione è ancora attiva, quindi non perdi il tuo accesso. Riprova a caricare il profilo.'}
+          </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => refreshProfile()}
+              className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-moss"
+            >
+              Riprova
+            </button>
+            <button
+              type="button"
+              onClick={() => signOut()}
+              className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-black text-ink transition hover:border-ink/30"
+            >
+              Esci
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (profile.status !== 'active') {
     const removed = profile.status === 'deleted';
     return (
       <section className="section-shell py-16">
