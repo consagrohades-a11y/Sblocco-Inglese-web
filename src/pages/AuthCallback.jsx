@@ -86,7 +86,12 @@ export default function AuthCallback() {
         });
       } catch (authError) {
         if (!cancelled) {
-          setError(getAuthErrorMessage(authError));
+          const message = String(authError?.message || '').toLowerCase();
+          if (flowType !== 'recovery' && message.includes('session missing')) {
+            setError('Il link di conferma non è valido o è scaduto. Prova ad accedere oppure richiedi una nuova conferma.');
+          } else {
+            setError(getAuthErrorMessage(authError));
+          }
         }
       }
     }
