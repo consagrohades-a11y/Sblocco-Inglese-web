@@ -40,6 +40,7 @@ const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const UpdatePassword = lazy(() => import('./pages/UpdatePassword'));
+const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const Account = lazy(() => import('./pages/Account'));
 const AdminShell = lazy(() => import('./components/AdminShell'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
@@ -129,7 +130,7 @@ export default function App() {
     || (import.meta.env.DEV && location.pathname.startsWith('/__preview/recovery'));
   const isStandaloneRecoveryOnboarding = location.pathname === '/recupero-debito/onboarding'
     || (import.meta.env.DEV && location.pathname === '/__preview/recovery-onboarding');
-  const isStandaloneAuth = ['/register', '/login', '/forgot-password', '/update-password'].includes(location.pathname);
+  const isStandaloneAuth = ['/register', '/login', '/forgot-password', '/update-password', '/auth/callback'].includes(location.pathname);
   const isStandaloneRegistration = location.pathname === '/register';
   const isStandaloneExperience = isStandaloneRecoveryOnboarding || isStandaloneAuth;
   const suppressMarketingMobileCta = isRecoveryExperience || isStandaloneAuth;
@@ -183,6 +184,7 @@ export default function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/update-password" element={<UpdatePassword />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/account" element={<ProtectedRoute><AccountEntry /></ProtectedRoute>} />
             <Route path="/account/settings" element={<ProtectedRoute><Account /></ProtectedRoute>} />
             <Route path="/checkout/success" element={<ProtectedRoute><CheckoutSuccess /></ProtectedRoute>} />
