@@ -234,7 +234,7 @@ export default function Register() {
       timezone,
       email: email.trim(),
       password,
-      emailRedirectTo: `${window.location.origin}${authPath('/login', from)}`,
+      emailRedirectTo: `${window.location.origin}/auth/callback?type=signup&returnTo=${encodeURIComponent(from)}`,
     });
 
     if (signUpError) {
@@ -264,7 +264,7 @@ export default function Register() {
           <p className="register-journey__completion-copy">
             {sessionReady
               ? 'Il tuo spazio Sblocco è pronto. Da qui in poi troverai ciò che ti serve per usare davvero l’inglese, senza strada inutile.'
-              : `Ti abbiamo mandato un’email a ${email.trim()}. Apri il link di conferma e poi torna qui: il tuo spazio ti aspetta.`}
+              : `Ti abbiamo mandato un’email a ${email.trim()}. Apri il link di conferma: ti porteremo direttamente nel tuo spazio Sblocco.`}
           </p>
 
           {sessionReady ? (
@@ -273,7 +273,7 @@ export default function Register() {
             </button>
           ) : (
             <Link className="register-journey__primary register-journey__primary--wide" to={authPath('/login', from)}>
-              Ho confermato, accedi <ArrowRight />
+              Vai al login <ArrowRight />
             </Link>
           )}
 
