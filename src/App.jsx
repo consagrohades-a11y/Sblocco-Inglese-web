@@ -130,7 +130,8 @@ export default function App() {
     || (import.meta.env.DEV && location.pathname.startsWith('/__preview/recovery'));
   const isStandaloneRecoveryOnboarding = location.pathname === '/recupero-debito/onboarding'
     || (import.meta.env.DEV && location.pathname === '/__preview/recovery-onboarding');
-  const isStandaloneAuth = ['/register', '/login', '/forgot-password', '/update-password', '/auth/callback'].includes(location.pathname);
+  const isStandaloneAuth = ['/register', '/login', '/forgot-password', '/update-password'].includes(location.pathname)
+    || location.pathname === '/auth/callback';
   const isStandaloneRegistration = location.pathname === '/register';
   const isStandaloneExperience = isStandaloneRecoveryOnboarding || isStandaloneAuth;
   const suppressMarketingMobileCta = isRecoveryExperience || isStandaloneAuth;
