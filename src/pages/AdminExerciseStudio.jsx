@@ -681,7 +681,7 @@ export default function AdminExerciseStudio() {
               </button>
               <button
                 type="button"
-                onClick={publishCurrentDraft}
+                onClick={() => publishCurrentDraft(false)}
                 disabled={!preflight.valid || publishState === 'publishing'}
                 className="focus-ring inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-xs font-black text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-35 dark:bg-orange-400 dark:text-surface-950"
               >
