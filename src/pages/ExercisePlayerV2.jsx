@@ -441,12 +441,6 @@ function FinalResult({ payload, assignmentId, resourceId, focusMistakesRequested
               </p>
             </div>
           ) : null}
-          {settings.show_diagnostic_summary !== false &&
-          !awaitingPublishedReview ? (
-            <div className="mt-6">
-              <ExerciseDiagnosticSummary summary={summary.diagnostic_summary} />
-            </div>
-          ) : null}
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to={`/assignments/${assignmentId}`}
