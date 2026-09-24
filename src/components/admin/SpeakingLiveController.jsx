@@ -56,6 +56,11 @@ export default function SpeakingLiveController({ session, onEnd }) {
   }, [remoteState?.sourceIndex, session?.activity?.prompts]);
 
   useEffect(() => {
+    setRemoteState(null);
+    setConnected(false);
+  }, [session?.activity?.id]);
+
+  useEffect(() => {
     if (!session?.controlId) return undefined;
 
     function handlePresenterPayload(payload) {

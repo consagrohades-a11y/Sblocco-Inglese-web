@@ -38,11 +38,21 @@ assert.ok(controller.includes("window.addEventListener('message'"), 'Teacher con
 assert.ok(controller.includes('Teacher note') || controller.includes('Teacher note'.toLowerCase()), 'Controller must keep teacher notes teacher-side.');
 assert.ok(controller.includes('Lesson timer'), 'Controller must include a teacher timer.');
 assert.ok(controller.includes('Student screen connected'), 'Controller must expose connection status.');
+const focusStudentWindowBlock = controller.slice(controller.indexOf('function focusStudentWindow'), controller.indexOf('function endSession'));
+assert.ok(!focusStudentWindowBlock.includes('command('), 'Focusing the student window must never change the speaking item.');
+assert.ok(!focusStudentWindowBlock.includes('channelRef.current?.send'), 'Focusing the student window must not dispatch live-control messages.');
+assert.ok(controller.includes("}, [session?.activity?.id]);"), 'Teacher controller must reset stale presenter state when the activity changes.');
+assert.ok(!presenter.includes("addEventListener('focus'"), 'Student-window focus must never advance or randomize speaking cards.');
 
 assert.ok(library.includes('createSpeakingControlId'), 'Speaking launcher must create a unique live-control channel.');
 assert.ok(library.includes('SpeakingLiveController'), 'Speaking library must keep the teacher controller open after launch.');
 assert.ok(library.includes("searchParams.get('learner')"), 'Speaking library must accept a learner from the profile route.');
 assert.ok(library.includes('initialLearnerId={focusedLearnerId}'), 'Profile-selected learner must prefill the presentation launcher.');
+assert.ok(library.includes('Mostra allo studente'), 'An active session must let the teacher switch activities from the library.');
+assert.ok(library.includes('studentWindow.location.replace(presenterUrl)'), 'Activity switches must reuse the same student window.');
+assert.ok(library.includes('window.focus()'), 'Launching the presenter should restore focus to the teacher panel.');
+const switchActivityBlock = library.slice(library.indexOf('function switchLiveActivity'), library.indexOf('\n\n  return (', library.indexOf('function switchLiveActivity')));
+assert.ok(!switchActivityBlock.includes('studentWindow.focus'), 'Changing activity must not steal focus from the teacher panel.');
 
 assert.ok(learner.includes('/admin/content/speaking-library?learner='), 'Learner profile must launch directly into speaking.');
 assert.ok(learner.includes('Start speaking'), 'Learner profile must expose a speaking action.');
