@@ -25,11 +25,11 @@ import { AdminLearnerContextProvider } from '../context/AdminLearnerContext.jsx'
 const navigationGroups = [
   {
     id: 'home',
-    label: 'Workspace',
-    description: 'Panoramica e aggiornamenti',
+    label: 'Command Center',
+    description: 'Priorità e accessi rapidi',
     icon: LayoutDashboard,
     items: [
-      { label: 'Dashboard', to: '/admin', icon: LayoutDashboard, end: true },
+      { label: 'Command Center', to: '/admin/command-center', icon: LayoutDashboard },
       { label: 'Notifiche', to: '/admin/notifications', icon: Bell },
     ],
   },
