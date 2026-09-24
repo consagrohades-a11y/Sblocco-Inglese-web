@@ -141,7 +141,7 @@ export default function VocabularyReplay({ items = [], autoStart = false, onItem
               <p className="text-[0.66rem] font-black uppercase tracking-[0.15em] text-orange-700 dark:text-orange-300">Sblocco Replay</p>
               <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Un minuto. Cinque parole. Niente lista da ristudiare.</h2>
               <p className="mt-1 max-w-2xl text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
-                Ti mostro un indizio preso dal tuo vocabolario. Prova a richiamare la parola o il chunk prima di rivelarlo.
+                Ti mostro prima ciò che è più urgente. Ogni “me lo ricordavo” o “da rivedere” cambia quando quell’elemento tornerà.
               </p>
             </div>
           </div>
@@ -160,8 +160,8 @@ export default function VocabularyReplay({ items = [], autoStart = false, onItem
             <h2 className="mt-2 text-3xl font-black text-ink dark:text-white">{known} su {session.length} richiamate subito.</h2>
             <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
               {again
-                ? `${again} ${again === 1 ? 'elemento merita' : 'elementi meritano'} un altro passaggio. Nessun voto: serve solo a capire cosa torna davvero in mente.`
-                : 'Tutto richiamato al primo colpo. Puoi fare un altro giro con elementi diversi.'}
+                ? `${again} ${again === 1 ? 'elemento tornerà' : 'elementi torneranno'} prima. Sblocco ha già aggiornato il prossimo richiamo.`
+                : 'Tutto richiamato al primo colpo. Sblocco ha già allungato il tempo prima del prossimo ripasso.'}
             </p>
           </div>
           <button
