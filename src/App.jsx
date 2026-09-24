@@ -210,6 +210,7 @@ export default function App() {
             <Route path="/admin/present/speaking/:activityId" element={<AdminRoute><SpeakingActivityPresenter /></AdminRoute>} />
             <Route path="/admin" element={<AdminRoute><AdminShell /></AdminRoute>}>
               <Route index element={<AdminDashboard />} />
+              <Route path="command-center" element={<AdminDashboard />} />
               <Route path="notifications" element={<AdminNotifications />} />
               <Route path="learners" element={<AdminLearners />} />
               <Route path="learners/:learnerId" element={<AdminLearnerDetail />} />
