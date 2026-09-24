@@ -138,6 +138,7 @@ function GenericDashboard({ firstName }) {
   const laterAssignments = open.slice(1, 3);
   const completion = assignments.length ? Math.round((completed.length / assignments.length) * 100) : 0;
   const memoryDue = Number(pulse?.memory?.due_count || 0);
+  const memorySessionCount = Math.min(5, memoryDue);
   const latestAttempt = pulse?.latest_attempt || null;
   const mistakeCount = Number(latestAttempt?.mistake_count || 0);
   const mistakeTarget = latestAttempt?.attempt_id
@@ -254,8 +255,8 @@ function GenericDashboard({ firstName }) {
             {memoryDue > 0 ? (
               <Link to="/vocab-bank?replay=1" className="group rounded-[1.75rem] border border-orange-200 bg-[#fff8ef] p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-400 dark:border-orange-300/15 dark:bg-white/[0.035]">
                 <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">Memory Engine</p>
-                <h3 className="mt-2 text-2xl font-black text-ink dark:text-white">{memoryDue} {memoryDue === 1 ? 'elemento da riattivare' : 'elementi da riattivare'}</h3>
-                <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">Parole e chunk che Sblocco ha scelto perché è il momento giusto per provare a richiamarli.</p>
+                <h3 className="mt-2 text-2xl font-black text-ink dark:text-white">{memorySessionCount} {memorySessionCount === 1 ? 'elemento da riattivare' : 'elementi da riattivare'}</h3>
+                <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">{memoryDue > 5 ? `Sblocco ne sceglie 5 alla volta tra ${memoryDue} elementi pronti, senza trasformare il ripasso in una lista infinita.` : 'Parole e chunk che Sblocco ha scelto perché è il momento giusto per provare a richiamarli.'}</p>
                 <span className="mt-4 inline-flex items-center gap-2 text-sm font-black text-orange-700 dark:text-orange-300">Fai un Replay <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" /></span>
               </Link>
             ) : null}
