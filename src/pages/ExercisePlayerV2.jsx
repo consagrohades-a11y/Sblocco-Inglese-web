@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import SEO from "../components/SEO";
-import ExerciseDiagnosticSummary from "../components/exercises/ExerciseDiagnosticSummary.jsx";
 import ExerciseQuestionRenderer from "../components/exercises/ExerciseQuestionRenderer.jsx";
 import {
   ExerciseActionBar,
