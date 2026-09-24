@@ -25,11 +25,11 @@ import { AdminLearnerContextProvider } from '../context/AdminLearnerContext.jsx'
 const navigationGroups = [
   {
     id: 'home',
-    label: 'Command Center',
-    description: 'Priorità, notifiche e accessi rapidi',
+    label: 'Workspace',
+    description: 'Panoramica e aggiornamenti',
     icon: LayoutDashboard,
     items: [
-      { label: 'Command Center', to: '/admin/command-center', icon: LayoutDashboard, end: true },
+      { label: 'Dashboard', to: '/admin', icon: LayoutDashboard, end: true },
       { label: 'Notifiche', to: '/admin/notifications', icon: Bell },
     ],
   },
@@ -223,7 +223,7 @@ export default function AdminShell() {
       <>
         <div className={`border-b border-white/10 ${collapsed ? 'flex flex-col items-center gap-2 p-2' : 'p-4'}`}>
           <div className={collapsed ? 'w-10 overflow-hidden' : 'flex items-start justify-between gap-2'}>
-            <BrandLogo to="/admin/command-center" compact light />
+            <BrandLogo to="/admin" compact light />
             {!collapsed ? (
               <button
                 type="button"
@@ -303,7 +303,7 @@ export default function AdminShell() {
       </aside>
 
       <header className="sticky top-0 z-40 flex min-h-16 items-center justify-between border-b border-ink/10 bg-paper/95 px-4 backdrop-blur-xl dark:border-white/10 dark:bg-surface-950/95 lg:hidden">
-        <BrandLogo to="/admin/command-center" compact />
+        <BrandLogo to="/admin" compact />
         <div className="flex items-center gap-2">
           <AdminNotificationBell compact tone="light" />
           <button

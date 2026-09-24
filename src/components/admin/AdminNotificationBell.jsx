@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext.jsx';
-import { loadTeacherUnreadCount, markAllTeacherNotificationsRead, subscribeToTeacherNotifications } from '../../lib/teacherNotificationsApi.js';
+import { loadTeacherUnreadCount, markAllTeacherNotificationsRead } from '../../lib/teacherNotificationsApi.js';
 
 export default function AdminNotificationBell({ compact = false, onNavigate, tone = 'dark' }) {
   const { user } = useAuth();
@@ -20,13 +20,22 @@ export default function AdminNotificationBell({ compact = false, onNavigate, ton
     if (!user?.id) return undefined;
 
     refresh();
-    return subscribeToTeacherNotifications(user.id, refresh);
+    const timer = window.setInterval(refresh, 15000);
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') refresh();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [refresh, user?.id]);
 
   function openNotifications() {
     setUnreadCount(0);
     markAllTeacherNotificationsRead().catch(() => {
-      // A later realtime event reconciles the badge if the write fails.
+      // A later refresh reconciles the badge if the write fails.
     });
     onNavigate?.();
   }

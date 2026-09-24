@@ -29,11 +29,8 @@ const marketingContent = read('src/data/content.js');
 const contactQuestionForm = read('src/components/ContactQuestionForm.jsx');
 const sitemap = read('public/sitemap.xml');
 const platform = read('src/pages/Platform.jsx');
-const adminBell = read('src/components/admin/AdminNotificationBell.jsx');
-const adminNotifications = read('src/pages/AdminNotifications.jsx');
 
 for (const activeRoute of [
-  '/admin/command-center',
   '/admin/notifications',
   '/admin/learners',
   '/admin/groups',
@@ -69,11 +66,7 @@ for (const retiredDashboardItem of [
   assertNotContains(dashboard, retiredDashboardItem, `Retired dashboard item returned: ${retiredDashboardItem}`);
 }
 
-assertContains(shell, "label: 'Command Center'", 'Admin navigation must visibly name the Command Center.');
-assertContains(dashboard, 'eyebrow="Command Center"', 'Admin home must visibly identify itself as the Command Center.');
-assertContains(app, '<Route index element={<Navigate to="/admin/command-center" replace />} />', 'Admin root must land on the Command Center.');
-assertContains(app, '<Route path="command-center" element={<AdminDashboard />} />', 'Command Center must have a stable admin route.');
-assertContains(dashboard, '<TeacherRadar />', 'Admin Command Center must surface the Teacher Radar.');
+assertContains(dashboard, '<TeacherRadar />', 'Admin dashboard must surface the Teacher Radar.');
 assertContains(teacherRadar, "review_status === 'unreviewed'", 'Teacher Radar must prioritize unresolved reviews.');
 assertContains(teacherRadar, "notification_type === 'learner_signed_up'", 'Teacher Radar must surface new learner registrations.');
 assertContains(learnerHome, 'assignmentResumeTarget', 'Learner home must compute an exact resume target.');
@@ -135,11 +128,6 @@ for (const retiredPublicUrl of [
 ]) {
   assertNotContains(sitemap, retiredPublicUrl, `Retired public URL is still indexed: ${retiredPublicUrl}`);
 }
-
-assertContains(adminBell, 'subscribeToTeacherNotifications', 'Admin bell must use realtime notification updates.');
-assertNotContains(adminBell, 'setInterval', 'Admin bell must not poll in the background.');
-assertContains(adminNotifications, 'subscribeToTeacherNotifications', 'Notification center must use realtime updates.');
-assertNotContains(adminNotifications, 'setInterval', 'Notification center must not poll in the background.');
 
 assertNotContains(marketingContent, "to: '/trainers'", 'Marketing navigation must not point to the retired Trainer hub.');
 assertContains(marketingContent, "label: 'Piattaforma', to: '/piattaforma'", 'Marketing navigation must expose the current platform destination.');

@@ -209,8 +209,7 @@ export default function App() {
             <Route path="/vocab-bank" element={<ProtectedRoute><LearnerVocabularyBank /></ProtectedRoute>} />
             <Route path="/admin/present/speaking/:activityId" element={<AdminRoute><SpeakingActivityPresenter /></AdminRoute>} />
             <Route path="/admin" element={<AdminRoute><AdminShell /></AdminRoute>}>
-              <Route index element={<Navigate to="/admin/command-center" replace />} />
-              <Route path="command-center" element={<AdminDashboard />} />
+              <Route index element={<AdminDashboard />} />
               <Route path="notifications" element={<AdminNotifications />} />
               <Route path="learners" element={<AdminLearners />} />
               <Route path="learners/:learnerId" element={<AdminLearnerDetail />} />
