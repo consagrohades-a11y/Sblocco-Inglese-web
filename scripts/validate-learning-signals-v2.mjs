@@ -40,8 +40,7 @@ assert(migration.includes('delete from public.exercise_builder_diagnostic_events
 assert(migration.includes('admin_get_learner_learning_signals'), 'Learning Signals RPC is missing.');
 assert(migration.includes("coalesce((question.grading_result ->> 'max_points')::numeric, 0) > 0"), 'Learning Signals must ignore non-graded content.');
 assert(migration.includes("'correct',") && migration.includes("'nearly_correct',") && migration.includes("'incorrect'"), 'Learning Signals must use scored outcomes only.');
-assert(!migration.includes("'unanswered'
-      )"), 'Unanswered work must not be treated as language evidence.');
+assert(!migration.match(/grading_result[\s\S]{0,500}'status'[\s\S]{0,500}'unanswered'/), 'Unanswered work must not be treated as language evidence.');
 for (const type of ['transfer_gap', 'persistent_gap', 'guided_instability', 'improving']) {
   assert(migration.includes(type), `Learning signal type missing: ${type}`);
 }
