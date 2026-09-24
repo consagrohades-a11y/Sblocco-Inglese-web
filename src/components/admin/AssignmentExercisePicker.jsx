@@ -20,7 +20,7 @@ function buildResource(exercise) {
       show_score: true,
       show_correct_answers: true,
       show_explanations: true,
-      show_diagnostic_summary: true,
+      show_diagnostic_summary: false,
     },
   };
 }
@@ -109,7 +109,7 @@ export default function AssignmentExercisePicker({ value = [], onChange }) {
                   <label className="flex items-center gap-2 self-end rounded-lg border border-ink/10 bg-white px-3 py-2.5 text-xs font-black text-ink dark:border-white/10 dark:bg-white/[0.06] dark:text-white"><input type="checkbox" checked={config.allow_retry !== false} onChange={(event) => updateConfig(index, { allow_retry: event.target.checked })} />Permetti nuovi tentativi</label>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-3 text-xs font-bold text-ink/65 dark:text-white/65">
-                  {[['show_score', 'Mostra punteggio'], ['show_correct_answers', 'Mostra soluzioni'], ['show_explanations', 'Mostra spiegazioni'], ['show_diagnostic_summary', 'Mostra diagnosi']].map(([key, label]) => <label key={key} className="flex items-center gap-2"><input type="checkbox" checked={config[key] !== false} onChange={(event) => updateConfig(index, { [key]: event.target.checked })} />{label}</label>)}
+                  {[['show_score', 'Mostra punteggio'], ['show_correct_answers', 'Mostra soluzioni'], ['show_explanations', 'Mostra spiegazioni']].map(([key, label]) => <label key={key} className="flex items-center gap-2"><input type="checkbox" checked={config[key] !== false} onChange={(event) => updateConfig(index, { [key]: event.target.checked })} />{label}</label>)}
                 </div>
               </article>
             );
