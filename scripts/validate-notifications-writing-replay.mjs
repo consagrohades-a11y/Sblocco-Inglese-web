@@ -25,10 +25,12 @@ const reviewPublishSyncMigration = read('supabase/migrations/20260922215156_sync
 const exercisePlayer = read('src/pages/ExercisePlayerV2.jsx');
 
 assert.match(shell, /AdminNotificationBell/);
-assert.match(bell, /setInterval\(refresh, 15000\)/);
+assert.match(bell, /subscribeToTeacherNotifications/);
+assert.doesNotMatch(bell, /setInterval/);
 assert.match(bell, /markAllTeacherNotificationsRead/);
 assert.match(bell, /setUnreadCount\(0\)/);
-assert.doesNotMatch(bell, /subscribeToTeacherNotifications/);
+assert.match(adminNotifications, /subscribeToTeacherNotifications/);
+assert.doesNotMatch(adminNotifications, /setInterval/);
 
 assert.match(results, /WritingCorrectionWorkspace/);
 const writingWorkspace = read('src/components/exercises/WritingCorrectionWorkspace.jsx');
