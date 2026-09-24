@@ -76,21 +76,37 @@ export async function archiveTeacherNotification(notificationId) {
 export function subscribeToTeacherNotifications(teacherId, onChange) {
   if (!teacherId) return () => {};
 
-  const channel = supabase
-    .channel(`teacher-notifications:${teacherId}`)
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'teacher_notifications',
-        filter: `teacher_id=eq.${teacherId}`,
-      },
-      () => onChange?.(),
-    )
-    .subscribe();
+  let channel = null;
+  try {
+    channel = supabase
+      .channel(`teacher-notifications:${teacherId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'teacher_notifications',
+          filter: `teacher_id=eq.${teacherId}`,
+        },
+        () => {
+          try {
+            onChange?.();
+          } catch {
+            // Notification refresh failures must never break the surrounding UI.
+          }
+        },
+      )
+      .subscribe();
+  } catch {
+    return () => {};
+  }
 
   return () => {
-    supabase.removeChannel(channel);
+    if (!channel) return;
+    try {
+      supabase.removeChannel(channel);
+    } catch {
+      // Realtime cleanup must never block navigation or unmounting.
+    }
   };
 }
