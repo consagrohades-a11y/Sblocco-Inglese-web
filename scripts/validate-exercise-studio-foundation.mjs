@@ -19,6 +19,7 @@ import { stableShuffleWordOrderTokenInstances } from '../src/lib/wordOrderShuffl
 import { stableShuffleChoiceOptions } from '../src/lib/choiceOptionShuffle.js';
 import { parseStudioImport } from '../src/lib/exerciseStudioImport.js';
 import { buildStudioActivitiesZip, buildStudioActivityExport } from '../src/lib/exerciseStudioExport.js';
+import { applyStudioRecipe, buildStudioActivityPulse, STUDIO_RECIPES } from '../src/lib/exerciseStudioRecipes.js';
 
 const requiredTypes = [
   'explanation',
@@ -103,6 +104,53 @@ const part7PresetActivity = addStudioBlock(freshReadingActivity, 'reading_compre
 assert.equal(part7PresetActivity.blocks[0].sections.length, 4);
 assert.equal(part7PresetActivity.blocks[0].items.length, 10);
 assert.ok(part7PresetActivity.blocks[0].items.every((item) => item.correct_section_index === null));
+
+assert.deepEqual(
+  STUDIO_RECIPES.map((recipe) => recipe.id),
+  ['quick_lesson', 'grammar_arc', 'listening_arc', 'vocabulary_to_use'],
+  'Studio Recipes should remain a small intentional set.',
+);
+
+for (const recipe of STUDIO_RECIPES) {
+  const recipeDocument = applyStudioRecipe(createStudioDocument({
+    internal_title: 'Recipe test',
+    level: 'A2',
+    topic: 'test',
+  }), recipe.id);
+  assert.ok(recipeDocument.blocks.length >= 4, recipe.id + ' must create a meaningful learning sequence.');
+  assert.equal(recipeDocument.activity_type, recipe.activity_type, recipe.id + ' must set the intended activity type.');
+  assert.equal(
+    new Set(recipeDocument.blocks.map((block) => block.id)).size,
+    recipeDocument.blocks.length,
+    recipe.id + ' must keep system-owned block IDs unique.',
+  );
+  for (const block of recipeDocument.blocks) {
+    assert.ok(STUDIO_BLOCK_TYPES.includes(block.type), recipe.id + ' may only use registered Studio blocks.');
+  }
+}
+
+const teachOnlyPulse = buildStudioActivityPulse(addStudioBlock(
+  createStudioDocument({ internal_title: 'Teach only', topic: 'test' }),
+  'explanation',
+  { body: 'A clear explanation.' },
+));
+assert.equal(teachOnlyPulse.counts.teach, 1);
+assert.equal(teachOnlyPulse.counts.practice, 0);
+assert.equal(teachOnlyPulse.suggestion?.type, 'multiple_choice_set', 'Activity Pulse should recommend practice after teaching.');
+
+const grammarRecipePulse = buildStudioActivityPulse(applyStudioRecipe(
+  createStudioDocument({ internal_title: 'Grammar arc', topic: 'test' }),
+  'grammar_arc',
+));
+assert.ok(grammarRecipePulse.counts.teach > 0);
+assert.ok(grammarRecipePulse.counts.practice > 0);
+assert.ok(grammarRecipePulse.counts.produce > 0);
+assert.equal(grammarRecipePulse.complete, true, 'Grammar recipe should already span teach, practice and production.');
+
+const studioPageSource = fs.readFileSync('src/pages/AdminExerciseStudio.jsx', 'utf8');
+assert.ok(studioPageSource.includes('StudioActivityPulse'), 'Learning Studio must surface Activity Pulse.');
+assert.ok(studioPageSource.includes('Publish & assign'), 'Learning Studio must expose the one-step publish-and-assign action.');
+assert.ok(studioPageSource.includes('onRecipe={startRecipe}'), 'Learning Studio empty state must expose Studio Recipes.');
 
 const remixSource = addStudioBlock(
   createStudioDocument({
