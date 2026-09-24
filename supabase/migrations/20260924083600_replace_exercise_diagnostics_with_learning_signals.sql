@@ -393,8 +393,7 @@ begin
 
   return v_result;
 end;
-$function$
-
+$function$;
 
 revoke all on function public.admin_get_learner_learning_signals(uuid, integer) from public;
 grant execute on function public.admin_get_learner_learning_signals(uuid, integer) to authenticated;
