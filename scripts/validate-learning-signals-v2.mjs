@@ -4,6 +4,7 @@ const read = (path) => readFile(path, 'utf8');
 
 const [
   migration,
+  retirementMigration,
   learnerDetail,
   learnerAnalytics,
   globalAnalytics,
@@ -16,6 +17,7 @@ const [
   studioCompiler,
 ] = await Promise.all([
   read('supabase/migrations/20260924083600_replace_exercise_diagnostics_with_learning_signals.sql'),
+  read('supabase/migrations/20260924084341_retire_legacy_exercise_diagnostic_rpcs.sql'),
   read('src/pages/AdminLearnerDetail.jsx'),
   read('src/pages/AdminLearnerAnalytics.jsx'),
   read('src/pages/AdminAnalytics.jsx'),
@@ -47,6 +49,8 @@ assert(migration.includes("when signal.attempt_count >= 2 then 'confirmed'"), 'C
 assert(migration.includes("'Da verificare'"), 'Single-attempt observations must be explicitly marked as provisional.');
 assert(migration.includes("'next_action'"), 'Every learning signal must include a next teaching action.');
 assert(migration.includes("'evidence'"), 'Every learning signal must expose supporting learning-objective evidence.');
+assert(retirementMigration.includes('revoke execute on function public.admin_rebuild_exercise_builder_diagnostics'), 'Legacy diagnostic rebuild RPC must be retired.');
+assert(retirementMigration.includes('revoke execute on function public.get_exercise_builder_learner_diagnostics'), 'Legacy learner diagnostic RPC must be retired.');
 
 assert(learnerDetail.includes('LearnerLearningSignalsPanel'), 'Learner detail must show Learning Signals.');
 assert(!learnerDetail.includes('LearnerDiagnosticPanel'), 'Legacy learner diagnostic panel must be removed.');
