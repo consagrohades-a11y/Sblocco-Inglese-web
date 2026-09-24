@@ -122,8 +122,7 @@ export default function LearnerVocabularyBank() {
         </header>
 
         {!loading ? (
-          <VocabularyReplay
-            items={items}
+          <VocabularyReplay items={items}
             autoStart={searchParams.get('replay') === '1'}
             onItemRated={(memory) => setItems((current) => current.map((item) => item.id === memory.id ? { ...item, ...memory } : item))}
           />
