@@ -22,7 +22,7 @@ export async function quickAssignStudioExercise({
   showScore = true,
   showCorrectAnswers = true,
   showExplanations = true,
-  showDiagnosticSummary = true,
+  showDiagnosticSummary = false,
 }) {
   if (!learnerId) throw new Error('Choose a learner.');
   if (!exerciseId) throw new Error('Publish the activity before assigning it.');
@@ -70,7 +70,7 @@ export async function quickAssignStudioExerciseGroup({
   showScore = true,
   showCorrectAnswers = true,
   showExplanations = true,
-  showDiagnosticSummary = true,
+  showDiagnosticSummary = false,
 }) {
   if (!groupId) throw new Error('Choose a group.');
   if (!exerciseId) throw new Error('Publish the activity before assigning it.');
