@@ -7,7 +7,6 @@ const runtimeFiles = [
   'src/components/exercises/ExerciseQuestionRendererV2.jsx',
   'src/components/exercises/EducationalContentBlock.jsx',
   'src/components/exercises/ExerciseRenderer.jsx',
-  'src/components/exercises/ExerciseDiagnosticSummary.jsx',
   'src/components/learning/EditorialLearning.jsx',
   'src/pages/ExercisePlayerV2.jsx',
   'src/pages/GrammarA1Test.jsx',
