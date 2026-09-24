@@ -12,7 +12,7 @@ export const STUDIO_RECIPES = Object.freeze([
     blocks: [
       { type: 'dialogue', initial: { title: '1 · Set the scene', body: '' } },
       { type: 'language_bank', initial: { title: '2 · Give useful language', body: '', items: [] } },
-      { type: 'multiple_choice_set', initial: { title: '3 · Quick check', prompt: 'Choose the best answer in each example.', instructions: 'Complete every item before checking feedback.', items: [] } },
+      { type: 'multiple_choice_set', initial: { title: '3 · Quick check', prompt: 'Choose the best answer in each example.', instructions: 'Complete every item before checking feedback.' } },
       { type: 'written_response', initial: { title: '4 · Make it yours', prompt: 'Respond to a realistic situation using the language from this lesson.', min_words: 35, max_words: 90, required_points: ['Use at least one useful expression from the lesson'] } },
       { type: 'recap', initial: { title: '5 · Takeaway', body: '' } },
     ],
@@ -27,7 +27,7 @@ export const STUDIO_RECIPES = Object.freeze([
     blocks: [
       { type: 'explanation', initial: { title: '1 · Make the idea clear', body: '' } },
       { type: 'examples', initial: { title: '2 · Notice it in context', examples: [] } },
-      { type: 'multiple_choice_set', initial: { title: '3 · Check the distinction', prompt: 'Choose the best answer in each example.', instructions: 'Complete every item before checking feedback.', items: [] } },
+      { type: 'multiple_choice_set', initial: { title: '3 · Check the distinction', prompt: 'Choose the best answer in each example.', instructions: 'Complete every item before checking feedback.' } },
       { type: 'word_order', initial: { title: '4 · Build it', prompt: 'Put the chunks in the correct order.', chunks: [] } },
       { type: 'written_response', initial: { title: '5 · Use it for real', prompt: 'Use the target language in a short realistic response.', min_words: 40, max_words: 100, required_points: ['Use the target structure accurately', 'Make the answer meaningful rather than mechanical'] } },
     ],
@@ -43,7 +43,7 @@ export const STUDIO_RECIPES = Object.freeze([
       { type: 'dialogue', initial: { title: '1 · Before you listen', body: '' } },
       { type: 'media', initial: { title: '2 · Listen / watch', transcript_visibility: 'after_submit' } },
       { type: 'vocabulary', initial: { title: '3 · Notice useful language', body: '', items: [] } },
-      { type: 'multiple_choice_set', initial: { title: '4 · Check understanding', prompt: 'Answer the questions about what you heard.', instructions: 'Complete every item before checking feedback.', items: [] } },
+      { type: 'multiple_choice_set', initial: { title: '4 · Check understanding', prompt: 'Answer the questions about what you heard.', instructions: 'Complete every item before checking feedback.' } },
       { type: 'written_response', initial: { title: '5 · Respond', prompt: 'React to the listening in your own words.', min_words: 40, max_words: 100, required_points: ['Refer to at least one idea from the listening'] } },
     ],
   },
@@ -104,10 +104,10 @@ export function buildStudioActivityPulse(rawDocument) {
     suggestion = { type: 'multiple_choice_set', label: 'The media is ready. Add a comprehension check next.', action: 'Add comprehension' };
   } else if (counts.teach > 0 && counts.practice === 0) {
     suggestion = { type: 'multiple_choice_set', label: 'You have taught it. Give the learner a chance to practise it.', action: 'Add practice' };
+  } else if (counts.practice > 0 && counts.teach === 0 && counts.media === 0) {
+    suggestion = { type: 'explanation', label: 'The learner is practising without a teaching anchor. Add a short explanation or language bank.', action: 'Add teaching' };
   } else if (counts.practice > 0 && counts.produce === 0) {
     suggestion = { type: 'written_response', label: 'Practice is covered. Add one moment where the learner has to produce language.', action: 'Add production' };
-  } else if (counts.theory === 0 && counts.practice > 0) {
-    suggestion = { type: 'explanation', label: 'The learner is practising without a teaching anchor. Add a short explanation or language bank.', action: 'Add teaching' };
   }
 
   const complete = counts.practice > 0 && counts.produce > 0 && (counts.teach > 0 || counts.media > 0);
