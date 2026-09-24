@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  Activity,
   AlertTriangle,
   BookOpenCheck,
   Brain,
@@ -618,50 +617,6 @@ export default function AdminAnalytics() {
                 </section>
               </div>
 
-              <section className="mt-6 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-surface-900 sm:p-7">
-                <div className="flex items-end justify-between gap-4">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-wide text-cyan-700 dark:text-cyan-300">
-                      Diagnostica
-                    </p>
-                    <h2 className="mt-1 text-xl font-black">
-                      Errori ricorrenti
-                    </h2>
-                  </div>
-                  <Activity className="h-6 w-6 text-cyan-600" />
-                </div>
-                <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                  {(data.diagnostics || []).map((item) => (
-                    <article
-                      key={item.diagnostic_code}
-                      className="rounded-xl border border-ink/10 p-4 dark:border-white/10"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-xs font-black text-cyan-700 dark:text-cyan-300">
-                            {item.diagnostic_code}
-                          </p>
-                          <h3 className="mt-1 font-black text-ink dark:text-white">
-                            {item.label}
-                          </h3>
-                          <p className="mt-1 text-xs font-semibold text-ink/60 dark:text-white/60">
-                            {item.primary_skill} · {number(item.learner_count)}{" "}
-                            studenti · {number(item.error_count, 1)} errori
-                          </p>
-                        </div>
-                        <span className="rounded-full bg-cyan-50 px-2.5 py-1 text-xs font-black text-cyan-800 dark:bg-cyan-300/10 dark:text-cyan-200">
-                          {number(item.error_rate, 1)}%
-                        </span>
-                      </div>
-                    </article>
-                  ))}
-                  {!(data.diagnostics || []).length ? (
-                    <p className="text-sm font-bold text-ink/65 dark:text-white/65">
-                      Nessuna diagnostica disponibile nel periodo.
-                    </p>
-                  ) : null}
-                </div>
-              </section>
             </>
           ) : null}
         </div>
