@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Brain, CircleAlert, Clock3 } from 'lucide-react';
 import { loadAdminLearnerAnalytics } from '../../lib/adminAnalyticsApi.js';
+import { loadLearnerLearningSignals } from '../../lib/learnerLearningSignalsApi.js';
 import { loadLearnerVocabularyBank } from '../../lib/learnerVocabularyBankApi.js';
 
 export default function LearnerLearningPulse({ learnerId, learnerName }) {
   const [analytics, setAnalytics] = useState(null);
+  const [signalsPayload, setSignalsPayload] = useState(null);
   const [vocabulary, setVocabulary] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -15,11 +17,13 @@ export default function LearnerLearningPulse({ learnerId, learnerName }) {
     setError('');
     Promise.all([
       loadAdminLearnerAnalytics(learnerId, 30),
+      loadLearnerLearningSignals(learnerId, 90),
       loadLearnerVocabularyBank(learnerId),
     ])
-      .then(([nextAnalytics, nextVocabulary]) => {
+      .then(([nextAnalytics, nextSignals, nextVocabulary]) => {
         if (!active) return;
         setAnalytics(nextAnalytics);
+        setSignalsPayload(nextSignals);
         setVocabulary(nextVocabulary);
       })
       .catch((loadError) => {
@@ -36,10 +40,10 @@ export default function LearnerLearningPulse({ learnerId, learnerName }) {
       .filter((item) => Number(item.forgotten_count || 0) > 0 || item.last_recall_rating === 'again')
       .sort((a, b) => Number(b.forgotten_count || 0) - Number(a.forgotten_count || 0)
         || Number(a.recall_strength || 0) - Number(b.recall_strength || 0))[0] || null;
-    const diagnostic = analytics?.diagnostics?.[0] || null;
+    const signal = signalsPayload?.signals?.[0] || null;
     const exercise = analytics?.exercises?.[0] || null;
-    return { due, fragile, diagnostic, exercise };
-  }, [analytics, vocabulary]);
+    return { due, fragile, signal, exercise };
+  }, [analytics, signalsPayload, vocabulary]);
 
   return (
     <section className="overflow-hidden rounded-[2rem] border border-ink/10 bg-white shadow-sm dark:border-white/10 dark:bg-surface-900">
@@ -48,7 +52,7 @@ export default function LearnerLearningPulse({ learnerId, learnerName }) {
           <p className="text-xs font-black uppercase tracking-[0.15em] text-orange-700 dark:text-orange-300">Learning Pulse</p>
           <h2 className="mt-2 text-3xl font-black tracking-[-0.03em] text-ink dark:text-white">Cosa guarderei adesso.</h2>
           <p className="mt-3 max-w-xl text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
-            Una sintesi automatica dei dati già presenti per {learnerName || 'questo studente'}. Non è una valutazione: serve a farti arrivare alla prossima lezione sapendo dove guardare.
+            Una sintesi automatica dei dati già presenti per {learnerName || 'questo studente'}. Mostra solo segnali con evidenza utile, non una lista di errori ribattezzata “diagnosi”.
           </p>
         </div>
 
@@ -68,10 +72,10 @@ export default function LearnerLearningPulse({ learnerId, learnerName }) {
 
             <article className="rounded-2xl border border-ink/10 bg-linen/35 p-4 dark:border-white/10 dark:bg-white/[0.035]">
               <CircleAlert className="h-5 w-5 text-ink/55 dark:text-white/55" />
-              <p className="mt-3 text-[0.66rem] font-black uppercase tracking-[0.1em] text-ink/45 dark:text-white/45">Pattern</p>
-              <p className="mt-1 text-lg font-black text-ink dark:text-white">{pulse.diagnostic?.label || 'Nessun pattern forte'}</p>
+              <p className="mt-3 text-[0.66rem] font-black uppercase tracking-[0.1em] text-ink/45 dark:text-white/45">Segnale didattico</p>
+              <p className="mt-1 text-lg font-black text-ink dark:text-white">{pulse.signal?.title || 'Niente da forzare'}</p>
               <p className="mt-2 text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">
-                {pulse.diagnostic ? `${Math.round(Number(pulse.diagnostic.error_rate || 0))}% di errore nelle opportunità degli ultimi 30 giorni.` : 'Servono più esercizi diagnosticabili per distinguere un errore casuale da un pattern.'}
+                {pulse.signal ? pulse.signal.next_action : 'Non c’è ancora evidenza sufficiente per trasformare gli errori in un pattern. Meglio nessuna diagnosi che una diagnosi vuota.'}
               </p>
             </article>
 
