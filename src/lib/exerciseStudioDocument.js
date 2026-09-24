@@ -32,7 +32,7 @@ export function defaultStudioSettings() {
     show_score: true,
     show_correct_answers: true,
     show_explanations: true,
-    show_diagnostic_summary: true,
+    show_diagnostic_summary: false,
     allow_retry: true,
   };
 }

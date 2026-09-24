@@ -37,7 +37,6 @@ export default function StudioQuickAssignPanel({
   const [showScore, setShowScore] = useState(true);
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(true);
   const [showExplanations, setShowExplanations] = useState(true);
-  const [showDiagnosticSummary, setShowDiagnosticSummary] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(null);
@@ -99,7 +98,7 @@ export default function StudioQuickAssignPanel({
       showScore,
       showCorrectAnswers,
       showExplanations,
-      showDiagnosticSummary,
+      showDiagnosticSummary: false,
     };
   }
 
@@ -331,7 +330,6 @@ export default function StudioQuickAssignPanel({
                     <label className="flex items-center gap-3"><input type="checkbox" checked={showScore} onChange={(event) => setShowScore(event.target.checked)} /> Show score</label>
                     <label className="flex items-center gap-3"><input type="checkbox" checked={showCorrectAnswers} onChange={(event) => setShowCorrectAnswers(event.target.checked)} /> Show correct answers</label>
                     <label className="flex items-center gap-3"><input type="checkbox" checked={showExplanations} onChange={(event) => setShowExplanations(event.target.checked)} /> Show explanations</label>
-                    <label className="flex items-center gap-3"><input type="checkbox" checked={showDiagnosticSummary} onChange={(event) => setShowDiagnosticSummary(event.target.checked)} /> Show diagnostic summary</label>
                   </div>
                 </div>
               </details>

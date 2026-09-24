@@ -4,7 +4,6 @@ import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
-import LearnerDiagnosticPanel from '../components/admin/LearnerDiagnosticPanel.jsx';
 import LearnerNextLessonPanel from '../components/admin/LearnerNextLessonPanel.jsx';
 import LearnerNotesPanel from '../components/admin/LearnerNotesPanel.jsx';
 import LearnerContextNoteEditor from '../components/admin/LearnerContextNoteEditor.jsx';
@@ -12,6 +11,7 @@ import LearnerQuickFacts from '../components/admin/LearnerQuickFacts.jsx';
 import LearnerRecoveryPanel from '../components/admin/LearnerRecoveryPanel.jsx';
 import LearnerVocabularyBankPanel from '../components/admin/learner/LearnerVocabularyBankPanel.jsx';
 import LearnerLearningPulse from '../components/admin/LearnerLearningPulse.jsx';
+import LearnerLearningSignalsPanel from '../components/admin/LearnerLearningSignalsPanel.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 import { decorateLearnerAssignmentsWithProgress } from '../lib/assignmentProgressApi.js';
 
@@ -185,6 +185,7 @@ export default function AdminLearnerDetail() {
           <LearnerContextNoteEditor learnerId={learnerId} initialNote={learner.admin_context_note || ''} learner={learner} onSaved={(admin_context_note) => setLearner((current) => ({ ...current, admin_context_note }))} />
           <LearnerRecoveryPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} disabled={learner.status === 'deleted'} />
           <LearnerLearningPulse learnerId={learnerId} learnerName={learner.display_name || learner.email} />
+          <LearnerLearningSignalsPanel learnerId={learnerId} />
           <LearnerNextLessonPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} />
           <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">
             <div className="grid content-start gap-6">
@@ -326,7 +327,6 @@ export default function AdminLearnerDetail() {
             learnerId={learnerId}
             learnerName={learner.display_name || learner.email}
           />
-          <LearnerDiagnosticPanel learnerId={learnerId} />
         </div> : null}
       </div></section>
     </>

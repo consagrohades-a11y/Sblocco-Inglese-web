@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import SEO from "../components/SEO";
-import ExerciseDiagnosticSummary from "../components/exercises/ExerciseDiagnosticSummary.jsx";
 import ExerciseQuestionRenderer from "../components/exercises/ExerciseQuestionRenderer.jsx";
 import {
   ExerciseActionBar,
@@ -439,12 +438,6 @@ function FinalResult({ payload, assignmentId, resourceId, focusMistakesRequested
               <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-7 text-emerald-950 dark:text-emerald-100">
                 {attempt.teacher_note}
               </p>
-            </div>
-          ) : null}
-          {settings.show_diagnostic_summary !== false &&
-          !awaitingPublishedReview ? (
-            <div className="mt-6">
-              <ExerciseDiagnosticSummary summary={summary.diagnostic_summary} />
             </div>
           ) : null}
           <div className="mt-8 flex flex-wrap gap-3">

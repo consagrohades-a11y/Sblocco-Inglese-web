@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
-import ExerciseDiagnosticSummary from '../components/exercises/ExerciseDiagnosticSummary.jsx';
 import ExerciseQuestionRenderer from '../components/exercises/ExerciseQuestionRenderer.jsx';
 import WritingCorrectionWorkspace from '../components/exercises/WritingCorrectionWorkspace.jsx';
 import {
@@ -308,8 +307,6 @@ export default function AdminExerciseResults() {
                 <strong className="font-black">Correzione già pubblicata.</strong> Puoi riaprire qualsiasi annotazione, modificarla o eliminarla: salva di nuovo e lo studente vedrà la versione aggiornata.
               </div>
             ) : null}
-
-            <ExerciseDiagnosticSummary summary={detail.attempt.result_summary?.diagnostic_summary} admin />
 
             {(detail.sections || []).map((section) => <section key={section.id} className="grid gap-4"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-wide text-clay dark:text-coral">Sezione {section.sequence_index + 1}</p><h2 className="mt-1 text-2xl font-black text-ink dark:text-white">{section.title}</h2></div><p className="text-sm font-black text-ink/65 dark:text-white/65">{Number(section.earned_points || 0).toFixed(1)} / {Number(section.max_points || 0).toFixed(1)}</p></div>{(section.questions || []).map((item) => <QuestionReviewCard key={item.id} item={item} review={reviews[item.id]} onChange={(patch) => updateReview(item.id, patch)} />)}</section>)}
 

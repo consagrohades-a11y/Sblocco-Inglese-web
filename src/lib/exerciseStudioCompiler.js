@@ -27,7 +27,7 @@ function runtimeSettings(document) {
     show_score: source.show_score !== false,
     show_correct_answers: source.show_correct_answers !== false,
     show_explanations: source.show_explanations !== false,
-    show_diagnostic_summary: source.show_diagnostic_summary !== false,
+    show_diagnostic_summary: false,
     allow_retry: source.allow_retry !== false,
   };
 }
