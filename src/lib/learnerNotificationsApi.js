@@ -73,3 +73,42 @@ export async function loadLearnerUnreadCount() {
   throwIfError(error);
   return count || 0;
 }
+
+
+export function subscribeToLearnerNotifications(learnerId, onChange) {
+  if (!learnerId) return () => {};
+
+  let channel = null;
+  try {
+    channel = supabase
+      .channel(`learner-notifications:${learnerId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "learner_notifications",
+          filter: `learner_id=eq.${learnerId}`,
+        },
+        () => {
+          try {
+            onChange?.();
+          } catch {
+            // Notification refresh failures must never break learner navigation.
+          }
+        },
+      )
+      .subscribe();
+  } catch {
+    return () => {};
+  }
+
+  return () => {
+    if (!channel) return;
+    try {
+      supabase.removeChannel(channel);
+    } catch {
+      // Realtime cleanup must never block navigation or unmounting.
+    }
+  };
+}
