@@ -8,6 +8,7 @@ import {
   UserPlus,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext.jsx';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
@@ -16,6 +17,7 @@ import {
   loadTeacherNotifications,
   markAllTeacherNotificationsRead,
   markTeacherNotificationRead,
+  subscribeToTeacherNotifications,
 } from '../lib/teacherNotificationsApi.js';
 
 function formatDate(value) {
@@ -55,6 +57,7 @@ function NotificationAvatar({ notification }) {
 
 export default function AdminNotifications() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -90,13 +93,17 @@ export default function AdminNotifications() {
         // Reading the notification center should not fail the page if marking read fails.
       }
     }
+
     initialise();
-    const timer = window.setInterval(() => refresh({ quiet: true }), 30000);
+    const unsubscribe = user?.id
+      ? subscribeToTeacherNotifications(user.id, () => refresh({ quiet: true }))
+      : () => {};
+
     return () => {
       active = false;
-      window.clearInterval(timer);
+      unsubscribe();
     };
-  }, [refresh, showArchive]);
+  }, [refresh, showArchive, user?.id]);
 
   async function openNotification(notification) {
     try {
