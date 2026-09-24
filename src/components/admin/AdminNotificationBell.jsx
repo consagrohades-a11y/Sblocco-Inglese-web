@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext.jsx';
-import { loadTeacherUnreadCount, markAllTeacherNotificationsRead } from '../../lib/teacherNotificationsApi.js';
+import { loadTeacherUnreadCount, markAllTeacherNotificationsRead, subscribeToTeacherNotifications } from '../../lib/teacherNotificationsApi.js';
 
 export default function AdminNotificationBell({ compact = false, onNavigate, tone = 'dark' }) {
   const { user } = useAuth();
@@ -20,22 +20,32 @@ export default function AdminNotificationBell({ compact = false, onNavigate, ton
     if (!user?.id) return undefined;
 
     refresh();
-    const timer = window.setInterval(refresh, 15000);
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') refresh();
     };
     document.addEventListener('visibilitychange', handleVisibility);
 
+    let unsubscribe = () => {};
+    try {
+      unsubscribe = subscribeToTeacherNotifications(user.id, refresh);
+    } catch {
+      // Visibility refresh remains as a safe fallback when realtime is unavailable.
+    }
+
     return () => {
-      window.clearInterval(timer);
       document.removeEventListener('visibilitychange', handleVisibility);
+      try {
+        unsubscribe();
+      } catch {
+        // Cleanup must never block admin navigation.
+      }
     };
   }, [refresh, user?.id]);
 
   function openNotifications() {
     setUnreadCount(0);
     markAllTeacherNotificationsRead().catch(() => {
-      // A later refresh reconciles the badge if the write fails.
+      // Realtime or the next visibility refresh reconciles the badge if the write fails.
     });
     onNavigate?.();
   }
