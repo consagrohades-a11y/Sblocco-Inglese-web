@@ -57,13 +57,13 @@ export default function AdminDashboard() {
 
   return (
     <>
-      <SEO title="Dashboard admin | Sblocco Inglese" description="Workspace amministrativo di Sblocco Inglese." />
+      <SEO title="Command Center | Sblocco Inglese" description="Priorità operative e accessi rapidi per il docente." />
       <section className="section-shell py-8 lg:py-10">
         <div className="mx-auto max-w-6xl">
           <AdminPageHeader
-            eyebrow="Workspace admin"
+            eyebrow="Command Center"
             title={`Ciao ${displayName}`}
-            description="Gestisci studenti, attività, assegnazioni e risultati da un unico spazio."
+            description="Qui trovi prima ciò che richiede una tua decisione, poi gli accessi rapidi al resto del lavoro."
           />
 
           <TeacherRadar />
