@@ -12,12 +12,14 @@ import {
   Trophy,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../auth/AuthContext.jsx";
 import {
   archiveLearnerNotification,
   loadLearnerMilestoneProgress,
   loadLearnerNotifications,
   markAllLearnerNotificationsRead,
   markLearnerNotificationRead,
+  subscribeToLearnerNotifications,
 } from "../../lib/learnerNotificationsApi.js";
 
 function formatDate(value) {
@@ -60,6 +62,7 @@ function notificationPresentation(type, read) {
 
 export default function LearnerNotificationsPanel({ limit = 6 }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -90,17 +93,30 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
 
   useEffect(() => {
     refresh();
-    const timer = window.setInterval(() => refresh({ quiet: true }), 30000);
+
     const handleVisibility = () => {
       if (document.visibilityState === "visible") refresh({ quiet: true });
     };
     document.addEventListener("visibilitychange", handleVisibility);
 
+    let unsubscribe = () => {};
+    try {
+      unsubscribe = user?.id
+        ? subscribeToLearnerNotifications(user.id, () => refresh({ quiet: true }))
+        : () => {};
+    } catch {
+      // Visibility refresh remains as a safe fallback when realtime is unavailable.
+    }
+
     return () => {
-      window.clearInterval(timer);
       document.removeEventListener("visibilitychange", handleVisibility);
+      try {
+        unsubscribe();
+      } catch {
+        // Cleanup must never block learner navigation.
+      }
     };
-  }, [refresh]);
+  }, [refresh, user?.id]);
 
   async function openNotification(notification) {
     try {

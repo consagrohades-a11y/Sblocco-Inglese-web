@@ -25,10 +25,12 @@ const reviewPublishSyncMigration = read('supabase/migrations/20260922215156_sync
 const exercisePlayer = read('src/pages/ExercisePlayerV2.jsx');
 
 assert.match(shell, /AdminNotificationBell/);
-assert.match(bell, /setInterval\(refresh, 15000\)/);
+assert.match(bell, /subscribeToTeacherNotifications/);
+assert.doesNotMatch(bell, /setInterval/);
 assert.match(bell, /markAllTeacherNotificationsRead/);
 assert.match(bell, /setUnreadCount\(0\)/);
-assert.doesNotMatch(bell, /subscribeToTeacherNotifications/);
+assert.match(adminNotifications, /subscribeToTeacherNotifications/);
+assert.doesNotMatch(adminNotifications, /setInterval/);
 
 assert.match(results, /WritingCorrectionWorkspace/);
 const writingWorkspace = read('src/components/exercises/WritingCorrectionWorkspace.jsx');
@@ -58,7 +60,11 @@ assert.match(learnerNotifications, /writing_review_published/);
 assert.match(learnerNotifications, /learner-notifications/);
 assert.match(learnerBell, /loadLearnerUnreadCount/);
 assert.match(learnerBell, /markAllLearnerNotificationsRead/);
+assert.match(learnerBell, /subscribeToLearnerNotifications/);
+assert.doesNotMatch(learnerBell, /setInterval/);
 assert.match(learnerBell, /setUnreadCount\(0\)/);
+assert.match(learnerNotifications, /subscribeToLearnerNotifications/);
+assert.doesNotMatch(learnerNotifications, /setInterval/);
 assert.match(learnerBell, /attivita\/esercizi#learner-notifications/);
 assert.match(learnerNotificationApi, /related_assignment_id/);
 assert.match(learnerNotificationApi, /archived_at/);
@@ -67,6 +73,8 @@ assert.match(learnerNotificationApi, /archiveLearnerReviewNotificationsForAttemp
 assert.match(learnerNotifications, /Archivio/);
 assert.match(adminNotifications, /Archivio notifiche/);
 assert.match(teacherNotificationApi, /archived_at/);
+assert.match(teacherNotificationApi, /subscribeToTeacherNotifications/);
+assert.match(learnerNotificationApi, /subscribeToLearnerNotifications/);
 assert.match(smartArchiveMigration, /archive_resolved_exercise_submission_notification/);
 assert.match(smartArchiveMigration, /notification_type <> 'learner_signed_up'/);
 assert.match(openedReviewMigration, /archive_learner_review_notifications_for_attempt/);

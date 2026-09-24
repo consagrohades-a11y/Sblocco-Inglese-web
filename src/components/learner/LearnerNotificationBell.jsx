@@ -7,6 +7,7 @@ import {
   loadLearnerNotifications,
   loadLearnerUnreadCount,
   markAllLearnerNotificationsRead,
+  subscribeToLearnerNotifications,
 } from '../../lib/learnerNotificationsApi.js';
 
 function formatDate(value) {
@@ -40,15 +41,25 @@ export default function LearnerNotificationBell({ mobile = false, onNavigate }) 
     if (!user?.id) return undefined;
 
     refresh();
-    const timer = window.setInterval(refresh, 20000);
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') refresh();
     };
     document.addEventListener('visibilitychange', handleVisibility);
 
+    let unsubscribe = () => {};
+    try {
+      unsubscribe = subscribeToLearnerNotifications(user.id, refresh);
+    } catch {
+      // Visibility refresh remains as a safe fallback when realtime is unavailable.
+    }
+
     return () => {
-      window.clearInterval(timer);
       document.removeEventListener('visibilitychange', handleVisibility);
+      try {
+        unsubscribe();
+      } catch {
+        // Cleanup must never block learner navigation.
+      }
     };
   }, [refresh, user?.id]);
 

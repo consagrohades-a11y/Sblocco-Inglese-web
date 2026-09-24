@@ -8,6 +8,7 @@ import {
   UserPlus,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext.jsx';
 import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
@@ -16,6 +17,7 @@ import {
   loadTeacherNotifications,
   markAllTeacherNotificationsRead,
   markTeacherNotificationRead,
+  subscribeToTeacherNotifications,
 } from '../lib/teacherNotificationsApi.js';
 
 function formatDate(value) {
@@ -55,6 +57,7 @@ function NotificationAvatar({ notification }) {
 
 export default function AdminNotifications() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -77,6 +80,7 @@ export default function AdminNotifications() {
 
   useEffect(() => {
     let active = true;
+
     async function initialise() {
       await refresh();
       if (!active || showArchive) return;
@@ -90,13 +94,33 @@ export default function AdminNotifications() {
         // Reading the notification center should not fail the page if marking read fails.
       }
     }
+
     initialise();
-    const timer = window.setInterval(() => refresh({ quiet: true }), 30000);
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') refresh({ quiet: true });
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    let unsubscribe = () => {};
+    try {
+      unsubscribe = user?.id
+        ? subscribeToTeacherNotifications(user.id, () => refresh({ quiet: true }))
+        : () => {};
+    } catch {
+      // Visibility refresh remains as a safe fallback when realtime is unavailable.
+    }
+
     return () => {
       active = false;
-      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      try {
+        unsubscribe();
+      } catch {
+        // Cleanup must never block navigation.
+      }
     };
-  }, [refresh, showArchive]);
+  }, [refresh, showArchive, user?.id]);
 
   async function openNotification(notification) {
     try {

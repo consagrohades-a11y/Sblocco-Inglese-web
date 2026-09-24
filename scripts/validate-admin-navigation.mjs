@@ -31,6 +31,7 @@ const sitemap = read('public/sitemap.xml');
 const platform = read('src/pages/Platform.jsx');
 
 for (const activeRoute of [
+  '/admin/command-center',
   '/admin/notifications',
   '/admin/learners',
   '/admin/groups',
@@ -66,7 +67,10 @@ for (const retiredDashboardItem of [
   assertNotContains(dashboard, retiredDashboardItem, `Retired dashboard item returned: ${retiredDashboardItem}`);
 }
 
-assertContains(dashboard, '<TeacherRadar />', 'Admin dashboard must surface the Teacher Radar.');
+assertContains(shell, "label: 'Command Center'", 'Admin navigation must visibly expose the Command Center.');
+assertContains(app, '<Route path="command-center" element={<AdminDashboard />} />', 'Command Center route must remain stable.');
+assertContains(dashboard, 'eyebrow="Command Center"', 'Admin home must visibly identify itself as the Command Center.');
+assertContains(dashboard, '<TeacherRadar />', 'Admin Command Center must surface the Teacher Radar.');
 assertContains(teacherRadar, "review_status === 'unreviewed'", 'Teacher Radar must prioritize unresolved reviews.');
 assertContains(teacherRadar, "notification_type === 'learner_signed_up'", 'Teacher Radar must surface new learner registrations.');
 assertContains(learnerHome, 'assignmentResumeTarget', 'Learner home must compute an exact resume target.');
