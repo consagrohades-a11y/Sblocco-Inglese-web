@@ -19,6 +19,7 @@ import { useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import StudioBlockEditor from '../components/admin/exercise-studio/StudioBlockEditor.jsx';
 import StudioBlockPalette from '../components/admin/exercise-studio/StudioBlockPalette.jsx';
+import StudioActivityPulse from '../components/admin/exercise-studio/StudioActivityPulse.jsx';
 import StudioJsonImportPanel from '../components/admin/exercise-studio/StudioJsonImportPanel.jsx';
 import StudioQuickAssignPanel from '../components/admin/exercise-studio/StudioQuickAssignPanel.jsx';
 import StudioSelect from '../components/admin/exercise-studio/StudioSelect.jsx';
@@ -46,6 +47,7 @@ import {
 } from '../lib/exerciseStudioDraftApi.js';
 import { downloadStudioActivityJson } from '../lib/exerciseStudioExport.js';
 import { deleteStudioContentMedia } from '../lib/exerciseStudioMediaApi.js';
+import { applyStudioRecipe, STUDIO_RECIPES } from '../lib/exerciseStudioRecipes.js';
 
 const LEVELS = ['A0', 'A1', 'A1+', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2', 'Mixed'];
 const ACTIVITY_TYPES = [
@@ -215,7 +217,7 @@ function PreviewBlock({ block, document, index, total, selected, onSelect }) {
   );
 }
 
-function EmptyCanvas({ onAdd, onQuickStart }) {
+function EmptyCanvas({ onAdd, onQuickStart, onRecipe }) {
   const readingPresets = [
     ['b2_part5', 'B2 Part 5', 'Long text · 6 questions'],
     ['b2_part6', 'B2 Part 6', 'Gapped text · 6 gaps'],
@@ -230,10 +232,32 @@ function EmptyCanvas({ onAdd, onQuickStart }) {
         </span>
         <h2 className="mt-5 text-2xl font-black text-ink dark:text-white">Start with what you want to teach.</h2>
         <p className="mt-2 text-sm font-semibold leading-6 text-ink/60 dark:text-white/60">
-          Add any supported block, or start a B2 reading activity with the correct structure already prepared.
+          Start from a Sblocco recipe when you want the teaching sequence prepared for you, or build freely block by block.
         </p>
 
-        <div className="mt-5 grid gap-2 sm:grid-cols-3">
+        <div className="mt-6 grid gap-2 text-left sm:grid-cols-2">
+          {STUDIO_RECIPES.map((recipe) => (
+            <button
+              key={recipe.id}
+              type="button"
+              onClick={() => onRecipe(recipe.id)}
+              className="focus-ring rounded-2xl border border-ink/10 bg-white px-4 py-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-md dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-orange-300/30"
+            >
+              <span className="block text-[0.66rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">{recipe.eyebrow}</span>
+              <span className="mt-1 block text-base font-black text-ink dark:text-white">{recipe.label}</span>
+              <span className="mt-1 block text-xs font-semibold leading-5 text-ink/50 dark:text-white/50">{recipe.description}</span>
+              <span className="mt-3 block text-[0.68rem] font-black text-ink/35 dark:text-white/35">{recipe.sequence}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="my-6 flex items-center gap-3">
+          <span className="h-px flex-1 bg-ink/10 dark:bg-white/10" />
+          <span className="text-[0.65rem] font-black uppercase tracking-[0.14em] text-ink/30 dark:text-white/30">or exam reading</span>
+          <span className="h-px flex-1 bg-ink/10 dark:bg-white/10" />
+        </div>
+
+        <div className="grid gap-2 sm:grid-cols-3">
           {readingPresets.map(([presetId, label, description]) => (
             <button
               key={presetId}
@@ -433,6 +457,18 @@ export default function AdminExerciseStudio() {
     setPaletteOpen(false);
   }
 
+  function startRecipe(recipeId) {
+    setPublishNotice('');
+    setImportNotice('');
+    setAssignmentNotice('');
+    setDocument((current) => {
+      const next = applyStudioRecipe(current, recipeId);
+      setSelectedBlockId(next.blocks[0]?.id || null);
+      return next;
+    });
+    setPaletteOpen(false);
+  }
+
   function replaceBlock(nextBlock) {
     setPublishNotice('');
     setImportNotice('');
@@ -494,7 +530,7 @@ export default function AdminExerciseStudio() {
     setDragOverBlockId(null);
   }
 
-  async function publishCurrentDraft() {
+  async function publishCurrentDraft(assignAfter = false) {
     if (!preflight.valid || publishState === 'publishing') return;
 
     setPublishState('publishing');
@@ -524,6 +560,7 @@ export default function AdminExerciseStudio() {
       setPublishedExerciseId(result.exercise_id || null);
       setPublishState('published');
       setPublishNotice(`${result.public_id || 'Exercise'} published and ready to assign.`);
+      if (assignAfter && result.exercise_id) setAssignOpen(true);
     } catch (error) {
       setPublishState('error');
       setPublishNotice(error.message || 'Publishing failed.');
@@ -628,12 +665,19 @@ export default function AdminExerciseStudio() {
               </button>
               <button
                 type="button"
-                onClick={() => setAssignOpen(true)}
-                disabled={document.status !== 'published' || !publishedExerciseId}
-                title={document.status === 'published' ? 'Assign this published activity' : 'Publish the current draft before assigning'}
-                className="focus-ring rounded-full border border-orange-300 bg-orange-50 px-4 py-2.5 text-xs font-black text-orange-900 disabled:cursor-not-allowed disabled:opacity-30 dark:border-orange-300/30 dark:bg-orange-300/[0.07] dark:text-orange-100"
+                onClick={() => document.status === 'published' ? setAssignOpen(true) : publishCurrentDraft(true)}
+                disabled={document.status === 'published'
+                  ? !publishedExerciseId
+                  : !preflight.valid || publishState === 'publishing'}
+                title={document.status === 'published'
+                  ? 'Assign this published activity'
+                  : preflight.valid
+                    ? 'Publish the valid activity and open assignment immediately'
+                    : 'Resolve the remaining teaching decisions before publishing'}
+                className="focus-ring inline-flex items-center gap-2 rounded-full border border-orange-300 bg-orange-50 px-4 py-2.5 text-xs font-black text-orange-900 disabled:cursor-not-allowed disabled:opacity-30 dark:border-orange-300/30 dark:bg-orange-300/[0.07] dark:text-orange-100"
               >
-                Assign
+                {publishState === 'publishing' && document.status !== 'published' ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+                {document.status === 'published' ? 'Assign' : 'Publish & assign'}
               </button>
               <button
                 type="button"
@@ -706,6 +750,8 @@ export default function AdminExerciseStudio() {
                 <Plus className="h-4 w-4" />
               </button>
             </div>
+
+            <StudioActivityPulse document={document} onAdd={addBlock} />
 
             {paletteOpen ? (
               <div className="mt-4 min-w-0">
@@ -888,7 +934,7 @@ export default function AdminExerciseStudio() {
                     />
                   ))}
                 </ExerciseCanvas>
-              ) : <EmptyCanvas onAdd={() => setPaletteOpen(true)} onQuickStart={(presetId) => addBlock('reading_comprehension', presetId)} />}
+              ) : <EmptyCanvas onAdd={() => setPaletteOpen(true)} onQuickStart={(presetId) => addBlock('reading_comprehension', presetId)} onRecipe={startRecipe} />}
             </div>
           </main>
 
