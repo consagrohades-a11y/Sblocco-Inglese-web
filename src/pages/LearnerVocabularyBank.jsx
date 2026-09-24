@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ArrowLeft, BookMarked, Plus, Sparkles, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO.jsx';
 import VocabularyBankCatalog from '../components/vocabulary/VocabularyBankCatalog.jsx';
 import VocabularyReplay from '../components/vocabulary/VocabularyReplay.jsx';
@@ -24,6 +24,7 @@ function inputClass() {
 }
 
 export default function LearnerVocabularyBank() {
+  const [searchParams] = useSearchParams();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -120,7 +121,13 @@ export default function LearnerVocabularyBank() {
           </div>
         </header>
 
-        {!loading ? <VocabularyReplay items={items} /> : null}
+        {!loading ? (
+          <VocabularyReplay
+            items={items}
+            autoStart={searchParams.get('replay') === '1'}
+            onItemRated={(memory) => setItems((current) => current.map((item) => item.id === memory.id ? { ...item, ...memory } : item))}
+          />
+        ) : null}
 
         {addOpen ? (
           <section className="mt-5 overflow-hidden rounded-[2rem] border border-orange-200 bg-[#fffaf3] shadow-sm dark:border-orange-300/15 dark:bg-[#181d1a]">
