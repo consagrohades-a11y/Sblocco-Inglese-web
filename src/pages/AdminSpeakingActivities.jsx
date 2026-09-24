@@ -220,6 +220,11 @@ function PresentationLauncher({ activity, initialLearnerId = '', onClose, onStar
       studentWindow,
     });
     onClose();
+    window.setTimeout(() => {
+      try { window.focus(); } catch {
+        // Keep the student popup open even if the browser refuses to restore teacher focus.
+      }
+    }, 0);
   }
 
   const firstName = String(selectedLearner?.display_name || selectedLearner?.email || '')
@@ -414,6 +419,64 @@ export default function AdminSpeakingActivities() {
     setSearchParams(next, { replace: true });
   }
 
+  function liveLevelsFor(activity) {
+    const supported = asArray(activity?.levels);
+    const retained = asArray(liveSession?.levels).filter((item) => supported.includes(item));
+    if (retained.length) return retained;
+    if (level !== 'all' && supported.includes(level)) return [level];
+    return supported;
+  }
+
+  function switchLiveActivity(activity) {
+    if (!liveSession?.controlId) {
+      setPresenting(activity);
+      return;
+    }
+
+    const nextLevels = liveLevelsFor(activity);
+    if (!nextLevels.length) {
+      setError('Questa attività non ha livelli disponibili per la presentazione.');
+      return;
+    }
+
+    const params = new URLSearchParams({
+      levels: LEVELS.filter((item) => nextLevels.includes(item)).join(','),
+      control: liveSession.controlId,
+    });
+    if (liveSession.learnerId) params.set('learner', liveSession.learnerId);
+
+    const presenterUrl = `/admin/present/speaking/${activity.id}?${params.toString()}`;
+    let studentWindow = liveSession.studentWindow;
+
+    if (studentWindow && !studentWindow.closed) {
+      try {
+        studentWindow.location.replace(presenterUrl);
+      } catch (navigationError) {
+        setError(navigationError.message || 'Non è stato possibile cambiare attività nella finestra studente.');
+        return;
+      }
+    } else {
+      studentWindow = window.open(
+        presenterUrl,
+        liveSession.windowName || `sblocco-speaking-${liveSession.controlId}`,
+        'popup=yes,width=1320,height=860,resizable=yes,scrollbars=yes',
+      );
+      if (!studentWindow) {
+        setError('Il browser ha bloccato la finestra studente. Consenti i popup per Sblocco e riprova.');
+        return;
+      }
+    }
+
+    setError('');
+    setLiveSession((current) => current ? {
+      ...current,
+      activity,
+      levels: nextLevels,
+      presenterUrl,
+      studentWindow,
+    } : current);
+  }
+
   return (
     <>
       <SEO title="Libreria speaking | Admin | Sblocco Inglese" description="Giochi e attività speaking riutilizzabili per le lezioni." />
@@ -465,6 +528,7 @@ export default function AdminSpeakingActivities() {
             <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6">
               {filtered.map((activity) => {
                 const counts = itemCounts(activity);
+                const isLiveActivity = liveSession?.activity?.id === activity.id;
                 return (
                   <article key={activity.id} className="flex min-h-[24rem] flex-col rounded-3xl border border-ink/10 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-clay/25 dark:border-white/10 dark:bg-surface-900">
                     <div className="flex items-start justify-between gap-3">
@@ -483,7 +547,15 @@ export default function AdminSpeakingActivities() {
                     <div className="mt-auto grid grid-cols-2 gap-2 pt-5">
                       <button type="button" onClick={() => setPreview(activity)} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/15 px-3 text-[0.7rem] font-black dark:border-white/15"><Eye className="h-4 w-4" /> Anteprima</button>
                       <button type="button" onClick={() => setEditor(activity)} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/15 px-3 text-[0.7rem] font-black dark:border-white/15"><Pencil className="h-4 w-4" /> Modifica</button>
-                      <button type="button" onClick={() => setPresenting(activity)} className="focus-ring col-span-2 inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-ink px-3 text-xs font-black text-white dark:bg-clay"><ExternalLink className="h-4 w-4" /> Presenta in nuova finestra</button>
+                      <button
+                        type="button"
+                        disabled={isLiveActivity}
+                        onClick={() => liveSession ? switchLiveActivity(activity) : setPresenting(activity)}
+                        className={`focus-ring col-span-2 inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full px-3 text-xs font-black disabled:cursor-default ${isLiveActivity ? 'border border-clay/25 bg-blush text-clay dark:border-coral/25 dark:bg-coral/10 dark:text-coral' : 'bg-ink text-white dark:bg-clay'}`}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        {isLiveActivity ? 'In corso' : liveSession ? 'Mostra allo studente' : 'Presenta in nuova finestra'}
+                      </button>
                     </div>
                   </article>
                 );
