@@ -228,6 +228,14 @@ function ResultBreakdown({ summary }) {
   );
 }
 
+function exerciseResultNeedsReview(result) {
+  const status = String(result?.status || '');
+  if (['incorrect', 'nearly_correct', 'unanswered'].includes(status)) return true;
+  const max = Number(result?.max_points || 0);
+  const earned = Number(result?.earned_points || 0);
+  return max > 0 && earned < max;
+}
+
 function b2ReadingPartScores(payload) {
   const rows = [];
   (payload?.sections || []).forEach((section) => {
@@ -255,7 +263,7 @@ function b2ReadingPartScores(payload) {
   return rows;
 }
 
-function FinalResult({ payload, assignmentId, resourceId }) {
+function FinalResult({ payload, assignmentId, resourceId, focusMistakesRequested = false }) {
   const attempt = payload.attempt;
   const settings = payload.exercise.settings || {};
   const summary = attempt.result_summary || {};
@@ -290,6 +298,12 @@ function FinalResult({ payload, assignmentId, resourceId }) {
     (completionRule === "passed" && scoreGoalMet) ||
     (completionRule === "attempts" && attemptsGoalMet);
   const needsMoreWork = !awaitingPublishedReview && !completionGoalMet;
+  const mistakeCount = (payload.sections || []).reduce(
+    (sum, section) => sum + (section.questions || []).filter((item) => exerciseResultNeedsReview(item.result)).length,
+    0,
+  );
+  const [mistakeFocus, setMistakeFocus] = useState(Boolean(focusMistakesRequested && mistakeCount > 0));
+
   const resultBadgeLabel = awaitingPublishedReview
     ? "Consegnato, valutazione in arrivo"
     : completionRule === "passed" && !scoreGoalMet
@@ -452,6 +466,15 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                     : "Nuovo tentativo"}
               </Link>
             ) : null}
+            {!awaitingPublishedReview && mistakeCount > 0 ? (
+              <button
+                type="button"
+                onClick={() => setMistakeFocus((value) => !value)}
+                className="rounded-full border border-orange-300 bg-orange-50 px-5 py-3 text-sm font-black text-orange-900 dark:border-orange-300/25 dark:bg-orange-300/[0.08] dark:text-orange-100"
+              >
+                {mistakeFocus ? 'Mostra tutto' : `Fix My Mistakes · ${mistakeCount}`}
+              </button>
+            ) : null}
             <Link
               to="/vocab-bank"
               className="rounded-full border border-clay/20 bg-white px-5 py-3 text-sm font-black text-ink dark:border-white/20 dark:bg-white/10 dark:text-white"
@@ -460,9 +483,20 @@ function FinalResult({ payload, assignmentId, resourceId }) {
             </Link>
           </div>
         </article>
+        {mistakeFocus ? (
+          <div className="mt-6 rounded-[1.75rem] border border-orange-200 bg-[#fff8ef] p-5 dark:border-orange-300/15 dark:bg-orange-300/[0.05]">
+            <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">Fix My Mistakes</p>
+            <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Solo ciò che merita un secondo sguardo.</h2>
+            <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">Hai già completato l’esercizio: nascondo le attività completamente corrette e tengo davanti a te quelle con almeno un inciampo.</p>
+          </div>
+        ) : null}
         <div className="mt-6 grid gap-5">
           {payload.sections.map((section, sectionIndex) => {
             const feedbackHidden = section.feedback_timing === "hidden";
+            const visibleQuestions = (section.questions || [])
+              .map((item, originalIndex) => ({ item, originalIndex }))
+              .filter(({ item }) => !mistakeFocus || exerciseResultNeedsReview(item.result));
+            if (mistakeFocus && !visibleQuestions.length) return null;
             return (
               <section
                 key={section.id}
@@ -489,12 +523,12 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                   </p>
                 ) : null}
                 <div className="mt-5 grid gap-5">
-                  {section.questions.map((item, index) => (
+                  {visibleQuestions.map(({ item, originalIndex }, index) => (
                     <ExerciseActivity
                       key={item.id}
                       type={activityDisplayType(item.question)}
                       index={index + 1}
-                      total={section.questions.length}
+                      total={visibleQuestions.length}
                     >
                       <ExerciseQuestionRenderer
                         item={item}
@@ -517,7 +551,7 @@ function FinalResult({ payload, assignmentId, resourceId }) {
                           settings.show_explanations !== false
                         }
                         attemptId={attempt.id}
-                        referencedTranscript={transcriptBeforeQuestion(payload, sectionIndex, index)}
+                        referencedTranscript={transcriptBeforeQuestion(payload, sectionIndex, originalIndex)}
                       />
                     </ExerciseActivity>
                   ))}
@@ -863,6 +897,7 @@ export default function ExercisePlayerV2() {
           payload={payload}
           assignmentId={assignmentId}
           resourceId={resourceId}
+          focusMistakesRequested={searchParams.get("focus") === "mistakes"}
         />
       </>
     );

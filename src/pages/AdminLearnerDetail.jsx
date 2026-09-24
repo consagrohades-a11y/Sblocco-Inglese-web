@@ -11,6 +11,7 @@ import LearnerContextNoteEditor from '../components/admin/LearnerContextNoteEdit
 import LearnerQuickFacts from '../components/admin/LearnerQuickFacts.jsx';
 import LearnerRecoveryPanel from '../components/admin/LearnerRecoveryPanel.jsx';
 import LearnerVocabularyBankPanel from '../components/admin/learner/LearnerVocabularyBankPanel.jsx';
+import LearnerLearningPulse from '../components/admin/LearnerLearningPulse.jsx';
 import { supabase } from '../lib/supabaseClient.js';
 import { decorateLearnerAssignmentsWithProgress } from '../lib/assignmentProgressApi.js';
 
@@ -183,6 +184,7 @@ export default function AdminLearnerDetail() {
         {!loading && !error && learner ? <div className="mt-6 grid gap-6">
           <LearnerContextNoteEditor learnerId={learnerId} initialNote={learner.admin_context_note || ''} learner={learner} onSaved={(admin_context_note) => setLearner((current) => ({ ...current, admin_context_note }))} />
           <LearnerRecoveryPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} disabled={learner.status === 'deleted'} />
+          <LearnerLearningPulse learnerId={learnerId} learnerName={learner.display_name || learner.email} />
           <LearnerNextLessonPanel learnerId={learnerId} learnerName={learner.display_name || learner.email} />
           <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">
             <div className="grid content-start gap-6">

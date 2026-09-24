@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { rateLearnerVocabularyRecall } from '../../lib/learnerVocabularyBankApi.js';
 import { ArrowRight, Check, Eye, RefreshCw, Sparkles, X } from 'lucide-react';
 
 function shuffle(values) {
@@ -37,7 +38,7 @@ function cueFor(item) {
   };
 }
 
-export default function VocabularyReplay({ items = [] }) {
+export default function VocabularyReplay({ items = [], autoStart = false, onItemRated = null }) {
   const reviewable = useMemo(
     () => items.filter((item) => String(item?.display_text || '').trim()),
     [items],
@@ -48,9 +49,23 @@ export default function VocabularyReplay({ items = [] }) {
   const [known, setKnown] = useState(0);
   const [again, setAgain] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [rating, setRating] = useState(false);
+  const [ratingError, setRatingError] = useState('');
+  const [autoStarted, setAutoStarted] = useState(false);
 
   function start() {
-    const nextSession = shuffle(reviewable).slice(0, Math.min(5, reviewable.length)).map((item) => {
+    const now = Date.now();
+    const prioritized = [...reviewable].sort((a, b) => {
+      const aDue = !a.next_review_at || new Date(a.next_review_at).getTime() <= now;
+      const bDue = !b.next_review_at || new Date(b.next_review_at).getTime() <= now;
+      if (aDue !== bDue) return aDue ? -1 : 1;
+      const strengthDelta = Number(a.recall_strength || 0) - Number(b.recall_strength || 0);
+      if (strengthDelta) return strengthDelta;
+      return new Date(a.last_recalled_at || a.last_seen_at || 0) - new Date(b.last_recalled_at || b.last_seen_at || 0);
+    });
+    const due = prioritized.filter((item) => !item.next_review_at || new Date(item.next_review_at).getTime() <= now);
+    const later = prioritized.filter((item) => item.next_review_at && new Date(item.next_review_at).getTime() > now);
+    const nextSession = [...shuffle(due), ...shuffle(later)].slice(0, Math.min(5, reviewable.length)).map((item) => {
       const pool = Array.isArray(item.examples) && item.examples.length
         ? item.examples.filter((example) => String(example || '').trim())
         : item.example ? [item.example] : [];
@@ -72,20 +87,41 @@ export default function VocabularyReplay({ items = [] }) {
     setKnown(0);
     setAgain(0);
     setFinished(false);
+    setRatingError('');
   }
 
-  function rate(recalled) {
-    if (recalled) setKnown((value) => value + 1);
-    else setAgain((value) => value + 1);
+  useEffect(() => {
+    if (!autoStart || autoStarted || reviewable.length < 2) return;
+    setAutoStarted(true);
+    start();
+  }, [autoStart, autoStarted, reviewable.length]);
 
-    if (index >= session.length - 1) {
-      setFinished(true);
+  async function rate(recalled) {
+    if (!current || rating) return;
+    setRating(true);
+    setRatingError('');
+    try {
+      const memory = await rateLearnerVocabularyRecall(current.id, recalled ? 'remembered' : 'again');
+      if (memory) {
+        setSession((currentSession) => currentSession.map((item) => item.id === current.id ? { ...item, ...memory } : item));
+        onItemRated?.(memory);
+      }
+      if (recalled) setKnown((value) => value + 1);
+      else setAgain((value) => value + 1);
+
+      if (index >= session.length - 1) {
+        setFinished(true);
+        setRevealed(false);
+        return;
+      }
+
+      setIndex((value) => value + 1);
       setRevealed(false);
-      return;
+    } catch (error) {
+      setRatingError(error.message || 'Non sono riuscito a salvare questo richiamo. Riprova.');
+    } finally {
+      setRating(false);
     }
-
-    setIndex((value) => value + 1);
-    setRevealed(false);
   }
 
   if (reviewable.length < 2) return null;
@@ -105,7 +141,7 @@ export default function VocabularyReplay({ items = [] }) {
               <p className="text-[0.66rem] font-black uppercase tracking-[0.15em] text-orange-700 dark:text-orange-300">Sblocco Replay</p>
               <h2 className="mt-1 text-xl font-black text-ink dark:text-white">Un minuto. Cinque parole. Niente lista da ristudiare.</h2>
               <p className="mt-1 max-w-2xl text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
-                Ti mostro un indizio preso dal tuo vocabolario. Prova a richiamare la parola o il chunk prima di rivelarlo.
+                Ti mostro prima ciò che è più urgente. Ogni “me lo ricordavo” o “da rivedere” cambia quando quell’elemento tornerà.
               </p>
             </div>
           </div>
@@ -124,8 +160,8 @@ export default function VocabularyReplay({ items = [] }) {
             <h2 className="mt-2 text-3xl font-black text-ink dark:text-white">{known} su {session.length} richiamate subito.</h2>
             <p className="mt-2 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
               {again
-                ? `${again} ${again === 1 ? 'elemento merita' : 'elementi meritano'} un altro passaggio. Nessun voto: serve solo a capire cosa torna davvero in mente.`
-                : 'Tutto richiamato al primo colpo. Puoi fare un altro giro con elementi diversi.'}
+                ? `${again} ${again === 1 ? 'elemento tornerà' : 'elementi torneranno'} prima. Sblocco ha già aggiornato il prossimo richiamo.`
+                : 'Tutto richiamato al primo colpo. Sblocco ha già allungato il tempo prima del prossimo ripasso.'}
             </p>
           </div>
           <button
@@ -179,6 +215,7 @@ export default function VocabularyReplay({ items = [] }) {
                   <button
                     type="button"
                     onClick={() => rate(true)}
+                    disabled={rating}
                     className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-4 py-2.5 text-sm font-black text-white transition hover:bg-clay dark:bg-[#dce8ef] dark:text-[#163d55]"
                   >
                     <Check className="h-4 w-4" aria-hidden="true" /> Me lo ricordavo
@@ -186,11 +223,13 @@ export default function VocabularyReplay({ items = [] }) {
                   <button
                     type="button"
                     onClick={() => rate(false)}
+                    disabled={rating}
                     className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full border border-clay/25 bg-white px-4 py-2.5 text-sm font-black text-clay transition hover:bg-clay/[0.06] dark:border-coral/25 dark:bg-white/[0.035] dark:text-coral"
                   >
                     <RefreshCw className="h-4 w-4" aria-hidden="true" /> Da rivedere
                   </button>
                 </div>
+                {ratingError ? <p className="mt-3 text-xs font-bold text-red-700 dark:text-red-300">{ratingError}</p> : null}
               </div>
             )}
           </div>
