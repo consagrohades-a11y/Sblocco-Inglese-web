@@ -528,7 +528,6 @@ export default function AdminRecoveryContent() {
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link to="/admin/content/exercises" className={adminButton.secondary}>Apri Exercise Builder</Link>
-              <Link to="/admin/content/exercises/diagnostics" className={adminButton.secondary}>Diagnostica errori</Link>
             </div>
           </header>
 
