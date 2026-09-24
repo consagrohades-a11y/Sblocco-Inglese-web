@@ -48,8 +48,24 @@ export default function VocabularyReplay({ items = [], autoStart = false, onItem
   const [revealed, setRevealed] = useState(false);
   const [known, setKnown] = useState(0);
   const [again, setAgain] = useState(0);
-  const [finished, setFinished] = useState(false);\n  const [rating, setRating] = useState(false);\n  const [ratingError, setRatingError] = useState('');\n  const [autoStarted, setAutoStarted] = useState(false);\n\n  function start() {
-    const now = Date.now();\n    const prioritized = [...reviewable].sort((a, b) => {\n      const aDue = !a.next_review_at || new Date(a.next_review_at).getTime() <= now;\n      const bDue = !b.next_review_at || new Date(b.next_review_at).getTime() <= now;\n      if (aDue !== bDue) return aDue ? -1 : 1;\n      const strengthDelta = Number(a.recall_strength || 0) - Number(b.recall_strength || 0);\n      if (strengthDelta) return strengthDelta;\n      return new Date(a.last_recalled_at || a.last_seen_at || 0) - new Date(b.last_recalled_at || b.last_seen_at || 0);\n    });\n    const due = prioritized.filter((item) => !item.next_review_at || new Date(item.next_review_at).getTime() <= now);\n    const later = prioritized.filter((item) => item.next_review_at && new Date(item.next_review_at).getTime() > now);\n    const nextSession = [...shuffle(due), ...shuffle(later)].slice(0, Math.min(5, reviewable.length)).map((item) => {
+  const [finished, setFinished] = useState(false);
+  const [rating, setRating] = useState(false);
+  const [ratingError, setRatingError] = useState('');
+  const [autoStarted, setAutoStarted] = useState(false);
+
+  function start() {
+    const now = Date.now();
+    const prioritized = [...reviewable].sort((a, b) => {
+      const aDue = !a.next_review_at || new Date(a.next_review_at).getTime() <= now;
+      const bDue = !b.next_review_at || new Date(b.next_review_at).getTime() <= now;
+      if (aDue !== bDue) return aDue ? -1 : 1;
+      const strengthDelta = Number(a.recall_strength || 0) - Number(b.recall_strength || 0);
+      if (strengthDelta) return strengthDelta;
+      return new Date(a.last_recalled_at || a.last_seen_at || 0) - new Date(b.last_recalled_at || b.last_seen_at || 0);
+    });
+    const due = prioritized.filter((item) => !item.next_review_at || new Date(item.next_review_at).getTime() <= now);
+    const later = prioritized.filter((item) => item.next_review_at && new Date(item.next_review_at).getTime() > now);
+    const nextSession = [...shuffle(due), ...shuffle(later)].slice(0, Math.min(5, reviewable.length)).map((item) => {
       const pool = Array.isArray(item.examples) && item.examples.length
         ? item.examples.filter((example) => String(example || '').trim())
         : item.example ? [item.example] : [];
@@ -70,7 +86,43 @@ export default function VocabularyReplay({ items = [], autoStart = false, onItem
     setRevealed(false);
     setKnown(0);
     setAgain(0);
-    setFinished(false);\n    setRatingError('');\n  }\n\n  useEffect(() => {\n    if (!autoStart || autoStarted || reviewable.length < 2) return;\n    setAutoStarted(true);\n    start();\n  }, [autoStart, autoStarted, reviewable.length]);\n\n  async function rate(recalled) {\n    if (!current || rating) return;\n    setRating(true);\n    setRatingError('');\n    try {\n      const memory = await rateLearnerVocabularyRecall(current.id, recalled ? 'remembered' : 'again');\n      if (memory) {\n        setSession((currentSession) => currentSession.map((item) => item.id === current.id ? { ...item, ...memory } : item));\n        onItemRated?.(memory);\n      }\n      if (recalled) setKnown((value) => value + 1);\n      else setAgain((value) => value + 1);\n\n      if (index >= session.length - 1) {\n        setFinished(true);\n        setRevealed(false);\n        return;\n      }\n\n      setIndex((value) => value + 1);\n      setRevealed(false);\n    } catch (error) {\n      setRatingError(error.message || 'Non sono riuscito a salvare questo richiamo. Riprova.');\n    } finally {\n      setRating(false);\n    }\n  }
+    setFinished(false);
+    setRatingError('');
+  }
+
+  useEffect(() => {
+    if (!autoStart || autoStarted || reviewable.length < 2) return;
+    setAutoStarted(true);
+    start();
+  }, [autoStart, autoStarted, reviewable.length]);
+
+  async function rate(recalled) {
+    if (!current || rating) return;
+    setRating(true);
+    setRatingError('');
+    try {
+      const memory = await rateLearnerVocabularyRecall(current.id, recalled ? 'remembered' : 'again');
+      if (memory) {
+        setSession((currentSession) => currentSession.map((item) => item.id === current.id ? { ...item, ...memory } : item));
+        onItemRated?.(memory);
+      }
+      if (recalled) setKnown((value) => value + 1);
+      else setAgain((value) => value + 1);
+
+      if (index >= session.length - 1) {
+        setFinished(true);
+        setRevealed(false);
+        return;
+      }
+
+      setIndex((value) => value + 1);
+      setRevealed(false);
+    } catch (error) {
+      setRatingError(error.message || 'Non sono riuscito a salvare questo richiamo. Riprova.');
+    } finally {
+      setRating(false);
+    }
+  }
 
   if (reviewable.length < 2) return null;
 
