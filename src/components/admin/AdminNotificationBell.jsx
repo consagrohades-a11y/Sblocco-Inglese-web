@@ -5,19 +5,23 @@ import { useAuth } from '../../auth/AuthContext.jsx';
 import { loadTeacherUnreadCount, markAllTeacherNotificationsRead, subscribeToTeacherNotifications } from '../../lib/teacherNotificationsApi.js';
 
 export default function AdminNotificationBell({ compact = false, onNavigate, tone = 'dark' }) {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
 
   const refresh = useCallback(async () => {
+    if (!session?.access_token) {
+      setUnreadCount(0);
+      return;
+    }
     try {
       setUnreadCount(await loadTeacherUnreadCount());
     } catch {
       // Notifications should never block the admin shell.
     }
-  }, []);
+  }, [session?.access_token]);
 
   useEffect(() => {
-    if (!user?.id) return undefined;
+    if (!user?.id || !session?.access_token) return undefined;
 
     refresh();
     const handleVisibility = () => {
@@ -40,13 +44,15 @@ export default function AdminNotificationBell({ compact = false, onNavigate, ton
         // Cleanup must never block admin navigation.
       }
     };
-  }, [refresh, user?.id]);
+  }, [refresh, session?.access_token, user?.id]);
 
   function openNotifications() {
     setUnreadCount(0);
-    markAllTeacherNotificationsRead().catch(() => {
-      // Realtime or the next visibility refresh reconciles the badge if the write fails.
-    });
+    if (session?.access_token) {
+      markAllTeacherNotificationsRead().catch(() => {
+        // Realtime or the next visibility refresh reconciles the badge if the write fails.
+      });
+    }
     onNavigate?.();
   }
 
