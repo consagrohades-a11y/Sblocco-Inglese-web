@@ -6,6 +6,7 @@ import { AuthProvider } from './auth/AuthContext.jsx';
 import LearnerExperienceBoundary from './components/learning/LearnerExperienceBoundary.jsx';
 import AppErrorBoundary from './components/AppErrorBoundary.jsx';
 import { installDownloadCompatibility } from './lib/downloadCompatibility.js';
+import { installAppVersionGuard } from './lib/appVersionGuard.js';
 import { validateSupabaseConfig } from './lib/supabaseConfig.js';
 import './index.css';
 import './styles/learnerEditorial.css';
@@ -93,6 +94,8 @@ window.addEventListener('error', (event) => {
   if (!isDynamicImportFailure(event.error || event.message)) return;
   showChunkRecoveryNotice();
 });
+
+installAppVersionGuard(showChunkRecoveryNotice);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   React.createElement(
