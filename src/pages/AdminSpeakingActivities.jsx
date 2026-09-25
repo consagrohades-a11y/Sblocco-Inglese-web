@@ -24,7 +24,7 @@ import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import LearnerQuickFacts from '../components/admin/LearnerQuickFacts.jsx';
 import { loadAdminLearners } from '../lib/adminLearnersApi.js';
 import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
-import { createSpeakingControlId } from '../lib/speakingLiveControl.js';
+import { createSpeakingControlId, openOrReuseSpeakingStudentWindow, SPEAKING_STUDENT_WINDOW_NAME } from '../lib/speakingLiveControl.js';
 import { loadSpeakingActivities, loadSpeakingActivityHistory, updateSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
@@ -197,15 +197,11 @@ function PresentationLauncher({ activity, initialLearnerId = '', onClose, onStar
     if (learnerId) params.set('learner', learnerId);
 
     const presenterUrl = `/admin/present/speaking/${activity.id}?${params.toString()}`;
-    const windowName = `sblocco-speaking-${controlId}`;
-    const studentWindow = window.open(
-      presenterUrl,
-      windowName,
-      'popup=yes,width=1320,height=860,resizable=yes,scrollbars=yes',
-    );
+    const windowName = SPEAKING_STUDENT_WINDOW_NAME;
+    const studentWindow = openOrReuseSpeakingStudentWindow(presenterUrl);
 
     if (!studentWindow) {
-      setLearnerError('Il browser ha bloccato la finestra studente. Consenti i popup per Sblocco e riprova.');
+      setLearnerError('Il browser ha bloccato lo schermo studente. Consenti i popup per Sblocco e riprova.');
       return;
     }
 
@@ -325,11 +321,11 @@ function PresentationLauncher({ activity, initialLearnerId = '', onClose, onStar
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">
-            Solo la finestra di presentazione va condivisa: note e soluzioni restano nel pannello admin.
+            Apri uno schermo studente una volta sola: cambiando gioco, Sblocco riuserà sempre quello stesso schermo. Note e soluzioni restano nel pannello admin.
           </p>
           <button type="button" disabled={!levels.length || Boolean(learnerId && !selectedLearner)} onClick={open} className="focus-ring inline-flex min-h-12 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-35 dark:bg-clay">
             <ExternalLink className="h-4 w-4" />
-            {learnerId && !selectedLearner ? 'Caricamento studente…' : firstName ? `Apri con ${firstName}` : 'Apri finestra studente'}
+            {learnerId && !selectedLearner ? 'Caricamento studente…' : firstName ? `Apri con ${firstName}` : 'Apri schermo studente'}
           </button>
         </div>
       </div>
@@ -446,25 +442,14 @@ export default function AdminSpeakingActivities() {
     if (liveSession.learnerId) params.set('learner', liveSession.learnerId);
 
     const presenterUrl = `/admin/present/speaking/${activity.id}?${params.toString()}`;
-    let studentWindow = liveSession.studentWindow;
+    const studentWindow = openOrReuseSpeakingStudentWindow(
+      presenterUrl,
+      liveSession.studentWindow,
+    );
 
-    if (studentWindow && !studentWindow.closed) {
-      try {
-        studentWindow.location.replace(presenterUrl);
-      } catch (navigationError) {
-        setError(navigationError.message || 'Non è stato possibile cambiare attività nella finestra studente.');
-        return;
-      }
-    } else {
-      studentWindow = window.open(
-        presenterUrl,
-        liveSession.windowName || `sblocco-speaking-${liveSession.controlId}`,
-        'popup=yes,width=1320,height=860,resizable=yes,scrollbars=yes',
-      );
-      if (!studentWindow) {
-        setError('Il browser ha bloccato la finestra studente. Consenti i popup per Sblocco e riprova.');
-        return;
-      }
+    if (!studentWindow) {
+      setError('Il browser ha bloccato lo schermo studente. Consenti i popup per Sblocco e riprova.');
+      return;
     }
 
     setError('');
@@ -554,7 +539,7 @@ export default function AdminSpeakingActivities() {
                         className={`focus-ring col-span-2 inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full px-3 text-xs font-black disabled:cursor-default ${isLiveActivity ? 'border border-clay/25 bg-blush text-clay dark:border-coral/25 dark:bg-coral/10 dark:text-coral' : 'bg-ink text-white dark:bg-clay'}`}
                       >
                         <ExternalLink className="h-4 w-4" />
-                        {isLiveActivity ? 'In corso' : liveSession ? 'Mostra allo studente' : 'Presenta in nuova finestra'}
+                        {isLiveActivity ? 'In corso' : liveSession ? 'Mostra allo studente' : 'Apri schermo studente'}
                       </button>
                     </div>
                   </article>

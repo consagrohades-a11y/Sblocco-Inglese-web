@@ -1,4 +1,25 @@
 const STORAGE_PREFIX = '__sblocco_speaking_control__';
+export const SPEAKING_STUDENT_WINDOW_NAME = 'sblocco-speaking-student-screen';
+export const SPEAKING_STUDENT_WINDOW_FEATURES = 'popup=yes,width=1320,height=860,resizable=yes,scrollbars=yes';
+
+export function openOrReuseSpeakingStudentWindow(presenterUrl, existingWindow = null) {
+  if (typeof window === 'undefined' || !presenterUrl) return null;
+
+  if (existingWindow && !existingWindow.closed) {
+    try {
+      existingWindow.location.replace(presenterUrl);
+      return existingWindow;
+    } catch {
+      // Fall through to the stable named-window lookup.
+    }
+  }
+
+  return window.open(
+    presenterUrl,
+    SPEAKING_STUDENT_WINDOW_NAME,
+    SPEAKING_STUDENT_WINDOW_FEATURES,
+  );
+}
 
 function randomId() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {

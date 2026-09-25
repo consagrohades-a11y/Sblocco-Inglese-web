@@ -17,6 +17,8 @@ const learner = read('src/pages/AdminLearnerDetail.jsx');
 assert.ok(control.includes('BroadcastChannel'), 'Live control should prefer BroadcastChannel.');
 assert.ok(control.includes('localStorage'), 'Live control should have a same-origin storage-event fallback.');
 assert.ok(control.includes('controlId'), 'Live control messages must be scoped to one session.');
+assert.ok(control.includes("SPEAKING_STUDENT_WINDOW_NAME = 'sblocco-speaking-student-screen'"), 'Speaking must use one stable browser window name for the student screen.');
+assert.ok(control.includes('openOrReuseSpeakingStudentWindow'), 'Speaking live control must expose a single-window reuse helper.');
 
 for (const command of ['previous', 'next', 'random', 'toggle-support', 'toggle-challenge', 'sync-request', 'close-presenter']) {
   assert.ok(presenter.includes(`payload.type === '${command}'`), `Presenter must support remote command: ${command}`);
@@ -31,6 +33,7 @@ assert.ok(presenter.includes('lg:overflow-hidden'), 'Desktop presenter must prev
 assert.ok(presenter.includes("window.addEventListener('message'"), 'Presenter must accept direct window messages while unfocused.');
 assert.ok(presenter.includes('window.opener.postMessage'), 'Presenter must send state directly back to the teacher window.');
 assert.ok(controller.includes('studentWindow.postMessage'), 'Teacher controller must send commands directly to the student window.');
+assert.ok(controller.includes('openOrReuseSpeakingStudentWindow'), 'Teacher controller must reopen or reuse the same named student screen when the reference is stale.');
 const commandBlock = controller.slice(controller.indexOf('function command(type)'), controller.indexOf('function focusStudentWindow'));
 assert.ok(commandBlock.includes('return;'), 'Direct live commands must return after postMessage so toggle commands are not dispatched twice.');
 assert.ok(commandBlock.indexOf('return;') < commandBlock.lastIndexOf('channelRef.current?.send(payload)'), 'Broadcast fallback must run only after direct postMessage does not return.');
@@ -49,7 +52,10 @@ assert.ok(library.includes('SpeakingLiveController'), 'Speaking library must kee
 assert.ok(library.includes("searchParams.get('learner')"), 'Speaking library must accept a learner from the profile route.');
 assert.ok(library.includes('initialLearnerId={focusedLearnerId}'), 'Profile-selected learner must prefill the presentation launcher.');
 assert.ok(library.includes('Mostra allo studente'), 'An active session must let the teacher switch activities from the library.');
-assert.ok(library.includes('studentWindow.location.replace(presenterUrl)'), 'Activity switches must reuse the same student window.');
+assert.ok(library.includes('openOrReuseSpeakingStudentWindow'), 'Activity switches must route through the stable student-screen helper.');
+assert.ok(library.includes('SPEAKING_STUDENT_WINDOW_NAME'), 'The first speaking launch must use the same stable student-screen name.');
+assert.ok(!library.includes('sblocco-speaking-${controlId}'), 'Speaking launch must not create a new browser window name for each control session.');
+assert.ok(library.includes('Apri schermo studente'), 'Speaking UX must describe one reusable student screen rather than a new window per game.');
 assert.ok(library.includes('window.focus()'), 'Launching the presenter should restore focus to the teacher panel.');
 const switchActivityBlock = library.slice(library.indexOf('function switchLiveActivity'), library.indexOf('\n\n  return (', library.indexOf('function switchLiveActivity')));
 assert.ok(!switchActivityBlock.includes('studentWindow.focus'), 'Changing activity must not steal focus from the teacher panel.');
