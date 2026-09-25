@@ -15,7 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import LearnerAvatar from '../learner/LearnerAvatar.jsx';
-import { connectSpeakingControl } from '../../lib/speakingLiveControl.js';
+import { connectSpeakingControl, openOrReuseSpeakingStudentWindow } from '../../lib/speakingLiveControl.js';
 
 function asArray(value) {
   return Array.isArray(value) ? value : [];
@@ -152,11 +152,15 @@ export default function SpeakingLiveController({ session, onEnd }) {
       return;
     }
     if (session?.presenterUrl) {
-      window.open(
+      const studentWindow = openOrReuseSpeakingStudentWindow(
         session.presenterUrl,
-        session.windowName || 'sblocco-speaking-live',
-        'popup=yes,width=1320,height=860,resizable=yes,scrollbars=yes',
+        session.studentWindow,
       );
+      if (studentWindow) {
+        try { studentWindow.focus(); } catch {
+          // The screen is still reused even if the browser refuses focus.
+        }
+      }
     }
   }
 
