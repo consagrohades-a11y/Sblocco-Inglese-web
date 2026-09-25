@@ -90,19 +90,3 @@ export async function archiveDiagnosticRule(ruleKey, archived = true) {
     .eq('rule_key', ruleKey);
   throwIfError(error);
 }
-
-export async function loadLearnerDiagnostics(learnerId) {
-  const { data, error } = await supabase.rpc('get_exercise_builder_learner_diagnostics', {
-    p_learner_id: learnerId,
-  });
-  throwIfError(error);
-  return Array.isArray(data) ? data : [];
-}
-
-export async function rebuildExerciseDiagnostics(attemptId = null) {
-  const { data, error } = await supabase.rpc('admin_rebuild_exercise_builder_diagnostics', {
-    p_attempt_id: attemptId,
-  });
-  throwIfError(error);
-  return data || 0;
-}
