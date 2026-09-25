@@ -62,7 +62,7 @@ function notificationPresentation(type, read) {
 
 export default function LearnerNotificationsPanel({ limit = 6 }) {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -71,6 +71,14 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
   const [showArchive, setShowArchive] = useState(false);
 
   const refresh = useCallback(async ({ quiet = false } = {}) => {
+    if (!session?.access_token) {
+      setNotifications([]);
+      setUnreadCount(0);
+      setProgress(null);
+      setError("");
+      setLoading(false);
+      return;
+    }
     if (!quiet) setLoading(true);
     try {
       const [result, milestoneProgress] = await Promise.all([
@@ -89,9 +97,14 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
     } finally {
       if (!quiet) setLoading(false);
     }
-  }, [limit, showArchive]);
+  }, [limit, session?.access_token, showArchive]);
 
   useEffect(() => {
+    if (!session?.access_token) {
+      setLoading(false);
+      return undefined;
+    }
+
     refresh();
 
     const handleVisibility = () => {
@@ -101,7 +114,7 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
 
     let unsubscribe = () => {};
     try {
-      unsubscribe = user?.id
+      unsubscribe = user?.id && session?.access_token
         ? subscribeToLearnerNotifications(user.id, () => refresh({ quiet: true }))
         : () => {};
     } catch {
@@ -116,7 +129,7 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
         // Cleanup must never block learner navigation.
       }
     };
-  }, [refresh, user?.id]);
+  }, [refresh, session?.access_token, user?.id]);
 
   async function openNotification(notification) {
     try {
