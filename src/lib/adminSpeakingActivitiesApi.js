@@ -84,10 +84,32 @@ export async function loadSpeakingActivityHistory(learnerId) {
   return data || [];
 }
 
+function isAuthFailure(error) {
+  const status = Number(error?.status || error?.statusCode || 0);
+  const code = String(error?.code || '');
+  const message = String(error?.message || '');
+  return status === 401
+    || code === 'PGRST301'
+    || /jwt|unauthori[sz]ed|not authenticated|auth session/i.test(message);
+}
+
 export async function finishSpeakingSession(sessionId) {
   if (!sessionId) return;
-  const { error } = await supabase.rpc('admin_finish_speaking_session', {
-    p_session_id: sessionId,
-  });
-  if (error) throw error;
+
+  async function finish() {
+    return supabase.rpc('admin_finish_speaking_session', {
+      p_session_id: sessionId,
+    });
+  }
+
+  let result = await finish();
+
+  if (result.error && isAuthFailure(result.error)) {
+    const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession();
+    if (!refreshError && refreshed?.session?.access_token) {
+      result = await finish();
+    }
+  }
+
+  if (result.error) throw result.error;
 }
