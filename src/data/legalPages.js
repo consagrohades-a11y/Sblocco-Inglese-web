@@ -1,261 +1,261 @@
 const contactEmail = 'consagrohades@gmail.com';
 const siteUrl = 'https://sbloccoinglese.com';
 const brand = 'Sblocco Inglese';
-const lastUpdated = '24 giugno 2026';
+const lastUpdated = '14 agosto 2026';
 
 const ownerDetails = [
   brand,
-  `Email: ${contactEmail}`,
+  `Contatto operativo attuale: ${contactEmail}`,
   `Sito web: ${siteUrl}`,
-  'Dati fiscali: non esposti pubblicamente in questa fase; eventuale documentazione fiscale, se dovuta, sarà gestita secondo la normativa applicabile.',
+  'DA COMPLETARE PRIMA DELLA MESSA IN VENDITA: identità legale del venditore/titolare e indirizzo geografico da pubblicare, con la privacy personale come vincolo operativo.',
+  'DA CONFERMARE CON UN PROFESSIONISTA FISCALE: inquadramento dell’iniziativa commerciale temporanea e processo di documentazione/dichiarazione dei corrispettivi.',
 ];
 
 export const legalPages = {
   terms: {
     title: 'Termini e Condizioni',
-    description: 'Termini e condizioni per i servizi online di Sblocco Inglese.',
+    description: 'Termini e condizioni per i prodotti e servizi digitali di Sblocco Inglese.',
     updated: lastUpdated,
     intro: [
-      'I presenti Termini e Condizioni regolano la richiesta, la prenotazione e l’utilizzo dei servizi online offerti tramite il sito Sblocco Inglese.',
-      'Prima di prenotare o pagare un servizio, l’utente è invitato a leggere attentamente questa pagina.',
+      'Questa versione descrive il flusso digitale attuale di Sblocco Inglese e, in particolare, Recupero Debito Inglese. Restano da completare prima della messa in vendita i dati identificativi del venditore e l’inquadramento fiscale/documentale applicabile.',
+      'Prima di completare un acquisto, l’utente deve poter leggere questi Termini, la Privacy Policy e le informazioni sul diritto di recesso applicabili al prodotto acquistato.',
     ],
     sections: [
       {
-        title: '1. Titolare del servizio',
-        paragraphs: ['Il servizio è offerto tramite il progetto di formazione linguistica online Sblocco Inglese.'],
+        title: '1. Venditore e contatti',
+        paragraphs: [
+          'Il sito e il prodotto sono presentati con il marchio Sblocco Inglese.',
+          'L’identità legale completa del soggetto che conclude il contratto con il cliente, l’indirizzo geografico da pubblicare e i dati fiscali applicabili non vengono inventati in questa bozza tecnica e devono essere completati prima della messa in vendita.',
+        ],
         details: ownerDetails,
       },
       {
-        title: '2. Servizio principale',
+        title: '2. Recupero Debito Inglese',
         paragraphs: [
-          'Il servizio principale acquistabile dal sito è la Simulazione Inglese per Colloqui e Lavoro al prezzo beta di €39.',
-          'La simulazione consiste in una sessione online di 30 minuti per testare e migliorare lo speaking in una situazione pratica, come colloquio, call di lavoro, presentazione personale, conversazione con clienti o contesto internazionale.',
-          'La sessione include simulazione pratica, correzioni durante la sessione, feedback scritto dopo la sessione, frasi migliorate da riutilizzare e indicazioni operative su cosa migliorare.',
+          'Recupero Debito Inglese è un percorso digitale di preparazione alla prova scolastica di recupero di inglese.',
+          'Il percorso utilizza il test diagnostico, il programma indicato dalla scuola e la data dell’esame per organizzare le priorità di studio. Include recupero guidato degli argomenti, pratica, modalità scuola, verifiche per argomento e recupero mirato degli errori.',
+          'Il programma assegnato dalla scuola resta il riferimento per gli argomenti da preparare. Il servizio non sostituisce le indicazioni della scuola o dell’insegnante.',
         ],
       },
       {
-        title: '3. Prenotazione e conferma dello slot',
+        title: '3. Test diagnostico e account',
         paragraphs: [
-          'L’utente compila il quiz di idoneità, sceglie uno slot disponibile tramite lo strumento di prenotazione indicato e completa il pagamento tramite PayPal.',
-          'La scelta dello slot non è sufficiente a confermare la sessione: lo slot è confermato solo dopo il pagamento completato.',
-          'Se il pagamento non viene completato, la sessione non si considera confermata.',
+          'Il test diagnostico può essere svolto gratuitamente senza acquistare il percorso.',
+          'Per procedere all’acquisto è necessario accedere a un account o crearne uno. Sullo stesso dispositivo, il risultato diagnostico può essere collegato all’account dopo l’attivazione dell’accesso.',
         ],
       },
       {
         title: '4. Prezzo e pagamento',
         paragraphs: [
-          'Il prezzo beta della simulazione è €39.',
-          'Il pagamento viene gestito tramite PayPal Hosted Buttons. Il sito non raccoglie né conserva dati completi della carta o altri dati sensibili di pagamento.',
-          'PayPal può trattare i dati dell’utente secondo le proprie condizioni e informative privacy.',
+          'Il prezzo di lancio mostrato per Recupero Debito Inglese è €39 con pagamento unico. Non è un abbonamento e non prevede rinnovo automatico.',
+          'Il pagamento viene effettuato tramite Stripe Hosted Checkout. I dati completi della carta non vengono raccolti dal modulo di pagamento di Sblocco Inglese; il pagamento è gestito da Stripe secondo le condizioni applicabili al suo servizio.',
+          'Il browser non determina il prezzo o il tipo di accesso: l’offerta e il prezzo utilizzati dal Checkout vengono risolti dal server.',
         ],
       },
       {
-        title: '5. Requisiti tecnici',
+        title: '5. Attivazione dell’accesso',
         paragraphs: [
-          'La sessione si svolge online. L’utente è responsabile di avere una connessione internet stabile, un dispositivo funzionante, microfono e webcam se richiesti, e un ambiente adatto alla conversazione.',
+          'L’accesso al prodotto viene attribuito dopo che il sistema riceve la conferma di pagamento riuscito tramite il flusso server-to-server collegato a Stripe.',
+          'Il semplice caricamento o aggiornamento della pagina di conferma non attribuisce l’accesso. In caso di breve ritardo tecnico nella conferma, la pagina può mostrare lo stato di elaborazione e consentire di ricontrollarlo.',
         ],
       },
       {
-        title: '6. Spostamento della sessione',
+        title: '6. Durata dell’accesso',
         paragraphs: [
-          'L’utente può richiedere di spostare la sessione una sola volta con almeno 24 ore di preavviso.',
-          'Le richieste con meno di 24 ore di preavviso potrebbero non essere accettate, salvo diversa disponibilità.',
-          'In caso di mancata presenza senza preavviso, la sessione si considera svolta e non viene recuperata né rimborsata.',
-          'Se la sessione viene annullata da parte di Sblocco Inglese, verrà proposta una nuova data oppure, se non è possibile trovare un accordo, verrà effettuato il rimborso dell’importo pagato.',
+          'L’acquisto di Recupero Debito Inglese concede accesso al percorso per 90 giorni dalla prima attivazione conseguente al pagamento riuscito.',
+          'Il pagamento è una tantum: allo scadere dei 90 giorni l’accesso termina senza rinnovo automatico e senza nuovi addebiti.',
         ],
       },
       {
-        title: '7. Rimborsi e recesso',
+        title: '7. Accesso immediato e diritto di recesso',
         paragraphs: [
-          'Il servizio è una prestazione online con data e orario concordati. Eventuali richieste di rimborso vengono valutate caso per caso e secondo la normativa applicabile.',
-          'Se il servizio è già stato completamente erogato, di norma non è previsto rimborso, salvo casi specifici previsti dalla legge o accordi diversi.',
-          'Non sono garantiti rimborsi in caso di assenza dell’utente, ritardo significativo dell’utente o impossibilità tecnica imputabile all’utente.',
+          'Prima del Checkout, il cliente deve chiedere espressamente che l’accesso digitale inizi subito dopo il pagamento, senza attendere la scadenza del periodo di recesso, e confermare di aver letto le informazioni sul recesso e sulla politica di rimborso.',
+          'La politica commerciale di rimborso prevista per questo lancio non limita eventuali diritti inderogabili riconosciuti al consumatore dalla normativa applicabile. La qualificazione giuridica definitiva del servizio e la formulazione di dettaglio sul recesso devono comunque essere verificate prima della messa in vendita.',
         ],
       },
       {
-        title: '8. Nessuna garanzia di risultato',
+        title: '8. Politica di rimborso di lancio',
         paragraphs: [
-          'Il servizio ha lo scopo di aiutare l’utente a testare e migliorare il proprio inglese in una situazione pratica, ricevendo correzioni e feedback.',
-          'Non vengono garantiti superamento di colloqui, ottenimento di un lavoro, trasferimento all’estero, ammissione a programmi o miglioramenti specifici entro un tempo garantito.',
-          'I risultati dipendono dal livello di partenza, dalla pratica personale, dall’obiettivo, dalla costanza e dal contesto individuale.',
+          'Per Recupero Debito Inglese viene riconosciuto un rimborso integrale del prezzo pagato quando la richiesta viene inviata entro 14 giorni dalla conclusione del contratto.',
+          `La richiesta può essere inviata a ${contactEmail}, indicando l’indirizzo email dell’account usato per l’acquisto e le informazioni necessarie a identificare l’ordine. Questa politica commerciale non limita eventuali diritti inderogabili previsti dalla legge.`,
         ],
       },
       {
-        title: '9. Materiali e feedback',
+        title: '9. Studenti minorenni e acquirente',
         paragraphs: [
-          'Il feedback scritto e gli eventuali materiali forniti sono destinati all’uso personale dell’utente.',
-          'Non è consentito copiare, rivendere, distribuire o utilizzare commercialmente materiali, template, feedback o contenuti forniti, salvo autorizzazione scritta.',
+          'Recupero Debito Inglese può essere utilizzato da studenti delle scuole superiori, inclusi studenti minorenni.',
+          'Il soggetto che conclude l’acquisto deve avere almeno 18 anni. Se il percorso è destinato a uno studente minorenne, l’acquirente deve essere il genitore o tutore legale che effettua l’acquisto per il minore.',
+          'Prima del Checkout viene richiesta una conferma positiva separata relativa alla maggiore età dell’acquirente e, quando applicabile, al ruolo di genitore o tutore legale.',
         ],
       },
       {
-        title: '10. Comportamento durante la sessione',
+        title: '10. Nessuna garanzia sul voto o sull’esito',
         paragraphs: [
-          'L’utente si impegna a mantenere un comportamento rispettoso durante la sessione.',
-          'Sblocco Inglese si riserva il diritto di interrompere la sessione in caso di comportamenti offensivi, inappropriati, aggressivi o contrari al normale svolgimento del servizio.',
+          'Il percorso fornisce strumenti di studio, pratica e verifica, ma non garantisce un voto specifico, il superamento della prova o un risultato entro un tempo determinato.',
+          'L’esito dipende anche dal programma effettivamente assegnato, dal livello di partenza, dal tempo disponibile, dalla costanza dello studente e dai criteri della scuola.',
         ],
       },
       {
-        title: '11. Modifiche ai servizi e ai prezzi',
+        title: '11. Uso dei contenuti',
         paragraphs: [
-          'Prezzi, servizi e modalità di erogazione possono essere modificati nel tempo.',
-          'Le modifiche non incidono sui servizi già pagati e confermati, salvo diverso accordo tra le parti.',
+          'I contenuti e i materiali resi disponibili tramite l’account sono destinati all’uso personale collegato all’accesso acquistato.',
+          'Non è consentito rivendere, distribuire o riutilizzare commercialmente materiali e contenuti proprietari senza autorizzazione.',
         ],
       },
       {
         title: '12. Contatti',
-        paragraphs: [`Per domande sui presenti Termini e Condizioni, è possibile scrivere a: ${contactEmail}.`],
+        paragraphs: [
+          `L’indirizzo operativo attualmente utilizzato per assistenza, richieste di rimborso e comunicazioni relative al servizio è ${contactEmail}. Gli indirizzi di dominio dedicati verranno pubblicati solo dopo la loro effettiva attivazione.`,
+        ],
       },
     ],
   },
   privacy: {
     title: 'Privacy Policy',
-    description: 'Privacy Policy per il sito e i servizi online di Sblocco Inglese.',
+    description: 'Informativa privacy per il sito e la piattaforma Sblocco Inglese.',
     updated: lastUpdated,
     intro: [
-      'La presente Privacy Policy descrive come vengono trattati i dati personali degli utenti che visitano il sito Sblocco Inglese e che richiedono informazioni, compilano il quiz, prenotano una sessione o completano un pagamento tramite strumenti esterni collegati al sito.',
+      'Questa informativa descrive le categorie di dati trattate dal flusso digitale attuale di Sblocco Inglese. L’identità legale completa del titolare del trattamento e l’indirizzo geografico da pubblicare devono essere completati prima della messa in vendita.',
     ],
     sections: [
       {
         title: '1. Titolare del trattamento',
-        paragraphs: ['Il titolare del trattamento dei dati personali è Sblocco Inglese.'],
+        paragraphs: [
+          'Il servizio è presentato con il marchio Sblocco Inglese. La denominazione legale completa del titolare del trattamento e gli ulteriori dati identificativi richiesti devono essere inseriti e verificati prima del lancio commerciale.',
+        ],
         details: ownerDetails,
       },
       {
-        title: '2. Tipologie di dati raccolti',
-        paragraphs: ['Attraverso il sito e gli strumenti collegati possono essere raccolti i seguenti dati personali:'],
+        title: '2. Dati trattati',
+        paragraphs: ['In base alle funzioni utilizzate, possono essere trattate le seguenti categorie di dati:'],
         bullets: [
-          'nome e cognome',
-          'indirizzo email',
-          'numero di telefono o contatto WhatsApp',
-          'informazioni sul livello di inglese',
-          'obiettivo per cui viene richiesto il servizio',
-          'eventuale scadenza o urgenza indicata dall’utente',
-          'informazioni inviate volontariamente tramite modulo, email o WhatsApp',
-          'dati relativi alla prenotazione della sessione',
-          'informazioni relative allo stato del pagamento, gestite tramite PayPal',
-          'dati tecnici di navigazione eventualmente raccolti dal provider di hosting',
+          'dati dell’account, come indirizzo email e identificativo utente',
+          'risposte e risultati del test diagnostico di recupero',
+          'informazioni inserite per organizzare il percorso, come anno scolastico, data dell’esame e argomenti del programma della scuola',
+          'stato del percorso, attività svolte, risultati delle verifiche ed errori necessari a fornire la funzione didattica richiesta',
+          'dati relativi all’ordine e allo stato del pagamento, come identificativi Stripe, importo, valuta e stato di fulfillment',
+          'conferme registrate al momento del Checkout, inclusa la versione delle condizioni accettate e l’orario della registrazione',
+          'parametri di campagna UTM limitati a source, medium, campaign e content quando presenti nel percorso di acquisto',
+          'dati tecnici e di sicurezza necessari a fornire il sito, autenticare l’utente e diagnosticare errori del servizio',
         ],
-        paragraphsAfter: ['Non viene richiesto all’utente di inviare dati sensibili o informazioni non necessarie alla valutazione della richiesta.'],
+        paragraphsAfter: [
+          'Il sito non chiede di inserire dati sensibili nei parametri UTM. I parametri di campagna vengono filtrati e limitati prima di essere associati all’acquisto.',
+          'Il pagamento avviene su Stripe Hosted Checkout: Sblocco Inglese non riceve dal proprio modulo i dati completi della carta.',
+        ],
       },
       {
         title: '3. Finalità del trattamento',
-        paragraphs: ['I dati personali vengono trattati per le seguenti finalità:'],
         bullets: [
-          'rispondere alle richieste inviate dall’utente',
-          'valutare se la simulazione è adatta al livello e all’obiettivo dell’utente',
-          'gestire la prenotazione della sessione',
-          'gestire comunicazioni relative al pagamento e alla conferma dello slot',
-          'erogare il servizio richiesto',
-          'inviare il feedback scritto dopo la sessione',
-          'gestire eventuali comunicazioni successive relative al servizio',
-          'adempiere a eventuali obblighi legali, fiscali o contabili',
-          'tutelare i diritti del titolare in caso di contestazioni',
+          'creare e gestire l’account',
+          'fornire il test diagnostico e, quando applicabile, collegarlo all’account',
+          'costruire e mostrare il percorso richiesto sulla base delle informazioni scolastiche inserite',
+          'erogare esercizi, verifiche e recupero mirato',
+          'gestire il pagamento, registrare l’acquisto e attribuire l’accesso',
+          'registrare le conferme precontrattuali richieste nel flusso di acquisto',
+          'assistere l’utente e gestire rimborsi, problemi tecnici o contestazioni',
+          'proteggere il servizio da abusi e garantire sicurezza e integrità',
+          'misurare, in forma limitata, la provenienza commerciale di un acquisto tramite i parametri UTM conservati con l’ordine',
+          'adempiere agli obblighi legali, contabili o fiscali applicabili al titolare',
         ],
-        paragraphsAfter: ['I dati non vengono utilizzati per newsletter o comunicazioni promozionali continuative, salvo consenso espresso dell’utente.'],
       },
       {
-        title: '4. Base giuridica del trattamento',
-        paragraphs: ['Il trattamento dei dati si basa su una o più delle seguenti basi giuridiche:'],
+        title: '4. Base giuridica',
+        paragraphs: [
+          'La base giuridica dipende dalla specifica operazione e può includere l’esecuzione di misure precontrattuali richieste dall’utente, l’esecuzione del contratto, l’adempimento di obblighi legali, il legittimo interesse del titolare quando applicabile e il consenso quando la legge lo richiede.',
+          'La scelta definitiva delle basi giuridiche e la relativa documentazione restano responsabilità del titolare del trattamento e devono essere verificate rispetto all’uso effettivo del servizio.',
+        ],
+      },
+      {
+        title: '5. Fornitori tecnici principali',
+        paragraphs: ['Il flusso attuale utilizza fornitori tecnici per ospitare il servizio, i dati e i pagamenti, tra cui:'],
         bullets: [
-          'esecuzione di misure precontrattuali richieste dall’utente',
-          'esecuzione del contratto quando l’utente acquista o prenota un servizio',
-          'adempimento di obblighi legali, fiscali o contabili',
-          'legittimo interesse del titolare, ad esempio per gestire comunicazioni e tutelare i propri diritti',
-          'consenso dell’utente, quando richiesto per finalità specifiche',
+          'Vercel, per hosting e distribuzione dell’applicazione',
+          'Supabase, per autenticazione, database e funzioni server collegate alla piattaforma',
+          'Stripe, per il Checkout e l’elaborazione dei pagamenti',
+          'servizi email utilizzati per le comunicazioni di assistenza, quando l’utente li contatta',
         ],
+        paragraphsAfter: ['I fornitori trattano dati secondo i rispettivi ruoli, accordi e informative applicabili.'],
       },
       {
-        title: '5. Strumenti esterni utilizzati',
-        paragraphs: ['Per gestire richieste, prenotazioni, comunicazioni e pagamenti possono essere utilizzati servizi esterni, tra cui:'],
-        bullets: [
-          'Google Forms o Google Workspace, per la raccolta delle richieste',
-          'Calendly, per la prenotazione degli slot',
-          'PayPal, per la gestione dei pagamenti',
-          'WhatsApp ed email, per comunicazioni con l’utente',
-          'Vercel o altro provider di hosting, per la pubblicazione del sito',
-        ],
-        paragraphsAfter: [
-          'Questi servizi possono trattare dati personali secondo le proprie privacy policy e condizioni di utilizzo.',
-          'L’utente è invitato a consultare anche le informative privacy dei servizi esterni utilizzati.',
-        ],
-      },
-      {
-        title: '6. Conservazione dei dati',
+        title: '6. Attribuzione commerciale di prima parte',
         paragraphs: [
-          'I dati personali vengono conservati per il tempo necessario a gestire la richiesta, erogare il servizio e adempiere a eventuali obblighi legali o fiscali.',
-          'I dati relativi a richieste non concluse possono essere conservati fino a 12 mesi. I dati relativi a clienti e pagamenti possono essere conservati per il periodo richiesto dagli obblighi fiscali e contabili applicabili.',
+          'Quando un link contiene utm_source, utm_medium, utm_campaign o utm_content, l’applicazione può mantenere questi valori sanitizzati nella URL durante il percorso verso diagnostica, accesso e Checkout.',
+          'Non viene installato per questa funzione un pixel pubblicitario, Google Analytics, Google Tag Manager o Meta Pixel. I valori UTM consentiti possono essere registrati nel database insieme all’acquisto pagato per ricostruirne la provenienza commerciale.',
+          'I parametri UTM non vengono utilizzati per autorizzare l’account, scegliere il prezzo o attribuire diritti di accesso.',
         ],
       },
       {
-        title: '7. Comunicazione dei dati',
-        paragraphs: ['I dati personali non vengono venduti a terzi.', 'I dati possono essere comunicati a fornitori di servizi tecnici, piattaforme di pagamento, strumenti di prenotazione, consulenti fiscali o legali se necessario, e autorità competenti nei casi previsti dalla legge.'],
-      },
-      {
-        title: '8. Trasferimento dei dati fuori dallo Spazio Economico Europeo',
+        title: '7. Conservazione',
         paragraphs: [
-          'Alcuni strumenti esterni utilizzati, come Google, Calendly, PayPal o WhatsApp, possono comportare il trasferimento di dati al di fuori dello Spazio Economico Europeo.',
-          'In questi casi, il trasferimento avviene secondo le garanzie previste dalla normativa applicabile e dalle policy dei rispettivi fornitori.',
+          'I dati vengono conservati per il tempo necessario alle finalità per cui sono trattati e, quando applicabile, per rispettare obblighi legali, fiscali, contabili, di sicurezza o di tutela dei diritti.',
+          'La durata di accesso al prodotto è di 90 giorni, ma questo non determina automaticamente la cancellazione di ogni dato allo scadere dell’accesso: alcuni dati possono dover essere conservati più a lungo per finalità legali, fiscali, contabili, di sicurezza o di tutela dei diritti.',
+          'I periodi di conservazione applicabili alle diverse categorie devono essere definiti e documentati in modo coerente con le finalità effettive del trattamento.',
         ],
       },
       {
-        title: '9. Diritti dell’utente',
-        paragraphs: ['L’utente può esercitare i diritti previsti dalla normativa in materia di protezione dei dati personali, tra cui accesso, rettifica, cancellazione, limitazione, opposizione, portabilità quando applicabile e revoca del consenso quando il trattamento si basa sul consenso.'],
-        paragraphsAfter: [
-          `Per esercitare i propri diritti, l’utente può scrivere a: ${contactEmail}.`,
-          'L’utente ha inoltre il diritto di proporre reclamo al Garante per la protezione dei dati personali, secondo le modalità previste dall’autorità competente.',
-        ],
-      },
-      {
-        title: '10. Dati di minori',
+        title: '8. Comunicazione e trasferimenti',
         paragraphs: [
-          'Il servizio è pensato principalmente per adulti.',
-          'Se una persona minorenne desidera utilizzare il servizio, è necessario il consenso di un genitore o di chi esercita la responsabilità genitoriale.',
+          'I dati non vengono venduti a terzi.',
+          'Possono essere trattati dai fornitori tecnici necessari al servizio e comunicati ad autorità o consulenti quando richiesto dalla legge o necessario per tutelare diritti. Eventuali trasferimenti internazionali dipendono dai fornitori utilizzati e devono essere gestiti con le garanzie previste dalla normativa applicabile.',
         ],
       },
       {
-        title: '11. Modifiche alla Privacy Policy',
-        paragraphs: ['La presente Privacy Policy può essere aggiornata nel tempo. La versione aggiornata sarà pubblicata su questa pagina con indicazione della data dell’ultimo aggiornamento.'],
+        title: '9. Diritti dell’interessato',
+        paragraphs: [
+          'L’interessato può esercitare, quando applicabili, i diritti previsti dalla normativa sulla protezione dei dati, inclusi accesso, rettifica, cancellazione, limitazione, opposizione, portabilità e revoca del consenso per i trattamenti basati sul consenso.',
+          `L’indirizzo operativo attualmente utilizzato per le richieste privacy è ${contactEmail}. È inoltre possibile proporre reclamo al Garante per la protezione dei dati personali nei casi previsti dalla legge.`,
+        ],
+      },
+      {
+        title: '10. Minori',
+        paragraphs: [
+          'Il prodotto può essere utilizzato da studenti minorenni. Le informative destinate a minori devono essere comprensibili e proporzionate alla loro età.',
+          'Quando lo studente è minorenne, il contratto di acquisto viene concluso dal genitore o tutore legale maggiorenne. I dati dell’acquirente e quelli dello studente possono quindi riferirsi a persone diverse e vengono trattati soltanto per le finalità pertinenti al rispettivo ruolo.',
+          'Le regole sul consenso privacy dei minori e quelle sulla formazione del contratto restano distinte e devono essere applicate in base alla specifica operazione di trattamento.',
+        ],
+      },
+      {
+        title: '11. Aggiornamenti',
+        paragraphs: ['Questa informativa può essere aggiornata per riflettere modifiche del servizio o del trattamento. La data dell’ultima versione è indicata in alto.'],
       },
     ],
   },
   cookies: {
     title: 'Cookie Policy',
-    description: 'Cookie Policy per il sito Sblocco Inglese.',
+    description: 'Cookie Policy e informazioni sugli strumenti di memorizzazione usati da Sblocco Inglese.',
     updated: lastUpdated,
-    intro: ['La presente Cookie Policy descrive l’utilizzo di cookie e strumenti simili sul sito Sblocco Inglese.'],
+    intro: ['Questa pagina descrive cookie, memorizzazione locale e strumenti analoghi utilizzati dal sito nel flusso tecnico attuale.'],
     sections: [
       {
-        title: '1. Cosa sono i cookie',
+        title: '1. Strumenti tecnici',
         paragraphs: [
-          'I cookie sono piccoli file di testo che possono essere salvati sul dispositivo dell’utente durante la navigazione di un sito web.',
-          'Possono servire a far funzionare correttamente il sito, ricordare preferenze, raccogliere statistiche o supportare attività di marketing.',
+          'Il sito può utilizzare cookie o memorizzazione locale strettamente necessari per autenticazione, sicurezza, continuità della sessione e funzioni richieste dall’utente.',
+          'Il risultato del test diagnostico può essere associato a un token tecnico sul dispositivo per consentire, sullo stesso dispositivo, il successivo collegamento all’account dopo l’acquisto.',
         ],
       },
       {
-        title: '2. Cookie utilizzati da questo sito',
+        title: '2. Attribuzione UTM',
         paragraphs: [
-          'Al momento, il sito non utilizza volutamente strumenti di tracciamento come Google Analytics, Meta Pixel, strumenti di remarketing, heatmap, newsletter tracking o sistemi di profilazione.',
-          'Il sito può utilizzare cookie tecnici o strumenti strettamente necessari al funzionamento tecnico della piattaforma di hosting, alla sicurezza del sito o al funzionamento di servizi esterni collegati.',
+          'Il flusso di lancio non salva i parametri UTM in localStorage o in un cookie di marketing. Se presenti, i quattro parametri UTM consentiti vengono mantenuti nella URL durante il percorso e possono essere associati all’ordine soltanto al momento del Checkout.',
+          'Non vengono installati Google Analytics, Google Tag Manager, Meta Pixel o un altro stack di tracciamento pubblicitario per questa attribuzione di lancio.',
         ],
       },
       {
-        title: '3. Link a servizi esterni',
-        paragraphs: ['Il sito può contenere link o embed a servizi esterni come Google Forms, Calendly, PayPal, WhatsApp, email o altri strumenti di prenotazione e pagamento.'],
-        paragraphsAfter: [
-          'Quando l’utente clicca su un link esterno o utilizza un servizio incorporato, può accedere a piattaforme di terzi che trattano dati e cookie secondo le proprie informative.',
-          'L’utente è invitato a consultare le informative dei servizi esterni prima di utilizzarli.',
-        ],
-      },
-      {
-        title: '4. Gestione dei cookie dal browser',
+        title: '3. Stripe Checkout e servizi esterni',
         paragraphs: [
-          'L’utente può gestire o disabilitare i cookie tramite le impostazioni del proprio browser.',
-          'La disabilitazione di alcuni cookie tecnici potrebbe compromettere il corretto funzionamento del sito o dei servizi collegati.',
+          'Quando l’utente sceglie di pagare, viene reindirizzato a Stripe Hosted Checkout. Stripe può utilizzare cookie o altri strumenti secondo le proprie informative e le impostazioni del proprio servizio.',
+          'Altri fornitori tecnici possono utilizzare strumenti strettamente necessari per autenticazione, sicurezza e funzionamento della piattaforma.',
         ],
       },
       {
-        title: '5. Aggiornamenti',
-        paragraphs: ['La presente Cookie Policy può essere aggiornata nel tempo, soprattutto se vengono aggiunti strumenti di analytics, tracciamento, video incorporati, form incorporati o altri servizi di terze parti.'],
+        title: '4. Strumenti non tecnici',
+        paragraphs: [
+          'Se in futuro verranno introdotti strumenti di analytics, profilazione o marketing che richiedono consenso, il relativo meccanismo di scelta dovrà essere implementato prima della loro attivazione e questa informativa dovrà essere aggiornata.',
+        ],
+      },
+      {
+        title: '5. Contatti',
+        paragraphs: [`Per domande su cookie e privacy, l’indirizzo operativo attualmente utilizzato è ${contactEmail}. Gli indirizzi di dominio dedicati verranno pubblicati solo dopo la loro effettiva attivazione.`],
       },
     ],
   },
