@@ -19,23 +19,30 @@ export default function TeacherRadar() {
   const [loading, setLoading] = useState(true);
   const [attempts, setAttempts] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [degraded, setDegraded] = useState(false);
 
   useEffect(() => {
     let active = true;
-    Promise.all([loadExerciseAttemptResults(120), loadTeacherNotifications(40)])
-      .then(([attemptRows, notificationResult]) => {
-        if (!active) return;
-        setAttempts(attemptRows || []);
-        setNotifications(notificationResult.notifications || []);
-      })
-      .catch(() => {
-        if (!active) return;
-        setAttempts([]);
-        setNotifications([]);
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
+
+    Promise.allSettled([
+      loadExerciseAttemptResults(120),
+      loadTeacherNotifications(40),
+    ]).then(([attemptResult, notificationResult]) => {
+      if (!active) return;
+
+      const attemptsAvailable = attemptResult.status === 'fulfilled';
+      const notificationsAvailable = notificationResult.status === 'fulfilled';
+
+      setAttempts(attemptsAvailable ? (attemptResult.value || []) : []);
+      setNotifications(
+        notificationsAvailable
+          ? (notificationResult.value?.notifications || [])
+          : [],
+      );
+      setDegraded(!attemptsAvailable || !notificationsAvailable);
+      setLoading(false);
+    });
+
     return () => { active = false; };
   }, []);
 
@@ -85,6 +92,12 @@ export default function TeacherRadar() {
           </div>
         ) : null}
       </header>
+
+      {degraded && !loading ? (
+        <div className="border-b border-amber-200 bg-amber-50 px-5 py-3 text-xs font-bold text-amber-900 dark:border-amber-300/15 dark:bg-amber-300/[0.06] dark:text-amber-100 sm:px-6">
+          Alcuni dati non sono disponibili in questo momento; il Radar mostra comunque tutto ciò che è riuscito a leggere.
+        </div>
+      ) : null}
 
       {loading ? (
         <div className="p-6 text-sm font-semibold text-ink/45 dark:text-white/45">Controllo cosa richiede attenzione…</div>
