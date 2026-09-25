@@ -57,7 +57,7 @@ function NotificationAvatar({ notification }) {
 
 export default function AdminNotifications() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -65,6 +65,13 @@ export default function AdminNotifications() {
   const [showArchive, setShowArchive] = useState(false);
 
   const refresh = useCallback(async ({ quiet = false } = {}) => {
+    if (!session?.access_token) {
+      setNotifications([]);
+      setUnreadCount(0);
+      setError('');
+      setLoading(false);
+      return;
+    }
     if (!quiet) setLoading(true);
     try {
       const result = await loadTeacherNotifications(60, { archived: showArchive });
@@ -76,12 +83,16 @@ export default function AdminNotifications() {
     } finally {
       if (!quiet) setLoading(false);
     }
-  }, [showArchive]);
+  }, [session?.access_token, showArchive]);
 
   useEffect(() => {
     let active = true;
 
     async function initialise() {
+      if (!session?.access_token) {
+        setLoading(false);
+        return;
+      }
       await refresh();
       if (!active || showArchive) return;
       try {
@@ -104,7 +115,7 @@ export default function AdminNotifications() {
 
     let unsubscribe = () => {};
     try {
-      unsubscribe = user?.id
+      unsubscribe = user?.id && session?.access_token
         ? subscribeToTeacherNotifications(user.id, () => refresh({ quiet: true }))
         : () => {};
     } catch {
@@ -120,7 +131,7 @@ export default function AdminNotifications() {
         // Cleanup must never block navigation.
       }
     };
-  }, [refresh, showArchive, user?.id]);
+  }, [refresh, session?.access_token, showArchive, user?.id]);
 
   async function openNotification(notification) {
     try {
