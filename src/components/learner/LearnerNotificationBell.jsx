@@ -21,7 +21,7 @@ function formatDate(value) {
 }
 
 export default function LearnerNotificationBell({ mobile = false, onNavigate }) {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const navigate = useNavigate();
   const rootRef = useRef(null);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -30,15 +30,19 @@ export default function LearnerNotificationBell({ mobile = false, onNavigate }) 
   const [loadingPreview, setLoadingPreview] = useState(false);
 
   const refresh = useCallback(async () => {
+    if (!session?.access_token) {
+      setUnreadCount(0);
+      return;
+    }
     try {
       setUnreadCount(await loadLearnerUnreadCount());
     } catch {
       // Notifications must never block learner navigation.
     }
-  }, []);
+  }, [session?.access_token]);
 
   useEffect(() => {
-    if (!user?.id) return undefined;
+    if (!user?.id || !session?.access_token) return undefined;
 
     refresh();
     const handleVisibility = () => {
@@ -61,7 +65,7 @@ export default function LearnerNotificationBell({ mobile = false, onNavigate }) 
         // Cleanup must never block learner navigation.
       }
     };
-  }, [refresh, user?.id]);
+  }, [refresh, session?.access_token, user?.id]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -80,7 +84,7 @@ export default function LearnerNotificationBell({ mobile = false, onNavigate }) 
   }, [open]);
 
   async function clearUnread() {
-    if (!unreadCount) return;
+    if (!unreadCount || !session?.access_token) return;
     setUnreadCount(0);
     try {
       await markAllLearnerNotificationsRead();
@@ -93,6 +97,12 @@ export default function LearnerNotificationBell({ mobile = false, onNavigate }) 
     const nextOpen = !open;
     setOpen(nextOpen);
     if (!nextOpen) return;
+
+    if (!session?.access_token) {
+      setNotifications([]);
+      setLoadingPreview(false);
+      return;
+    }
 
     clearUnread();
     setLoadingPreview(true);

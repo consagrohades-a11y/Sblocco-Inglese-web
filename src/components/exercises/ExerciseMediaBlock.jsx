@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Headphones, Video } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient.js';
 
@@ -24,33 +24,67 @@ function withMediaFragment(url, startSeconds, endSeconds) {
   return url + '#t=' + start + (end ? ',' + end : '');
 }
 
+const SIGNED_URL_SECONDS = 3600;
+const SIGNED_URL_REFRESH_MS = 50 * 60 * 1000;
+const MEDIA_ERROR_RETRY_COOLDOWN_MS = 5000;
+
 export default function ExerciseMediaBlock({ content = {}, prompt = '', instructions = '', disabled = false }) {
   const media = content.media || {};
   const [signedUrl, setSignedUrl] = useState('');
   const [error, setError] = useState('');
+  const [signingRevision, setSigningRevision] = useState(0);
+  const playbackRetryAtRef = useRef(0);
   const sourceType = ['audio', 'video', 'youtube'].includes(media.source_type) ? media.source_type : 'audio';
 
   useEffect(() => {
     let active = true;
+    let renewalTimer = null;
     setError('');
-    setSignedUrl('');
 
-    if (!media.storage_path || !media.storage_bucket) return undefined;
+    if (!media.storage_path || !media.storage_bucket) {
+      setSignedUrl('');
+      return undefined;
+    }
 
-    supabase.storage
-      .from(media.storage_bucket)
-      .createSignedUrl(media.storage_path, 3600)
-      .then(({ data, error: storageError }) => {
-        if (!active) return;
-        if (storageError) {
-          setError('Non è stato possibile caricare il file multimediale.');
-          return;
-        }
-        setSignedUrl(data?.signedUrl || '');
-      });
+    async function signMedia() {
+      const { data, error: storageError } = await supabase.storage
+        .from(media.storage_bucket)
+        .createSignedUrl(media.storage_path, SIGNED_URL_SECONDS);
 
-    return () => { active = false; };
-  }, [media.storage_bucket, media.storage_path]);
+      if (!active) return;
+      if (storageError) {
+        setSignedUrl('');
+        setError('Non è stato possibile caricare il file multimediale.');
+        return;
+      }
+
+      setSignedUrl(data?.signedUrl || '');
+      setError('');
+
+      renewalTimer = window.setTimeout(() => {
+        if (active) setSigningRevision((current) => current + 1);
+      }, SIGNED_URL_REFRESH_MS);
+    }
+
+    signMedia().catch(() => {
+      if (!active) return;
+      setSignedUrl('');
+      setError('Non è stato possibile caricare il file multimediale.');
+    });
+
+    return () => {
+      active = false;
+      if (renewalTimer) window.clearTimeout(renewalTimer);
+    };
+  }, [media.storage_bucket, media.storage_path, signingRevision]);
+
+  function recoverPlayback() {
+    if (!media.storage_path || !media.storage_bucket) return;
+    const now = Date.now();
+    if (now - playbackRetryAtRef.current < MEDIA_ERROR_RETRY_COOLDOWN_MS) return;
+    playbackRetryAtRef.current = now;
+    setSigningRevision((current) => current + 1);
+  }
 
   const directUrl = signedUrl || media.url || '';
   const playableUrl = useMemo(
@@ -94,7 +128,7 @@ export default function ExerciseMediaBlock({ content = {}, prompt = '', instruct
 
       {sourceType === 'video' && playableUrl ? (
         <div className="overflow-hidden rounded-2xl border border-ink/10 bg-black shadow-sm dark:border-white/10">
-          <video controls preload="metadata" src={playableUrl} className="w-full">
+          <video controls preload="metadata" src={playableUrl} className="w-full" onError={recoverPlayback}>
             Il browser non supporta questo video.
           </video>
         </div>
@@ -106,7 +140,7 @@ export default function ExerciseMediaBlock({ content = {}, prompt = '', instruct
             <Headphones className="h-4 w-4" aria-hidden="true" />
             <span>{content.heading || 'Ascolta'}</span>
           </div>
-          <audio controls preload="metadata" src={playableUrl} className="w-full">
+          <audio controls preload="metadata" src={playableUrl} className="w-full" onError={recoverPlayback}>
             Il browser non supporta questo audio.
           </audio>
         </div>

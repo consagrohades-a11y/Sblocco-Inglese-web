@@ -10,26 +10,30 @@ export default function LearnerLearningPulse({ learnerId, learnerName }) {
   const [vocabulary, setVocabulary] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [partial, setPartial] = useState(false);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
     setError('');
-    Promise.all([
+    setPartial(false);
+    Promise.allSettled([
       loadAdminLearnerAnalytics(learnerId, 30),
       loadLearnerLearningSignals(learnerId, 90),
       loadLearnerVocabularyBank(learnerId),
-    ])
-      .then(([nextAnalytics, nextSignals, nextVocabulary]) => {
-        if (!active) return;
-        setAnalytics(nextAnalytics);
-        setSignalsPayload(nextSignals);
-        setVocabulary(nextVocabulary);
-      })
-      .catch((loadError) => {
-        if (active) setError(loadError.message || 'Non è stato possibile costruire il Learning Pulse.');
-      })
-      .finally(() => { if (active) setLoading(false); });
+    ]).then(([analyticsResult, signalsResult, vocabularyResult]) => {
+      if (!active) return;
+
+      const successCount = [analyticsResult, signalsResult, vocabularyResult]
+        .filter((result) => result.status === 'fulfilled').length;
+
+      setAnalytics(analyticsResult.status === 'fulfilled' ? analyticsResult.value : null);
+      setSignalsPayload(signalsResult.status === 'fulfilled' ? signalsResult.value : null);
+      setVocabulary(vocabularyResult.status === 'fulfilled' ? vocabularyResult.value : []);
+      setPartial(successCount > 0 && successCount < 3);
+      setError(successCount === 0 ? 'Non è stato possibile costruire il Learning Pulse.' : '');
+      setLoading(false);
+    });
     return () => { active = false; };
   }, [learnerId]);
 
@@ -58,6 +62,7 @@ export default function LearnerLearningPulse({ learnerId, learnerName }) {
 
         {loading ? <p className="text-sm font-bold text-ink/55 dark:text-white/55">Sto leggendo gli ultimi segnali…</p> : null}
         {error ? <p className="text-sm font-bold text-red-700 dark:text-red-300">{error}</p> : null}
+        {partial && !loading ? <p className="text-xs font-bold text-amber-800 dark:text-amber-200">Dati parziali: mostro i segnali disponibili senza bloccare il resto del profilo.</p> : null}
 
         {!loading && !error ? (
           <div className="grid gap-3 md:grid-cols-3">
