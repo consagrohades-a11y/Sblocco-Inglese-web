@@ -81,18 +81,28 @@ export default function LearnerNotificationsPanel({ limit = 6 }) {
     }
     if (!quiet) setLoading(true);
     try {
-      const [result, milestoneProgress] = await Promise.all([
+      const [notificationsResult, milestoneResult] = await Promise.allSettled([
         loadLearnerNotifications(limit, { archived: showArchive }),
         loadLearnerMilestoneProgress(),
       ]);
-      setNotifications(result.notifications);
-      setUnreadCount(result.unreadCount);
-      setProgress(milestoneProgress);
-      setError("");
-    } catch (loadError) {
-      setError(
-        loadError.message ||
-          "Non è stato possibile caricare gli aggiornamenti.",
+
+      if (notificationsResult.status === "fulfilled") {
+        setNotifications(notificationsResult.value.notifications);
+        setUnreadCount(notificationsResult.value.unreadCount);
+        setError("");
+      } else {
+        setNotifications([]);
+        setUnreadCount(0);
+        setError(
+          notificationsResult.reason?.message ||
+            "Non è stato possibile caricare gli aggiornamenti.",
+        );
+      }
+
+      setProgress(
+        milestoneResult.status === "fulfilled"
+          ? milestoneResult.value
+          : null,
       );
     } finally {
       if (!quiet) setLoading(false);
