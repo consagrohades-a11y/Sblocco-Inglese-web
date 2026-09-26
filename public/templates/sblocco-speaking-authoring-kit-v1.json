@@ -41,7 +41,10 @@
               "language_targets": [
                 "follow-up-questions"
               ],
-              "difficulty": 2
+              "difficulty": 2,
+              "format": "Optional structured format id. Omit for a standard prompt.",
+              "title": "Required learner-facing title for structured formats.",
+              "instructions": "Required learner instruction for structured formats."
             }
           ]
         }
@@ -51,14 +54,17 @@
       "Use the exact Sblocco activity title in activities[].activity.",
       "Do not invent activity IDs, learner IDs, database IDs or technical metadata.",
       "Each item must include text and at least one CEFR level.",
-      "Allowed CEFR levels are A1, A2, B1, B2, C1 and C2.",
+      "Allowed levels are A0, A1, A1+, A2, B1, B1+, B2, C1, C2 and Mixed.",
       "difficulty is an integer from 1 to 5.",
       "context_tags and language_targets should be concise reusable lowercase labels.",
       "student_support scaffolds without giving the answer.",
       "challenge adds a meaningful second-stage speaking condition.",
       "teacher_note may contain private answers, facilitation guidance or the hidden rule.",
       "Repeated vocabulary alone is allowed when context or communicative function changes.",
-      "Reject exact duplicates, near paraphrases, cosmetic noun swaps, and items with the same scenario plus same language target plus same response path."
+      "Reject exact duplicates, near paraphrases, cosmetic noun swaps, and items with the same scenario plus same language target plus same response path.",
+      "For the five structured formats, use format plus the structured fields shown in completed_examples. Do not encode the layout inside text.",
+      "AI must not invent IDs, signatures, sequence indexes, timestamps, storage paths or database metadata.",
+      "For structured items, text is a concise searchable summary. If omitted, Sblocco may safely derive it from title or instructions."
     ]
   },
   "activity_mechanics": {
@@ -122,5 +128,443 @@
     "Phrase Auction": "Provide five to seven phrases of different usefulness or register. Weak options do not all need to be ungrammatical.",
     "Conversation Detective": "Give a short dialogue fragment with clues; require inference about relationship, backstory and likely next step."
   },
-  "canonical_reference": "# Sblocco Inglese — Speaking Library Item Authoring Guide\n\nThis file is the canonical instruction set for generating, reviewing and importing new items into the admin Speaking Library.\n\nThe goal is not to create generic conversation questions. Every item must activate a specific speaking behaviour: explaining, reacting, negotiating, repairing, asking, persuading, narrating, clarifying, adapting register, or managing a conversation.\n\n## 1. Non-negotiable principles\n\n1. Speaking first. An item must create meaningful spoken output, not worksheet behaviour.\n2. One clear mechanism per game. New items must respect the game mechanic instead of turning every activity into a normal discussion question.\n3. Multiple CEFR levels are allowed and encouraged. levels is always an array. An item may be [\"A2\",\"B1\"], [\"B1\",\"B2\",\"C1\"], etc.\n4. Level means usable speaking demand, not vocabulary prestige. Do not label an item C1 simply because it contains an advanced word.\n5. Student-facing text must be immediately understandable on screen.\n6. Teacher notes may contain expected answers, hidden information, likely language, correction notes or facilitation advice.\n7. Support must help without answering.\n8. Challenges must change the speaking demand, not merely say “speak more”.\n9. Avoid textbook sameness. Prefer situations, trade-offs, interaction and follow-up over broad prompts.\n10. Do not manufacture novelty by swapping nouns. If the same response path works almost unchanged, it is probably the same item.\n\n## 2. Item JSON contract\n\nEvery generated item should use this shape:\n\n    {\n      \"text\": \"The complete prompt/scenario shown to the student.\",\n      \"levels\": [\"B1\", \"B2\"],\n      \"student_support\": \"Optional scaffold visible to the learner.\",\n      \"challenge\": \"Optional second-stage complication/reveal.\",\n      \"teacher_note\": \"Private note, solution, expected interpretation or facilitation cue.\",\n      \"context_tags\": [\"work\", \"meeting\"],\n      \"language_targets\": [\"disagreement\", \"hedging\"],\n      \"difficulty\": 3\n    }\n\nRequired:\n- text: non-empty and presentation-ready.\n- levels: one or more of A1, A2, B1, B2, C1, C2.\n- context_tags: 1–4 short lowercase tags.\n- language_targets: 1–4 short lowercase tags.\n- difficulty: integer 1–5.\n\nExpected when useful:\n- student_support: a route into the task without giving the answer.\n- challenge: a second reveal that materially deepens the speaking task.\n- teacher_note: solutions, hidden context, likely chunks, ambiguity notes, or facilitation advice.\n\n## 3. Context tags\n\nPrefer stable reusable tags before inventing synonyms:\n\nwork, career, meeting, client, management, team, supplier, business, interview, study, learning, travel, airport, hotel, transport, restaurant, service, shopping, housing, money, technology, communication, small-talk, social, relationships, conflict, daily-life, habits, food, hobbies, places, personal, story, values, decision, planning, leadership, feedback, negotiation, formal, pragmatics.\n\nAdd a new context tag only if none of these reasonably describes the scenario.\n\n## 4. Language targets\n\nExamples:\n\nquestions, follow-up, reactions, extended-answer, storytelling, past-simple, past-tenses, present-perfect, conditionals, comparatives, requests, complaints, refusals, disagreement, agreement, hedging, softening, assertiveness, clarification, repair, negotiation, persuasion, rebuttal, concession, register, pragmatics, indirectness, chunks, phrasal-verbs, collocations, lexical-range, precision, plain-English, topic-development, topic-shift, sequencing, problem-solving, prioritisation, trade-offs, inference, speculation, critical-thinking.\n\nThese are pedagogical functions, not random vocabulary topics.\n\n## 5. Difficulty scale\n\n- 1 — immediate: concrete, familiar, little ambiguity, minimal planning.\n- 2 — supported: familiar situation but requires reason/example/follow-up.\n- 3 — flexible: requires adaptation, comparison, complication or sustained interaction.\n- 4 — demanding: requires nuance, register control, multiple constraints or perspective shift.\n- 5 — high cognitive/pragmatic load: abstract reasoning, stakeholder adaptation, implied meaning, complex negotiation or advanced discourse control.\n\nDifficulty is separate from CEFR. An A2 item can be difficulty 3. A C1 item does not need to be difficulty 5.\n\n## 6. Context-aware novelty / duplicate policy\n\nThe application performs an internal novelty check.\n\n### What IS a duplicate\n\nBlock or rewrite when:\n- normalized text is identical;\n- the prompt is a near-paraphrase with the same communicative task;\n- context + language target + prompt structure are substantially the same;\n- the scenario has only cosmetic substitutions;\n- the same answer path would work with almost no adaptation.\n\nExample to reject inside one problem-solving game:\n- “Your flight is cancelled. Ask what your options are.”\n- “Your train is cancelled. Ask what alternatives you have.”\n\nIf the mechanic and response path are identical, replacing flight with train is not enough novelty.\n\n### What is NOT a duplicate\n\nRepeated words are not duplicates by themselves.\n\nThe word deadline may legitimately appear in:\n- negotiation about changing a deadline;\n- storytelling about missing a deadline;\n- clarification about what a deadline means;\n- a complaint about repeated deadline failures;\n- chunk activation containing meet a deadline.\n\nLikewise work, travel, client, manager, good, or a phrasal verb may recur when context or communicative function changes.\n\n### Generator novelty test\n\nBefore returning a new item, ask:\n1. Is the situation meaningfully different?\n2. Is the learner doing a different communicative action?\n3. Does it practise a different language target, or the same target in a meaningfully different context?\n4. Would the learner need to adapt their answer rather than reuse the same response?\n5. Does the new item add coverage to level, context, difficulty or interaction pattern?\n\nIf fewer than 2 answers are yes, rewrite the item.\n\n## 7. Batch-generation rules\n\nWhen generating a batch for one game:\n- default batch size: 8–15;\n- do not put more than 30% of the batch in the same context;\n- include at least 3 distinct context clusters when the game permits it;\n- vary difficulty;\n- vary item levels;\n- avoid putting the hardest item always last;\n- avoid repeating the same grammatical frame across the full batch;\n- for B1+, include chunks/phrasal verbs where natural, not decoratively;\n- do not make all work items corporate-office items;\n- do not make all travel items airport/hotel items;\n- do not assume every learner is young, single, extroverted, university educated or office-based;\n- keep sensitive personal disclosure optional;\n- if an item works only because the teacher already knows the answer, place that information in teacher_note.\n\nFor 10 items, aim roughly for:\n- 2 easier-entry items;\n- 5 core items;\n- 2 stretch items;\n- 1 unusual/high-value item.\n\n## 8. Student support\n\nGood support narrows the route into speaking:\n- “Think about timing, cost and convenience.”\n- “React first, then ask a connected question.”\n- “Choose where you stand on the line, not only one extreme.”\n- “Separate facts from assumptions.”\n\nBad support answers the task:\n- giving the exact response;\n- exposing the hidden solution;\n- listing all arguments the learner should use.\n\n## 9. Challenge rules\n\nA good challenge adds a second conversational condition:\n- new information;\n- audience change;\n- register change;\n- objection;\n- time pressure;\n- forced compromise;\n- banned easy word;\n- perspective shift;\n- extra constraint;\n- unexpected follow-up.\n\nAvoid empty challenges such as “Explain more” unless timing itself is the mechanic.\n\n## 10. Activity-specific generation rules\n\n| Activity | New items must preserve this mechanic |\n| --- | --- |\n| Odd One Out — Conversation Edition | Four items with a defensible relationship and at least one plausible alternative interpretation; avoid trivia-only categories. |\n| Would You Rather — No Easy Answers | Genuine trade-off where both choices have costs; avoid obviously good vs obviously bad. |\n| One Minute, No Escape | Topic deep enough for sustained speech plus a useful constraint. |\n| Explain It Without Saying It | Target plus 2–4 forbidden words that force circumlocution without making it impossible. |\n| Bad Advice Only | Relatable problem where intentionally bad advice can lead to useful repair/discussion. |\n| Story Chain — But Something Changes | Strong story seed or twist that can be integrated into an existing narrative. |\n| Convince Me | Clear persuasion objective with space for objection handling. |\n| The Missing Detail | One important missing detail the learner must identify or ask about. |\n| Upgrade That Answer | Short/basic answer that can be improved through specificity, reasons, examples or chunks. |\n| Three Questions Deeper | Normal opening question that supports increasingly connected deeper follow-ups. |\n| Conversation Roulette | Specific but broad prompts that invite personal answers without requiring sensitive disclosure. |\n| Defend the Opposite | Position with two defendable sides; not a factual question with one correct answer. |\n| Repair the Conversation | Line that is pragmatically awkward, too direct, unclear or unnatural and can be repaired in context. |\n| Agree, Disagree, It Depends | Statement with room for qualification; “it depends” must name the condition. |\n| What Happened Just Before? | Intriguing final moment with multiple plausible backstories. |\n| Make It Sound Like a Person | Understandable but unnatural English with a clearly more idiomatic alternative. |\n| Sell Me Something Useless | Difficult product/service paired with an audience whose needs make persuasion non-obvious. |\n| The Missing Question | Answer that allows one or more natural questions; avoid answers so broad that anything fits. |\n| Take a Side | Two meaningful poles on one continuum; midpoint must also be defendable. |\n| Change My Mind | Position that can be challenged with reasons, evidence, examples and concessions. |\n| The Better Question | Questions where appropriacy/naturalness differs; not only obvious grammar mistakes. |\n| What Would You Say? | Real situation with a concrete interpersonal objective and no single script. |\n| Say It Three Ways | One communicative intention that genuinely changes across casual, neutral and professional register. |\n| Keep It Going | Conversational line with several connected follow-ups; train reaction + development. |\n| The Awkward Silence | Shared context clear enough to restart naturally without random-topic questions. |\n| What's the Problem? | Student sees symptoms only; teacher_note contains hidden root cause; questions are needed to uncover it. |\n| You Have 30 Seconds | Concrete task small enough for timed retrieval but rich enough to sustain 30–60 seconds. |\n| One Detail Is False | Storytelling category that supports believable connected details and follow-up. |\n| Build the Perfect... | Construct an ideal version from explicit dimensions, then add constraint/trade-off. |\n| Trade-Off | Four to six desirable options but learner may keep only a subset; no universally irrelevant option. |\n| Emergency English | Practical high-pressure situation with a specific outcome and escalating complication. |\n| The Complaint Ladder | Same problem must work at polite → firm → final-escalation levels. |\n| Don’t Say Yes | Question that tempts a binary answer but supports a natural fuller response. |\n| Five Whys | Preference/decision/opinion that can deepen into more precise reasons without becoming intrusive. |\n| Make It More Specific | Start vague; upgrade requires evidence, examples, behaviour, numbers or precise language. |\n| Finish My Thought | Stem that naturally produces a complete personal or hypothetical thought. |\n| What Are You Assuming? | Claim with identifiable hidden assumptions; not merely an opinion. |\n| Unpopular Opinion | Low-stakes, non-inflammatory topic; challenge is argument quality, not provocation. |\n| Explain the Difference | Close lexical/conceptual pair; require contexts/examples, not dictionary definitions only. |\n| Which One Sounds More Natural? | Understandable alternatives where idiomaticity, collocation or register differs. |\n| The Forbidden Easy Word | Bans that force precision while leaving enough language to complete the task. |\n| Use These 3 Chunks | Three chunks that can naturally coexist in one coherent response. |\n| Personalise It | Generic statement that must become a concrete personal or invented example. |\n| Guess My Rule | teacher_note defines a precise hidden rule plus enough consistent examples for inference. |\n| Who Said It? | One line with clues about relationship, context, intention or register. |\n| Before / During / After | Event with meaningful preparation, live action and follow-up phases. |\n| Problem → Options → Decision | Require problem definition, at least three options, comparison and justified decision. |\n| Interrupt Me Politely | Exact reason to interrupt: clarification, correction, redirect, timing, decision, etc. |\n| Tell Me What I Mean | Indirect language whose intended meaning depends on context, tone or relationship. |\n| Bad Small Talk / Good Small Talk | Contrast conversation mechanics, not “wrong grammar vs correct grammar”. |\n| Describe Without Adjectives | Target describable through behaviour, actions, events or sensory detail. |\n| Make It Less Direct | Start needlessly forceful; preserve clarity when softening. |\n| Make It More Direct | Start too vague/hedged; improve clarity without making it rude. |\n| Conversation Fork | One conversational moment plus 2–3 genuinely different strategic directions. |\n| The Unexpected Follow-Up | Familiar first question + second question that forces a new angle, not simply “why?”. |\n| Explain Your Choice to Someone Who Disagrees | Define listener’s competing value so learner must reframe rather than repeat. |\n| Micro Roleplay | One scenario, one objective, 60–90 seconds; challenge complicates without replacing the task. |\n| Phrase Auction | Five to seven phrases of different usefulness/register; weak options need not all be ungrammatical. |\n| Conversation Detective | Short dialogue fragment with clues; infer relationship, backstory and likely next step. |\n\n## 11. Delivery rule\n\nGenerate according to this guide and deliver the final batch as a downloadable JSON file matching the import contract. Do not output a copyable prompt.\n\n## 12. Review checklist\n\nReject an item if any answer is no:\n- Does it preserve the game mechanic?\n- Would it create actual speaking?\n- Is it meaningfully different from existing items?\n- Are its levels plausible?\n- Are context tags accurate?\n- Are language targets pedagogically meaningful?\n- Does the challenge deepen interaction?\n- Is student support non-spoilery?\n- Is teacher-only information private?\n- Would the prompt look clean on the presentation screen?\n\nThe library should become broader and more reusable as it grows, not simply longer.\n"
+  "canonical_reference": "## Structured round update\n\nThe library now supports five registry-backed structured speaking formats: Number Mission, Picture Detective, Explain Without Saying, Conversation Detective and Make the Choice.\n\nFor these formats, follow completed_examples exactly for field structure. Keep a short text summary for search/history, but never encode the visual layout or teacher-only solution inside text.\n\nAllowed levels are A0, A1, A1+, A2, B1, B1+, B2, C1, C2 and Mixed.\n\nSystem-owned IDs, signatures, indexes, timestamps and storage metadata must not be invented by AI.\n\n\n\n# Sblocco Inglese — Speaking Library Item Authoring Guide\n\nThis file is the canonical instruction set for generating, reviewing and importing new items into the admin Speaking Library.\n\nThe goal is not to create generic conversation questions. Every item must activate a specific speaking behaviour: explaining, reacting, negotiating, repairing, asking, persuading, narrating, clarifying, adapting register, or managing a conversation.\n\n## 1. Non-negotiable principles\n\n1. Speaking first. An item must create meaningful spoken output, not worksheet behaviour.\n2. One clear mechanism per game. New items must respect the game mechanic instead of turning every activity into a normal discussion question.\n3. Multiple CEFR levels are allowed and encouraged. levels is always an array. An item may be [\"A2\",\"B1\"], [\"B1\",\"B2\",\"C1\"], etc.\n4. Level means usable speaking demand, not vocabulary prestige. Do not label an item C1 simply because it contains an advanced word.\n5. Student-facing text must be immediately understandable on screen.\n6. Teacher notes may contain expected answers, hidden information, likely language, correction notes or facilitation advice.\n7. Support must help without answering.\n8. Challenges must change the speaking demand, not merely say “speak more”.\n9. Avoid textbook sameness. Prefer situations, trade-offs, interaction and follow-up over broad prompts.\n10. Do not manufacture novelty by swapping nouns. If the same response path works almost unchanged, it is probably the same item.\n\n## 2. Item JSON contract\n\nEvery generated item should use this shape:\n\n    {\n      \"text\": \"The complete prompt/scenario shown to the student.\",\n      \"levels\": [\"B1\", \"B2\"],\n      \"student_support\": \"Optional scaffold visible to the learner.\",\n      \"challenge\": \"Optional second-stage complication/reveal.\",\n      \"teacher_note\": \"Private note, solution, expected interpretation or facilitation cue.\",\n      \"context_tags\": [\"work\", \"meeting\"],\n      \"language_targets\": [\"disagreement\", \"hedging\"],\n      \"difficulty\": 3\n    }\n\nRequired:\n- text: non-empty and presentation-ready.\n- levels: one or more of A1, A2, B1, B2, C1, C2.\n- context_tags: 1–4 short lowercase tags.\n- language_targets: 1–4 short lowercase tags.\n- difficulty: integer 1–5.\n\nExpected when useful:\n- student_support: a route into the task without giving the answer.\n- challenge: a second reveal that materially deepens the speaking task.\n- teacher_note: solutions, hidden context, likely chunks, ambiguity notes, or facilitation advice.\n\n## 3. Context tags\n\nPrefer stable reusable tags before inventing synonyms:\n\nwork, career, meeting, client, management, team, supplier, business, interview, study, learning, travel, airport, hotel, transport, restaurant, service, shopping, housing, money, technology, communication, small-talk, social, relationships, conflict, daily-life, habits, food, hobbies, places, personal, story, values, decision, planning, leadership, feedback, negotiation, formal, pragmatics.\n\nAdd a new context tag only if none of these reasonably describes the scenario.\n\n## 4. Language targets\n\nExamples:\n\nquestions, follow-up, reactions, extended-answer, storytelling, past-simple, past-tenses, present-perfect, conditionals, comparatives, requests, complaints, refusals, disagreement, agreement, hedging, softening, assertiveness, clarification, repair, negotiation, persuasion, rebuttal, concession, register, pragmatics, indirectness, chunks, phrasal-verbs, collocations, lexical-range, precision, plain-English, topic-development, topic-shift, sequencing, problem-solving, prioritisation, trade-offs, inference, speculation, critical-thinking.\n\nThese are pedagogical functions, not random vocabulary topics.\n\n## 5. Difficulty scale\n\n- 1 — immediate: concrete, familiar, little ambiguity, minimal planning.\n- 2 — supported: familiar situation but requires reason/example/follow-up.\n- 3 — flexible: requires adaptation, comparison, complication or sustained interaction.\n- 4 — demanding: requires nuance, register control, multiple constraints or perspective shift.\n- 5 — high cognitive/pragmatic load: abstract reasoning, stakeholder adaptation, implied meaning, complex negotiation or advanced discourse control.\n\nDifficulty is separate from CEFR. An A2 item can be difficulty 3. A C1 item does not need to be difficulty 5.\n\n## 6. Context-aware novelty / duplicate policy\n\nThe application performs an internal novelty check.\n\n### What IS a duplicate\n\nBlock or rewrite when:\n- normalized text is identical;\n- the prompt is a near-paraphrase with the same communicative task;\n- context + language target + prompt structure are substantially the same;\n- the scenario has only cosmetic substitutions;\n- the same answer path would work with almost no adaptation.\n\nExample to reject inside one problem-solving game:\n- “Your flight is cancelled. Ask what your options are.”\n- “Your train is cancelled. Ask what alternatives you have.”\n\nIf the mechanic and response path are identical, replacing flight with train is not enough novelty.\n\n### What is NOT a duplicate\n\nRepeated words are not duplicates by themselves.\n\nThe word deadline may legitimately appear in:\n- negotiation about changing a deadline;\n- storytelling about missing a deadline;\n- clarification about what a deadline means;\n- a complaint about repeated deadline failures;\n- chunk activation containing meet a deadline.\n\nLikewise work, travel, client, manager, good, or a phrasal verb may recur when context or communicative function changes.\n\n### Generator novelty test\n\nBefore returning a new item, ask:\n1. Is the situation meaningfully different?\n2. Is the learner doing a different communicative action?\n3. Does it practise a different language target, or the same target in a meaningfully different context?\n4. Would the learner need to adapt their answer rather than reuse the same response?\n5. Does the new item add coverage to level, context, difficulty or interaction pattern?\n\nIf fewer than 2 answers are yes, rewrite the item.\n\n## 7. Batch-generation rules\n\nWhen generating a batch for one game:\n- default batch size: 8–15;\n- do not put more than 30% of the batch in the same context;\n- include at least 3 distinct context clusters when the game permits it;\n- vary difficulty;\n- vary item levels;\n- avoid putting the hardest item always last;\n- avoid repeating the same grammatical frame across the full batch;\n- for B1+, include chunks/phrasal verbs where natural, not decoratively;\n- do not make all work items corporate-office items;\n- do not make all travel items airport/hotel items;\n- do not assume every learner is young, single, extroverted, university educated or office-based;\n- keep sensitive personal disclosure optional;\n- if an item works only because the teacher already knows the answer, place that information in teacher_note.\n\nFor 10 items, aim roughly for:\n- 2 easier-entry items;\n- 5 core items;\n- 2 stretch items;\n- 1 unusual/high-value item.\n\n## 8. Student support\n\nGood support narrows the route into speaking:\n- “Think about timing, cost and convenience.”\n- “React first, then ask a connected question.”\n- “Choose where you stand on the line, not only one extreme.”\n- “Separate facts from assumptions.”\n\nBad support answers the task:\n- giving the exact response;\n- exposing the hidden solution;\n- listing all arguments the learner should use.\n\n## 9. Challenge rules\n\nA good challenge adds a second conversational condition:\n- new information;\n- audience change;\n- register change;\n- objection;\n- time pressure;\n- forced compromise;\n- banned easy word;\n- perspective shift;\n- extra constraint;\n- unexpected follow-up.\n\nAvoid empty challenges such as “Explain more” unless timing itself is the mechanic.\n\n## 10. Activity-specific generation rules\n\n| Activity | New items must preserve this mechanic |\n| --- | --- |\n| Odd One Out — Conversation Edition | Four items with a defensible relationship and at least one plausible alternative interpretation; avoid trivia-only categories. |\n| Would You Rather — No Easy Answers | Genuine trade-off where both choices have costs; avoid obviously good vs obviously bad. |\n| One Minute, No Escape | Topic deep enough for sustained speech plus a useful constraint. |\n| Explain It Without Saying It | Target plus 2–4 forbidden words that force circumlocution without making it impossible. |\n| Bad Advice Only | Relatable problem where intentionally bad advice can lead to useful repair/discussion. |\n| Story Chain — But Something Changes | Strong story seed or twist that can be integrated into an existing narrative. |\n| Convince Me | Clear persuasion objective with space for objection handling. |\n| The Missing Detail | One important missing detail the learner must identify or ask about. |\n| Upgrade That Answer | Short/basic answer that can be improved through specificity, reasons, examples or chunks. |\n| Three Questions Deeper | Normal opening question that supports increasingly connected deeper follow-ups. |\n| Conversation Roulette | Specific but broad prompts that invite personal answers without requiring sensitive disclosure. |\n| Defend the Opposite | Position with two defendable sides; not a factual question with one correct answer. |\n| Repair the Conversation | Line that is pragmatically awkward, too direct, unclear or unnatural and can be repaired in context. |\n| Agree, Disagree, It Depends | Statement with room for qualification; “it depends” must name the condition. |\n| What Happened Just Before? | Intriguing final moment with multiple plausible backstories. |\n| Make It Sound Like a Person | Understandable but unnatural English with a clearly more idiomatic alternative. |\n| Sell Me Something Useless | Difficult product/service paired with an audience whose needs make persuasion non-obvious. |\n| The Missing Question | Answer that allows one or more natural questions; avoid answers so broad that anything fits. |\n| Take a Side | Two meaningful poles on one continuum; midpoint must also be defendable. |\n| Change My Mind | Position that can be challenged with reasons, evidence, examples and concessions. |\n| The Better Question | Questions where appropriacy/naturalness differs; not only obvious grammar mistakes. |\n| What Would You Say? | Real situation with a concrete interpersonal objective and no single script. |\n| Say It Three Ways | One communicative intention that genuinely changes across casual, neutral and professional register. |\n| Keep It Going | Conversational line with several connected follow-ups; train reaction + development. |\n| The Awkward Silence | Shared context clear enough to restart naturally without random-topic questions. |\n| What's the Problem? | Student sees symptoms only; teacher_note contains hidden root cause; questions are needed to uncover it. |\n| You Have 30 Seconds | Concrete task small enough for timed retrieval but rich enough to sustain 30–60 seconds. |\n| One Detail Is False | Storytelling category that supports believable connected details and follow-up. |\n| Build the Perfect... | Construct an ideal version from explicit dimensions, then add constraint/trade-off. |\n| Trade-Off | Four to six desirable options but learner may keep only a subset; no universally irrelevant option. |\n| Emergency English | Practical high-pressure situation with a specific outcome and escalating complication. |\n| The Complaint Ladder | Same problem must work at polite → firm → final-escalation levels. |\n| Don’t Say Yes | Question that tempts a binary answer but supports a natural fuller response. |\n| Five Whys | Preference/decision/opinion that can deepen into more precise reasons without becoming intrusive. |\n| Make It More Specific | Start vague; upgrade requires evidence, examples, behaviour, numbers or precise language. |\n| Finish My Thought | Stem that naturally produces a complete personal or hypothetical thought. |\n| What Are You Assuming? | Claim with identifiable hidden assumptions; not merely an opinion. |\n| Unpopular Opinion | Low-stakes, non-inflammatory topic; challenge is argument quality, not provocation. |\n| Explain the Difference | Close lexical/conceptual pair; require contexts/examples, not dictionary definitions only. |\n| Which One Sounds More Natural? | Understandable alternatives where idiomaticity, collocation or register differs. |\n| The Forbidden Easy Word | Bans that force precision while leaving enough language to complete the task. |\n| Use These 3 Chunks | Three chunks that can naturally coexist in one coherent response. |\n| Personalise It | Generic statement that must become a concrete personal or invented example. |\n| Guess My Rule | teacher_note defines a precise hidden rule plus enough consistent examples for inference. |\n| Who Said It? | One line with clues about relationship, context, intention or register. |\n| Before / During / After | Event with meaningful preparation, live action and follow-up phases. |\n| Problem → Options → Decision | Require problem definition, at least three options, comparison and justified decision. |\n| Interrupt Me Politely | Exact reason to interrupt: clarification, correction, redirect, timing, decision, etc. |\n| Tell Me What I Mean | Indirect language whose intended meaning depends on context, tone or relationship. |\n| Bad Small Talk / Good Small Talk | Contrast conversation mechanics, not “wrong grammar vs correct grammar”. |\n| Describe Without Adjectives | Target describable through behaviour, actions, events or sensory detail. |\n| Make It Less Direct | Start needlessly forceful; preserve clarity when softening. |\n| Make It More Direct | Start too vague/hedged; improve clarity without making it rude. |\n| Conversation Fork | One conversational moment plus 2–3 genuinely different strategic directions. |\n| The Unexpected Follow-Up | Familiar first question + second question that forces a new angle, not simply “why?”. |\n| Explain Your Choice to Someone Who Disagrees | Define listener’s competing value so learner must reframe rather than repeat. |\n| Micro Roleplay | One scenario, one objective, 60–90 seconds; challenge complicates without replacing the task. |\n| Phrase Auction | Five to seven phrases of different usefulness/register; weak options need not all be ungrammatical. |\n| Conversation Detective | Short dialogue fragment with clues; infer relationship, backstory and likely next step. |\n\n## 11. Delivery rule\n\nGenerate according to this guide and deliver the final batch as a downloadable JSON file matching the import contract. Do not output a copyable prompt.\n\n## 12. Review checklist\n\nReject an item if any answer is no:\n- Does it preserve the game mechanic?\n- Would it create actual speaking?\n- Is it meaningfully different from existing items?\n- Are its levels plausible?\n- Are context tags accurate?\n- Are language targets pedagogically meaningful?\n- Does the challenge deepen interaction?\n- Is student support non-spoilery?\n- Is teacher-only information private?\n- Would the prompt look clean on the presentation screen?\n\nThe library should become broader and more reusable as it grows, not simply longer.\n",
+  "block_registry_version": 2,
+  "speaking_round_contract_version": 1,
+  "supported_levels": [
+    "A0",
+    "A1",
+    "A1+",
+    "A2",
+    "B1",
+    "B1+",
+    "B2",
+    "C1",
+    "C2",
+    "Mixed"
+  ],
+  "system_owned_fields": [
+    "activity IDs",
+    "learner IDs",
+    "database IDs",
+    "session IDs",
+    "item signatures",
+    "sequence indexes",
+    "timestamps",
+    "storage paths",
+    "schema metadata"
+  ],
+  "structured_formats": [
+    {
+      "id": "number_mission",
+      "purpose": "Use numbers as information that must be exchanged, checked and repaired in conversation."
+    },
+    {
+      "id": "picture_detective",
+      "purpose": "Use meaningful visual options to drive questions, description and identification."
+    },
+    {
+      "id": "explain_without_saying",
+      "purpose": "Force circumlocution by explaining a target without obvious words."
+    },
+    {
+      "id": "conversation_detective",
+      "purpose": "Infer relationship, context or intention from a compact dialogue."
+    },
+    {
+      "id": "make_the_choice",
+      "purpose": "Compare real trade-offs and negotiate a justified choice."
+    }
+  ],
+  "completed_examples": {
+    "number_mission": {
+      "activity": "You Have 30 Seconds",
+      "items": [
+        {
+          "text": "Confirm the booking details using the numbers.",
+          "format": "number_mission",
+          "title": "Booking check",
+          "instructions": "Ask and answer until both people have exactly the same booking details.",
+          "situation": "A booking was written down quickly and may contain mistakes.",
+          "outcome": "Confirm every number and repair any mismatch.",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "context_tags": [
+            "travel",
+            "service"
+          ],
+          "language_targets": [
+            "numbers",
+            "clarification",
+            "repair"
+          ],
+          "difficulty": 2,
+          "support": [
+            "Could you repeat that?",
+            "Did you say ...?"
+          ],
+          "challenge": {
+            "text": "One detail you hear is wrong. Correct it politely.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Swap roles and use a new set of details."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Customer",
+              "goal": "Check the booking details.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Agent",
+              "goal": "Answer and confirm the details.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "facts": [
+              {
+                "label": "People",
+                "value": "3",
+                "display": "3 people",
+                "kind": "quantity"
+              },
+              {
+                "label": "Time",
+                "value": "19:30",
+                "display": "7:30 p.m.",
+                "kind": "time"
+              },
+              {
+                "label": "Day",
+                "value": "Friday",
+                "display": "Friday",
+                "kind": "weekday"
+              }
+            ]
+          },
+          "teacher": {
+            "private_cue": "Read back one detail incorrectly after the learner checks it.",
+            "final_confirmation": "All details now match."
+          },
+          "teacher_note": "Keep the interaction conversational; do not turn it into number dictation."
+        }
+      ]
+    },
+    "picture_detective": {
+      "activity": "Conversation Detective",
+      "items": [
+        {
+          "text": "Find the object by asking questions about the pictures.",
+          "format": "picture_detective",
+          "title": "Which one am I thinking of?",
+          "instructions": "Ask useful questions until you can identify the secret picture.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "context_tags": [
+            "daily-life",
+            "objects"
+          ],
+          "language_targets": [
+            "questions",
+            "description"
+          ],
+          "difficulty": 1,
+          "support": [
+            "Is it big or small?",
+            "What colour is it?",
+            "Do you use it every day?"
+          ],
+          "challenge": {
+            "text": "Now describe your own choice and let the teacher guess.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Choose a new secret picture and swap roles."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Detective",
+              "goal": "Identify the secret picture.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Keeper",
+              "goal": "Answer without naming the object.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "show_labels": true,
+            "options": [
+              {
+                "key": "A",
+                "label": "camera",
+                "image_url": "/assets/speaking/picture-detective-camera.png",
+                "image_alt": "A compact black camera"
+              },
+              {
+                "key": "B",
+                "label": "umbrella",
+                "image_url": "/assets/speaking/picture-detective-umbrella.png",
+                "image_alt": "A folded orange umbrella"
+              },
+              {
+                "key": "C",
+                "label": "backpack",
+                "image_url": "/assets/speaking/picture-detective-backpack.png",
+                "image_alt": "A navy backpack"
+              }
+            ]
+          },
+          "teacher": {
+            "secret_option_key": "C"
+          },
+          "teacher_note": "Do not reveal the secret key on the student screen."
+        }
+      ]
+    },
+    "explain_without_saying": {
+      "activity": "Explain It Without Saying It",
+      "items": [
+        {
+          "text": "Explain 'deadline' without using the obvious words.",
+          "format": "explain_without_saying",
+          "title": "Explain: deadline",
+          "instructions": "Make the teacher understand the target without saying any forbidden word.",
+          "levels": [
+            "B1",
+            "B1+"
+          ],
+          "context_tags": [
+            "work",
+            "communication"
+          ],
+          "language_targets": [
+            "circumlocution",
+            "precision"
+          ],
+          "difficulty": 3,
+          "support": [
+            "Think about time, work and what happens if you are late."
+          ],
+          "challenge": {
+            "text": "Give a real example after the teacher guesses.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Let the teacher explain the next target and you guess."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Explainer",
+              "goal": "Make the target understandable.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Guesser",
+              "goal": "Guess from the explanation.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "target": "deadline",
+            "forbidden_words": [
+              "finish",
+              "date",
+              "due"
+            ]
+          },
+          "teacher": {
+            "model_response": "It is the last moment when a piece of work must be ready."
+          },
+          "teacher_note": "Accept natural paraphrases; the model response is not an exact-answer key."
+        }
+      ]
+    },
+    "conversation_detective": {
+      "activity": "Conversation Detective",
+      "items": [
+        {
+          "text": "Infer what is happening from a short conversation.",
+          "format": "conversation_detective",
+          "title": "Why is Sam hesitating?",
+          "instructions": "Read the exchange, infer the situation and justify your interpretation.",
+          "levels": [
+            "B1",
+            "B2"
+          ],
+          "context_tags": [
+            "work",
+            "pragmatics"
+          ],
+          "language_targets": [
+            "inference",
+            "implied-meaning"
+          ],
+          "difficulty": 3,
+          "support": [
+            "What do they both already know?",
+            "Which line changes the tone?"
+          ],
+          "challenge": {
+            "text": "Predict the most natural next line.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Read the dialogue aloud with swapped roles."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Detective",
+              "goal": "Explain the hidden situation.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Partner",
+              "goal": "Challenge the learner's interpretation with one question.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "turns": [
+              {
+                "speaker": "Alex",
+                "text": "So, are you still coming tomorrow?"
+              },
+              {
+                "speaker": "Sam",
+                "text": "I thought we said we'd decide after the call."
+              },
+              {
+                "speaker": "Alex",
+                "text": "Right. I just need to know before six."
+              }
+            ],
+            "question": "What decision are they probably talking about, and why is Sam hesitant?",
+            "follow_up": "Which phrase sounds slightly pressured?"
+          },
+          "teacher": {
+            "hidden_clue": "Alex needs a commitment before a deadline.",
+            "interpretation": "Sam believes the decision was meant to wait until after another call; Alex is pushing for an earlier commitment."
+          },
+          "teacher_note": "Alternative interpretations are fine when supported by the dialogue."
+        }
+      ]
+    },
+    "make_the_choice": {
+      "activity": "Trade-Off",
+      "items": [
+        {
+          "text": "Choose between two realistic travel options and justify the trade-off.",
+          "format": "make_the_choice",
+          "title": "Which train would you book?",
+          "instructions": "Compare the options, choose one and convince the teacher.",
+          "levels": [
+            "A2",
+            "B1"
+          ],
+          "context_tags": [
+            "travel",
+            "decision"
+          ],
+          "language_targets": [
+            "comparatives",
+            "trade-offs",
+            "persuasion"
+          ],
+          "difficulty": 2,
+          "support": [
+            "Compare price, time and convenience."
+          ],
+          "challenge": {
+            "text": "The cheaper option is suddenly 20 minutes later. Does your decision change?",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Swap priorities: the teacher chooses, you challenge the choice."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Traveller",
+              "goal": "Choose and justify the best option.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Travel partner",
+              "goal": "Ask about one trade-off.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "situation": "You need to arrive before an evening event.",
+            "task": "Choose the train that gives the best balance for you.",
+            "options": [
+              {
+                "key": "fast",
+                "title": "Fast train",
+                "details": [
+                  {
+                    "label": "Price",
+                    "value": "€48"
+                  },
+                  {
+                    "label": "Journey",
+                    "value": "1h 20m"
+                  },
+                  {
+                    "label": "Change",
+                    "value": "none"
+                  }
+                ]
+              },
+              {
+                "key": "cheap",
+                "title": "Budget train",
+                "details": [
+                  {
+                    "label": "Price",
+                    "value": "€24"
+                  },
+                  {
+                    "label": "Journey",
+                    "value": "2h 10m"
+                  },
+                  {
+                    "label": "Change",
+                    "value": "one"
+                  }
+                ]
+              }
+            ]
+          },
+          "teacher": {
+            "complication": "The budget train is delayed by 20 minutes.",
+            "role_note": "Ask the learner which priority matters most and why."
+          },
+          "teacher_note": "Both choices must remain defensible."
+        }
+      ]
+    }
+  }
 }
