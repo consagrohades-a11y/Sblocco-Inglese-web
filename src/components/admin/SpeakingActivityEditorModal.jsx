@@ -27,6 +27,8 @@ function cleanCsv(value) {
 function normaliseItem(item) {
   if (typeof item === 'string') return { ...emptyItem(), text: item };
   return {
+    // Preserve authored fields that this legacy editor cannot edit yet.
+    ...item,
     text: item?.text || '',
     levels: asArray(item?.levels),
     student_support: item?.student_support || item?.support || '',
@@ -155,6 +157,7 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
 
     const cleanedItems = draft.prompts
       .map((item) => ({
+        ...item,
         text: item.text.trim(),
         levels: LEVELS.filter((level) => asArray(item.levels).includes(level)),
         student_support: item.student_support.trim(),
