@@ -9,6 +9,7 @@ const migration = read('supabase/migrations/20260922153000_speaking_session_hist
 const presenter = read('src/pages/SpeakingActivityPresenter.jsx');
 const library = read('src/pages/AdminSpeakingActivities.jsx');
 const api = read('src/lib/adminSpeakingActivitiesApi.js');
+const controller = read('src/components/admin/SpeakingLiveController.jsx');
 
 for (const token of [
   'create table if not exists public.admin_speaking_sessions',
@@ -38,7 +39,7 @@ assert.ok(presenter.includes('recent_practice_count'), 'Presenter must prioritiz
 assert.ok(presenter.includes('recent_shown_count'), 'Presenter must keep shown history distinct from confirmed practice.');
 assert.ok(presenter.includes('recordSpeakingItem'), 'Presenter must persist each shown item.');
 assert.ok(presenter.includes('startSpeakingSession'), 'Presenter must create a session when a learner is selected.');
-assert.ok(presenter.includes('finishSpeakingSession'), 'Presenter must finish tracked sessions on cleanup.');
+assert.ok(controller.includes('finishSpeakingControl'), 'Teacher control must close the resumable speaking control when the live session ends.');
 
 assert.ok(library.includes('loadSpeakingActivityHistory'), 'Launcher must load learner activity history.');
 assert.ok(library.includes('Smart no-repeat'), 'Launcher must explain smart no-repeat before opening the presenter.');
