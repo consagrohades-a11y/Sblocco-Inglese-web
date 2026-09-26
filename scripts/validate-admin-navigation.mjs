@@ -15,6 +15,7 @@ function assertNotContains(source, fragment, message) {
 const shell = read('src/components/AdminShell.jsx');
 const dashboard = read('src/pages/AdminDashboard.jsx');
 const teacherRadar = read('src/components/admin/TeacherRadar.jsx');
+const exerciseResults = read('src/pages/AdminExerciseResults.jsx');
 const studioLibrary = read('src/pages/AdminExerciseBuilderLibrary.jsx');
 const app = read('src/App.jsx');
 const navbar = read('src/components/Navbar.jsx');
@@ -71,7 +72,9 @@ assertContains(shell, "label: 'Command Center'", 'Admin navigation must visibly 
 assertContains(app, '<Route path="command-center" element={<AdminDashboard />} />', 'Command Center route must remain stable.');
 assertContains(dashboard, 'eyebrow="Command Center"', 'Admin home must visibly identify itself as the Command Center.');
 assertContains(dashboard, '<TeacherRadar />', 'Admin Command Center must surface the Teacher Radar.');
-assertContains(teacherRadar, "review_status === 'unreviewed'", 'Teacher Radar must prioritize unresolved reviews.');
+assertContains(teacherRadar, "attempt.status === 'submitted' && attempt.review_status === 'unreviewed'", 'Teacher Radar must only surface submitted attempts that need review.');
+assertContains(exerciseResults, "statusFilter === 'in_progress'", 'Exercise results must distinguish in-progress attempts from submitted reviews.');
+assertContains(exerciseResults, "detail.attempt.status !== 'submitted'", 'Exercise results must keep in-progress attempts read-only and visibly incomplete.');
 assertContains(teacherRadar, "notification_type === 'learner_signed_up'", 'Teacher Radar must surface new learner registrations.');
 assertContains(learnerHome, 'assignmentResumeTarget', 'Learner home must compute an exact resume target.');
 assertContains(learnerHome, "'in_progress'", 'Learner resume must prioritize in-progress resources.');

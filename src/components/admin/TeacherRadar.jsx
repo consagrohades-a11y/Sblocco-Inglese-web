@@ -47,7 +47,7 @@ export default function TeacherRadar() {
   }, []);
 
   const pendingReviews = useMemo(() => attempts
-    .filter((attempt) => attempt.review_status === 'unreviewed')
+    .filter((attempt) => attempt.status === 'submitted' && attempt.review_status === 'unreviewed')
     .sort((a, b) => new Date(a.submitted_at || 0) - new Date(b.submitted_at || 0)), [attempts]);
 
   const newLearners = useMemo(() => notifications
@@ -61,7 +61,7 @@ export default function TeacherRadar() {
       Icon: ClipboardCheck,
       eyebrow: 'Da revisionare',
       title: attempt.learner_name || 'Studente',
-      detail: attempt.exercise_title || attempt.assignment_title || 'Esercizio completato',
+      detail: attempt.exercise_title || attempt.assignment_title || 'Esercizio inviato',
       meta: ageLabel(attempt.submitted_at || attempt.started_at),
       to: '/admin/content/exercises/results?attemptId=' + attempt.id,
     })),
