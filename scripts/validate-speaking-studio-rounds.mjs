@@ -103,7 +103,7 @@ for (const fixture of fixtures) {
   const learner = projectSpeakingRoundForLearner(normalized);
   const learnerJson = JSON.stringify(learner);
   assert.ok(!learnerJson.includes('PRIVATE ROLE CUE'), fixture.format + ' learner projection leaked a private role cue');
-  assert.ok(!learnerJson.includes(JSON.stringify(normalized.teacher_note).slice(1, -1)), fixture.format + ' learner projection leaked teacher notes');
+  if (normalized.teacher_note) assert.ok(!learnerJson.includes(normalized.teacher_note), fixture.format + ' learner projection leaked teacher notes');
   if (fixture.teacher) {
     for (const value of Object.values(fixture.teacher)) {
       if (typeof value === 'string' && value) assert.ok(!learnerJson.includes(value), fixture.format + ' learner projection leaked teacher-only content');
