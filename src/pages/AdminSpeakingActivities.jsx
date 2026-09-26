@@ -27,6 +27,7 @@ import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
 import { createSpeakingControlId, openOrReuseSpeakingStudentWindow, SPEAKING_STUDENT_WINDOW_NAME } from '../lib/speakingLiveControl.js';
 import { loadSpeakingActivities, loadSpeakingActivityHistory, updateSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
 import { findMatchingSpeakingItems } from '../lib/speakingItemSearch.js';
+import { normalizeSpeakingItem } from '../lib/speakingRoundContract.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
 const typeLabels = {
@@ -44,14 +45,7 @@ function asArray(value) {
 }
 
 function normaliseItem(item, fallbackLevels = []) {
-  if (typeof item === 'string') return { text: item, levels: fallbackLevels, student_support: '', challenge: '', teacher_note: '' };
-  return {
-    text: item?.text || '',
-    levels: asArray(item?.levels).length ? asArray(item.levels) : fallbackLevels,
-    student_support: item?.student_support || item?.support || '',
-    challenge: item?.challenge || '',
-    teacher_note: item?.teacher_note || '',
-  };
+  return normalizeSpeakingItem(item, fallbackLevels);
 }
 
 function itemCounts(activity) {

@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { AlertTriangle, CheckCircle2, FileJson2, Upload, X } from 'lucide-react';
 import { updateSpeakingActivity } from '../../lib/adminSpeakingActivitiesApi.js';
 import { analyseSpeakingItemSet, duplicateReasonLabel } from '../../lib/speakingItemQuality.js';
+import { normalizeSpeakingItem, validateSpeakingMaterial } from '../../lib/speakingRoundContract.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
 
@@ -14,12 +15,10 @@ function normaliseItem(item, activity) {
   const requestedLevels = asArray(source.levels).map((level) => String(level || '').trim().toUpperCase()).filter(Boolean);
   const validLevels = LEVELS.filter((level) => requestedLevels.includes(level));
   const fallbackLevels = LEVELS.filter((level) => asArray(activity.levels).includes(level));
+  const normalised = normalizeSpeakingItem(source, requestedLevels.length ? validLevels : fallbackLevels);
   return {
-    text: String(source.text || '').trim(),
+    ...normalised,
     levels: requestedLevels.length ? validLevels : fallbackLevels,
-    student_support: String(source.student_support || source.support || '').trim(),
-    challenge: String(source.challenge || '').trim(),
-    teacher_note: String(source.teacher_note || '').trim(),
     context_tags: uniqueStrings(source.context_tags),
     language_targets: uniqueStrings(source.language_targets),
     difficulty: Math.min(5, Math.max(1, Number(source.difficulty || 2))),
@@ -63,6 +62,7 @@ function buildPlans(payload, activities) {
       if (!item.text) errors.push(`Item ${itemIndex + 1}: manca text.`);
       if (!item.levels.length) errors.push(`Item ${itemIndex + 1}: manca almeno un livello CEFR valido.`);
       if (item._invalidLevels.length) errors.push(`Item ${itemIndex + 1}: livelli non validi: ${item._invalidLevels.join(', ')}.`);
+      validateSpeakingMaterial(item.material).forEach((issue) => errors.push(`Item ${itemIndex + 1}: ${issue.message}`));
     });
     const items = normalised.map(({ _invalidLevels, ...item }) => item);
     const quality = errors.length ? { blocking: [], warnings: [] } : analyseSpeakingItemSet(items, workingCatalog);

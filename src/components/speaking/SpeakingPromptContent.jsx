@@ -1,4 +1,6 @@
 import React from 'react';
+import SpeakingRoundContent from './SpeakingRoundContent.jsx';
+import { normalizeSpeakingMaterial } from '../../lib/speakingRoundContract.js';
 
 function splitBadGood(text) {
   const source = String(text || '').trim();
@@ -18,6 +20,11 @@ function TextBlock({ children, compact = false }) {
 export default function SpeakingPromptContent({ item, style, compact = false }) {
   const text = String(item?.text || '');
   const comparison = splitBadGood(text);
+  const structuredMaterial = normalizeSpeakingMaterial(item?.material);
+
+  if (structuredMaterial) {
+    return <SpeakingRoundContent material={structuredMaterial} compact={compact} />;
+  }
 
   if (comparison) {
     return (

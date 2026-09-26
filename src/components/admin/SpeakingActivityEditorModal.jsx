@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { AlertTriangle, Plus, Save, Trash2, X } from 'lucide-react';
 import { createSpeakingActivity, updateSpeakingActivity } from '../../lib/adminSpeakingActivitiesApi.js';
 import { analyseSpeakingItemSet, duplicateReasonLabel } from '../../lib/speakingItemQuality.js';
+import SpeakingRoundEditor from './SpeakingRoundEditor.jsx';
+import { normalizeSpeakingItem, validateSpeakingMaterial } from '../../lib/speakingRoundContract.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
 
@@ -14,6 +16,7 @@ const emptyItem = () => ({
   context_tags: [],
   language_targets: [],
   difficulty: 2,
+  material: null,
 });
 
 function asArray(value) {
@@ -25,18 +28,14 @@ function cleanCsv(value) {
 }
 
 function normaliseItem(item) {
-  if (typeof item === 'string') return { ...emptyItem(), text: item };
+  const normalised = normalizeSpeakingItem(item, ['B1']);
   return {
-    // Preserve authored fields that this legacy editor cannot edit yet.
-    ...item,
-    text: item?.text || '',
-    levels: asArray(item?.levels),
-    student_support: item?.student_support || item?.support || '',
-    challenge: item?.challenge || '',
-    teacher_note: item?.teacher_note || '',
-    context_tags: asArray(item?.context_tags),
-    language_targets: asArray(item?.language_targets),
-    difficulty: Math.min(5, Math.max(1, Number(item?.difficulty || 2))),
+    ...emptyItem(),
+    ...normalised,
+    levels: asArray(normalised.levels),
+    context_tags: asArray(normalised.context_tags),
+    language_targets: asArray(normalised.language_targets),
+    difficulty: Math.min(5, Math.max(1, Number(normalised.difficulty || 2))),
   };
 }
 
@@ -177,6 +176,12 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
       setError('Ogni item deve avere almeno un livello. Puoi selezionarne più di uno.');
       return;
     }
+    const structuredIssues = cleanedItems.flatMap((item, itemIndex) => validateSpeakingMaterial(item.material).map((issue) => ({ ...issue, itemIndex })));
+    if (structuredIssues.length) {
+      const first = structuredIssues[0];
+      setError(`Item ${first.itemIndex + 1}: ${first.message}`);
+      return;
+    }
 
     const quality = analyseSpeakingItemSet(cleanedItems, catalogActivities, { excludeActivityId: activity?.id || null });
     if (quality.blocking.length) {
@@ -284,6 +289,7 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
                       <button type="button" onClick={() => removeItem(index)} disabled={draft.prompts.length === 1} className="focus-ring grid h-9 w-9 place-items-center rounded-full border border-ink/10 text-ink/45 disabled:opacity-30 dark:border-white/10 dark:text-white/45" aria-label="Rimuovi item"><Trash2 className="h-3.5 w-3.5" /></button>
                     </div>
                     <textarea rows={3} value={item.text} onChange={(e) => updateItem(index, { text: e.target.value })} placeholder="Prompt / scenario / set di parole…" className="focus-ring mt-3 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-bold leading-6 dark:border-white/15 dark:bg-surface-900" />
+                    <SpeakingRoundEditor material={item.material} onChange={(material) => updateItem(index, { material })} />
 
                     <div className="mt-4">
                       <p className="mb-2 text-xs font-black text-ink/55 dark:text-white/55">Livelli — selezione multipla</p>

@@ -16,21 +16,14 @@ import {
 } from 'lucide-react';
 import LearnerAvatar from '../learner/LearnerAvatar.jsx';
 import { connectSpeakingControl, openOrReuseSpeakingStudentWindow } from '../../lib/speakingLiveControl.js';
+import { normalizeSpeakingItem } from '../../lib/speakingRoundContract.js';
 
 function asArray(value) {
   return Array.isArray(value) ? value : [];
 }
 
 function normaliseItem(item) {
-  if (typeof item === 'string') {
-    return { text: item, student_support: '', challenge: '', teacher_note: '' };
-  }
-  return {
-    text: item?.text || '',
-    student_support: item?.student_support || item?.support || '',
-    challenge: item?.challenge || '',
-    teacher_note: item?.teacher_note || '',
-  };
+  return normalizeSpeakingItem(item);
 }
 
 function formatTimer(seconds) {
