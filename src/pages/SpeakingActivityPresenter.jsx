@@ -5,16 +5,16 @@ import SEO from '../components/SEO';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import SpeakingPromptContent from '../components/speaking/SpeakingPromptContent.jsx';
 import { connectSpeakingControl } from '../lib/speakingLiveControl.js';
+import { loadSpeakingPresenterState, saveSpeakingPresenterState } from '../lib/speakingLiveState.js';
 import { loadAdminLearnerDetail } from '../lib/adminLearnersApi.js';
 import {
-  finishSpeakingSession,
-  loadSpeakingActivity,
+  loadSpeakingPresenterActivity,
   loadSpeakingItemHistory,
   recordSpeakingItem,
   startSpeakingSession,
 } from '../lib/adminSpeakingActivitiesApi.js';
 
-const LEVELS = ['A1','A2','B1','B2','C1','C2'];
+const LEVELS = ['A0','A1','A1+','A2','B1','B1+','B2','C1','C2','Mixed'];
 const RECENT_ITEM_DAYS = 60;
 
 function asArray(value) {
@@ -31,75 +31,23 @@ function normaliseItem(item, fallbackLevels = [], sourceIndex = null) {
       text: item,
       levels: fallbackLevels,
       student_support: '',
+      support: [],
       challenge: '',
       sourceIndex,
       historyKey: normaliseHistoryText(item),
     };
   }
-  const text = item?.text || '';
+  const text = item?.text || item?.title || item?.instructions || '';
   return {
+    ...item,
     text,
     levels: asArray(item?.levels).length ? asArray(item.levels) : fallbackLevels,
-    student_support: item?.student_support || item?.support || '',
-    challenge: item?.challenge || '',
+    student_support: item?.student_support || (typeof item?.support === 'string' ? item.support : ''),
+    support: Array.isArray(item?.support) ? item.support : [],
+    challenge: typeof item?.challenge === 'string' ? item.challenge : item?.challenge?.text || '',
     sourceIndex,
-    historyKey: normaliseHistoryText(text),
+    historyKey: normaliseHistoryText(text + ' ' + (item?.format || '')),
   };
-}
-
-function PromptBody({ item, style }) {
-  if (style === 'odd_one_out') {
-    const choices = item.text.split('·').map((part) => part.trim()).filter(Boolean);
-    if (choices.length > 1) {
-      return (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {choices.map((choice, index) => (
-            <div key={`${choice}-${index}`} className="grid min-h-28 place-items-center rounded-2xl border border-white/15 bg-white/[0.07] p-5 text-center text-2xl font-black sm:text-3xl">
-              {choice}
-            </div>
-          ))}
-        </div>
-      );
-    }
-  }
-
-  if (style === 'taboo') {
-    const match = item.text.match(/^(.+?)\s*(?:\||—)\s*forbidden:\s*(.+)$/i);
-    if (match) {
-      const forbidden = match[2].split(',').map((word) => word.trim()).filter(Boolean);
-      return (
-        <div>
-          <p className="text-center text-4xl font-black sm:text-6xl">{match[1].trim()}</p>
-          <div className="mt-8">
-            <p className="text-center text-xs font-black uppercase tracking-[0.16em] text-white/55">Do not say</p>
-            <div className="mt-3 flex flex-wrap justify-center gap-2">
-              {forbidden.map((word) => <span key={word} className="rounded-full border border-white/20 bg-white/[0.08] px-4 py-2 text-sm font-black">{word}</span>)}
-            </div>
-          </div>
-        </div>
-      );
-    }
-  }
-
-  if (style === 'repair') {
-    return (
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.16em] text-white/50">Original line</p>
-        <p className="mt-4 text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>
-      </div>
-    );
-  }
-
-  if (style === 'story') {
-    return (
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.16em] text-white/50">Story seed</p>
-        <p className="mt-4 text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>
-      </div>
-    );
-  }
-
-  return <p className="text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>;
 }
 
 export default function SpeakingActivityPresenter() {
@@ -115,6 +63,7 @@ export default function SpeakingActivityPresenter() {
   const [itemHistory, setItemHistory] = useState([]);
   const [historyReady, setHistoryReady] = useState(true);
   const [sessionId, setSessionId] = useState('');
+  const [presenterStateReady, setPresenterStateReady] = useState(false);
   const shownThisSessionRef = useRef(new Set());
   const controlConnectionRef = useRef(null);
   const presenterStateRef = useRef(null);
@@ -149,7 +98,7 @@ export default function SpeakingActivityPresenter() {
       setLoading(true);
       setError('');
       try {
-        const data = await loadSpeakingActivity(activityId);
+        const data = await loadSpeakingPresenterActivity(activityId);
         if (active) setActivity(data);
       } catch (loadError) {
         if (active) setError(loadError.message || 'Non è stato possibile aprire la presentazione.');
@@ -195,6 +144,7 @@ export default function SpeakingActivityPresenter() {
               learnerId,
               activityId,
               levels: selectedLevels,
+              controlId,
             });
             if (active) setSessionId(openedSessionId);
           } catch (sessionError) {
@@ -216,9 +166,8 @@ export default function SpeakingActivityPresenter() {
 
     return () => {
       active = false;
-      if (openedSessionId) finishSpeakingSession(openedSessionId).catch(() => {});
     };
-  }, [activityId, learnerId, selectedLevels.join(',')]);
+  }, [activityId, controlId, learnerId, selectedLevels.join(',')]);
 
   const items = useMemo(() => {
     if (!activity) return [];
@@ -255,10 +204,22 @@ export default function SpeakingActivityPresenter() {
   }, [activity, historyReady, itemHistory, learnerId, selectedLevels]);
 
   useEffect(() => {
-    setIndex(0);
-    setChallengeVisible(false);
-    setSupportVisible(false);
-  }, [activityId, historyReady, learnerId, selectedLevels.join(',')]);
+    setPresenterStateReady(false);
+  }, [activityId, controlId, learnerId, selectedLevels.join(',')]);
+
+  useEffect(() => {
+    if (!activity || !historyReady || presenterStateReady || !items.length) return;
+
+    const saved = loadSpeakingPresenterState(controlId, activityId);
+    const restoredIndex = saved?.sourceIndex == null
+      ? -1
+      : items.findIndex((item) => item.sourceIndex === saved.sourceIndex);
+
+    setIndex(restoredIndex >= 0 ? restoredIndex : 0);
+    setChallengeVisible(restoredIndex >= 0 && saved?.challengeVisible === true);
+    setSupportVisible(restoredIndex >= 0 && saved?.supportVisible === true);
+    setPresenterStateReady(true);
+  }, [activity, activityId, controlId, historyReady, items, learnerId, presenterStateReady, selectedLevels]);
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -335,7 +296,7 @@ export default function SpeakingActivityPresenter() {
     challengeVisible,
     supportVisible,
     hasChallenge: Boolean(current?.challenge),
-    hasSupport: Boolean(current?.student_support),
+    hasSupport: Boolean(current?.student_support || asArray(current?.support).length),
   }), [
     activityId,
     challengeVisible,
@@ -349,6 +310,9 @@ export default function SpeakingActivityPresenter() {
 
   useEffect(() => {
     presenterStateRef.current = presenterState;
+    if (controlId && presenterStateReady) {
+      saveSpeakingPresenterState(controlId, activityId, presenterState);
+    }
     if (controlId && controlConnectionRef.current) {
       const payload = { type: 'presenter-state', state: presenterState };
       controlConnectionRef.current.send(payload);
@@ -370,6 +334,7 @@ export default function SpeakingActivityPresenter() {
 
     function handleControlPayload(payload) {
       if (!payload?.type) return;
+      if (payload.activityId && payload.activityId !== activityId) return;
 
       if (payload.type === 'next' && items.length) {
         setIndex((currentIndex) => (currentIndex + 1) % items.length);
@@ -429,7 +394,7 @@ export default function SpeakingActivityPresenter() {
       window.removeEventListener('message', onDirectMessage);
       if (controlConnectionRef.current === connection) controlConnectionRef.current = null;
     };
-  }, [controlId, items]);
+  }, [activityId, controlId, items]);
   if (loading || (learnerId && !historyReady)) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-ink dark:bg-surface-950 dark:text-white">Preparing speaking session…</div>;
   if (error || !activity) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-red-800 dark:bg-surface-950 dark:text-red-200">{error || 'Activity not found.'}</div>;
 
@@ -481,8 +446,8 @@ export default function SpeakingActivityPresenter() {
             <div className="mt-5 grid gap-4 lg:min-h-0 lg:overflow-hidden xl:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
               <section className="min-w-0 lg:flex lg:min-h-0 lg:flex-col">
                 <div className="flex min-h-[20rem] flex-col justify-center rounded-[2rem] bg-ink p-5 text-center text-white sm:p-7 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
-                  <div className="w-full"><SpeakingPromptContent item={current} style={activity.presenter_style} /></div>
-                  {current.student_support && supportVisible ? (
+                  <div className="w-full"><SpeakingPromptContent item={current} style={activity.presenter_style} showSupport={supportVisible} /></div>
+                  {current.student_support && supportVisible && !current.format ? (
                     <div className="mt-5 rounded-2xl border border-white/15 bg-white/[0.07] p-4">
                       <p className="text-xs font-black uppercase tracking-[0.15em] text-white/50">Need a little help?</p>
                       <p className="mt-2 text-base font-bold leading-7 sm:text-lg">{current.student_support}</p>

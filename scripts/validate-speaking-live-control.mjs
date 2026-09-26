@@ -25,6 +25,9 @@ for (const command of ['previous', 'next', 'random', 'toggle-support', 'toggle-c
 }
 
 assert.ok(presenter.includes('presenter-state'), 'Presenter must broadcast state back to the teacher controller.');
+assert.ok(presenter.includes('loadSpeakingPresenterActivity'), 'Student presenter must load a learner-safe activity projection.');
+assert.ok(presenter.includes('loadSpeakingPresenterState'), 'Student presenter must restore active item and reveal state after refresh.');
+assert.ok(presenter.includes('saveSpeakingPresenterState'), 'Student presenter must persist active item and reveal state.');
 assert.ok(presenter.includes('supportVisible'), 'Presenter must support teacher-controlled support reveal.');
 assert.ok(presenter.includes("useState(false)"), 'Student support must be hidden by default.');
 assert.ok(!presenter.includes('setSupportVisible(true)'), 'Changing game items must never auto-open student support.');
@@ -33,6 +36,8 @@ assert.ok(presenter.includes('lg:overflow-hidden'), 'Desktop presenter must prev
 assert.ok(presenter.includes("window.addEventListener('message'"), 'Presenter must accept direct window messages while unfocused.');
 assert.ok(presenter.includes('window.opener.postMessage'), 'Presenter must send state directly back to the teacher window.');
 assert.ok(controller.includes('studentWindow.postMessage'), 'Teacher controller must send commands directly to the student window.');
+assert.ok(controller.includes("payload.state?.activityId && payload.state.activityId !== session?.activity?.id"), 'Teacher controller must ignore stale state from the previous activity.');
+assert.ok(controller.includes('finishSpeakingControl'), 'Ending the live lesson must close all activity sessions under one control id.');
 assert.ok(controller.includes('openOrReuseSpeakingStudentWindow'), 'Teacher controller must reopen or reuse the same named student screen when the reference is stale.');
 const commandBlock = controller.slice(controller.indexOf('function command(type)'), controller.indexOf('function focusStudentWindow'));
 assert.ok(commandBlock.includes('return;'), 'Direct live commands must return after postMessage so toggle commands are not dispatched twice.');
@@ -49,6 +54,8 @@ assert.ok(!presenter.includes("addEventListener('focus'"), 'Student-window focus
 
 assert.ok(library.includes('createSpeakingControlId'), 'Speaking launcher must create a unique live-control channel.');
 assert.ok(library.includes('SpeakingLiveController'), 'Speaking library must keep the teacher controller open after launch.');
+assert.ok(library.includes('loadSpeakingLiveSession'), 'Speaking library must restore the teacher controller after refresh.');
+assert.ok(library.includes('saveSpeakingLiveSession'), 'Speaking library must persist the current teacher controller descriptor.');
 assert.ok(library.includes("searchParams.get('learner')"), 'Speaking library must accept a learner from the profile route.');
 assert.ok(library.includes('initialLearnerId={focusedLearnerId}'), 'Profile-selected learner must prefill the presentation launcher.');
 assert.ok(library.includes('Mostra allo studente'), 'An active session must let the teacher switch activities from the library.');

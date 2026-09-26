@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Clock3,
@@ -25,9 +25,10 @@ import LearnerQuickFacts from '../components/admin/LearnerQuickFacts.jsx';
 import { loadAdminLearners } from '../lib/adminLearnersApi.js';
 import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
 import { createSpeakingControlId, openOrReuseSpeakingStudentWindow, SPEAKING_STUDENT_WINDOW_NAME } from '../lib/speakingLiveControl.js';
+import { clearSpeakingLiveSession, loadSpeakingLiveSession, saveSpeakingLiveSession } from '../lib/speakingLiveState.js';
 import { loadSpeakingActivities, loadSpeakingActivityHistory, updateSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
 
-const LEVELS = ['A1','A2','B1','B2','C1','C2'];
+const LEVELS = ['A0','A1','A1+','A2','B1','B1+','B2','C1','C2','Mixed'];
 const typeLabels = {
   speaking_game: 'Gioco speaking',
   conversation: 'Conversazione',
@@ -43,12 +44,14 @@ function asArray(value) {
 }
 
 function normaliseItem(item, fallbackLevels = []) {
-  if (typeof item === 'string') return { text: item, levels: fallbackLevels, student_support: '', challenge: '', teacher_note: '' };
+  if (typeof item === 'string') return { text: item, levels: fallbackLevels, student_support: '', support: [], challenge: '', teacher_note: '' };
   return {
-    text: item?.text || '',
+    ...item,
+    text: item?.text || item?.title || item?.instructions || '',
     levels: asArray(item?.levels).length ? asArray(item.levels) : fallbackLevels,
-    student_support: item?.student_support || item?.support || '',
-    challenge: item?.challenge || '',
+    student_support: item?.student_support || (typeof item?.support === 'string' ? item.support : ''),
+    support: Array.isArray(item?.support) ? item.support : [],
+    challenge: typeof item?.challenge === 'string' ? item.challenge : item?.challenge?.text || '',
     teacher_note: item?.teacher_note || '',
   };
 }
@@ -84,7 +87,7 @@ function PreviewModal({ activity, onClose }) {
                 <p className="text-xs font-black uppercase tracking-[0.15em] text-white/55">Student screen</p>
                 <p className="text-xs font-black text-white/55">{items.length ? `${index + 1}/${items.length}` : '0/0'}</p>
               </div>
-              <div className="mt-7 grid min-h-[18rem] place-items-center"><SpeakingPromptContent item={current || { text: 'Nessun item' }} style={activity.presenter_style} compact /></div>
+              <div className="mt-7 grid min-h-[18rem] place-items-center"><SpeakingPromptContent item={current || { text: 'Nessun item' }} style={activity.presenter_style} compact showSupport /></div>
               {current?.student_support ? <div className="mt-7 rounded-2xl border border-white/15 bg-white/[0.07] p-4"><p className="text-xs font-black uppercase tracking-wide text-white/50">Support</p><p className="mt-2 text-sm font-bold leading-6">{current.student_support}</p></div> : null}
             </div>
             <div className="mt-3 flex flex-wrap gap-1.5">
@@ -351,6 +354,7 @@ export default function AdminSpeakingActivities() {
   const [editingNew, setEditingNew] = useState(false);
   const [presenting, setPresenting] = useState(null);
   const [liveSession, setLiveSession] = useState(null);
+  const liveRestoreAttemptedRef = useRef(false);
   const [importOpen, setImportOpen] = useState(false);
 
   async function load() {
@@ -367,6 +371,28 @@ export default function AdminSpeakingActivities() {
   }
 
   useEffect(() => { load(); }, []);
+
+  useEffect(() => {
+    if (loading || liveRestoreAttemptedRef.current) return;
+    liveRestoreAttemptedRef.current = true;
+
+    const saved = loadSpeakingLiveSession();
+    if (!saved) return;
+
+    const activity = activities.find((item) => item.id === saved.activityId) || null;
+    if (!activity) {
+      clearSpeakingLiveSession();
+      return;
+    }
+
+    setLiveSession({
+      ...saved,
+      activity,
+      learner: saved.learnerId ? getLearner(saved.learnerId) : null,
+      windowName: SPEAKING_STUDENT_WINDOW_NAME,
+      studentWindow: null,
+    });
+  }, [activities, getLearner, loading]);
 
   const types = useMemo(() => Array.from(new Set(activities.map((activity) => activity.activity_type).filter(Boolean))).sort(), [activities]);
   const filtered = useMemo(() => {
@@ -423,6 +449,17 @@ export default function AdminSpeakingActivities() {
     return supported;
   }
 
+  function startLiveSession(session) {
+    const next = { ...session, startedAt: Date.now() };
+    saveSpeakingLiveSession(next);
+    setLiveSession(next);
+  }
+
+  function endLiveSession() {
+    clearSpeakingLiveSession();
+    setLiveSession(null);
+  }
+
   function switchLiveActivity(activity) {
     if (!liveSession?.controlId) {
       setPresenting(activity);
@@ -453,13 +490,16 @@ export default function AdminSpeakingActivities() {
     }
 
     setError('');
-    setLiveSession((current) => current ? {
-      ...current,
+    const nextSession = {
+      ...liveSession,
       activity,
+      activityId: activity.id,
       levels: nextLevels,
       presenterUrl,
       studentWindow,
-    } : current);
+    };
+    saveSpeakingLiveSession(nextSession);
+    setLiveSession(nextSession);
   }
 
   return (
@@ -557,9 +597,9 @@ export default function AdminSpeakingActivities() {
         activity={presenting}
         initialLearnerId={focusedLearnerId}
         onClose={() => setPresenting(null)}
-        onStartLive={setLiveSession}
+        onStartLive={startLiveSession}
       />
-      <SpeakingLiveController session={liveSession} onEnd={() => setLiveSession(null)} />
+      <SpeakingLiveController session={liveSession} onEnd={endLiveSession} />
       {importOpen ? <SpeakingItemImportModal activities={activities} onClose={() => setImportOpen(false)} onImported={handleImported} /> : null}
       {(editor || editingNew) ? <SpeakingActivityEditorModal activity={editingNew ? null : editor} catalogActivities={activities} onClose={() => { setEditor(null); setEditingNew(false); }} onSaved={handleSaved} /> : null}
     </>

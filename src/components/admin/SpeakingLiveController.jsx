@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import LearnerAvatar from '../learner/LearnerAvatar.jsx';
 import { connectSpeakingControl, openOrReuseSpeakingStudentWindow } from '../../lib/speakingLiveControl.js';
+import { finishSpeakingControl } from '../../lib/adminSpeakingActivitiesApi.js';
 
 function asArray(value) {
   return Array.isArray(value) ? value : [];
@@ -23,12 +24,14 @@ function asArray(value) {
 
 function normaliseItem(item) {
   if (typeof item === 'string') {
-    return { text: item, student_support: '', challenge: '', teacher_note: '' };
+    return { text: item, student_support: '', support: [], challenge: '', teacher_note: '' };
   }
   return {
-    text: item?.text || '',
-    student_support: item?.student_support || item?.support || '',
-    challenge: item?.challenge || '',
+    ...item,
+    text: item?.text || item?.title || item?.instructions || '',
+    student_support: item?.student_support || (typeof item?.support === 'string' ? item.support : ''),
+    support: Array.isArray(item?.support) ? item.support : [],
+    challenge: typeof item?.challenge === 'string' ? item.challenge : item?.challenge?.text || '',
     teacher_note: item?.teacher_note || '',
   };
 }
@@ -71,6 +74,7 @@ export default function SpeakingLiveController({ session, onEnd }) {
         return;
       }
       if (payload.type !== 'presenter-state') return;
+      if (payload.state?.activityId && payload.state.activityId !== session?.activity?.id) return;
 
       setRemoteState(payload.state || null);
       setConnected(true);
@@ -95,7 +99,7 @@ export default function SpeakingLiveController({ session, onEnd }) {
     }
 
     function requestSync() {
-      const payload = { type: 'sync-request' };
+      const payload = { type: 'sync-request', activityId: session?.activity?.id || null };
       connection.send(payload);
       sendDirect(payload);
     }
@@ -118,7 +122,7 @@ export default function SpeakingLiveController({ session, onEnd }) {
       connection.close();
       channelRef.current = null;
     };
-  }, [session?.controlId, session?.studentWindow]);
+  }, [session?.activity?.id, session?.controlId, session?.studentWindow]);
 
   useEffect(() => {
     if (!timerRunning) return undefined;
@@ -127,7 +131,7 @@ export default function SpeakingLiveController({ session, onEnd }) {
   }, [timerRunning]);
 
   function command(type) {
-    const payload = { type };
+    const payload = { type, activityId: session?.activity?.id || null };
     const studentWindow = session?.studentWindow;
 
     if (studentWindow && !studentWindow.closed) {
@@ -166,6 +170,9 @@ export default function SpeakingLiveController({ session, onEnd }) {
 
   function endSession() {
     command('close-presenter');
+    finishSpeakingControl(session?.controlId).catch((finishError) => {
+      console.warn('Speaking control history could not be closed.', finishError);
+    });
     try {
       if (session?.studentWindow && !session.studentWindow.closed) session.studentWindow.close();
     } catch {
