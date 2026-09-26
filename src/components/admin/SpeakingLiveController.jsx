@@ -12,11 +12,18 @@ import {
   RotateCcw,
   Sparkles,
   Square,
+  Check,
+  SkipForward,
+  Undo2,
   X,
 } from 'lucide-react';
 import LearnerAvatar from '../learner/LearnerAvatar.jsx';
 import { connectSpeakingControl, openOrReuseSpeakingStudentWindow } from '../../lib/speakingLiveControl.js';
-import { finishSpeakingControl } from '../../lib/adminSpeakingActivitiesApi.js';
+import {
+  confirmSpeakingPractice,
+  finishSpeakingControl,
+  undoLatestSpeakingPractice,
+} from '../../lib/adminSpeakingActivitiesApi.js';
 
 function asArray(value) {
   return Array.isArray(value) ? value : [];
@@ -48,6 +55,9 @@ export default function SpeakingLiveController({ session, onEnd }) {
   const [collapsed, setCollapsed] = useState(false);
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);
+  const [practiceBusy, setPracticeBusy] = useState(false);
+  const [practiceMessage, setPracticeMessage] = useState('');
+  const [practiceError, setPracticeError] = useState('');
   const channelRef = useRef(null);
   const disconnectTimerRef = useRef(null);
 
@@ -150,6 +160,48 @@ export default function SpeakingLiveController({ session, onEnd }) {
     channelRef.current?.send(payload);
   }
 
+  async function markDoneAndNext() {
+    if (!remoteState?.sessionId || !currentItem?.text || practiceBusy) return;
+    setPracticeBusy(true);
+    setPracticeError('');
+    setPracticeMessage('');
+    try {
+      await confirmSpeakingPractice({
+        sessionId: remoteState.sessionId,
+        itemText: currentItem.text,
+        itemIndex: Number.isInteger(remoteState?.sourceIndex) ? remoteState.sourceIndex : null,
+      });
+      setPracticeMessage('Practice saved.');
+      command('next');
+    } catch (error) {
+      setPracticeError(error.message || 'Could not save practice.');
+    } finally {
+      setPracticeBusy(false);
+    }
+  }
+
+  function skipCurrent() {
+    if (practiceBusy) return;
+    setPracticeError('');
+    setPracticeMessage('Skipped — not marked as practised.');
+    command('next');
+  }
+
+  async function undoPractice() {
+    if (!remoteState?.sessionId || practiceBusy) return;
+    setPracticeBusy(true);
+    setPracticeError('');
+    setPracticeMessage('');
+    try {
+      const undone = await undoLatestSpeakingPractice(remoteState.sessionId);
+      setPracticeMessage(undone ? 'Latest practice undone.' : 'No confirmed practice to undo.');
+    } catch (error) {
+      setPracticeError(error.message || 'Could not undo practice.');
+    } finally {
+      setPracticeBusy(false);
+    }
+  }
+
   function focusStudentWindow() {
     if (session?.studentWindow && !session.studentWindow.closed) {
       session.studentWindow.focus();
@@ -228,17 +280,27 @@ export default function SpeakingLiveController({ session, onEnd }) {
             </div>
           </div>
 
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            <button type="button" disabled={!connected || !remoteState?.total} onClick={() => command('previous')} className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-ink/15 bg-white text-xs font-black disabled:opacity-35 dark:border-white/15 dark:bg-white/[0.05]">
-              <ArrowLeft className="h-4 w-4" /> Previous
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <button type="button" disabled={!connected || !remoteState?.total || !remoteState?.sessionId || !currentItem?.text || practiceBusy} onClick={markDoneAndNext} className="focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-ink px-3 text-xs font-black text-white disabled:opacity-35 dark:bg-clay">
+              <Check className="h-4 w-4" /> {practiceBusy ? 'Saving…' : 'Done & next'}
             </button>
-            <button type="button" disabled={!connected || Number(remoteState?.total || 0) < 2} onClick={() => command('random')} className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-ink/15 bg-white text-xs font-black disabled:opacity-35 dark:border-white/15 dark:bg-white/[0.05]">
-              <Dices className="h-4 w-4" /> Random
-            </button>
-            <button type="button" disabled={!connected || !remoteState?.total} onClick={() => command('next')} className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-ink text-xs font-black text-white disabled:opacity-35 dark:bg-clay">
-              Next <ArrowRight className="h-4 w-4" />
+            <button type="button" disabled={!connected || !remoteState?.total || practiceBusy} onClick={skipCurrent} className="focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-ink/15 bg-white px-3 text-xs font-black disabled:opacity-35 dark:border-white/15 dark:bg-white/[0.05]">
+              <SkipForward className="h-4 w-4" /> Skip
             </button>
           </div>
+          <div className="mt-2 grid grid-cols-3 gap-2">
+            <button type="button" disabled={!connected || !remoteState?.total} onClick={() => command('previous')} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-ink/15 bg-white text-[0.7rem] font-black disabled:opacity-35 dark:border-white/15 dark:bg-white/[0.05]">
+              <ArrowLeft className="h-3.5 w-3.5" /> Previous
+            </button>
+            <button type="button" disabled={!connected || Number(remoteState?.total || 0) < 2} onClick={() => command('random')} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-ink/15 bg-white text-[0.7rem] font-black disabled:opacity-35 dark:border-white/15 dark:bg-white/[0.05]">
+              <Dices className="h-3.5 w-3.5" /> Random
+            </button>
+            <button type="button" disabled={!remoteState?.sessionId || practiceBusy} onClick={undoPractice} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-ink/15 bg-white text-[0.7rem] font-black disabled:opacity-35 dark:border-white/15 dark:bg-white/[0.05]">
+              <Undo2 className="h-3.5 w-3.5" /> Undo practice
+            </button>
+          </div>
+          {practiceMessage ? <p className="mt-2 text-[0.68rem] font-bold text-emerald-700 dark:text-emerald-200">{practiceMessage}</p> : null}
+          {practiceError ? <p className="mt-2 text-[0.68rem] font-bold text-red-700 dark:text-red-200">{practiceError}</p> : null}
 
           <div className="mt-2 grid grid-cols-2 gap-2">
             <button

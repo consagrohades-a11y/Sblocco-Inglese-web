@@ -84,6 +84,15 @@ export default function SpeakingActivityPresenter() {
     }
   }
 
+  const selectedIndices = useMemo(() => {
+    const raw = String(searchParams.get('indices') || '').trim();
+    if (!raw) return null;
+    const values = raw.split(',')
+      .map((value) => Number.parseInt(value, 10))
+      .filter((value) => Number.isInteger(value) && value >= 0);
+    return new Set(values);
+  }, [searchParams]);
+
   const selectedLevels = useMemo(() => {
     const requested = String(searchParams.get('levels') || '')
       .split(',')
@@ -178,6 +187,7 @@ export default function SpeakingActivityPresenter() {
 
     const eligible = asArray(activity.prompts)
       .map((item, sourceIndex) => normaliseItem(item, asArray(activity.levels), sourceIndex))
+      .filter((item) => !selectedIndices || selectedIndices.has(item.sourceIndex))
       .filter((item) => !selectedLevels.length || asArray(item.levels).some((level) => selectedLevels.includes(level)))
       .map((item) => ({
         ...item,
@@ -187,9 +197,13 @@ export default function SpeakingActivityPresenter() {
     if (!learnerId || !historyReady) return eligible;
 
     return [...eligible].sort((left, right) => {
-      const leftRecent = Number(left.priorUse?.recent_use_count || 0) > 0;
-      const rightRecent = Number(right.priorUse?.recent_use_count || 0) > 0;
-      if (leftRecent !== rightRecent) return leftRecent ? 1 : -1;
+      const leftPractised = Number(left.priorUse?.recent_practice_count || 0) > 0;
+      const rightPractised = Number(right.priorUse?.recent_practice_count || 0) > 0;
+      if (leftPractised !== rightPractised) return leftPractised ? 1 : -1;
+
+      const leftShown = Number(left.priorUse?.recent_shown_count || 0) > 0;
+      const rightShown = Number(right.priorUse?.recent_shown_count || 0) > 0;
+      if (leftShown !== rightShown) return leftShown ? 1 : -1;
 
       const leftSeen = Boolean(left.priorUse);
       const rightSeen = Boolean(right.priorUse);
@@ -197,11 +211,11 @@ export default function SpeakingActivityPresenter() {
 
       if (!leftSeen && !rightSeen) return left.sourceIndex - right.sourceIndex;
 
-      const leftTime = new Date(left.priorUse?.last_used_at || 0).getTime();
-      const rightTime = new Date(right.priorUse?.last_used_at || 0).getTime();
+      const leftTime = new Date(left.priorUse?.last_practised_at || left.priorUse?.last_shown_at || 0).getTime();
+      const rightTime = new Date(right.priorUse?.last_practised_at || right.priorUse?.last_shown_at || 0).getTime();
       return leftTime - rightTime;
     });
-  }, [activity, historyReady, itemHistory, learnerId, selectedLevels]);
+  }, [activity, historyReady, itemHistory, learnerId, selectedIndices, selectedLevels]);
 
   useEffect(() => {
     setPresenterStateReady(false);
@@ -273,7 +287,7 @@ export default function SpeakingActivityPresenter() {
           item,
           itemIndex,
           shown: shownThisSessionRef.current.has(item.historyKey),
-          recent: Number(item.priorUse?.recent_use_count || 0) > 0,
+          recent: Number(item.priorUse?.recent_practice_count || 0) > 0,
         }))
         .filter((candidate) => candidate.itemIndex !== currentIndex);
 
@@ -290,6 +304,7 @@ export default function SpeakingActivityPresenter() {
 
   const presenterState = useMemo(() => ({
     activityId,
+    sessionId: sessionId || null,
     position: items.length ? index + 1 : 0,
     total: items.length,
     sourceIndex: current?.sourceIndex ?? null,
@@ -300,6 +315,7 @@ export default function SpeakingActivityPresenter() {
   }), [
     activityId,
     challengeVisible,
+    sessionId,
     current?.challenge,
     current?.sourceIndex,
     current?.student_support,
@@ -351,7 +367,7 @@ export default function SpeakingActivityPresenter() {
               item,
               itemIndex,
               shown: shownThisSessionRef.current.has(item.historyKey),
-              recent: Number(item.priorUse?.recent_use_count || 0) > 0,
+              recent: Number(item.priorUse?.recent_practice_count || 0) > 0,
             }))
             .filter((candidate) => candidate.itemIndex !== currentIndex);
           const freshUnseen = candidates.filter((candidate) => !candidate.shown && !candidate.recent);

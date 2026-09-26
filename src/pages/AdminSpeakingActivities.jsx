@@ -26,7 +26,13 @@ import { loadAdminLearners } from '../lib/adminLearnersApi.js';
 import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
 import { createSpeakingControlId, openOrReuseSpeakingStudentWindow, SPEAKING_STUDENT_WINDOW_NAME } from '../lib/speakingLiveControl.js';
 import { clearSpeakingLiveSession, loadSpeakingLiveSession, saveSpeakingLiveSession } from '../lib/speakingLiveState.js';
-import { loadSpeakingActivities, loadSpeakingActivityHistory, updateSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
+import {
+  loadSpeakingActivities,
+  loadSpeakingActivityHistory,
+  loadSpeakingPracticeCatalog,
+  updateSpeakingActivity,
+} from '../lib/adminSpeakingActivitiesApi.js';
+import { findMatchingSpeakingItems, normaliseSpeakingHistoryText } from '../lib/speakingItemSearch.js';
 
 const LEVELS = ['A0','A1','A1+','A2','B1','B1+','B2','C1','C2','Mixed'];
 const typeLabels = {
@@ -61,8 +67,11 @@ function itemCounts(activity) {
   return Object.fromEntries(LEVELS.map((level) => [level, items.filter((item) => asArray(item.levels).includes(level)).length]));
 }
 
-function PreviewModal({ activity, onClose }) {
-  const items = useMemo(() => asArray(activity?.prompts).map((item) => normaliseItem(item, asArray(activity?.levels))), [activity]);
+function PreviewModal({ activity, eligibleIndices = null, onClose }) {
+  const items = useMemo(() => asArray(activity?.prompts)
+    .map((item, sourceIndex) => ({ item: normaliseItem(item, asArray(activity?.levels)), sourceIndex }))
+    .filter(({ sourceIndex }) => !eligibleIndices || eligibleIndices.includes(sourceIndex))
+    .map(({ item }) => item), [activity, eligibleIndices]);
   const [index, setIndex] = useState(0);
   useEffect(() => setIndex(0), [activity?.id]);
   if (!activity) return null;
@@ -114,7 +123,7 @@ function PreviewModal({ activity, onClose }) {
   );
 }
 
-function PresentationLauncher({ activity, initialLearnerId = '', onClose, onStartLive }) {
+function PresentationLauncher({ activity, eligibleIndices = null, initialLearnerId = '', onClose, onStartLive }) {
   const [levels, setLevels] = useState(() => asArray(activity?.levels));
   const [learners, setLearners] = useState([]);
   const [learnerId, setLearnerId] = useState(initialLearnerId || '');
@@ -197,6 +206,7 @@ function PresentationLauncher({ activity, initialLearnerId = '', onClose, onStar
       levels: LEVELS.filter((level) => levels.includes(level)).join(','),
       control: controlId,
     });
+    if (eligibleIndices) params.set('indices', eligibleIndices.join(','));
     if (learnerId) params.set('learner', learnerId);
 
     const presenterUrl = `/admin/present/speaking/${activity.id}?${params.toString()}`;
@@ -213,6 +223,7 @@ function PresentationLauncher({ activity, initialLearnerId = '', onClose, onStar
       learner: selectedLearner,
       learnerId: learnerId || null,
       levels: LEVELS.filter((level) => levels.includes(level)),
+      eligibleIndices,
       controlId,
       presenterUrl,
       windowName,
@@ -349,6 +360,9 @@ export default function AdminSpeakingActivities() {
   const [level, setLevel] = useState('all');
   const [type, setType] = useState('all');
   const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [unpractisedOnly, setUnpractisedOnly] = useState(false);
+  const [practiceCatalog, setPracticeCatalog] = useState([]);
+  const [practiceCatalogLoading, setPracticeCatalogLoading] = useState(false);
   const [preview, setPreview] = useState(null);
   const [editor, setEditor] = useState(null);
   const [editingNew, setEditingNew] = useState(false);
@@ -373,6 +387,29 @@ export default function AdminSpeakingActivities() {
   useEffect(() => { load(); }, []);
 
   useEffect(() => {
+    let active = true;
+    if (!focusedLearnerId) {
+      setPracticeCatalog([]);
+      setPracticeCatalogLoading(false);
+      setUnpractisedOnly(false);
+      return () => { active = false; };
+    }
+
+    setPracticeCatalogLoading(true);
+    loadSpeakingPracticeCatalog(focusedLearnerId)
+      .then((rows) => { if (active) setPracticeCatalog(rows); })
+      .catch((catalogError) => {
+        if (active) {
+          setPracticeCatalog([]);
+          setError(catalogError.message || 'Non è stato possibile caricare lo storico speaking.');
+        }
+      })
+      .finally(() => { if (active) setPracticeCatalogLoading(false); });
+
+    return () => { active = false; };
+  }, [focusedLearnerId]);
+
+  useEffect(() => {
     if (loading || liveRestoreAttemptedRef.current) return;
     liveRestoreAttemptedRef.current = true;
 
@@ -395,19 +432,33 @@ export default function AdminSpeakingActivities() {
   }, [activities, getLearner, loading]);
 
   const types = useMemo(() => Array.from(new Set(activities.map((activity) => activity.activity_type).filter(Boolean))).sort(), [activities]);
-  const filtered = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    return activities.filter((activity) => {
-      if (favoritesOnly && !activity.favorite) return false;
-      if (level !== 'all' && !asArray(activity.levels).includes(level)) return false;
-      if (type !== 'all' && activity.activity_type !== type) return false;
-      if (!needle) return true;
-      const itemText = asArray(activity.prompts).map((item) => typeof item === 'string' ? item : item?.text).filter(Boolean);
-      const itemMetadata = asArray(activity.prompts).flatMap((item) => typeof item === 'string' ? [] : [...asArray(item?.context_tags), ...asArray(item?.language_targets)]);
-      return [activity.title, activity.summary, ...asArray(activity.goals), ...asArray(activity.tags), ...itemText, ...itemMetadata]
-        .some((value) => String(value || '').toLowerCase().includes(needle));
+  const practisedByActivity = useMemo(() => {
+    const map = new Map();
+    practiceCatalog.forEach((row) => {
+      if (!map.has(row.activity_id)) map.set(row.activity_id, new Set());
+      map.get(row.activity_id).add(normaliseSpeakingHistoryText(row.item_text));
     });
-  }, [activities, favoritesOnly, level, query, type]);
+    return map;
+  }, [practiceCatalog]);
+
+  const filtered = useMemo(() => activities.flatMap((activity) => {
+    if (favoritesOnly && !activity.favorite) return [];
+    if (type !== 'all' && activity.activity_type !== type) return [];
+
+    const matches = findMatchingSpeakingItems(activity, {
+      query,
+      level,
+      practisedTexts: practisedByActivity.get(activity.id) || new Set(),
+      unpractisedOnly: Boolean(unpractisedOnly && focusedLearnerId),
+    });
+    if (!matches.length) return [];
+
+    return [{
+      activity,
+      eligibleIndices: matches.map((match) => match.sourceIndex),
+      matchingItems: matches.length,
+    }];
+  }), [activities, favoritesOnly, focusedLearnerId, level, practisedByActivity, query, type, unpractisedOnly]);
 
   async function toggleFavorite(activity) {
     const next = !activity.favorite;
@@ -460,7 +511,7 @@ export default function AdminSpeakingActivities() {
     setLiveSession(null);
   }
 
-  function switchLiveActivity(activity) {
+  function switchLiveActivity(activity, eligibleIndices = null) {
     if (!liveSession?.controlId) {
       setPresenting(activity);
       return;
@@ -476,6 +527,7 @@ export default function AdminSpeakingActivities() {
       levels: LEVELS.filter((item) => nextLevels.includes(item)).join(','),
       control: liveSession.controlId,
     });
+    if (eligibleIndices) params.set('indices', eligibleIndices.join(','));
     if (liveSession.learnerId) params.set('learner', liveSession.learnerId);
 
     const presenterUrl = `/admin/present/speaking/${activity.id}?${params.toString()}`;
@@ -495,6 +547,7 @@ export default function AdminSpeakingActivities() {
       activity,
       activityId: activity.id,
       levels: nextLevels,
+      eligibleIndices,
       presenterUrl,
       studentWindow,
     };
@@ -539,11 +592,12 @@ export default function AdminSpeakingActivities() {
             </div>
           ) : null}
 
-          <div className="mt-6 grid gap-3 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-surface-900 md:grid-cols-[minmax(0,1fr)_auto_auto_auto]">
+          <div className="mt-6 grid gap-3 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-surface-900 md:grid-cols-[minmax(0,1fr)_auto_auto_auto_auto]">
             <label className="relative"><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35 dark:text-white/35" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cerca gioco, item, obiettivo o tag…" className="focus-ring w-full rounded-xl border border-ink/10 bg-paper py-2.5 pl-9 pr-3 text-sm font-semibold dark:border-white/10 dark:bg-white/[0.05]" /></label>
             <select value={level} onChange={(event) => setLevel(event.target.value)} className="focus-ring rounded-xl border border-ink/10 bg-paper px-3 py-2.5 text-sm font-black dark:border-white/10 dark:bg-white/[0.05]"><option value="all">Tutti i livelli</option>{LEVELS.map((item) => <option key={item} value={item}>{item}</option>)}</select>
             <select value={type} onChange={(event) => setType(event.target.value)} className="focus-ring rounded-xl border border-ink/10 bg-paper px-3 py-2.5 text-sm font-black dark:border-white/10 dark:bg-white/[0.05]"><option value="all">Tutti i formati</option>{types.map((item) => <option key={item} value={item}>{typeLabels[item] || item}</option>)}</select>
-            <button type="button" onClick={() => setFavoritesOnly((value) => !value)} className={`focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border px-4 text-sm font-black ${favoritesOnly ? 'border-clay bg-blush text-clay dark:bg-coral/10 dark:text-coral' : 'border-ink/10 bg-paper dark:border-white/10 dark:bg-white/[0.05]'}`}><Heart className={`h-4 w-4 ${favoritesOnly ? 'fill-current' : ''}`} /> Preferiti</button>
+            <button type="button" onClick={() => setFavoritesOnly((value) => !value)} className={`focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border px-4 text-sm font-black ${favoritesOnly ? 'border-clay bg-blush text-clay dark:border-coral/10 dark:text-coral' : 'border-ink/10 bg-paper dark:border-white/10 dark:bg-white/[0.05]'}`}><Heart className={`h-4 w-4 ${favoritesOnly ? 'fill-current' : ''}`} /> Preferiti</button>
+            <button type="button" disabled={!focusedLearnerId || practiceCatalogLoading} onClick={() => setUnpractisedOnly((value) => !value)} className={`focus-ring inline-flex min-h-11 items-center justify-center rounded-xl border px-4 text-sm font-black disabled:opacity-35 ${unpractisedOnly ? 'border-clay bg-blush text-clay dark:bg-coral/10 dark:text-coral' : 'border-ink/10 bg-paper dark:border-white/10 dark:bg-white/[0.05]'}`}>{practiceCatalogLoading ? 'Storico…' : 'Non praticati'}</button>
           </div>
 
           {error ? <div className="mt-5 border-l-4 border-red-400 bg-red-50 p-4 text-sm font-bold text-red-950 dark:bg-red-400/10 dark:text-red-100">{error}</div> : null}
@@ -551,7 +605,7 @@ export default function AdminSpeakingActivities() {
 
           {!loading && filtered.length ? (
             <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6">
-              {filtered.map((activity) => {
+              {filtered.map(({ activity, eligibleIndices, matchingItems }) => {
                 const counts = itemCounts(activity);
                 const isLiveActivity = liveSession?.activity?.id === activity.id;
                 return (
@@ -562,6 +616,7 @@ export default function AdminSpeakingActivities() {
                     </div>
 
                     <p className="mt-3 text-[0.82rem] font-semibold leading-5 text-ink/65 dark:text-white/65">{activity.summary}</p>
+                    <p className="mt-2 text-[0.68rem] font-black text-clay dark:text-coral">{matchingItems} item {matchingItems === 1 ? 'corrispondente' : 'corrispondenti'} ai filtri</p>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {asArray(activity.levels).map((item) => <span key={item} className="rounded-full bg-linen px-2.5 py-1 text-xs font-black dark:bg-white/10">{item} · {counts[item] || 0}</span>)}
                       {activity.duration_minutes ? <span className="inline-flex items-center gap-1 rounded-full bg-linen px-2 py-1 text-[0.68rem] font-black dark:bg-white/10"><Clock3 className="h-3 w-3" />{activity.duration_minutes} min</span> : null}
@@ -570,12 +625,12 @@ export default function AdminSpeakingActivities() {
                     <div className="mt-4"><p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Speaking focus</p><div className="mt-2 flex flex-wrap gap-1.5">{asArray(activity.goals).slice(0, 4).map((goal) => <span key={goal} className="rounded-full bg-mint/60 px-2 py-1 text-[0.68rem] font-black dark:bg-emerald-300/10 dark:text-emerald-100">{goal}</span>)}</div></div>
 
                     <div className="mt-auto grid grid-cols-2 gap-2 pt-5">
-                      <button type="button" onClick={() => setPreview(activity)} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/15 px-3 text-[0.7rem] font-black dark:border-white/15"><Eye className="h-4 w-4" /> Anteprima</button>
+                      <button type="button" onClick={() => setPreview({ activity, eligibleIndices })} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/15 px-3 text-[0.7rem] font-black dark:border-white/15"><Eye className="h-4 w-4" /> Anteprima</button>
                       <button type="button" onClick={() => setEditor(activity)} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/15 px-3 text-[0.7rem] font-black dark:border-white/15"><Pencil className="h-4 w-4" /> Modifica</button>
                       <button
                         type="button"
                         disabled={isLiveActivity}
-                        onClick={() => liveSession ? switchLiveActivity(activity) : setPresenting(activity)}
+                        onClick={() => liveSession ? switchLiveActivity(activity, eligibleIndices) : setPresenting({ activity, eligibleIndices })}
                         className={`focus-ring col-span-2 inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full px-3 text-xs font-black disabled:cursor-default ${isLiveActivity ? 'border border-clay/25 bg-blush text-clay dark:border-coral/25 dark:bg-coral/10 dark:text-coral' : 'bg-ink text-white dark:bg-clay'}`}
                       >
                         <ExternalLink className="h-4 w-4" />
@@ -592,9 +647,10 @@ export default function AdminSpeakingActivities() {
         </div>
       </section>
 
-      <PreviewModal activity={preview} onClose={() => setPreview(null)} />
+      <PreviewModal activity={preview?.activity || null} eligibleIndices={preview?.eligibleIndices || null} onClose={() => setPreview(null)} />
       <PresentationLauncher
-        activity={presenting}
+        activity={presenting?.activity || null}
+        eligibleIndices={presenting?.eligibleIndices || null}
         initialLearnerId={focusedLearnerId}
         onClose={() => setPresenting(null)}
         onStartLive={startLiveSession}

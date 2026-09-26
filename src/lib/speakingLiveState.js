@@ -25,6 +25,9 @@ export function speakingLiveSessionDescriptor(session) {
     activityId,
     learnerId: text(session?.learnerId) || null,
     levels: uniqueLevels(session?.levels),
+    eligibleIndices: Array.isArray(session?.eligibleIndices)
+      ? session.eligibleIndices.filter((value) => Number.isInteger(value) && value >= 0)
+      : null,
     controlId,
     presenterUrl,
     startedAt: Number(session?.startedAt || Date.now()),
@@ -59,6 +62,9 @@ export function loadSpeakingLiveSession() {
       activityId,
       learnerId: text(value.learnerId) || null,
       levels: uniqueLevels(value.levels),
+      eligibleIndices: Array.isArray(value.eligibleIndices)
+        ? value.eligibleIndices.filter((item) => Number.isInteger(item) && item >= 0)
+        : null,
       controlId,
       presenterUrl,
       startedAt: Number(value.startedAt || value.savedAt || Date.now()),

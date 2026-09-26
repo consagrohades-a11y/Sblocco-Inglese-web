@@ -85,7 +85,7 @@ export async function recordSpeakingItem({ sessionId, itemText, itemIndex = null
 }
 
 export async function loadSpeakingItemHistory(learnerId, activityId, recentDays = 60) {
-  const { data, error } = await supabase.rpc('admin_get_speaking_item_history', {
+  const { data, error } = await supabase.rpc('admin_get_speaking_item_history_v2', {
     p_learner_id: learnerId,
     p_activity_id: activityId,
     p_recent_days: recentDays,
@@ -95,11 +95,37 @@ export async function loadSpeakingItemHistory(learnerId, activityId, recentDays 
 }
 
 export async function loadSpeakingActivityHistory(learnerId) {
-  const { data, error } = await supabase.rpc('admin_get_speaking_activity_history', {
+  const { data, error } = await supabase.rpc('admin_get_speaking_activity_history_v2', {
     p_learner_id: learnerId,
   });
   if (error) throw error;
   return data || [];
+}
+
+export async function loadSpeakingPracticeCatalog(learnerId) {
+  const { data, error } = await supabase.rpc('admin_get_speaking_practice_catalog', {
+    p_learner_id: learnerId,
+  });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function confirmSpeakingPractice({ sessionId, itemText, itemIndex = null }) {
+  const { data, error } = await supabase.rpc('admin_confirm_speaking_practice', {
+    p_session_id: sessionId,
+    p_item_text: itemText,
+    p_item_index: itemIndex,
+  });
+  if (error) throw error;
+  return data || null;
+}
+
+export async function undoLatestSpeakingPractice(sessionId) {
+  const { data, error } = await supabase.rpc('admin_undo_latest_speaking_practice', {
+    p_session_id: sessionId,
+  });
+  if (error) throw error;
+  return data || null;
 }
 
 function isAuthFailure(error) {
