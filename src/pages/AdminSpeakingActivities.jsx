@@ -26,6 +26,7 @@ import { loadAdminLearners } from '../lib/adminLearnersApi.js';
 import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
 import { createSpeakingControlId, openOrReuseSpeakingStudentWindow, SPEAKING_STUDENT_WINDOW_NAME } from '../lib/speakingLiveControl.js';
 import { loadSpeakingActivities, loadSpeakingActivityHistory, updateSpeakingActivity } from '../lib/adminSpeakingActivitiesApi.js';
+import { findMatchingSpeakingItems } from '../lib/speakingItemSearch.js';
 
 const LEVELS = ['A1','A2','B1','B2','C1','C2'];
 const typeLabels = {
@@ -58,8 +59,11 @@ function itemCounts(activity) {
   return Object.fromEntries(LEVELS.map((level) => [level, items.filter((item) => asArray(item.levels).includes(level)).length]));
 }
 
-function PreviewModal({ activity, onClose }) {
-  const items = useMemo(() => asArray(activity?.prompts).map((item) => normaliseItem(item, asArray(activity?.levels))), [activity]);
+function PreviewModal({ activity, eligibleIndices, onClose }) {
+  const items = useMemo(() => asArray(activity?.prompts)
+    .map((item, sourceIndex) => ({ item: normaliseItem(item, asArray(activity?.levels)), sourceIndex }))
+    .filter(({ sourceIndex }) => !eligibleIndices || eligibleIndices.includes(sourceIndex))
+    .map(({ item }) => item), [activity, eligibleIndices]);
   const [index, setIndex] = useState(0);
   useEffect(() => setIndex(0), [activity?.id]);
   if (!activity) return null;
@@ -111,7 +115,7 @@ function PreviewModal({ activity, onClose }) {
   );
 }
 
-function PresentationLauncher({ activity, initialLearnerId = '', onClose, onStartLive }) {
+function PresentationLauncher({ activity, eligibleIndices, initialLearnerId = '', onClose, onStartLive }) {
   const [levels, setLevels] = useState(() => asArray(activity?.levels));
   const [learners, setLearners] = useState([]);
   const [learnerId, setLearnerId] = useState(initialLearnerId || '');
@@ -194,6 +198,7 @@ function PresentationLauncher({ activity, initialLearnerId = '', onClose, onStar
       levels: LEVELS.filter((level) => levels.includes(level)).join(','),
       control: controlId,
     });
+    if (eligibleIndices) params.set('indices', eligibleIndices.join(','));
     if (learnerId) params.set('learner', learnerId);
 
     const presenterUrl = `/admin/present/speaking/${activity.id}?${params.toString()}`;
@@ -210,6 +215,7 @@ function PresentationLauncher({ activity, initialLearnerId = '', onClose, onStar
       learner: selectedLearner,
       learnerId: learnerId || null,
       levels: LEVELS.filter((level) => levels.includes(level)),
+      eligibleIndices,
       controlId,
       presenterUrl,
       windowName,
@@ -370,16 +376,11 @@ export default function AdminSpeakingActivities() {
 
   const types = useMemo(() => Array.from(new Set(activities.map((activity) => activity.activity_type).filter(Boolean))).sort(), [activities]);
   const filtered = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    return activities.filter((activity) => {
-      if (favoritesOnly && !activity.favorite) return false;
-      if (level !== 'all' && !asArray(activity.levels).includes(level)) return false;
-      if (type !== 'all' && activity.activity_type !== type) return false;
-      if (!needle) return true;
-      const itemText = asArray(activity.prompts).map((item) => typeof item === 'string' ? item : item?.text).filter(Boolean);
-      const itemMetadata = asArray(activity.prompts).flatMap((item) => typeof item === 'string' ? [] : [...asArray(item?.context_tags), ...asArray(item?.language_targets)]);
-      return [activity.title, activity.summary, ...asArray(activity.goals), ...asArray(activity.tags), ...itemText, ...itemMetadata]
-        .some((value) => String(value || '').toLowerCase().includes(needle));
+    return activities.flatMap((activity) => {
+      if (favoritesOnly && !activity.favorite) return [];
+      if (type !== 'all' && activity.activity_type !== type) return [];
+      const matches = findMatchingSpeakingItems(activity, { query, level });
+      return matches.length ? [{ activity, eligibleIndices: matches.map(({ sourceIndex }) => sourceIndex) }] : [];
     });
   }, [activities, favoritesOnly, level, query, type]);
 
@@ -423,9 +424,9 @@ export default function AdminSpeakingActivities() {
     return supported;
   }
 
-  function switchLiveActivity(activity) {
+  function switchLiveActivity(activity, eligibleIndices) {
     if (!liveSession?.controlId) {
-      setPresenting(activity);
+      setPresenting({ activity, eligibleIndices });
       return;
     }
 
@@ -439,6 +440,7 @@ export default function AdminSpeakingActivities() {
       levels: LEVELS.filter((item) => nextLevels.includes(item)).join(','),
       control: liveSession.controlId,
     });
+    if (eligibleIndices) params.set('indices', eligibleIndices.join(','));
     if (liveSession.learnerId) params.set('learner', liveSession.learnerId);
 
     const presenterUrl = `/admin/present/speaking/${activity.id}?${params.toString()}`;
@@ -457,6 +459,7 @@ export default function AdminSpeakingActivities() {
       ...current,
       activity,
       levels: nextLevels,
+      eligibleIndices,
       presenterUrl,
       studentWindow,
     } : current);
@@ -511,7 +514,7 @@ export default function AdminSpeakingActivities() {
 
           {!loading && filtered.length ? (
             <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6">
-              {filtered.map((activity) => {
+              {filtered.map(({ activity, eligibleIndices }) => {
                 const counts = itemCounts(activity);
                 const isLiveActivity = liveSession?.activity?.id === activity.id;
                 return (
@@ -522,6 +525,7 @@ export default function AdminSpeakingActivities() {
                     </div>
 
                     <p className="mt-3 text-[0.82rem] font-semibold leading-5 text-ink/65 dark:text-white/65">{activity.summary}</p>
+                    {(query.trim() || level !== 'all') ? <p className="mt-2 text-xs font-bold text-ink/70 dark:text-white/80">{eligibleIndices.length} item corrispondent{eligibleIndices.length === 1 ? 'e' : 'i'}</p> : null}
                     <div className="mt-4 flex flex-wrap gap-2">
                       {asArray(activity.levels).map((item) => <span key={item} className="rounded-full bg-linen px-2.5 py-1 text-xs font-black dark:bg-white/10">{item} · {counts[item] || 0}</span>)}
                       {activity.duration_minutes ? <span className="inline-flex items-center gap-1 rounded-full bg-linen px-2 py-1 text-[0.68rem] font-black dark:bg-white/10"><Clock3 className="h-3 w-3" />{activity.duration_minutes} min</span> : null}
@@ -530,12 +534,12 @@ export default function AdminSpeakingActivities() {
                     <div className="mt-4"><p className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Speaking focus</p><div className="mt-2 flex flex-wrap gap-1.5">{asArray(activity.goals).slice(0, 4).map((goal) => <span key={goal} className="rounded-full bg-mint/60 px-2 py-1 text-[0.68rem] font-black dark:bg-emerald-300/10 dark:text-emerald-100">{goal}</span>)}</div></div>
 
                     <div className="mt-auto grid grid-cols-2 gap-2 pt-5">
-                      <button type="button" onClick={() => setPreview(activity)} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/15 px-3 text-[0.7rem] font-black dark:border-white/15"><Eye className="h-4 w-4" /> Anteprima</button>
+                      <button type="button" onClick={() => setPreview({ activity, eligibleIndices })} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/15 px-3 text-[0.7rem] font-black dark:border-white/15"><Eye className="h-4 w-4" /> Anteprima</button>
                       <button type="button" onClick={() => setEditor(activity)} className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/15 px-3 text-[0.7rem] font-black dark:border-white/15"><Pencil className="h-4 w-4" /> Modifica</button>
                       <button
                         type="button"
                         disabled={isLiveActivity}
-                        onClick={() => liveSession ? switchLiveActivity(activity) : setPresenting(activity)}
+                        onClick={() => liveSession ? switchLiveActivity(activity, eligibleIndices) : setPresenting({ activity, eligibleIndices })}
                         className={`focus-ring col-span-2 inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full px-3 text-xs font-black disabled:cursor-default ${isLiveActivity ? 'border border-clay/25 bg-blush text-clay dark:border-coral/25 dark:bg-coral/10 dark:text-coral' : 'bg-ink text-white dark:bg-clay'}`}
                       >
                         <ExternalLink className="h-4 w-4" />
@@ -552,9 +556,10 @@ export default function AdminSpeakingActivities() {
         </div>
       </section>
 
-      <PreviewModal activity={preview} onClose={() => setPreview(null)} />
+      <PreviewModal activity={preview?.activity} eligibleIndices={preview?.eligibleIndices} onClose={() => setPreview(null)} />
       <PresentationLauncher
-        activity={presenting}
+        activity={presenting?.activity}
+        eligibleIndices={presenting?.eligibleIndices}
         initialLearnerId={focusedLearnerId}
         onClose={() => setPresenting(null)}
         onStartLive={setLiveSession}

@@ -47,61 +47,6 @@ function normaliseItem(item, fallbackLevels = [], sourceIndex = null) {
   };
 }
 
-function PromptBody({ item, style }) {
-  if (style === 'odd_one_out') {
-    const choices = item.text.split('·').map((part) => part.trim()).filter(Boolean);
-    if (choices.length > 1) {
-      return (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {choices.map((choice, index) => (
-            <div key={`${choice}-${index}`} className="grid min-h-28 place-items-center rounded-2xl border border-white/15 bg-white/[0.07] p-5 text-center text-2xl font-black sm:text-3xl">
-              {choice}
-            </div>
-          ))}
-        </div>
-      );
-    }
-  }
-
-  if (style === 'taboo') {
-    const match = item.text.match(/^(.+?)\s*(?:\||—)\s*forbidden:\s*(.+)$/i);
-    if (match) {
-      const forbidden = match[2].split(',').map((word) => word.trim()).filter(Boolean);
-      return (
-        <div>
-          <p className="text-center text-4xl font-black sm:text-6xl">{match[1].trim()}</p>
-          <div className="mt-8">
-            <p className="text-center text-xs font-black uppercase tracking-[0.16em] text-white/55">Do not say</p>
-            <div className="mt-3 flex flex-wrap justify-center gap-2">
-              {forbidden.map((word) => <span key={word} className="rounded-full border border-white/20 bg-white/[0.08] px-4 py-2 text-sm font-black">{word}</span>)}
-            </div>
-          </div>
-        </div>
-      );
-    }
-  }
-
-  if (style === 'repair') {
-    return (
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.16em] text-white/50">Original line</p>
-        <p className="mt-4 text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>
-      </div>
-    );
-  }
-
-  if (style === 'story') {
-    return (
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.16em] text-white/50">Story seed</p>
-        <p className="mt-4 text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>
-      </div>
-    );
-  }
-
-  return <p className="text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>;
-}
-
 export default function SpeakingActivityPresenter() {
   const { activityId } = useParams();
   const [searchParams] = useSearchParams();
@@ -141,6 +86,13 @@ export default function SpeakingActivityPresenter() {
       .map((level) => level.trim().toUpperCase())
       .filter((level) => LEVELS.includes(level));
     return Array.from(new Set(requested));
+  }, [searchParams]);
+
+  const selectedIndices = useMemo(() => {
+    const raw = searchParams.get('indices');
+    if (raw === null) return null;
+    return new Set(raw.split(',').filter((value) => /^\d+$/.test(value)).map(Number)
+      .filter((value) => Number.isSafeInteger(value)));
   }, [searchParams]);
 
   useEffect(() => {
@@ -229,6 +181,7 @@ export default function SpeakingActivityPresenter() {
 
     const eligible = asArray(activity.prompts)
       .map((item, sourceIndex) => normaliseItem(item, asArray(activity.levels), sourceIndex))
+      .filter((item) => !selectedIndices || selectedIndices.has(item.sourceIndex))
       .filter((item) => !selectedLevels.length || asArray(item.levels).some((level) => selectedLevels.includes(level)))
       .map((item) => ({
         ...item,
@@ -252,7 +205,7 @@ export default function SpeakingActivityPresenter() {
       const rightTime = new Date(right.priorUse?.last_used_at || 0).getTime();
       return leftTime - rightTime;
     });
-  }, [activity, historyReady, itemHistory, learnerId, selectedLevels]);
+  }, [activity, historyReady, itemHistory, learnerId, selectedIndices, selectedLevels]);
 
   useEffect(() => {
     setIndex(0);
