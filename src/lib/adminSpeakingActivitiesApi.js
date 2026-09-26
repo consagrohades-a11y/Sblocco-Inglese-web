@@ -23,6 +23,14 @@ export async function loadSpeakingActivity(id) {
   return data;
 }
 
+export async function loadSpeakingPresenterActivity(id) {
+  const { data, error } = await supabase.rpc('admin_get_speaking_presenter_activity', {
+    p_activity_id: id,
+  });
+  if (error) throw error;
+  return data || null;
+}
+
 export async function createSpeakingActivity(activity) {
   const { data, error } = await supabase
     .from('admin_speaking_activities')
@@ -46,14 +54,24 @@ export async function updateSpeakingActivity(id, patch) {
 }
 
 
-export async function startSpeakingSession({ learnerId, activityId, levels = [] }) {
-  const { data, error } = await supabase.rpc('admin_start_speaking_session', {
+export async function startSpeakingSession({ learnerId, activityId, levels = [], controlId = null }) {
+  const { data, error } = await supabase.rpc('admin_start_or_resume_speaking_session', {
     p_learner_id: learnerId,
     p_activity_id: activityId,
     p_levels: levels,
+    p_control_id: controlId,
   });
   if (error) throw error;
   return data;
+}
+
+export async function finishSpeakingControl(controlId) {
+  if (!controlId) return 0;
+  const { data, error } = await supabase.rpc('admin_finish_speaking_control', {
+    p_control_id: controlId,
+  });
+  if (error) throw error;
+  return Number(data || 0);
 }
 
 export async function recordSpeakingItem({ sessionId, itemText, itemIndex = null }) {
