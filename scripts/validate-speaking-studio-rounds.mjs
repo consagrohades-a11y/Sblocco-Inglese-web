@@ -102,12 +102,15 @@ for (const fixture of fixtures) {
 
   const learner = projectSpeakingRoundForLearner(normalized);
   const learnerJson = JSON.stringify(learner);
+  assert.equal(Object.hasOwn(learner, 'teacher'), false, fixture.format + ' learner projection exposed the teacher object');
+  assert.equal(Object.hasOwn(learner, 'teacher_note'), false, fixture.format + ' learner projection exposed teacher_note');
+  assert.equal(Object.hasOwn(learner, 'challenge'), false, fixture.format + ' learner projection exposed the hidden challenge payload');
+  assert.ok(learner.roles.every((role) => !Object.hasOwn(role, 'private_cue')), fixture.format + ' learner projection exposed a private role cue');
   assert.ok(!learnerJson.includes('PRIVATE ROLE CUE'), fixture.format + ' learner projection leaked a private role cue');
   if (normalized.teacher_note) assert.ok(!learnerJson.includes(normalized.teacher_note), fixture.format + ' learner projection leaked teacher notes');
-  if (fixture.teacher) {
-    for (const value of Object.values(fixture.teacher)) {
-      if (typeof value === 'string' && value) assert.ok(!learnerJson.includes(value), fixture.format + ' learner projection leaked teacher-only content');
-    }
+  for (const [field, value] of Object.entries(fixture.teacher || {})) {
+    if (field === 'secret_option_key') continue;
+    if (typeof value === 'string' && value) assert.ok(!learnerJson.includes(value), fixture.format + ' learner projection leaked teacher-only content from ' + field);
   }
 
   const document = createStudioDocument({
