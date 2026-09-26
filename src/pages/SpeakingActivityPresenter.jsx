@@ -46,7 +46,7 @@ function normaliseItem(item, fallbackLevels = [], sourceIndex = null) {
     support: Array.isArray(item?.support) ? item.support : [],
     challenge: typeof item?.challenge === 'string' ? item.challenge : item?.challenge?.text || '',
     sourceIndex,
-    historyKey: normaliseHistoryText(text + ' ' + (item?.format || '')),
+    historyKey: normaliseHistoryText(text),
   };
 }
 

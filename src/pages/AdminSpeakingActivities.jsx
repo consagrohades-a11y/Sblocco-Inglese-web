@@ -277,10 +277,10 @@ function PresentationLauncher({ activity, eligibleIndices = null, initialLearner
                   {historyLoading
                     ? 'Controllo storico…'
                     : activityHistory
-                      ? `Questo gioco: ${activityHistory.session_count} session${Number(activityHistory.session_count) === 1 ? 'e' : 'i'} · ${activityHistory.items_seen} item già visti · ultima ${new Intl.DateTimeFormat('it-IT', { day: '2-digit', month: 'short' }).format(new Date(activityHistory.last_session_at))}`
+                      ? `Questo gioco: ${activityHistory.session_count} session${Number(activityHistory.session_count) === 1 ? 'e' : 'i'} · ${activityHistory.items_shown} mostrati · ${activityHistory.items_practised} praticati · ultima ${new Intl.DateTimeFormat('it-IT', { day: '2-digit', month: 'short' }).format(new Date(activityHistory.last_session_at))}`
                       : 'Questo gioco non risulta ancora usato con questo studente.'}
                 </p>
-                <p className="mt-0.5 text-[0.68rem] font-bold text-clay dark:text-coral">Smart no-repeat: evita prima gli item usati negli ultimi 60 giorni.</p>
+                <p className="mt-0.5 text-[0.68rem] font-bold text-clay dark:text-coral">Smart no-repeat: privilegia ciò che non è stato praticato; gli item solo mostrati restano distinti.</p>
               </div>
               <button type="button" onClick={() => setLearnerId('')} className="focus-ring min-h-9 rounded-full border border-ink/10 px-3 text-xs font-black dark:border-white/10">Cambia</button>
             </div>
@@ -513,7 +513,7 @@ export default function AdminSpeakingActivities() {
 
   function switchLiveActivity(activity, eligibleIndices = null) {
     if (!liveSession?.controlId) {
-      setPresenting(activity);
+      setPresenting({ activity, eligibleIndices });
       return;
     }
 
