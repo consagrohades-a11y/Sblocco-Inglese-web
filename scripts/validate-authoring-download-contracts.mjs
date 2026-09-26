@@ -26,6 +26,14 @@ for (const [name, kit] of [['universal', universal], ['grammar', grammar], ['spe
 
 assert.equal(Object.keys(speaking.activity_mechanics || {}).length, 59, 'Speaking authoring kit must document all 59 activities.');
 assert.equal(speaking.import_contract?.entity_type, 'speaking_item_batch', 'Speaking kit must document the import batch contract.');
+assert.equal(speaking.block_registry_version, 2, 'Speaking kit must declare the current Block Registry version.');
+assert.equal(speaking.speaking_round_contract_version, 1, 'Speaking kit must declare the structured speaking contract version.');
+assert.ok(speaking.supported_levels?.includes('A0'), 'Speaking kit must support A0.');
+assert.ok(speaking.supported_levels?.includes('A1+'), 'Speaking kit must support bridge levels.');
+assert.equal(speaking.structured_formats?.length, 5, 'Speaking kit must document all five benchmark structured formats.');
+for (const format of ['number_mission','picture_detective','explain_without_saying','conversation_detective','make_the_choice']) {
+  assert.ok(speaking.completed_examples?.[format], `Speaking kit must include a completed ${format} example.`);
+}
 assert.equal(b2Reading.block_registry_version, 2, 'B2 reading kit must target Block Registry v2.');
 assert.ok(b2Reading.completed_examples?.b2_part5, 'B2 reading kit must include a completed Part 5 example.');
 assert.ok(b2Reading.completed_examples?.b2_part6, 'B2 reading kit must include a completed Part 6 example.');
@@ -67,6 +75,8 @@ assert.ok(
   'Speaking import must append selected items rather than replace existing items.',
 );
 assert.ok(speakingImport.includes('analyseSpeakingItemSet'), 'Speaking import must run the duplicate/context quality gate.');
+assert.ok(speakingImport.includes('validateSpeakingRoundBlock'), 'Speaking import must validate structured rounds with the canonical contract.');
+assert.ok(speakingImport.includes("'A0'"), 'Speaking import must accept A0 items.');
 assert.ok(speakingImport.includes("'Salta'"), 'Speaking import must let admins skip individual items.');
 assert.ok(speakingImport.includes('Importa comunque'), 'Speaking import must let the teacher explicitly accept a flagged item.');
 assert.ok(speakingImport.includes('totals.unresolved === 0'), 'Speaking import must require a decision for every flagged item before import.');

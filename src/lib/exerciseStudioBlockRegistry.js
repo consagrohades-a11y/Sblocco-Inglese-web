@@ -1,6 +1,13 @@
 import { EXERCISE_BUILDER_LEVELS } from './exerciseBuilderSchemaV2.js';
+import {
+  createDefaultSpeakingRound,
+  normalizeSpeakingRoundBlock,
+  projectSpeakingRoundForLearner,
+  SPEAKING_ROUND_PRESETS,
+  validateSpeakingRoundBlock,
+} from './speakingRoundContract.js';
 
-export const STUDIO_BLOCK_REGISTRY_VERSION = 3;
+export const STUDIO_BLOCK_REGISTRY_VERSION = 4;
 
 const text = (value) => typeof value === 'string' ? value.trim() : '';
 const list = (value) => Array.isArray(value) ? value.map((item) => text(item)).filter(Boolean) : [];
@@ -1306,6 +1313,38 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
         terminal_punctuation: block.terminal_punctuation || null,
         shuffle_strategy: 'stable_attempt',
       },
+    }),
+  }),
+  speaking_round: definition({
+    type: 'speaking_round',
+    label: 'Speaking Round',
+    category: 'production',
+    capabilities: {
+      automaticGrading: false,
+      manualReview: false,
+      learnerRenderer: 'speaking_round',
+      speaking: true,
+      structuredMaterial: true,
+      teacherPrivateFields: true,
+      supports: true,
+      challenges: true,
+      roleSwap: true,
+    },
+    presets: SPEAKING_ROUND_PRESETS,
+    createDefault: () => createDefaultSpeakingRound('number_mission'),
+    normalize: (block) => normalizeSpeakingRoundBlock(block),
+    validate: (block) => validateSpeakingRoundBlock(block),
+    compile: (block, context) => commonQuestion(block, context, {
+      type: 'content_block',
+      primary_skill: 'speaking',
+      learning_objective: text(block.learning_objective) || 'Use English to complete a clear communicative task with another person.',
+      prompt: text(block.title) || text(block.instructions) || 'Speaking round',
+      content: {
+        presentation: 'speaking_round',
+        body: text(block.instructions) || text(block.title) || 'Speaking round',
+        round: projectSpeakingRoundForLearner(block),
+      },
+      grading: { mode: 'ungraded', weight: 0, nearly_correct_multiplier: 0 },
     }),
   }),
   written_response: definition({

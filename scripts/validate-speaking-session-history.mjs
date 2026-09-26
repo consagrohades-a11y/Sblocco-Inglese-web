@@ -9,6 +9,7 @@ const migration = read('supabase/migrations/20260922153000_speaking_session_hist
 const presenter = read('src/pages/SpeakingActivityPresenter.jsx');
 const library = read('src/pages/AdminSpeakingActivities.jsx');
 const api = read('src/lib/adminSpeakingActivitiesApi.js');
+const controller = read('src/components/admin/SpeakingLiveController.jsx');
 
 for (const token of [
   'create table if not exists public.admin_speaking_sessions',
@@ -34,14 +35,17 @@ assert.ok(api.includes('finishSpeakingSession'), 'Speaking API must finish sessi
 
 assert.ok(presenter.includes('RECENT_ITEM_DAYS = 60'), 'Presenter must define the recent-item no-repeat window.');
 assert.ok(presenter.includes('freshUnseen'), 'Random selection must prefer fresh unseen items.');
-assert.ok(presenter.includes('recent_use_count'), 'Presenter must use recent learner history.');
+assert.ok(presenter.includes('recent_practice_count'), 'Presenter must prioritize confirmed-practice history.');
+assert.ok(presenter.includes('recent_shown_count'), 'Presenter must keep shown history distinct from confirmed practice.');
 assert.ok(presenter.includes('recordSpeakingItem'), 'Presenter must persist each shown item.');
 assert.ok(presenter.includes('startSpeakingSession'), 'Presenter must create a session when a learner is selected.');
-assert.ok(presenter.includes('finishSpeakingSession'), 'Presenter must finish tracked sessions on cleanup.');
+assert.ok(controller.includes('finishSpeakingControl'), 'Teacher control must close the resumable speaking control when the live session ends.');
 
 assert.ok(library.includes('loadSpeakingActivityHistory'), 'Launcher must load learner activity history.');
 assert.ok(library.includes('Smart no-repeat'), 'Launcher must explain smart no-repeat before opening the presenter.');
-assert.ok(library.includes('items_seen'), 'Launcher must show prior item usage for the selected learner.');
+assert.ok(library.includes('items_shown'), 'Launcher must show prior display history for the selected learner.');
+assert.ok(library.includes('items_practised'), 'Launcher must show confirmed practice history for the selected learner.');
+assert.ok(library.includes('unpractisedOnly'), 'Launcher must support learner-specific unpractised discovery.');
 assert.ok(!library.includes('analyseSpeakingItemSet'), 'Speaking library must not run similarity analysis while browsing activities.');
 assert.ok(!library.includes('similarityByActivity'), 'Speaking library must not compute or render similarity counts.');
 const importModal = read('src/components/admin/SpeakingItemImportModal.jsx');

@@ -1,4 +1,8 @@
 import React from 'react';
+import SpeakingRoundContent from './SpeakingRoundContent.jsx';
+import { projectSpeakingRoundForLearner, SPEAKING_ROUND_FORMATS } from '../../lib/speakingRoundContract.js';
+
+const STRUCTURED_FORMATS = new Set(SPEAKING_ROUND_FORMATS.map((item) => item.id));
 
 function splitBadGood(text) {
   const source = String(text || '').trim();
@@ -15,7 +19,11 @@ function TextBlock({ children, compact = false }) {
   );
 }
 
-export default function SpeakingPromptContent({ item, style, compact = false }) {
+export default function SpeakingPromptContent({ item, style, compact = false, showSupport = false }) {
+  if (STRUCTURED_FORMATS.has(item?.format)) {
+    return <SpeakingRoundContent round={projectSpeakingRoundForLearner(item)} showSupport={showSupport} />;
+  }
+
   const text = String(item?.text || '');
   const comparison = splitBadGood(text);
 
