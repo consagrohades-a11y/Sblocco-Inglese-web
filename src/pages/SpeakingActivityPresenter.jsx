@@ -5,6 +5,7 @@ import SEO from '../components/SEO';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import SpeakingPromptContent from '../components/speaking/SpeakingPromptContent.jsx';
 import { connectSpeakingControl } from '../lib/speakingLiveControl.js';
+import { resolveSpeakingPresenterConfig } from '../lib/speakingPresenterRegistry.js';
 import { loadSpeakingPresenterState, saveSpeakingPresenterState } from '../lib/speakingLiveState.js';
 import { loadAdminLearnerDetail } from '../lib/adminLearnersApi.js';
 import {
@@ -241,6 +242,8 @@ export default function SpeakingActivityPresenter() {
   }, [activity, activityId, controlId, historyReady, items, learnerId, presenterStateReady, selectedLevels]);
 
   useEffect(() => {
+    if (controlId) return undefined;
+
     function onKeyDown(event) {
       if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLSelectElement) return;
       if (event.key === 'ArrowRight' && items.length) goNext();
@@ -248,7 +251,7 @@ export default function SpeakingActivityPresenter() {
     }
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [items.length]);
+  }, [controlId, items.length]);
 
   const current = items[index] || items[0] || null;
 
@@ -426,8 +429,13 @@ export default function SpeakingActivityPresenter() {
   if (loading || (learnerId && !historyReady)) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-ink dark:bg-surface-950 dark:text-white">Preparing speaking session…</div>;
   if (error || !activity) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-red-800 dark:bg-surface-950 dark:text-red-200">{error || 'Activity not found.'}</div>;
 
-  const steps = asArray(activity.student_steps);
-  const language = asArray(activity.useful_language);
+  const presenterConfig = resolveSpeakingPresenterConfig(activity);
+  const steps = presenterConfig.showActivitySteps ? asArray(activity.student_steps) : [];
+  const itemHasSupport = Boolean(current?.student_support || asArray(current?.support).length);
+  const language = presenterConfig.allowActivityLanguageFallback && supportVisible && !itemHasSupport
+    ? asArray(activity.useful_language)
+    : [];
+  const hasAside = steps.length > 0 || language.length > 0;
   const firstName = String(learner?.display_name || learner?.email || '').trim().split(/\\s+/)[0];
 
   return (
@@ -471,64 +479,64 @@ export default function SpeakingActivityPresenter() {
               <p className="mt-3 text-lg font-black">No items match the selected level combination.</p>
             </div>
           ) : (
-            <div className="mt-5 grid gap-4 lg:min-h-0 lg:overflow-hidden xl:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
+            <div className={'mt-5 grid gap-4 lg:min-h-0 lg:overflow-hidden ' + (hasAside ? 'xl:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)]' : 'grid-cols-1')}>
               <section className="min-w-0 lg:flex lg:min-h-0 lg:flex-col">
-                <div className="flex min-h-[20rem] flex-col justify-center rounded-[2rem] bg-ink p-5 text-center text-white sm:p-7 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
-                  <div className="w-full"><SpeakingPromptContent item={current} style={activity.presenter_style} showSupport={supportVisible} /></div>
+                <div className="flex min-h-[20rem] flex-col justify-center rounded-[2rem] border border-ink/10 bg-white p-5 text-ink shadow-sm dark:border-white/10 dark:bg-surface-900 dark:text-white sm:p-7 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
+                  <div className="w-full"><SpeakingPromptContent item={current} config={presenterConfig} showSupport={supportVisible} /></div>
                   {current.student_support && supportVisible && !current.format ? (
-                    <div className="mt-5 rounded-2xl border border-white/15 bg-white/[0.07] p-4">
-                      <p className="text-xs font-black uppercase tracking-[0.15em] text-white/50">Need a little help?</p>
-                      <p className="mt-2 text-base font-bold leading-7 sm:text-lg">{current.student_support}</p>
+                    <div className="mx-auto mt-6 w-full max-w-4xl rounded-2xl border border-clay/20 bg-clay/[0.06] p-4 text-left">
+                      <p className="text-xs font-black uppercase tracking-[0.15em] text-clay">Need a little help?</p>
+                      <p className="mt-2 text-base font-bold leading-7 text-ink dark:text-white sm:text-lg">{current.student_support}</p>
                     </div>
                   ) : null}
                 </div>
 
-                {current?.hasChallenge ? (
-                  <div className="mt-3 shrink-0 rounded-2xl border border-ink/10 bg-white px-4 py-3 dark:border-white/10 dark:bg-surface-900">
-                    <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Extra challenge</p>
-                    {challengeVisible && revealedChallenge ? (
-                      <p className="mt-2 text-base font-black leading-6">{revealedChallenge}</p>
-                    ) : (
-                      <p className="mt-2 text-sm font-semibold text-ink/45 dark:text-white/45">Your teacher can reveal an extra challenge from the control panel.</p>
-                    )}
+                {challengeVisible && revealedChallenge ? (
+                  <div className="mt-3 shrink-0 rounded-2xl border border-clay/25 bg-clay/[0.07] px-4 py-3">
+                    <p className="text-xs font-black uppercase tracking-[0.15em] text-clay">Extra challenge</p>
+                    <p className="mt-2 text-base font-black leading-6 text-ink dark:text-white">{revealedChallenge}</p>
                   </div>
                 ) : null}
               </section>
 
-              <aside className="grid content-start gap-3 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
-                {steps.length ? (
-                  <section className="rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-surface-900">
-                    <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Your task</p>
-                    <div className="mt-3 grid gap-2">
-                      {steps.map((step, stepIndex) => (
-                        <div key={`${stepIndex}-${step}`} className="flex gap-3">
-                          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-linen text-xs font-black dark:bg-white/10">{stepIndex + 1}</span>
-                          <p className="pt-0.5 text-sm font-bold leading-6">{step}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                ) : null}
+              {hasAside ? (
+                <aside className="grid content-start gap-3 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
+                  {steps.length ? (
+                    <section className="rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-surface-900">
+                      <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Your task</p>
+                      <div className="mt-3 grid gap-2">
+                        {steps.map((step, stepIndex) => (
+                          <div key={stepIndex + '-' + step} className="flex gap-3">
+                            <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-linen text-xs font-black dark:bg-white/10">{stepIndex + 1}</span>
+                            <p className="pt-0.5 text-sm font-bold leading-6">{step}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
 
-                {language.length ? (
-                  <section className="rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-surface-900">
-                    <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Useful language</p>
-                    <div className="mt-3 grid gap-1.5">
-                      {language.map((phrase) => <div key={phrase} className="rounded-xl bg-linen/70 px-3 py-2 text-sm font-black leading-5 dark:bg-white/[0.06]">{phrase}</div>)}
-                    </div>
-                  </section>
-                ) : null}
-              </aside>
+                  {language.length ? (
+                    <section className="rounded-2xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-surface-900">
+                      <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Useful language</p>
+                      <div className="mt-3 grid gap-1.5">
+                        {language.map((phrase) => <div key={phrase} className="rounded-xl bg-linen/70 px-3 py-2 text-sm font-black leading-5 dark:bg-white/[0.06]">{phrase}</div>)}
+                      </div>
+                    </section>
+                  ) : null}
+                </aside>
+              ) : null}
             </div>
           )}
 
-          <footer className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-ink/10 pt-3 dark:border-white/10 lg:mt-0">
-            <button type="button" disabled={!items.length} onClick={goPrevious} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><ArrowLeft className="h-4 w-4" /> Previous</button>
-            <div className="flex flex-wrap gap-2">
-              <button type="button" disabled={items.length < 2} onClick={chooseRandomIndex} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><Dices className="h-4 w-4" /> Random</button>
-              <button type="button" disabled={!items.length} onClick={goNext} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-30 dark:bg-clay">Next <ArrowRight className="h-4 w-4" /></button>
-            </div>
-          </footer>
+          {!controlId ? (
+            <footer className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-ink/10 pt-3 dark:border-white/10 lg:mt-0">
+              <button type="button" disabled={!items.length} onClick={goPrevious} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><ArrowLeft className="h-4 w-4" /> Previous</button>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" disabled={items.length < 2} onClick={chooseRandomIndex} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/15 bg-white px-5 text-sm font-black disabled:opacity-30 dark:border-white/15 dark:bg-white/[0.05]"><Dices className="h-4 w-4" /> Random</button>
+                <button type="button" disabled={!items.length} onClick={goNext} className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-full bg-ink px-6 text-sm font-black text-white disabled:opacity-30 dark:bg-clay">Next <ArrowRight className="h-4 w-4" /></button>
+              </div>
+            </footer>
+          ) : null}
         </main>
       </div>
     </>
