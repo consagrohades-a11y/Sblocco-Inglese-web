@@ -76,7 +76,7 @@ assert.ok(
 );
 assert.ok(speakingImport.includes('analyseSpeakingItemSet'), 'Speaking import must run the duplicate/context quality gate.');
 assert.ok(speakingImport.includes('validateSpeakingRoundBlock'), 'Speaking import must validate structured rounds with the canonical contract.');
-assert.ok(speakingImport.includes("'A0'"), 'Speaking import must accept A0 items.');
+assert.ok(speakingImport.includes('ALL_SPEAKING_LEVELS'), 'Speaking import must use the canonical level catalog, including A0.');
 assert.ok(speakingImport.includes("'Salta'"), 'Speaking import must let admins skip individual items.');
 assert.ok(speakingImport.includes('Importa comunque'), 'Speaking import must let the teacher explicitly accept a flagged item.');
 assert.ok(speakingImport.includes('totals.unresolved === 0'), 'Speaking import must require a decision for every flagged item before import.');

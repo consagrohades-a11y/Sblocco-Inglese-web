@@ -6,6 +6,13 @@ import {
   resolveSpeakingPresenterConfig,
 } from '../src/lib/speakingPresenterRegistry.js';
 import {
+  ALL_SPEAKING_LEVELS,
+  resolveSpeakingActivityPedagogy,
+  speakingPriorityScore,
+  speakingRelevanceForLevel,
+} from '../src/lib/speakingActivityPedagogy.js';
+import { selectSpeakingItemsForLevels } from '../src/lib/speakingLevelSupport.js';
+import {
   adaptLegacySpeakingItem,
   parseAnswerFirst,
   parseBadGood,
@@ -105,6 +112,9 @@ assert.equal(newGameSeed.activities.length, 13, 'New speaking pack must contain 
 assert.equal(newGameSeed.activities.reduce((sum, activity) => sum + activity.prompts.length, 0), 72, 'New speaking pack must ship 72 playable items.');
 for (const activity of newGameSeed.activities) {
   assert.ok(EXPECTED_TITLES.includes(activity.title), 'Seeded activity is missing from presenter registry: ' + activity.title);
+}
+for (const activity of newGameSeed.activities) {
+  assert.deepEqual(activity.levels, ALL_SPEAKING_LEVELS, 'Seeded speaking activity must remain available A0-C2: ' + activity.title);
 }
 for (const activity of newGameSeed.activities) {
   for (const item of activity.prompts) {

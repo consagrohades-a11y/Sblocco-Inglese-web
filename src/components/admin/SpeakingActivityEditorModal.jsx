@@ -3,6 +3,7 @@ import { AlertTriangle, Plus, Save, Trash2, X } from 'lucide-react';
 import { createSpeakingActivity, updateSpeakingActivity } from '../../lib/adminSpeakingActivitiesApi.js';
 import { analyseSpeakingItemSet, duplicateReasonLabel } from '../../lib/speakingItemQuality.js';
 import StudioSpeakingRoundEditor from './exercise-studio/StudioSpeakingRoundEditor.jsx';
+import { ALL_SPEAKING_LEVELS } from '../../lib/speakingActivityPedagogy.js';
 import {
   SPEAKING_ROUND_FORMATS,
   createDefaultSpeakingRound,
@@ -10,7 +11,7 @@ import {
   validateSpeakingRoundBlock,
 } from '../../lib/speakingRoundContract.js';
 
-const LEVELS = ['A0','A1','A1+','A2','B1','B1+','B2','C1','C2','Mixed'];
+const LEVELS = [...ALL_SPEAKING_LEVELS, 'Mixed'];
 const STRUCTURED_FORMATS = new Set(SPEAKING_ROUND_FORMATS.map((item) => item.id));
 
 const emptyItem = () => ({
@@ -269,7 +270,7 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
       title,
       summary: draft.summary.trim(),
       activity_type: draft.activity_type,
-      levels: LEVELS.filter((level) => cleanedItems.some((item) => item.levels.includes(level))),
+      levels: [...ALL_SPEAKING_LEVELS],
       goals: cleanCsv(draft.goalsText),
       tags: cleanCsv(draft.tagsText),
       duration_minutes: Math.max(1, Number.parseInt(draft.duration_minutes || '15', 10) || 15),
@@ -307,8 +308,8 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
             <p className="text-xs font-black uppercase tracking-[0.15em] text-clay dark:text-coral">{activity ? 'Modifica attività' : 'Nuova attività'}</p>
             <h2 className="mt-1 text-2xl font-black">{activity?.title || 'Crea un gioco speaking'}</h2>
             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs font-bold text-ink/50 dark:text-white/50">
-              <span>Livelli automatici dagli item:</span>
-              {derivedLevels.length ? derivedLevels.map((level) => <span key={level} className="rounded-full bg-linen px-2 py-1 dark:bg-white/10">{level}</span>) : <span>nessuno</span>}
+              <span>Attività disponibile automaticamente A0–C2.</span>
+              <span className="rounded-full bg-linen px-2 py-1 dark:bg-white/10">Item coverage: {derivedLevels.length ? derivedLevels.join(' · ') : 'nessuno'}</span>
             </div>
           </div>
           <button type="button" onClick={onClose} className="focus-ring grid h-10 w-10 place-items-center rounded-full border border-ink/10 bg-white dark:border-white/10 dark:bg-white/10" aria-label="Chiudi"><X className="h-4 w-4" /></button>

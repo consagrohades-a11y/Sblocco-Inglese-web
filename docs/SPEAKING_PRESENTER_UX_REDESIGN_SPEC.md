@@ -227,7 +227,7 @@ Structured `speaking_round` formats keep their structured contract but resolve i
 
 # PART B — PRESENTER FAMILIES
 
-The 59 Speaking Library activities do not need 59 unrelated renderers. They need a small set of strong display families with specific variants.
+The 72 Speaking Library activities do not need 72 unrelated renderers. They need a small set of strong display families with specific variants.
 
 ## 5. Family F1 — Constraint Focus
 
