@@ -24,6 +24,8 @@ assert.ok(kit.challenge_design_guide?.strong_patterns?.length >= 5, 'Challenge d
 assert.ok(kit.batch_design_guide?.distribution_rules?.length >= 5, 'Batch design guidance is incomplete.');
 assert.ok(kit.novelty_and_duplicate_guide?.preflight_questions?.length >= 4, 'Novelty guidance is incomplete.');
 assert.equal(Object.keys(kit.activity_mechanics_detailed || {}).length, Object.keys(kit.activity_mechanics || {}).length, 'Every speaking activity needs a detailed authoring profile.');
+assert.equal(Object.keys(kit.activity_mechanics || {}).length, 72, 'Authoring kit must cover the complete 72-game Speaking Library.');
+assert.equal(kit.lower_level_game_pack?.games?.length, 10, 'Authoring kit must document all ten lower-level-first games.');
 assert.ok(kit.quality_assurance?.per_item_gate?.length >= 10, 'Per-item authoring QA is incomplete.');
 assert.ok(kit.quality_assurance?.per_batch_gate?.length >= 8, 'Per-batch authoring QA is incomplete.');
 assert.ok(kit.common_failure_modes?.length >= 8, 'Common failure-mode guidance is incomplete.');

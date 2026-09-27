@@ -65,6 +65,26 @@ function ConstraintFocus({ legacy }) {
     );
   }
 
+  if (legacy.variant === 'three_clues' && legacy.fieldCards) {
+    const target = legacy.fieldCards.find((field) => field.label === 'TARGET')?.value || legacy.text;
+    const clueValue = legacy.fieldCards.find((field) => field.label === 'CLUES')?.value || '';
+    const clues = clueValue.split(/\s*·\s*/).filter(Boolean);
+    return (
+      <div className="mx-auto grid w-full max-w-5xl gap-7 text-center">
+        <div>
+          <Eyebrow>Target</Eyebrow>
+          <div className="mt-3"><Prompt>{target}</Prompt></div>
+        </div>
+        <section>
+          <Eyebrow>Your three clues</Eyebrow>
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
+            {clues.map((clue) => <Token key={clue}>{clue}</Token>)}
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   const rule = legacy.variant === 'no_yes'
     ? 'Don’t say YES'
     : legacy.variant === 'no_adjectives'
@@ -93,6 +113,47 @@ function DialogueStack({ dialogue }) {
 }
 
 function SituationResponse({ legacy }) {
+  if (legacy.variant === 'map_mission' && legacy.fieldCards) {
+    const values = Object.fromEntries(legacy.fieldCards.map((field) => [field.label, field.value]));
+    const landmarks = String(values.LANDMARKS || '').split(/\s*·\s*/).filter(Boolean);
+    return (
+      <div className="mx-auto grid w-full max-w-5xl gap-6">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <section className="rounded-2xl border border-ink/10 bg-white p-5 text-center dark:border-white/10 dark:bg-white/[0.05]">
+            <Eyebrow>Start</Eyebrow>
+            <p className="mt-2 text-2xl font-black text-ink dark:text-white">{values.START}</p>
+          </section>
+          <section className="rounded-2xl border border-clay/20 bg-clay/[0.06] p-5 text-center">
+            <Eyebrow>Destination</Eyebrow>
+            <p className="mt-2 text-2xl font-black text-ink dark:text-white">{values.END}</p>
+          </section>
+        </div>
+        {landmarks.length ? (
+          <div className="flex flex-wrap justify-center gap-2">
+            {landmarks.map((landmark) => <Token key={landmark}>{landmark}</Token>)}
+          </div>
+        ) : null}
+        <p className="text-center text-xl font-black text-ink dark:text-white">{values.MISSION || 'Ask for the route.'}</p>
+      </div>
+    );
+  }
+
+  if (legacy.variant === 'pass_it_back' && legacy.fieldCards) {
+    const values = Object.fromEntries(legacy.fieldCards.map((field) => [field.label, field.value]));
+    return (
+      <div className="mx-auto grid w-full max-w-5xl gap-6">
+        <section className="rounded-[1.75rem] border border-ink/10 bg-linen/55 p-6 text-center dark:border-white/10 dark:bg-white/[0.05]">
+          <Eyebrow>Teacher asks</Eyebrow>
+          <p className="mt-3 text-3xl font-black leading-tight text-ink dark:text-white">{values.TEACHER}</p>
+        </section>
+        <div className="text-center">
+          <Eyebrow>Pass it back</Eyebrow>
+          <p className="mt-2 text-xl font-black text-ink dark:text-white">{values['YOUR JOB'] || 'Answer, then ask one connected question.'}</p>
+        </div>
+      </div>
+    );
+  }
+
   if (legacy.dialogue) {
     return (
       <div className="mx-auto grid w-full max-w-5xl gap-6">
@@ -174,7 +235,7 @@ function Inference({ legacy }) {
 
   return (
     <div className="mx-auto grid w-full max-w-5xl gap-5 text-center">
-      <Eyebrow>Find the clue</Eyebrow>
+      <Eyebrow>{legacy.variant === 'ask_to_unlock' ? 'Ask to unlock' : 'Find the clue'}</Eyebrow>
       <Prompt>{legacy.text}</Prompt>
     </div>
   );
@@ -268,6 +329,40 @@ function ChoiceTradeoff({ legacy }) {
 }
 
 function TransformRepair({ legacy }) {
+  if (legacy.variant === 'before_after' && legacy.beforeAfter) {
+    return (
+      <div className="mx-auto grid w-full max-w-5xl gap-4 sm:grid-cols-2">
+        <section className="rounded-[1.75rem] border border-ink/10 bg-white p-5 text-center dark:border-white/10 dark:bg-white/[0.05]">
+          <Eyebrow>Before</Eyebrow>
+          <p className="mt-4 text-2xl font-black leading-snug text-ink dark:text-white sm:text-3xl">{legacy.beforeAfter.before}</p>
+        </section>
+        <section className="rounded-[1.75rem] border border-clay/25 bg-clay/[0.06] p-5 text-center">
+          <Eyebrow>After</Eyebrow>
+          <p className="mt-4 text-2xl font-black leading-snug text-ink dark:text-white sm:text-3xl">{legacy.beforeAfter.after}</p>
+        </section>
+      </div>
+    );
+  }
+
+  if (legacy.variant === 'correct_me' && legacy.fieldCards) {
+    const values = Object.fromEntries(legacy.fieldCards.map((field) => [field.label, field.value]));
+    return (
+      <div className="mx-auto grid w-full max-w-5xl gap-5">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <section className="rounded-[1.75rem] border border-ink/10 bg-white p-5 text-center dark:border-white/10 dark:bg-white/[0.05]">
+            <Eyebrow>Your real info</Eyebrow>
+            <p className="mt-3 text-2xl font-black leading-snug text-ink dark:text-white">{values['YOUR INFO']}</p>
+          </section>
+          <section className="rounded-[1.75rem] border border-clay/25 bg-clay/[0.06] p-5 text-center">
+            <Eyebrow>Teacher says</Eyebrow>
+            <p className="mt-3 text-2xl font-black leading-snug text-ink dark:text-white">{values['TEACHER SAYS']}</p>
+          </section>
+        </div>
+        <p className="text-center text-xl font-black text-ink dark:text-white">Correct me naturally.</p>
+      </div>
+    );
+  }
+
   if (legacy.badGood) {
     return (
       <div className="mx-auto grid w-full max-w-5xl gap-4 sm:grid-cols-2">
@@ -333,6 +428,35 @@ function RapidFluency({ legacy }) {
 }
 
 function StorySequence({ legacy }) {
+  if (legacy.variant === 'schedule' && legacy.schedule) {
+    return (
+      <div className="mx-auto grid w-full max-w-4xl gap-3">
+        {legacy.schedule.map((entry, index) => (
+          <div key={entry.time + '-' + index} className="grid grid-cols-[5rem_minmax(0,1fr)] items-center gap-4 rounded-2xl border border-ink/10 bg-white px-4 py-3 text-left dark:border-white/10 dark:bg-white/[0.05]">
+            <span className="rounded-xl bg-clay/10 px-2 py-2 text-center text-sm font-black text-clay">{entry.time}</span>
+            <p className="text-lg font-black text-ink dark:text-white">{entry.action}</p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (legacy.variant === 'story_cards' && legacy.fieldCards) {
+    return (
+      <div className="mx-auto grid w-full max-w-5xl gap-5">
+        <div className="grid gap-3 sm:grid-cols-3">
+          {legacy.fieldCards.map((field) => (
+            <section key={field.label} className="rounded-[1.75rem] border border-ink/10 bg-white p-5 text-center dark:border-white/10 dark:bg-white/[0.05]">
+              <Eyebrow>{field.label}</Eyebrow>
+              <p className="mt-3 text-xl font-black leading-snug text-ink dark:text-white">{field.value}</p>
+            </section>
+          ))}
+        </div>
+        <p className="text-center text-xl font-black text-ink dark:text-white">Connect the three cards into one tiny story.</p>
+      </div>
+    );
+  }
+
   if (legacy.variant === 'three_stage') {
     return (
       <div className="mx-auto grid w-full max-w-5xl gap-5 text-center">

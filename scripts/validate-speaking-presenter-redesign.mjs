@@ -84,6 +84,22 @@ const EXPECTED_TITLES = [
 assert.equal(SPEAKING_ACTIVITY_TITLES.length, 59, 'All 59 active speaking activities must be registered.');
 assert.deepEqual([...SPEAKING_ACTIVITY_TITLES].sort(), [...EXPECTED_TITLES].sort(), 'Presenter registry must cover the complete active library.');
 
+const newGameSeed = JSON.parse(fs.readFileSync(new URL('../public/templates/sblocco-speaking-new-games-v1.json', import.meta.url), 'utf8'));
+assert.equal(newGameSeed.activities.length, 13, 'New speaking pack must contain 13 activities.');
+assert.equal(newGameSeed.activities.reduce((sum, activity) => sum + activity.prompts.length, 0), 72, 'New speaking pack must ship 72 playable items.');
+for (const activity of newGameSeed.activities) {
+  assert.ok(EXPECTED_TITLES.includes(activity.title), 'Seeded activity is missing from presenter registry: ' + activity.title);
+}
+for (const activity of newGameSeed.activities) {
+  for (const item of activity.prompts) {
+    if (item.format !== 'picture_detective') continue;
+    for (const option of item.material?.options || []) {
+      const relative = String(option.image_url || '').replace(/^\//, '');
+      assert.ok(relative && fs.existsSync(new URL('../public/' + relative, import.meta.url)), 'Missing Picture Detective asset: ' + option.image_url);
+    }
+  }
+}
+
 const allowedFamilies = new Set(Object.values(SPEAKING_PRESENTER_FAMILIES));
 for (const title of EXPECTED_TITLES) {
   const config = resolveSpeakingPresenterConfig({ title });
