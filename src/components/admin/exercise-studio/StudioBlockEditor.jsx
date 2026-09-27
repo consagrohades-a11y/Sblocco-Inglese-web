@@ -1,6 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { FileAudio2, FileVideo2, Loader2, Plus, Trash2, Upload } from 'lucide-react';
 import { getStudioBlockDefinition } from '../../../lib/exerciseStudioBlockRegistry.js';
+import {
+  createDefaultSpeakingRound,
+  SPEAKING_ROUND_FORMAT_LABELS,
+  SPEAKING_ROUND_FORMATS,
+} from '../../../lib/speakingRoundContract.js';
 import StudioSelect from './StudioSelect.jsx';
 import {
   deleteStudioContentMedia,
@@ -1796,6 +1801,221 @@ function WritingEditor({ block, patch }) {
   );
 }
 
+
+function SpeakingFactsEditor({ facts = [], onChange, label = 'Facts' }) {
+  const values = Array.isArray(facts) ? facts : [];
+  const patchFact = (index, value) => onChange(values.map((item, current) => current === index ? { ...item, ...value } : item));
+  return (
+    <section className="grid gap-3 rounded-2xl border border-ink/10 bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">{label}</p>
+        <span className="text-[0.68rem] font-bold text-ink/35 dark:text-white/35">{values.length}</span>
+      </div>
+      {values.map((fact, index) => (
+        <div key={index} className="grid gap-2 rounded-xl border border-ink/10 bg-linen/30 p-3 dark:border-white/10 dark:bg-white/[0.03]">
+          <div className="grid gap-2 sm:grid-cols-[0.8fr_1fr_0.8fr_auto]">
+            <input value={fact.label || ''} onChange={(event) => patchFact(index, { label: event.target.value })} placeholder="Label" className="focus-ring min-w-0 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white" />
+            <input value={fact.value ?? ''} onChange={(event) => patchFact(index, { value: event.target.value })} placeholder="Exact value" className="focus-ring min-w-0 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white" />
+            <input value={fact.display || ''} onChange={(event) => patchFact(index, { display: event.target.value })} placeholder="Display (optional)" className="focus-ring min-w-0 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white" />
+            <button type="button" onClick={() => onChange(values.filter((_, current) => current !== index))} className="focus-ring grid h-10 w-10 place-items-center rounded-xl text-ink/45 hover:bg-red-50 hover:text-red-700 dark:text-white/45"><Trash2 className="h-4 w-4" /></button>
+          </div>
+          <StudioSelect
+            value={fact.kind || 'text'}
+            onChange={(value) => patchFact(index, { kind: value })}
+            options={['text', 'quantity', 'time', 'weekday', 'date', 'price'].map((value) => [value, value])}
+            ariaLabel={\`Fact type \${index + 1}\`}
+          />
+        </div>
+      ))}
+      <button type="button" onClick={() => onChange([...values, { label: '', value: '', display: '', kind: 'text' }])} className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200"><Plus className="h-3.5 w-3.5" /> Add fact</button>
+    </section>
+  );
+}
+
+function SpeakingRolesEditor({ roles = [], onChange }) {
+  const values = Array.isArray(roles) ? roles : [];
+  const patchRole = (index, value) => onChange(values.map((item, current) => current === index ? { ...item, ...value } : item));
+  return (
+    <section className="grid gap-3 rounded-2xl border border-ink/10 bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Roles</p>
+        <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">Private cues stay teacher-only and are stripped from learner runtime payloads.</p>
+      </div>
+      {values.map((role, index) => (
+        <div key={index} className="grid gap-2 rounded-xl border border-ink/10 bg-linen/30 p-3 dark:border-white/10 dark:bg-white/[0.03]">
+          <div className="flex gap-2">
+            <input value={role.name || ''} onChange={(event) => patchRole(index, { name: event.target.value })} placeholder="Role name" className="focus-ring min-w-0 flex-1 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white" />
+            <button type="button" onClick={() => onChange(values.filter((_, current) => current !== index))} className="focus-ring grid h-10 w-10 place-items-center rounded-xl text-ink/45 hover:bg-red-50 hover:text-red-700 dark:text-white/45"><Trash2 className="h-4 w-4" /></button>
+          </div>
+          <TextArea label="Role goal" value={role.goal || ''} onChange={(value) => patchRole(index, { goal: value })} rows={2} />
+          <TextArea label="Teacher/private cue" value={role.private_cue || ''} onChange={(value) => patchRole(index, { private_cue: value })} rows={2} hint="Never sent to the learner renderer." />
+        </div>
+      ))}
+      <button type="button" onClick={() => onChange([...values, { name: '', goal: '', support: [], private_cue: '' }])} className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200"><Plus className="h-3.5 w-3.5" /> Add role</button>
+    </section>
+  );
+}
+
+function PictureChoicesEditor({ choices = [], onChange }) {
+  const values = Array.isArray(choices) ? choices : [];
+  const patchChoice = (index, value) => onChange(values.map((item, current) => current === index ? { ...item, ...value } : item));
+  return (
+    <section className="grid gap-3 rounded-2xl border border-ink/10 bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+      <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Image choices</p>
+      {values.map((choice, index) => (
+        <div key={index} className="grid gap-2 rounded-xl border border-ink/10 bg-linen/30 p-3 dark:border-white/10 dark:bg-white/[0.03]">
+          <div className="grid gap-2 sm:grid-cols-[5rem_1fr_auto]">
+            <input value={choice.key || ''} onChange={(event) => patchChoice(index, { key: event.target.value })} placeholder="A" className="focus-ring min-w-0 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-black text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white" />
+            <input value={choice.label || ''} onChange={(event) => patchChoice(index, { label: event.target.value })} placeholder="Object name" className="focus-ring min-w-0 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white" />
+            <button type="button" onClick={() => onChange(values.filter((_, current) => current !== index))} className="focus-ring grid h-10 w-10 place-items-center rounded-xl text-ink/45 hover:bg-red-50 hover:text-red-700 dark:text-white/45"><Trash2 className="h-4 w-4" /></button>
+          </div>
+          <TextInput label="Image URL / asset path" value={choice.image_src || ''} onChange={(value) => patchChoice(index, { image_src: value })} />
+          <TextInput label="Accessible description" value={choice.alt || ''} onChange={(value) => patchChoice(index, { alt: value })} hint="Describe only visible facts. Do not expose the teacher secret." />
+          <TextArea label="Optional visible description" value={choice.description || ''} onChange={(value) => patchChoice(index, { description: value })} rows={2} />
+        </div>
+      ))}
+      <button type="button" onClick={() => onChange([...values, { key: String.fromCharCode(65 + values.length), label: '', image_src: '', alt: '', description: '' }])} className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200"><Plus className="h-3.5 w-3.5" /> Add image choice</button>
+    </section>
+  );
+}
+
+function SpeakingDialogueEditor({ turns = [], onChange }) {
+  const values = Array.isArray(turns) ? turns : [];
+  const patchTurn = (index, value) => onChange(values.map((item, current) => current === index ? { ...item, ...value } : item));
+  return (
+    <section className="grid gap-3 rounded-2xl border border-ink/10 bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+      <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Dialogue turns</p>
+      {values.map((turn, index) => (
+        <div key={index} className="grid gap-2 sm:grid-cols-[0.35fr_1fr_auto]">
+          <input value={turn.speaker || ''} onChange={(event) => patchTurn(index, { speaker: event.target.value })} placeholder="Speaker" className="focus-ring min-w-0 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white" />
+          <input value={turn.text || ''} onChange={(event) => patchTurn(index, { text: event.target.value })} placeholder="Line" className="focus-ring min-w-0 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-semibold text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white" />
+          <button type="button" onClick={() => onChange(values.filter((_, current) => current !== index))} className="focus-ring grid h-10 w-10 place-items-center rounded-xl text-ink/45 hover:bg-red-50 hover:text-red-700 dark:text-white/45"><Trash2 className="h-4 w-4" /></button>
+        </div>
+      ))}
+      <button type="button" onClick={() => onChange([...values, { speaker: '', text: '' }])} className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200"><Plus className="h-3.5 w-3.5" /> Add turn</button>
+    </section>
+  );
+}
+
+function ComparisonOptionsEditor({ options = [], onChange }) {
+  const values = Array.isArray(options) ? options : [];
+  const patchOption = (index, value) => onChange(values.map((item, current) => current === index ? { ...item, ...value } : item));
+  return (
+    <section className="grid gap-3 rounded-2xl border border-ink/10 bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+      <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Options to compare</p>
+      {values.map((option, index) => (
+        <div key={index} className="grid gap-3 rounded-xl border border-ink/10 bg-linen/30 p-3 dark:border-white/10 dark:bg-white/[0.03]">
+          <div className="flex gap-2">
+            <input value={option.title || ''} onChange={(event) => patchOption(index, { title: event.target.value })} placeholder="Option title" className="focus-ring min-w-0 flex-1 rounded-xl border border-ink/10 bg-white px-3 py-2 text-sm font-black text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white" />
+            <button type="button" onClick={() => onChange(values.filter((_, current) => current !== index))} className="focus-ring grid h-10 w-10 place-items-center rounded-xl text-ink/45 hover:bg-red-50 hover:text-red-700 dark:text-white/45"><Trash2 className="h-4 w-4" /></button>
+          </div>
+          <TextArea label="Description" value={option.description || ''} onChange={(value) => patchOption(index, { description: value })} rows={2} />
+          <SpeakingFactsEditor facts={option.facts || []} onChange={(facts) => patchOption(index, { facts })} label="Comparable facts" />
+        </div>
+      ))}
+      <button type="button" onClick={() => onChange([...values, { key: \`option_\${values.length + 1}\`, title: '', description: '', facts: [] }])} className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200"><Plus className="h-3.5 w-3.5" /> Add option</button>
+    </section>
+  );
+}
+
+function SpeakingRoundEditor({ block, patch }) {
+  const material = block.material && typeof block.material === 'object' ? block.material : {};
+  const privateData = block.private && typeof block.private === 'object' ? block.private : {};
+  const changeFormat = (format) => {
+    const fresh = createDefaultSpeakingRound(format);
+    patch({
+      ...fresh,
+      title: block.title || '',
+      instruction: block.instruction || '',
+      situation: block.situation || '',
+      outcome: block.outcome || '',
+      primary_capacity: block.primary_capacity || '',
+      language_targets: block.language_targets || [],
+      support: block.support || [],
+      teacher_note: block.teacher_note || '',
+    });
+  };
+
+  return (
+    <>
+      <section className="grid gap-3 rounded-2xl border border-orange-200/70 bg-orange-50/45 p-4 dark:border-orange-300/15 dark:bg-orange-300/[0.04]">
+        <SelectInput
+          label="Speaking format"
+          value={block.format}
+          onChange={changeFormat}
+          options={SPEAKING_ROUND_FORMATS.map((format) => [format, SPEAKING_ROUND_FORMAT_LABELS[format]])}
+          hint="Changing format resets only format-specific material; shared teaching fields are preserved."
+        />
+        <TextInput label="Learner title" value={block.title || ''} onChange={(value) => patch({ title: value })} />
+        <TextArea label="Instruction" value={block.instruction || ''} onChange={(value) => patch({ instruction: value })} rows={3} />
+        <TextArea label="Situation / context" value={block.situation || ''} onChange={(value) => patch({ situation: value })} rows={3} />
+        <TextInput label="Primary capacity" value={block.primary_capacity || ''} onChange={(value) => patch({ primary_capacity: value })} placeholder="e.g. listening to numerical detail" />
+        <TextArea label="Outcome" value={block.outcome || ''} onChange={(value) => patch({ outcome: value })} rows={2} />
+      </section>
+
+      {block.format === 'number_mission' ? (
+        <>
+          <SpeakingFactsEditor facts={material.facts || []} onChange={(facts) => patch({ material: { ...material, facts } })} />
+          <TextArea label="Teacher-only mismatch / read-back script" value={privateData.teacher_script || ''} onChange={(value) => patch({ private: { ...privateData, teacher_script: value } })} rows={4} hint="This is never compiled into the learner payload." />
+        </>
+      ) : null}
+
+      {block.format === 'picture_detective' ? (
+        <>
+          <PictureChoicesEditor choices={material.choices || []} onChange={(choices) => patch({ material: { ...material, choices } })} />
+          <TextInput label="Teacher secret choice key" value={privateData.teacher_secret_key || ''} onChange={(value) => patch({ private: { ...privateData, teacher_secret_key: value } })} hint="Teacher-only. Must match one visible choice key." />
+        </>
+      ) : null}
+
+      {block.format === 'explain_without_saying' ? (
+        <>
+          <TextInput label="Target" value={material.target || ''} onChange={(value) => patch({ material: { ...material, target: value } })} />
+          <StringListEditor label="Forbidden words" items={material.forbidden_words || []} onChange={(forbidden_words) => patch({ material: { ...material, forbidden_words } })} />
+          <TextArea label="Teacher-only possible explanation" value={privateData.teacher_model || ''} onChange={(value) => patch({ private: { ...privateData, teacher_model: value } })} rows={4} />
+        </>
+      ) : null}
+
+      {block.format === 'conversation_detective' ? (
+        <>
+          <SpeakingDialogueEditor turns={material.turns || []} onChange={(turns) => patch({ material: { ...material, turns } })} />
+          <TextArea label="Inference question" value={material.question || ''} onChange={(value) => patch({ material: { ...material, question: value } })} rows={2} />
+          <StringListEditor label="Optional vocabulary" items={material.vocabulary || []} onChange={(vocabulary) => patch({ material: { ...material, vocabulary } })} />
+          <TextArea label="Hidden clue" value={privateData.hidden_clue || ''} onChange={(value) => patch({ private: { ...privateData, hidden_clue: value } })} rows={3} hint="Teacher-only until an intentional reveal is supported." />
+          <TextArea label="Teacher interpretation" value={privateData.teacher_interpretation || ''} onChange={(value) => patch({ private: { ...privateData, teacher_interpretation: value } })} rows={4} />
+        </>
+      ) : null}
+
+      {block.format === 'make_choice' ? (
+        <>
+          <ComparisonOptionsEditor options={material.options || []} onChange={(options) => patch({ material: { ...material, options } })} />
+          <StringListEditor label="Decision criteria" items={material.criteria || []} onChange={(criteria) => patch({ material: { ...material, criteria } })} />
+          <StringListEditor label="Constraints" items={material.constraints || []} onChange={(constraints) => patch({ material: { ...material, constraints } })} />
+        </>
+      ) : null}
+
+      <SpeakingRolesEditor roles={block.roles || []} onChange={(roles) => patch({ roles })} />
+      <StringListEditor label="Useful language" items={block.support || []} onChange={(support) => patch({ support })} hint="Support must help without revealing a secret or solving the task." />
+      <StringListEditor label="Language targets" items={block.language_targets || []} onChange={(language_targets) => patch({ language_targets })} />
+
+      <section className="grid gap-3 rounded-2xl border border-ink/10 bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-ink/65 dark:text-white/65">Challenge / second stage</p>
+        <TextArea label="Challenge" value={block.challenge?.text || ''} onChange={(value) => patch({ challenge: { ...(block.challenge || {}), text: value } })} rows={3} />
+        <SelectInput
+          label="Reveal timing"
+          value={block.challenge?.reveal || 'teacher-controlled'}
+          onChange={(value) => patch({ challenge: { ...(block.challenge || {}), reveal: value } })}
+          options={[['teacher-controlled', 'Teacher controlled'], ['after-attempt', 'After first attempt'], ['immediate', 'Visible immediately']]}
+        />
+      </section>
+
+      <TextArea label="Teacher facilitation note" value={block.teacher_note || ''} onChange={(value) => patch({ teacher_note: value })} rows={4} hint="Teacher-only. Never sent to learner runtime." />
+      <p className="rounded-xl bg-linen/55 px-3 py-2 text-xs font-semibold leading-5 text-ink/50 dark:bg-white/[0.04] dark:text-white/50">
+        Live speaking is teacher-observed and non-auto-graded. Opening a round is not evidence that the learner practised it.
+      </p>
+    </>
+  );
+}
+
 function TheoryEditor({ block, patch }) {
   if (block.type === 'examples') {
     return (
@@ -1928,6 +2148,7 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
         {block.type === 'translation' ? <TranslationEditor block={block} patch={patch} /> : null}
         {block.type === 'written_response' ? <WritingEditor block={block} patch={patch} /> : null}
         {block.type === 'media' ? <MediaEditor block={block} patch={patch} activityId={activityId} /> : null}
+        {block.type === 'speaking_round' ? <SpeakingRoundEditor block={block} patch={patch} /> : null}
         {definition.category === 'theory' ? <TheoryEditor block={block} patch={patch} /> : null}
       </div>
 
