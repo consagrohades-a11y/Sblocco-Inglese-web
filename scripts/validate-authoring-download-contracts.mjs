@@ -24,7 +24,7 @@ for (const [name, kit] of [['universal', universal], ['grammar', grammar], ['spe
   );
 }
 
-assert.equal(Object.keys(speaking.activity_mechanics || {}).length, 59, 'Speaking authoring kit must document all 59 activities.');
+assert.equal(Object.keys(speaking.activity_mechanics || {}).length, 72, 'Speaking authoring kit must document all 72 activities.');
 assert.equal(speaking.import_contract?.entity_type, 'speaking_item_batch', 'Speaking kit must document the import batch contract.');
 assert.equal(speaking.block_registry_version, 2, 'Speaking kit must declare the current Block Registry version.');
 assert.equal(speaking.speaking_round_contract_version, 1, 'Speaking kit must declare the structured speaking contract version.');
