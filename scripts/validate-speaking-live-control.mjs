@@ -13,6 +13,8 @@ const controller = read('src/components/admin/SpeakingLiveController.jsx');
 const presenter = read('src/pages/SpeakingActivityPresenter.jsx');
 const library = read('src/pages/AdminSpeakingActivities.jsx');
 const learner = read('src/pages/AdminLearnerDetail.jsx');
+const liveState = read('src/lib/speakingLiveState.js');
+const liveMigration = read('supabase/migrations/20260926123000_speaking_live_continuity.sql');
 
 assert.ok(control.includes('BroadcastChannel'), 'Live control should prefer BroadcastChannel.');
 assert.ok(control.includes('localStorage'), 'Live control should have a same-origin storage-event fallback.');
@@ -25,16 +27,30 @@ for (const command of ['previous', 'next', 'random', 'toggle-support', 'toggle-c
 }
 
 assert.ok(presenter.includes('presenter-state'), 'Presenter must broadcast state back to the teacher controller.');
+assert.ok(presenter.includes('loadSpeakingPresenterActivity'), 'Student presenter must load a learner-safe activity projection.');
+assert.ok(presenter.includes('loadSpeakingPresenterState'), 'Student presenter must restore active item and reveal state after refresh.');
+assert.ok(presenter.includes('saveSpeakingPresenterState'), 'Student presenter must persist active item and reveal state.');
 assert.ok(presenter.includes('supportVisible'), 'Presenter must support teacher-controlled support reveal.');
 assert.ok(presenter.includes("useState(false)"), 'Student support must be hidden by default.');
 assert.ok(!presenter.includes('setSupportVisible(true)'), 'Changing game items must never auto-open student support.');
+assert.ok(liveMigration.includes("'has_challenge'"), 'Learner-safe presenter payload must expose only challenge availability before reveal.');
+assert.ok(!liveMigration.includes("'challenge', prompt_item -> 'challenge'"), 'Reveal-later challenge text must not be preloaded into the student presenter payload.');
+assert.ok(controller.includes("command('toggle-challenge', { challenge: currentItem?.challenge || '' })"), 'Teacher controller must send challenge text only on an explicit reveal command.');
+assert.ok(presenter.includes("setRevealedChallenge(nextVisible ? String(payload.challenge) : '')"), 'Presenter must receive challenge text only from the teacher reveal command.');
+assert.ok(!presenter.includes('onClick={() => setChallengeVisible'), 'Student presenter must not expose a local challenge reveal control.');
+assert.ok(liveState.includes('revealedChallenge: state?.challengeVisible === true'), 'Intentional challenge reveal must remain refresh-safe after it has been shown.');
 assert.ok(presenter.includes('lg:h-[100dvh]'), 'Desktop presenter must fit the viewport height.');
 assert.ok(presenter.includes('lg:overflow-hidden'), 'Desktop presenter must prevent page-level scrolling.');
 assert.ok(presenter.includes("window.addEventListener('message'"), 'Presenter must accept direct window messages while unfocused.');
 assert.ok(presenter.includes('window.opener.postMessage'), 'Presenter must send state directly back to the teacher window.');
 assert.ok(controller.includes('studentWindow.postMessage'), 'Teacher controller must send commands directly to the student window.');
+assert.ok(controller.includes("payload.state?.activityId && payload.state.activityId !== session?.activity?.id"), 'Teacher controller must ignore stale state from the previous activity.');
+assert.ok(controller.includes('finishSpeakingControl'), 'Ending the live lesson must close all activity sessions under one control id.');
 assert.ok(controller.includes('openOrReuseSpeakingStudentWindow'), 'Teacher controller must reopen or reuse the same named student screen when the reference is stale.');
-const commandBlock = controller.slice(controller.indexOf('function command(type)'), controller.indexOf('function focusStudentWindow'));
+const commandStart = controller.indexOf('function command(');
+const commandEnd = controller.indexOf('function focusStudentWindow');
+assert.ok(commandStart >= 0 && commandEnd > commandStart, 'Teacher controller must expose the live command dispatcher before focusStudentWindow.');
+const commandBlock = controller.slice(commandStart, commandEnd);
 assert.ok(commandBlock.includes('return;'), 'Direct live commands must return after postMessage so toggle commands are not dispatched twice.');
 assert.ok(commandBlock.indexOf('return;') < commandBlock.lastIndexOf('channelRef.current?.send(payload)'), 'Broadcast fallback must run only after direct postMessage does not return.');
 assert.ok(controller.includes("window.addEventListener('message'"), 'Teacher controller must accept direct presenter state messages.');
@@ -49,6 +65,8 @@ assert.ok(!presenter.includes("addEventListener('focus'"), 'Student-window focus
 
 assert.ok(library.includes('createSpeakingControlId'), 'Speaking launcher must create a unique live-control channel.');
 assert.ok(library.includes('SpeakingLiveController'), 'Speaking library must keep the teacher controller open after launch.');
+assert.ok(library.includes('loadSpeakingLiveSession'), 'Speaking library must restore the teacher controller after refresh.');
+assert.ok(library.includes('saveSpeakingLiveSession'), 'Speaking library must persist the current teacher controller descriptor.');
 assert.ok(library.includes("searchParams.get('learner')"), 'Speaking library must accept a learner from the profile route.');
 assert.ok(library.includes('initialLearnerId={focusedLearnerId}'), 'Profile-selected learner must prefill the presentation launcher.');
 assert.ok(library.includes('Mostra allo studente'), 'An active session must let the teacher switch activities from the library.');
@@ -56,6 +74,9 @@ assert.ok(library.includes('openOrReuseSpeakingStudentWindow'), 'Activity switch
 assert.ok(library.includes('SPEAKING_STUDENT_WINDOW_NAME'), 'The first speaking launch must use the same stable student-screen name.');
 assert.ok(!library.includes('sblocco-speaking-${controlId}'), 'Speaking launch must not create a new browser window name for each control session.');
 assert.ok(library.includes('Apri schermo studente'), 'Speaking UX must describe one reusable student screen rather than a new window per game.');
+assert.ok(!library.includes('learners.slice(0, 10)'), 'Speaking learner selector must not silently truncate the active learner list.');
+assert.ok(!library.includes('.slice(0, 10);'), 'Speaking learner search results must not be capped at ten learners.');
+assert.ok(library.includes('max-h-56 overflow-y-auto'), 'Speaking learner selector must keep the full active learner list internally scrollable.');
 assert.ok(library.includes('window.focus()'), 'Launching the presenter should restore focus to the teacher panel.');
 const switchActivityBlock = library.slice(library.indexOf('function switchLiveActivity'), library.indexOf('\n\n  return (', library.indexOf('function switchLiveActivity')));
 assert.ok(!switchActivityBlock.includes('studentWindow.focus'), 'Changing activity must not steal focus from the teacher panel.');

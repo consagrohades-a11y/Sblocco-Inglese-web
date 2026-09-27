@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '../lib/supabaseClient.js';
+import { canKeepAuthenticatedView } from './authSessionContinuity.js';
 
 const AuthContext = createContext(null);
 const PROFILE_RETRY_DELAYS = [0, 180, 420, 800];
@@ -50,12 +51,14 @@ export function AuthProvider({ children }) {
   const [profileError, setProfileError] = useState('');
   const [loading, setLoading] = useState(true);
   const profileRequestRef = useRef(0);
+  const profileOwnerIdRef = useRef(null);
 
   const hydrateProfile = useCallback(async (activeUser) => {
     const requestId = ++profileRequestRef.current;
 
     if (!activeUser) {
       setProfile(null);
+      profileOwnerIdRef.current = null;
       setProfileError('');
       return null;
     }
@@ -64,12 +67,14 @@ export function AuthProvider({ children }) {
       const nextProfile = await loadProfileWithRetry(activeUser.id);
       if (requestId !== profileRequestRef.current) return null;
 
+      profileOwnerIdRef.current = nextProfile ? activeUser.id : null;
       setProfile(nextProfile);
       setProfileError(nextProfile ? '' : 'missing');
       return nextProfile;
     } catch {
       if (requestId !== profileRequestRef.current) return null;
 
+      profileOwnerIdRef.current = null;
       setProfile(null);
       setProfileError('unavailable');
       return null;
@@ -79,31 +84,41 @@ export function AuthProvider({ children }) {
   const refreshProfile = useCallback(async (activeUser = user) => {
     if (!activeUser) {
       profileRequestRef.current += 1;
+      profileOwnerIdRef.current = null;
       setProfile(null);
       setProfileError('');
       return null;
     }
 
-    setLoading(true);
+    // A manual profile refresh should not tear down a working live lesson.
+    const needsAccessCheck = profileOwnerIdRef.current !== activeUser.id;
+    if (needsAccessCheck) setLoading(true);
     try {
       return await hydrateProfile(activeUser);
     } finally {
-      setLoading(false);
+      if (needsAccessCheck) setLoading(false);
     }
   }, [hydrateProfile, user]);
 
   useEffect(() => {
     let active = true;
 
-    async function applySession(nextSession) {
+    async function applySession(nextSession, event = 'INITIAL_SESSION') {
       if (!active) return;
 
       const nextUser = nextSession?.user ?? null;
+      if (canKeepAuthenticatedView(event, nextUser?.id, profileOwnerIdRef.current)) {
+        setSession(nextSession);
+        setUser(nextUser);
+        return;
+      }
+
       setSession(nextSession ?? null);
       setUser(nextUser);
 
       if (!nextUser) {
         profileRequestRef.current += 1;
+        profileOwnerIdRef.current = null;
         setProfile(null);
         setProfileError('');
         setLoading(false);
@@ -129,7 +144,7 @@ export function AuthProvider({ children }) {
         return;
       }
 
-      await applySession(data.session ?? null);
+      await applySession(data.session ?? null, 'INITIAL_SESSION');
     }
 
     initialiseAuth();
@@ -139,13 +154,14 @@ export function AuthProvider({ children }) {
       // Defer profile/database work so auth state changes cannot deadlock the client.
       window.setTimeout(() => {
         if (!active) return;
-        applySession(nextSession);
+        applySession(nextSession, event);
       }, 0);
     });
 
     return () => {
       active = false;
       profileRequestRef.current += 1;
+      profileOwnerIdRef.current = null;
       listener.subscription.unsubscribe();
     };
   }, [hydrateProfile]);

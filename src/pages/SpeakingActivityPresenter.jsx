@@ -5,16 +5,16 @@ import SEO from '../components/SEO';
 import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import SpeakingPromptContent from '../components/speaking/SpeakingPromptContent.jsx';
 import { connectSpeakingControl } from '../lib/speakingLiveControl.js';
+import { loadSpeakingPresenterState, saveSpeakingPresenterState } from '../lib/speakingLiveState.js';
 import { loadAdminLearnerDetail } from '../lib/adminLearnersApi.js';
 import {
-  finishSpeakingSession,
-  loadSpeakingActivity,
+  loadSpeakingPresenterActivity,
   loadSpeakingItemHistory,
   recordSpeakingItem,
   startSpeakingSession,
 } from '../lib/adminSpeakingActivitiesApi.js';
 
-const LEVELS = ['A1','A2','B1','B2','C1','C2'];
+const LEVELS = ['A0','A1','A1+','A2','B1','B1+','B2','C1','C2','Mixed'];
 const RECENT_ITEM_DAYS = 60;
 
 function asArray(value) {
@@ -31,75 +31,23 @@ function normaliseItem(item, fallbackLevels = [], sourceIndex = null) {
       text: item,
       levels: fallbackLevels,
       student_support: '',
-      challenge: '',
+      support: [],
+      hasChallenge: false,
       sourceIndex,
       historyKey: normaliseHistoryText(item),
     };
   }
-  const text = item?.text || '';
+  const text = item?.text || item?.title || item?.instructions || '';
   return {
+    ...item,
     text,
     levels: asArray(item?.levels).length ? asArray(item.levels) : fallbackLevels,
-    student_support: item?.student_support || item?.support || '',
-    challenge: item?.challenge || '',
+    student_support: item?.student_support || (typeof item?.support === 'string' ? item.support : ''),
+    support: Array.isArray(item?.support) ? item.support : [],
+    hasChallenge: item?.has_challenge === true,
     sourceIndex,
     historyKey: normaliseHistoryText(text),
   };
-}
-
-function PromptBody({ item, style }) {
-  if (style === 'odd_one_out') {
-    const choices = item.text.split('·').map((part) => part.trim()).filter(Boolean);
-    if (choices.length > 1) {
-      return (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {choices.map((choice, index) => (
-            <div key={`${choice}-${index}`} className="grid min-h-28 place-items-center rounded-2xl border border-white/15 bg-white/[0.07] p-5 text-center text-2xl font-black sm:text-3xl">
-              {choice}
-            </div>
-          ))}
-        </div>
-      );
-    }
-  }
-
-  if (style === 'taboo') {
-    const match = item.text.match(/^(.+?)\s*(?:\||—)\s*forbidden:\s*(.+)$/i);
-    if (match) {
-      const forbidden = match[2].split(',').map((word) => word.trim()).filter(Boolean);
-      return (
-        <div>
-          <p className="text-center text-4xl font-black sm:text-6xl">{match[1].trim()}</p>
-          <div className="mt-8">
-            <p className="text-center text-xs font-black uppercase tracking-[0.16em] text-white/55">Do not say</p>
-            <div className="mt-3 flex flex-wrap justify-center gap-2">
-              {forbidden.map((word) => <span key={word} className="rounded-full border border-white/20 bg-white/[0.08] px-4 py-2 text-sm font-black">{word}</span>)}
-            </div>
-          </div>
-        </div>
-      );
-    }
-  }
-
-  if (style === 'repair') {
-    return (
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.16em] text-white/50">Original line</p>
-        <p className="mt-4 text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>
-      </div>
-    );
-  }
-
-  if (style === 'story') {
-    return (
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.16em] text-white/50">Story seed</p>
-        <p className="mt-4 text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>
-      </div>
-    );
-  }
-
-  return <p className="text-3xl font-black leading-tight sm:text-5xl">{item.text}</p>;
 }
 
 export default function SpeakingActivityPresenter() {
@@ -111,10 +59,12 @@ export default function SpeakingActivityPresenter() {
   const [error, setError] = useState('');
   const [index, setIndex] = useState(0);
   const [challengeVisible, setChallengeVisible] = useState(false);
+  const [revealedChallenge, setRevealedChallenge] = useState('');
   const [supportVisible, setSupportVisible] = useState(false);
   const [itemHistory, setItemHistory] = useState([]);
   const [historyReady, setHistoryReady] = useState(true);
   const [sessionId, setSessionId] = useState('');
+  const [presenterStateReady, setPresenterStateReady] = useState(false);
   const shownThisSessionRef = useRef(new Set());
   const controlConnectionRef = useRef(null);
   const presenterStateRef = useRef(null);
@@ -135,6 +85,15 @@ export default function SpeakingActivityPresenter() {
     }
   }
 
+  const selectedIndices = useMemo(() => {
+    const raw = String(searchParams.get('indices') || '').trim();
+    if (!raw) return null;
+    const values = raw.split(',')
+      .map((value) => Number.parseInt(value, 10))
+      .filter((value) => Number.isInteger(value) && value >= 0);
+    return new Set(values);
+  }, [searchParams]);
+
   const selectedLevels = useMemo(() => {
     const requested = String(searchParams.get('levels') || '')
       .split(',')
@@ -149,7 +108,7 @@ export default function SpeakingActivityPresenter() {
       setLoading(true);
       setError('');
       try {
-        const data = await loadSpeakingActivity(activityId);
+        const data = await loadSpeakingPresenterActivity(activityId);
         if (active) setActivity(data);
       } catch (loadError) {
         if (active) setError(loadError.message || 'Non è stato possibile aprire la presentazione.');
@@ -195,6 +154,7 @@ export default function SpeakingActivityPresenter() {
               learnerId,
               activityId,
               levels: selectedLevels,
+              controlId,
             });
             if (active) setSessionId(openedSessionId);
           } catch (sessionError) {
@@ -216,9 +176,8 @@ export default function SpeakingActivityPresenter() {
 
     return () => {
       active = false;
-      if (openedSessionId) finishSpeakingSession(openedSessionId).catch(() => {});
     };
-  }, [activityId, learnerId, selectedLevels.join(',')]);
+  }, [activityId, controlId, learnerId, selectedLevels.join(',')]);
 
   const items = useMemo(() => {
     if (!activity) return [];
@@ -229,6 +188,7 @@ export default function SpeakingActivityPresenter() {
 
     const eligible = asArray(activity.prompts)
       .map((item, sourceIndex) => normaliseItem(item, asArray(activity.levels), sourceIndex))
+      .filter((item) => !selectedIndices || selectedIndices.has(item.sourceIndex))
       .filter((item) => !selectedLevels.length || asArray(item.levels).some((level) => selectedLevels.includes(level)))
       .map((item) => ({
         ...item,
@@ -238,9 +198,13 @@ export default function SpeakingActivityPresenter() {
     if (!learnerId || !historyReady) return eligible;
 
     return [...eligible].sort((left, right) => {
-      const leftRecent = Number(left.priorUse?.recent_use_count || 0) > 0;
-      const rightRecent = Number(right.priorUse?.recent_use_count || 0) > 0;
-      if (leftRecent !== rightRecent) return leftRecent ? 1 : -1;
+      const leftPractised = Number(left.priorUse?.recent_practice_count || 0) > 0;
+      const rightPractised = Number(right.priorUse?.recent_practice_count || 0) > 0;
+      if (leftPractised !== rightPractised) return leftPractised ? 1 : -1;
+
+      const leftShown = Number(left.priorUse?.recent_shown_count || 0) > 0;
+      const rightShown = Number(right.priorUse?.recent_shown_count || 0) > 0;
+      if (leftShown !== rightShown) return leftShown ? 1 : -1;
 
       const leftSeen = Boolean(left.priorUse);
       const rightSeen = Boolean(right.priorUse);
@@ -248,17 +212,33 @@ export default function SpeakingActivityPresenter() {
 
       if (!leftSeen && !rightSeen) return left.sourceIndex - right.sourceIndex;
 
-      const leftTime = new Date(left.priorUse?.last_used_at || 0).getTime();
-      const rightTime = new Date(right.priorUse?.last_used_at || 0).getTime();
+      const leftTime = new Date(left.priorUse?.last_practised_at || left.priorUse?.last_shown_at || 0).getTime();
+      const rightTime = new Date(right.priorUse?.last_practised_at || right.priorUse?.last_shown_at || 0).getTime();
       return leftTime - rightTime;
     });
-  }, [activity, historyReady, itemHistory, learnerId, selectedLevels]);
+  }, [activity, historyReady, itemHistory, learnerId, selectedIndices, selectedLevels]);
 
   useEffect(() => {
-    setIndex(0);
-    setChallengeVisible(false);
-    setSupportVisible(false);
-  }, [activityId, historyReady, learnerId, selectedLevels.join(',')]);
+    setPresenterStateReady(false);
+  }, [activityId, controlId, learnerId, selectedLevels.join(',')]);
+
+  useEffect(() => {
+    if (!activity || !historyReady || presenterStateReady || !items.length) return;
+
+    const saved = loadSpeakingPresenterState(controlId, activityId);
+    const restoredIndex = saved?.sourceIndex == null
+      ? -1
+      : items.findIndex((item) => item.sourceIndex === saved.sourceIndex);
+
+    setIndex(restoredIndex >= 0 ? restoredIndex : 0);
+    const restoredChallenge = restoredIndex >= 0 && saved?.challengeVisible === true
+      ? String(saved?.revealedChallenge || '')
+      : '';
+    setRevealedChallenge(restoredChallenge);
+    setChallengeVisible(Boolean(restoredChallenge));
+    setSupportVisible(restoredIndex >= 0 && saved?.supportVisible === true);
+    setPresenterStateReady(true);
+  }, [activity, activityId, controlId, historyReady, items, learnerId, presenterStateReady, selectedLevels]);
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -293,6 +273,7 @@ export default function SpeakingActivityPresenter() {
     if (!items.length) return;
     setIndex((currentIndex) => (currentIndex + 1) % items.length);
     setChallengeVisible(false);
+    setRevealedChallenge('');
     setSupportVisible(false);
   }
 
@@ -300,6 +281,7 @@ export default function SpeakingActivityPresenter() {
     if (!items.length) return;
     setIndex((currentIndex) => (currentIndex - 1 + items.length) % items.length);
     setChallengeVisible(false);
+    setRevealedChallenge('');
     setSupportVisible(false);
   }
 
@@ -312,7 +294,7 @@ export default function SpeakingActivityPresenter() {
           item,
           itemIndex,
           shown: shownThisSessionRef.current.has(item.historyKey),
-          recent: Number(item.priorUse?.recent_use_count || 0) > 0,
+          recent: Number(item.priorUse?.recent_practice_count || 0) > 0,
         }))
         .filter((candidate) => candidate.itemIndex !== currentIndex);
 
@@ -324,22 +306,25 @@ export default function SpeakingActivityPresenter() {
     });
 
     setChallengeVisible(false);
+    setRevealedChallenge('');
     setSupportVisible(false);
   }
 
   const presenterState = useMemo(() => ({
     activityId,
+    sessionId: sessionId || null,
     position: items.length ? index + 1 : 0,
     total: items.length,
     sourceIndex: current?.sourceIndex ?? null,
     challengeVisible,
     supportVisible,
-    hasChallenge: Boolean(current?.challenge),
-    hasSupport: Boolean(current?.student_support),
+    hasChallenge: Boolean(current?.hasChallenge),
+    hasSupport: Boolean(current?.student_support || asArray(current?.support).length),
   }), [
     activityId,
     challengeVisible,
-    current?.challenge,
+    sessionId,
+    current?.hasChallenge,
     current?.sourceIndex,
     current?.student_support,
     index,
@@ -349,12 +334,15 @@ export default function SpeakingActivityPresenter() {
 
   useEffect(() => {
     presenterStateRef.current = presenterState;
+    if (controlId && presenterStateReady) {
+      saveSpeakingPresenterState(controlId, activityId, { ...presenterState, revealedChallenge });
+    }
     if (controlId && controlConnectionRef.current) {
       const payload = { type: 'presenter-state', state: presenterState };
       controlConnectionRef.current.send(payload);
       postStateToController(payload);
     }
-  }, [controlId, presenterState]);
+  }, [controlId, presenterState, revealedChallenge]);
 
   useEffect(() => {
     if (!controlId) return undefined;
@@ -370,6 +358,7 @@ export default function SpeakingActivityPresenter() {
 
     function handleControlPayload(payload) {
       if (!payload?.type) return;
+      if (payload.activityId && payload.activityId !== activityId) return;
 
       if (payload.type === 'next' && items.length) {
         setIndex((currentIndex) => (currentIndex + 1) % items.length);
@@ -386,7 +375,7 @@ export default function SpeakingActivityPresenter() {
               item,
               itemIndex,
               shown: shownThisSessionRef.current.has(item.historyKey),
-              recent: Number(item.priorUse?.recent_use_count || 0) > 0,
+              recent: Number(item.priorUse?.recent_practice_count || 0) > 0,
             }))
             .filter((candidate) => candidate.itemIndex !== currentIndex);
           const freshUnseen = candidates.filter((candidate) => !candidate.shown && !candidate.recent);
@@ -399,7 +388,11 @@ export default function SpeakingActivityPresenter() {
       } else if (payload.type === 'toggle-support') {
         setSupportVisible((value) => !value);
       } else if (payload.type === 'toggle-challenge') {
-        setChallengeVisible((value) => !value);
+        setChallengeVisible((visible) => {
+          const nextVisible = !visible && Boolean(payload.challenge);
+          setRevealedChallenge(nextVisible ? String(payload.challenge) : '');
+          return nextVisible;
+        });
       } else if (payload.type === 'sync-request') {
         sendPresenterState();
       } else if (payload.type === 'close-presenter') {
@@ -429,7 +422,7 @@ export default function SpeakingActivityPresenter() {
       window.removeEventListener('message', onDirectMessage);
       if (controlConnectionRef.current === connection) controlConnectionRef.current = null;
     };
-  }, [controlId, items]);
+  }, [activityId, controlId, items]);
   if (loading || (learnerId && !historyReady)) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-ink dark:bg-surface-950 dark:text-white">Preparing speaking session…</div>;
   if (error || !activity) return <div className="min-h-screen bg-paper p-8 text-center text-sm font-black text-red-800 dark:bg-surface-950 dark:text-red-200">{error || 'Activity not found.'}</div>;
 
@@ -481,8 +474,8 @@ export default function SpeakingActivityPresenter() {
             <div className="mt-5 grid gap-4 lg:min-h-0 lg:overflow-hidden xl:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
               <section className="min-w-0 lg:flex lg:min-h-0 lg:flex-col">
                 <div className="flex min-h-[20rem] flex-col justify-center rounded-[2rem] bg-ink p-5 text-center text-white sm:p-7 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
-                  <div className="w-full"><SpeakingPromptContent item={current} style={activity.presenter_style} /></div>
-                  {current.student_support && supportVisible ? (
+                  <div className="w-full"><SpeakingPromptContent item={current} style={activity.presenter_style} showSupport={supportVisible} /></div>
+                  {current.student_support && supportVisible && !current.format ? (
                     <div className="mt-5 rounded-2xl border border-white/15 bg-white/[0.07] p-4">
                       <p className="text-xs font-black uppercase tracking-[0.15em] text-white/50">Need a little help?</p>
                       <p className="mt-2 text-base font-bold leading-7 sm:text-lg">{current.student_support}</p>
@@ -490,15 +483,14 @@ export default function SpeakingActivityPresenter() {
                   ) : null}
                 </div>
 
-                {current.challenge ? (
+                {current?.hasChallenge ? (
                   <div className="mt-3 shrink-0 rounded-2xl border border-ink/10 bg-white px-4 py-3 dark:border-white/10 dark:bg-surface-900">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Extra challenge</p>
-                      <button type="button" onClick={() => setChallengeVisible((value) => !value)} className="focus-ring min-h-10 rounded-full border border-ink/15 px-4 text-xs font-black dark:border-white/15">
-                        {challengeVisible ? 'Hide' : 'Reveal'}
-                      </button>
-                    </div>
-                    {challengeVisible ? <p className="mt-2 text-base font-black leading-6">{current.challenge}</p> : null}
+                    <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Extra challenge</p>
+                    {challengeVisible && revealedChallenge ? (
+                      <p className="mt-2 text-base font-black leading-6">{revealedChallenge}</p>
+                    ) : (
+                      <p className="mt-2 text-sm font-semibold text-ink/45 dark:text-white/45">Your teacher can reveal an extra challenge from the control panel.</p>
+                    )}
                   </div>
                 ) : null}
               </section>

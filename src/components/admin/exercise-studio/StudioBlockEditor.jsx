@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { FileAudio2, FileVideo2, Loader2, Plus, Trash2, Upload } from 'lucide-react';
 import { getStudioBlockDefinition } from '../../../lib/exerciseStudioBlockRegistry.js';
 import StudioSelect from './StudioSelect.jsx';
+import StudioSpeakingRoundEditor from './StudioSpeakingRoundEditor.jsx';
 import {
   deleteStudioContentMedia,
   uploadStudioContentMedia,
@@ -1927,6 +1928,7 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
         {block.type === 'practice_selection' ? <PracticeSelectionEditor block={block} patch={patch} /> : null}
         {block.type === 'translation' ? <TranslationEditor block={block} patch={patch} /> : null}
         {block.type === 'written_response' ? <WritingEditor block={block} patch={patch} /> : null}
+        {block.type === 'speaking_round' ? <StudioSpeakingRoundEditor block={block} onChange={patch} /> : null}
         {block.type === 'media' ? <MediaEditor block={block} patch={patch} activityId={activityId} /> : null}
         {definition.category === 'theory' ? <TheoryEditor block={block} patch={patch} /> : null}
       </div>

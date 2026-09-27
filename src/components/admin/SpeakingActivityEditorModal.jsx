@@ -2,8 +2,16 @@ import React, { useMemo, useState } from 'react';
 import { AlertTriangle, Plus, Save, Trash2, X } from 'lucide-react';
 import { createSpeakingActivity, updateSpeakingActivity } from '../../lib/adminSpeakingActivitiesApi.js';
 import { analyseSpeakingItemSet, duplicateReasonLabel } from '../../lib/speakingItemQuality.js';
+import StudioSpeakingRoundEditor from './exercise-studio/StudioSpeakingRoundEditor.jsx';
+import {
+  SPEAKING_ROUND_FORMATS,
+  createDefaultSpeakingRound,
+  normalizeSpeakingRoundBlock,
+  validateSpeakingRoundBlock,
+} from '../../lib/speakingRoundContract.js';
 
-const LEVELS = ['A1','A2','B1','B2','C1','C2'];
+const LEVELS = ['A0','A1','A1+','A2','B1','B1+','B2','C1','C2','Mixed'];
+const STRUCTURED_FORMATS = new Set(SPEAKING_ROUND_FORMATS.map((item) => item.id));
 
 const emptyItem = () => ({
   text: '',
@@ -26,15 +34,29 @@ function cleanCsv(value) {
 
 function normaliseItem(item) {
   if (typeof item === 'string') return { ...emptyItem(), text: item };
+  const source = item || {};
+  const metadata = {
+    levels: asArray(source.levels),
+    context_tags: asArray(source.context_tags),
+    language_targets: asArray(source.language_targets),
+    difficulty: Math.min(5, Math.max(1, Number(source.difficulty || 2))),
+  };
+  if (STRUCTURED_FORMATS.has(source.format)) {
+    const round = normalizeSpeakingRoundBlock(source);
+    return {
+      ...source,
+      ...round,
+      ...metadata,
+      text: source.text || round.title || round.instructions || '',
+    };
+  }
   return {
-    text: item?.text || '',
-    levels: asArray(item?.levels),
-    student_support: item?.student_support || item?.support || '',
-    challenge: item?.challenge || '',
-    teacher_note: item?.teacher_note || '',
-    context_tags: asArray(item?.context_tags),
-    language_targets: asArray(item?.language_targets),
-    difficulty: Math.min(5, Math.max(1, Number(item?.difficulty || 2))),
+    ...source,
+    text: source.text || '',
+    student_support: source.student_support || source.support || '',
+    challenge: typeof source.challenge === 'string' ? source.challenge : '',
+    teacher_note: source.teacher_note || '',
+    ...metadata,
   };
 }
 
@@ -136,6 +158,34 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
     }));
   }
 
+  function setItemFormat(index, format) {
+    resetQualityGate();
+    setDraft((current) => ({
+      ...current,
+      prompts: current.prompts.map((item, itemIndex) => {
+        if (itemIndex !== index) return item;
+        if (!format) {
+          return {
+            ...emptyItem(),
+            text: item.text || item.title || item.instructions || '',
+            levels: item.levels,
+            context_tags: item.context_tags,
+            language_targets: item.language_targets,
+            difficulty: item.difficulty,
+          };
+        }
+        return {
+          ...createDefaultSpeakingRound(format),
+          text: item.text || '',
+          levels: item.levels,
+          context_tags: item.context_tags,
+          language_targets: item.language_targets,
+          difficulty: item.difficulty,
+        };
+      }),
+    }));
+  }
+
   function removeItem(index) {
     resetQualityGate();
     setDraft((current) => ({
@@ -154,16 +204,32 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
     }
 
     const cleanedItems = draft.prompts
-      .map((item) => ({
-        text: item.text.trim(),
-        levels: LEVELS.filter((level) => asArray(item.levels).includes(level)),
-        student_support: item.student_support.trim(),
-        challenge: item.challenge.trim(),
-        teacher_note: item.teacher_note.trim(),
-        context_tags: asArray(item.context_tags).map((value) => String(value).trim().toLowerCase()).filter(Boolean),
-        language_targets: asArray(item.language_targets).map((value) => String(value).trim().toLowerCase()).filter(Boolean),
-        difficulty: Math.min(5, Math.max(1, Number(item.difficulty || 2))),
-      }))
+      .map((item) => {
+        const metadata = {
+          levels: LEVELS.filter((level) => asArray(item.levels).includes(level)),
+          context_tags: asArray(item.context_tags).map((value) => String(value).trim().toLowerCase()).filter(Boolean),
+          language_targets: asArray(item.language_targets).map((value) => String(value).trim().toLowerCase()).filter(Boolean),
+          difficulty: Math.min(5, Math.max(1, Number(item.difficulty || 2))),
+        };
+        if (STRUCTURED_FORMATS.has(item.format)) {
+          const round = normalizeSpeakingRoundBlock(item);
+          return {
+            ...round,
+            text: String(item.text || round.title || round.instructions || '').trim(),
+            ...metadata,
+          };
+        }
+        return {
+          text: String(item.text || '').trim(),
+          levels: metadata.levels,
+          student_support: String(item.student_support || '').trim(),
+          challenge: String(item.challenge || '').trim(),
+          teacher_note: String(item.teacher_note || '').trim(),
+          context_tags: metadata.context_tags,
+          language_targets: metadata.language_targets,
+          difficulty: metadata.difficulty,
+        };
+      })
       .filter((item) => item.text);
 
     if (!cleanedItems.length) {
@@ -173,6 +239,15 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
     if (cleanedItems.some((item) => !item.levels.length)) {
       setError('Ogni item deve avere almeno un livello. Puoi selezionarne più di uno.');
       return;
+    }
+    for (let itemIndex = 0; itemIndex < cleanedItems.length; itemIndex += 1) {
+      const item = cleanedItems[itemIndex];
+      if (!STRUCTURED_FORMATS.has(item.format)) continue;
+      const issues = validateSpeakingRoundBlock(item);
+      if (issues.length) {
+        setError(`Item ${itemIndex + 1}: ${issues[0].message}`);
+        return;
+      }
     }
 
     const quality = analyseSpeakingItemSet(cleanedItems, catalogActivities, { excludeActivityId: activity?.id || null });
@@ -280,7 +355,27 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
                       <p className="text-xs font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Item {index + 1}</p>
                       <button type="button" onClick={() => removeItem(index)} disabled={draft.prompts.length === 1} className="focus-ring grid h-9 w-9 place-items-center rounded-full border border-ink/10 text-ink/45 disabled:opacity-30 dark:border-white/10 dark:text-white/45" aria-label="Rimuovi item"><Trash2 className="h-3.5 w-3.5" /></button>
                     </div>
-                    <textarea rows={3} value={item.text} onChange={(e) => updateItem(index, { text: e.target.value })} placeholder="Prompt / scenario / set di parole…" className="focus-ring mt-3 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-bold leading-6 dark:border-white/15 dark:bg-surface-900" />
+                    <div className="mt-3 grid gap-3 sm:grid-cols-[13rem_minmax(0,1fr)]">
+                      <label>
+                        <span className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Struttura</span>
+                        <select value={STRUCTURED_FORMATS.has(item.format) ? item.format : ''} onChange={(event) => setItemFormat(index, event.target.value)} className="focus-ring mt-1.5 w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-xs font-black dark:border-white/10 dark:bg-surface-900">
+                          <option value="">Prompt standard</option>
+                          {SPEAKING_ROUND_FORMATS.map((format) => <option key={format.id} value={format.id}>{format.label}</option>)}
+                        </select>
+                      </label>
+                      <label>
+                        <span className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Riassunto per ricerca / storico</span>
+                        <textarea rows={2} value={item.text || ''} onChange={(e) => updateItem(index, { text: e.target.value })} placeholder="Se vuoto, Sblocco usa titolo o istruzione." className="focus-ring mt-1.5 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-bold leading-6 dark:border-white/15 dark:bg-surface-900" />
+                      </label>
+                    </div>
+
+                    {STRUCTURED_FORMATS.has(item.format) ? (
+                      <div className="mt-4 rounded-2xl border border-orange-200 bg-white p-4 dark:border-orange-300/15 dark:bg-white/[0.02]">
+                        <StudioSpeakingRoundEditor block={normalizeSpeakingRoundBlock(item)} onChange={(patch) => updateItem(index, patch)} />
+                      </div>
+                    ) : (
+                      <textarea rows={3} value={item.text || ''} onChange={(e) => updateItem(index, { text: e.target.value })} placeholder="Prompt / scenario / set di parole…" className="focus-ring mt-4 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm font-bold leading-6 dark:border-white/15 dark:bg-surface-900" />
+                    )}
 
                     <div className="mt-4">
                       <p className="mb-2 text-xs font-black text-ink/55 dark:text-white/55">Livelli — selezione multipla</p>
@@ -302,11 +397,13 @@ export default function SpeakingActivityEditorModal({ activity, catalogActivitie
                       </label>
                     </div>
 
-                    <div className="mt-4 grid gap-3 lg:grid-cols-3">
-                      <label><span className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Supporto studente</span><textarea rows={3} value={item.student_support} onChange={(e) => updateItem(index, { student_support: e.target.value })} className="focus-ring mt-1.5 w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-xs font-semibold dark:border-white/10 dark:bg-surface-900" /></label>
-                      <label><span className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Challenge studente</span><textarea rows={3} value={item.challenge} onChange={(e) => updateItem(index, { challenge: e.target.value })} className="focus-ring mt-1.5 w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-xs font-semibold dark:border-white/10 dark:bg-surface-900" /></label>
-                      <label><span className="text-[0.68rem] font-black uppercase tracking-wide text-clay dark:text-coral">Nota / soluzione docente</span><textarea rows={3} value={item.teacher_note} onChange={(e) => updateItem(index, { teacher_note: e.target.value })} className="focus-ring mt-1.5 w-full rounded-xl border border-clay/20 bg-blush/40 px-3 py-2.5 text-xs font-semibold dark:border-coral/20 dark:bg-coral/[0.06]" /></label>
-                    </div>
+                    {!STRUCTURED_FORMATS.has(item.format) ? (
+                      <div className="mt-4 grid gap-3 lg:grid-cols-3">
+                        <label><span className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Supporto studente</span><textarea rows={3} value={item.student_support || ''} onChange={(e) => updateItem(index, { student_support: e.target.value })} className="focus-ring mt-1.5 w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-xs font-semibold dark:border-white/10 dark:bg-surface-900" /></label>
+                        <label><span className="text-[0.68rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Challenge studente</span><textarea rows={3} value={item.challenge || ''} onChange={(e) => updateItem(index, { challenge: e.target.value })} className="focus-ring mt-1.5 w-full rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-xs font-semibold dark:border-white/10 dark:bg-surface-900" /></label>
+                        <label><span className="text-[0.68rem] font-black uppercase tracking-wide text-clay dark:text-coral">Nota / soluzione docente</span><textarea rows={3} value={item.teacher_note || ''} onChange={(e) => updateItem(index, { teacher_note: e.target.value })} className="focus-ring mt-1.5 w-full rounded-xl border border-clay/20 bg-blush/40 px-3 py-2.5 text-xs font-semibold dark:border-coral/20 dark:bg-coral/[0.06]" /></label>
+                      </div>
+                    ) : null}
                   </article>
                 ))}
               </div>

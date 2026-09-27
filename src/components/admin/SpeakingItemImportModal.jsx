@@ -2,8 +2,14 @@ import React, { useMemo, useRef, useState } from 'react';
 import { AlertTriangle, CheckCircle2, FileJson2, Upload, X } from 'lucide-react';
 import { updateSpeakingActivity } from '../../lib/adminSpeakingActivitiesApi.js';
 import { analyseSpeakingItemSet, duplicateReasonLabel } from '../../lib/speakingItemQuality.js';
+import {
+  SPEAKING_ROUND_FORMATS,
+  normalizeSpeakingRoundBlock,
+  validateSpeakingRoundBlock,
+} from '../../lib/speakingRoundContract.js';
 
-const LEVELS = ['A1','A2','B1','B2','C1','C2'];
+const LEVELS = ['A0','A1','A1+','A2','B1','B1+','B2','C1','C2','Mixed'];
+const STRUCTURED_FORMATS = new Set(SPEAKING_ROUND_FORMATS.map((item) => item.id));
 
 function asArray(value) { return Array.isArray(value) ? value : []; }
 function uniqueStrings(value) {
@@ -11,19 +17,38 @@ function uniqueStrings(value) {
 }
 function normaliseItem(item, activity) {
   const source = typeof item === 'string' ? { text: item } : (item || {});
-  const requestedLevels = asArray(source.levels).map((level) => String(level || '').trim().toUpperCase()).filter(Boolean);
-  const validLevels = LEVELS.filter((level) => requestedLevels.includes(level));
+  const requestedLevels = asArray(source.levels).map((level) => String(level || '').trim()).filter(Boolean);
+  const validLevels = LEVELS.filter((level) => requestedLevels.some((requested) => requested.toLowerCase() === level.toLowerCase()));
   const fallbackLevels = LEVELS.filter((level) => asArray(activity.levels).includes(level));
-  return {
-    text: String(source.text || '').trim(),
+  const base = {
+    ...source,
     levels: requestedLevels.length ? validLevels : fallbackLevels,
-    student_support: String(source.student_support || source.support || '').trim(),
-    challenge: String(source.challenge || '').trim(),
-    teacher_note: String(source.teacher_note || '').trim(),
     context_tags: uniqueStrings(source.context_tags),
     language_targets: uniqueStrings(source.language_targets),
     difficulty: Math.min(5, Math.max(1, Number(source.difficulty || 2))),
-    _invalidLevels: requestedLevels.filter((level) => !LEVELS.includes(level)),
+    _invalidLevels: requestedLevels.filter((requested) => !LEVELS.some((level) => level.toLowerCase() === requested.toLowerCase())),
+  };
+
+  if (STRUCTURED_FORMATS.has(source.format)) {
+    const round = normalizeSpeakingRoundBlock(source);
+    return {
+      ...base,
+      ...round,
+      text: String(source.text || round.title || round.instructions || '').trim(),
+      levels: base.levels,
+      context_tags: base.context_tags,
+      language_targets: base.language_targets,
+      difficulty: base.difficulty,
+      _invalidLevels: base._invalidLevels,
+    };
+  }
+
+  return {
+    ...base,
+    text: String(source.text || '').trim(),
+    student_support: String(source.student_support || source.support || '').trim(),
+    challenge: typeof source.challenge === 'string' ? source.challenge.trim() : '',
+    teacher_note: String(source.teacher_note || '').trim(),
   };
 }
 function extractGroups(payload) {
@@ -60,9 +85,12 @@ function buildPlans(payload, activities) {
     }
     const normalised = rawItems.map((item) => normaliseItem(item, activity));
     normalised.forEach((item, itemIndex) => {
-      if (!item.text) errors.push(`Item ${itemIndex + 1}: manca text.`);
+      if (!item.text) errors.push(`Item ${itemIndex + 1}: manca un prompt o un titolo utilizzabile.`);
       if (!item.levels.length) errors.push(`Item ${itemIndex + 1}: manca almeno un livello CEFR valido.`);
       if (item._invalidLevels.length) errors.push(`Item ${itemIndex + 1}: livelli non validi: ${item._invalidLevels.join(', ')}.`);
+      if (STRUCTURED_FORMATS.has(item.format)) {
+        validateSpeakingRoundBlock(item).forEach((issue) => errors.push(`Item ${itemIndex + 1}: ${issue.message}`));
+      }
     });
     const items = normalised.map(({ _invalidLevels, ...item }) => item);
     const quality = errors.length ? { blocking: [], warnings: [] } : analyseSpeakingItemSet(items, workingCatalog);
