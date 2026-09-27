@@ -133,7 +133,20 @@
     "Explain Your Choice to Someone Who Disagrees": "Define the listener's competing value so the learner must reframe rather than repeat the same reason.",
     "Micro Roleplay": "Use one scenario and one objective for roughly 60–90 seconds; the challenge may complicate but must not replace the task.",
     "Phrase Auction": "Provide five to seven phrases of different usefulness or register. Weak options do not all need to be ungrammatical.",
-    "Conversation Detective": "Give a short dialogue fragment with clues; require inference about relationship, backstory and likely next step."
+    "Conversation Detective": "Give a short dialogue fragment with clues; require inference about relationship, backstory and likely next step.",
+    "Number Mission": "Use consequential numbers inside a two-person information check. The learner must confirm, repeat or repair details rather than simply read numbers aloud.",
+    "Picture Detective": "Use three to six meaningful images. The learner asks questions, describes visible features and identifies a secret picture without the secret leaking into learner-visible data.",
+    "Make the Choice": "Present two to four defensible options with comparable details. The learner chooses, explains priorities and adapts when the teacher reveals a new condition.",
+    "Quick Pick": "Give two to four concrete options that can be chosen quickly. Require one short reason so the game remains speaking-first even at A0/A1.",
+    "Ask to Unlock": "The teacher holds one hidden answer. The learner unlocks it by asking a small number of useful questions. Teacher-only information must stay in teacher_note.",
+    "Oops, Fix Me!": "Show the learner the correct information and let the teacher deliberately say one or two details incorrectly. The learner repairs the mismatch naturally.",
+    "Build My Day": "Show three to five timed actions. The learner turns them into a spoken sequence using time and ordering language, then adapts if one event changes.",
+    "Three Clues": "Give one target and three concrete clues. The learner uses the clues to describe the target in short connected language while the teacher guesses.",
+    "What Changed?": "Show a clear BEFORE and AFTER state. The learner identifies and verbalises the change, then may explain a reason or consequence.",
+    "Mini Map Mission": "Give a start point, destination and a few landmarks. The learner asks for or gives a short route using basic direction language.",
+    "Pass It Back": "Teacher asks one safe everyday question. The learner answers and then keeps the interaction alive by asking one connected question back.",
+    "Tiny Story Builder": "Give WHO, WHERE and ACTION cards. The learner connects them into a tiny coherent story rather than listing the three elements.",
+    "Which One Fits?": "Give one concrete situation and two to four possible phrases. The learner chooses the most natural/appropriate phrase and says it aloud."
   },
   "canonical_reference": "## Structured round update\n\nThe library now supports five registry-backed structured speaking formats: Number Mission, Picture Detective, Explain Without Saying, Conversation Detective and Make the Choice.\n\nFor these formats, follow completed_examples exactly for field structure. Keep a short text summary for search/history, but never encode the visual layout or teacher-only solution inside text.\n\nAllowed levels are A0, A1, A1+, A2, B1, B1+, B2, C1, C2 and Mixed.\n\nSystem-owned IDs, signatures, indexes, timestamps and storage metadata must not be invented by AI.\n\n\n\n# Sblocco Inglese — Speaking Library Item Authoring Guide\n\nThis file is the canonical instruction set for generating, reviewing and importing new items into the admin Speaking Library.\n\nThe goal is not to create generic conversation questions. Every item must activate a specific speaking behaviour: explaining, reacting, negotiating, repairing, asking, persuading, narrating, clarifying, adapting register, or managing a conversation.\n\n## 1. Non-negotiable principles\n\n1. Speaking first. An item must create meaningful spoken output, not worksheet behaviour.\n2. One clear mechanism per game. New items must respect the game mechanic instead of turning every activity into a normal discussion question.\n3. Multiple CEFR levels are allowed and encouraged. levels is always an array. An item may be [\"A2\",\"B1\"], [\"B1\",\"B2\",\"C1\"], etc.\n4. Level means usable speaking demand, not vocabulary prestige. Do not label an item C1 simply because it contains an advanced word.\n5. Student-facing text must be immediately understandable on screen.\n6. Teacher notes may contain expected answers, hidden information, likely language, correction notes or facilitation advice.\n7. Support must help without answering.\n8. Challenges must change the speaking demand, not merely say “speak more”.\n9. Avoid textbook sameness. Prefer situations, trade-offs, interaction and follow-up over broad prompts.\n10. Do not manufacture novelty by swapping nouns. If the same response path works almost unchanged, it is probably the same item.\n\n## 2. Item JSON contract\n\nEvery generated item should use this shape:\n\n    {\n      \"text\": \"The complete prompt/scenario shown to the student.\",\n      \"levels\": [\"B1\", \"B2\"],\n      \"student_support\": \"Optional scaffold visible to the learner.\",\n      \"challenge\": \"Optional second-stage complication/reveal.\",\n      \"teacher_note\": \"Private note, solution, expected interpretation or facilitation cue.\",\n      \"context_tags\": [\"work\", \"meeting\"],\n      \"language_targets\": [\"disagreement\", \"hedging\"],\n      \"difficulty\": 3\n    }\n\nRequired:\n- text: non-empty and presentation-ready.\n- levels: one or more of A1, A2, B1, B2, C1, C2.\n- context_tags: 1–4 short lowercase tags.\n- language_targets: 1–4 short lowercase tags.\n- difficulty: integer 1–5.\n\nExpected when useful:\n- student_support: a route into the task without giving the answer.\n- challenge: a second reveal that materially deepens the speaking task.\n- teacher_note: solutions, hidden context, likely chunks, ambiguity notes, or facilitation advice.\n\n## 3. Context tags\n\nPrefer stable reusable tags before inventing synonyms:\n\nwork, career, meeting, client, management, team, supplier, business, interview, study, learning, travel, airport, hotel, transport, restaurant, service, shopping, housing, money, technology, communication, small-talk, social, relationships, conflict, daily-life, habits, food, hobbies, places, personal, story, values, decision, planning, leadership, feedback, negotiation, formal, pragmatics.\n\nAdd a new context tag only if none of these reasonably describes the scenario.\n\n## 4. Language targets\n\nExamples:\n\nquestions, follow-up, reactions, extended-answer, storytelling, past-simple, past-tenses, present-perfect, conditionals, comparatives, requests, complaints, refusals, disagreement, agreement, hedging, softening, assertiveness, clarification, repair, negotiation, persuasion, rebuttal, concession, register, pragmatics, indirectness, chunks, phrasal-verbs, collocations, lexical-range, precision, plain-English, topic-development, topic-shift, sequencing, problem-solving, prioritisation, trade-offs, inference, speculation, critical-thinking.\n\nThese are pedagogical functions, not random vocabulary topics.\n\n## 5. Difficulty scale\n\n- 1 — immediate: concrete, familiar, little ambiguity, minimal planning.\n- 2 — supported: familiar situation but requires reason/example/follow-up.\n- 3 — flexible: requires adaptation, comparison, complication or sustained interaction.\n- 4 — demanding: requires nuance, register control, multiple constraints or perspective shift.\n- 5 — high cognitive/pragmatic load: abstract reasoning, stakeholder adaptation, implied meaning, complex negotiation or advanced discourse control.\n\nDifficulty is separate from CEFR. An A2 item can be difficulty 3. A C1 item does not need to be difficulty 5.\n\n## 6. Context-aware novelty / duplicate policy\n\nThe application performs an internal novelty check.\n\n### What IS a duplicate\n\nBlock or rewrite when:\n- normalized text is identical;\n- the prompt is a near-paraphrase with the same communicative task;\n- context + language target + prompt structure are substantially the same;\n- the scenario has only cosmetic substitutions;\n- the same answer path would work with almost no adaptation.\n\nExample to reject inside one problem-solving game:\n- “Your flight is cancelled. Ask what your options are.”\n- “Your train is cancelled. Ask what alternatives you have.”\n\nIf the mechanic and response path are identical, replacing flight with train is not enough novelty.\n\n### What is NOT a duplicate\n\nRepeated words are not duplicates by themselves.\n\nThe word deadline may legitimately appear in:\n- negotiation about changing a deadline;\n- storytelling about missing a deadline;\n- clarification about what a deadline means;\n- a complaint about repeated deadline failures;\n- chunk activation containing meet a deadline.\n\nLikewise work, travel, client, manager, good, or a phrasal verb may recur when context or communicative function changes.\n\n### Generator novelty test\n\nBefore returning a new item, ask:\n1. Is the situation meaningfully different?\n2. Is the learner doing a different communicative action?\n3. Does it practise a different language target, or the same target in a meaningfully different context?\n4. Would the learner need to adapt their answer rather than reuse the same response?\n5. Does the new item add coverage to level, context, difficulty or interaction pattern?\n\nIf fewer than 2 answers are yes, rewrite the item.\n\n## 7. Batch-generation rules\n\nWhen generating a batch for one game:\n- default batch size: 8–15;\n- do not put more than 30% of the batch in the same context;\n- include at least 3 distinct context clusters when the game permits it;\n- vary difficulty;\n- vary item levels;\n- avoid putting the hardest item always last;\n- avoid repeating the same grammatical frame across the full batch;\n- for B1+, include chunks/phrasal verbs where natural, not decoratively;\n- do not make all work items corporate-office items;\n- do not make all travel items airport/hotel items;\n- do not assume every learner is young, single, extroverted, university educated or office-based;\n- keep sensitive personal disclosure optional;\n- if an item works only because the teacher already knows the answer, place that information in teacher_note.\n\nFor 10 items, aim roughly for:\n- 2 easier-entry items;\n- 5 core items;\n- 2 stretch items;\n- 1 unusual/high-value item.\n\n## 8. Student support\n\nGood support narrows the route into speaking:\n- “Think about timing, cost and convenience.”\n- “React first, then ask a connected question.”\n- “Choose where you stand on the line, not only one extreme.”\n- “Separate facts from assumptions.”\n\nBad support answers the task:\n- giving the exact response;\n- exposing the hidden solution;\n- listing all arguments the learner should use.\n\n## 9. Challenge rules\n\nA good challenge adds a second conversational condition:\n- new information;\n- audience change;\n- register change;\n- objection;\n- time pressure;\n- forced compromise;\n- banned easy word;\n- perspective shift;\n- extra constraint;\n- unexpected follow-up.\n\nAvoid empty challenges such as “Explain more” unless timing itself is the mechanic.\n\n## 10. Activity-specific generation rules\n\n| Activity | New items must preserve this mechanic |\n| --- | --- |\n| Odd One Out — Conversation Edition | Four items with a defensible relationship and at least one plausible alternative interpretation; avoid trivia-only categories. |\n| Would You Rather — No Easy Answers | Genuine trade-off where both choices have costs; avoid obviously good vs obviously bad. |\n| One Minute, No Escape | Topic deep enough for sustained speech plus a useful constraint. |\n| Explain It Without Saying It | Target plus 2–4 forbidden words that force circumlocution without making it impossible. |\n| Bad Advice Only | Relatable problem where intentionally bad advice can lead to useful repair/discussion. |\n| Story Chain — But Something Changes | Strong story seed or twist that can be integrated into an existing narrative. |\n| Convince Me | Clear persuasion objective with space for objection handling. |\n| The Missing Detail | One important missing detail the learner must identify or ask about. |\n| Upgrade That Answer | Short/basic answer that can be improved through specificity, reasons, examples or chunks. |\n| Three Questions Deeper | Normal opening question that supports increasingly connected deeper follow-ups. |\n| Conversation Roulette | Specific but broad prompts that invite personal answers without requiring sensitive disclosure. |\n| Defend the Opposite | Position with two defendable sides; not a factual question with one correct answer. |\n| Repair the Conversation | Line that is pragmatically awkward, too direct, unclear or unnatural and can be repaired in context. |\n| Agree, Disagree, It Depends | Statement with room for qualification; “it depends” must name the condition. |\n| What Happened Just Before? | Intriguing final moment with multiple plausible backstories. |\n| Make It Sound Like a Person | Understandable but unnatural English with a clearly more idiomatic alternative. |\n| Sell Me Something Useless | Difficult product/service paired with an audience whose needs make persuasion non-obvious. |\n| The Missing Question | Answer that allows one or more natural questions; avoid answers so broad that anything fits. |\n| Take a Side | Two meaningful poles on one continuum; midpoint must also be defendable. |\n| Change My Mind | Position that can be challenged with reasons, evidence, examples and concessions. |\n| The Better Question | Questions where appropriacy/naturalness differs; not only obvious grammar mistakes. |\n| What Would You Say? | Real situation with a concrete interpersonal objective and no single script. |\n| Say It Three Ways | One communicative intention that genuinely changes across casual, neutral and professional register. |\n| Keep It Going | Conversational line with several connected follow-ups; train reaction + development. |\n| The Awkward Silence | Shared context clear enough to restart naturally without random-topic questions. |\n| What's the Problem? | Student sees symptoms only; teacher_note contains hidden root cause; questions are needed to uncover it. |\n| You Have 30 Seconds | Concrete task small enough for timed retrieval but rich enough to sustain 30–60 seconds. |\n| One Detail Is False | Storytelling category that supports believable connected details and follow-up. |\n| Build the Perfect... | Construct an ideal version from explicit dimensions, then add constraint/trade-off. |\n| Trade-Off | Four to six desirable options but learner may keep only a subset; no universally irrelevant option. |\n| Emergency English | Practical high-pressure situation with a specific outcome and escalating complication. |\n| The Complaint Ladder | Same problem must work at polite → firm → final-escalation levels. |\n| Don’t Say Yes | Question that tempts a binary answer but supports a natural fuller response. |\n| Five Whys | Preference/decision/opinion that can deepen into more precise reasons without becoming intrusive. |\n| Make It More Specific | Start vague; upgrade requires evidence, examples, behaviour, numbers or precise language. |\n| Finish My Thought | Stem that naturally produces a complete personal or hypothetical thought. |\n| What Are You Assuming? | Claim with identifiable hidden assumptions; not merely an opinion. |\n| Unpopular Opinion | Low-stakes, non-inflammatory topic; challenge is argument quality, not provocation. |\n| Explain the Difference | Close lexical/conceptual pair; require contexts/examples, not dictionary definitions only. |\n| Which One Sounds More Natural? | Understandable alternatives where idiomaticity, collocation or register differs. |\n| The Forbidden Easy Word | Bans that force precision while leaving enough language to complete the task. |\n| Use These 3 Chunks | Three chunks that can naturally coexist in one coherent response. |\n| Personalise It | Generic statement that must become a concrete personal or invented example. |\n| Guess My Rule | teacher_note defines a precise hidden rule plus enough consistent examples for inference. |\n| Who Said It? | One line with clues about relationship, context, intention or register. |\n| Before / During / After | Event with meaningful preparation, live action and follow-up phases. |\n| Problem → Options → Decision | Require problem definition, at least three options, comparison and justified decision. |\n| Interrupt Me Politely | Exact reason to interrupt: clarification, correction, redirect, timing, decision, etc. |\n| Tell Me What I Mean | Indirect language whose intended meaning depends on context, tone or relationship. |\n| Bad Small Talk / Good Small Talk | Contrast conversation mechanics, not “wrong grammar vs correct grammar”. |\n| Describe Without Adjectives | Target describable through behaviour, actions, events or sensory detail. |\n| Make It Less Direct | Start needlessly forceful; preserve clarity when softening. |\n| Make It More Direct | Start too vague/hedged; improve clarity without making it rude. |\n| Conversation Fork | One conversational moment plus 2–3 genuinely different strategic directions. |\n| The Unexpected Follow-Up | Familiar first question + second question that forces a new angle, not simply “why?”. |\n| Explain Your Choice to Someone Who Disagrees | Define listener’s competing value so learner must reframe rather than repeat. |\n| Micro Roleplay | One scenario, one objective, 60–90 seconds; challenge complicates without replacing the task. |\n| Phrase Auction | Five to seven phrases of different usefulness/register; weak options need not all be ungrammatical. |\n| Conversation Detective | Short dialogue fragment with clues; infer relationship, backstory and likely next step. |\n\n## 11. Delivery rule\n\nGenerate according to this guide and deliver the final batch as a downloadable JSON file matching the import contract. Do not output a copyable prompt.\n\n## 12. Review checklist\n\nReject an item if any answer is no:\n- Does it preserve the game mechanic?\n- Would it create actual speaking?\n- Is it meaningfully different from existing items?\n- Are its levels plausible?\n- Are context tags accurate?\n- Are language targets pedagogically meaningful?\n- Does the challenge deepen interaction?\n- Is student support non-spoilery?\n- Is teacher-only information private?\n- Would the prompt look clean on the presentation screen?\n\nThe library should become broader and more reusable as it grows, not simply longer.\n",
   "block_registry_version": 2,
@@ -574,7 +587,7 @@
       ]
     }
   },
-  "documentation_revision": "2026-09-27.1",
+  "documentation_revision": "2026-09-27.2",
   "read_this_first": {
     "purpose": "This is the complete operating manual for authoring importable Sblocco Speaking Library content. It is designed to be sufficient on its own: an authoring model should not need access to the Sblocco codebase, database, prior chat history or hidden implementation details.",
     "success_definition": "A successful output is pedagogically useful, presentation-ready, importable without technical repair, visibly appropriate to its game mechanic, varied across a batch, and safe for teacher/student split-screen use.",
@@ -2155,6 +2168,123 @@
       "challenge_guidance": "Predict the next line or add one clue that changes the interpretation.",
       "reject_if": "The dialogue states the answer directly or relies on arbitrary trivia.",
       "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Number Mission": {
+      "core_mechanic": "Use consequential numbers inside a two-person information check. The learner must confirm, repeat or repair details rather than simply read numbers aloud.",
+      "must_include": "At least two consequential number/date/time/price/code facts plus a genuine confirmation or mismatch opportunity.",
+      "learner_action": "Ask, confirm, repeat and repair numerical information.",
+      "support_guidance": "Use number-question chunks and repair language. Do not read the answer for the learner.",
+      "challenge_guidance": "Change one number or make one read-back deliberately wrong.",
+      "reject_if": "The item is just number dictation or the numbers have no communicative consequence.",
+      "quality_test": "Removing the need to confirm numbers would break the game."
+    },
+    "Picture Detective": {
+      "core_mechanic": "Use three to six meaningful images. The learner asks questions, describes visible features and identifies a secret picture without the secret leaking into learner-visible data.",
+      "must_include": "At least three clear image options and one teacher-only secret option.",
+      "learner_action": "Ask descriptive/category/use questions and infer the secret picture.",
+      "support_guidance": "Use question stems appropriate to level; labels may be shown at lower levels.",
+      "challenge_guidance": "Swap roles, limit questions or hide labels.",
+      "reject_if": "One picture is obviously unique or the secret is leaked by label/alt text.",
+      "quality_test": "The learner must need language to distinguish visually plausible options."
+    },
+    "Make the Choice": {
+      "core_mechanic": "Present two to four defensible options with comparable details. The learner chooses, explains priorities and adapts when the teacher reveals a new condition.",
+      "must_include": "Two to four options with comparable details and no universally dominant answer.",
+      "learner_action": "Compare, choose and justify.",
+      "support_guidance": "Offer comparison and priority chunks, not the winning argument.",
+      "challenge_guidance": "Change one condition or stakeholder priority.",
+      "reject_if": "One option wins every criterion or the task is just personal preference with no comparison data.",
+      "quality_test": "A reasonable learner could defend more than one option."
+    },
+    "Quick Pick": {
+      "core_mechanic": "Give two to four concrete options that can be chosen quickly. Require one short reason so the game remains speaking-first even at A0/A1.",
+      "must_include": "2–4 concrete choices visible at once.",
+      "learner_action": "Choose quickly and give one short reason.",
+      "support_guidance": "A0/A1 sentence frames such as 'I choose ___ because ___.'.",
+      "challenge_guidance": "Change one condition and ask for a new choice.",
+      "reject_if": "A simple one-word answer completes the whole activity.",
+      "quality_test": "The item works in under 45 seconds but still requires spoken justification."
+    },
+    "Ask to Unlock": {
+      "core_mechanic": "The teacher holds one hidden answer. The learner unlocks it by asking a small number of useful questions. Teacher-only information must stay in teacher_note.",
+      "must_include": "One hidden teacher answer plus a small question budget or clear guessing goal.",
+      "learner_action": "Form questions to reduce uncertainty and identify the secret.",
+      "support_guidance": "Question stems only; never reveal the hidden answer.",
+      "challenge_guidance": "Reduce the number of questions or require one target question form.",
+      "reject_if": "The answer appears anywhere learner-visible or can be guessed without asking.",
+      "quality_test": "The learner must ask at least two meaningful questions in a normal round."
+    },
+    "Oops, Fix Me!": {
+      "core_mechanic": "Show the learner the correct information and let the teacher deliberately say one or two details incorrectly. The learner repairs the mismatch naturally.",
+      "must_include": "Visible correct information and a distinct wrong teacher version.",
+      "learner_action": "Correct the teacher clearly and appropriately.",
+      "support_guidance": "Repair chunks such as 'No, it’s…' or 'Actually…'.",
+      "challenge_guidance": "Correct two details in one turn or increase politeness.",
+      "reject_if": "There is no observable mismatch to repair.",
+      "quality_test": "A learner can point to exactly what is wrong and say the correction."
+    },
+    "Build My Day": {
+      "core_mechanic": "Show three to five timed actions. The learner turns them into a spoken sequence using time and ordering language, then adapts if one event changes.",
+      "must_include": "3–5 ordered times/actions.",
+      "learner_action": "Turn schedule data into connected spoken sequence.",
+      "support_guidance": "First / then / at / after that / finally.",
+      "challenge_guidance": "Move one event and require the learner to rebuild the sequence.",
+      "reject_if": "The item is an unordered vocabulary list.",
+      "quality_test": "The learner must express both time and order."
+    },
+    "Three Clues": {
+      "core_mechanic": "Give one target and three concrete clues. The learner uses the clues to describe the target in short connected language while the teacher guesses.",
+      "must_include": "One concrete target and exactly three useful clues.",
+      "learner_action": "Use clues to describe the target while the teacher guesses.",
+      "support_guidance": "It has… / You use it… / You find it…",
+      "challenge_guidance": "Add one original clue or remove one easy clue.",
+      "reject_if": "The clues literally contain the target word or make the answer instant.",
+      "quality_test": "The clues support at least two short learner utterances."
+    },
+    "What Changed?": {
+      "core_mechanic": "Show a clear BEFORE and AFTER state. The learner identifies and verbalises the change, then may explain a reason or consequence.",
+      "must_include": "A meaningful BEFORE and AFTER pair.",
+      "learner_action": "Notice and verbalise the changed detail(s).",
+      "support_guidance": "Before… / Now… / It changed from… to…",
+      "challenge_guidance": "Ask for reason, consequence or a second invented change.",
+      "reject_if": "Before and after differ only cosmetically or require hidden knowledge.",
+      "quality_test": "The change is visible in the prompt and worth saying aloud."
+    },
+    "Mini Map Mission": {
+      "core_mechanic": "Give a start point, destination and a few landmarks. The learner asks for or gives a short route using basic direction language.",
+      "must_include": "START, END and 2–4 landmarks plus a clear ask/give directions mission.",
+      "learner_action": "Ask for, give or confirm a short route.",
+      "support_guidance": "Go straight / turn left-right / next to / opposite / past.",
+      "challenge_guidance": "Wrong turn, blocked landmark or return route.",
+      "reject_if": "The route cannot be described consistently from the provided information.",
+      "quality_test": "The learner must use at least two direction moves."
+    },
+    "Pass It Back": {
+      "core_mechanic": "Teacher asks one safe everyday question. The learner answers and then keeps the interaction alive by asking one connected question back.",
+      "must_include": "One safe teacher question and an explicit connected-question-back requirement.",
+      "learner_action": "Answer, react if appropriate, then ask a connected question.",
+      "support_guidance": "And you? / What about you? / How often…? / What did you…?",
+      "challenge_guidance": "Ban 'And you?' and require a more specific follow-up.",
+      "reject_if": "The learner can answer and stop.",
+      "quality_test": "The exchange naturally produces at least two learner turns."
+    },
+    "Tiny Story Builder": {
+      "core_mechanic": "Give WHO, WHERE and ACTION cards. The learner connects them into a tiny coherent story rather than listing the three elements.",
+      "must_include": "WHO, WHERE and ACTION cards that can combine coherently.",
+      "learner_action": "Connect the three cards into a tiny story.",
+      "support_guidance": "One day / then / but / so / in the end.",
+      "challenge_guidance": "Add a twist or ending.",
+      "reject_if": "The cards are incompatible or invite only a list.",
+      "quality_test": "A 2–4 sentence story is possible with beginner language."
+    },
+    "Which One Fits?": {
+      "core_mechanic": "Give one concrete situation and two to four possible phrases. The learner chooses the most natural/appropriate phrase and says it aloud.",
+      "must_include": "A concrete situation and 2–4 phrase options with a meaningful appropriacy/naturalness difference.",
+      "learner_action": "Choose the phrase, say it and optionally explain why.",
+      "support_guidance": "Focus on politeness, naturalness and communicative fit.",
+      "challenge_guidance": "Change the audience or require the learner to produce a new phrase without reading.",
+      "reject_if": "The game is only obvious grammar-error spotting.",
+      "quality_test": "At least one distractor is understandable enough to create a real choice."
     }
   },
   "final_self_review_algorithm": [
@@ -2172,5 +2302,27 @@
     "For structured rounds, validate every required material/teacher field against structured_format_specs.",
     "Remove all invented technical metadata.",
     "Output only the importable JSON batch when the user asks for the downloadable authoring result."
-  ]
+  ],
+  "lower_level_game_pack": {
+    "purpose": "Ten lower-level-first games designed for A0–A2 1:1 speaking with high interaction and low reading load.",
+    "games": [
+      "Quick Pick",
+      "Ask to Unlock",
+      "Oops, Fix Me!",
+      "Build My Day",
+      "Three Clues",
+      "What Changed?",
+      "Mini Map Mission",
+      "Pass It Back",
+      "Tiny Story Builder",
+      "Which One Fits?"
+    ],
+    "design_rules": [
+      "Beginner does not mean childish: contexts stay adult and practical.",
+      "Prefer visible information, short turns and reusable chunks.",
+      "Use numbers, images, choices, repair, sequencing and questions to vary cognitive demand.",
+      "A0 may answer with chunks; A1/A2 should progressively connect turns.",
+      "Every game must still involve teacher-student interaction rather than silent selection."
+    ]
+  }
 }

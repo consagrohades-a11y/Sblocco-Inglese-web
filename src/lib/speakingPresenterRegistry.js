@@ -77,6 +77,19 @@ const CONFIG = {
   'Who Said It?': { family: 'dialogue_inference', variant: 'speaker_inference' },
   'Would You Rather — No Easy Answers': { family: 'choice_tradeoff', variant: 'binary_tradeoff' },
   'You Have 30 Seconds': { family: 'rapid_fluency', variant: 'thirty_seconds' },
+  'Number Mission': { family: 'rapid_fluency', variant: 'number_mission' },
+  'Picture Detective': { family: 'visual_identification', variant: 'picture_detective' },
+  'Make the Choice': { family: 'choice_tradeoff', variant: 'make_the_choice' },
+  'Quick Pick': { family: 'choice_tradeoff', variant: 'quick_pick' },
+  'Ask to Unlock': { family: 'dialogue_inference', variant: 'ask_to_unlock' },
+  'Oops, Fix Me!': { family: 'transform_repair', variant: 'correct_me' },
+  'Build My Day': { family: 'story_sequence', variant: 'schedule' },
+  'Three Clues': { family: 'constraint_focus', variant: 'three_clues' },
+  'What Changed?': { family: 'transform_repair', variant: 'before_after' },
+  'Mini Map Mission': { family: 'situation_response', variant: 'map_mission' },
+  'Pass It Back': { family: 'situation_response', variant: 'pass_it_back' },
+  'Tiny Story Builder': { family: 'story_sequence', variant: 'story_cards' },
+  'Which One Fits?': { family: 'choice_tradeoff', variant: 'phrase_choice' },
 };
 
 export const SPEAKING_ACTIVITY_TITLES = Object.freeze(Object.keys(CONFIG));

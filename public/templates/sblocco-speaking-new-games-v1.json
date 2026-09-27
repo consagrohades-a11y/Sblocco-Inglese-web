@@ -1,0 +1,2608 @@
+{
+  "version": 1,
+  "generated_for": "Sblocco Speaking Library",
+  "created": "2026-09-27",
+  "note": "Production seed for the three missing structured games plus ten lower-level-first games.",
+  "activities": [
+    {
+      "title": "Number Mission",
+      "summary": "Numbers become information you must confirm, correct and use with another person.",
+      "activity_type": "speaking_game",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "numbers",
+        "clarification",
+        "repair"
+      ],
+      "tags": [
+        "lower-level",
+        "numbers",
+        "interactive"
+      ],
+      "duration_minutes": 8,
+      "group_size": "1:1",
+      "instructions": "Use the visible facts to complete a real mini-mission. Listen carefully and repair any number that does not match.",
+      "student_intro": "Numbers matter here. Check them, repeat them and correct mistakes.",
+      "student_steps": [],
+      "useful_language": [
+        "Did you say…?",
+        "Sorry, could you repeat that?",
+        "No, it’s…",
+        "So that’s…"
+      ],
+      "presenter_style": "prompt",
+      "prompts": [
+        {
+          "text": "Confirm the café order using the numbers.",
+          "format": "number_mission",
+          "title": "Café order check",
+          "instructions": "Check the order with your teacher until every number matches.",
+          "situation": "You ordered quickly and the server may have written one detail incorrectly.",
+          "outcome": "Confirm the full order and correct one mismatch.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "context_tags": [
+            "food",
+            "service"
+          ],
+          "language_targets": [
+            "numbers",
+            "clarification",
+            "repair"
+          ],
+          "difficulty": 1,
+          "support": [
+            "Two coffees, please.",
+            "Did you say…?",
+            "No, it’s…"
+          ],
+          "challenge": {
+            "text": "The total you hear is wrong. Correct it politely.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Swap roles and use the same facts in a new order."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Customer",
+              "goal": "Check the order.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Server",
+              "goal": "Read the order back.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "facts": [
+              {
+                "label": "Coffee",
+                "value": "2",
+                "display": "2 coffees",
+                "kind": "quantity"
+              },
+              {
+                "label": "Sandwich",
+                "value": "1",
+                "display": "1 sandwich",
+                "kind": "quantity"
+              },
+              {
+                "label": "Total",
+                "value": "9.50",
+                "display": "€9.50",
+                "kind": "price"
+              }
+            ]
+          },
+          "teacher": {
+            "private_cue": "Read one quantity back incorrectly after the learner checks it.",
+            "final_confirmation": "The final order is 2 coffees, 1 sandwich, €9.50."
+          },
+          "teacher_note": "Keep this conversational. A0 learners can use chunks rather than full questions."
+        },
+        {
+          "text": "Confirm the train details before you leave.",
+          "format": "number_mission",
+          "title": "Train check",
+          "instructions": "Ask and confirm until you have the correct platform, time, carriage and seat.",
+          "situation": "You are at the station and want to make sure you copied everything correctly.",
+          "outcome": "Say all four details accurately.",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "context_tags": [
+            "travel",
+            "transport"
+          ],
+          "language_targets": [
+            "numbers",
+            "time",
+            "clarification"
+          ],
+          "difficulty": 2,
+          "support": [
+            "What platform is it?",
+            "What time does it leave?",
+            "Did you say carriage…?"
+          ],
+          "challenge": {
+            "text": "The platform changes at the last minute. Confirm the new platform.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Swap roles and confirm the details again."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Traveller",
+              "goal": "Check the train details.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Station staff",
+              "goal": "Answer and confirm.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "facts": [
+              {
+                "label": "Platform",
+                "value": "6",
+                "display": "Platform 6",
+                "kind": "quantity"
+              },
+              {
+                "label": "Departure",
+                "value": "14:25",
+                "display": "14:25",
+                "kind": "time"
+              },
+              {
+                "label": "Carriage",
+                "value": "3",
+                "display": "Carriage 3",
+                "kind": "quantity"
+              },
+              {
+                "label": "Seat",
+                "value": "18B",
+                "display": "Seat 18B",
+                "kind": "code"
+              }
+            ]
+          },
+          "teacher": {
+            "private_cue": "First say platform 8, then let the learner correct you.",
+            "final_confirmation": "Platform 6, 14:25, carriage 3, seat 18B."
+          },
+          "teacher_note": "Focus on intelligible number pronunciation and repair."
+        },
+        {
+          "text": "Check the appointment details.",
+          "format": "number_mission",
+          "title": "Appointment check",
+          "instructions": "Confirm the day, date, time and room.",
+          "situation": "The receptionist is checking an appointment you booked online.",
+          "outcome": "Leave with one clear set of appointment details.",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "context_tags": [
+            "daily-life",
+            "service"
+          ],
+          "language_targets": [
+            "dates",
+            "time",
+            "clarification"
+          ],
+          "difficulty": 2,
+          "support": [
+            "Is that Tuesday?",
+            "At half past ten?",
+            "Which room?"
+          ],
+          "challenge": {
+            "text": "The time moves 30 minutes later. Repeat the updated appointment.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Swap roles and confirm a new appointment."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Visitor",
+              "goal": "Check the appointment.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Receptionist",
+              "goal": "Confirm the details.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "facts": [
+              {
+                "label": "Day",
+                "value": "Tuesday",
+                "display": "Tuesday",
+                "kind": "weekday"
+              },
+              {
+                "label": "Date",
+                "value": "12 October",
+                "display": "12 October",
+                "kind": "date"
+              },
+              {
+                "label": "Time",
+                "value": "10:30",
+                "display": "10:30",
+                "kind": "time"
+              },
+              {
+                "label": "Room",
+                "value": "204",
+                "display": "Room 204",
+                "kind": "code"
+              }
+            ]
+          },
+          "teacher": {
+            "private_cue": "Misread room 204 as 240 once.",
+            "final_confirmation": "Tuesday 12 October, 10:30, room 204."
+          },
+          "teacher_note": "A1 learners may point/read then reformulate."
+        },
+        {
+          "text": "Confirm a delivery before it arrives.",
+          "format": "number_mission",
+          "title": "Delivery details",
+          "instructions": "Check quantities, address number and arrival time.",
+          "situation": "A small delivery is coming to your workplace.",
+          "outcome": "Confirm exactly what is coming and when.",
+          "levels": [
+            "A2"
+          ],
+          "context_tags": [
+            "work",
+            "service"
+          ],
+          "language_targets": [
+            "numbers",
+            "quantities",
+            "repair"
+          ],
+          "difficulty": 2,
+          "support": [
+            "How many…?",
+            "What number is the address?",
+            "What time should it arrive?"
+          ],
+          "challenge": {
+            "text": "Two extra boxes are added. Update the quantity and confirm it again.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Swap roles and repeat with one changed number."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Receiver",
+              "goal": "Confirm the delivery.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Driver",
+              "goal": "Read the details.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "facts": [
+              {
+                "label": "Boxes",
+                "value": "4",
+                "display": "4 boxes",
+                "kind": "quantity"
+              },
+              {
+                "label": "Bottles",
+                "value": "12",
+                "display": "12 bottles",
+                "kind": "quantity"
+              },
+              {
+                "label": "Address",
+                "value": "27",
+                "display": "No. 27",
+                "kind": "code"
+              },
+              {
+                "label": "Arrival",
+                "value": "16:45",
+                "display": "16:45",
+                "kind": "time"
+              }
+            ]
+          },
+          "teacher": {
+            "private_cue": "Read 12 bottles as 20 once.",
+            "final_confirmation": "4 boxes, 12 bottles, No. 27, 16:45."
+          },
+          "teacher_note": "Keep the interaction fast and practical."
+        }
+      ]
+    },
+    {
+      "title": "Picture Detective",
+      "summary": "Ask simple questions about pictures until you can identify the secret one.",
+      "activity_type": "speaking_game",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "questions",
+        "description",
+        "vocabulary"
+      ],
+      "tags": [
+        "lower-level",
+        "visual",
+        "questions"
+      ],
+      "duration_minutes": 8,
+      "group_size": "1:1",
+      "instructions": "Study the pictures. Ask useful questions and identify the teacher’s secret picture.",
+      "student_intro": "Look first. Ask questions. Guess only when you have enough information.",
+      "student_steps": [],
+      "useful_language": [
+        "Is it…?",
+        "Do you use it…?",
+        "Is it big or small?",
+        "Can you… with it?"
+      ],
+      "presenter_style": "choice",
+      "prompts": [
+        {
+          "text": "Find the secret everyday object.",
+          "format": "picture_detective",
+          "title": "Everyday objects",
+          "instructions": "Ask questions until you can identify the secret picture.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "context_tags": [
+            "daily-life",
+            "objects"
+          ],
+          "language_targets": [
+            "questions",
+            "description"
+          ],
+          "difficulty": 1,
+          "support": [
+            "Is it big or small?",
+            "Do you use it outside?",
+            "Can you carry it?"
+          ],
+          "challenge": {
+            "text": "Choose your own secret object and let the teacher guess.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Choose a new secret picture and swap roles."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Detective",
+              "goal": "Find the secret picture.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Keeper",
+              "goal": "Answer without naming it.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "show_labels": true,
+            "options": [
+              {
+                "key": "A",
+                "label": "camera",
+                "image_url": "/assets/speaking/picture-detective-camera.svg",
+                "image_alt": "A small camera"
+              },
+              {
+                "key": "B",
+                "label": "umbrella",
+                "image_url": "/assets/speaking/picture-detective-umbrella.svg",
+                "image_alt": "An open umbrella"
+              },
+              {
+                "key": "C",
+                "label": "backpack",
+                "image_url": "/assets/speaking/picture-detective-backpack.svg",
+                "image_alt": "A backpack"
+              },
+              {
+                "key": "D",
+                "label": "headphones",
+                "image_url": "/assets/speaking/picture-detective-headphones.svg",
+                "image_alt": "A pair of headphones"
+              }
+            ]
+          },
+          "teacher": {
+            "secret_option_key": "C"
+          },
+          "teacher_note": "Answer with simple yes/no or short chunks. Do not name the secret."
+        },
+        {
+          "text": "Find the secret food or drink.",
+          "format": "picture_detective",
+          "title": "Snack detective",
+          "instructions": "Ask about colour, type, temperature or when people eat it.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "context_tags": [
+            "food",
+            "daily-life"
+          ],
+          "language_targets": [
+            "questions",
+            "food-vocabulary"
+          ],
+          "difficulty": 1,
+          "support": [
+            "Is it sweet?",
+            "Is it hot?",
+            "Do you drink it?"
+          ],
+          "challenge": {
+            "text": "Describe one picture without saying its name.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Choose a new picture and swap roles."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Detective",
+              "goal": "Find the secret food.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Keeper",
+              "goal": "Answer without naming it.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "show_labels": true,
+            "options": [
+              {
+                "key": "A",
+                "label": "apple",
+                "image_url": "/assets/speaking/picture-detective-apple.svg",
+                "image_alt": "A red apple"
+              },
+              {
+                "key": "B",
+                "label": "sandwich",
+                "image_url": "/assets/speaking/picture-detective-sandwich.svg",
+                "image_alt": "A sandwich"
+              },
+              {
+                "key": "C",
+                "label": "mug",
+                "image_url": "/assets/speaking/picture-detective-mug.svg",
+                "image_alt": "A mug with a hot drink"
+              },
+              {
+                "key": "D",
+                "label": "ice cream",
+                "image_url": "/assets/speaking/picture-detective-icecream.svg",
+                "image_alt": "An ice cream cone"
+              }
+            ]
+          },
+          "teacher": {
+            "secret_option_key": "D"
+          },
+          "teacher_note": "Allow A0 learners to use single-word adjective + question chunks."
+        },
+        {
+          "text": "Find the secret way to travel.",
+          "format": "picture_detective",
+          "title": "Transport detective",
+          "instructions": "Ask questions about wheels, speed, people and where it goes.",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "context_tags": [
+            "travel",
+            "transport"
+          ],
+          "language_targets": [
+            "questions",
+            "transport-vocabulary"
+          ],
+          "difficulty": 2,
+          "support": [
+            "Does it have wheels?",
+            "Can many people use it?",
+            "Does it go on rails?"
+          ],
+          "challenge": {
+            "text": "Ask only three questions before you guess.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Swap roles and choose a new transport picture."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Detective",
+              "goal": "Find the secret transport.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Keeper",
+              "goal": "Answer without naming it.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "show_labels": true,
+            "options": [
+              {
+                "key": "A",
+                "label": "bus",
+                "image_url": "/assets/speaking/picture-detective-bus.svg",
+                "image_alt": "A city bus"
+              },
+              {
+                "key": "B",
+                "label": "bicycle",
+                "image_url": "/assets/speaking/picture-detective-bike.svg",
+                "image_alt": "A bicycle"
+              },
+              {
+                "key": "C",
+                "label": "train",
+                "image_url": "/assets/speaking/picture-detective-train.svg",
+                "image_alt": "A train"
+              },
+              {
+                "key": "D",
+                "label": "car",
+                "image_url": "/assets/speaking/picture-detective-car.svg",
+                "image_alt": "A small car"
+              }
+            ]
+          },
+          "teacher": {
+            "secret_option_key": "C"
+          },
+          "teacher_note": "Push complete questions at A1+."
+        },
+        {
+          "text": "Find the secret picture without labels.",
+          "format": "picture_detective",
+          "title": "No-label round",
+          "instructions": "Use what you can see. Ask category and use questions before guessing.",
+          "levels": [
+            "A1+",
+            "A2"
+          ],
+          "context_tags": [
+            "daily-life",
+            "objects"
+          ],
+          "language_targets": [
+            "description",
+            "question-formation",
+            "inference"
+          ],
+          "difficulty": 2,
+          "support": [
+            "Is it something you wear?",
+            "Would I use it at home?",
+            "Can I put things inside it?"
+          ],
+          "challenge": {
+            "text": "Now explain why each wrong option cannot be the secret.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Choose a new secret picture and swap roles."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Detective",
+              "goal": "Find the secret picture.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Keeper",
+              "goal": "Answer naturally.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "show_labels": false,
+            "options": [
+              {
+                "key": "A",
+                "label": "camera",
+                "image_url": "/assets/speaking/picture-detective-camera.svg",
+                "image_alt": "A small camera"
+              },
+              {
+                "key": "B",
+                "label": "mug",
+                "image_url": "/assets/speaking/picture-detective-mug.svg",
+                "image_alt": "A mug with a hot drink"
+              },
+              {
+                "key": "C",
+                "label": "headphones",
+                "image_url": "/assets/speaking/picture-detective-headphones.svg",
+                "image_alt": "A pair of headphones"
+              },
+              {
+                "key": "D",
+                "label": "backpack",
+                "image_url": "/assets/speaking/picture-detective-backpack.svg",
+                "image_alt": "A backpack"
+              }
+            ]
+          },
+          "teacher": {
+            "secret_option_key": "A"
+          },
+          "teacher_note": "Do not reveal labels verbally unless the learner is stuck."
+        }
+      ]
+    },
+    {
+      "title": "Make the Choice",
+      "summary": "Compare simple options, choose one and explain what matters most.",
+      "activity_type": "speaking_game",
+      "levels": [
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "choices",
+        "comparatives",
+        "reasons"
+      ],
+      "tags": [
+        "lower-level",
+        "decision",
+        "comparison"
+      ],
+      "duration_minutes": 8,
+      "group_size": "1:1",
+      "instructions": "Compare the options, choose one and explain your reason. The teacher may reveal a new condition.",
+      "student_intro": "There is no perfect answer. Choose what works best for you.",
+      "student_steps": [],
+      "useful_language": [
+        "I choose… because…",
+        "This one is cheaper.",
+        "This one is faster.",
+        "For me, … is more important."
+      ],
+      "presenter_style": "choice",
+      "prompts": [
+        {
+          "text": "Choose the best lunch for you.",
+          "format": "make_the_choice",
+          "title": "Lunch break",
+          "instructions": "Compare the two options and choose one.",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "context_tags": [
+            "food",
+            "daily-life"
+          ],
+          "language_targets": [
+            "choices",
+            "comparatives",
+            "reasons"
+          ],
+          "difficulty": 1,
+          "support": [
+            "I choose… because…",
+            "It is cheaper/faster."
+          ],
+          "challenge": {
+            "text": "You now have only 15 minutes. Does your choice change?",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Teacher chooses; learner asks why."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Customer",
+              "goal": "Choose lunch.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Friend",
+              "goal": "Ask one follow-up.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "situation": "You have a short lunch break.",
+            "task": "Choose the option that works best for you.",
+            "options": [
+              {
+                "key": "sandwich",
+                "title": "Sandwich",
+                "details": [
+                  {
+                    "label": "Price",
+                    "value": "€6"
+                  },
+                  {
+                    "label": "Time",
+                    "value": "5 min"
+                  },
+                  {
+                    "label": "Size",
+                    "value": "small"
+                  }
+                ]
+              },
+              {
+                "key": "pasta",
+                "title": "Pasta",
+                "details": [
+                  {
+                    "label": "Price",
+                    "value": "€10"
+                  },
+                  {
+                    "label": "Time",
+                    "value": "15 min"
+                  },
+                  {
+                    "label": "Size",
+                    "value": "large"
+                  }
+                ]
+              }
+            ]
+          },
+          "teacher": {
+            "complication": "Only 15 minutes remain.",
+            "role_note": "Ask which matters more: time, price or hunger."
+          },
+          "teacher_note": "Both choices are defensible."
+        },
+        {
+          "text": "Choose how to go to class.",
+          "format": "make_the_choice",
+          "title": "Bus or bike?",
+          "instructions": "Compare time, price and weather.",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "context_tags": [
+            "transport",
+            "daily-life"
+          ],
+          "language_targets": [
+            "comparatives",
+            "transport",
+            "reasons"
+          ],
+          "difficulty": 2,
+          "support": [
+            "The bus is…",
+            "The bike is…",
+            "I prefer… because…"
+          ],
+          "challenge": {
+            "text": "It starts raining. Choose again.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Swap priorities and choose again."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Student",
+              "goal": "Choose transport.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Friend",
+              "goal": "Challenge the choice.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "situation": "Class starts in 35 minutes.",
+            "task": "Choose how to get there.",
+            "options": [
+              {
+                "key": "bus",
+                "title": "Bus",
+                "details": [
+                  {
+                    "label": "Time",
+                    "value": "25 min"
+                  },
+                  {
+                    "label": "Price",
+                    "value": "€2"
+                  },
+                  {
+                    "label": "Weather",
+                    "value": "dry"
+                  }
+                ]
+              },
+              {
+                "key": "bike",
+                "title": "Bike",
+                "details": [
+                  {
+                    "label": "Time",
+                    "value": "18 min"
+                  },
+                  {
+                    "label": "Price",
+                    "value": "free"
+                  },
+                  {
+                    "label": "Weather",
+                    "value": "outside"
+                  }
+                ]
+              }
+            ]
+          },
+          "teacher": {
+            "complication": "It starts raining.",
+            "role_note": "Ask the learner whether speed still matters most."
+          },
+          "teacher_note": "Encourage comparative forms but accept simple reasons."
+        },
+        {
+          "text": "Choose a weekend plan.",
+          "format": "make_the_choice",
+          "title": "Saturday plan",
+          "instructions": "Compare cost, energy and social time.",
+          "levels": [
+            "A2"
+          ],
+          "context_tags": [
+            "hobbies",
+            "planning"
+          ],
+          "language_targets": [
+            "future-plans",
+            "trade-offs",
+            "reasons"
+          ],
+          "difficulty": 2,
+          "support": [
+            "I’d rather…",
+            "It costs…",
+            "I want something more…"
+          ],
+          "challenge": {
+            "text": "A friend can join only one option. Reconsider your choice.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Teacher chooses; learner disagrees politely."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Planner",
+              "goal": "Choose Saturday plan.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Friend",
+              "goal": "Ask about priorities.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "situation": "You are free all Saturday.",
+            "task": "Pick the plan you want most.",
+            "options": [
+              {
+                "key": "trip",
+                "title": "Day trip",
+                "details": [
+                  {
+                    "label": "Cost",
+                    "value": "€35"
+                  },
+                  {
+                    "label": "Time",
+                    "value": "all day"
+                  },
+                  {
+                    "label": "Energy",
+                    "value": "high"
+                  }
+                ]
+              },
+              {
+                "key": "cinema",
+                "title": "Cinema + dinner",
+                "details": [
+                  {
+                    "label": "Cost",
+                    "value": "€28"
+                  },
+                  {
+                    "label": "Time",
+                    "value": "evening"
+                  },
+                  {
+                    "label": "Energy",
+                    "value": "low"
+                  }
+                ]
+              }
+            ]
+          },
+          "teacher": {
+            "complication": "Your friend can join only the cinema plan.",
+            "role_note": "Ask whether company changes the decision."
+          },
+          "teacher_note": "Let learner choose personally or hypothetically."
+        },
+        {
+          "text": "Choose a gift.",
+          "format": "make_the_choice",
+          "title": "Birthday gift",
+          "instructions": "Choose a gift based on price and what the person likes.",
+          "levels": [
+            "A1+",
+            "A2"
+          ],
+          "context_tags": [
+            "shopping",
+            "social"
+          ],
+          "language_targets": [
+            "choices",
+            "reasons",
+            "preferences"
+          ],
+          "difficulty": 2,
+          "support": [
+            "They like…",
+            "This is more personal.",
+            "This costs less."
+          ],
+          "challenge": {
+            "text": "You discover the person already owns one option.",
+            "reveal": "teacher-controlled"
+          },
+          "role_swap": {
+            "enabled": true,
+            "instruction": "Teacher chooses; learner asks for a reason."
+          },
+          "roles": [
+            {
+              "key": "learner",
+              "name": "Friend",
+              "goal": "Choose the gift.",
+              "private_cue": ""
+            },
+            {
+              "key": "teacher",
+              "name": "Shopping partner",
+              "goal": "Ask what matters most.",
+              "private_cue": ""
+            }
+          ],
+          "material": {
+            "situation": "Your friend likes music and reading.",
+            "task": "Choose one birthday gift.",
+            "options": [
+              {
+                "key": "book",
+                "title": "Book",
+                "details": [
+                  {
+                    "label": "Price",
+                    "value": "€18"
+                  },
+                  {
+                    "label": "Interest",
+                    "value": "reading"
+                  },
+                  {
+                    "label": "Personal",
+                    "value": "medium"
+                  }
+                ]
+              },
+              {
+                "key": "ticket",
+                "title": "Concert ticket",
+                "details": [
+                  {
+                    "label": "Price",
+                    "value": "€42"
+                  },
+                  {
+                    "label": "Interest",
+                    "value": "music"
+                  },
+                  {
+                    "label": "Personal",
+                    "value": "high"
+                  }
+                ]
+              }
+            ]
+          },
+          "teacher": {
+            "complication": "Your friend already owns the book.",
+            "role_note": "Ask whether price still changes the decision."
+          },
+          "teacher_note": "Keep the language concrete."
+        }
+      ]
+    },
+    {
+      "title": "Quick Pick",
+      "summary": "Fast A/B/C choices that force a short spoken decision and one reason.",
+      "activity_type": "warmup",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "choices",
+        "reasons",
+        "retrieval"
+      ],
+      "tags": [
+        "lower-level",
+        "quick",
+        "choice"
+      ],
+      "duration_minutes": 5,
+      "group_size": "1:1",
+      "instructions": "Choose one option quickly. Say it aloud and add one short reason.",
+      "student_intro": "Pick fast. One answer, one reason.",
+      "student_steps": [],
+      "useful_language": [
+        "I choose…",
+        "For me…",
+        "Because…",
+        "I prefer…"
+      ],
+      "presenter_style": "choice",
+      "prompts": [
+        {
+          "text": "Breakfast tomorrow:\nA) eggs\nB) yogurt\nC) toast",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "I choose ___ because it is ___.",
+          "challenge": "Choose a second option for a very busy morning.",
+          "teacher_note": "Accept one-word reason at A0.",
+          "context_tags": [
+            "food",
+            "daily-life"
+          ],
+          "language_targets": [
+            "choices",
+            "reasons"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "Go to the city centre:\nA) bus\nB) bike\nC) walk",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "I choose ___ because it is fast / cheap / easy.",
+          "challenge": "It starts raining. Pick again.",
+          "teacher_note": "Elicit one simple comparative if possible.",
+          "context_tags": [
+            "transport",
+            "daily-life"
+          ],
+          "language_targets": [
+            "choices",
+            "comparatives"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "Free evening:\nA) film\nB) restaurant\nC) stay home",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "student_support": "I’d choose ___ because ___.",
+          "challenge": "You are very tired. Pick again.",
+          "teacher_note": "Ask one follow-up only.",
+          "context_tags": [
+            "hobbies",
+            "planning"
+          ],
+          "language_targets": [
+            "preferences",
+            "reasons"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "Drink with lunch:\nA) water\nB) coffee\nC) juice",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "For me, ___.",
+          "challenge": "Now choose for a hot summer day.",
+          "teacher_note": "Keep it rapid.",
+          "context_tags": [
+            "food",
+            "daily-life"
+          ],
+          "language_targets": [
+            "preferences",
+            "retrieval"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "Meeting time:\nA) 09:00\nB) 13:00\nC) 18:00",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "student_support": "___ is better for me because ___.",
+          "challenge": "You have another appointment at 12:30.",
+          "teacher_note": "Use time language.",
+          "context_tags": [
+            "work",
+            "planning"
+          ],
+          "language_targets": [
+            "time",
+            "reasons"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "Take only one on a short trip:\nA) book\nB) headphones\nC) camera",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "student_support": "I’d take ___ because ___.",
+          "challenge": "Your bag is very small.",
+          "teacher_note": "Encourage one concrete use.",
+          "context_tags": [
+            "travel",
+            "daily-life"
+          ],
+          "language_targets": [
+            "choices",
+            "purpose"
+          ],
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "title": "Ask to Unlock",
+      "summary": "Learners unlock hidden information by asking a small number of useful questions.",
+      "activity_type": "speaking_game",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "questions",
+        "clarification",
+        "information-gap"
+      ],
+      "tags": [
+        "lower-level",
+        "questions",
+        "interactive"
+      ],
+      "duration_minutes": 7,
+      "group_size": "1:1",
+      "instructions": "The teacher knows the secret. Ask useful questions until you can unlock it.",
+      "student_intro": "You do not have the answer yet. Ask for it.",
+      "student_steps": [],
+      "useful_language": [
+        "Is it…?",
+        "Do you…?",
+        "Where…?",
+        "What time…?",
+        "Can you…?"
+      ],
+      "presenter_style": "roleplay",
+      "prompts": [
+        {
+          "text": "SECRET: a room in a house. Ask up to 4 questions and guess it.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "Is it big? Is there a…? Do you cook/sleep there?",
+          "challenge": "Ask only yes/no questions.",
+          "teacher_note": "Secret answer: kitchen. Answer simply and consistently.",
+          "context_tags": [
+            "housing",
+            "daily-life"
+          ],
+          "language_targets": [
+            "questions",
+            "home-vocabulary"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "SECRET: a way to travel. Ask up to 4 questions and guess it.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "Does it have wheels? Is it fast? Is it public?",
+          "challenge": "You get only 3 questions.",
+          "teacher_note": "Secret answer: bus.",
+          "context_tags": [
+            "transport",
+            "travel"
+          ],
+          "language_targets": [
+            "questions",
+            "transport-vocabulary"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "SECRET: something I buy every week. Ask questions and guess it.",
+          "levels": [
+            "A1"
+          ],
+          "student_support": "Is it food? Is it expensive? Where do you buy it?",
+          "challenge": "Ask one question with how much / how many.",
+          "teacher_note": "Secret answer: coffee.",
+          "context_tags": [
+            "shopping",
+            "daily-life"
+          ],
+          "language_targets": [
+            "questions",
+            "shopping"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "SECRET: where I went yesterday. Ask questions and guess the place.",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "student_support": "Was it indoors? Did you buy something? Who did you go with?",
+          "challenge": "Ask one past-simple question.",
+          "teacher_note": "Secret answer: supermarket.",
+          "context_tags": [
+            "daily-life",
+            "places"
+          ],
+          "language_targets": [
+            "past-simple",
+            "questions"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "SECRET: what time my train leaves. Ask the questions you need.",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "student_support": "What time…? Which train…? From which platform…?",
+          "challenge": "Confirm the answer by repeating it back.",
+          "teacher_note": "Secret answer: 17:40, platform 5.",
+          "context_tags": [
+            "travel",
+            "transport"
+          ],
+          "language_targets": [
+            "time",
+            "clarification"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "SECRET: my weekend plan. Ask questions until you can describe it.",
+          "levels": [
+            "A2"
+          ],
+          "student_support": "Where are you going? Who with? What are you going to do?",
+          "challenge": "Summarise the plan in one sentence.",
+          "teacher_note": "Secret: Saturday morning market, lunch with a friend, cinema at 20:00.",
+          "context_tags": [
+            "planning",
+            "social"
+          ],
+          "language_targets": [
+            "future-plans",
+            "questions"
+          ],
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "title": "Oops, Fix Me!",
+      "summary": "The teacher says the wrong detail and the learner corrects it clearly and naturally.",
+      "activity_type": "speaking_game",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "repair",
+        "correction",
+        "numbers"
+      ],
+      "tags": [
+        "lower-level",
+        "repair",
+        "interactive"
+      ],
+      "duration_minutes": 6,
+      "group_size": "1:1",
+      "instructions": "Read your real information. Listen to the teacher’s wrong version and correct it.",
+      "student_intro": "I’ll get it wrong on purpose. Fix me.",
+      "student_steps": [],
+      "useful_language": [
+        "No, it’s…",
+        "Actually…",
+        "Not ___, ___.",
+        "Sorry, I said…"
+      ],
+      "presenter_style": "repair",
+      "prompts": [
+        {
+          "text": "YOUR INFO: Tuesday at 18:00\nTEACHER SAYS: Monday at 19:00",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "No, it’s Tuesday at six.",
+          "challenge": "Correct both details in one sentence.",
+          "teacher_note": "Say the wrong line naturally, then let learner repair.",
+          "context_tags": [
+            "study",
+            "planning"
+          ],
+          "language_targets": [
+            "time",
+            "repair"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "YOUR INFO: 2 coffees and 1 sandwich\nTEACHER SAYS: 1 coffee and 2 sandwiches",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "No, two coffees and one sandwich.",
+          "challenge": "Add please and make it polite.",
+          "teacher_note": "Focus quantity clarity.",
+          "context_tags": [
+            "food",
+            "service"
+          ],
+          "language_targets": [
+            "numbers",
+            "repair"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "YOUR INFO: Train at 14:20, platform 6\nTEACHER SAYS: Train at 14:40, platform 9",
+          "levels": [
+            "A1"
+          ],
+          "student_support": "Actually, it’s at… from platform…",
+          "challenge": "Ask the teacher to repeat the final details.",
+          "teacher_note": "Encourage confirmation.",
+          "context_tags": [
+            "travel",
+            "transport"
+          ],
+          "language_targets": [
+            "time",
+            "clarification",
+            "repair"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "YOUR INFO: Room 308 for 3 nights\nTEACHER SAYS: Room 380 for 2 nights",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "student_support": "I think there are two mistakes…",
+          "challenge": "Correct the teacher politely, not abruptly.",
+          "teacher_note": "Use hotel context.",
+          "context_tags": [
+            "hotel",
+            "travel"
+          ],
+          "language_targets": [
+            "numbers",
+            "politeness",
+            "repair"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "YOUR INFO: Meeting starts at 10:30 in Room B\nTEACHER SAYS: It starts at 11:30 in Room D",
+          "levels": [
+            "A1+",
+            "A2"
+          ],
+          "student_support": "Just to clarify, it starts…",
+          "challenge": "Confirm what time everyone should arrive.",
+          "teacher_note": "Model natural workplace correction.",
+          "context_tags": [
+            "work",
+            "meeting"
+          ],
+          "language_targets": [
+            "clarification",
+            "repair"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "YOUR INFO: Total €24.50\nTEACHER SAYS: Total €42.50",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "student_support": "Sorry, I think the total is…",
+          "challenge": "Ask how the teacher got the wrong total.",
+          "teacher_note": "Keep it practical.",
+          "context_tags": [
+            "shopping",
+            "money"
+          ],
+          "language_targets": [
+            "prices",
+            "repair"
+          ],
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "title": "Build My Day",
+      "summary": "Put a simple schedule into spoken order using times and sequencing language.",
+      "activity_type": "speaking_game",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "time",
+        "sequencing",
+        "routines"
+      ],
+      "tags": [
+        "lower-level",
+        "time",
+        "sequence"
+      ],
+      "duration_minutes": 7,
+      "group_size": "1:1",
+      "instructions": "Read the schedule and tell the teacher what happens in order.",
+      "student_intro": "Build the day one step at a time.",
+      "student_steps": [],
+      "useful_language": [
+        "First…",
+        "Then…",
+        "At…",
+        "After that…",
+        "Finally…"
+      ],
+      "presenter_style": "story",
+      "prompts": [
+        {
+          "text": "08:00 breakfast\n09:30 English class\n13:00 lunch\n18:00 gym",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "At eight, breakfast. Then…",
+          "challenge": "Say the whole day without reading the times twice.",
+          "teacher_note": "A0 can use chunk + time.",
+          "context_tags": [
+            "daily-life",
+            "study"
+          ],
+          "language_targets": [
+            "time",
+            "sequencing"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "07:30 wake up\n08:15 bus\n09:00 work\n12:30 lunch",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "First I… Then I…",
+          "challenge": "Add one thing after lunch.",
+          "teacher_note": "Use present simple.",
+          "context_tags": [
+            "daily-life",
+            "work"
+          ],
+          "language_targets": [
+            "routines",
+            "time"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "10:00 supermarket\n11:30 coffee with Anna\n14:00 clean the flat\n20:00 film",
+          "levels": [
+            "A1"
+          ],
+          "student_support": "In the morning… In the afternoon… In the evening…",
+          "challenge": "Change one time and explain why.",
+          "teacher_note": "Encourage parts of day.",
+          "context_tags": [
+            "daily-life",
+            "planning"
+          ],
+          "language_targets": [
+            "time",
+            "sequencing"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "09:15 train\n11:00 arrive in Florence\n13:00 lunch\n16:30 museum\n19:10 train home",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "student_support": "First we take… We arrive at…",
+          "challenge": "Your train home moves to 18:40. Update the plan.",
+          "teacher_note": "Good travel mini-plan.",
+          "context_tags": [
+            "travel",
+            "planning"
+          ],
+          "language_targets": [
+            "time",
+            "future-plans"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "08:30 check email\n09:00 team meeting\n11:00 client call\n13:00 lunch\n15:30 finish report",
+          "levels": [
+            "A1+",
+            "A2"
+          ],
+          "student_support": "My first task is… After the meeting…",
+          "challenge": "The client call moves to 10:00. Rebuild the morning.",
+          "teacher_note": "Use workplace sequencing.",
+          "context_tags": [
+            "work",
+            "planning"
+          ],
+          "language_targets": [
+            "sequencing",
+            "work-vocabulary"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "17:30 finish work\n18:00 supermarket\n19:00 cook dinner\n20:30 call a friend\n23:00 bed",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "student_support": "After work… Later… Finally…",
+          "challenge": "You finish work one hour late. What changes?",
+          "teacher_note": "Let learner adapt the plan.",
+          "context_tags": [
+            "daily-life",
+            "planning"
+          ],
+          "language_targets": [
+            "time",
+            "adaptation"
+          ],
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "title": "Three Clues",
+      "summary": "Use three simple clues to describe a target without giving a long explanation.",
+      "activity_type": "vocabulary",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "description",
+        "vocabulary",
+        "circumlocution"
+      ],
+      "tags": [
+        "lower-level",
+        "vocabulary",
+        "clues"
+      ],
+      "duration_minutes": 6,
+      "group_size": "1:1",
+      "instructions": "Use the three clues to help you describe the target. The teacher guesses.",
+      "student_intro": "Three clues. One target. Make me guess.",
+      "student_steps": [],
+      "useful_language": [
+        "It has…",
+        "You use it for…",
+        "You find it in…",
+        "It can…"
+      ],
+      "presenter_style": "taboo",
+      "prompts": [
+        {
+          "text": "TARGET: bicycle\nCLUES: two wheels · outside · you ride it",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "It has… You use it…",
+          "challenge": "Add one new clue of your own.",
+          "teacher_note": "Do not guess immediately; let learner produce at least two chunks.",
+          "context_tags": [
+            "transport",
+            "objects"
+          ],
+          "language_targets": [
+            "description",
+            "vocabulary"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "TARGET: fridge\nCLUES: kitchen · cold · food",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "It is in… It keeps…",
+          "challenge": "Describe it without saying kitchen.",
+          "teacher_note": "Keep sentences short.",
+          "context_tags": [
+            "housing",
+            "food"
+          ],
+          "language_targets": [
+            "description",
+            "home-vocabulary"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "TARGET: umbrella\nCLUES: rain · hand · outside",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "You use it when…",
+          "challenge": "Add a colour and a size.",
+          "teacher_note": "Accept simple noun phrases at A0.",
+          "context_tags": [
+            "daily-life",
+            "objects"
+          ],
+          "language_targets": [
+            "description",
+            "weather"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "TARGET: airport\nCLUES: planes · passport · travel",
+          "levels": [
+            "A1"
+          ],
+          "student_support": "You go there when…",
+          "challenge": "Say two things people do there.",
+          "teacher_note": "Expand from place to actions.",
+          "context_tags": [
+            "travel",
+            "airport"
+          ],
+          "language_targets": [
+            "places",
+            "actions"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "TARGET: supermarket\nCLUES: food · basket · pay",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "student_support": "It is a place where…",
+          "challenge": "Give one example of something you buy there.",
+          "teacher_note": "Push relative-clause chunk if possible.",
+          "context_tags": [
+            "shopping",
+            "daily-life"
+          ],
+          "language_targets": [
+            "description",
+            "shopping"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "TARGET: colleague\nCLUES: work · same company · person",
+          "levels": [
+            "A1+",
+            "A2"
+          ],
+          "student_support": "A colleague is someone who…",
+          "challenge": "Explain the difference between colleague and friend.",
+          "teacher_note": "Good lexical distinction.",
+          "context_tags": [
+            "work",
+            "people"
+          ],
+          "language_targets": [
+            "definition",
+            "vocabulary"
+          ],
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "title": "What Changed?",
+      "summary": "Compare a before and after situation and say exactly what is different.",
+      "activity_type": "speaking_game",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "comparison",
+        "past-present",
+        "noticing"
+      ],
+      "tags": [
+        "lower-level",
+        "comparison",
+        "repair"
+      ],
+      "duration_minutes": 6,
+      "group_size": "1:1",
+      "instructions": "Look at BEFORE and AFTER. Say what changed.",
+      "student_intro": "Spot the change and say it clearly.",
+      "student_steps": [],
+      "useful_language": [
+        "Before…",
+        "Now…",
+        "It changed from… to…",
+        "There is/are…"
+      ],
+      "presenter_style": "repair",
+      "prompts": [
+        {
+          "text": "BEFORE: The café opens at 08:00.\nAFTER: The café opens at 07:30.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "Before: eight. Now: seven thirty.",
+          "challenge": "Say whether the café opens earlier or later.",
+          "teacher_note": "Focus time + earlier.",
+          "context_tags": [
+            "daily-life",
+            "service"
+          ],
+          "language_targets": [
+            "time",
+            "comparison"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "BEFORE: I take the bus to work.\nAFTER: I ride my bike to work.",
+          "levels": [
+            "A1"
+          ],
+          "student_support": "Before I… Now I…",
+          "challenge": "Add one possible reason for the change.",
+          "teacher_note": "Present simple contrast.",
+          "context_tags": [
+            "work",
+            "transport"
+          ],
+          "language_targets": [
+            "routines",
+            "comparison"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "BEFORE: The room has one table.\nAFTER: The room has three tables.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "There was one… Now there are three…",
+          "challenge": "Add one more change yourself.",
+          "teacher_note": "Accept there is/are if past form is too hard.",
+          "context_tags": [
+            "housing",
+            "daily-life"
+          ],
+          "language_targets": [
+            "there-is-are",
+            "numbers"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "BEFORE: The ticket costs €12.\nAFTER: The ticket costs €18.",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "student_support": "The price went from… to…",
+          "challenge": "Say how much more expensive it is.",
+          "teacher_note": "Optional subtraction support.",
+          "context_tags": [
+            "money",
+            "travel"
+          ],
+          "language_targets": [
+            "prices",
+            "comparison"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "BEFORE: We meet on Friday at 15:00.\nAFTER: We meet on Thursday at 16:30.",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "student_support": "The day changed from… The time changed from…",
+          "challenge": "Confirm the new meeting in one sentence.",
+          "teacher_note": "Two-detail noticing.",
+          "context_tags": [
+            "work",
+            "meeting"
+          ],
+          "language_targets": [
+            "dates",
+            "time",
+            "repair"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "BEFORE: Sara works from home five days a week.\nAFTER: Sara works from home two days a week.",
+          "levels": [
+            "A1+",
+            "A2"
+          ],
+          "student_support": "She used to / Before she… Now she…",
+          "challenge": "Suggest one possible reason.",
+          "teacher_note": "Do not require used to; it is optional support.",
+          "context_tags": [
+            "work",
+            "daily-life"
+          ],
+          "language_targets": [
+            "frequency",
+            "comparison"
+          ],
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "title": "Mini Map Mission",
+      "summary": "Use a tiny route mission to practise asking for and giving simple directions.",
+      "activity_type": "roleplay",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "directions",
+        "questions",
+        "places"
+      ],
+      "tags": [
+        "lower-level",
+        "directions",
+        "interactive"
+      ],
+      "duration_minutes": 7,
+      "group_size": "1:1",
+      "instructions": "Use START, END and the landmarks. Ask for or give the route.",
+      "student_intro": "Get from A to B using English.",
+      "student_steps": [],
+      "useful_language": [
+        "Where is…?",
+        "Go straight.",
+        "Turn left/right.",
+        "It’s next to…",
+        "It’s opposite…"
+      ],
+      "presenter_style": "roleplay",
+      "prompts": [
+        {
+          "text": "START: station\nEND: café\nLANDMARKS: bank · park\nMISSION: Ask the teacher how to get there.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "Where is the café? Left or right?",
+          "challenge": "Repeat the route back to the teacher.",
+          "teacher_note": "Route: straight past the bank, café on the left before the park.",
+          "context_tags": [
+            "transport",
+            "places"
+          ],
+          "language_targets": [
+            "directions",
+            "questions"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "START: hotel\nEND: supermarket\nLANDMARKS: pharmacy · bus stop\nMISSION: Ask for directions.",
+          "levels": [
+            "A1"
+          ],
+          "student_support": "Go straight / turn left / next to…",
+          "challenge": "Ask one clarification question.",
+          "teacher_note": "Route: right at pharmacy, supermarket opposite bus stop.",
+          "context_tags": [
+            "travel",
+            "shopping"
+          ],
+          "language_targets": [
+            "directions",
+            "clarification"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "START: school\nEND: library\nLANDMARKS: café · church\nMISSION: Give the teacher directions.",
+          "levels": [
+            "A1"
+          ],
+          "student_support": "First… Then… It’s next to…",
+          "challenge": "Teacher takes a wrong turn; correct them.",
+          "teacher_note": "Route: straight, left at café, library next to church.",
+          "context_tags": [
+            "study",
+            "places"
+          ],
+          "language_targets": [
+            "directions",
+            "sequencing"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "START: museum\nEND: restaurant\nLANDMARKS: river · bridge\nMISSION: Give the route in 3 steps.",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "student_support": "Cross… Go along… Turn…",
+          "challenge": "Now give the route back to the museum.",
+          "teacher_note": "Route can be invented consistently from landmarks.",
+          "context_tags": [
+            "travel",
+            "places"
+          ],
+          "language_targets": [
+            "directions",
+            "sequencing"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "START: office\nEND: car park\nLANDMARKS: reception · lift\nMISSION: Help a visitor find it.",
+          "levels": [
+            "A1+",
+            "A2"
+          ],
+          "student_support": "Go past… Take the… It’s on your…",
+          "challenge": "The lift is not working. Change the route.",
+          "teacher_note": "Use workplace route language.",
+          "context_tags": [
+            "work",
+            "places"
+          ],
+          "language_targets": [
+            "directions",
+            "repair"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "START: train station\nEND: city hall\nLANDMARKS: square · fountain · bank\nMISSION: Ask for directions, then summarise them.",
+          "levels": [
+            "A2"
+          ],
+          "student_support": "So I go… then… and it’s…?",
+          "challenge": "Ask how long it takes on foot.",
+          "teacher_note": "Require one confirmation question.",
+          "context_tags": [
+            "travel",
+            "places"
+          ],
+          "language_targets": [
+            "directions",
+            "clarification"
+          ],
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "title": "Pass It Back",
+      "summary": "Train conversational reciprocity: answer, then ask a connected question back.",
+      "activity_type": "conversation",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "questions",
+        "conversation",
+        "follow-up"
+      ],
+      "tags": [
+        "lower-level",
+        "interaction",
+        "questions"
+      ],
+      "duration_minutes": 6,
+      "group_size": "1:1",
+      "instructions": "Answer the teacher’s question, then pass the conversation back with one connected question.",
+      "student_intro": "Answer it. Then send the conversation back.",
+      "student_steps": [],
+      "useful_language": [
+        "And you?",
+        "What about you?",
+        "Do you…?",
+        "How often do you…?"
+      ],
+      "presenter_style": "roleplay",
+      "prompts": [
+        {
+          "text": "TEACHER: What do you usually eat for breakfast?\nYOUR JOB: Answer, then ask me a connected question.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "I usually… And you?",
+          "challenge": "Ask a different question, not just ‘And you?’",
+          "teacher_note": "Model reciprocity, not interrogation.",
+          "context_tags": [
+            "food",
+            "daily-life"
+          ],
+          "language_targets": [
+            "questions",
+            "routines"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "TEACHER: How do you come to class?\nYOUR JOB: Answer, then ask me about transport.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "I come by… How do you…?",
+          "challenge": "Ask how long it takes.",
+          "teacher_note": "Accept by bus / on foot chunks.",
+          "context_tags": [
+            "transport",
+            "study"
+          ],
+          "language_targets": [
+            "questions",
+            "transport"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "TEACHER: What do you like doing at the weekend?\nYOUR JOB: Answer, then ask one connected question.",
+          "levels": [
+            "A1"
+          ],
+          "student_support": "I like… What do you like…?",
+          "challenge": "Ask a follow-up about when or who with.",
+          "teacher_note": "Keep chain natural.",
+          "context_tags": [
+            "hobbies",
+            "daily-life"
+          ],
+          "language_targets": [
+            "preferences",
+            "follow-up"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "TEACHER: What time do you usually finish work or study?\nYOUR JOB: Answer, then ask me about my day.",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "student_support": "I usually finish at… What time do you…?",
+          "challenge": "React to my answer before asking again.",
+          "teacher_note": "Add a reaction: really? / that’s late.",
+          "context_tags": [
+            "work",
+            "study"
+          ],
+          "language_targets": [
+            "time",
+            "reactions",
+            "questions"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "TEACHER: What was the best part of your week?\nYOUR JOB: Answer, then ask me a past question.",
+          "levels": [
+            "A1+",
+            "A2"
+          ],
+          "student_support": "The best part was… What did you…?",
+          "challenge": "Ask a second follow-up based on my answer.",
+          "teacher_note": "Past-simple focus.",
+          "context_tags": [
+            "daily-life",
+            "social"
+          ],
+          "language_targets": [
+            "past-simple",
+            "follow-up"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "TEACHER: What are you going to do after this lesson?\nYOUR JOB: Answer, then ask me about my plan.",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "student_support": "I’m going to… What are you going to…?",
+          "challenge": "Find one thing your plans have in common.",
+          "teacher_note": "Future plan exchange.",
+          "context_tags": [
+            "planning",
+            "daily-life"
+          ],
+          "language_targets": [
+            "future-plans",
+            "questions"
+          ],
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "title": "Tiny Story Builder",
+      "summary": "Combine three simple story cards into a short connected story.",
+      "activity_type": "storytelling",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "storytelling",
+        "sequencing",
+        "sentence-building"
+      ],
+      "tags": [
+        "lower-level",
+        "story",
+        "creative"
+      ],
+      "duration_minutes": 7,
+      "group_size": "1:1",
+      "instructions": "Use WHO, WHERE and ACTION to build a tiny story. Connect the ideas instead of listing them.",
+      "student_intro": "Three cards become one little story.",
+      "student_steps": [],
+      "useful_language": [
+        "One day…",
+        "Then…",
+        "But…",
+        "So…",
+        "In the end…"
+      ],
+      "presenter_style": "story",
+      "prompts": [
+        {
+          "text": "WHO: a tired waiter\nWHERE: a train station\nACTION: loses a phone",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "student_support": "The waiter was… He was at… Then…",
+          "challenge": "Give the story a happy ending.",
+          "teacher_note": "Aim for 3 connected sentences.",
+          "context_tags": [
+            "story",
+            "travel"
+          ],
+          "language_targets": [
+            "past-simple",
+            "sequencing"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "WHO: a student\nWHERE: a café\nACTION: meets an old friend",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "A student is in… Then…",
+          "challenge": "Add one thing they talk about.",
+          "teacher_note": "A0 can use present simple story.",
+          "context_tags": [
+            "story",
+            "social"
+          ],
+          "language_targets": [
+            "sentence-building",
+            "sequencing"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "WHO: a tourist\nWHERE: a supermarket\nACTION: cannot find the exit",
+          "levels": [
+            "A1"
+          ],
+          "student_support": "First… Then… Finally…",
+          "challenge": "Add a person who helps.",
+          "teacher_note": "Encourage simple problem-solution.",
+          "context_tags": [
+            "story",
+            "travel"
+          ],
+          "language_targets": [
+            "past-simple",
+            "problem-solving"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "WHO: two colleagues\nWHERE: an office kitchen\nACTION: find a birthday cake",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "student_support": "They were… They saw… Then…",
+          "challenge": "The cake has the wrong name on it.",
+          "teacher_note": "Let learner invent context.",
+          "context_tags": [
+            "story",
+            "work"
+          ],
+          "language_targets": [
+            "past-simple",
+            "storytelling"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "WHO: a family\nWHERE: a bus stop\nACTION: the bus does not come",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "student_support": "They wait… After… So they decide…",
+          "challenge": "It starts raining.",
+          "teacher_note": "Good for sequence + decision.",
+          "context_tags": [
+            "story",
+            "transport"
+          ],
+          "language_targets": [
+            "past-simple",
+            "sequencing"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "WHO: a chef\nWHERE: a small hotel\nACTION: receives 20 pizzas by mistake",
+          "levels": [
+            "A2"
+          ],
+          "student_support": "At first… The problem was… In the end…",
+          "challenge": "The pizzas are already paid for.",
+          "teacher_note": "Push creative resolution.",
+          "context_tags": [
+            "story",
+            "hotel"
+          ],
+          "language_targets": [
+            "storytelling",
+            "problem-solving"
+          ],
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "title": "Which One Fits?",
+      "summary": "Choose the most natural phrase for a concrete low-level situation, then say it aloud.",
+      "activity_type": "speaking_game",
+      "levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "goals": [
+        "functional-language",
+        "natural-English",
+        "choices"
+      ],
+      "tags": [
+        "lower-level",
+        "phrases",
+        "choice"
+      ],
+      "duration_minutes": 6,
+      "group_size": "1:1",
+      "instructions": "Read the situation, choose the phrase that fits best and say it naturally.",
+      "student_intro": "Pick the phrase you would really use.",
+      "student_steps": [],
+      "useful_language": [
+        "I think ___ fits because…",
+        "I’d say…",
+        "That sounds more polite."
+      ],
+      "presenter_style": "choice",
+      "prompts": [
+        {
+          "text": "You want a coffee in a café.\nA) Coffee.\nB) Can I have a coffee, please?\nC) I need coffee now.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "Which one sounds polite and normal?",
+          "challenge": "Order a tea instead without reading.",
+          "teacher_note": "B is strongest. A may be acceptable contextually but is less complete.",
+          "context_tags": [
+            "food",
+            "service"
+          ],
+          "language_targets": [
+            "requests",
+            "politeness"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "You do not understand your teacher.\nA) Again.\nB) Sorry, could you say that again?\nC) You speak more.",
+          "levels": [
+            "A0",
+            "A1"
+          ],
+          "student_support": "Choose the phrase that asks politely for repetition.",
+          "challenge": "Ask the teacher to speak more slowly too.",
+          "teacher_note": "B.",
+          "context_tags": [
+            "study",
+            "communication"
+          ],
+          "language_targets": [
+            "clarification",
+            "requests"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "You need directions from a stranger.\nA) Excuse me, where is the station?\nB) Station where?\nC) Tell station.",
+          "levels": [
+            "A1"
+          ],
+          "student_support": "Think: get attention + question.",
+          "challenge": "Ask where the nearest bus stop is.",
+          "teacher_note": "A.",
+          "context_tags": [
+            "travel",
+            "places"
+          ],
+          "language_targets": [
+            "directions",
+            "questions"
+          ],
+          "difficulty": 1
+        },
+        {
+          "text": "Your friend says: ‘I’m really tired.’\nA) That’s nice.\nB) Oh no. Long day?\nC) Why you tired?",
+          "levels": [
+            "A1",
+            "A1+"
+          ],
+          "student_support": "React first, then ask.",
+          "challenge": "Keep the conversation going for one more turn.",
+          "teacher_note": "B is the most natural supportive response.",
+          "context_tags": [
+            "social",
+            "daily-life"
+          ],
+          "language_targets": [
+            "reactions",
+            "follow-up"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "A colleague sends you a file you asked for.\nA) Thanks, got it.\nB) Finally.\nC) I receive.",
+          "levels": [
+            "A1+",
+            "A2"
+          ],
+          "student_support": "Choose the natural short work response.",
+          "challenge": "Make it slightly more formal.",
+          "teacher_note": "A.",
+          "context_tags": [
+            "work",
+            "communication"
+          ],
+          "language_targets": [
+            "workplace-chunks",
+            "register"
+          ],
+          "difficulty": 2
+        },
+        {
+          "text": "A waiter brings the wrong drink.\nA) Sorry, I ordered water.\nB) Wrong.\nC) You make mistake.",
+          "levels": [
+            "A1",
+            "A2"
+          ],
+          "student_support": "Be clear and polite.",
+          "challenge": "Ask for the correct drink too.",
+          "teacher_note": "A, then extend with Could I have…?",
+          "context_tags": [
+            "restaurant",
+            "service"
+          ],
+          "language_targets": [
+            "complaints",
+            "requests"
+          ],
+          "difficulty": 2
+        }
+      ]
+    }
+  ]
+}

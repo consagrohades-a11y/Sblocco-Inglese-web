@@ -118,6 +118,30 @@ export function parseDotOptions(text) {
   return pieces.length >= 3 ? pieces : null;
 }
 
+export function parseBeforeAfter(text) {
+  const match = clean(text).match(/^BEFORE\s*:\s*([\s\S]*?)\n+AFTER\s*:\s*([\s\S]+)$/i);
+  return match ? { before: clean(match[1]), after: clean(match[2]) } : null;
+}
+
+export function parseFieldCards(text) {
+  const lines = clean(text).split(/\n+/).map(clean).filter(Boolean);
+  const fields = [];
+  for (const line of lines) {
+    const match = line.match(/^([A-Z][A-Z0-9 ]{1,24})\s*:\s*(.+)$/);
+    if (match) fields.push({ label: clean(match[1]), value: clean(match[2]) });
+  }
+  return fields.length >= 2 ? fields : null;
+}
+
+export function parseSchedule(text) {
+  const lines = clean(text).split(/\n+/).map(clean).filter(Boolean);
+  const entries = lines.map((line) => {
+    const match = line.match(/^(\d{1,2}:\d{2})\s+(.+)$/);
+    return match ? { time: match[1], action: clean(match[2]) } : null;
+  }).filter(Boolean);
+  return entries.length >= 3 && entries.length === lines.length ? entries : null;
+}
+
 export function adaptLegacySpeakingItem(item, config = {}) {
   const text = clean(item?.text);
   const family = config.family || 'situation_response';
@@ -139,5 +163,8 @@ export function adaptLegacySpeakingItem(item, config = {}) {
     difference: parseDifference(text),
     quotedPrompt: parseQuotedPrompt(text),
     dotOptions: parseDotOptions(text),
+    beforeAfter: parseBeforeAfter(text),
+    fieldCards: parseFieldCards(text),
+    schedule: parseSchedule(text),
   };
 }

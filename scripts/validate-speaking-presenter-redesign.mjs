@@ -17,6 +17,9 @@ import {
   parsePhraseAuction,
   parseRequiredChunks,
   parseTradeoff,
+  parseBeforeAfter,
+  parseFieldCards,
+  parseSchedule,
 } from '../src/lib/speakingPresenterLegacyAdapter.js';
 
 const EXPECTED_TITLES = [
@@ -79,10 +82,39 @@ const EXPECTED_TITLES = [
   'Who Said It?',
   'Would You Rather — No Easy Answers',
   'You Have 30 Seconds',
+  'Number Mission',
+  'Picture Detective',
+  'Make the Choice',
+  'Quick Pick',
+  'Ask to Unlock',
+  'Oops, Fix Me!',
+  'Build My Day',
+  'Three Clues',
+  'What Changed?',
+  'Mini Map Mission',
+  'Pass It Back',
+  'Tiny Story Builder',
+  'Which One Fits?',
 ];
 
-assert.equal(SPEAKING_ACTIVITY_TITLES.length, 59, 'All 59 active speaking activities must be registered.');
+assert.equal(SPEAKING_ACTIVITY_TITLES.length, 72, 'All 72 active speaking activities must be registered.');
 assert.deepEqual([...SPEAKING_ACTIVITY_TITLES].sort(), [...EXPECTED_TITLES].sort(), 'Presenter registry must cover the complete active library.');
+
+const newGameSeed = JSON.parse(fs.readFileSync(new URL('../public/templates/sblocco-speaking-new-games-v1.json', import.meta.url), 'utf8'));
+assert.equal(newGameSeed.activities.length, 13, 'New speaking pack must contain 13 activities.');
+assert.equal(newGameSeed.activities.reduce((sum, activity) => sum + activity.prompts.length, 0), 72, 'New speaking pack must ship 72 playable items.');
+for (const activity of newGameSeed.activities) {
+  assert.ok(EXPECTED_TITLES.includes(activity.title), 'Seeded activity is missing from presenter registry: ' + activity.title);
+}
+for (const activity of newGameSeed.activities) {
+  for (const item of activity.prompts) {
+    if (item.format !== 'picture_detective') continue;
+    for (const option of item.material?.options || []) {
+      const relative = String(option.image_url || '').replace(/^\//, '');
+      assert.ok(relative && fs.existsSync(new URL('../public/' + relative, import.meta.url)), 'Missing Picture Detective asset: ' + option.image_url);
+    }
+  }
+}
 
 const allowedFamilies = new Set(Object.values(SPEAKING_PRESENTER_FAMILIES));
 for (const title of EXPECTED_TITLES) {
@@ -118,6 +150,9 @@ assert.equal(parsePhraseAuction('SITUATION: disagreement\nBUDGET: 3 phrases\n•
 assert.equal(parseTradeoff('Choose 3 for an apartment: cheap · central · large · quiet · modern').options.length, 5);
 assert.deepEqual(parseDifference('trip vs journey'), { left: 'trip', right: 'journey' });
 assert.deepEqual(parseBadGood('BAD: How old are you?\nGOOD: What do you do?'), { bad: 'How old are you?', good: 'What do you do?' });
+assert.deepEqual(parseBeforeAfter('BEFORE: The café opens at 08:00.\nAFTER: The café opens at 07:30.'), { before: 'The café opens at 08:00.', after: 'The café opens at 07:30.' });
+assert.equal(parseFieldCards('WHO: a student\nWHERE: a café\nACTION: meets a friend').length, 3);
+assert.equal(parseSchedule('08:00 breakfast\n09:30 class\n13:00 lunch').length, 3);
 
 const forbiddenLegacy = adaptLegacySpeakingItem(
   { text: 'Describe your favourite place.\nFORBIDDEN: nice · good · beautiful' },
