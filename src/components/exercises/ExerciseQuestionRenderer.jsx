@@ -5,6 +5,7 @@ import ExerciseQuestionRendererV2 from './ExerciseQuestionRendererV2.jsx';
 import ExerciseMediaBlock from './ExerciseMediaBlock.jsx';
 import ListeningComprehensionQuestion from './ListeningComprehensionQuestion.jsx';
 import SafeTeachingContent from './SafeTeachingContent.jsx';
+import SpeakingRoundContent from '../speaking/SpeakingRoundContent.jsx';
 import TranscriptReferencePanel from './TranscriptReferencePanel.jsx';
 
 // Compatibility entry point for existing player and admin imports.
@@ -20,6 +21,10 @@ export default function ExerciseQuestionRenderer(props) {
 
   if (question.type === 'content_block' && question.content?.presentation === 'media') {
     return wrap(<ExerciseMediaBlock content={question.content || {}} prompt={question.prompt || ''} instructions={question.instructions || ''} disabled={props.disabled} />);
+  }
+
+  if (question.type === 'content_block' && question.content?.presentation === 'speaking_round') {
+    return wrap(<SpeakingRoundContent round={question.content?.speaking_round || {}} />);
   }
 
   if (question.type === 'content_block' && !isStructuredEducationalContent(question.content)) {
