@@ -19,6 +19,10 @@ import { stableShuffleWordOrderTokenInstances } from '../src/lib/wordOrderShuffl
 import { stableShuffleChoiceOptions } from '../src/lib/choiceOptionShuffle.js';
 import { parseStudioImport } from '../src/lib/exerciseStudioImport.js';
 import { buildStudioActivitiesZip, buildStudioActivityExport } from '../src/lib/exerciseStudioExport.js';
+import {
+  containsSpeakingPrivateMaterial,
+  SPEAKING_ROUND_FORMATS,
+} from '../src/lib/speakingRoundContract.js';
 import { applyStudioRecipe, buildStudioActivityPulse, STUDIO_RECIPES } from '../src/lib/exerciseStudioRecipes.js';
 
 const requiredTypes = [
@@ -43,6 +47,7 @@ const requiredTypes = [
   'gap_fill',
   'word_order',
   'written_response',
+  'speaking_round',
 ];
 
 for (const type of requiredTypes) {
@@ -54,6 +59,162 @@ for (const type of requiredTypes) {
   }
   assert.ok(definition.capabilities?.learnerRenderer, type + ' must declare its learner renderer.');
 }
+
+
+const speakingPresets = STUDIO_BLOCK_REGISTRY.speaking_round.presets || [];
+assert.deepEqual(
+  speakingPresets.map((preset) => preset.id),
+  SPEAKING_ROUND_FORMATS,
+  'Speaking Round presets must come from the canonical five-format contract.',
+);
+
+const speakingFixtures = [
+  {
+    format: 'number_mission',
+    title: 'Fix my booking',
+    instruction: 'Book a table. Listen carefully when the restaurant checks your details.',
+    situation: 'You are booking dinner.',
+    outcome: 'The final booking matches the request.',
+    primary_capacity: 'listening to numerical detail',
+    material: { facts: [
+      { label: 'People', value: 2, kind: 'quantity' },
+      { label: 'Time', value: '19:00', display: '7 p.m.', kind: 'time' },
+      { label: 'Day', value: 'Saturday', kind: 'weekday' },
+    ] },
+    roles: [
+      { name: 'Customer', goal: 'Get the correct booking.', private_cue: '' },
+      { name: 'Restaurant staff', goal: 'Check the booking.', private_cue: 'Read back the wrong details first.' },
+    ],
+    support: ['A table for two, please.', 'Sorry, …, not …'],
+    private: { teacher_script: 'Say: Seven people at two p.m. on Saturday?' },
+    teacher_note: 'Observe whether both numerical errors are repaired.',
+  },
+  {
+    format: 'picture_detective',
+    title: 'Which one am I thinking of?',
+    instruction: 'Ask questions, then choose your guess.',
+    outcome: 'Identify the object through questions.',
+    primary_capacity: 'question formation',
+    material: { choices: [
+      { key: 'A', label: 'Camera', image_src: '/assets/camera.png', alt: 'A camera' },
+      { key: 'B', label: 'Key', image_src: '/assets/key.png', alt: 'A key' },
+      { key: 'C', label: 'Umbrella', image_src: '/assets/umbrella.png', alt: 'An umbrella' },
+      { key: 'D', label: 'Headphones', image_src: '/assets/headphones.png', alt: 'A pair of headphones' },
+    ] },
+    private: { teacher_secret_key: 'C' },
+    support: ['Do you use it outside?'],
+  },
+  {
+    format: 'explain_without_saying',
+    title: 'A refund',
+    instruction: 'Describe the target without saying it or the words below.',
+    outcome: 'Explain the target successfully under lexical constraints.',
+    primary_capacity: 'paraphrase',
+    material: { target: 'A refund', forbidden_words: ['money', 'back', 'return'] },
+    private: { teacher_model: 'A shop gives you the amount you paid after a faulty purchase.' },
+    support: ['You might ask for this when…'],
+  },
+  {
+    format: 'conversation_detective',
+    title: 'Read between the lines',
+    instruction: 'Read the three lines and infer the situation.',
+    outcome: 'Give a plausible inference and justify it with evidence.',
+    primary_capacity: 'inference from context',
+    material: {
+      turns: [
+        { speaker: 'Alex', text: 'You kept the receipt, right?' },
+        { speaker: 'Sam', text: 'Yes. But I took the label off.' },
+        { speaker: 'Alex', text: 'Let\'s ask anyway.' },
+      ],
+      question: 'What are they probably going to ask?',
+      vocabulary: ['receipt = proof of payment'],
+    },
+    private: {
+      hidden_clue: 'Sam takes a jumper out of a shopping bag. It is much too small.',
+      teacher_interpretation: 'They may want to exchange or return a purchase.',
+    },
+  },
+  {
+    format: 'make_choice',
+    title: 'Where should we stay?',
+    instruction: 'Compare the options and agree where to stay.',
+    situation: 'You want a quiet night. Your friend wants to go out for dinner.',
+    outcome: 'Reach a reasoned choice or compromise.',
+    primary_capacity: 'comparison and negotiation',
+    material: {
+      options: [
+        { title: 'Hotel A', facts: [{ label: 'Price', value: 105, display: '€105', kind: 'price' }], description: 'Quiet area, restaurant closes early.' },
+        { title: 'Hotel B', facts: [{ label: 'Price', value: 118, display: '€118', kind: 'price' }], description: 'Busy centre, many restaurants nearby.' },
+      ],
+      criteria: ['quiet night', 'dinner options'],
+      constraints: ['Maximum €120 for one room'],
+    },
+  },
+];
+
+for (const fixture of speakingFixtures) {
+  const speakingDocument = addStudioBlock(
+    createStudioDocument({
+      internal_title: 'Speaking fixture · ' + fixture.format,
+      learner_title: fixture.title,
+      level: fixture.format === 'explain_without_saying' ? 'B1' : 'A2',
+      topic: 'speaking',
+      activity_type: 'lesson',
+      skills: ['speaking', 'interaction'],
+    }),
+    'speaking_round',
+    fixture,
+    fixture.format,
+  );
+  const speakingPreflight = preflightStudioDocument(speakingDocument);
+  assert.equal(
+    speakingPreflight.valid,
+    true,
+    fixture.format + ': ' + speakingPreflight.errors.map((item) => item.message).join('\n'),
+  );
+  const runtimeQuestion = speakingPreflight.runtime.exercise.sections[0].questions[0];
+  assert.equal(runtimeQuestion.type, 'content_block', fixture.format + ' must compile through the stable non-graded runtime.');
+  assert.equal(runtimeQuestion.content.presentation, 'speaking_round');
+  assert.equal(runtimeQuestion.content.speaking_round.format, fixture.format);
+  assert.equal(runtimeQuestion.grading.weight, 0);
+  assert.equal(
+    containsSpeakingPrivateMaterial(runtimeQuestion.content.speaking_round),
+    false,
+    fixture.format + ' learner payload must not contain teacher/private material.',
+  );
+}
+
+const incompletePictureDraft = addStudioBlock(
+  createStudioDocument({
+    internal_title: 'Repairable picture draft',
+    learner_title: 'Picture draft',
+    level: 'A1',
+    topic: 'speaking',
+    skills: ['speaking'],
+  }),
+  'speaking_round',
+  {
+    format: 'picture_detective',
+    title: 'Which one?',
+    instruction: 'Ask questions and guess.',
+    outcome: 'Identify one object.',
+    primary_capacity: 'question formation',
+    material: { choices: [
+      { key: 'A', label: 'Camera', image_src: '', alt: 'A camera' },
+      { key: 'B', label: 'Key', image_src: '', alt: 'A key' },
+      { key: 'C', label: 'Umbrella', image_src: '', alt: 'An umbrella' },
+    ] },
+    private: { teacher_secret_key: 'C' },
+  },
+  'picture_detective',
+);
+const incompletePicturePreflight = preflightStudioDocument(incompletePictureDraft);
+assert.equal(incompletePicturePreflight.valid, false, 'Missing essential speaking imagery must block publish.');
+assert.ok(
+  incompletePicturePreflight.errors.some((item) => item.code === 'missing_asset'),
+  'Image-dependent speaking drafts must surface a clear missing-asset teaching issue.',
+);
+assert.equal(incompletePicturePreflight.runtime, null, 'Invalid speaking drafts must stay repairable drafts instead of compiling as runnable content.');
 
 const authoredChoiceOptions = [
   { key: 'option_1', text: 'A' },
