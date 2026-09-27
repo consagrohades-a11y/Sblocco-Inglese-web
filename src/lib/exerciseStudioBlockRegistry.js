@@ -1,6 +1,14 @@
 import { EXERCISE_BUILDER_LEVELS } from './exerciseBuilderSchemaV2.js';
+import {
+  createDefaultSpeakingRound,
+  normalizeSpeakingRound,
+  projectSpeakingRoundForLearner,
+  SPEAKING_ROUND_FORMAT_LABELS,
+  SPEAKING_ROUND_FORMATS,
+  validateSpeakingRound,
+} from './speakingRoundContract.js';
 
-export const STUDIO_BLOCK_REGISTRY_VERSION = 3;
+export const STUDIO_BLOCK_REGISTRY_VERSION = 4;
 
 const text = (value) => typeof value === 'string' ? value.trim() : '';
 const list = (value) => Array.isArray(value) ? value.map((item) => text(item)).filter(Boolean) : [];
@@ -1358,7 +1366,58 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       },
       grading: { mode: 'manual_review', weight: block.rubric.reduce((sum, item) => sum + Number(item.max_points || 0), 0) || 10 },
     }),
-  }),
+  }),,
+  speaking_round: definition({
+    type: 'speaking_round',
+    label: 'Speaking Round',
+    category: 'production',
+    capabilities: {
+      automaticGrading: false,
+      manualReview: false,
+      learnerRenderer: 'speaking_round',
+      speaking: true,
+      teacherObserved: true,
+      supportsRoleSwap: true,
+      supportsPrivateTeacherMaterial: true,
+    },
+    presets: SPEAKING_ROUND_FORMATS.map((format) => ({
+      id: format,
+      label: SPEAKING_ROUND_FORMAT_LABELS[format],
+      description: {
+        number_mission: 'Listen for exact details, repair misunderstandings and confirm the final facts.',
+        picture_detective: 'Ask questions to identify one image without leaking the teacher secret.',
+        explain_without_saying: 'Paraphrase a target while avoiding authored forbidden words.',
+        conversation_detective: 'Infer a situation from short speaker-labelled dialogue and explain the evidence.',
+        make_choice: 'Compare structured options, negotiate priorities and reach a reasoned choice.',
+      }[format],
+      initial: createDefaultSpeakingRound(format),
+    })),
+    createDefault: () => createDefaultSpeakingRound('number_mission'),
+    normalize: (block) => ({
+      ...block,
+      ...normalizeSpeakingRound(block),
+      title: text(block.title),
+      primary_skill: 'speaking',
+    }),
+    validate: (block) => validateSpeakingRound(block),
+    compile: (block, context) => {
+      const round = projectSpeakingRoundForLearner(block);
+      return commonQuestion(block, context, {
+        type: 'content_block',
+        title: round.title || 'Speaking round',
+        prompt: round.instruction || round.title || 'Speaking round',
+        instructions: round.instruction,
+        primary_skill: 'speaking',
+        learning_objective: text(block.learning_objective)
+          || ('Practise ' + (round.primary_capacity || 'spoken interaction') + ' in a structured live task.'),
+        content: {
+          presentation: 'speaking_round',
+          speaking_round: round,
+        },
+        grading: { mode: 'ungraded', weight: 0, nearly_correct_multiplier: 0 },
+      });
+    },
+  })
 });
 
 export const STUDIO_BLOCK_TYPES = Object.freeze(Object.keys(STUDIO_BLOCK_REGISTRY));
