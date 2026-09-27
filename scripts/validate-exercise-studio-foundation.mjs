@@ -184,6 +184,54 @@ for (const fixture of speakingFixtures) {
   );
 }
 
+
+const speakingRoundTripSource = addStudioBlock(
+  createStudioDocument({
+    internal_title: 'Speaking export round trip',
+    learner_title: 'Fix my booking',
+    level: 'A1',
+    topic: 'speaking',
+    activity_type: 'lesson',
+    skills: ['speaking', 'interaction'],
+    tags: ['speaking', 'numbers'],
+  }),
+  'speaking_round',
+  speakingFixtures[0],
+  'number_mission',
+);
+const speakingExport = buildStudioActivityExport(speakingRoundTripSource);
+assert.equal(
+  Object.hasOwn(speakingExport.activity.blocks[0], 'id'),
+  false,
+  'Speaking export must not expose system-owned block IDs.',
+);
+assert.equal(
+  speakingExport.activity.blocks[0].private.teacher_script,
+  speakingFixtures[0].private.teacher_script,
+  'Portable Studio authoring export must preserve teacher-only speaking material for safe re-editing.',
+);
+const speakingReimport = parseStudioImport(JSON.stringify(speakingExport));
+assert.equal(
+  speakingReimport.publishable,
+  true,
+  speakingReimport.errors.map((item) => item.message).join('\n'),
+);
+assert.equal(speakingReimport.document.blocks[0].format, 'number_mission');
+assert.equal(
+  speakingReimport.document.blocks[0].private.teacher_script,
+  speakingFixtures[0].private.teacher_script,
+  'Speaking import must preserve structured private authoring fields.',
+);
+const speakingRecompiled = preflightStudioDocument(speakingReimport.document);
+assert.equal(speakingRecompiled.valid, true);
+assert.equal(
+  containsSpeakingPrivateMaterial(
+    speakingRecompiled.runtime.exercise.sections[0].questions[0].content.speaking_round,
+  ),
+  false,
+  'Reimported speaking content must still compile to a learner-safe projection.',
+);
+
 const incompletePictureDraft = addStudioBlock(
   createStudioDocument({
     internal_title: 'Repairable picture draft',
