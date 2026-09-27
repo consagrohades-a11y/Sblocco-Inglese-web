@@ -123,8 +123,11 @@ function PreviewModal({ activity, eligibleIndices = null, onClose }) {
   );
 }
 
-function PresentationLauncher({ activity, eligibleIndices = null, initialLearnerId = '', onClose, onStartLive }) {
-  const [levels, setLevels] = useState(() => asArray(activity?.levels));
+function PresentationLauncher({ activity, eligibleIndices = null, initialLearnerId = '', initialLevels = [], onClose, onStartLive }) {
+  const [levels, setLevels] = useState(() => {
+    const requested = asArray(initialLevels).filter((item) => ALL_SPEAKING_LEVELS.includes(item));
+    return requested.length ? requested : [...ALL_SPEAKING_LEVELS];
+  });
   const [learners, setLearners] = useState([]);
   const [learnerId, setLearnerId] = useState(initialLearnerId || '');
   const [learnerQuery, setLearnerQuery] = useState('');
