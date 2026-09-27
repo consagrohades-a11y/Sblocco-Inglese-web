@@ -1366,7 +1366,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       },
       grading: { mode: 'manual_review', weight: block.rubric.reduce((sum, item) => sum + Number(item.max_points || 0), 0) || 10 },
     }),
-  }),,
+  }),
   speaking_round: definition({
     type: 'speaking_round',
     label: 'Speaking Round',
