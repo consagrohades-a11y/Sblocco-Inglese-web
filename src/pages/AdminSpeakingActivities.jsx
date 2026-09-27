@@ -33,8 +33,9 @@ import {
   updateSpeakingActivity,
 } from '../lib/adminSpeakingActivitiesApi.js';
 import { findMatchingSpeakingItems, normaliseSpeakingHistoryText } from '../lib/speakingItemSearch.js';
+import { ALL_SPEAKING_LEVELS } from '../lib/speakingActivityPedagogy.js';
 
-const LEVELS = ['A0','A1','A1+','A2','B1','B1+','B2','C1','C2','Mixed'];
+const LEVELS = [...ALL_SPEAKING_LEVELS, 'Mixed'];
 const typeLabels = {
   speaking_game: 'Gioco speaking',
   conversation: 'Conversazione',
