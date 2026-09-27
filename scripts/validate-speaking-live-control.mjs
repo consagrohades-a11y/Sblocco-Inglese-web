@@ -74,6 +74,9 @@ assert.ok(library.includes('openOrReuseSpeakingStudentWindow'), 'Activity switch
 assert.ok(library.includes('SPEAKING_STUDENT_WINDOW_NAME'), 'The first speaking launch must use the same stable student-screen name.');
 assert.ok(!library.includes('sblocco-speaking-${controlId}'), 'Speaking launch must not create a new browser window name for each control session.');
 assert.ok(library.includes('Apri schermo studente'), 'Speaking UX must describe one reusable student screen rather than a new window per game.');
+assert.ok(!library.includes('learners.slice(0, 10)'), 'Speaking learner selector must not silently truncate the active learner list.');
+assert.ok(!library.includes('.slice(0, 10);'), 'Speaking learner search results must not be capped at ten learners.');
+assert.ok(library.includes('max-h-56 overflow-y-auto'), 'Speaking learner selector must keep the full active learner list internally scrollable.');
 assert.ok(library.includes('window.focus()'), 'Launching the presenter should restore focus to the teacher panel.');
 const switchActivityBlock = library.slice(library.indexOf('function switchLiveActivity'), library.indexOf('\n\n  return (', library.indexOf('function switchLiveActivity')));
 assert.ok(!switchActivityBlock.includes('studentWindow.focus'), 'Changing activity must not steal focus from the teacher panel.');
