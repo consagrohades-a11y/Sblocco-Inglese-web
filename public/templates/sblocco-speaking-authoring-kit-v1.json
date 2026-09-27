@@ -21,7 +21,10 @@
     "Run the per-item and per-batch quality gates in quality_assurance.",
     "For structured formats, run the structured-item gate and preserve teacher/student visibility boundaries.",
     "Do not invent unsupported fields or any system-owned technical metadata.",
-    "When the batch is complete, create and attach one downloadable .json file only. Do not paste the JSON payload into chat."
+    "When the batch is complete, create and attach one downloadable .json file only. Do not paste the JSON payload into chat.",
+    "Treat supported activity levels and item levels separately: every game supports A0-C2, while each item receives only the CEFR levels it genuinely fits.",
+    "Use activity_pedagogy_audit to prioritize recommended levels and image support without treating recommendations as hard availability limits.",
+    "When authoring a complete pack for one activity, include meaningful item coverage from A0 through C2 rather than broadening the same prompt to every level."
   ],
   "import_contract": {
     "schema_version": 1,
@@ -587,7 +590,7 @@
       ]
     }
   },
-  "documentation_revision": "2026-09-27.2",
+  "documentation_revision": "2026-09-27.3",
   "read_this_first": {
     "purpose": "This is the complete operating manual for authoring importable Sblocco Speaking Library content. It is designed to be sufficient on its own: an authoring model should not need access to the Sblocco codebase, database, prior chat history or hidden implementation details.",
     "success_definition": "A successful output is pedagogically useful, presentation-ready, importable without technical repair, visibly appropriate to its game mechanic, varied across a batch, and safe for teacher/student split-screen use.",
@@ -1037,6 +1040,40 @@
         "rules": [
           "Independent from CEFR.",
           "Consider ambiguity, number of constraints, interaction pressure, register and perspective shift."
+        ]
+      },
+      "image_url": {
+        "required": false,
+        "type": "string",
+        "visibility": "student",
+        "purpose": "Optional single visual asset for a standard speaking item.",
+        "rules": [
+          "Use a real provided asset path/URL.",
+          "Requires image_alt.",
+          "Do not duplicate teacher-only information in the image or alt text."
+        ]
+      },
+      "image_alt": {
+        "required": false,
+        "type": "string",
+        "visibility": "student/accessibility",
+        "purpose": "Accessible description for image_url.",
+        "rules": [
+          "Required when image_url is present.",
+          "Describe only visible information.",
+          "Never reveal a hidden answer or teacher cue."
+        ]
+      },
+      "visuals": {
+        "required": false,
+        "type": "array<object>",
+        "visibility": "student",
+        "purpose": "Optional small set of labelled visuals such as BEFORE/AFTER or WHO/WHERE/ACTION.",
+        "rules": [
+          "Use 2-4 visuals.",
+          "Each entry uses url, alt and optional label.",
+          "Use real assets only.",
+          "Keep the set small enough to remain readable."
         ]
       }
     },
@@ -1515,7 +1552,10 @@
     "Do not add answer keys to learner-visible fields.",
     "Do not fabricate image URLs. For Picture Detective, use real provided asset paths if available; otherwise the draft should remain incomplete/repairable rather than pretending an asset exists.",
     "Do not silently drop requested levels or requested item counts.",
-    "Do not 'fix' an exact existing activity title by renaming it."
+    "Do not 'fix' an exact existing activity title by renaming it.",
+    "Do not restrict an activity itself to only its recommended levels. Every activity remains available A0-C2.",
+    "Do not tag every item A0-C2 merely because the activity supports all levels. Item levels must reflect the actual authored language demand.",
+    "Do not add decorative images solely because a game supports images."
   ],
   "accessibility_and_imagery": {
     "general": [
@@ -1557,7 +1597,9 @@
       "Difficulty believable?",
       "No exact/near duplicate?",
       "Screen text concise and readable?",
-      "No technical metadata invented?"
+      "No technical metadata invented?",
+      "If the item has image_url or visuals, are all assets real and all alt texts non-spoiling?",
+      "Are item levels honest about the actual language demand rather than copied from the activity-level availability?"
     ],
     "per_batch_gate": [
       "Requested item count met exactly?",
@@ -1569,7 +1611,8 @@
       "No repeated teacher-note formula that ignores item specifics?",
       "No systematic ordering from easiest to hardest unless requested?",
       "Higher levels include natural chunks/phrasal verbs where useful, not forced?",
-      "Every item would plausibly generate learner speech in a live lesson?"
+      "Every item would plausibly generate learner speech in a live lesson?",
+      "If this is a complete activity pack, does it deliberately cover A0 through C2?"
     ],
     "structured_item_gate": [
       "Format id supported?",
@@ -1645,7 +1688,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Change one assumption so the learner may need to revise the position.",
       "reject_if": "The claim is factual/trivial or only one socially acceptable answer exists.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Bad Advice Only": {
       "core_mechanic": "Give a realistic problem; the learner must produce intentionally bad advice, then explain why it is bad or repair it.",
@@ -1654,7 +1717,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Explain why the advice would fail, then replace it with good advice.",
       "reject_if": "Bad advice could encourage genuinely dangerous or harmful behaviour.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "B",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Conversation Roulette": {
       "core_mechanic": "Use varied conversational prompts that can sustain an unscripted exchange and allow follow-up questions.",
@@ -1663,7 +1745,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Introduce an unexpected follow-up angle.",
       "reject_if": "The prompt is just a topic label such as 'travel' or 'work'.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "B",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Convince Me": {
       "core_mechanic": "Give a concrete position, product, choice or action the learner must persuade another person to accept.",
@@ -1672,7 +1773,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Reveal the listener's competing priority.",
       "reject_if": "There is nothing plausible to disagree about.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Defend the Opposite": {
       "core_mechanic": "Use a defensible opinion or preference and require the learner to argue for the opposite side.",
@@ -1681,7 +1801,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Add an objection they must answer.",
       "reject_if": "The opposite position would require defending harm, hate or unsafe conduct.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Explain It Without Saying It": {
       "core_mechanic": "Provide a target concept plus forbidden obvious words so the learner must paraphrase.",
@@ -1690,7 +1829,29 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Explain the same target to a different audience/register.",
       "reject_if": "The banned words make explanation impossible or trivial.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "importance": "S",
+      "image_support": "optional",
+      "image_guidance": "Picture targets are particularly useful for A0-A2 variants."
     },
     "Make It Sound Like a Person": {
       "core_mechanic": "Start from stiff, robotic or over-literal English and require a more natural conversational version.",
@@ -1699,7 +1860,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Produce two natural versions with different tone/register.",
       "reject_if": "The original is simply grammatically wrong rather than unnaturally phrased.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Odd One Out — Conversation Edition": {
       "core_mechanic": "Use four items with one defensible odd item. The distinction should support discussion, not rely on trivial categories.",
@@ -1708,7 +1889,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Defend a different odd-one-out than the first choice.",
       "reject_if": "The category difference is trivial or only visual/orthographic.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "optional",
+      "image_guidance": "Image sets are useful for concrete lower-level variants."
     },
     "One Minute, No Escape": {
       "core_mechanic": "Give a topic specific enough to sustain one minute of speech without becoming a list of disconnected facts.",
@@ -1717,7 +1917,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Add one required example, contrast or personal/hypothetical link.",
       "reject_if": "The topic is so broad that filler replaces meaningful development.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Repair the Conversation": {
       "core_mechanic": "Provide a conversational breakdown, awkward line or misunderstanding and require a natural repair.",
@@ -1726,7 +1946,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Repair again under a different relationship/register.",
       "reject_if": "The task is just grammar correction.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Sell Me Something Useless": {
       "core_mechanic": "Give an intentionally unnecessary object or service and require persuasive language and benefits.",
@@ -1735,7 +1974,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Sell it to a different target customer.",
       "reject_if": "The object is actually useful in an obvious way.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "B",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Story Chain — But Something Changes": {
       "core_mechanic": "Give a story seed and a change/twist that forces the learner to continue coherently.",
@@ -1753,7 +2011,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Reveal one detail but leave a second ambiguity.",
       "reject_if": "The missing information is obvious but irrelevant.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "The Missing Question": {
       "core_mechanic": "Give an answer or conversational fragment and require the learner to infer a natural preceding question.",
@@ -1762,7 +2039,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Create a second question that makes the same answer natural in a different context.",
       "reject_if": "Only a grammar transformation is required.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Three Questions Deeper": {
       "core_mechanic": "Start from a normal topic and require three progressively deeper but appropriate follow-up questions.",
@@ -1771,7 +2068,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Make the third question more specific without becoming intrusive.",
       "reject_if": "Depth means personal invasion rather than conversational relevance.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Upgrade That Answer": {
       "core_mechanic": "Give a short, vague or basic answer and require a fuller, more precise, more natural response.",
@@ -1780,7 +2097,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Upgrade for a different audience or register.",
       "reject_if": "The base answer is simply incorrect grammar.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "What Happened Just Before?": {
       "core_mechanic": "Give a moment or outcome with enough clues for the learner to infer plausible immediately preceding events.",
@@ -1789,7 +2126,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Offer a second plausible explanation and compare evidence.",
       "reject_if": "There are no usable clues and any random story fits equally.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "A",
+      "image_support": "optional",
+      "image_guidance": "A single strange image is an effective narrative stimulus."
     },
     "Would You Rather — No Easy Answers": {
       "core_mechanic": "Offer two plausible options with a real trade-off so the learner must justify a choice.",
@@ -1798,7 +2154,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Change one condition so the decision may change.",
       "reject_if": "One option is obviously better or absurd.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Take a Side": {
       "core_mechanic": "Use a clear proposition with two plausible positions and require a reasoned stance.",
@@ -1807,7 +2183,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Respond to the strongest opposing argument.",
       "reject_if": "The proposition invites harmful/extremist advocacy or has no meaningful opposing case.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Change My Mind": {
       "core_mechanic": "Give a position held by the teacher/listener; the learner must challenge it with reasons, examples and reframing.",
@@ -1816,7 +2212,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Listener reveals the real underlying concern.",
       "reject_if": "The teacher position is deliberately irrational so persuasion is fake.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "The Better Question": {
       "core_mechanic": "Provide a weak, vague or closed question and require a more useful, natural or revealing question.",
@@ -1825,7 +2240,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Produce a version for a different relationship or register.",
       "reject_if": "The only change needed is grammar correction.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "What Would You Say?": {
       "core_mechanic": "Give a concrete social or professional situation with a clear communicative purpose.",
@@ -1834,7 +2269,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "The other person resists, misunderstands or changes the situation.",
       "reject_if": "The scenario lacks enough context to choose tone/register.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Say It Three Ways": {
       "core_mechanic": "Use one meaning or intention that can be expressed naturally in three different registers, tones or phrasings.",
@@ -1843,7 +2298,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Assign three audiences such as friend, colleague, customer.",
       "reject_if": "The three versions differ by one synonym only.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Keep It Going": {
       "core_mechanic": "Give a short conversational exchange at risk of ending; the learner must extend it naturally.",
@@ -1852,7 +2327,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Keep it going without asking a question.",
       "reject_if": "The existing exchange already contains an obvious scripted next line.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "The Awkward Silence": {
       "core_mechanic": "Create a realistic silence after a remark or event; the learner must restart or redirect the conversation.",
@@ -1861,7 +2356,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Do it again with a different relationship.",
       "reject_if": "The silence is caused by severe/sensitive events unsuitable for playful practice.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "What's the Problem?": {
       "core_mechanic": "Provide symptoms, clues or a situation from which the learner can identify and explain the underlying problem.",
@@ -1870,7 +2384,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Add one misleading clue and require revision.",
       "reject_if": "Requires medical/legal diagnosis or specialist knowledge.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "You Have 30 Seconds": {
       "core_mechanic": "Use a compact speaking task with one clear objective that can be completed under time pressure.",
@@ -1879,7 +2413,29 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Repeat for a different listener or with one added constraint.",
       "reject_if": "The task requires long planning or multiple unrelated sub-questions.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "One Detail Is False": {
       "core_mechanic": "Give a compact set of personal-style details where one can plausibly be false; the learner must question or infer.",
@@ -1888,7 +2444,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Learner creates their own set for the teacher.",
       "reject_if": "The false detail is obviously absurd.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "A",
+      "image_support": "optional",
+      "image_guidance": "Optional image sequences can support story investigation."
     },
     "Build the Perfect...": {
       "core_mechanic": "Give a category and meaningful criteria so the learner must design, prioritise and justify an ideal version.",
@@ -1897,7 +2472,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Remove one resource or add one stakeholder priority.",
       "reject_if": "The task is just listing favourite features.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "B",
+      "image_support": "optional",
+      "image_guidance": "Visual tiles can make design dimensions easier to compare."
     },
     "Trade-Off": {
       "core_mechanic": "Present two benefits/costs that cannot all be maximised; require a choice and justification.",
@@ -1906,7 +2501,29 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Change which stakeholder bears the cost.",
       "reject_if": "There is an obvious no-cost solution.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Emergency English": {
       "core_mechanic": "Use urgent but safe everyday situations where the learner must communicate essential information clearly and quickly.",
@@ -1915,7 +2532,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "The listener asks for one missing detail.",
       "reject_if": "Scenario encourages dangerous behaviour or asks learner to roleplay severe medical/legal emergencies beyond language practice.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "The Complaint Ladder": {
       "core_mechanic": "Start with a service problem and require escalation from polite report to firmer complaint while staying appropriate.",
@@ -1924,7 +2560,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "The first solution is inadequate; escalate one level.",
       "reject_if": "Firmer is treated as ruder rather than clearer/more assertive.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Don’t Say Yes": {
       "core_mechanic": "Ask questions designed to trigger agreement, but the learner must respond without simply saying yes and must elaborate.",
@@ -1933,7 +2589,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Teacher follows with two more yes/no-triggering questions.",
       "reject_if": "Learner can dodge the question instead of answering it.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Five Whys": {
       "core_mechanic": "Use a preference, decision or opinion that can deepen through repeated why questions without becoming intrusive.",
@@ -1942,7 +2618,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "At the fourth/fifth why, shift from preference to underlying criterion/value.",
       "reject_if": "Repeated why becomes intrusive or accusatory.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Make It More Specific": {
       "core_mechanic": "Start vague; the learner must add evidence, examples, behaviour, numbers or precise language.",
@@ -1951,7 +2647,28 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Make it specific without making it longer.",
       "reject_if": "The vague version is already sufficient for its context.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Finish My Thought": {
       "core_mechanic": "Provide a sentence stem that naturally produces a complete personal or hypothetical thought.",
@@ -1960,7 +2677,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Add a contrasting second sentence.",
       "reject_if": "Only one obvious completion is possible.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "B",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "What Are You Assuming?": {
       "core_mechanic": "Use a claim with identifiable hidden assumptions; the task is to surface and question them.",
@@ -1969,7 +2706,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Change one assumption and revisit the conclusion.",
       "reject_if": "Assumption is so hidden/arbitrary that it becomes a logic puzzle.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Unpopular Opinion": {
       "core_mechanic": "Use low-stakes, non-inflammatory topics; the challenge is argument quality rather than provocation.",
@@ -1978,7 +2734,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Acknowledge the strongest reasonable counterargument.",
       "reject_if": "Provocation depends on hate, humiliation or inflammatory politics.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "B",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Explain the Difference": {
       "core_mechanic": "Use a close lexical or conceptual pair and require contexts/examples, not dictionary definitions alone.",
@@ -1987,7 +2762,29 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Create one sentence/context where only one option works naturally.",
       "reject_if": "Task is solved by dictionary definitions alone.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Which One Sounds More Natural?": {
       "core_mechanic": "Provide understandable alternatives where idiomaticity, collocation or register differs.",
@@ -1996,7 +2793,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Find a context where the less-natural option could become appropriate.",
       "reject_if": "One option is simply ungrammatical unless grammar correction is explicitly the point.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "The Forbidden Easy Word": {
       "core_mechanic": "Ban obvious easy words in a way that forces more precise language while leaving the task achievable.",
@@ -2005,7 +2822,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Add a second ban after the first response.",
       "reject_if": "Ban targets essential function words or creates unnatural thesaurus speech.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Use These 3 Chunks": {
       "core_mechanic": "Give three chunks that can naturally coexist in one coherent response or exchange.",
@@ -2014,7 +2851,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Use the same chunks in a different scenario/register.",
       "reject_if": "Chunks are semantically incompatible or force nonsense.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Personalise It": {
       "core_mechanic": "Give a generic statement or example that the learner must turn into a concrete personal or invented example.",
@@ -2023,7 +2880,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Create a contrasting second example.",
       "reject_if": "Requires sensitive real disclosure with no hypothetical option.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Guess My Rule": {
       "core_mechanic": "Provide examples that obey a precise hidden rule. teacher_note must state the rule clearly for the teacher.",
@@ -2032,7 +2909,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Learner proposes a new example and teacher confirms/rejects.",
       "reject_if": "Rule is arbitrary, ambiguous or depends on hidden trivia.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Who Said It?": {
       "core_mechanic": "Give one line containing clues about relationship, context, intention or register; require inference.",
@@ -2041,7 +2938,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Rewrite the line for a different speaker relationship.",
       "reject_if": "Answer depends on stereotypes rather than linguistic/context evidence.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Before / During / After": {
       "core_mechanic": "Use an event with meaningful preparation, live action and follow-up phases.",
@@ -2050,7 +2967,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "One phase goes wrong; adapt the plan/story.",
       "reject_if": "Three phases are just unrelated lists.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Problem → Options → Decision": {
       "core_mechanic": "Require problem definition, at least three options, comparison and a justified decision.",
@@ -2059,7 +2996,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Remove the preferred option and decide again.",
       "reject_if": "There is only one realistic option.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Interrupt Me Politely": {
       "core_mechanic": "Give an exact reason to interrupt such as clarification, correction, redirect, timing or decision.",
@@ -2068,7 +3024,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Repeat with a more formal/power-imbalanced relationship.",
       "reject_if": "No reason to interrupt is given.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Tell Me What I Mean": {
       "core_mechanic": "Use indirect language whose intended meaning depends on context, tone or relationship.",
@@ -2077,7 +3052,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Make the same meaning more direct or more diplomatic.",
       "reject_if": "Interpretation depends on unsupported mind-reading.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Bad Small Talk / Good Small Talk": {
       "core_mechanic": "Contrast conversation mechanics rather than wrong grammar versus correct grammar. Format text with explicit BAD: and GOOD: sections so the presenter can render separate cards.",
@@ -2086,7 +3080,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Repair the BAD version in another way.",
       "reject_if": "GOOD is just grammatically corrected BAD with no conversational improvement.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Describe Without Adjectives": {
       "core_mechanic": "Choose a target describable through behaviour, actions, events or sensory detail without adjectives.",
@@ -2095,7 +3108,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Listener asks one follow-up that also must be answered without adjectives.",
       "reject_if": "Target cannot reasonably be described without adjective dependence.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "optional",
+      "image_guidance": "Images can provide a rich shared target without extra reading."
     },
     "Make It Less Direct": {
       "core_mechanic": "Start needlessly forceful and require softer language while preserving clarity.",
@@ -2104,7 +3137,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Produce casual and formal softened versions.",
       "reject_if": "Softening removes clarity or changes the intended action.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Make It More Direct": {
       "core_mechanic": "Start too vague or hedged and require clearer language without making it rude.",
@@ -2113,7 +3166,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Keep one polite hedge while making the action explicit.",
       "reject_if": "More direct is equated with aggressive.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Conversation Fork": {
       "core_mechanic": "Give one conversational moment plus two or three genuinely different strategic directions.",
@@ -2122,7 +3194,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Try a second fork and compare the effect.",
       "reject_if": "Forks are superficial rephrasings of the same response.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "The Unexpected Follow-Up": {
       "core_mechanic": "Use a familiar first question plus a second question that forces a new angle rather than simply asking why.",
@@ -2131,7 +3223,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Teacher adds one more follow-up from a different angle.",
       "reject_if": "Follow-up is just 'why?' with no new demand.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Explain Your Choice to Someone Who Disagrees": {
       "core_mechanic": "Define the listener's competing value so the learner must reframe rather than repeat the same reason.",
@@ -2140,7 +3252,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Listener raises one value-based objection.",
       "reject_if": "Disagreement has no defined basis.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Micro Roleplay": {
       "core_mechanic": "Use one scenario and one objective for roughly 60–90 seconds; the challenge may complicate but must not replace the task.",
@@ -2149,7 +3280,28 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Introduce one complication after the exchange starts.",
       "reject_if": "Roleplay is a script or contains too many simultaneous objectives.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Phrase Auction": {
       "core_mechanic": "Provide five to seven phrases of different usefulness or register. Weak options do not all need to be ungrammatical.",
@@ -2158,7 +3310,26 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Change the audience so phrase values change.",
       "reject_if": "All weak options are obviously ungrammatical.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "A",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Conversation Detective": {
       "core_mechanic": "Give a short dialogue fragment with clues; require inference about relationship, backstory and likely next step.",
@@ -2167,7 +3338,27 @@
       "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
       "challenge_guidance": "Predict the next line or add one clue that changes the interpretation.",
       "reject_if": "The dialogue states the answer directly or relies on arbitrary trivia.",
-      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Number Mission": {
       "core_mechanic": "Use consequential numbers inside a two-person information check. The learner must confirm, repeat or repair details rather than simply read numbers aloud.",
@@ -2176,7 +3367,27 @@
       "support_guidance": "Use number-question chunks and repair language. Do not read the answer for the learner.",
       "challenge_guidance": "Change one number or make one read-back deliberately wrong.",
       "reject_if": "The item is just number dictation or the numbers have no communicative consequence.",
-      "quality_test": "Removing the need to confirm numbers would break the game."
+      "quality_test": "Removing the need to confirm numbers would break the game.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "recommended",
+      "image_guidance": "Use ticket, menu, timetable, receipt or booking visuals where possible."
     },
     "Picture Detective": {
       "core_mechanic": "Use three to six meaningful images. The learner asks questions, describes visible features and identifies a secret picture without the secret leaking into learner-visible data.",
@@ -2185,7 +3396,27 @@
       "support_guidance": "Use question stems appropriate to level; labels may be shown at lower levels.",
       "challenge_guidance": "Swap roles, limit questions or hide labels.",
       "reject_if": "One picture is obviously unique or the secret is leaked by label/alt text.",
-      "quality_test": "The learner must need language to distinguish visually plausible options."
+      "quality_test": "The learner must need language to distinguish visually plausible options.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "required",
+      "image_guidance": "Images are the task. Every option needs a real image and accurate non-spoiling alt text."
     },
     "Make the Choice": {
       "core_mechanic": "Present two to four defensible options with comparable details. The learner chooses, explains priorities and adapts when the teacher reveals a new condition.",
@@ -2194,7 +3425,26 @@
       "support_guidance": "Offer comparison and priority chunks, not the winning argument.",
       "challenge_guidance": "Change one condition or stakeholder priority.",
       "reject_if": "One option wins every criterion or the task is just personal preference with no comparison data.",
-      "quality_test": "A reasonable learner could defend more than one option."
+      "quality_test": "A reasonable learner could defend more than one option.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "recommended",
+      "image_guidance": "Option visuals are strongly recommended at A1 and useful for concrete choices."
     },
     "Quick Pick": {
       "core_mechanic": "Give two to four concrete options that can be chosen quickly. Require one short reason so the game remains speaking-first even at A0/A1.",
@@ -2203,7 +3453,27 @@
       "support_guidance": "A0/A1 sentence frames such as 'I choose ___ because ___.'.",
       "challenge_guidance": "Change one condition and ask for a new choice.",
       "reject_if": "A simple one-word answer completes the whole activity.",
-      "quality_test": "The item works in under 45 seconds but still requires spoken justification."
+      "quality_test": "The item works in under 45 seconds but still requires spoken justification.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "recommended",
+      "image_guidance": "At A0-A1, illustrated options reduce reading load and speed up choice."
     },
     "Ask to Unlock": {
       "core_mechanic": "The teacher holds one hidden answer. The learner unlocks it by asking a small number of useful questions. Teacher-only information must stay in teacher_note.",
@@ -2212,7 +3482,27 @@
       "support_guidance": "Question stems only; never reveal the hidden answer.",
       "challenge_guidance": "Reduce the number of questions or require one target question form.",
       "reject_if": "The answer appears anywhere learner-visible or can be guessed without asking.",
-      "quality_test": "The learner must ask at least two meaningful questions in a normal round."
+      "quality_test": "The learner must ask at least two meaningful questions in a normal round.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "recommended",
+      "image_guidance": "A secret-picture variant is strongly recommended for A0-A1."
     },
     "Oops, Fix Me!": {
       "core_mechanic": "Show the learner the correct information and let the teacher deliberately say one or two details incorrectly. The learner repairs the mismatch naturally.",
@@ -2221,7 +3511,27 @@
       "support_guidance": "Repair chunks such as 'No, it’s…' or 'Actually…'.",
       "challenge_guidance": "Correct two details in one turn or increase politeness.",
       "reject_if": "There is no observable mismatch to repair.",
-      "quality_test": "A learner can point to exactly what is wrong and say the correction."
+      "quality_test": "A learner can point to exactly what is wrong and say the correction.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "recommended",
+      "image_guidance": "A visible ticket/order/appointment card makes the correction task clearer."
     },
     "Build My Day": {
       "core_mechanic": "Show three to five timed actions. The learner turns them into a spoken sequence using time and ordering language, then adapts if one event changes.",
@@ -2230,7 +3540,27 @@
       "support_guidance": "First / then / at / after that / finally.",
       "challenge_guidance": "Move one event and require the learner to rebuild the sequence.",
       "reject_if": "The item is an unordered vocabulary list.",
-      "quality_test": "The learner must express both time and order."
+      "quality_test": "The learner must express both time and order.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "recommended",
+      "image_guidance": "Timeline icons or small scene images make routines and times easier to process."
     },
     "Three Clues": {
       "core_mechanic": "Give one target and three concrete clues. The learner uses the clues to describe the target in short connected language while the teacher guesses.",
@@ -2239,7 +3569,27 @@
       "support_guidance": "It has… / You use it… / You find it…",
       "challenge_guidance": "Add one original clue or remove one easy clue.",
       "reject_if": "The clues literally contain the target word or make the answer instant.",
-      "quality_test": "The clues support at least two short learner utterances."
+      "quality_test": "The clues support at least two short learner utterances.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "recommended",
+      "image_guidance": "A target image can support comprehension or be revealed after guessing."
     },
     "What Changed?": {
       "core_mechanic": "Show a clear BEFORE and AFTER state. The learner identifies and verbalises the change, then may explain a reason or consequence.",
@@ -2248,7 +3598,27 @@
       "support_guidance": "Before… / Now… / It changed from… to…",
       "challenge_guidance": "Ask for reason, consequence or a second invented change.",
       "reject_if": "Before and after differ only cosmetically or require hidden knowledge.",
-      "quality_test": "The change is visible in the prompt and worth saying aloud."
+      "quality_test": "The change is visible in the prompt and worth saying aloud.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "recommended",
+      "image_guidance": "Prefer a BEFORE/AFTER visual pair, especially at A0-A1."
     },
     "Mini Map Mission": {
       "core_mechanic": "Give a start point, destination and a few landmarks. The learner asks for or gives a short route using basic direction language.",
@@ -2257,7 +3627,27 @@
       "support_guidance": "Go straight / turn left-right / next to / opposite / past.",
       "challenge_guidance": "Wrong turn, blocked landmark or return route.",
       "reject_if": "The route cannot be described consistently from the provided information.",
-      "quality_test": "The learner must use at least two direction moves."
+      "quality_test": "The learner must use at least two direction moves.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "required",
+      "image_guidance": "Use a simple map or route visual with visible landmarks; text-only legacy items remain compatible."
     },
     "Pass It Back": {
       "core_mechanic": "Teacher asks one safe everyday question. The learner answers and then keeps the interaction alive by asking one connected question back.",
@@ -2266,7 +3656,27 @@
       "support_guidance": "And you? / What about you? / How often…? / What did you…?",
       "challenge_guidance": "Ban 'And you?' and require a more specific follow-up.",
       "reject_if": "The learner can answer and stop.",
-      "quality_test": "The exchange naturally produces at least two learner turns."
+      "quality_test": "The exchange naturally produces at least two learner turns.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
     },
     "Tiny Story Builder": {
       "core_mechanic": "Give WHO, WHERE and ACTION cards. The learner connects them into a tiny coherent story rather than listing the three elements.",
@@ -2275,7 +3685,27 @@
       "support_guidance": "One day / then / but / so / in the end.",
       "challenge_guidance": "Add a twist or ending.",
       "reject_if": "The cards are incompatible or invite only a list.",
-      "quality_test": "A 2–4 sentence story is possible with beginner language."
+      "quality_test": "A 2–4 sentence story is possible with beginner language.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "recommended",
+      "image_guidance": "WHO / WHERE / ACTION work best as visual cards at lower levels."
     },
     "Which One Fits?": {
       "core_mechanic": "Give one concrete situation and two to four possible phrases. The learner chooses the most natural/appropriate phrase and says it aloud.",
@@ -2284,7 +3714,27 @@
       "support_guidance": "Focus on politeness, naturalness and communicative fit.",
       "challenge_guidance": "Change the audience or require the learner to produce a new phrase without reading.",
       "reject_if": "The game is only obvious grammar-error spotting.",
-      "quality_test": "At least one distractor is understandable enough to create a real choice."
+      "quality_test": "At least one distractor is understandable enough to create a real choice.",
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "importance": "S",
+      "image_support": "optional",
+      "image_guidance": "A small context image can establish the situation quickly."
     }
   },
   "final_self_review_algorithm": [
@@ -2323,6 +3773,1910 @@
       "Use numbers, images, choices, repair, sequencing and questions to vary cognitive demand.",
       "A0 may answer with chunks; A1/A2 should progressively connect turns.",
       "Every game must still involve teacher-student interaction rather than silent selection."
+    ]
+  },
+  "activity_level_policy": {
+    "principle": "Every Speaking Library activity is available at every learner level from A0 through C2. Activity availability and item authoring level are different concepts.",
+    "activity_supported_levels": [
+      "A0",
+      "A1",
+      "A1+",
+      "A2",
+      "B1",
+      "B1+",
+      "B2",
+      "C1",
+      "C2"
+    ],
+    "recommended_levels_mean": "Recommended levels indicate where the mechanic is especially high-value. They are a ranking signal, never a gate.",
+    "item_levels_mean": "Each item keeps the exact CEFR level(s) it was authored for. Do not relabel an A1 prompt as C2 simply to create coverage.",
+    "fallback_behavior": "If a selected activity has no exact item for the requested level, Sblocco may use the nearest authored level set so the game remains playable. This is a compatibility fallback, not permission to author vague all-level items.",
+    "full_catalog_rule": "When expanding an activity as a complete content pack, deliberately create appropriate items across A0, A1, A1+, A2, B1, B1+, B2, C1 and C2.",
+    "mixed": "Mixed is a delivery context, not a CEFR level. Use layered support/challenge rather than replacing exact item levels with Mixed."
+  },
+  "activity_pedagogy_audit": {
+    "Agree, Disagree, It Depends": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Ask to Unlock": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "recommended",
+      "image_guidance": "A secret-picture variant is strongly recommended for A0-A1."
+    },
+    "Bad Advice Only": {
+      "importance": "B",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Bad Small Talk / Good Small Talk": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Before / During / After": {
+      "importance": "A",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Build My Day": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "recommended",
+      "image_guidance": "Timeline icons or small scene images make routines and times easier to process."
+    },
+    "Build the Perfect...": {
+      "importance": "B",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "optional",
+      "image_guidance": "Visual tiles can make design dimensions easier to compare."
+    },
+    "Change My Mind": {
+      "importance": "A",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Conversation Detective": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Conversation Fork": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Conversation Roulette": {
+      "importance": "B",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Convince Me": {
+      "importance": "A",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Defend the Opposite": {
+      "importance": "A",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Describe Without Adjectives": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "optional",
+      "image_guidance": "Images can provide a rich shared target without extra reading."
+    },
+    "Don’t Say Yes": {
+      "importance": "S",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Emergency English": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Explain It Without Saying It": {
+      "importance": "S",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "optional",
+      "image_guidance": "Picture targets are particularly useful for A0-A2 variants."
+    },
+    "Explain the Difference": {
+      "importance": "S",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Explain Your Choice to Someone Who Disagrees": {
+      "importance": "A",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Finish My Thought": {
+      "importance": "B",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Five Whys": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Guess My Rule": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Interrupt Me Politely": {
+      "importance": "A",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Keep It Going": {
+      "importance": "S",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Make It Less Direct": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Make It More Direct": {
+      "importance": "A",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Make It More Specific": {
+      "importance": "S",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Make It Sound Like a Person": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Make the Choice": {
+      "importance": "S",
+      "recommended_levels": [
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "recommended",
+      "image_guidance": "Option visuals are strongly recommended at A1 and useful for concrete choices."
+    },
+    "Micro Roleplay": {
+      "importance": "S",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Mini Map Mission": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "required",
+      "image_guidance": "Use a simple map or route visual with visible landmarks; text-only legacy items remain compatible."
+    },
+    "Number Mission": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "recommended",
+      "image_guidance": "Use ticket, menu, timetable, receipt or booking visuals where possible."
+    },
+    "Odd One Out — Conversation Edition": {
+      "importance": "A",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "optional",
+      "image_guidance": "Image sets are useful for concrete lower-level variants."
+    },
+    "One Detail Is False": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "optional",
+      "image_guidance": "Optional image sequences can support story investigation."
+    },
+    "One Minute, No Escape": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Oops, Fix Me!": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "recommended",
+      "image_guidance": "A visible ticket/order/appointment card makes the correction task clearer."
+    },
+    "Pass It Back": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Personalise It": {
+      "importance": "S",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Phrase Auction": {
+      "importance": "A",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Picture Detective": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "required",
+      "image_guidance": "Images are the task. Every option needs a real image and accurate non-spoiling alt text."
+    },
+    "Problem → Options → Decision": {
+      "importance": "S",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Quick Pick": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "recommended",
+      "image_guidance": "At A0-A1, illustrated options reduce reading load and speed up choice."
+    },
+    "Repair the Conversation": {
+      "importance": "S",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Say It Three Ways": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Sell Me Something Useless": {
+      "importance": "B",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Story Chain | But Something Changes": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "optional",
+      "image_guidance": "Optional visual twist cards can reduce reading and increase spontaneity."
+    },
+    "Take a Side": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Tell Me What I Mean": {
+      "importance": "S",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "The Awkward Silence": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "The Better Question": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "The Complaint Ladder": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "The Forbidden Easy Word": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "The Missing Detail": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "The Missing Question": {
+      "importance": "S",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "The Unexpected Follow-Up": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Three Clues": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "recommended",
+      "image_guidance": "A target image can support comprehension or be revealed after guessing."
+    },
+    "Three Questions Deeper": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Tiny Story Builder": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "recommended",
+      "image_guidance": "WHO / WHERE / ACTION work best as visual cards at lower levels."
+    },
+    "Trade-Off": {
+      "importance": "S",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Unpopular Opinion": {
+      "importance": "B",
+      "recommended_levels": [
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Upgrade That Answer": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Use These 3 Chunks": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "What Are You Assuming?": {
+      "importance": "S",
+      "recommended_levels": [
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "What Changed?": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "recommended",
+      "image_guidance": "Prefer a BEFORE/AFTER visual pair, especially at A0-A1."
+    },
+    "What Happened Just Before?": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "optional",
+      "image_guidance": "A single strange image is an effective narrative stimulus."
+    },
+    "What Would You Say?": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "What's the Problem?": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Which One Fits?": {
+      "importance": "S",
+      "recommended_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "optional",
+      "image_guidance": "A small context image can establish the situation quickly."
+    },
+    "Which One Sounds More Natural?": {
+      "importance": "S",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Who Said It?": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "Would You Rather — No Easy Answers": {
+      "importance": "A",
+      "recommended_levels": [
+        "A2",
+        "B1",
+        "B2",
+        "C1"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    },
+    "You Have 30 Seconds": {
+      "importance": "S",
+      "recommended_levels": [
+        "A1",
+        "A2",
+        "B1",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "supported_levels": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "image_support": "none",
+      "image_guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+    }
+  },
+  "image_support_contract": {
+    "principle": "Images are pedagogical input, not decoration. Use them when they reduce reading load, create an information gap, provide evidence, or are intrinsic to the mechanic.",
+    "standard_item_fields": {
+      "image_url": "Optional path/URL for one learner-visible image.",
+      "image_alt": "Required whenever image_url is present. Describe visible information without leaking teacher-only answers.",
+      "image_label": "Optional short learner-visible caption for the single image.",
+      "visuals": "Optional array for 2-4 learner-visible visuals. Each entry uses {url, alt, label}. Use this instead of image_url for BEFORE/AFTER, WHO/WHERE/ACTION, or comparable visual sets."
+    },
+    "categories": {
+      "required": "New items for this game should include images because the mechanic depends on visual information. Legacy text items remain runnable while being upgraded.",
+      "recommended": "Prefer images, especially at A0-A1, because they materially reduce language-processing load or strengthen the mechanic.",
+      "optional": "Images can create useful variants but should not be forced into every item.",
+      "none": "The mechanic is primarily linguistic/pragmatic. Do not add decorative images by default."
+    },
+    "activity_rules": {
+      "Agree, Disagree, It Depends": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Ask to Unlock": {
+        "image_support": "recommended",
+        "guidance": "A secret-picture variant is strongly recommended for A0-A1."
+      },
+      "Bad Advice Only": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Bad Small Talk / Good Small Talk": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Before / During / After": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Build My Day": {
+        "image_support": "recommended",
+        "guidance": "Timeline icons or small scene images make routines and times easier to process."
+      },
+      "Build the Perfect...": {
+        "image_support": "optional",
+        "guidance": "Visual tiles can make design dimensions easier to compare."
+      },
+      "Change My Mind": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Conversation Detective": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Conversation Fork": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Conversation Roulette": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Convince Me": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Defend the Opposite": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Describe Without Adjectives": {
+        "image_support": "optional",
+        "guidance": "Images can provide a rich shared target without extra reading."
+      },
+      "Don’t Say Yes": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Emergency English": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Explain It Without Saying It": {
+        "image_support": "optional",
+        "guidance": "Picture targets are particularly useful for A0-A2 variants."
+      },
+      "Explain the Difference": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Explain Your Choice to Someone Who Disagrees": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Finish My Thought": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Five Whys": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Guess My Rule": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Interrupt Me Politely": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Keep It Going": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Make It Less Direct": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Make It More Direct": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Make It More Specific": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Make It Sound Like a Person": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Make the Choice": {
+        "image_support": "recommended",
+        "guidance": "Option visuals are strongly recommended at A1 and useful for concrete choices."
+      },
+      "Micro Roleplay": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Mini Map Mission": {
+        "image_support": "required",
+        "guidance": "Use a simple map or route visual with visible landmarks; text-only legacy items remain compatible."
+      },
+      "Number Mission": {
+        "image_support": "recommended",
+        "guidance": "Use ticket, menu, timetable, receipt or booking visuals where possible."
+      },
+      "Odd One Out — Conversation Edition": {
+        "image_support": "optional",
+        "guidance": "Image sets are useful for concrete lower-level variants."
+      },
+      "One Detail Is False": {
+        "image_support": "optional",
+        "guidance": "Optional image sequences can support story investigation."
+      },
+      "One Minute, No Escape": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Oops, Fix Me!": {
+        "image_support": "recommended",
+        "guidance": "A visible ticket/order/appointment card makes the correction task clearer."
+      },
+      "Pass It Back": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Personalise It": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Phrase Auction": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Picture Detective": {
+        "image_support": "required",
+        "guidance": "Images are the task. Every option needs a real image and accurate non-spoiling alt text."
+      },
+      "Problem → Options → Decision": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Quick Pick": {
+        "image_support": "recommended",
+        "guidance": "At A0-A1, illustrated options reduce reading load and speed up choice."
+      },
+      "Repair the Conversation": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Say It Three Ways": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Sell Me Something Useless": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Story Chain | But Something Changes": {
+        "image_support": "optional",
+        "guidance": "Optional visual twist cards can reduce reading and increase spontaneity."
+      },
+      "Take a Side": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Tell Me What I Mean": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "The Awkward Silence": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "The Better Question": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "The Complaint Ladder": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "The Forbidden Easy Word": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "The Missing Detail": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "The Missing Question": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "The Unexpected Follow-Up": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Three Clues": {
+        "image_support": "recommended",
+        "guidance": "A target image can support comprehension or be revealed after guessing."
+      },
+      "Three Questions Deeper": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Tiny Story Builder": {
+        "image_support": "recommended",
+        "guidance": "WHO / WHERE / ACTION work best as visual cards at lower levels."
+      },
+      "Trade-Off": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Unpopular Opinion": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Upgrade That Answer": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Use These 3 Chunks": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "What Are You Assuming?": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "What Changed?": {
+        "image_support": "recommended",
+        "guidance": "Prefer a BEFORE/AFTER visual pair, especially at A0-A1."
+      },
+      "What Happened Just Before?": {
+        "image_support": "optional",
+        "guidance": "A single strange image is an effective narrative stimulus."
+      },
+      "What Would You Say?": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "What's the Problem?": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Which One Fits?": {
+        "image_support": "optional",
+        "guidance": "A small context image can establish the situation quickly."
+      },
+      "Which One Sounds More Natural?": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Who Said It?": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "Would You Rather — No Easy Answers": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      },
+      "You Have 30 Seconds": {
+        "image_support": "none",
+        "guidance": "Text-first mechanic. Add imagery only when it materially improves the specific item."
+      }
+    },
+    "accessibility": [
+      "Every image needs meaningful alt text.",
+      "Never encode a secret answer in alt text.",
+      "Do not rely on colour alone for a critical distinction.",
+      "Keep important visual information readable on a shared laptop/projector screen.",
+      "Do not fabricate asset URLs. Missing imagery should remain an explicit draft problem."
     ]
   }
 }

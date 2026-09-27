@@ -30,6 +30,36 @@ function Token({ children, strong = false }) {
   );
 }
 
+function speakingVisuals(item) {
+  const explicit = Array.isArray(item?.visuals)
+    ? item.visuals.map((visual) => ({
+      url: visual?.url || visual?.image_url || '',
+      alt: visual?.alt || visual?.image_alt || '',
+      label: visual?.label || '',
+    })).filter((visual) => visual.url)
+    : [];
+  if (explicit.length) return explicit;
+  if (item?.image_url) {
+    return [{ url: item.image_url, alt: item.image_alt || '', label: item.image_label || '' }];
+  }
+  return [];
+}
+
+function ItemVisualSupport({ item }) {
+  const visuals = speakingVisuals(item);
+  if (!visuals.length) return null;
+  return (
+    <div className={'mx-auto grid w-full max-w-5xl gap-3 ' + (visuals.length > 1 ? 'sm:grid-cols-2' : '')}>
+      {visuals.map((visual, index) => (
+        <figure key={visual.url + '-' + index} className="overflow-hidden rounded-[1.5rem] border border-ink/10 bg-linen/40 dark:border-white/10 dark:bg-white/[0.04]">
+          <img src={visual.url} alt={visual.alt} className="max-h-[22rem] w-full object-contain" loading="eager" />
+          {visual.label ? <figcaption className="px-4 py-2 text-center text-xs font-black uppercase tracking-[0.1em] text-ink/55 dark:text-white/55">{visual.label}</figcaption> : null}
+        </figure>
+      ))}
+    </div>
+  );
+}
+
 function ConstraintFocus({ legacy }) {
   if (legacy.forbidden) {
     return (
@@ -486,12 +516,23 @@ export default function SpeakingPromptContent({ item, config, showSupport = fals
   }
 
   const legacy = adaptLegacySpeakingItem(item, config);
+  let body;
 
-  if (legacy.family === 'constraint_focus') return <ConstraintFocus legacy={legacy} />;
-  if (legacy.family === 'dialogue_inference') return <Inference legacy={legacy} />;
-  if (legacy.family === 'choice_tradeoff') return <ChoiceTradeoff legacy={legacy} />;
-  if (legacy.family === 'transform_repair') return <TransformRepair legacy={legacy} />;
-  if (legacy.family === 'rapid_fluency') return <RapidFluency legacy={legacy} />;
-  if (legacy.family === 'story_sequence') return <StorySequence legacy={legacy} />;
-  return <SituationResponse legacy={legacy} />;
+  if (legacy.family === 'constraint_focus') body = <ConstraintFocus legacy={legacy} />;
+  else if (legacy.family === 'dialogue_inference') body = <Inference legacy={legacy} />;
+  else if (legacy.family === 'choice_tradeoff') body = <ChoiceTradeoff legacy={legacy} />;
+  else if (legacy.family === 'transform_repair') body = <TransformRepair legacy={legacy} />;
+  else if (legacy.family === 'rapid_fluency') body = <RapidFluency legacy={legacy} />;
+  else if (legacy.family === 'story_sequence') body = <StorySequence legacy={legacy} />;
+  else body = <SituationResponse legacy={legacy} />;
+
+  const hasVisuals = speakingVisuals(item).length > 0;
+  if (!hasVisuals) return body;
+
+  return (
+    <div className="grid gap-6">
+      <ItemVisualSupport item={item} />
+      {body}
+    </div>
+  );
 }

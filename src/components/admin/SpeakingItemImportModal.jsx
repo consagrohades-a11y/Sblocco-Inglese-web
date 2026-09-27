@@ -2,13 +2,14 @@ import React, { useMemo, useRef, useState } from 'react';
 import { AlertTriangle, CheckCircle2, FileJson2, Upload, X } from 'lucide-react';
 import { updateSpeakingActivity } from '../../lib/adminSpeakingActivitiesApi.js';
 import { analyseSpeakingItemSet, duplicateReasonLabel } from '../../lib/speakingItemQuality.js';
+import { ALL_SPEAKING_LEVELS } from '../../lib/speakingActivityPedagogy.js';
 import {
   SPEAKING_ROUND_FORMATS,
   normalizeSpeakingRoundBlock,
   validateSpeakingRoundBlock,
 } from '../../lib/speakingRoundContract.js';
 
-const LEVELS = ['A0','A1','A1+','A2','B1','B1+','B2','C1','C2','Mixed'];
+const LEVELS = [...ALL_SPEAKING_LEVELS, 'Mixed'];
 const STRUCTURED_FORMATS = new Set(SPEAKING_ROUND_FORMATS.map((item) => item.id));
 
 function asArray(value) { return Array.isArray(value) ? value : []; }
@@ -19,7 +20,7 @@ function normaliseItem(item, activity) {
   const source = typeof item === 'string' ? { text: item } : (item || {});
   const requestedLevels = asArray(source.levels).map((level) => String(level || '').trim()).filter(Boolean);
   const validLevels = LEVELS.filter((level) => requestedLevels.some((requested) => requested.toLowerCase() === level.toLowerCase()));
-  const fallbackLevels = LEVELS.filter((level) => asArray(activity.levels).includes(level));
+  const fallbackLevels = [];
   const base = {
     ...source,
     levels: requestedLevels.length ? validLevels : fallbackLevels,
@@ -257,12 +258,10 @@ export default function SpeakingItemImportModal({ activities = [], onClose, onIm
 
         const current = updated.get(plan.activity.id) || plan.activity;
         const prompts = [...asArray(current.prompts), ...selectedItems];
-        const levels = LEVELS.filter((level) => prompts.some((item) => (
-          typeof item === 'string'
-            ? asArray(current.levels).includes(level)
-            : asArray(item?.levels).includes(level)
-        )));
-        const saved = await updateSpeakingActivity(plan.activity.id, { prompts, levels });
+        const saved = await updateSpeakingActivity(plan.activity.id, {
+          prompts,
+          levels: [...ALL_SPEAKING_LEVELS],
+        });
         updated.set(saved.id, saved);
       }
       onImported?.(Array.from(updated.values()));

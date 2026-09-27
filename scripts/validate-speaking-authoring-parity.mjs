@@ -26,6 +26,19 @@ assert.ok(kit.novelty_and_duplicate_guide?.preflight_questions?.length >= 4, 'No
 assert.equal(Object.keys(kit.activity_mechanics_detailed || {}).length, Object.keys(kit.activity_mechanics || {}).length, 'Every speaking activity needs a detailed authoring profile.');
 assert.equal(Object.keys(kit.activity_mechanics || {}).length, 72, 'Authoring kit must cover the complete 72-game Speaking Library.');
 assert.equal(kit.lower_level_game_pack?.games?.length, 10, 'Authoring kit must document all ten lower-level-first games.');
+assert.deepEqual(kit.activity_level_policy?.activity_supported_levels, ['A0','A1','A1+','A2','B1','B1+','B2','C1','C2'], 'Every activity must be available A0-C2.');
+assert.equal(Object.keys(kit.activity_pedagogy_audit || {}).length, 72, 'Pedagogy audit must cover all 72 activities.');
+assert.ok(kit.image_support_contract?.standard_item_fields?.image_url, 'Standard image_url authoring contract is missing.');
+assert.ok(kit.image_support_contract?.standard_item_fields?.visuals, 'Multi-visual authoring contract is missing.');
+assert.equal(kit.activity_pedagogy_audit['Picture Detective']?.image_support, 'required');
+assert.equal(kit.activity_pedagogy_audit['Mini Map Mission']?.image_support, 'required');
+assert.equal(kit.activity_pedagogy_audit['What Changed?']?.image_support, 'recommended');
+for (const [title, profile] of Object.entries(kit.activity_pedagogy_audit || {})) {
+  assert.deepEqual(profile.supported_levels, ['A0','A1','A1+','A2','B1','B1+','B2','C1','C2'], 'Activity support must remain universal: ' + title);
+  assert.ok(profile.recommended_levels?.length, 'Recommended level ranking missing: ' + title);
+  assert.ok(['S','A','B'].includes(profile.importance), 'Importance ranking missing: ' + title);
+  assert.ok(['required','recommended','optional','none'].includes(profile.image_support), 'Image support classification missing: ' + title);
+}
 assert.ok(kit.quality_assurance?.per_item_gate?.length >= 10, 'Per-item authoring QA is incomplete.');
 assert.ok(kit.quality_assurance?.per_batch_gate?.length >= 8, 'Per-batch authoring QA is incomplete.');
 assert.ok(kit.common_failure_modes?.length >= 8, 'Common failure-mode guidance is incomplete.');
@@ -49,5 +62,8 @@ assert.ok(importer.includes('validateSpeakingRoundBlock'));
 assert.ok(editor.includes('StudioSpeakingRoundEditor'));
 assert.ok(editor.includes('createDefaultSpeakingRound'));
 assert.ok(editor.includes('validateSpeakingRoundBlock'));
+assert.ok(editor.includes('levels: [...ALL_SPEAKING_LEVELS]'), 'Manual activity saves must keep every game A0-C2.');
+assert.ok(importer.includes('levels: [...ALL_SPEAKING_LEVELS]'), 'Imported item batches must not narrow activity availability.');
+assert.ok(importer.includes('const fallbackLevels = [];'), 'Imports without item levels must not silently inherit A0-C2.');
 
 console.log('Speaking authoring kit, import and manual editor parity validated.');

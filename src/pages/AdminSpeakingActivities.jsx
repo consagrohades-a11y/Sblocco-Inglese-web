@@ -154,7 +154,9 @@ function PresentationLauncher({ activity, eligibleIndices = null, initialLearner
   useEffect(() => {
     setLearnerId(initialLearnerId || '');
     setLearnerQuery('');
-  }, [activity?.id, initialLearnerId]);
+    const requested = asArray(initialLevels).filter((item) => ALL_SPEAKING_LEVELS.includes(item));
+    setLevels(requested.length ? requested : [...ALL_SPEAKING_LEVELS]);
+  }, [activity?.id, initialLearnerId, initialLevels]);
 
   const filteredLearners = useMemo(() => {
     const needle = learnerQuery.trim().toLowerCase();
@@ -664,6 +666,7 @@ export default function AdminSpeakingActivities() {
         activity={presenting?.activity || null}
         eligibleIndices={presenting?.eligibleIndices || null}
         initialLearnerId={focusedLearnerId}
+        initialLevels={level !== 'all' && level !== 'Mixed' ? [level] : []}
         onClose={() => setPresenting(null)}
         onStartLive={startLiveSession}
       />

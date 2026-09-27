@@ -2,7 +2,7 @@
   "version": 1,
   "generated_for": "Sblocco Speaking Library",
   "created": "2026-09-27",
-  "note": "Production seed for the three missing structured games plus ten lower-level-first games.",
+  "note": "Production seed for the three structured games plus ten lower-level-first games. Every activity is available A0-C2; individual items retain their authored level tags.",
   "activities": [
     {
       "title": "Number Mission",
@@ -12,7 +12,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "numbers",
@@ -368,7 +373,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "questions",
@@ -717,9 +727,15 @@
       "summary": "Compare simple options, choose one and explain what matters most.",
       "activity_type": "speaking_game",
       "levels": [
+        "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "choices",
@@ -1128,7 +1144,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "choices",
@@ -1277,7 +1298,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "questions",
@@ -1425,7 +1451,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "repair",
@@ -1575,7 +1606,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "time",
@@ -1724,7 +1760,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "description",
@@ -1872,7 +1913,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "comparison",
@@ -2021,7 +2067,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "directions",
@@ -2168,7 +2219,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "questions",
@@ -2317,7 +2373,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "storytelling",
@@ -2465,7 +2526,12 @@
         "A0",
         "A1",
         "A1+",
-        "A2"
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
       ],
       "goals": [
         "functional-language",

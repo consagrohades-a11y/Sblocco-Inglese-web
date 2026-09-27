@@ -1,3 +1,5 @@
+import { selectSpeakingItemsForLevels } from './speakingLevelSupport.js';
+
 const array = (value) => Array.isArray(value) ? value : [];
 
 export function normaliseSpeakingHistoryText(value) {
@@ -39,18 +41,19 @@ export function findMatchingSpeakingItems(activity, {
     ...array(activity?.tags),
   ].some((value) => String(value || '').toLowerCase().includes(needle));
 
-  return array(activity?.prompts).flatMap((raw, sourceIndex) => {
+  const candidates = array(activity?.prompts).flatMap((raw, sourceIndex) => {
     const item = typeof raw === 'string' ? { text: raw } : (raw || {});
     const levels = array(item.levels).length ? item.levels : array(activity?.levels);
-    if (level !== 'all' && !levels.includes(level)) return [];
-
     const visibleText = item.text || item.title || item.instructions || '';
     const historyText = normaliseSpeakingHistoryText(visibleText);
-    if (unpractisedOnly && historyText && practisedTexts?.has(historyText)) return [];
 
+    if (unpractisedOnly && historyText && practisedTexts?.has(historyText)) return [];
     if (needle && !activityText && !itemSearchValues(item)
       .some((value) => String(value || '').toLowerCase().includes(needle))) return [];
 
-    return [{ sourceIndex, item, historyText }];
+    return [{ sourceIndex, item, levels, historyText }];
   });
+
+  if (level === 'all' || level === 'Mixed') return candidates;
+  return selectSpeakingItemsForLevels(candidates, [level], array(activity?.levels));
 }

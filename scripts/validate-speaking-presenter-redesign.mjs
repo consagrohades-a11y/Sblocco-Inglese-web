@@ -107,6 +107,9 @@ for (const activity of newGameSeed.activities) {
   assert.ok(EXPECTED_TITLES.includes(activity.title), 'Seeded activity is missing from presenter registry: ' + activity.title);
 }
 for (const activity of newGameSeed.activities) {
+  assert.deepEqual(activity.levels, ALL_SPEAKING_LEVELS, 'Seeded speaking activity must remain available A0-C2: ' + activity.title);
+}
+for (const activity of newGameSeed.activities) {
   for (const item of activity.prompts) {
     if (item.format !== 'picture_detective') continue;
     for (const option of item.material?.options || []) {

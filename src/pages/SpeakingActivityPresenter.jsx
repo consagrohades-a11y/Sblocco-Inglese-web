@@ -6,6 +6,7 @@ import LearnerAvatar from '../components/learner/LearnerAvatar.jsx';
 import SpeakingPromptContent from '../components/speaking/SpeakingPromptContent.jsx';
 import { connectSpeakingControl } from '../lib/speakingLiveControl.js';
 import { resolveSpeakingPresenterConfig } from '../lib/speakingPresenterRegistry.js';
+import { selectSpeakingItemsForLevels } from '../lib/speakingLevelSupport.js';
 import { loadSpeakingPresenterState, saveSpeakingPresenterState } from '../lib/speakingLiveState.js';
 import { loadAdminLearnerDetail } from '../lib/adminLearnersApi.js';
 import {
@@ -187,14 +188,18 @@ export default function SpeakingActivityPresenter() {
       asArray(itemHistory).map((entry) => [normaliseHistoryText(entry.item_text), entry]),
     );
 
-    const eligible = asArray(activity.prompts)
+    const eligibleBase = asArray(activity.prompts)
       .map((item, sourceIndex) => normaliseItem(item, asArray(activity.levels), sourceIndex))
-      .filter((item) => !selectedIndices || selectedIndices.has(item.sourceIndex))
-      .filter((item) => !selectedLevels.length || asArray(item.levels).some((level) => selectedLevels.includes(level)))
-      .map((item) => ({
-        ...item,
-        priorUse: historyByText.get(item.historyKey) || null,
-      }));
+      .filter((item) => !selectedIndices || selectedIndices.has(item.sourceIndex));
+
+    const eligible = selectSpeakingItemsForLevels(
+      eligibleBase,
+      selectedLevels,
+      asArray(activity.levels),
+    ).map((item) => ({
+      ...item,
+      priorUse: historyByText.get(item.historyKey) || null,
+    }));
 
     if (!learnerId || !historyReady) return eligible;
 
@@ -476,7 +481,7 @@ export default function SpeakingActivityPresenter() {
           {!items.length ? (
             <div className="mt-8 rounded-3xl border border-dashed border-ink/15 bg-white p-10 text-center dark:border-white/15 dark:bg-surface-900">
               <Sparkles className="mx-auto h-7 w-7 text-clay" />
-              <p className="mt-3 text-lg font-black">No items match the selected level combination.</p>
+              <p className="mt-3 text-lg font-black">No speaking items are available for this activity yet.</p>
             </div>
           ) : (
             <div className={'mt-5 grid gap-4 lg:min-h-0 lg:overflow-hidden ' + (hasAside ? 'xl:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)]' : 'grid-cols-1')}>
