@@ -47,7 +47,10 @@ assert.ok(controller.includes('studentWindow.postMessage'), 'Teacher controller 
 assert.ok(controller.includes("payload.state?.activityId && payload.state.activityId !== session?.activity?.id"), 'Teacher controller must ignore stale state from the previous activity.');
 assert.ok(controller.includes('finishSpeakingControl'), 'Ending the live lesson must close all activity sessions under one control id.');
 assert.ok(controller.includes('openOrReuseSpeakingStudentWindow'), 'Teacher controller must reopen or reuse the same named student screen when the reference is stale.');
-const commandBlock = controller.slice(controller.indexOf('function command(type)'), controller.indexOf('function focusStudentWindow'));
+const commandStart = controller.indexOf('function command(');
+const commandEnd = controller.indexOf('function focusStudentWindow');
+assert.ok(commandStart >= 0 && commandEnd > commandStart, 'Teacher controller must expose the live command dispatcher before focusStudentWindow.');
+const commandBlock = controller.slice(commandStart, commandEnd);
 assert.ok(commandBlock.includes('return;'), 'Direct live commands must return after postMessage so toggle commands are not dispatched twice.');
 assert.ok(commandBlock.indexOf('return;') < commandBlock.lastIndexOf('channelRef.current?.send(payload)'), 'Broadcast fallback must run only after direct postMessage does not return.');
 assert.ok(controller.includes("window.addEventListener('message'"), 'Teacher controller must accept direct presenter state messages.');
