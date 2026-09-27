@@ -246,7 +246,6 @@ Activities:
 - Explain It Without Saying It
 - Don’t Say Yes
 - The Forbidden Easy Word
-- The Forbidden Easy Word
 - Use These 3 Chunks
 - Describe Without Adjectives
 
@@ -257,7 +256,6 @@ Variants:
 - required chunks;
 - lexical restriction.
 
-Note: duplicate naming in source inventory should be normalized at registry authoring time, not by changing production activity titles casually.
 
 ## 6. Family F2 — Situation + Response
 
