@@ -140,8 +140,8 @@ export default function SpeakingLiveController({ session, onEnd }) {
     return () => window.clearInterval(id);
   }, [timerRunning]);
 
-  function command(type) {
-    const payload = { type, activityId: session?.activity?.id || null };
+  function command(type, details = {}) {
+    const payload = { type, activityId: session?.activity?.id || null, ...details };
     const studentWindow = session?.studentWindow;
 
     if (studentWindow && !studentWindow.closed) {
@@ -315,7 +315,7 @@ export default function SpeakingLiveController({ session, onEnd }) {
             <button
               type="button"
               disabled={!connected || !remoteState?.hasChallenge}
-              onClick={() => command('toggle-challenge')}
+              onClick={() => command('toggle-challenge', { challenge: currentItem?.challenge || '' })}
               className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-ink/15 px-3 text-xs font-black disabled:opacity-35 dark:border-white/15"
             >
               <Sparkles className="h-4 w-4" />

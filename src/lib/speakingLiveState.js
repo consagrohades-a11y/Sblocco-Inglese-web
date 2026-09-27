@@ -93,6 +93,7 @@ export function saveSpeakingPresenterState(controlId, activityId, state) {
     sourceIndex: Number.isInteger(state?.sourceIndex) ? state.sourceIndex : null,
     supportVisible: state?.supportVisible === true,
     challengeVisible: state?.challengeVisible === true,
+    revealedChallenge: state?.challengeVisible === true ? text(state?.revealedChallenge) : '',
     savedAt: Date.now(),
   };
   try { storage.setItem(key, JSON.stringify(value)); } catch {}
@@ -111,7 +112,8 @@ export function loadSpeakingPresenterState(controlId, activityId) {
     return {
       sourceIndex: Number.isInteger(value.sourceIndex) ? value.sourceIndex : null,
       supportVisible: value.supportVisible === true,
-      challengeVisible: value.challengeVisible === true,
+      challengeVisible: value.challengeVisible === true && Boolean(text(value.revealedChallenge)),
+      revealedChallenge: value.challengeVisible === true ? text(value.revealedChallenge) : '',
       savedAt: Number(value.savedAt),
     };
   } catch {

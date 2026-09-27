@@ -32,7 +32,7 @@ function normaliseItem(item, fallbackLevels = [], sourceIndex = null) {
       levels: fallbackLevels,
       student_support: '',
       support: [],
-      challenge: '',
+      hasChallenge: false,
       sourceIndex,
       historyKey: normaliseHistoryText(item),
     };
@@ -44,7 +44,7 @@ function normaliseItem(item, fallbackLevels = [], sourceIndex = null) {
     levels: asArray(item?.levels).length ? asArray(item.levels) : fallbackLevels,
     student_support: item?.student_support || (typeof item?.support === 'string' ? item.support : ''),
     support: Array.isArray(item?.support) ? item.support : [],
-    challenge: typeof item?.challenge === 'string' ? item.challenge : item?.challenge?.text || '',
+    hasChallenge: item?.has_challenge === true,
     sourceIndex,
     historyKey: normaliseHistoryText(text),
   };
@@ -59,6 +59,7 @@ export default function SpeakingActivityPresenter() {
   const [error, setError] = useState('');
   const [index, setIndex] = useState(0);
   const [challengeVisible, setChallengeVisible] = useState(false);
+  const [revealedChallenge, setRevealedChallenge] = useState('');
   const [supportVisible, setSupportVisible] = useState(false);
   const [itemHistory, setItemHistory] = useState([]);
   const [historyReady, setHistoryReady] = useState(true);
@@ -230,7 +231,11 @@ export default function SpeakingActivityPresenter() {
       : items.findIndex((item) => item.sourceIndex === saved.sourceIndex);
 
     setIndex(restoredIndex >= 0 ? restoredIndex : 0);
-    setChallengeVisible(restoredIndex >= 0 && saved?.challengeVisible === true);
+    const restoredChallenge = restoredIndex >= 0 && saved?.challengeVisible === true
+      ? String(saved?.revealedChallenge || '')
+      : '';
+    setRevealedChallenge(restoredChallenge);
+    setChallengeVisible(Boolean(restoredChallenge));
     setSupportVisible(restoredIndex >= 0 && saved?.supportVisible === true);
     setPresenterStateReady(true);
   }, [activity, activityId, controlId, historyReady, items, learnerId, presenterStateReady, selectedLevels]);
@@ -268,6 +273,7 @@ export default function SpeakingActivityPresenter() {
     if (!items.length) return;
     setIndex((currentIndex) => (currentIndex + 1) % items.length);
     setChallengeVisible(false);
+    setRevealedChallenge('');
     setSupportVisible(false);
   }
 
@@ -275,6 +281,7 @@ export default function SpeakingActivityPresenter() {
     if (!items.length) return;
     setIndex((currentIndex) => (currentIndex - 1 + items.length) % items.length);
     setChallengeVisible(false);
+    setRevealedChallenge('');
     setSupportVisible(false);
   }
 
@@ -299,6 +306,7 @@ export default function SpeakingActivityPresenter() {
     });
 
     setChallengeVisible(false);
+    setRevealedChallenge('');
     setSupportVisible(false);
   }
 
@@ -310,13 +318,13 @@ export default function SpeakingActivityPresenter() {
     sourceIndex: current?.sourceIndex ?? null,
     challengeVisible,
     supportVisible,
-    hasChallenge: Boolean(current?.challenge),
+    hasChallenge: Boolean(current?.hasChallenge),
     hasSupport: Boolean(current?.student_support || asArray(current?.support).length),
   }), [
     activityId,
     challengeVisible,
     sessionId,
-    current?.challenge,
+    current?.hasChallenge,
     current?.sourceIndex,
     current?.student_support,
     index,
@@ -327,14 +335,14 @@ export default function SpeakingActivityPresenter() {
   useEffect(() => {
     presenterStateRef.current = presenterState;
     if (controlId && presenterStateReady) {
-      saveSpeakingPresenterState(controlId, activityId, presenterState);
+      saveSpeakingPresenterState(controlId, activityId, { ...presenterState, revealedChallenge });
     }
     if (controlId && controlConnectionRef.current) {
       const payload = { type: 'presenter-state', state: presenterState };
       controlConnectionRef.current.send(payload);
       postStateToController(payload);
     }
-  }, [controlId, presenterState]);
+  }, [controlId, presenterState, revealedChallenge]);
 
   useEffect(() => {
     if (!controlId) return undefined;
@@ -380,7 +388,11 @@ export default function SpeakingActivityPresenter() {
       } else if (payload.type === 'toggle-support') {
         setSupportVisible((value) => !value);
       } else if (payload.type === 'toggle-challenge') {
-        setChallengeVisible((value) => !value);
+        setChallengeVisible((visible) => {
+          const nextVisible = !visible && Boolean(payload.challenge);
+          setRevealedChallenge(nextVisible ? String(payload.challenge) : '');
+          return nextVisible;
+        });
       } else if (payload.type === 'sync-request') {
         sendPresenterState();
       } else if (payload.type === 'close-presenter') {
@@ -471,15 +483,14 @@ export default function SpeakingActivityPresenter() {
                   ) : null}
                 </div>
 
-                {current.challenge ? (
+                {current?.hasChallenge ? (
                   <div className="mt-3 shrink-0 rounded-2xl border border-ink/10 bg-white px-4 py-3 dark:border-white/10 dark:bg-surface-900">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Extra challenge</p>
-                      <button type="button" onClick={() => setChallengeVisible((value) => !value)} className="focus-ring min-h-10 rounded-full border border-ink/15 px-4 text-xs font-black dark:border-white/15">
-                        {challengeVisible ? 'Hide' : 'Reveal'}
-                      </button>
-                    </div>
-                    {challengeVisible ? <p className="mt-2 text-base font-black leading-6">{current.challenge}</p> : null}
+                    <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">Extra challenge</p>
+                    {challengeVisible && revealedChallenge ? (
+                      <p className="mt-2 text-base font-black leading-6">{revealedChallenge}</p>
+                    ) : (
+                      <p className="mt-2 text-sm font-semibold text-ink/45 dark:text-white/45">Your teacher can reveal an extra challenge from the control panel.</p>
+                    )}
                   </div>
                 ) : null}
               </section>

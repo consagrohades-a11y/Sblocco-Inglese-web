@@ -13,6 +13,8 @@ const controller = read('src/components/admin/SpeakingLiveController.jsx');
 const presenter = read('src/pages/SpeakingActivityPresenter.jsx');
 const library = read('src/pages/AdminSpeakingActivities.jsx');
 const learner = read('src/pages/AdminLearnerDetail.jsx');
+const liveState = read('src/lib/speakingLiveState.js');
+const liveMigration = read('supabase/migrations/20260926123000_speaking_live_continuity.sql');
 
 assert.ok(control.includes('BroadcastChannel'), 'Live control should prefer BroadcastChannel.');
 assert.ok(control.includes('localStorage'), 'Live control should have a same-origin storage-event fallback.');
@@ -31,6 +33,12 @@ assert.ok(presenter.includes('saveSpeakingPresenterState'), 'Student presenter m
 assert.ok(presenter.includes('supportVisible'), 'Presenter must support teacher-controlled support reveal.');
 assert.ok(presenter.includes("useState(false)"), 'Student support must be hidden by default.');
 assert.ok(!presenter.includes('setSupportVisible(true)'), 'Changing game items must never auto-open student support.');
+assert.ok(liveMigration.includes("'has_challenge'"), 'Learner-safe presenter payload must expose only challenge availability before reveal.');
+assert.ok(!liveMigration.includes("'challenge', prompt_item -> 'challenge'"), 'Reveal-later challenge text must not be preloaded into the student presenter payload.');
+assert.ok(controller.includes("command('toggle-challenge', { challenge: currentItem?.challenge || '' })"), 'Teacher controller must send challenge text only on an explicit reveal command.');
+assert.ok(presenter.includes("setRevealedChallenge(nextVisible ? String(payload.challenge) : '')"), 'Presenter must receive challenge text only from the teacher reveal command.');
+assert.ok(!presenter.includes('onClick={() => setChallengeVisible'), 'Student presenter must not expose a local challenge reveal control.');
+assert.ok(liveState.includes('revealedChallenge: state?.challengeVisible === true'), 'Intentional challenge reveal must remain refresh-safe after it has been shown.');
 assert.ok(presenter.includes('lg:h-[100dvh]'), 'Desktop presenter must fit the viewport height.');
 assert.ok(presenter.includes('lg:overflow-hidden'), 'Desktop presenter must prevent page-level scrolling.');
 assert.ok(presenter.includes("window.addEventListener('message'"), 'Presenter must accept direct window messages while unfocused.');

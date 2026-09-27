@@ -146,7 +146,13 @@ begin
               'text', prompt_item ->> 'text',
               'levels', prompt_item -> 'levels',
               'student_support', prompt_item -> 'student_support',
-              'challenge', prompt_item -> 'challenge',
+              'has_challenge', case
+                when jsonb_typeof(prompt_item -> 'challenge') = 'string'
+                  then btrim(coalesce(prompt_item ->> 'challenge', '')) <> ''
+                when jsonb_typeof(prompt_item -> 'challenge') = 'object'
+                  then btrim(coalesce(prompt_item -> 'challenge' ->> 'text', '')) <> ''
+                else false
+              end,
               'format', prompt_item ->> 'format',
               'title', prompt_item ->> 'title',
               'instructions', prompt_item ->> 'instructions',
