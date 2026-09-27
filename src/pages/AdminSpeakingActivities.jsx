@@ -158,11 +158,16 @@ function PresentationLauncher({ activity, eligibleIndices = null, initialLearner
 
   const filteredLearners = useMemo(() => {
     const needle = learnerQuery.trim().toLowerCase();
-    if (!needle) return learners.slice(0, 10);
-    return learners
-      .filter((learner) => [learner.display_name, learner.email, learner.admin_context_note]
+    const matching = needle
+      ? learners.filter((learner) => [learner.display_name, learner.email, learner.admin_context_note]
         .some((value) => String(value || '').toLowerCase().includes(needle)))
-      .slice(0, 10);
+      : learners;
+
+    return [...matching].sort((left, right) => {
+      const leftLabel = String(left.display_name || left.email || '').trim();
+      const rightLabel = String(right.display_name || right.email || '').trim();
+      return leftLabel.localeCompare(rightLabel, 'it', { sensitivity: 'base' });
+    });
   }, [learnerQuery, learners]);
 
   const selectedLearner = learners.find((learner) => learner.id === learnerId) || null;
@@ -286,13 +291,20 @@ function PresentationLauncher({ activity, eligibleIndices = null, initialLearner
             </div>
           ) : (
             <>
-              <input
-                type="search"
-                value={learnerQuery}
-                onChange={(event) => setLearnerQuery(event.target.value)}
-                placeholder="Cerca studente…"
-                className="focus-ring mt-4 w-full rounded-xl border border-ink/15 bg-paper px-4 py-3 text-sm font-semibold dark:border-white/15 dark:bg-white/[0.05]"
-              />
+              <div className="mt-4 flex items-center gap-3">
+                <input
+                  type="search"
+                  value={learnerQuery}
+                  onChange={(event) => setLearnerQuery(event.target.value)}
+                  placeholder="Cerca studente…"
+                  className="focus-ring min-w-0 flex-1 rounded-xl border border-ink/15 bg-paper px-4 py-3 text-sm font-semibold dark:border-white/15 dark:bg-white/[0.05]"
+                />
+                {!loadingLearners && !learnerError ? (
+                  <span className="shrink-0 text-[0.68rem] font-black uppercase tracking-[0.08em] text-ink/40 dark:text-white/40">
+                    {filteredLearners.length}/{learners.length}
+                  </span>
+                ) : null}
+              </div>
               {loadingLearners ? <p className="mt-3 text-xs font-bold text-ink/45 dark:text-white/45">Caricamento studenti…</p> : null}
               {learnerError ? <p className="mt-3 text-xs font-bold text-red-700 dark:text-red-200">{learnerError}</p> : null}
               {!loadingLearners && !learnerError ? (
