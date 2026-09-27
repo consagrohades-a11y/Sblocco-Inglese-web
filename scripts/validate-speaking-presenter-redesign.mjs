@@ -6,6 +6,13 @@ import {
   resolveSpeakingPresenterConfig,
 } from '../src/lib/speakingPresenterRegistry.js';
 import {
+  ALL_SPEAKING_LEVELS,
+  resolveSpeakingActivityPedagogy,
+  speakingPriorityScore,
+  speakingRelevanceForLevel,
+} from '../src/lib/speakingActivityPedagogy.js';
+import { selectSpeakingItemsForLevels } from '../src/lib/speakingLevelSupport.js';
+import {
   adaptLegacySpeakingItem,
   parseAnswerFirst,
   parseBadGood,
