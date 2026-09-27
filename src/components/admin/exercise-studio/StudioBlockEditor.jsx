@@ -1823,7 +1823,7 @@ function SpeakingFactsEditor({ facts = [], onChange, label = 'Facts' }) {
             value={fact.kind || 'text'}
             onChange={(value) => patchFact(index, { kind: value })}
             options={['text', 'quantity', 'time', 'weekday', 'date', 'price'].map((value) => [value, value])}
-            ariaLabel={\`Fact type \${index + 1}\`}
+            ariaLabel={`Fact type ${index + 1}`}
           />
         </div>
       ))}
@@ -1913,7 +1913,7 @@ function ComparisonOptionsEditor({ options = [], onChange }) {
           <SpeakingFactsEditor facts={option.facts || []} onChange={(facts) => patchOption(index, { facts })} label="Comparable facts" />
         </div>
       ))}
-      <button type="button" onClick={() => onChange([...values, { key: \`option_\${values.length + 1}\`, title: '', description: '', facts: [] }])} className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200"><Plus className="h-3.5 w-3.5" /> Add option</button>
+      <button type="button" onClick={() => onChange([...values, { key: `option_${values.length + 1}`, title: '', description: '', facts: [] }])} className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200"><Plus className="h-3.5 w-3.5" /> Add option</button>
     </section>
   );
 }
