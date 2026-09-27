@@ -82,7 +82,7 @@ assert.ok(speakingImport.includes('Importa comunque'), 'Speaking import must let
 assert.ok(speakingImport.includes('totals.unresolved === 0'), 'Speaking import must require a decision for every flagged item before import.');
 assert.ok(!speakingLibrary.includes('analyseSpeakingItemSet'), 'Speaking library browsing must not run similarity analysis.');
 
-assert.ok(speakingPrompt.includes('splitBadGood'), 'Speaking prompt renderer must support Bad/Good split cards.');
+assert.ok(speakingPrompt.includes('legacy.badGood'), 'Speaking prompt renderer must support Bad/Good split cards through the legacy adapter.');
 assert.ok(speakingPrompt.includes('text-center'), 'Speaking prompts must remain centered.');
 assert.ok(!notifications.includes('opacity-65'), 'Read notifications must not be globally washed out.');
 

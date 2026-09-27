@@ -1,0 +1,92 @@
+export const SPEAKING_PRESENTER_FAMILIES = Object.freeze({
+  CONSTRAINT: 'constraint_focus',
+  SITUATION: 'situation_response',
+  INFERENCE: 'dialogue_inference',
+  CHOICE: 'choice_tradeoff',
+  TRANSFORM: 'transform_repair',
+  RAPID: 'rapid_fluency',
+  STORY: 'story_sequence',
+  VISUAL: 'visual_identification',
+});
+
+const DEFAULT_CONFIG = Object.freeze({
+  family: SPEAKING_PRESENTER_FAMILIES.SITUATION,
+  variant: 'prompt',
+  showActivitySteps: false,
+  allowActivityLanguageFallback: false,
+  density: 'focused',
+});
+
+const CONFIG = {
+  'Agree, Disagree, It Depends': { family: 'choice_tradeoff', variant: 'stance' },
+  'Bad Advice Only': { family: 'situation_response', variant: 'response' },
+  'Bad Small Talk / Good Small Talk': { family: 'transform_repair', variant: 'bad_good' },
+  'Before / During / After': { family: 'story_sequence', variant: 'three_stage', showActivitySteps: true },
+  'Build the Perfect...': { family: 'choice_tradeoff', variant: 'build' },
+  'Change My Mind': { family: 'choice_tradeoff', variant: 'persuasion' },
+  'Conversation Detective': { family: 'dialogue_inference', variant: 'detective' },
+  'Conversation Fork': { family: 'choice_tradeoff', variant: 'fork' },
+  'Conversation Roulette': { family: 'rapid_fluency', variant: 'roulette' },
+  'Convince Me': { family: 'choice_tradeoff', variant: 'persuasion' },
+  'Defend the Opposite': { family: 'choice_tradeoff', variant: 'stance' },
+  'Describe Without Adjectives': { family: 'constraint_focus', variant: 'no_adjectives' },
+  'Don’t Say Yes': { family: 'constraint_focus', variant: 'no_yes' },
+  'Emergency English': { family: 'situation_response', variant: 'urgent_response' },
+  'Explain It Without Saying It': { family: 'constraint_focus', variant: 'forbidden_words' },
+  'Explain the Difference': { family: 'choice_tradeoff', variant: 'difference' },
+  'Explain Your Choice to Someone Who Disagrees': { family: 'choice_tradeoff', variant: 'defend_choice' },
+  'Finish My Thought': { family: 'rapid_fluency', variant: 'sentence_stem' },
+  'Five Whys': { family: 'rapid_fluency', variant: 'question_ladder', showActivitySteps: true },
+  'Guess My Rule': { family: 'dialogue_inference', variant: 'hidden_rule' },
+  'Interrupt Me Politely': { family: 'situation_response', variant: 'interrupt' },
+  'Keep It Going': { family: 'situation_response', variant: 'continue_dialogue' },
+  'Make It Less Direct': { family: 'transform_repair', variant: 'soften' },
+  'Make It More Direct': { family: 'transform_repair', variant: 'clarify' },
+  'Make It More Specific': { family: 'transform_repair', variant: 'specificity' },
+  'Make It Sound Like a Person': { family: 'transform_repair', variant: 'naturalise' },
+  'Micro Roleplay': { family: 'situation_response', variant: 'roleplay' },
+  'Odd One Out — Conversation Edition': { family: 'choice_tradeoff', variant: 'odd_one_out' },
+  'One Detail Is False': { family: 'dialogue_inference', variant: 'false_detail' },
+  'One Minute, No Escape': { family: 'rapid_fluency', variant: 'one_minute' },
+  'Personalise It': { family: 'transform_repair', variant: 'personalise' },
+  'Phrase Auction': { family: 'choice_tradeoff', variant: 'phrase_auction' },
+  'Problem → Options → Decision': { family: 'choice_tradeoff', variant: 'problem_options', showActivitySteps: true, allowActivityLanguageFallback: true },
+  'Repair the Conversation': { family: 'transform_repair', variant: 'repair' },
+  'Say It Three Ways': { family: 'transform_repair', variant: 'three_ways' },
+  'Sell Me Something Useless': { family: 'story_sequence', variant: 'pitch' },
+  'Story Chain | But Something Changes': { family: 'story_sequence', variant: 'story_chain' },
+  'Take a Side': { family: 'choice_tradeoff', variant: 'stance' },
+  'Tell Me What I Mean': { family: 'dialogue_inference', variant: 'implied_meaning' },
+  'The Awkward Silence': { family: 'situation_response', variant: 'restart' },
+  'The Better Question': { family: 'choice_tradeoff', variant: 'question_choice' },
+  'The Complaint Ladder': { family: 'transform_repair', variant: 'complaint_ladder', showActivitySteps: true, allowActivityLanguageFallback: true },
+  'The Forbidden Easy Word': { family: 'constraint_focus', variant: 'forbidden_words' },
+  'The Missing Detail': { family: 'dialogue_inference', variant: 'missing_detail' },
+  'The Missing Question': { family: 'dialogue_inference', variant: 'answer_first' },
+  'The Unexpected Follow-Up': { family: 'rapid_fluency', variant: 'unexpected_followup' },
+  'Three Questions Deeper': { family: 'rapid_fluency', variant: 'question_ladder' },
+  'Trade-Off': { family: 'choice_tradeoff', variant: 'tradeoff' },
+  'Unpopular Opinion': { family: 'choice_tradeoff', variant: 'stance' },
+  'Upgrade That Answer': { family: 'transform_repair', variant: 'upgrade' },
+  'Use These 3 Chunks': { family: 'constraint_focus', variant: 'required_chunks' },
+  'What Are You Assuming?': { family: 'dialogue_inference', variant: 'assumption' },
+  'What Happened Just Before?': { family: 'story_sequence', variant: 'backstory' },
+  'What Would You Say?': { family: 'situation_response', variant: 'what_would_you_say' },
+  "What's the Problem?": { family: 'dialogue_inference', variant: 'diagnose' },
+  'Which One Sounds More Natural?': { family: 'choice_tradeoff', variant: 'natural_choice' },
+  'Who Said It?': { family: 'dialogue_inference', variant: 'speaker_inference' },
+  'Would You Rather — No Easy Answers': { family: 'choice_tradeoff', variant: 'binary_tradeoff' },
+  'You Have 30 Seconds': { family: 'rapid_fluency', variant: 'thirty_seconds' },
+};
+
+export const SPEAKING_ACTIVITY_TITLES = Object.freeze(Object.keys(CONFIG));
+
+export function resolveSpeakingPresenterConfig(activity = {}) {
+  const title = String(activity?.title || '').trim();
+  const configured = CONFIG[title] || {};
+  return {
+    ...DEFAULT_CONFIG,
+    ...configured,
+    activityTitle: title,
+  };
+}

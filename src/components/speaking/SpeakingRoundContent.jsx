@@ -127,7 +127,6 @@ export default function SpeakingRoundContent({ round, showSupport = true }) {
       <header className="grid gap-2">
         <div className="flex flex-wrap items-center gap-2">
           <span className="rounded-full bg-orange-500 px-3 py-1 text-[0.66rem] font-black uppercase tracking-[0.12em] text-white">{FORMAT_LABELS[format] || 'Speaking'}</span>
-          {round.has_challenge ? <span className="rounded-full border border-ink/10 bg-white px-3 py-1 text-[0.66rem] font-black text-ink/55 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/60">Second stage available</span> : null}
         </div>
         <h3 className="text-2xl font-black leading-tight text-ink sm:text-3xl dark:text-white">{round.title}</h3>
         <p className="text-base font-bold leading-7 text-ink/75 dark:text-white/75">{round.instructions}</p>
