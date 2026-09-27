@@ -12,8 +12,15 @@
   },
   "agent_instructions": [
     "Treat this file as direct operating instructions. Follow it; do not rewrite it as a prompt for the user to copy.",
+    "This file is intentionally verbose. Read the sections relevant to the requested activity before generating items.",
     "Generate only new speaking-library items for activities explicitly requested by the user.",
+    "Use the exact requested Sblocco activity title; do not rename it.",
+    "Determine whether the activity uses standard prompt items or one of the five structured formats before drafting.",
+    "Apply the CEFR-specific guidance rather than merely changing vocabulary difficulty.",
     "Before final delivery, compare the new items against any existing-item catalog supplied by the user and reject exact duplicates, near paraphrases and cosmetic noun swaps.",
+    "Run the per-item and per-batch quality gates in quality_assurance.",
+    "For structured formats, run the structured-item gate and preserve teacher/student visibility boundaries.",
+    "Do not invent unsupported fields or any system-owned technical metadata.",
     "When the batch is complete, create and attach one downloadable .json file only. Do not paste the JSON payload into chat."
   ],
   "import_contract": {
@@ -566,5 +573,1604 @@
         }
       ]
     }
-  }
+  },
+  "documentation_revision": "2026-09-27.1",
+  "read_this_first": {
+    "purpose": "This is the complete operating manual for authoring importable Sblocco Speaking Library content. It is designed to be sufficient on its own: an authoring model should not need access to the Sblocco codebase, database, prior chat history or hidden implementation details.",
+    "success_definition": "A successful output is pedagogically useful, presentation-ready, importable without technical repair, visibly appropriate to its game mechanic, varied across a batch, and safe for teacher/student split-screen use.",
+    "authority_order": [
+      "1. Follow the JSON/import contract and supported field names in this file.",
+      "2. Follow the activity-specific mechanic for the exact requested activity title.",
+      "3. Follow the CEFR guidance for the requested level or level range.",
+      "4. Follow batch variety, novelty and quality-control rules.",
+      "5. When a structured format is requested, follow its structured_format_specs and completed example exactly enough that the importer can normalize it safely.",
+      "6. Never invent system-owned technical fields. Sblocco generates those."
+    ],
+    "non_negotiables": [
+      "The learner must have something meaningful to SAY. Do not create worksheet questions disguised as speaking.",
+      "The item must preserve the named game's mechanic. Do not turn every activity into 'What do you think and why?'.",
+      "Student-facing wording must be immediately understandable on a projected/shared screen.",
+      "Teacher-only answers, secrets, hidden rules, facilitation notes and reveal-later content must never be embedded in the normal learner prompt.",
+      "Support gives a route into the task; it must not solve the task.",
+      "A challenge changes the communicative demand, information, constraint, role, priority or interaction pattern. 'Say more' is not a challenge.",
+      "A batch must contain genuine variation in context, language demand and response path.",
+      "Do not use difficulty or CEFR as decoration. They must reflect the actual speaking demand.",
+      "For structured games, visual/material data belongs in structured fields, never encoded as pseudo-layout inside text."
+    ]
+  },
+  "authoring_workflow": [
+    {
+      "step": 1,
+      "name": "Identify the exact activity and requested levels",
+      "instructions": [
+        "Use the exact activity title already present in the Speaking Library.",
+        "Do not rename an existing activity in the import payload.",
+        "Determine whether the request is for standard prompt items or one of the five structured formats.",
+        "If multiple levels are requested, decide whether each item genuinely works at more than one level; do not attach every requested level to every item automatically."
+      ]
+    },
+    {
+      "step": 2,
+      "name": "Define the speaking behaviour before writing the prompt",
+      "instructions": [
+        "Write down the learner action mentally: ask, clarify, infer, persuade, negotiate, narrate, repair, compare, soften, interrupt, paraphrase, disagree, speculate, etc.",
+        "The speaking behaviour must be observable in the learner's response.",
+        "If the item can be answered with one isolated word and the game is not intentionally A0-level, the item is probably under-designed."
+      ]
+    },
+    {
+      "step": 3,
+      "name": "Build the scenario and information structure",
+      "instructions": [
+        "Give only the information needed to create a clear communicative problem or choice.",
+        "Prefer concrete details, roles, constraints and consequences over broad topic labels.",
+        "For lower levels, reduce linguistic complexity before reducing communicative purpose.",
+        "For higher levels, add pragmatic, discourse or decision complexity rather than merely adding rare vocabulary."
+      ]
+    },
+    {
+      "step": 4,
+      "name": "Write student-facing text",
+      "instructions": [
+        "Write directly to the learner using short, natural instructions.",
+        "Avoid teacher-facing meta-language such as 'elicit', 'drill', 'check understanding' or 'model answer'.",
+        "Do not expose the answer, hidden rule, secret option, private cue or intended interpretation.",
+        "Keep screen text scannable. Break complex tasks into structured fields rather than one oversized paragraph."
+      ]
+    },
+    {
+      "step": 5,
+      "name": "Add support only where it improves access",
+      "instructions": [
+        "A0-A1 support can include sentence frames, question stems, mini word banks and chunks.",
+        "A2-B1 support should usually provide useful language or an interaction route rather than a near-complete answer.",
+        "B2-C2 support should be selective and can focus on discourse moves, register, nuance or strategic phrases.",
+        "Do not add support mechanically to every item if it is not needed."
+      ]
+    },
+    {
+      "step": 6,
+      "name": "Design a meaningful second stage",
+      "instructions": [
+        "Use a challenge when a reveal or complication can make the same item worth continuing.",
+        "Good challenge types: new constraint, new stakeholder, changed priority, contradiction, time pressure, role swap, extra evidence, tone shift, or required follow-up.",
+        "The challenge must not invalidate the original task or require information the learner could not reasonably infer."
+      ]
+    },
+    {
+      "step": 7,
+      "name": "Write private teacher guidance",
+      "instructions": [
+        "Use teacher_note or structured teacher fields for answers, accepted interpretations, hidden rules, secret choices, likely alternatives, facilitation moves and ambiguity notes.",
+        "Teacher guidance should help run the interaction; it should not over-script the teacher.",
+        "For open-ended tasks, describe acceptable response territory rather than pretending there is one exact answer."
+      ]
+    },
+    {
+      "step": 8,
+      "name": "Tag and level the item",
+      "instructions": [
+        "Choose CEFR levels from the allowed list only.",
+        "Use 1-4 stable context tags and 1-4 pedagogical language targets.",
+        "Set difficulty 1-5 from cognitive/pragmatic demand, not from how sophisticated the topic sounds."
+      ]
+    },
+    {
+      "step": 9,
+      "name": "Run the novelty and batch-balance check",
+      "instructions": [
+        "Compare against supplied existing items and against other items in the same generated batch.",
+        "Reject paraphrases and cosmetic noun swaps.",
+        "Check context spread, level spread, interaction pattern and response-path variation.",
+        "Reorder naturally; do not always progress from easiest to hardest."
+      ]
+    },
+    {
+      "step": 10,
+      "name": "Validate delivery",
+      "instructions": [
+        "Return the exact speaking_item_batch top-level structure.",
+        "Do not invent IDs, timestamps, database keys or sequence numbers.",
+        "Do not wrap JSON in markdown.",
+        "When requested for use in Sblocco, produce one downloadable .json file only."
+      ]
+    }
+  ],
+  "pedagogical_quality_standard": {
+    "target_experience": "The learner should feel that they are doing something with English, not proving that they know English.",
+    "required_characteristics": [
+      "A clear communicative purpose.",
+      "Enough information or friction to create spoken output.",
+      "A response path that cannot be completed by mechanically reading the prompt back.",
+      "Language demand appropriate to the assigned level(s).",
+      "Natural opportunities for teacher follow-up.",
+      "A reason to listen to the other speaker where the mechanic is interactive.",
+      "Support that preserves productive struggle.",
+      "A scenario that is plausible or intentionally playful, but not arbitrary."
+    ],
+    "output_depth_targets": {
+      "A0": "Usually 1-4 short chunks or very short exchanges, with strong lexical/visual support.",
+      "A1": "Short but complete utterances and simple question-answer interaction; often 2-5 turns.",
+      "A1+": "Short connected responses with simple reasons, alternatives or follow-ups.",
+      "A2": "Several connected sentences or a short exchange with clarification, reason, comparison or sequence.",
+      "B1": "Sustained explanation or interaction with reasons, examples, follow-up and adaptation.",
+      "B1+": "More flexible spontaneous interaction, clearer discourse structure and less reliance on scaffolds.",
+      "B2": "Nuanced argument, negotiation, register control, inference or extended spontaneous response.",
+      "C1": "Strategic, precise and flexible discourse with implied meaning, reframing, stakeholder awareness or complex interaction.",
+      "C2": "Highly controlled, subtle, rhetorically adaptive or pragmatically demanding speaking; avoid artificial obscurity.",
+      "Mixed": "The mechanic must remain playable across levels. Build optional support/challenge layers instead of averaging everything into bland B1."
+    },
+    "reject_if": [
+      "The item is essentially a grammar worksheet with 'say your answer' added.",
+      "The learner can answer well with yes/no and no further requirement.",
+      "The task depends on obscure trivia or specialist knowledge unrelated to the language goal.",
+      "The only novelty is swapping a person, city, product or object in an otherwise identical prompt.",
+      "The task demands personal disclosure about trauma, finances, health, relationships or identity without an easy hypothetical alternative.",
+      "The teacher note merely repeats the prompt.",
+      "The challenge says only 'speak for longer', 'give more details' or an equivalent empty instruction.",
+      "The assigned level is justified mainly by one difficult word."
+    ]
+  },
+  "cefr_authoring_guide": {
+    "A0": {
+      "learner_profile": "Very limited productive English. Recognition may be stronger than spontaneous production.",
+      "design": [
+        "Use visible choices, concrete nouns, actions, numbers, people, places and high-frequency chunks.",
+        "One communicative decision at a time.",
+        "Keep instructions extremely short and preferably model the response shape through support.",
+        "Use imagery whenever it genuinely reduces language-processing load.",
+        "Allow pointing/choosing plus a spoken chunk rather than requiring unsupported full sentences."
+      ],
+      "support": [
+        "word/chunk banks",
+        "fixed question stems",
+        "either/or choices",
+        "visual labels when the mechanic permits them",
+        "very short model chunks"
+      ],
+      "avoid": [
+        "abstract opinions",
+        "multi-part instructions",
+        "implicit pragmatics",
+        "long reading before speaking",
+        "tasks requiring tense control the learner has not acquired"
+      ]
+    },
+    "A1": {
+      "learner_profile": "Can manage familiar everyday exchanges with simple present/past/future chunks and basic questions.",
+      "design": [
+        "Use familiar scenarios but give a real reason to ask, choose, correct or explain.",
+        "Keep sentence structure simple while allowing the communicative goal to remain adult.",
+        "Use numbers, schedules, shopping, preferences, directions, routines and simple service situations carefully without making every item childlike."
+      ],
+      "support": [
+        "sentence starters",
+        "question words",
+        "functional chunks",
+        "small vocabulary banks"
+      ],
+      "avoid": [
+        "long hypothetical chains",
+        "dense trade-offs",
+        "sarcasm/strong implication",
+        "four or five constraints at once"
+      ]
+    },
+    "A1+": {
+      "learner_profile": "Can extend A1 exchanges with basic reasons, sequencing and simple comparison.",
+      "design": [
+        "Introduce one meaningful complication or follow-up.",
+        "Ask for because, but, first/then, better/worse, can/can't style expansion.",
+        "Encourage short interaction rather than one-shot answers."
+      ],
+      "support": [
+        "reason frames",
+        "comparison frames",
+        "repair chunks",
+        "simple follow-up prompts"
+      ],
+      "avoid": [
+        "overloading with B1 discourse markers",
+        "long abstract explanation"
+      ]
+    },
+    "A2": {
+      "learner_profile": "Can handle routine situations and describe, compare, plan and explain familiar matters with some detail.",
+      "design": [
+        "Use realistic choices and small trade-offs.",
+        "Require reasons, examples, clarification or sequencing.",
+        "Build 30-90 seconds of speaking potential without needing advanced vocabulary.",
+        "Use roleplay objectives rather than scripts."
+      ],
+      "support": [
+        "functional phrases",
+        "comparison language",
+        "clarification chunks",
+        "optional vocabulary prompts"
+      ],
+      "avoid": [
+        "purely broad conversation questions with no task",
+        "C1-style ethical abstraction",
+        "unnecessarily idiomatic instructions"
+      ]
+    },
+    "B1": {
+      "learner_profile": "Can sustain familiar and semi-unfamiliar interaction, explain reasons and narrate connected events.",
+      "design": [
+        "Use decisions, negotiation, storytelling, repair, persuasion and inferred meaning.",
+        "Require adaptation after a follow-up or changed condition.",
+        "Allow more than one defensible answer.",
+        "Introduce useful chunks/phrasal verbs when natural."
+      ],
+      "support": [
+        "strategic sentence stems",
+        "discourse chunks",
+        "useful collocations",
+        "ways to buy time or clarify"
+      ],
+      "avoid": [
+        "turning vocabulary prestige into difficulty",
+        "tasks where a memorised opinion paragraph is enough"
+      ]
+    },
+    "B1+": {
+      "learner_profile": "Transitional upper-intermediate behaviour: more spontaneous, flexible and interactional than standard B1.",
+      "design": [
+        "Reduce scaffold density.",
+        "Add pragmatic choices, perspective shift, competing priorities or more demanding follow-up.",
+        "Expect clearer discourse organisation and active conversational management."
+      ],
+      "support": [
+        "optional rather than necessary",
+        "higher-value chunks",
+        "reframing and negotiation moves"
+      ],
+      "avoid": [
+        "B2/C1 abstraction without enough conceptual support"
+      ]
+    },
+    "B2": {
+      "learner_profile": "Can interact fluently across a wide range of topics and manage argument, nuance and register with reasonable control.",
+      "design": [
+        "Use competing values, stakeholder needs, implied meaning, persuasion, rebuttal and register.",
+        "Require the learner to respond to another person's position rather than deliver a monologue only.",
+        "Use realistic professional/social ambiguity."
+      ],
+      "support": [
+        "nuance markers",
+        "concession/rebuttal phrases",
+        "register alternatives",
+        "discourse-management chunks"
+      ],
+      "avoid": [
+        "trivia",
+        "fake sophistication",
+        "tasks solvable with generic pros/cons"
+      ]
+    },
+    "C1": {
+      "learner_profile": "Can use language flexibly and effectively for complex social, professional and academic purposes.",
+      "design": [
+        "Build strategic communication: reframing, diplomacy, implication, tone control, stakeholder management, complex negotiation.",
+        "Make the difficulty come from communicative judgement and discourse control.",
+        "Allow multiple plausible interpretations and require evidence."
+      ],
+      "support": [
+        "high-value rhetorical/discourse moves only",
+        "optional lexical precision prompts"
+      ],
+      "avoid": [
+        "rare-word quizzes",
+        "needlessly academic topics",
+        "one-right-answer pragmatics"
+      ]
+    },
+    "C2": {
+      "learner_profile": "Can communicate with very high precision, flexibility and sensitivity to nuance.",
+      "design": [
+        "Use subtle register shifts, compressed implied meaning, rhetorical strategy, ambiguity management and high-stakes-but-safe communication.",
+        "Keep scenarios natural enough that sophisticated language has a reason to exist.",
+        "Require adaptation to listener, context and consequences."
+      ],
+      "support": [
+        "minimal",
+        "optional rhetorical constraints",
+        "stylistic alternatives"
+      ],
+      "avoid": [
+        "obscurity for its own sake",
+        "specialist domain knowledge as a language test"
+      ]
+    },
+    "Mixed": {
+      "learner_profile": "Used when the same mechanic can scale naturally across a mixed group or broad library context.",
+      "design": [
+        "Keep the core task accessible.",
+        "Provide optional support for lower levels and optional challenge for higher levels.",
+        "Do not write one median-level prompt and label it Mixed without actual scalability."
+      ],
+      "support": [
+        "layered support",
+        "optional extension",
+        "role differentiation"
+      ],
+      "avoid": [
+        "requiring everyone to perform at the highest level represented"
+      ]
+    }
+  },
+  "field_reference": {
+    "standard_item": {
+      "text": {
+        "required": true,
+        "type": "string",
+        "visibility": "student",
+        "purpose": "The presentation-ready prompt or scenario. It is also used for search/history matching.",
+        "rules": [
+          "Must make sense without teacher reconstruction.",
+          "Must state the learner's communicative job clearly.",
+          "May contain line breaks or explicit BAD:/GOOD: sections only when the activity mechanic calls for them.",
+          "Should not contain hidden answers, private rules or teacher instructions."
+        ]
+      },
+      "levels": {
+        "required": true,
+        "type": "array<string>",
+        "allowed_values": [
+          "A0",
+          "A1",
+          "A1+",
+          "A2",
+          "B1",
+          "B1+",
+          "B2",
+          "C1",
+          "C2",
+          "Mixed"
+        ],
+        "purpose": "Declares the levels for which the same item is genuinely usable.",
+        "rules": [
+          "At least one level.",
+          "Use an array even for one level.",
+          "Do not attach adjacent levels automatically if the speaking demand does not fit both."
+        ]
+      },
+      "student_support": {
+        "required": false,
+        "type": "string",
+        "visibility": "student_when_support_is_shown",
+        "purpose": "Optional scaffold for standard prompt items.",
+        "rules": [
+          "Help the learner start or continue.",
+          "Do not provide a full answer.",
+          "Prefer chunks, stems, categories or strategic prompts."
+        ]
+      },
+      "challenge": {
+        "required": false,
+        "type": "string OR structured object for structured rounds",
+        "visibility": "reveal_later",
+        "purpose": "Adds a meaningful second stage.",
+        "rules": [
+          "Must change the task in a real way.",
+          "Do not leak it into the main prompt.",
+          "For structured rounds use {text, reveal:'teacher-controlled'}."
+        ]
+      },
+      "teacher_note": {
+        "required": false,
+        "type": "string",
+        "visibility": "teacher_only",
+        "purpose": "Private facilitation guidance, solution, hidden rule, acceptable interpretation or correction cue.",
+        "rules": [
+          "Never phrase it as student-facing text.",
+          "For open tasks describe acceptable directions rather than one fake exact answer."
+        ]
+      },
+      "context_tags": {
+        "required": true,
+        "type": "array<string>",
+        "target_count": "1-4",
+        "purpose": "Stable reusable scenario/context labels for search and coverage.",
+        "rules": [
+          "lowercase",
+          "short",
+          "reuse existing vocabulary when possible",
+          "do not use full phrases as tags"
+        ]
+      },
+      "language_targets": {
+        "required": true,
+        "type": "array<string>",
+        "target_count": "1-4",
+        "purpose": "Pedagogical functions or language behaviours practised by the item.",
+        "rules": [
+          "Use functional/pedagogical labels.",
+          "Avoid vague tags like english or speaking.",
+          "Do not confuse topic with language target."
+        ]
+      },
+      "difficulty": {
+        "required": true,
+        "type": "integer",
+        "allowed_values": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "purpose": "Relative cognitive/pragmatic demand inside the library.",
+        "rules": [
+          "Independent from CEFR.",
+          "Consider ambiguity, number of constraints, interaction pressure, register and perspective shift."
+        ]
+      }
+    },
+    "structured_common_fields": {
+      "format": "Exact structured format id. Must be one of number_mission, picture_detective, explain_without_saying, conversation_detective, make_the_choice.",
+      "title": "Short learner-facing title. Specific enough to distinguish the round; avoid technical labels.",
+      "instructions": "Direct learner instruction explaining what to do, not how the software works.",
+      "situation": "Optional shared scenario context. Use when it materially helps the interaction.",
+      "outcome": "What successful communication achieves. Prefer an observable outcome.",
+      "support": "Array of learner-visible chunks/strategies, not answers.",
+      "challenge": "{text, reveal:'teacher-controlled'}. Reveal is system-normalized; do not invent other reveal modes.",
+      "role_swap": "{enabled:boolean, instruction:string}. If enabled, the second round must still make communicative sense.",
+      "roles": "Usually learner + teacher. Each role has key, name, goal, private_cue. private_cue is teacher-only and is stripped from learner rendering.",
+      "teacher": "Format-specific teacher-only object. Exact accepted fields are defined in structured_format_specs.",
+      "teacher_note": "Teacher-only general facilitation note."
+    }
+  },
+  "visibility_and_privacy": {
+    "principle": "The teacher and learner do not receive identical information. Author private information explicitly so Sblocco can keep it off the student screen.",
+    "student_safe_fields": [
+      "text",
+      "title",
+      "instructions",
+      "situation",
+      "outcome",
+      "levels",
+      "student_support/support when revealed",
+      "role names and public role goals",
+      "structured material intended for the game",
+      "whether a challenge exists"
+    ],
+    "teacher_only_fields": [
+      "teacher_note",
+      "roles[].private_cue",
+      "structured teacher object fields such as private_cue, secret_option_key, model_response, hidden_clue, interpretation, complication and role_note",
+      "the text of a reveal-later challenge until the teacher explicitly reveals it"
+    ],
+    "author_rules": [
+      "Never duplicate teacher-only information in text, title, instructions, situation, outcome, support or visible material.",
+      "Do not write 'the answer is...' in student-visible fields.",
+      "In Picture Detective, image_alt must describe only what is visibly in the image; it must not reveal which option is secret.",
+      "In Conversation Detective, the dialogue must contain enough evidence to support inference without exposing teacher.interpretation.",
+      "If a challenge is intended as a reveal, author it only in challenge.text, not in instructions."
+    ]
+  },
+  "support_design_guide": {
+    "objective": "Reduce access difficulty without reducing the speaking decision to imitation.",
+    "strong_support_examples": [
+      "Could you repeat that?",
+      "I think ___ because ___.",
+      "One advantage is … / The problem is …",
+      "Is it something you use at home?",
+      "I’m not sure I agree because …"
+    ],
+    "weak_support_examples": [
+      "Repeat the model answer exactly.",
+      "The correct answer is option B.",
+      "Say: I want a refund because the product is broken.",
+      "Think harder.",
+      "Use good vocabulary."
+    ],
+    "by_level": {
+      "A0-A1": "Concrete words, fixed chunks, binary choices, sentence frames and question stems are appropriate.",
+      "A2-B1": "Use functional phrases, connectors and strategic prompts. Leave content generation to the learner.",
+      "B2-C2": "Use support sparingly; focus on discourse strategy, register, nuance and rhetorical moves."
+    }
+  },
+  "challenge_design_guide": {
+    "objective": "Create a worthwhile second speaking stage after the learner has already engaged with the base task.",
+    "strong_patterns": [
+      "Change one important fact and require repair.",
+      "Reveal a new constraint or deadline.",
+      "Introduce a stakeholder with a competing priority.",
+      "Require the learner to switch role or position.",
+      "Add contradictory evidence and ask the learner to revise an interpretation.",
+      "Change register: friend → customer, colleague → director, casual → formal.",
+      "Impose a lexical or timing constraint that changes language choices.",
+      "Ask the learner to defend the same decision to someone who values something different."
+    ],
+    "reject_patterns": [
+      "Say more.",
+      "Give more details.",
+      "Talk for another minute.",
+      "Use advanced vocabulary.",
+      "Try again but better."
+    ]
+  },
+  "batch_design_guide": {
+    "before_generation": [
+      "List the exact activity title and requested level(s).",
+      "Define at least 3 context clusters for a medium/large batch when the mechanic permits it.",
+      "Plan a mix of communicative functions or response paths before writing individual items.",
+      "Check any supplied existing catalog before drafting."
+    ],
+    "distribution_rules": [
+      "No more than about 30% of a batch should use the same context unless the user explicitly requested a narrow domain.",
+      "Do not place all lower-difficulty items first and all harder items last.",
+      "Do not use the same grammatical frame repeatedly.",
+      "Vary role relationships: peer, customer/staff, friend, colleague, stranger, service provider, manager, neighbour, etc.",
+      "Vary interaction: ask, respond, repair, persuade, decide, infer, narrate, reframe, challenge.",
+      "Where appropriate, include both everyday and professional contexts without making professional automatically more advanced."
+    ],
+    "batch_size_guidance": {
+      "1-10": "Every item should feel clearly distinct. Aim for at least 3 contexts where possible.",
+      "11-30": "Plan context clusters and difficulty spread explicitly. Check response-path repetition after every 5-10 items.",
+      "31-120": "Use a coverage matrix: level × context × communicative action × difficulty. Re-run duplicate/near-duplicate review in chunks.",
+      "120+": "Generate in internally reviewed waves rather than one undifferentiated stream. Preserve consistent schema and game mechanic across all waves."
+    }
+  },
+  "novelty_and_duplicate_guide": {
+    "duplicate_definition": [
+      "Exact normalized text match.",
+      "Near paraphrase with the same scenario and same learner action.",
+      "Same scenario + same language target + same response path with cosmetic substitutions.",
+      "Same hidden rule or same set of trade-offs with renamed objects.",
+      "Same answer can be reused with negligible adaptation."
+    ],
+    "acceptable_reuse": [
+      "The same vocabulary item used for a different communicative function.",
+      "The same context used at a different level with genuinely different interactional demand.",
+      "The same language target practised in a meaningfully different relationship, consequence or response path.",
+      "A deliberate progression where later items transform rather than repeat an earlier task."
+    ],
+    "preflight_questions": [
+      "What must the learner actually DO differently here?",
+      "What information is new or differently structured?",
+      "Would the same answer work for another item in the batch?",
+      "Does this item add level, context, pragmatic, lexical or interaction coverage?",
+      "If I replace one noun, does the item become another existing item? If yes, rewrite."
+    ]
+  },
+  "structured_format_specs": {
+    "number_mission": {
+      "label": "Number Mission",
+      "pedagogical_purpose": "Make numerical information consequential inside a live exchange so the learner must listen, confirm, repair and reach a shared accurate result.",
+      "best_for": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1"
+      ],
+      "required_core_fields": [
+        "format",
+        "title",
+        "instructions",
+        "levels",
+        "material.facts",
+        "teacher.private_cue"
+      ],
+      "material_contract": {
+        "facts": {
+          "minimum": 2,
+          "item_shape": {
+            "label": "Short human-readable label such as People, Time, Date, Room, Price, Platform or Code.",
+            "value": "Canonical value. May be string or number.",
+            "display": "Optional learner-friendly rendering such as '7:30 p.m.' or '€48'.",
+            "kind": "quantity | time | weekday | date | price | code | other"
+          }
+        }
+      },
+      "teacher_contract": {
+        "private_cue": "Required teacher-only mismatch/read-back cue or information asymmetry that creates the need to listen and repair.",
+        "final_confirmation": "Optional teacher-only final state or confirmation."
+      },
+      "authoring_rules": [
+        "Numbers must matter to task success; do not create plain number dictation.",
+        "Use at least two separate numerical/details categories.",
+        "The teacher cue should create a natural opportunity for clarification or correction.",
+        "For A0-A1, prefer visible fact cards and high-frequency repair chunks.",
+        "For A2-B1, combine numbers with consequences: booking, schedule, order, deadline, quantity, price, route or plan."
+      ],
+      "good_challenges": [
+        "one fact changes",
+        "teacher reads one number back incorrectly",
+        "a new person/item changes quantity",
+        "time/date becomes unavailable"
+      ],
+      "reject_if": [
+        "facts are just a list to read aloud",
+        "the teacher cue does not create interaction",
+        "all facts are irrelevant decoration"
+      ]
+    },
+    "picture_detective": {
+      "label": "Picture Detective",
+      "pedagogical_purpose": "Use visual information to generate genuine questions, descriptive language, categorisation and hypothesis testing.",
+      "best_for": [
+        "A0",
+        "A1",
+        "A1+",
+        "A2",
+        "B1"
+      ],
+      "required_core_fields": [
+        "format",
+        "title",
+        "instructions",
+        "levels",
+        "material.options",
+        "teacher.secret_option_key"
+      ],
+      "material_contract": {
+        "show_labels": "Boolean. Use true for lower-level lexical access when labels do not destroy the mechanic.",
+        "options": {
+          "minimum": 3,
+          "recommended": "3-6",
+          "item_shape": {
+            "key": "Short unique option key, e.g. A, B, C.",
+            "label": "Name of visible object/person/place/scene.",
+            "image_url": "Final asset path/URL. Required for publishable structured content.",
+            "image_alt": "Accessible visual description that does not reveal the secret."
+          }
+        }
+      },
+      "teacher_contract": {
+        "secret_option_key": "Required. Must exactly match one authored option key."
+      },
+      "authoring_rules": [
+        "Options must be visually or conceptually distinct enough to support useful questions but similar enough that one question does not always solve the task.",
+        "For beginners, imagery should carry meaning rather than decorate text.",
+        "Do not place the secret in image_alt, label styling, title or support.",
+        "Questions should target meaningful attributes: use, location, size, material, category, situation, action.",
+        "Avoid culturally obscure objects unless the image itself makes them clear."
+      ],
+      "good_challenges": [
+        "swap roles",
+        "describe a new option without naming it",
+        "allow only yes/no questions",
+        "require a final full-sentence justification"
+      ],
+      "reject_if": [
+        "one option is obviously different",
+        "images are missing",
+        "alt text leaks secret",
+        "labels make the answer trivial when labels should be hidden"
+      ]
+    },
+    "explain_without_saying": {
+      "label": "Explain Without Saying",
+      "pedagogical_purpose": "Develop circumlocution, lexical flexibility and repair by making the learner explain a target without relying on its most obvious lexical shortcuts.",
+      "best_for": [
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1"
+      ],
+      "required_core_fields": [
+        "format",
+        "title",
+        "instructions",
+        "levels",
+        "material.target",
+        "material.forbidden_words"
+      ],
+      "material_contract": {
+        "target": "Word, chunk, concept or expression to communicate.",
+        "forbidden_words": "Array of at least two distinct words that are genuinely useful shortcuts but do not make the task impossible."
+      },
+      "teacher_contract": {
+        "model_response": "Optional teacher-only example of one viable explanation. It is not an exact answer key."
+      },
+      "authoring_rules": [
+        "The target itself must not be repeated as a forbidden word.",
+        "Forbidden words should force paraphrase, not sabotage the task.",
+        "At lower levels, choose concrete targets and fewer high-value bans.",
+        "At higher levels, use abstract concepts, professional/social language, chunks or nuanced terms.",
+        "Support should suggest semantic routes such as function, situation, consequence, category or example without stating the answer."
+      ],
+      "good_challenges": [
+        "give a real example after the guess",
+        "explain it to a child/client/new colleague",
+        "switch to a second register",
+        "use a required chunk"
+      ],
+      "reject_if": [
+        "target is impossible to explain without banned words",
+        "forbidden list contains obscure unrelated words",
+        "model response is exposed to learner"
+      ]
+    },
+    "conversation_detective": {
+      "label": "Conversation Detective",
+      "pedagogical_purpose": "Train inference from conversational evidence: relationship, intention, shared knowledge, tension, implied meaning, context and likely next action.",
+      "best_for": [
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1",
+        "C2"
+      ],
+      "required_core_fields": [
+        "format",
+        "title",
+        "instructions",
+        "levels",
+        "material.turns",
+        "material.question",
+        "teacher.interpretation"
+      ],
+      "material_contract": {
+        "turns": {
+          "minimum": 2,
+          "item_shape": {
+            "speaker": "Speaker label/name.",
+            "text": "Natural spoken line."
+          }
+        },
+        "question": "The inference question. It must require evidence from the dialogue.",
+        "follow_up": "Optional visible follow-up that deepens interpretation."
+      },
+      "teacher_contract": {
+        "hidden_clue": "Optional private contextual clue for teacher facilitation/reveal.",
+        "interpretation": "Required private accepted reading or range of plausible readings."
+      },
+      "authoring_rules": [
+        "Dialogue must sound spoken, not like exposition written to hide a riddle.",
+        "Include enough evidence for a defensible inference.",
+        "Avoid requiring one culturally specific interpretation when several are equally plausible.",
+        "At A2, infer concrete situation/relationship. At B1-B2, infer intention/tension. At C1-C2, use implication, politeness, power, stance or strategic ambiguity.",
+        "Teacher interpretation may acknowledge multiple acceptable answers."
+      ],
+      "good_challenges": [
+        "predict the next line",
+        "add one clue and revise the inference",
+        "identify which phrase carries pressure/softening",
+        "roleplay the next 30 seconds"
+      ],
+      "reject_if": [
+        "dialogue contains the answer explicitly",
+        "question can be answered without reading dialogue",
+        "teacher interpretation treats an ambiguous exchange as objectively certain"
+      ]
+    },
+    "make_the_choice": {
+      "label": "Make the Choice",
+      "pedagogical_purpose": "Create real comparison, prioritisation, negotiation and justification by giving options with defensible but conflicting advantages.",
+      "best_for": [
+        "A1+",
+        "A2",
+        "B1",
+        "B1+",
+        "B2",
+        "C1"
+      ],
+      "required_core_fields": [
+        "format",
+        "title",
+        "instructions",
+        "levels",
+        "material.situation",
+        "material.task",
+        "material.options"
+      ],
+      "material_contract": {
+        "situation": "Shared decision context and any important global constraint.",
+        "task": "Explicit decision or negotiation objective.",
+        "options": {
+          "minimum": 2,
+          "recommended": "2-4",
+          "item_shape": {
+            "key": "Stable author-facing key; Sblocco can normalize from title.",
+            "title": "Short visible option name.",
+            "details": "At least two {label,value} details per option so the trade-off is visible."
+          }
+        }
+      },
+      "teacher_contract": {
+        "complication": "Optional teacher-only new information/reveal that changes the decision landscape.",
+        "role_note": "Optional teacher-only priority or stance for live negotiation."
+      },
+      "authoring_rules": [
+        "Every option must remain defensible for some learner priority.",
+        "Use comparable dimensions across options when possible.",
+        "Do not create a fake choice with one obviously superior option.",
+        "For A1+-A2, use 2-3 concrete criteria. For B1-B2, add competing priorities. For C1, add stakeholder or strategic consequences.",
+        "The task should require a spoken decision, not merely reading pros and cons."
+      ],
+      "good_challenges": [
+        "one price/time changes",
+        "a stakeholder rejects the first choice",
+        "new priority appears",
+        "learner must defend choice to someone who disagrees"
+      ],
+      "reject_if": [
+        "one option dominates every criterion",
+        "details are too vague to compare",
+        "options differ only cosmetically"
+      ]
+    }
+  },
+  "standard_item_examples": [
+    {
+      "activity": "What Would You Say?",
+      "why_it_works": "Concrete situation + clear communicative purpose + natural learner choice.",
+      "item": {
+        "text": "Your hotel room is much noisier than you expected. It is 11 p.m. Call reception, explain the problem and ask for a realistic solution.",
+        "levels": [
+          "A2",
+          "B1"
+        ],
+        "student_support": "The problem is… / Would it be possible to…?",
+        "challenge": "Reception says there are no other rooms tonight. Negotiate another solution.",
+        "teacher_note": "Accept room change, quiet-room request, earplugs/discount/next-day move or other realistic solutions. Encourage polite escalation.",
+        "context_tags": [
+          "travel",
+          "hotel",
+          "service"
+        ],
+        "language_targets": [
+          "complaints",
+          "requests",
+          "negotiation"
+        ],
+        "difficulty": 2
+      }
+    },
+    {
+      "activity": "Don’t Say Yes",
+      "why_it_works": "The mechanic forces elaboration rather than banning one word arbitrarily.",
+      "item": {
+        "text": "Do you usually know what you want to order before you open a menu?",
+        "levels": [
+          "A1+",
+          "A2"
+        ],
+        "student_support": "Usually… / It depends… / Most of the time…",
+        "challenge": "Answer the teacher’s next two questions without using yes or no.",
+        "teacher_note": "Follow with questions that naturally invite yes/no, then reward expansion rather than grammar perfection.",
+        "context_tags": [
+          "food",
+          "daily-life"
+        ],
+        "language_targets": [
+          "extended-answer",
+          "reactions"
+        ],
+        "difficulty": 2
+      }
+    },
+    {
+      "activity": "Conversation Detective",
+      "why_it_works": "The clue is inside natural dialogue and the answer requires evidence, not trivia.",
+      "item": {
+        "text": "A: 'You don’t have to stay if you’ve got somewhere else to be.' B: 'No, no. I said I’d help. I’m just checking the time.' What is probably happening between them?",
+        "levels": [
+          "B1",
+          "B2"
+        ],
+        "student_support": "Think about what A may be implying and why B immediately explains themself.",
+        "challenge": "Say the same situation again, but make A sound genuinely relaxed instead of slightly annoyed.",
+        "teacher_note": "Likely reading: A senses B wants to leave or is distracted; B reassures them. Other evidence-based readings are acceptable.",
+        "context_tags": [
+          "social",
+          "pragmatics"
+        ],
+        "language_targets": [
+          "inference",
+          "implied-meaning",
+          "tone"
+        ],
+        "difficulty": 3
+      }
+    }
+  ],
+  "ai_forbidden_actions": [
+    "Do not invent activity IDs, item IDs, learner IDs, UUIDs, database primary keys or foreign keys.",
+    "Do not invent sequence indexes, row numbers, timestamps, created_at/updated_at values, versions beyond those explicitly defined in this kit, storage paths or signatures.",
+    "Do not invent unsupported structured format ids.",
+    "Do not invent reveal modes; structured challenge reveal is teacher-controlled.",
+    "Do not add schema fields simply because they seem useful. Use only the import contract plus the structured fields documented here.",
+    "Do not embed HTML, React, CSS, markdown tables or layout instructions inside item text.",
+    "Do not add answer keys to learner-visible fields.",
+    "Do not fabricate image URLs. For Picture Detective, use real provided asset paths if available; otherwise the draft should remain incomplete/repairable rather than pretending an asset exists.",
+    "Do not silently drop requested levels or requested item counts.",
+    "Do not 'fix' an exact existing activity title by renaming it."
+  ],
+  "accessibility_and_imagery": {
+    "general": [
+      "Use imagery when it reduces language load or is central to the mechanic, especially for beginners.",
+      "Do not require colour perception alone to distinguish critical options.",
+      "Avoid tiny textual information embedded inside images.",
+      "Image-dependent tasks must still have accurate alt text."
+    ],
+    "picture_detective": [
+      "Every visible option requires image_url and image_alt before publish.",
+      "Alt text should describe visible facts only and must not reveal teacher.secret_option_key.",
+      "If labels are shown, labels must help language access without making the detective mechanic pointless.",
+      "Prefer images with clear silhouettes and meaningful visual differences at classroom-screen size."
+    ]
+  },
+  "inclusion_and_sensitivity": {
+    "rules": [
+      "Use adult-respectful scenarios across levels. Beginner does not mean childish.",
+      "Vary ages, jobs, living situations and social roles without stereotyping.",
+      "Do not assume marriage, children, university, office work, car ownership or international travel.",
+      "Avoid forcing disclosure about trauma, abuse, medical history, money problems, religion, politics, sexuality or family conflict.",
+      "When a potentially personal topic is pedagogically useful, make a hypothetical or third-person route equally natural.",
+      "Avoid humiliating roleplays or scenarios where the learner is pressured to reveal private information."
+    ]
+  },
+  "quality_assurance": {
+    "per_item_gate": [
+      "Correct exact activity title?",
+      "Correct schema fields only?",
+      "At least one valid level?",
+      "Mechanic preserved?",
+      "Clear learner action?",
+      "Enough information to speak?",
+      "Support helpful but non-solving?",
+      "Challenge meaningful if present?",
+      "Teacher-only information truly private?",
+      "Context tags stable and concise?",
+      "Language targets pedagogically meaningful?",
+      "Difficulty believable?",
+      "No exact/near duplicate?",
+      "Screen text concise and readable?",
+      "No technical metadata invented?"
+    ],
+    "per_batch_gate": [
+      "Requested item count met exactly?",
+      "Requested level coverage met?",
+      "No more than ~30% same context unless intentionally narrow?",
+      "At least 3 context clusters for a normal medium/large general batch?",
+      "Difficulty and response patterns varied?",
+      "No cosmetic noun-swap families?",
+      "No repeated teacher-note formula that ignores item specifics?",
+      "No systematic ordering from easiest to hardest unless requested?",
+      "Higher levels include natural chunks/phrasal verbs where useful, not forced?",
+      "Every item would plausibly generate learner speech in a live lesson?"
+    ],
+    "structured_item_gate": [
+      "Format id supported?",
+      "Required common fields present?",
+      "Required format-specific material present?",
+      "Teacher-only fields stored only in teacher/private positions?",
+      "Challenge not leaked into visible fields?",
+      "Roles usable and role swap coherent?",
+      "Picture assets real and accessible if Picture Detective?",
+      "Choice options genuinely comparable if Make the Choice?",
+      "Dialogue inferable but not explicit if Conversation Detective?",
+      "Forbidden words workable if Explain Without Saying?",
+      "Numbers consequential if Number Mission?"
+    ]
+  },
+  "common_failure_modes": [
+    {
+      "failure": "Generic discussion drift",
+      "symptom": "Different games all become 'What do you think about X? Explain.'",
+      "repair": "Return to the named mechanic and create the information gap, rule, constraint or interaction that makes that game unique."
+    },
+    {
+      "failure": "Fake difficulty",
+      "symptom": "C1 item is an ordinary A2 task with difficult vocabulary.",
+      "repair": "Increase pragmatic/discourse demand: implication, stakeholder conflict, register, reframing, ambiguity or negotiation."
+    },
+    {
+      "failure": "Support answers the task",
+      "symptom": "Student support contains nearly the full sentence the learner should produce.",
+      "repair": "Reduce support to chunks, categories, stems or strategic prompts."
+    },
+    {
+      "failure": "Challenge adds nothing",
+      "symptom": "Challenge says 'give another reason' or 'speak for longer'.",
+      "repair": "Change information, constraint, audience, role, priority or evidence."
+    },
+    {
+      "failure": "Teacher secret leak",
+      "symptom": "Answer or hidden rule appears in text, instructions, image alt, support or situation.",
+      "repair": "Move it to teacher_note or the structured teacher object and rewrite visible fields."
+    },
+    {
+      "failure": "Cosmetic novelty",
+      "symptom": "Ten prompts share the same response path with different nouns/cities/products.",
+      "repair": "Change learner action, relationship, stakes, information structure or language target."
+    },
+    {
+      "failure": "Beginner infantilisation",
+      "symptom": "A0/A1 content becomes childish rather than linguistically accessible.",
+      "repair": "Keep adult scenarios but reduce linguistic load and add imagery/chunks."
+    },
+    {
+      "failure": "Structured layout encoded in text",
+      "symptom": "Number cards, image options or comparison tables are written manually into text.",
+      "repair": "Use the format-specific material fields so Sblocco can render the correct layout."
+    },
+    {
+      "failure": "One obvious correct option",
+      "symptom": "Make the Choice has a clearly superior choice.",
+      "repair": "Rebalance costs/benefits so different priorities can lead to different defensible choices."
+    },
+    {
+      "failure": "Riddle instead of inference",
+      "symptom": "Conversation Detective depends on arbitrary hidden trivia.",
+      "repair": "Put meaningful conversational evidence in the dialogue and allow evidence-based alternatives."
+    }
+  ],
+  "activity_mechanics_detailed": {
+    "Agree, Disagree, It Depends": {
+      "core_mechanic": "Use a claim with enough nuance for agreement, disagreement or a conditional position. Avoid one-fact questions.",
+      "must_include": "A claim with genuine room for agreement, disagreement or a conditional answer.",
+      "learner_action": "Take a position, explain conditions and react to challenge.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Change one assumption so the learner may need to revise the position.",
+      "reject_if": "The claim is factual/trivial or only one socially acceptable answer exists.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Bad Advice Only": {
+      "core_mechanic": "Give a realistic problem; the learner must produce intentionally bad advice, then explain why it is bad or repair it.",
+      "must_include": "A realistic problem where intentionally bad advice can still be linguistically productive.",
+      "learner_action": "Give bad advice on purpose, then justify or repair it.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Explain why the advice would fail, then replace it with good advice.",
+      "reject_if": "Bad advice could encourage genuinely dangerous or harmful behaviour.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Conversation Roulette": {
+      "core_mechanic": "Use varied conversational prompts that can sustain an unscripted exchange and allow follow-up questions.",
+      "must_include": "A prompt broad enough for follow-up but specific enough to avoid generic small talk.",
+      "learner_action": "Respond spontaneously and keep an unscripted exchange alive.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Introduce an unexpected follow-up angle.",
+      "reject_if": "The prompt is just a topic label such as 'travel' or 'work'.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Convince Me": {
+      "core_mechanic": "Give a concrete position, product, choice or action the learner must persuade another person to accept.",
+      "must_include": "A concrete thing, choice or action the learner must persuade the listener to accept.",
+      "learner_action": "Build reasons, respond to objections and adapt persuasion.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Reveal the listener's competing priority.",
+      "reject_if": "There is nothing plausible to disagree about.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Defend the Opposite": {
+      "core_mechanic": "Use a defensible opinion or preference and require the learner to argue for the opposite side.",
+      "must_include": "A low-risk position or preference where the opposite side is genuinely arguable.",
+      "learner_action": "Argue for a position they did not initially choose.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Add an objection they must answer.",
+      "reject_if": "The opposite position would require defending harm, hate or unsafe conduct.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Explain It Without Saying It": {
+      "core_mechanic": "Provide a target concept plus forbidden obvious words so the learner must paraphrase.",
+      "must_include": "A clear target plus meaningful forbidden shortcuts.",
+      "learner_action": "Circumlocute until the listener understands.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Explain the same target to a different audience/register.",
+      "reject_if": "The banned words make explanation impossible or trivial.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Make It Sound Like a Person": {
+      "core_mechanic": "Start from stiff, robotic or over-literal English and require a more natural conversational version.",
+      "must_include": "Stiff, robotic, over-literal or unnaturally formal English with a clear conversational intent.",
+      "learner_action": "Rewrite/say it naturally and explain the tonal improvement when appropriate.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Produce two natural versions with different tone/register.",
+      "reject_if": "The original is simply grammatically wrong rather than unnaturally phrased.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Odd One Out — Conversation Edition": {
+      "core_mechanic": "Use four items with one defensible odd item. The distinction should support discussion, not rely on trivial categories.",
+      "must_include": "Four items with at least one defensible odd-one-out relationship and room for alternative reasoning.",
+      "learner_action": "Choose, justify and respond to another possible grouping.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Defend a different odd-one-out than the first choice.",
+      "reject_if": "The category difference is trivial or only visual/orthographic.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "One Minute, No Escape": {
+      "core_mechanic": "Give a topic specific enough to sustain one minute of speech without becoming a list of disconnected facts.",
+      "must_include": "A bounded topic with enough internal angles to sustain connected speech.",
+      "learner_action": "Organise and sustain a short monologue without collapsing into a list.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Add one required example, contrast or personal/hypothetical link.",
+      "reject_if": "The topic is so broad that filler replaces meaningful development.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Repair the Conversation": {
+      "core_mechanic": "Provide a conversational breakdown, awkward line or misunderstanding and require a natural repair.",
+      "must_include": "A believable conversational breakdown, misunderstanding, awkward line or pragmatic problem.",
+      "learner_action": "Repair meaning, tone or relationship naturally.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Repair again under a different relationship/register.",
+      "reject_if": "The task is just grammar correction.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Sell Me Something Useless": {
+      "core_mechanic": "Give an intentionally unnecessary object or service and require persuasive language and benefits.",
+      "must_include": "An intentionally unnecessary but harmless product/service with enough features to invent value.",
+      "learner_action": "Create benefits, persuade and handle scepticism.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Sell it to a different target customer.",
+      "reject_if": "The object is actually useful in an obvious way.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Story Chain — But Something Changes": {
+      "core_mechanic": "Give a story seed and a change/twist that forces the learner to continue coherently.",
+      "must_include": "A concrete story seed plus a meaningful twist/change point.",
+      "learner_action": "Continue coherently while integrating new information.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Reveal a second twist that forces reinterpretation.",
+      "reject_if": "The twist has no consequence for the story.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "The Missing Detail": {
+      "core_mechanic": "Give a statement whose usefulness depends on one or more missing concrete details the learner must identify or add.",
+      "must_include": "An otherwise plausible statement that is unusable without one or more concrete details.",
+      "learner_action": "Identify what information is missing and ask for/add it.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Reveal one detail but leave a second ambiguity.",
+      "reject_if": "The missing information is obvious but irrelevant.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "The Missing Question": {
+      "core_mechanic": "Give an answer or conversational fragment and require the learner to infer a natural preceding question.",
+      "must_include": "A natural answer or fragment that strongly constrains but does not uniquely force one preceding question.",
+      "learner_action": "Infer one or more natural questions.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Create a second question that makes the same answer natural in a different context.",
+      "reject_if": "Only a grammar transformation is required.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Three Questions Deeper": {
+      "core_mechanic": "Start from a normal topic and require three progressively deeper but appropriate follow-up questions.",
+      "must_include": "A safe starting topic that supports increasingly informative follow-ups.",
+      "learner_action": "Ask three progressively deeper appropriate questions.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Make the third question more specific without becoming intrusive.",
+      "reject_if": "Depth means personal invasion rather than conversational relevance.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Upgrade That Answer": {
+      "core_mechanic": "Give a short, vague or basic answer and require a fuller, more precise, more natural response.",
+      "must_include": "A weak/basic answer with a clear reason it needs expansion.",
+      "learner_action": "Make it more informative, natural and context-appropriate.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Upgrade for a different audience or register.",
+      "reject_if": "The base answer is simply incorrect grammar.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "What Happened Just Before?": {
+      "core_mechanic": "Give a moment or outcome with enough clues for the learner to infer plausible immediately preceding events.",
+      "must_include": "A result/moment containing clues about immediately preceding events.",
+      "learner_action": "Infer and narrate plausible prior events.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Offer a second plausible explanation and compare evidence.",
+      "reject_if": "There are no usable clues and any random story fits equally.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Would You Rather — No Easy Answers": {
+      "core_mechanic": "Offer two plausible options with a real trade-off so the learner must justify a choice.",
+      "must_include": "Two plausible options with real competing benefits/costs.",
+      "learner_action": "Choose, justify and acknowledge the trade-off.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Change one condition so the decision may change.",
+      "reject_if": "One option is obviously better or absurd.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Take a Side": {
+      "core_mechanic": "Use a clear proposition with two plausible positions and require a reasoned stance.",
+      "must_include": "A clear, low-risk proposition with two plausible positions.",
+      "learner_action": "Choose and defend a side with reasons/examples.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Respond to the strongest opposing argument.",
+      "reject_if": "The proposition invites harmful/extremist advocacy or has no meaningful opposing case.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Change My Mind": {
+      "core_mechanic": "Give a position held by the teacher/listener; the learner must challenge it with reasons, examples and reframing.",
+      "must_include": "A listener position that can reasonably be challenged.",
+      "learner_action": "Persuade using reasons, examples and reframing.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Listener reveals the real underlying concern.",
+      "reject_if": "The teacher position is deliberately irrational so persuasion is fake.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "The Better Question": {
+      "core_mechanic": "Provide a weak, vague or closed question and require a more useful, natural or revealing question.",
+      "must_include": "A weak, closed, vague or socially clumsy question with an identifiable communicative purpose.",
+      "learner_action": "Reframe it into a more useful question.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Produce a version for a different relationship or register.",
+      "reject_if": "The only change needed is grammar correction.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "What Would You Say?": {
+      "core_mechanic": "Give a concrete social or professional situation with a clear communicative purpose.",
+      "must_include": "A concrete social/professional situation, relationship and communicative goal.",
+      "learner_action": "Produce natural language they would actually say.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "The other person resists, misunderstands or changes the situation.",
+      "reject_if": "The scenario lacks enough context to choose tone/register.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Say It Three Ways": {
+      "core_mechanic": "Use one meaning or intention that can be expressed naturally in three different registers, tones or phrasings.",
+      "must_include": "One stable intention that can naturally vary by tone, register or phrasing.",
+      "learner_action": "Produce three genuinely distinct natural formulations.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Assign three audiences such as friend, colleague, customer.",
+      "reject_if": "The three versions differ by one synonym only.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Keep It Going": {
+      "core_mechanic": "Give a short conversational exchange at risk of ending; the learner must extend it naturally.",
+      "must_include": "A short exchange that could naturally die unless someone adds a reaction, follow-up or related detail.",
+      "learner_action": "Extend the conversation naturally.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Keep it going without asking a question.",
+      "reject_if": "The existing exchange already contains an obvious scripted next line.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "The Awkward Silence": {
+      "core_mechanic": "Create a realistic silence after a remark or event; the learner must restart or redirect the conversation.",
+      "must_include": "A realistic conversational moment after which silence would feel awkward.",
+      "learner_action": "Restart, redirect or soften the interaction.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Do it again with a different relationship.",
+      "reject_if": "The silence is caused by severe/sensitive events unsuitable for playful practice.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "What's the Problem?": {
+      "core_mechanic": "Provide symptoms, clues or a situation from which the learner can identify and explain the underlying problem.",
+      "must_include": "Observable clues/symptoms with enough evidence to infer an underlying practical problem.",
+      "learner_action": "Identify, explain and ask clarifying questions.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Add one misleading clue and require revision.",
+      "reject_if": "Requires medical/legal diagnosis or specialist knowledge.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "You Have 30 Seconds": {
+      "core_mechanic": "Use a compact speaking task with one clear objective that can be completed under time pressure.",
+      "must_include": "One compact objective that can realistically be completed under time pressure.",
+      "learner_action": "Prioritise and speak concisely.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Repeat for a different listener or with one added constraint.",
+      "reject_if": "The task requires long planning or multiple unrelated sub-questions.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "One Detail Is False": {
+      "core_mechanic": "Give a compact set of personal-style details where one can plausibly be false; the learner must question or infer.",
+      "must_include": "A compact set of plausible personal-style or scenario details with exactly one deliberately false element.",
+      "learner_action": "Question, compare clues and identify the false detail.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Learner creates their own set for the teacher.",
+      "reject_if": "The false detail is obviously absurd.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Build the Perfect...": {
+      "core_mechanic": "Give a category and meaningful criteria so the learner must design, prioritise and justify an ideal version.",
+      "must_include": "A category plus meaningful criteria or constraints.",
+      "learner_action": "Design, prioritise and justify an ideal version.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Remove one resource or add one stakeholder priority.",
+      "reject_if": "The task is just listing favourite features.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Trade-Off": {
+      "core_mechanic": "Present two benefits/costs that cannot all be maximised; require a choice and justification.",
+      "must_include": "Two or more desirable outcomes that cannot all be maximised.",
+      "learner_action": "Prioritise and justify what to sacrifice.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Change which stakeholder bears the cost.",
+      "reject_if": "There is an obvious no-cost solution.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Emergency English": {
+      "core_mechanic": "Use urgent but safe everyday situations where the learner must communicate essential information clearly and quickly.",
+      "must_include": "An urgent but safe everyday communication need with essential facts.",
+      "learner_action": "Communicate critical information clearly and quickly.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "The listener asks for one missing detail.",
+      "reject_if": "Scenario encourages dangerous behaviour or asks learner to roleplay severe medical/legal emergencies beyond language practice.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "The Complaint Ladder": {
+      "core_mechanic": "Start with a service problem and require escalation from polite report to firmer complaint while staying appropriate.",
+      "must_include": "One service problem that plausibly requires escalation.",
+      "learner_action": "Move from polite report to firmer complaint while remaining appropriate.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "The first solution is inadequate; escalate one level.",
+      "reject_if": "Firmer is treated as ruder rather than clearer/more assertive.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Don’t Say Yes": {
+      "core_mechanic": "Ask questions designed to trigger agreement, but the learner must respond without simply saying yes and must elaborate.",
+      "must_include": "Questions that naturally invite yes/no but allow real elaboration.",
+      "learner_action": "Respond without simply saying yes, while still answering naturally.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Teacher follows with two more yes/no-triggering questions.",
+      "reject_if": "Learner can dodge the question instead of answering it.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Five Whys": {
+      "core_mechanic": "Use a preference, decision or opinion that can deepen through repeated why questions without becoming intrusive.",
+      "must_include": "A safe preference/decision/opinion with enough depth for repeated why questions.",
+      "learner_action": "Develop reasoning progressively.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "At the fourth/fifth why, shift from preference to underlying criterion/value.",
+      "reject_if": "Repeated why becomes intrusive or accusatory.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Make It More Specific": {
+      "core_mechanic": "Start vague; the learner must add evidence, examples, behaviour, numbers or precise language.",
+      "must_include": "A deliberately vague statement that can be improved with evidence, example, quantity, behaviour or exact wording.",
+      "learner_action": "Add concrete specificity.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Make it specific without making it longer.",
+      "reject_if": "The vague version is already sufficient for its context.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Finish My Thought": {
+      "core_mechanic": "Provide a sentence stem that naturally produces a complete personal or hypothetical thought.",
+      "must_include": "A sentence stem that opens a meaningful personal or hypothetical idea.",
+      "learner_action": "Complete and expand the thought naturally.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Add a contrasting second sentence.",
+      "reject_if": "Only one obvious completion is possible.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "What Are You Assuming?": {
+      "core_mechanic": "Use a claim with identifiable hidden assumptions; the task is to surface and question them.",
+      "must_include": "A claim/decision with identifiable hidden assumptions.",
+      "learner_action": "Surface assumptions and question their reliability.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Change one assumption and revisit the conclusion.",
+      "reject_if": "Assumption is so hidden/arbitrary that it becomes a logic puzzle.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Unpopular Opinion": {
+      "core_mechanic": "Use low-stakes, non-inflammatory topics; the challenge is argument quality rather than provocation.",
+      "must_include": "A low-stakes position that may be unconventional but remains safe and discussable.",
+      "learner_action": "Defend the position with coherent reasoning.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Acknowledge the strongest reasonable counterargument.",
+      "reject_if": "Provocation depends on hate, humiliation or inflammatory politics.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Explain the Difference": {
+      "core_mechanic": "Use a close lexical or conceptual pair and require contexts/examples, not dictionary definitions alone.",
+      "must_include": "A close lexical/conceptual pair whose difference matters in usage.",
+      "learner_action": "Explain through context, examples and contrast.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Create one sentence/context where only one option works naturally.",
+      "reject_if": "Task is solved by dictionary definitions alone.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Which One Sounds More Natural?": {
+      "core_mechanic": "Provide understandable alternatives where idiomaticity, collocation or register differs.",
+      "must_include": "Two or more understandable alternatives that differ meaningfully in idiomaticity, collocation or register.",
+      "learner_action": "Choose, improve and explain natural usage.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Find a context where the less-natural option could become appropriate.",
+      "reject_if": "One option is simply ungrammatical unless grammar correction is explicitly the point.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "The Forbidden Easy Word": {
+      "core_mechanic": "Ban obvious easy words in a way that forces more precise language while leaving the task achievable.",
+      "must_include": "A speaking task plus one or more obvious easy words that can be avoided without making communication impossible.",
+      "learner_action": "Use more precise or varied language.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Add a second ban after the first response.",
+      "reject_if": "Ban targets essential function words or creates unnatural thesaurus speech.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Use These 3 Chunks": {
+      "core_mechanic": "Give three chunks that can naturally coexist in one coherent response or exchange.",
+      "must_include": "Three chunks that can coexist naturally in one coherent response/exchange.",
+      "learner_action": "Integrate all chunks meaningfully rather than list them.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Use the same chunks in a different scenario/register.",
+      "reject_if": "Chunks are semantically incompatible or force nonsense.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Personalise It": {
+      "core_mechanic": "Give a generic statement or example that the learner must turn into a concrete personal or invented example.",
+      "must_include": "A generic statement/example with room for concrete personal OR invented adaptation.",
+      "learner_action": "Make it specific to a person/situation.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Create a contrasting second example.",
+      "reject_if": "Requires sensitive real disclosure with no hypothetical option.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Guess My Rule": {
+      "core_mechanic": "Provide examples that obey a precise hidden rule. teacher_note must state the rule clearly for the teacher.",
+      "must_include": "Several examples that consistently obey one precise, explainable hidden rule.",
+      "learner_action": "Form hypotheses, test examples and state the rule.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Learner proposes a new example and teacher confirms/rejects.",
+      "reject_if": "Rule is arbitrary, ambiguous or depends on hidden trivia.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Who Said It?": {
+      "core_mechanic": "Give one line containing clues about relationship, context, intention or register; require inference.",
+      "must_include": "One line with clues about speaker relationship, role, intention or register.",
+      "learner_action": "Infer who could have said it and justify from language clues.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Rewrite the line for a different speaker relationship.",
+      "reject_if": "Answer depends on stereotypes rather than linguistic/context evidence.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Before / During / After": {
+      "core_mechanic": "Use an event with meaningful preparation, live action and follow-up phases.",
+      "must_include": "An event with meaningful preparation, live action and follow-up phases.",
+      "learner_action": "Organise language chronologically across all three phases.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "One phase goes wrong; adapt the plan/story.",
+      "reject_if": "Three phases are just unrelated lists.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Problem → Options → Decision": {
+      "core_mechanic": "Require problem definition, at least three options, comparison and a justified decision.",
+      "must_include": "A clear problem plus enough constraints to generate at least three plausible options.",
+      "learner_action": "Define problem, generate options, compare and decide.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Remove the preferred option and decide again.",
+      "reject_if": "There is only one realistic option.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Interrupt Me Politely": {
+      "core_mechanic": "Give an exact reason to interrupt such as clarification, correction, redirect, timing or decision.",
+      "must_include": "A specific legitimate reason to interrupt: clarification, correction, redirect, timing or decision.",
+      "learner_action": "Interrupt naturally while preserving relationship/tone.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Repeat with a more formal/power-imbalanced relationship.",
+      "reject_if": "No reason to interrupt is given.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Tell Me What I Mean": {
+      "core_mechanic": "Use indirect language whose intended meaning depends on context, tone or relationship.",
+      "must_include": "Indirect language whose intended meaning can be inferred from context/tone/relationship.",
+      "learner_action": "Explain intended meaning and possible response.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Make the same meaning more direct or more diplomatic.",
+      "reject_if": "Interpretation depends on unsupported mind-reading.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Bad Small Talk / Good Small Talk": {
+      "core_mechanic": "Contrast conversation mechanics rather than wrong grammar versus correct grammar. Format text with explicit BAD: and GOOD: sections so the presenter can render separate cards.",
+      "must_include": "A BAD and GOOD version that differ in conversation mechanics, not merely grammar accuracy.",
+      "learner_action": "Notice why one version opens/maintains interaction better.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Repair the BAD version in another way.",
+      "reject_if": "GOOD is just grammatically corrected BAD with no conversational improvement.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Describe Without Adjectives": {
+      "core_mechanic": "Choose a target describable through behaviour, actions, events or sensory detail without adjectives.",
+      "must_include": "A target describable through actions, effects, examples, behaviour or sensory detail.",
+      "learner_action": "Describe while avoiding adjectives.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Listener asks one follow-up that also must be answered without adjectives.",
+      "reject_if": "Target cannot reasonably be described without adjective dependence.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Make It Less Direct": {
+      "core_mechanic": "Start needlessly forceful and require softer language while preserving clarity.",
+      "must_include": "A needlessly forceful but understandable line plus enough context to choose an appropriate softer version.",
+      "learner_action": "Soften while preserving the request/message.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Produce casual and formal softened versions.",
+      "reject_if": "Softening removes clarity or changes the intended action.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Make It More Direct": {
+      "core_mechanic": "Start too vague or hedged and require clearer language without making it rude.",
+      "must_include": "An overly vague/hedged line whose communicative goal needs clearer wording.",
+      "learner_action": "Increase clarity without becoming rude.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Keep one polite hedge while making the action explicit.",
+      "reject_if": "More direct is equated with aggressive.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Conversation Fork": {
+      "core_mechanic": "Give one conversational moment plus two or three genuinely different strategic directions.",
+      "must_include": "One conversational moment with 2-3 genuinely different strategic directions.",
+      "learner_action": "Choose a direction and continue accordingly.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Try a second fork and compare the effect.",
+      "reject_if": "Forks are superficial rephrasings of the same response.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "The Unexpected Follow-Up": {
+      "core_mechanic": "Use a familiar first question plus a second question that forces a new angle rather than simply asking why.",
+      "must_include": "A familiar first question plus a second question that changes angle, assumption or depth.",
+      "learner_action": "Adapt without relying on a rehearsed answer.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Teacher adds one more follow-up from a different angle.",
+      "reject_if": "Follow-up is just 'why?' with no new demand.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Explain Your Choice to Someone Who Disagrees": {
+      "core_mechanic": "Define the listener's competing value so the learner must reframe rather than repeat the same reason.",
+      "must_include": "A decision plus a listener with a clearly different value/priority.",
+      "learner_action": "Reframe reasons for that listener rather than repeat them.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Listener raises one value-based objection.",
+      "reject_if": "Disagreement has no defined basis.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Micro Roleplay": {
+      "core_mechanic": "Use one scenario and one objective for roughly 60–90 seconds; the challenge may complicate but must not replace the task.",
+      "must_include": "One scenario, two usable roles and one concrete objective for roughly 60-90 seconds.",
+      "learner_action": "Interact toward the objective.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Introduce one complication after the exchange starts.",
+      "reject_if": "Roleplay is a script or contains too many simultaneous objectives.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Phrase Auction": {
+      "core_mechanic": "Provide five to seven phrases of different usefulness or register. Weak options do not all need to be ungrammatical.",
+      "must_include": "5-7 phrases with different usefulness, naturalness or register for a clear situation.",
+      "learner_action": "Evaluate, 'buy'/rank and justify phrase choices.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Change the audience so phrase values change.",
+      "reject_if": "All weak options are obviously ungrammatical.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    },
+    "Conversation Detective": {
+      "core_mechanic": "Give a short dialogue fragment with clues; require inference about relationship, backstory and likely next step.",
+      "must_include": "A short natural dialogue containing clues about relationship, backstory, intention or likely next step.",
+      "learner_action": "Infer and justify from evidence.",
+      "support_guidance": "Offer language that helps the learner enter the task without supplying the substantive answer.",
+      "challenge_guidance": "Predict the next line or add one clue that changes the interpretation.",
+      "reject_if": "The dialogue states the answer directly or relies on arbitrary trivia.",
+      "quality_test": "If the activity title were hidden, a teacher should still be able to infer the game mechanic from the item's structure."
+    }
+  },
+  "final_self_review_algorithm": [
+    "Read the activity title. State the mechanic in one sentence. If your items do not visibly implement it, rewrite.",
+    "For every item, state the learner's main spoken action using one verb. If the verb is only 'answer', make the task more specific.",
+    "Check student-visible fields for teacher secrets/answers.",
+    "Check support: delete anything that gives away the response.",
+    "Check challenge: delete or rewrite any challenge that does not materially change the task.",
+    "Check levels against the CEFR guide. Remove levels that require too much or too little support.",
+    "Check difficulty independently from CEFR.",
+    "Check context and language-target tags.",
+    "Compare every item with every other item in the batch for response-path duplication.",
+    "Compare against supplied existing items.",
+    "Count items and level coverage exactly.",
+    "For structured rounds, validate every required material/teacher field against structured_format_specs.",
+    "Remove all invented technical metadata.",
+    "Output only the importable JSON batch when the user asks for the downloadable authoring result."
+  ]
 }
