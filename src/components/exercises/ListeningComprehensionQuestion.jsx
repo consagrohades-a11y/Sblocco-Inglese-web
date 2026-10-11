@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CircleAlert, FileText, Headphones } from 'lucide-react';
 import { createExerciseListeningSignedUrl } from '../../lib/exerciseListeningApi.js';
+import ListeningInstructionsPanel from './ListeningInstructionsPanel.jsx';
 import {
   ExerciseChoice,
   ExerciseFeedbackPanel,
@@ -78,7 +79,7 @@ function ListeningResult({ result, showScore, showCorrectAnswers, showExplanatio
   );
 }
 
-function ListeningAudio({ audio, revealTranscript }) {
+function ListeningAudio({ audio, revealTranscript, instructions = '', disabled = false }) {
   const ref = useRef(null);
   const [signedUrl, setSignedUrl] = useState(null);
   const [error, setError] = useState('');
@@ -122,7 +123,16 @@ function ListeningAudio({ audio, revealTranscript }) {
   }
 
   return (
-    <section className="exercise-reading">
+    <div className="grid gap-4">
+      <ListeningInstructionsPanel
+        hasMedia
+        instructions={instructions}
+        sourceType="audio"
+        transcript={audio?.transcript || ''}
+        transcriptVisibility={audio?.transcript_visibility || 'after_submit'}
+        disabled={disabled}
+      >
+      <div className="exercise-reading">
       <div className="exercise-reading__label"><Headphones /><span>Audio</span></div>
       {audio?.title ? <h3>{audio.title}</h3> : null}
       {source ? (
@@ -145,13 +155,15 @@ function ListeningAudio({ audio, revealTranscript }) {
         {remaining != null ? <span>Ascolti rimasti: {remaining}</span> : <span>Riascolto libero</span>}
       </div>
       {error ? <p className="mt-3 text-xs font-bold text-red-700 dark:text-red-300">{error}</p> : null}
+      </div>
+      </ListeningInstructionsPanel>
       {revealTranscript && audio?.transcript ? (
         <details className="mt-5 border-t border-ink/10 pt-4 dark:border-white/10">
           <summary className="flex cursor-pointer items-center gap-2 text-sm font-black text-ink dark:text-white"><FileText className="h-4 w-4" />Trascrizione</summary>
           <p className="mt-3 whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/75 dark:text-white/75">{audio.transcript}</p>
         </details>
       ) : null}
-    </section>
+    </div>
   );
 }
 
@@ -177,9 +189,9 @@ export default function ListeningComprehensionQuestion({
 
   return (
     <div>
-      <ExercisePrompt type="listening" prompt={question.prompt} instructions={question.instructions} />
+      <ExercisePrompt type="listening" prompt={question.prompt} />
       <div className="grid gap-6">
-        <ListeningAudio audio={audio} revealTranscript={revealTranscript} />
+        <ListeningAudio audio={audio} revealTranscript={revealTranscript} instructions={question.instructions} disabled={disabled} />
         <div className="exercise-reading-questions">
           {items.map((listeningItem, index) => (
             <section key={listeningItem.key} className="exercise-reading-question">

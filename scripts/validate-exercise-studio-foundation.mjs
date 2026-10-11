@@ -1251,3 +1251,32 @@ assert.match(speakingResultsSource, /<WritingCorrectionWorkspace/);
 assert.match(speakingRendererSource, /item\.speech_transcript/);
 assert.match(speakingRendererSource, /item\.teacher_correction/);
 console.log('Speaking transcript persistence and manual correction integration validated.');
+
+
+// A single editorial instruction renderer is shared by Studio media and native listening.
+// Teacher-authored instructions remain plain strings: no new database codes or fields.
+const listeningInstructionsSource = fs.readFileSync(
+  new URL('../src/components/exercises/ListeningInstructionsPanel.jsx', import.meta.url), 'utf8',
+);
+const studioMediaRendererSource = fs.readFileSync(
+  new URL('../src/components/exercises/ExerciseMediaBlock.jsx', import.meta.url), 'utf8',
+);
+const nativeListeningRendererSource = fs.readFileSync(
+  new URL('../src/components/exercises/ListeningComprehensionQuestion.jsx', import.meta.url), 'utf8',
+);
+const studioBlockEditorSource = fs.readFileSync(
+  new URL('../src/components/admin/exercise-studio/StudioBlockEditor.jsx', import.meta.url), 'utf8',
+);
+assert.match(listeningInstructionsSource, /parseListeningInstructionRows/);
+assert.match(listeningInstructionsSource, /Turn OFF subtitles \(CC\)/);
+assert.match(listeningInstructionsSource, /Listen without reading the transcript/);
+assert.match(listeningInstructionsSource, /transcriptVisibility === 'after_submit'/);
+assert.match(studioMediaRendererSource, /<ListeningInstructionsPanel/);
+assert.match(studioMediaRendererSource, /showTranscript/);
+assert.match(studioMediaRendererSource, /createSignedUrl/);
+assert.match(nativeListeningRendererSource, /<ListeningInstructionsPanel/);
+assert.match(nativeListeningRendererSource, /maxPlays/);
+assert.match(nativeListeningRendererSource, /revealTranscript/);
+assert.match(studioBlockEditorSource, /label="Listening instructions"/);
+assert.match(studioBlockEditorSource, /Separate steps with a blank line/);
+console.log('Listening instruction panels, editor guidance and existing media controls validated.');

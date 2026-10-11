@@ -1676,7 +1676,14 @@ function MediaEditor({ block, patch, activityId }) {
   return (
     <>
       <TextInput label="Title" value={block.title} onChange={(value) => patch({ title: value })} />
-      <TextInput label="Learner instruction" value={block.instructions} onChange={(value) => patch({ instructions: value })} />
+      <TextArea
+        label="Listening instructions"
+        value={block.instructions}
+        onChange={(value) => patch({ instructions: value })}
+        rows={6}
+        hint="Shown as clear instruction rows under the audio or video. Separate steps with a blank line; put a short heading on the first line and the explanation beneath it. Sblocco adds caption and transcript reminders when appropriate."
+        placeholder={"Focus on the main story.\\nTry to follow the events without translating every word."}
+      />
       <SelectInput
         label="Media type"
         value={block.source_type || 'audio'}

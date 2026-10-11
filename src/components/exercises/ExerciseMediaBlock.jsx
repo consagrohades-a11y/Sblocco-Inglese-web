@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Headphones, Video } from 'lucide-react';
+import { ExternalLink, Headphones, Video } from 'lucide-react';
+import ListeningInstructionsPanel from './ListeningInstructionsPanel.jsx';
 import { supabase } from '../../lib/supabaseClient.js';
 
 function youtubeId(value) {
@@ -106,12 +107,25 @@ export default function ExerciseMediaBlock({ content = {}, prompt = '', instruct
 
   return (
     <div className="grid gap-4">
-      {(content.heading || prompt || instructions) ? (
-        <div>
-          {content.heading || prompt ? <h2 className="text-xl font-black text-ink dark:text-white">{content.heading || prompt}</h2> : null}
-          {instructions ? <p className="mt-2 text-sm font-semibold leading-6 text-ink/65 dark:text-white/65">{instructions}</p> : null}
-        </div>
-      ) : null}
+      <ListeningInstructionsPanel
+        hasMedia
+        sourceType={sourceType}
+        transcript={media.transcript || ''}
+        transcriptVisibility={media.transcript_visibility || 'after_submit'}
+        instructions={instructions}
+        disabled={disabled}
+      >
+        {(content.heading || prompt) ? (
+          <div className="mb-4">
+            <p className="mb-1 text-[0.67rem] font-black uppercase tracking-[0.11em] text-[#b24c19] dark:text-orange-300">{sourceType === 'audio' ? 'Audio listening' : 'Video listening'}</p>
+            <h2 className="text-lg font-black leading-snug text-[#172d32] dark:text-white">{content.heading || prompt}</h2>
+            {sourceType === 'youtube' && directUrl ? (
+              <a href={directUrl} target="_blank" rel="noopener noreferrer" className="focus-ring mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-[#a34214] underline underline-offset-4 hover:text-orange-600 dark:text-orange-200">
+                Open the listening video <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+            ) : null}
+          </div>
+        ) : null}
       {sourceType === 'youtube' && ytId ? (
         <div className="overflow-hidden rounded-2xl border border-ink/10 bg-black shadow-sm dark:border-white/10">
           <div className="aspect-video">
@@ -164,6 +178,7 @@ export default function ExerciseMediaBlock({ content = {}, prompt = '', instruct
           {error}
         </p>
       ) : null}
+      </ListeningInstructionsPanel>
 
       {showTranscript ? (
         <details className="rounded-xl border border-ink/10 bg-white p-4 dark:border-white/10 dark:bg-white/[0.04]" open={media.transcript_visibility === 'always'}>
