@@ -4,6 +4,7 @@ import SEO from '../components/SEO';
 import AdminPageHeader from '../components/admin/AdminPageHeader.jsx';
 import ExerciseQuestionRenderer from '../components/exercises/ExerciseQuestionRenderer.jsx';
 import WritingCorrectionWorkspace from '../components/exercises/WritingCorrectionWorkspace.jsx';
+import { transcribeExerciseAudio } from '../lib/exerciseTranscriptionApi.js';
 import {
   loadExerciseAttemptDetail,
   loadExerciseAttemptResults,
@@ -98,6 +99,46 @@ function nestedAutomaticSummary(result) {
   };
 }
 
+function AudioTranscriptReview({ fileId }) {
+  const [transcript, setTranscript] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  if (!fileId) return null;
+
+  async function transcribe() {
+    setLoading(true);
+    setError('');
+    try {
+      const text = await transcribeExerciseAudio(fileId);
+      setTranscript(text);
+    } catch (err) {
+      setError(err?.message || 'Trascrizione non disponibile. Ascolta la registrazione.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <section className="mt-4 grid gap-3 rounded-xl border border-ink/10 bg-linen/25 p-4 dark:border-white/10 dark:bg-white/[0.035]">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-black uppercase tracking-wider text-ink/65 dark:text-white/65">Trascrizione facoltativa</p>
+          <p className="mt-1 text-xs font-semibold text-ink/50 dark:text-white/50">Generata dall'IA su richiesta. Controlla sempre l'audio: l'accento o gli errori possono essere trascritti male.</p>
+        </div>
+        <button type="button" onClick={transcribe} disabled={loading} className="focus-ring rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 disabled:opacity-50 dark:border-orange-300/30 dark:text-orange-200">
+          {loading ? 'Trascrizione in corso…' : transcript ? 'Trascrivi di nuovo' : 'Trascrivi audio'}
+        </button>
+      </div>
+      {error ? <p role="alert" className="text-xs font-bold text-red-700 dark:text-red-200">{error}</p> : null}
+      {transcript ? <div className="grid gap-2">
+        <p className="whitespace-pre-wrap text-sm leading-6 text-ink dark:text-white">{transcript}</p>
+        <button type="button" className="w-fit text-xs font-black text-orange-800 underline dark:text-orange-200" onClick={() => navigator.clipboard?.writeText(transcript)}>Copia testo</button>
+      </div> : null}
+    </section>
+  );
+}
+
 function QuestionReviewCard({ item, review, onChange, reviewEnabled = true }) {
   const automatic = item.automatic_result || item.result || {};
   const effective = item.result || {};
@@ -133,6 +174,8 @@ function QuestionReviewCard({ item, review, onChange, reviewEnabled = true }) {
           showExplanations
         />
       </div>
+
+      {item.question?.type === 'audio_response' ? <AudioTranscriptReview key={item.answer?.file_id || 'none'} fileId={item.answer?.file_id} /> : null}
 
       <div className="mt-5 grid gap-4 rounded-xl border border-clay/20 bg-clay/[0.045] p-4 dark:border-coral/20 dark:bg-coral/[0.06] sm:grid-cols-[12rem_9rem_minmax(0,1fr)]">
         <label className="text-xs font-black text-ink/60 dark:text-white/60">Esito docente

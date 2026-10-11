@@ -43,6 +43,7 @@ const requiredTypes = [
   'gap_fill',
   'word_order',
   'written_response',
+  'speaking_response',
 ];
 
 for (const type of requiredTypes) {
@@ -54,6 +55,26 @@ for (const type of requiredTypes) {
   }
   assert.ok(definition.capabilities?.learnerRenderer, type + ' must declare its learner renderer.');
 }
+
+const recordedSpeaking = addStudioBlock(
+  createStudioDocument({ internal_title: 'Recorded speaking', learner_title: 'Describe your experience', level: 'B1', topic: 'speaking', skills: ['speaking'] }),
+  'speaking_response',
+  { prompt: 'Explain a problem you solved while travelling.', context: 'Tell a friend what happened.', min_seconds: 15, max_seconds: 90 },
+);
+const recordedPreflight = preflightStudioDocument(recordedSpeaking);
+assert.equal(recordedPreflight.valid, true, recordedPreflight.errors.map((item) => item.message).join('\n'));
+const recordedQuestion = recordedPreflight.runtime.exercise.sections[0].questions[0];
+assert.equal(recordedQuestion.type, 'audio_response');
+assert.equal(recordedQuestion.grading.mode, 'manual_review');
+assert.equal(recordedQuestion.content.max_seconds, 90);
+assert.equal(recordedQuestion.content.min_seconds, 15);
+assert.ok(recordedQuestion.content.rubric.length > 0);
+const recordedInvalid = preflightStudioDocument({ ...recordedSpeaking, blocks: [{ ...recordedSpeaking.blocks[0], prompt: '' }] });
+assert.equal(recordedInvalid.valid, false, 'An empty speaking task must never publish.');
+const recordedExport = buildStudioActivityExport(recordedPreflight.document);
+const recordedReimport = parseStudioImport(JSON.stringify(recordedExport));
+assert.equal(recordedReimport.publishable, true, recordedReimport.errors.map((item) => item.message).join('\n'));
+assert.equal(recordedReimport.document.blocks[0].type, 'speaking_response');
 
 const authoredChoiceOptions = [
   { key: 'option_1', text: 'A' },

@@ -1765,6 +1765,41 @@ function MediaEditor({ block, patch, activityId }) {
   );
 }
 
+function SpeakingResponseEditor({ block, patch }) {
+  return (
+    <>
+      <TextArea
+        label="Speaking prompt"
+        value={block.prompt}
+        onChange={(value) => patch({ prompt: value })}
+        rows={4}
+        hint="Ask one meaningful question or give a realistic situation. Students will record their answer."
+        placeholder="Describe a difficult conversation you handled and explain what you would do differently."
+      />
+      <TextArea
+        label="Optional situation or context"
+        value={block.context}
+        onChange={(value) => patch({ context: value })}
+        rows={3}
+        placeholder="Who is speaking? Who are they speaking to, and why?"
+      />
+      <TextInput
+        label="Student instruction"
+        value={block.instructions}
+        onChange={(value) => patch({ instructions: value })}
+        placeholder="Record your response in English."
+      />
+      <div className="grid grid-cols-2 gap-3">
+        <NumberInput label="Minimum seconds" min={0} value={block.min_seconds} onChange={(value) => patch({ min_seconds: value })} />
+        <NumberInput label="Maximum seconds" min={5} value={block.max_seconds} onChange={(value) => patch({ max_seconds: value })} />
+      </div>
+      <p className="text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">
+        Students can replay and re-record before submitting. You assess the audio manually; optional on-demand transcription is available in Results. Recordings are automatically deleted after 14 days.
+      </p>
+    </>
+  );
+}
+
 function WritingEditor({ block, patch }) {
   return (
     <>
@@ -1928,6 +1963,7 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
         {block.type === 'practice_selection' ? <PracticeSelectionEditor block={block} patch={patch} /> : null}
         {block.type === 'translation' ? <TranslationEditor block={block} patch={patch} /> : null}
         {block.type === 'written_response' ? <WritingEditor block={block} patch={patch} /> : null}
+        {block.type === 'speaking_response' ? <SpeakingResponseEditor block={block} patch={patch} /> : null}
         {block.type === 'speaking_round' ? <StudioSpeakingRoundEditor block={block} onChange={patch} /> : null}
         {block.type === 'media' ? <MediaEditor block={block} patch={patch} activityId={activityId} /> : null}
         {definition.category === 'theory' ? <TheoryEditor block={block} patch={patch} /> : null}

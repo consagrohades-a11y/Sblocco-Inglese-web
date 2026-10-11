@@ -7,7 +7,7 @@ import {
   validateSpeakingRoundBlock,
 } from './speakingRoundContract.js';
 
-export const STUDIO_BLOCK_REGISTRY_VERSION = 4;
+export const STUDIO_BLOCK_REGISTRY_VERSION = 5;
 
 const text = (value) => typeof value === 'string' ? value.trim() : '';
 const list = (value) => Array.isArray(value) ? value.map((item) => text(item)).filter(Boolean) : [];
@@ -1345,6 +1345,53 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
         round: projectSpeakingRoundForLearner(block),
       },
       grading: { mode: 'ungraded', weight: 0, nearly_correct_multiplier: 0 },
+    }),
+  }),
+  speaking_response: definition({
+    type: 'speaking_response', label: 'Speaking Response', category: 'production',
+    capabilities: { manualReview: true, speaking: true, audioSubmission: true },
+    createDefault: () => ({
+      title: '', prompt: '', instructions: 'Registra una risposta in inglese. Riascolta prima di inviare.',
+      primary_skill: 'speaking', learning_objective: '',
+      context: '', min_seconds: 5, max_seconds: 90, allow_rerecord: true,
+      rubric: normalizeRubric([]),
+    }),
+    normalize: (block) => {
+      const maxSeconds = Math.min(300, Math.max(5, positiveInteger(block.max_seconds, 90)));
+      const minSeconds = Math.min(maxSeconds, Math.max(0, Number.isInteger(Number(block.min_seconds)) ? Number(block.min_seconds) : 5));
+      return {
+        ...block, title: text(block.title), prompt: text(block.prompt),
+        instructions: text(block.instructions), context: text(block.context),
+        min_seconds: minSeconds, max_seconds: maxSeconds,
+        allow_rerecord: true, rubric: normalizeRubric(block.rubric),
+      };
+    },
+    validate: (block) => {
+      const issues = requiredText(block, 'prompt', 'Speaking prompt');
+      if (!Number.isInteger(Number(block.max_seconds)) || Number(block.max_seconds) < 5 || Number(block.max_seconds) > 300) {
+        issues.push(issue('duration', 'Maximum recording duration must be between 5 and 300 seconds.', 'max_seconds'));
+      }
+      if (!Number.isInteger(Number(block.min_seconds)) || Number(block.min_seconds) < 0 || Number(block.min_seconds) > Number(block.max_seconds)) {
+        issues.push(issue('duration', 'Minimum duration must be between 0 and the maximum duration.', 'min_seconds'));
+      }
+      return issues;
+    },
+    compile: (block, context) => commonQuestion(block, context, {
+      type: 'audio_response',
+      primary_skill: 'speaking',
+      learning_objective: text(block.learning_objective) || 'Respond aloud to a real communicative task in English.',
+      content: {
+        context: text(block.context) || null,
+        min_seconds: block.min_seconds,
+        max_seconds: block.max_seconds,
+        allow_rerecord: true,
+        rubric: normalizeRubric(block.rubric),
+        model_transcript: null,
+      },
+      grading: {
+        mode: 'manual_review',
+        weight: normalizeRubric(block.rubric).reduce((sum, criterion) => sum + criterion.max_points, 0),
+      },
     }),
   }),
   written_response: definition({
