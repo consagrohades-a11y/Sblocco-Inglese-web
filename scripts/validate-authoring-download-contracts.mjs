@@ -24,6 +24,24 @@ for (const [name, kit] of [['universal', universal], ['grammar', grammar], ['spe
   );
 }
 
+
+const universalSpec = universal.full_authoring_spec || '';
+assert.match(universalSpec, /Media listening presentation contract/, 'Universal kit must explain the media instruction-row format.');
+assert.match(universalSpec, /Separate stages with one blank line/, 'Universal kit must teach the visual spacing rule.');
+assert.match(universalSpec, /automatically rendered captions\/transcript reminders|automatically when the media and visibility settings/, 'Universal kit must avoid duplicate listening reminders.');
+assert.match(universalSpec, /transcript_visibility.*after_submit/, 'Universal kit must document transcript visibility.');
+
+const listeningMediaExample = universalSpec.match(/### L\. `media`[\s\S]*?```json\n([\s\S]*?)\n```/);
+assert.ok(listeningMediaExample, 'Universal kit must include a completed media example.');
+const parsedListeningMediaExample = JSON.parse(listeningMediaExample[1]);
+assert.equal(parsedListeningMediaExample.type, 'media');
+const instructionStages = parsedListeningMediaExample.instructions.split(/\n\s*\n/);
+assert.ok(instructionStages.length >= 2, 'Example listening instructions must form multiple readable rows.');
+assert.ok(instructionStages.every((stage) => stage.split('\n').length >= 2),
+  'Each example listening instruction row needs a distinct heading and supporting explanation.');
+assert.ok(universal.agent_instructions.some((item) => /listening\/video media block/.test(item)),
+  'High-priority authoring instructions must describe the new media layout.');
+
 assert.equal(Object.keys(speaking.activity_mechanics || {}).length, 72, 'Speaking authoring kit must document all 72 activities.');
 assert.equal(speaking.import_contract?.entity_type, 'speaking_item_batch', 'Speaking kit must document the import batch contract.');
 assert.equal(speaking.block_registry_version, 2, 'Speaking kit must declare the current Block Registry version.');
