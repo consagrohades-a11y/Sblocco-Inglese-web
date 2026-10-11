@@ -341,6 +341,24 @@ function validateQuestion(rawQuestion, path = 'question', schemaVersion = 2) {
     if (!content.body) errors.push(pathMessage(path, 'content_block richiede body o prompt.'));
   }
 
+  // Optional learner choice for authored speaking/writing tasks. Keep legacy single-prompt questions intact.
+  if (questionType === 'written_response' || questionType === 'audio_response') {
+    const provided = Array.isArray(content.prompt_options) ? content.prompt_options
+      : Array.isArray(source.prompt_options) ? source.prompt_options : [];
+    if (provided.length) {
+      if (provided.length > 3) errors.push(pathMessage(path, 'prompt_options accetta massimo tre opzioni.'));
+      const prompts = provided.map((item) => text(item));
+      if (prompts.some((item) => !item)) errors.push(pathMessage(path, 'Ogni prompt deve contenere un testo.'));
+      if (new Set(prompts.map((item) => item.toLocaleLowerCase())).size !== prompts.length) {
+        errors.push(pathMessage(path, 'Le opzioni di prompt devono essere diverse.'));
+      }
+      if (prompt !== prompts[0]) errors.push(pathMessage(path, 'Il primo prompt deve corrispondere al prompt principale.'));
+      content.prompt_options = prompts;
+    } else if (content.prompt_options !== undefined || source.prompt_options !== undefined) {
+      errors.push(pathMessage(path, 'prompt_options deve contenere da uno a tre prompt.'));
+    }
+  }
+
   if (questionType === 'written_response') {
     const minWords = integer(source.min_words ?? content.min_words, 40);
     const maxWords = integer(source.max_words ?? content.max_words, Math.max(80, minWords || 40));

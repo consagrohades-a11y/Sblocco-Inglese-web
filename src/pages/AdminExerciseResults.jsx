@@ -223,7 +223,7 @@ function QuestionReviewCard({ item, review, onChange, reviewEnabled = true }) {
 
       {item.question?.type === 'written_response' ? (
         <WritingCorrectionWorkspace
-          originalText={typeof item.answer === 'string' ? item.answer : ''}
+          originalText={typeof item.answer === 'string' ? item.answer : (item.answer?.text || '')}
           correction={review.correction}
           onChange={(correction) => onChange({ correction, dirty: true })}
         />

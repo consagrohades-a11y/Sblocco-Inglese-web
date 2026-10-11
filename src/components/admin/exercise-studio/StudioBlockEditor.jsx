@@ -1765,17 +1765,57 @@ function MediaEditor({ block, patch, activityId }) {
   );
 }
 
+function PromptOptionsEditor({ block, patch, kind }) {
+  const stored = Array.isArray(block.prompt_options) && block.prompt_options.length
+    ? block.prompt_options : [block.prompt || ''];
+  const prompts = stored.length === 1 && !stored[0] && block.prompt
+    ? [block.prompt] : stored;
+  const setPrompts = (next) => patch({ prompt_options: next, prompt: next[0] || '' });
+
+  return (
+    <div className="grid gap-3">
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">Prompt options</p>
+        <p className="mt-1 text-xs font-semibold leading-5 text-ink/50 dark:text-white/50">
+          Add up to three different {kind} tasks. The student chooses <strong>one</strong>, not all three.
+        </p>
+      </div>
+      {prompts.map((prompt, index) => (
+        <div key={index} className="grid gap-2 rounded-xl border border-ink/10 bg-white/75 p-3 dark:border-white/10 dark:bg-white/[0.04]">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-xs font-black text-ink/70 dark:text-white/70">Option {index + 1}</span>
+            {prompts.length > 1 ? (
+              <button type="button" onClick={() => setPrompts(prompts.filter((_, i) => i !== index))}
+                className="focus-ring text-xs font-black text-red-700 dark:text-red-200">
+                Remove
+              </button>
+            ) : null}
+          </div>
+          <textarea
+            rows={3}
+            value={prompt}
+            onChange={(event) => setPrompts(prompts.map((value, i) => i === index ? event.target.value : value))}
+            placeholder={kind === 'speaking' ? 'What would you say in this situation?' : 'Describe a situation and explain your opinion.'}
+            className="focus-ring w-full min-w-0 resize-y rounded-xl border border-ink/10 bg-white px-3 py-2.5 text-sm font-semibold leading-6 normal-case tracking-normal text-ink dark:border-white/10 dark:bg-white/[0.05] dark:text-white"
+          />
+        </div>
+      ))}
+      {prompts.length < 3 ? (
+        <button type="button" onClick={() => setPrompts([...prompts, ''])}
+          className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:text-orange-200">
+          <Plus className="h-3.5 w-3.5" /> Add another prompt
+        </button>
+      ) : (
+        <p className="text-xs font-semibold text-ink/45 dark:text-white/45">Maximum of three prompts.</p>
+      )}
+    </div>
+  );
+}
+
 function SpeakingResponseEditor({ block, patch }) {
   return (
     <>
-      <TextArea
-        label="Speaking prompt"
-        value={block.prompt}
-        onChange={(value) => patch({ prompt: value })}
-        rows={4}
-        hint="Ask one meaningful question or give a realistic situation. Students will record their answer."
-        placeholder="Describe a difficult conversation you handled and explain what you would do differently."
-      />
+      <PromptOptionsEditor block={block} patch={patch} kind="speaking" />
       <TextArea
         label="Optional situation or context"
         value={block.context}
@@ -1808,7 +1848,7 @@ function WritingEditor({ block, patch }) {
           <p className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-orange-700 dark:text-orange-300">Task</p>
           <p className="mt-1 text-xs font-semibold leading-5 text-ink/45 dark:text-white/45">The main instruction the learner sees before writing.</p>
         </div>
-        <TextArea label="Writing prompt" value={block.prompt} onChange={(value) => patch({ prompt: value })} rows={4} />
+        <PromptOptionsEditor block={block} patch={patch} kind="writing" />
       </section>
 
       <StructuredContextEditor block={block} patch={patch} />

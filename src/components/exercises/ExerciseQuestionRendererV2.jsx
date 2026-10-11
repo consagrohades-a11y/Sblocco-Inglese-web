@@ -189,8 +189,53 @@ function WordOrder({ question, answer, onChange, disabled, shuffleSeed }) {
   </div>;
 }
 
+function PromptChoice({ options = [], selectedIndex, onSelect, disabled }) {
+  if (options.length <= 1) return null;
+  return (
+    <section className="grid gap-3 rounded-2xl border border-orange-200/70 bg-orange-50/30 p-4 dark:border-orange-300/20 dark:bg-orange-300/[0.04]">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <p className="text-xs font-black uppercase tracking-[0.1em] text-orange-800 dark:text-orange-200">Choose your prompt</p>
+        <span className="text-xs font-semibold text-ink/45 dark:text-white/45">Choose one of {options.length}</span>
+      </div>
+      <div className="grid gap-2">
+        {options.map((prompt, index) => (
+          <button
+            type="button"
+            key={index}
+            onClick={() => onSelect?.(index)}
+            disabled={disabled}
+            aria-pressed={selectedIndex === index}
+            className={`focus-ring flex items-start gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold leading-6 transition disabled:cursor-default ${selectedIndex === index
+              ? 'border-orange-500 bg-orange-100 text-ink dark:border-orange-300/70 dark:bg-orange-300/10 dark:text-white'
+              : 'border-ink/10 bg-white text-ink/75 hover:border-orange-400 dark:border-white/15 dark:bg-white/[0.03] dark:text-white/75'}`}
+          >
+            <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-black ${selectedIndex === index ? 'bg-orange-500 text-white' : 'bg-linen text-ink/65 dark:bg-white/10 dark:text-white/65'}`}>{index + 1}</span>
+            <span className="whitespace-pre-wrap">{prompt}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function selectedPromptIndex(answer, options) {
+  const number = answer && typeof answer === 'object' ? answer.prompt_index : null;
+  if (Number.isInteger(number) && number >= 0 && number < options.length) return number;
+  // Historical single-string answers authored before the choice feature always used the first prompt.
+  return typeof answer === 'string' && answer.trim() ? 0 : null;
+}
+
 function WrittenResponse({ question, answer, onChange, disabled }) {
   const content = question.content || {};
+  const options = Array.isArray(content.prompt_options) && content.prompt_options.length > 1 ? content.prompt_options : [];
+  const chosenIndex = selectedPromptIndex(answer, options);
+  const responseText = typeof answer === 'string' ? answer : (typeof answer?.text === 'string' ? answer.text : '');
+  const needsChoice = options.length > 1 && chosenIndex === null;
+  function choose(index) {
+    if (disabled || chosenIndex === index) return;
+    if (responseText.trim() && !window.confirm('Changing the prompt will clear your current writing. Continue?')) return;
+    onChange({ prompt_index: index, text: '' });
+  }
   const contextSections = content.context_sections && typeof content.context_sections === 'object'
     ? content.context_sections
     : {};
@@ -200,13 +245,14 @@ function WrittenResponse({ question, answer, onChange, disabled }) {
     ['Destinatario', contextSections.audience],
     ['Obiettivo', contextSections.goal],
   ].filter(([, value]) => value);
-  const count = wordCount(answer);
+  const count = wordCount(responseText);
   const min = Number(content.min_words || 0);
   const max = Number(content.max_words || 0);
   const validRange = (!min || count >= min) && (!max || count <= max);
 
   return (
     <div className="grid gap-6">
+      <PromptChoice options={options} selectedIndex={chosenIndex} onSelect={choose} disabled={disabled} />
       {(situation || compactContext.length) ? (
         <section className="border-l-2 border-orange-400 pl-4">
           <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-orange-700 dark:text-orange-300">Context</p>
@@ -261,10 +307,10 @@ function WrittenResponse({ question, answer, onChange, disabled }) {
           <TextAnswer
             multiline
             rows={10}
-            value={answer || ''}
-            onChange={onChange}
-            disabled={disabled}
-            placeholder="Scrivi qui la tua produzione..."
+            value={responseText}
+            onChange={(value) => onChange(options.length > 1 ? { prompt_index: chosenIndex, text: value } : value)}
+            disabled={disabled || needsChoice}
+            placeholder={needsChoice ? 'Scegli prima un prompt...' : 'Scrivi qui la tua produzione...'}
           />
           <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs font-black">
             <span className={validRange ? 'text-ink/50 dark:text-white/50' : 'text-orange-700 dark:text-orange-300'}>
@@ -880,6 +926,15 @@ function AudioRecorder({ question, answer, onChange, disabled, attemptId, attemp
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const recordingContent = contentOverride || question.content || {};
+  const options = Array.isArray(recordingContent.prompt_options) && recordingContent.prompt_options.length > 1
+    ? recordingContent.prompt_options : [];
+  const [chosen, setChosen] = useState(() => selectedPromptIndex(answer, options));
+  const chosenIndex = answer?.file_id ? (selectedPromptIndex(answer, options) ?? 0) : chosen;
+  const selectionRequired = options.length > 1 && chosenIndex === null;
+  const selectionLocked = disabled || recording || uploading || Boolean(previewUrl) || Boolean(answer?.file_id);
+  const promptSelector = (
+    <PromptChoice options={options} selectedIndex={chosenIndex} onSelect={setChosen} disabled={selectionLocked} />
+  );
   const maxSeconds = Number(recordingContent.max_seconds || 90);
   const minSeconds = Number(recordingContent.min_seconds || 0);
 
@@ -897,6 +952,10 @@ function AudioRecorder({ question, answer, onChange, disabled, attemptId, attemp
   }, [previewUrl]);
 
   async function startRecording() {
+    if (selectionRequired) {
+      setError('Scegli un prompt prima di registrare.');
+      return;
+    }
     setError('');
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
       setError('Questo browser non supporta la registrazione audio.');
@@ -959,7 +1018,7 @@ function AudioRecorder({ question, answer, onChange, disabled, attemptId, attemp
     setError('');
     try {
       const registered = await uploadExerciseAudioSubmission({ attemptId, attemptQuestionId, turnKey, blob, durationSeconds: elapsed, previousAnswer: answer });
-      onChange(registered);
+      onChange(options.length > 1 ? { ...registered, prompt_index: chosenIndex } : registered);
       setSavedUrl(previewUrl);
       setBlob(null);
       setPreviewUrl(null);
@@ -970,13 +1029,15 @@ function AudioRecorder({ question, answer, onChange, disabled, attemptId, attemp
     }
   }
 
-  if (disabled) return <div className="exercise-speaking">{savedUrl ? <audio controls src={savedUrl} className="w-full" /> : <p className="border-y border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/65 dark:border-white/15 dark:text-white/65">Nessuna registrazione disponibile.</p>}{answer?.duration_seconds ? <p className="text-xs font-bold text-ink/60 dark:text-white/60">Durata: {Math.round(Number(answer.duration_seconds))} secondi</p> : null}</div>;
+  if (disabled) return <div className="exercise-speaking">{promptSelector}{savedUrl ? <audio controls src={savedUrl} className="w-full" /> : <p className="border-y border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/65 dark:border-white/15 dark:text-white/65">Nessuna registrazione disponibile.</p>}{answer?.duration_seconds ? <p className="text-xs font-bold text-ink/60 dark:text-white/60">Durata: {Math.round(Number(answer.duration_seconds))} secondi</p> : null}</div>;
 
   return <div className="exercise-speaking">
+    {promptSelector}
+    {selectionRequired ? <p className="text-sm font-semibold text-orange-800 dark:text-orange-200">Choose one prompt to enable recording.</p> : null}
     {recordingContent.context ? <div className="exercise-scenario">{recordingContent.context}</div> : null}
     {savedUrl ? <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-300/20 dark:bg-emerald-300/[0.07]"><p className="mb-3 flex items-center gap-2 text-sm font-black text-emerald-900 dark:text-emerald-100"><CheckCircle2 className="h-4 w-4" />Registrazione salvata</p><audio controls src={savedUrl} className="w-full" /></div> : null}
     {previewUrl ? <div className="border-y border-sky-200 bg-sky-50 p-4 dark:border-sky-300/20 dark:bg-sky-300/[0.07]"><p className="mb-3 text-sm font-black text-sky-900 dark:text-sky-100">Riascolta prima di salvare</p><audio controls src={previewUrl} className="w-full" /><div className="mt-3 flex flex-wrap gap-2"><button type="button" disabled={uploading || !attemptId} onClick={saveRecording} className="exercise-primary-action disabled:opacity-40"><Upload className="h-4 w-4" />{uploading ? 'Caricamento...' : 'Usa questa registrazione'}</button><button type="button" disabled={uploading} onClick={discardRecording} className="exercise-secondary-action"><RotateCcw className="h-4 w-4" />Registra di nuovo</button></div></div> : null}
-    <div className="flex flex-wrap items-center gap-3">{recording ? <button type="button" onClick={stopRecording} className="inline-flex items-center gap-2 rounded-full bg-red-700 px-5 py-3 text-sm font-black text-white"><Square className="h-4 w-4 fill-current" />Ferma · {elapsed}s</button> : <button type="button" disabled={uploading} onClick={startRecording} className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-black text-white dark:bg-emerald-300 dark:text-surface-950"><Mic className="h-4 w-4" />{savedUrl ? 'Registra di nuovo' : 'Inizia registrazione'}</button>}<span className="text-xs font-bold text-ink/60 dark:text-white/60">{minSeconds ? `${minSeconds}–${maxSeconds}` : `Massimo ${maxSeconds}`} secondi</span></div>
+    <div className="flex flex-wrap items-center gap-3">{recording ? <button type="button" onClick={stopRecording} className="inline-flex items-center gap-2 rounded-full bg-red-700 px-5 py-3 text-sm font-black text-white"><Square className="h-4 w-4 fill-current" />Ferma · {elapsed}s</button> : <button type="button" disabled={uploading || selectionRequired} onClick={startRecording} className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-black text-white dark:bg-emerald-300 dark:text-surface-950"><Mic className="h-4 w-4" />{savedUrl ? 'Registra di nuovo' : 'Inizia registrazione'}</button>}<span className="text-xs font-bold text-ink/60 dark:text-white/60">{minSeconds ? `${minSeconds}–${maxSeconds}` : `Massimo ${maxSeconds}`} secondi</span></div>
     {!attemptId ? <p className="text-xs font-bold text-amber-700 dark:text-amber-200">La registrazione reale è disponibile soltanto durante un tentativo assegnato.</p> : null}
     {error ? <p className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-900 dark:border-red-300/20 dark:bg-red-300/10 dark:text-red-100"><CircleAlert className="mt-0.5 h-4 w-4 shrink-0" />{error}</p> : null}
     <RubricPreview rubric={recordingContent.rubric} />
@@ -1033,9 +1094,11 @@ export default function ExerciseQuestionRendererV2({
     : question.content?.presentation === 'open_answer_set'
       ? 'open_answer_set'
       : type;
+  const hasPromptOptions = (type === 'written_response' || type === 'audio_response')
+    && Array.isArray(question.content?.prompt_options) && question.content.prompt_options.length > 1;
   return (
     <div>
-      <ExercisePrompt type={displayType} prompt={question.prompt} instructions={question.instructions} />
+      <ExercisePrompt type={displayType} prompt={hasPromptOptions ? 'Choose one prompt to answer.' : question.prompt} instructions={question.instructions} />
       {input}
       <ResultPanel
         question={question}
@@ -1047,7 +1110,7 @@ export default function ExerciseQuestionRendererV2({
       />
       {type === 'written_response' ? (
         <WritingCorrectionDisplay
-          originalText={typeof answer === 'string' ? answer : ''}
+          originalText={typeof answer === 'string' ? answer : (answer?.text || '')}
           correction={item?.teacher_correction || {}}
         />
       ) : null}

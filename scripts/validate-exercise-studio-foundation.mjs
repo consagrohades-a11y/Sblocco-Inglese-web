@@ -76,6 +76,71 @@ const recordedReimport = parseStudioImport(JSON.stringify(recordedExport));
 assert.equal(recordedReimport.publishable, true, recordedReimport.errors.map((item) => item.message).join('\n'));
 assert.equal(recordedReimport.document.blocks[0].type, 'speaking_response');
 
+const multiWrite = addStudioBlock(
+  createStudioDocument({ internal_title: 'Write a message', learner_title: 'Make a choice', level: 'B1', topic: 'communication', skills: ['writing'] }),
+  'written_response',
+  {
+    prompt: 'Write to a colleague about changing a meeting.',
+    prompt_options: [
+      'Write to a colleague about changing a meeting.',
+      'Write to a client about changing an appointment.',
+      'Write to a friend about changing a plan.',
+    ],
+    min_words: 40,
+    max_words: 100,
+  },
+);
+const multiWritePreflight = preflightStudioDocument(multiWrite);
+assert.equal(multiWritePreflight.valid, true, multiWritePreflight.errors.map((e) => e.message).join('\\n'));
+const multiWriteRuntime = multiWritePreflight.runtime.exercise.sections[0].questions[0];
+assert.equal(multiWriteRuntime.type, 'written_response');
+assert.equal(multiWriteRuntime.prompt, multiWrite.blocks[0].prompt);
+assert.deepEqual(multiWriteRuntime.content.prompt_options, multiWrite.blocks[0].prompt_options);
+assert.equal(multiWriteRuntime.grading.mode, 'manual_review');
+const multiWriteImport = parseStudioImport(JSON.stringify(buildStudioActivityExport(multiWritePreflight.document)));
+assert.equal(multiWriteImport.publishable, true, multiWriteImport.errors.map((e) => e.message).join('\\n'));
+assert.deepEqual(multiWriteImport.document.blocks[0].prompt_options, multiWrite.blocks[0].prompt_options);
+for (const options of [
+  ['A', 'B', 'C', 'D'],
+  ['A', 'A'],
+  ['A', ''],
+]) {
+  const testDoc = {
+    ...multiWrite,
+    blocks: [{ ...multiWrite.blocks[0], prompt: options[0], prompt_options: options }],
+  };
+  assert.equal(preflightStudioDocument(testDoc).valid, false, 'Invalid prompt choices must not be publishable.');
+}
+const multiSpeaking = {
+  ...recordedSpeaking,
+  blocks: [{
+    ...recordedSpeaking.blocks[0],
+    prompt_options: [
+      'Explain a problem you solved while travelling.',
+      'Explain a problem you solved at work.',
+      'Explain a problem you helped a friend solve.',
+    ],
+  }],
+};
+const multiSpeakingPreflight = preflightStudioDocument(multiSpeaking);
+assert.equal(multiSpeakingPreflight.valid, true, multiSpeakingPreflight.errors.map((e) => e.message).join('\\n'));
+assert.equal(multiSpeakingPreflight.runtime.exercise.sections[0].questions[0].content.prompt_options.length, 3);
+assert.equal(multiSpeakingPreflight.runtime.exercise.sections[0].questions[0].grading.mode, 'manual_review');
+const singleWrite = addStudioBlock(
+  createStudioDocument({ internal_title: 'Single writing', learner_title: 'Single writing', topic: 'communication' }),
+  'written_response',
+  { prompt: 'Write about a day you will never forget.' },
+);
+assert.equal(preflightStudioDocument(singleWrite).valid, true, 'Existing single-prompt writing must keep working.');
+assert.deepEqual(preflightStudioDocument(singleWrite).runtime.exercise.sections[0].questions[0].content.prompt_options,
+  ['Write about a day you will never forget.']);
+
+const rendererSource = fs.readFileSync('src/components/exercises/ExerciseQuestionRendererV2.jsx', 'utf8');
+assert.ok(rendererSource.includes('function PromptChoice('));
+assert.ok(rendererSource.includes('prompt_index: chosenIndex'), 'Writing and audio must persist the chosen prompt.');
+assert.ok(fs.readFileSync('src/pages/AdminExerciseResults.jsx', 'utf8').includes('item.answer?.text'),
+  'Writing review must read structured answers.');
+
 const authoredChoiceOptions = [
   { key: 'option_1', text: 'A' },
   { key: 'option_2', text: 'B' },

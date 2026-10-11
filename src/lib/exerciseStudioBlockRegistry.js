@@ -7,7 +7,7 @@ import {
   validateSpeakingRoundBlock,
 } from './speakingRoundContract.js';
 
-export const STUDIO_BLOCK_REGISTRY_VERSION = 5;
+export const STUDIO_BLOCK_REGISTRY_VERSION = 6;
 
 const text = (value) => typeof value === 'string' ? value.trim() : '';
 const list = (value) => Array.isArray(value) ? value.map((item) => text(item)).filter(Boolean) : [];
@@ -97,6 +97,31 @@ function normalizeRubric(value) {
     description: text(item?.description) || null,
     max_points: Number(item?.max_points) > 0 ? Number(item.max_points) : 1,
   }));
+}
+
+// The first prompt remains the canonical question prompt for legacy consumers.
+function normalizePromptOptions(block) {
+  const stored = Array.isArray(block.prompt_options) && block.prompt_options.length
+    ? block.prompt_options : [block.prompt];
+  const raw = stored.length === 1 && !text(stored[0]) && text(block.prompt)
+    ? [block.prompt] : stored;
+  return raw.map((item) => text(item));
+}
+
+function validatePromptOptions(block, label) {
+  const options = normalizePromptOptions(block);
+  const issues = [];
+  if (options.length < 1 || options.length > 3) {
+    issues.push(issue('prompt_count', label + ' must have between one and three prompts.', 'prompt_options'));
+  }
+  options.forEach((option, index) => {
+    if (!option) issues.push(issue('required', label + ' option ' + (index + 1) + ' is required.', 'prompt_options.' + index));
+  });
+  const present = options.filter(Boolean).map((option) => option.toLocaleLowerCase());
+  if (new Set(present).size !== present.length) {
+    issues.push(issue('duplicate_prompt', 'Prompt options must be distinct.', 'prompt_options'));
+  }
+  return issues;
 }
 
 function commonQuestion(block, context, overrides = {}) {
@@ -1353,21 +1378,22 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
     createDefault: () => ({
       title: '', prompt: '', instructions: 'Registra una risposta in inglese. Riascolta prima di inviare.',
       primary_skill: 'speaking', learning_objective: '',
-      context: '', min_seconds: 5, max_seconds: 90, allow_rerecord: true,
+      context: '', prompt_options: [''], min_seconds: 5, max_seconds: 90, allow_rerecord: true,
       rubric: normalizeRubric([]),
     }),
     normalize: (block) => {
+      const prompts = normalizePromptOptions(block);
       const maxSeconds = Math.min(300, Math.max(5, positiveInteger(block.max_seconds, 90)));
       const minSeconds = Math.min(maxSeconds, Math.max(0, Number.isInteger(Number(block.min_seconds)) ? Number(block.min_seconds) : 5));
       return {
-        ...block, title: text(block.title), prompt: text(block.prompt),
+        ...block, title: text(block.title), prompt: prompts[0] || '', prompt_options: prompts,
         instructions: text(block.instructions), context: text(block.context),
         min_seconds: minSeconds, max_seconds: maxSeconds,
         allow_rerecord: true, rubric: normalizeRubric(block.rubric),
       };
     },
     validate: (block) => {
-      const issues = requiredText(block, 'prompt', 'Speaking prompt');
+      const issues = validatePromptOptions(block, 'Speaking response');
       if (!Number.isInteger(Number(block.max_seconds)) || Number(block.max_seconds) < 5 || Number(block.max_seconds) > 300) {
         issues.push(issue('duration', 'Maximum recording duration must be between 5 and 300 seconds.', 'max_seconds'));
       }
@@ -1382,6 +1408,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       learning_objective: text(block.learning_objective) || 'Respond aloud to a real communicative task in English.',
       content: {
         context: text(block.context) || null,
+        prompt_options: normalizePromptOptions(block),
         min_seconds: block.min_seconds,
         max_seconds: block.max_seconds,
         allow_rerecord: true,
@@ -1398,16 +1425,17 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
     type: 'written_response', label: 'Written Response', category: 'production',
     capabilities: { manualReview: true },
     createDefault: () => ({
-      title: '', prompt: '', instructions: 'Scrivi la tua risposta.', primary_skill: 'writing', learning_objective: '',
+      title: '', prompt: '', prompt_options: [''], instructions: 'Scrivi la tua risposta.', primary_skill: 'writing', learning_objective: '',
       context: '', context_situation: '', context_role: '', context_audience: '', context_goal: '',
       min_words: 40, max_words: 120, required_points: [], rubric: normalizeRubric([]),
     }),
     normalize: (block) => {
+      const prompts = normalizePromptOptions(block);
       const minWords = positiveInteger(block.min_words, 40);
       const contextSituation = text(block.context_situation || block.context);
       return {
         ...block,
-        title: text(block.title), prompt: text(block.prompt), instructions: text(block.instructions),
+        title: text(block.title), prompt: prompts[0] || '', prompt_options: prompts, instructions: text(block.instructions),
         context: contextSituation,
         context_situation: contextSituation,
         context_role: text(block.context_role),
@@ -1420,8 +1448,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       };
     },
     validate: (block) => {
-      const issues = [];
-      if (!text(block.prompt)) issues.push(issue('required', 'Writing prompt is required.', 'prompt'));
+      const issues = validatePromptOptions(block, 'Written response');
       if (Number(block.max_words) < Number(block.min_words)) issues.push(issue('word_limit', 'Maximum words must be at least minimum words.', 'max_words'));
       return issues;
     },
@@ -1429,6 +1456,7 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
       type: 'written_response',
       primary_skill: 'writing',
       content: {
+        prompt_options: normalizePromptOptions(block),
         context: block.context_situation || block.context || null,
         context_sections: {
           situation: block.context_situation || block.context || null,

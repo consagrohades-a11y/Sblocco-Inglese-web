@@ -65,7 +65,20 @@ function hasMeaningfulValue(value) {
 function answerMissingCount(answer, question) {
   const type = question?.type;
   if (type === "content_block") return 0;
-  if (type === "audio_response") return answer?.file_id ? 0 : 1;
+  if (type === "audio_response") {
+    const options = question?.content?.prompt_options || [];
+    const validChoice = options.length <= 1 || (Number.isInteger(answer?.prompt_index) && answer.prompt_index >= 0 && answer.prompt_index < options.length);
+    return answer?.file_id && validChoice ? 0 : 1;
+  }
+  if (type === "written_response") {
+    const options = question?.content?.prompt_options || [];
+    if (options.length > 1) {
+      const validChoice = Number.isInteger(answer?.prompt_index) && answer.prompt_index >= 0 && answer.prompt_index < options.length;
+      return validChoice && typeof answer?.text === 'string' && answer.text.trim() ? 0 : 1;
+    }
+    const value = typeof answer === 'string' ? answer : answer?.text;
+    return typeof value === 'string' && value.trim() ? 0 : 1;
+  }
 
   if (type === "dialogue_roleplay") {
     if (!answer?.role_key) return 1;
