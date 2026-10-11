@@ -72,3 +72,13 @@ export async function createExerciseAudioSignedUrl(answer, expiresIn = 3600) {
   if (error) throw error;
   return data?.signedUrl || null;
 }
+
+/** Remove a learner-owned, saved recording before changing the associated prompt.
+ * Database audio metadata is still subject to the standard 14-day cleanup.
+ */
+export async function discardExerciseAudioSubmission(answer) {
+  const path = answer?.storage_path;
+  if (!path) return;
+  const { error } = await supabase.storage.from(BUCKET).remove([path]);
+  if (error) throw error;
+}

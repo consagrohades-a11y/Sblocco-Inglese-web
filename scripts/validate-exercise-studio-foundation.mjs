@@ -136,7 +136,15 @@ assert.deepEqual(preflightStudioDocument(singleWrite).runtime.exercise.sections[
   ['Write about a day you will never forget.']);
 
 const rendererSource = fs.readFileSync('src/components/exercises/ExerciseQuestionRendererV2.jsx', 'utf8');
-assert.ok(rendererSource.includes('function PromptChoice('));
+assert.ok(rendererSource.includes('ProductionPromptCarousel'), 'Both production blocks must use the shared one-at-a-time carousel.');
+const carouselSource = fs.readFileSync('src/components/exercises/ProductionPromptCarousel.jsx', 'utf8');
+assert.match(carouselSource, /onNavigate\(\(selected \+ 1\) % total\)/, 'Carousel must navigate to the next prompt.');
+assert.match(carouselSource, /navigationLocked/, 'Carousel navigation must lock during recording and submissions.');
+assert.match(carouselSource, /Your friend says/, 'Carousel must preserve the dialogue scenario.');
+assert.match(carouselSource, /Your response should/, 'Carousel must distinguish the task from the dialogue.');
+assert.match(rendererSource, /prompt_index: chosenIndex/, 'The selected option must persist on the learner response.');
+assert.match(rendererSource, /discardExerciseAudioSubmission/, 'Switching topics after recording must explicitly discard audio.');
+assert.match(rendererSource, /Changing the prompt will clear your current writing/, 'A prompt switch must protect written drafts.');
 assert.ok(rendererSource.includes('prompt_index: chosenIndex'), 'Writing and audio must persist the chosen prompt.');
 assert.ok(fs.readFileSync('src/pages/AdminExerciseResults.jsx', 'utf8').includes('item.answer?.text'),
   'Writing review must read structured answers.');
