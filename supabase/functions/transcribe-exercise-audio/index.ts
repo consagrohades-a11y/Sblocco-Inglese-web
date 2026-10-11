@@ -65,8 +65,8 @@ Deno.serve(async (req: Request) => {
   const ext = file.mime_type.includes("ogg") ? "ogg"
     : file.mime_type.includes("mp4") ? "mp4" : file.mime_type.includes("wav") ? "wav" : "webm";
   const form = new FormData();
-  form.append("model", "gpt-4o-mini-transcribe");
-  form.append("language", "en");
+  form.append("model", "gpt-transcribe");
+  form.append("languages[]", "en");
   form.append("file", new File([audio], "recording." + ext, { type: file.mime_type }));
   try {
     const transcription = await fetch("https://api.openai.com/v1/audio/transcriptions", {
