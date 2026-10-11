@@ -1210,3 +1210,36 @@ assert.match(
   /risposte.*in bianco/,
   'Learner must be warned about unanswered comprehension subitems before continuing.',
 );
+
+
+// Speaking transcripts persist on the attempt question, independent of 14-day audio files.
+// Teacher highlighting is manual, and learner access is gated by approved review status.
+const speakingTranscriptMigration = fs.readFileSync(
+  new URL('../supabase/migrations/20261011194800_persist_speaking_transcripts_and_manual_corrections.sql', import.meta.url),
+  'utf8',
+);
+const speakingTranscriptionFunction = fs.readFileSync(
+  new URL('../supabase/functions/transcribe-exercise-audio/index.ts', import.meta.url),
+  'utf8',
+);
+const speakingResultsSource = fs.readFileSync(
+  new URL('../src/pages/AdminExerciseResults.jsx', import.meta.url),
+  'utf8',
+);
+const speakingRendererSource = fs.readFileSync(
+  new URL('../src/components/exercises/ExerciseQuestionRendererV2.jsx', import.meta.url),
+  'utf8',
+);
+assert.match(speakingTranscriptMigration, /add column if not exists speech_transcript text/);
+assert.match(speakingTranscriptMigration, /if not public\.is_admin\(\)/);
+assert.match(speakingTranscriptMigration, /speech_transcript', case when a\.review_status = 'approved'/);
+assert.match(speakingTranscriptMigration, /written_response', 'audio_response'/);
+assert.match(speakingTranscriptMigration, /teacher_correction = '\{\}'::jsonb/);
+assert.doesNotMatch(speakingTranscriptMigration, /delete\s+from\s+public\.exercise_builder_submission_files/i,
+  'Transcript migration must not change audio retention.');
+assert.match(speakingTranscriptionFunction, /admin_save_exercise_builder_speech_transcript/);
+assert.match(speakingResultsSource, /saveExerciseSpeechTranscript/);
+assert.match(speakingResultsSource, /<WritingCorrectionWorkspace/);
+assert.match(speakingRendererSource, /item\.speech_transcript/);
+assert.match(speakingRendererSource, /item\.teacher_correction/);
+console.log('Speaking transcript persistence and manual correction integration validated.');

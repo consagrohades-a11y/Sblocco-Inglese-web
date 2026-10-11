@@ -9,6 +9,7 @@ import {
   loadExerciseAttemptDetail,
   loadExerciseAttemptResults,
   saveExerciseAttemptReview,
+  saveExerciseSpeechTranscript,
 } from '../lib/exerciseResultsApi.js';
 import { useAdminLearnerContext } from '../context/AdminLearnerContext.jsx';
 
@@ -99,47 +100,114 @@ function nestedAutomaticSummary(result) {
   };
 }
 
-function AudioTranscriptReview({ fileId }) {
-  const [transcript, setTranscript] = useState('');
+function AudioTranscriptReview({ fileId, attemptQuestionId, uploadedAt, transcript, correction, onSaved, reviewEnabled }) {
+  const [draft, setDraft] = useState(transcript || '');
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const expired = Boolean(uploadedAt && Date.now() - new Date(uploadedAt).getTime() >= 14 * 86400_000);
+  const correctionsExist = Array.isArray(correction?.reasons) && correction.reasons.length > 0;
 
-  if (!fileId) return null;
+  useEffect(() => {
+    setDraft(transcript || '');
+    setError('');
+    setMessage('');
+  }, [transcript, attemptQuestionId]);
+
+  function confirmReplacement(next) {
+    if (next === transcript) return true;
+    if (correctionsExist) {
+      return window.confirm('Cambiare la trascrizione azzererà le annotazioni esistenti, perché le posizioni nel testo potrebbero cambiare. Continuare?');
+    }
+    return true;
+  }
 
   async function transcribe() {
+    if (!fileId || !reviewEnabled || expired || !confirmReplacement('__new_transcription__')) return;
     setLoading(true);
     setError('');
+    setMessage('');
     try {
-      const text = await transcribeExerciseAudio(fileId);
-      setTranscript(text);
+      const value = await transcribeExerciseAudio(fileId);
+      setDraft(value);
+      onSaved(value);
+      setMessage('Trascrizione generata e salvata. Puoi correggere eventuali errori prima di annotare.');
     } catch (err) {
-      setError(err?.message || 'Trascrizione non disponibile. Ascolta la registrazione.');
+      setError(err?.message || 'Trascrizione non disponibile. Puoi inserire manualmente il testo.');
     } finally {
       setLoading(false);
     }
   }
 
+  async function saveText() {
+    if (!reviewEnabled || !attemptQuestionId || !confirmReplacement(draft.trim())) return;
+    setSaving(true);
+    setError('');
+    setMessage('');
+    try {
+      const value = await saveExerciseSpeechTranscript(attemptQuestionId, draft);
+      onSaved(value);
+      setDraft(value);
+      setMessage(value ? 'Trascrizione salvata in modo permanente, indipendentemente dall’audio.' : 'Trascrizione eliminata.');
+    } catch (err) {
+      setError(err?.message || 'Impossibile salvare la trascrizione.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <section className="mt-4 grid gap-3 rounded-xl border border-ink/10 bg-linen/25 p-4 dark:border-white/10 dark:bg-white/[0.035]">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-black uppercase tracking-wider text-ink/65 dark:text-white/65">Trascrizione facoltativa</p>
-          <p className="mt-1 text-xs font-semibold text-ink/50 dark:text-white/50">Generata dall'IA su richiesta. Controlla sempre l'audio: l'accento o gli errori possono essere trascritti male.</p>
+          <p className="text-xs font-black uppercase tracking-wider text-ink/65 dark:text-white/65">Trascrizione della risposta orale</p>
+          <p className="mt-1 max-w-xl text-xs font-semibold leading-5 text-ink/50 dark:text-white/50">
+            Il testo resta salvato dopo la cancellazione automatica dell'audio (14 giorni). Verifica la trascrizione ascoltando la registrazione, poi correggi manualmente.
+          </p>
         </div>
-        <button type="button" onClick={transcribe} disabled={loading} className="focus-ring rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 disabled:opacity-50 dark:border-orange-300/30 dark:text-orange-200">
-          {loading ? 'Trascrizione in corso…' : transcript ? 'Trascrivi di nuovo' : 'Trascrivi audio'}
-        </button>
+        {reviewEnabled && fileId && !expired ? (
+          <button type="button" onClick={transcribe} disabled={loading || saving} className="focus-ring rounded-full border border-orange-300 px-3 py-2 text-xs font-black text-orange-800 disabled:opacity-50 dark:border-orange-300/30 dark:text-orange-200">
+            {loading ? 'Trascrizione in corso…' : transcript ? 'Rigenera trascrizione' : 'Trascrivi audio'}
+          </button>
+        ) : null}
       </div>
+      {expired ? <p className="text-xs font-bold text-ink/55 dark:text-white/60">La registrazione ha superato i 14 giorni: non è più trascrivibile. Il testo già salvato rimane disponibile.</p> : null}
+      {reviewEnabled ? (
+        <>
+          <label className="grid gap-2 text-xs font-black text-ink/65 dark:text-white/65">
+            Testo dello studente
+            <textarea
+              rows={Math.max(5, Math.min(13, draft.split('\n').length + Math.ceil(draft.length / 80)))}
+              value={draft}
+              onChange={(event) => { setDraft(event.target.value); setMessage(''); }}
+              placeholder="Genera la trascrizione oppure inserisci il testo manualmente…"
+              className={fieldClass + ' min-h-32 w-full resize-y whitespace-pre-wrap font-semibold leading-6'}
+              disabled={saving || loading}
+            />
+          </label>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span className="text-xs font-semibold text-ink/45 dark:text-white/45">
+              {transcript ? 'Testo conservato nel tentativo, anche dopo la scadenza dell’audio.' : 'Ancora nessun testo salvato.'}
+            </span>
+            <button type="button" disabled={saving || loading || draft.trim() === (transcript || '')}
+              onClick={saveText} className="focus-ring rounded-full bg-ink px-4 py-2.5 text-xs font-black text-white disabled:opacity-40 dark:bg-clay">
+              {saving ? 'Salvataggio…' : 'Salva trascrizione'}
+            </button>
+          </div>
+        </>
+      ) : transcript ? (
+        <p className="whitespace-pre-wrap text-sm font-semibold leading-6 text-ink/80 dark:text-white/80">{transcript}</p>
+      ) : null}
+      {message ? <p role="status" className="text-xs font-bold text-emerald-800 dark:text-emerald-200">{message}</p> : null}
       {error ? <p role="alert" className="text-xs font-bold text-red-700 dark:text-red-200">{error}</p> : null}
-      {transcript ? <div className="grid gap-2">
-        <p className="whitespace-pre-wrap text-sm leading-6 text-ink dark:text-white">{transcript}</p>
-        <button type="button" className="w-fit text-xs font-black text-orange-800 underline dark:text-orange-200" onClick={() => navigator.clipboard?.writeText(transcript)}>Copia testo</button>
-      </div> : null}
     </section>
   );
 }
 
 function QuestionReviewCard({ item, review, onChange, reviewEnabled = true }) {
+  const [speechTranscript, setSpeechTranscript] = useState(item.speech_transcript || '');
+  useEffect(() => { setSpeechTranscript(item.speech_transcript || ''); }, [item.id, item.speech_transcript]);
   const automatic = item.automatic_result || item.result || {};
   const effective = item.result || {};
   const maximum = Number(effective.max_points ?? automatic.max_points ?? 0);
@@ -169,13 +237,30 @@ function QuestionReviewCard({ item, review, onChange, reviewEnabled = true }) {
           answer={item.answer}
           onChange={() => {}}
           disabled
+          showSpeechTranscript={false}
           showScore
           showCorrectAnswers
           showExplanations
         />
       </div>
 
-      {item.question?.type === 'audio_response' ? <AudioTranscriptReview key={item.answer?.file_id || 'none'} fileId={item.answer?.file_id} /> : null}
+      {item.question?.type === 'audio_response' ? (
+        <AudioTranscriptReview
+          key={item.id}
+          attemptQuestionId={item.id}
+          fileId={item.answer?.file_id}
+          uploadedAt={item.answer?.uploaded_at}
+          transcript={speechTranscript}
+          correction={review.correction}
+          reviewEnabled={reviewEnabled}
+          onSaved={(value) => {
+            if (value !== speechTranscript && Object.keys(review.correction || {}).length) {
+              onChange({ correction: {}, dirty: true });
+            }
+            setSpeechTranscript(value);
+          }}
+        />
+      ) : null}
 
       <div className="mt-5 grid gap-4 rounded-xl border border-clay/20 bg-clay/[0.045] p-4 dark:border-coral/20 dark:bg-coral/[0.06] sm:grid-cols-[12rem_9rem_minmax(0,1fr)]">
         <label className="text-xs font-black text-ink/60 dark:text-white/60">Esito docente
@@ -221,9 +306,13 @@ function QuestionReviewCard({ item, review, onChange, reviewEnabled = true }) {
         Ripristina la correzione automatica
       </label>
 
-      {item.question?.type === 'written_response' ? (
+      {(item.question?.type === 'written_response' || (item.question?.type === 'audio_response' && speechTranscript && reviewEnabled)) ? (
         <WritingCorrectionWorkspace
-          originalText={typeof item.answer === 'string' ? item.answer : (item.answer?.text || '')}
+          sourceLabel={item.question?.type === 'audio_response' ? 'Trascrizione verificata' : 'Testo dello studente'}
+          reviewLabel={item.question?.type === 'audio_response' ? 'Correzione manuale dello speaking' : 'Revisore scritto'}
+          originalText={item.question?.type === 'audio_response'
+            ? speechTranscript
+            : (typeof item.answer === 'string' ? item.answer : (item.answer?.text || ''))}
           correction={review.correction}
           onChange={(correction) => onChange({ correction, dirty: true })}
         />

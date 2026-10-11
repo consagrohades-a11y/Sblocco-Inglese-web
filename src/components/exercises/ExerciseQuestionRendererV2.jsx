@@ -935,15 +935,16 @@ function AudioRecorder({ question, answer, onChange, disabled, attemptId, attemp
   const promptSelector = (
     <PromptChoice options={options} selectedIndex={chosenIndex} onSelect={setChosen} disabled={selectionLocked} />
   );
+  const audioExpired = Boolean(answer?.uploaded_at && Date.now() - new Date(answer.uploaded_at).getTime() >= 14 * 86400_000);
   const maxSeconds = Number(recordingContent.max_seconds || 90);
   const minSeconds = Number(recordingContent.min_seconds || 0);
 
   useEffect(() => {
     let active = true;
-    if (!answer?.storage_path) { setSavedUrl(null); return undefined; }
+    if (!answer?.storage_path || audioExpired) { setSavedUrl(null); return undefined; }
     createExerciseAudioSignedUrl(answer).then((url) => { if (active) setSavedUrl(url); }).catch(() => { if (active) setError('Non è stato possibile caricare il riascolto.'); });
     return () => { active = false; };
-  }, [answer?.storage_path]);
+  }, [answer?.storage_path, audioExpired]);
 
   useEffect(() => () => {
     if (timerRef.current) window.clearInterval(timerRef.current);
@@ -1029,7 +1030,7 @@ function AudioRecorder({ question, answer, onChange, disabled, attemptId, attemp
     }
   }
 
-  if (disabled) return <div className="exercise-speaking">{promptSelector}{savedUrl ? <audio controls src={savedUrl} className="w-full" /> : <p className="border-y border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/65 dark:border-white/15 dark:text-white/65">Nessuna registrazione disponibile.</p>}{answer?.duration_seconds ? <p className="text-xs font-bold text-ink/60 dark:text-white/60">Durata: {Math.round(Number(answer.duration_seconds))} secondi</p> : null}</div>;
+  if (disabled) return <div className="exercise-speaking">{promptSelector}{audioExpired ? <p className="border-y border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/65 dark:border-white/15 dark:text-white/65">Registrazione non più disponibile dopo 14 giorni. Le trascrizioni approvate e le correzioni restano consultabili.</p> : savedUrl ? <audio controls src={savedUrl} className="w-full" /> : <p className="border-y border-dashed border-ink/15 p-4 text-sm font-semibold text-ink/65 dark:border-white/15 dark:text-white/65">Nessuna registrazione disponibile.</p>}{answer?.duration_seconds ? <p className="text-xs font-bold text-ink/60 dark:text-white/60">Durata: {Math.round(Number(answer.duration_seconds))} secondi</p> : null}</div>;
 
   return <div className="exercise-speaking">
     {promptSelector}
@@ -1068,6 +1069,7 @@ export default function ExerciseQuestionRendererV2({
   showCorrectAnswers = false,
   showExplanations = false,
   attemptId = null,
+  showSpeechTranscript = true,
 }) {
   const question = item?.question || {};
   const type = question.type;
@@ -1108,6 +1110,21 @@ export default function ExerciseQuestionRendererV2({
         showCorrectAnswers={showCorrectAnswers}
         showExplanations={showExplanations}
       />
+      {type === 'audio_response' && showSpeechTranscript && typeof item?.speech_transcript === 'string' && item.speech_transcript.trim() ? (
+        <section className="mt-5">
+          {item?.teacher_correction?.corrected_text ? (
+            <WritingCorrectionDisplay
+              originalText={item.speech_transcript}
+              correction={item.teacher_correction}
+            />
+          ) : (
+            <div className="rounded-2xl border border-ink/10 bg-linen/30 p-5 dark:border-white/10 dark:bg-white/[0.035]">
+              <p className="text-xs font-black uppercase tracking-wider text-clay dark:text-coral">Trascrizione della tua risposta</p>
+              <p className="mt-3 whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/80 dark:text-white/80">{item.speech_transcript}</p>
+            </div>
+          )}
+        </section>
+      ) : null}
       {type === 'written_response' ? (
         <WritingCorrectionDisplay
           originalText={typeof answer === 'string' ? answer : (answer?.text || '')}

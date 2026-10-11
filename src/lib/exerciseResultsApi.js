@@ -76,3 +76,16 @@ export async function saveExerciseAttemptReview({
     })),
   };
 }
+
+/**
+ * Persist a reviewed or manually entered speaking transcript independently of audio retention.
+ * Editing the source transcript invalidates old text-range correction annotations server-side.
+ */
+export async function saveExerciseSpeechTranscript(attemptQuestionId, transcript) {
+  const { data, error } = await supabase.rpc('admin_save_exercise_builder_speech_transcript', {
+    p_attempt_question_id: attemptQuestionId,
+    p_transcript: transcript,
+  });
+  throwIfError(error);
+  return typeof data === 'string' ? data : '';
+}

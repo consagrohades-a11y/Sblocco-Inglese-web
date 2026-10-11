@@ -53,7 +53,7 @@ Deno.serve(async (req: Request) => {
 
   const { data: file, error: fileError } = await supabase
     .from("exercise_builder_submission_files")
-    .select("storage_bucket, storage_path, status, size_bytes, mime_type, created_at")
+    .select("attempt_question_id, storage_bucket, storage_path, status, size_bytes, mime_type, created_at")
     .eq("id", id).single();
   if (fileError || !file || file.status !== "active" || file.storage_bucket !== "exercise-submissions") {
     return respond({ error: "Recording unavailable or expired." }, 404);
@@ -88,8 +88,14 @@ Deno.serve(async (req: Request) => {
     if (typeof result?.text !== "string" || !result.text.trim()) {
       return respond({ error: "No speech was detected." }, 422);
     }
-    // No persisted transcript or second stored audio copy; the teacher may copy text during review.
-    return respond({ transcript: result.text.trim() });
+    // Persist text on the attempt question, independently from the 14-day audio cleanup.
+    // The RPC requires admin status and clears outdated range annotations if text changes.
+    const { data: savedTranscript, error: saveError } = await supabase.rpc(
+      "admin_save_exercise_builder_speech_transcript",
+      { p_attempt_question_id: file.attempt_question_id, p_transcript: result.text.trim() },
+    );
+    if (saveError) return respond({ error: "Transcription was generated but could not be saved. Please try again." }, 500);
+    return respond({ transcript: savedTranscript });
   } catch {
     return respond({ error: "Transcription timed out or was temporarily unavailable." }, 504);
   }

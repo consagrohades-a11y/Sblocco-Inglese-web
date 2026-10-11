@@ -93,7 +93,7 @@ function tabClass(active) {
     : 'text-ink/55 hover:text-ink dark:text-white/55 dark:hover:text-white';
 }
 
-export default function WritingCorrectionWorkspace({ originalText = '', correction = {}, onChange }) {
+export default function WritingCorrectionWorkspace({ originalText = '', correction = {}, onChange, sourceLabel = 'Testo dello studente', reviewLabel = 'Revisore scritto' }) {
   const value = normalizeCorrection(correction);
   const text = String(originalText || '');
   const [mode, setMode] = useState('edit');
@@ -246,7 +246,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
     <section className="mt-5 overflow-hidden rounded-3xl border border-[#d9c8bb] bg-[#fffaf5] shadow-sm dark:border-white/10 dark:bg-white/[0.035]">
       <header className="flex flex-wrap items-start justify-between gap-4 border-b border-[#eadbd1] px-5 py-5 dark:border-white/10 sm:px-6">
         <div className="min-w-0">
-          <p className="text-[0.66rem] font-black uppercase tracking-[0.14em] text-clay dark:text-coral">Revisore scritto</p>
+          <p className="text-[0.66rem] font-black uppercase tracking-[0.14em] text-clay dark:text-coral">{reviewLabel}</p>
           <h3 className="mt-1 text-xl font-black text-ink dark:text-white">Seleziona il testo. Correggi solo ciò che serve.</h3>
           <p className="mt-1 max-w-2xl text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
             Evidenzia un passaggio nella risposta. Le correzioni già create restano sempre modificabili: cliccale nel testo o riaprile dall’elenco.
@@ -284,7 +284,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
         <div className="grid min-h-[28rem] lg:grid-cols-[minmax(0,1.45fr)_minmax(19rem,0.55fr)]">
           <div className="border-b border-[#eadbd1] p-5 dark:border-white/10 lg:border-b-0 lg:border-r sm:p-7">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <p className="text-[0.68rem] font-black uppercase tracking-[0.13em] text-ink/45 dark:text-white/45">Testo dello studente</p>
+              <p className="text-[0.68rem] font-black uppercase tracking-[0.13em] text-ink/45 dark:text-white/45">{sourceLabel}</p>
               <p className="text-xs font-bold text-ink/40 dark:text-white/40">{value.reasons.length} {value.reasons.length === 1 ? 'correzione' : 'correzioni'}</p>
             </div>
 
