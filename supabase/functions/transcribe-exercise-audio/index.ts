@@ -20,10 +20,20 @@ Deno.serve(async (req: Request) => {
   if (!token.startsWith("Bearer ")) return respond({ error: "Authentication required." }, 401);
 
   const url = Deno.env.get("SUPABASE_URL");
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
-  if (!url || !anonKey) return respond({ error: "Server configuration unavailable." }, 503);
+  // Prefer current publishable API keys; retain compatibility with older Supabase projects.
+  const published = Deno.env.get("SUPABASE_PUBLISHABLE_KEYS");
+  let publishableKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
+  if (published) {
+    try {
+      const keys = JSON.parse(published) as Record<string, string>;
+      publishableKey = keys.default || publishableKey;
+    } catch {
+      return respond({ error: "Invalid Supabase key configuration." }, 503);
+    }
+  }
+  if (!url || !publishableKey) return respond({ error: "Server configuration unavailable." }, 503);
 
-  const supabase = createClient(url, anonKey, {
+  const supabase = createClient(url, publishableKey, {
     global: { headers: { Authorization: token } },
     auth: { persistSession: false, autoRefreshToken: false },
   });
