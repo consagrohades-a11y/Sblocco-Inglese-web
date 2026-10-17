@@ -77,6 +77,7 @@ Deno.serve(async (req: Request) => {
   const form = new FormData();
   form.append("model", "gpt-transcribe");
   form.append("languages[]", "en");
+  form.append("prompt", "This recording is a spontaneous spoken answer by an English-language learner. The learner may make grammar errors, repeat words, restart sentences, or use unusual phrasing. Represent the words actually spoken, including nonstandard grammar and incomplete sentences. Do not silently correct, paraphrase, or rewrite the learner's English. Do not invent inaudible words.");
   form.append("file", new File([audio], "recording." + ext, { type: file.mime_type }));
   try {
     const transcription = await fetch("https://api.openai.com/v1/audio/transcriptions", {
