@@ -10,7 +10,6 @@ import {
 } from '../../lib/speakingReviewCriteria.js';
 
 const CATEGORY_LABELS = {
-  ...Object.fromEntries(SPEAKING_CATEGORIES),
   grammar: 'Grammatica',
   vocabulary: 'Lessico',
   spelling: 'Ortografia',
@@ -75,6 +74,14 @@ const CATEGORY_STYLES = {
   },
 };
 
+const SPEAKING_CATEGORY_LABELS = Object.fromEntries(SPEAKING_CATEGORIES);
+
+function categoryLabel(category, isSpeaking) {
+  return (isSpeaking ? SPEAKING_CATEGORY_LABELS[category] : null)
+    || CATEGORY_LABELS[category]
+    || CATEGORY_LABELS.other;
+}
+
 function styleForCategory(category) {
   return CATEGORY_STYLES[category] || CATEGORY_STYLES.other;
 }
@@ -131,7 +138,7 @@ function categorizedSegments(originalText, reasons, view) {
   return segments;
 }
 
-function CorrectionText({ originalText, correctedText, reasons, view }) {
+function CorrectionText({ originalText, correctedText, reasons, view, isSpeaking }) {
   const categorized = useMemo(
     () => categorizedSegments(originalText, reasons, view),
     [originalText, reasons, view],
@@ -152,7 +159,7 @@ function CorrectionText({ originalText, correctedText, reasons, view }) {
         if (segment.type === 'reason') {
           const category = segment.reason?.category || 'other';
           const style = styleForCategory(category);
-          const label = CATEGORY_LABELS[category] || CATEGORY_LABELS.other;
+          const label = categoryLabel(category, isSpeaking);
           const isSuggestion = segment.reason?.kind === 'improvement';
           if (!segment.text) return null;
 
@@ -223,11 +230,11 @@ export default function WritingCorrectionDisplay({ originalText = '', correction
       {(hasTextChanges || !isSpeaking) ? <div className="grid gap-0 lg:grid-cols-2">
         <div className="border-b border-[#eadbd1] p-4 dark:border-white/10 lg:border-b-0 lg:border-r sm:p-5">
           <p className="mb-3 text-[0.65rem] font-black uppercase tracking-[0.12em] text-[#87351f] dark:text-[#ffc1ae]">La tua versione</p>
-          <CorrectionText originalText={originalText} correctedText={correctedText} reasons={reasons} view="original" />
+          <CorrectionText originalText={originalText} correctedText={correctedText} reasons={reasons} view="original" isSpeaking={isSpeaking} />
         </div>
         <div className="p-4 sm:p-5">
           <p className="mb-3 text-[0.65rem] font-black uppercase tracking-[0.12em] text-[#315f78] dark:text-[#cfe8f5]">Versione corretta</p>
-          <CorrectionText originalText={originalText} correctedText={correctedText} reasons={reasons} view="corrected" />
+          <CorrectionText originalText={originalText} correctedText={correctedText} reasons={reasons} view="corrected" isSpeaking={isSpeaking} />
         </div>
       </div> : (
         <div className="border-t border-[#eadbd1] p-5 dark:border-white/10">
@@ -247,7 +254,7 @@ export default function WritingCorrectionDisplay({ originalText = '', correction
                 <article key={`${reason?.original || 'reason'}-${index}`} className="rounded-xl border border-ink/10 bg-white/75 p-3.5 dark:border-white/10 dark:bg-white/[0.035]">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className={`rounded-full px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-wide ${style.badge}`}>
-                      {CATEGORY_LABELS[category] || CATEGORY_LABELS.other}
+                      {categoryLabel(category, isSpeaking)}
                     </span>
                     {isSpeaking ? <span className="text-[0.62rem] font-bold text-ink/60 dark:text-white/60">{reason.kind === 'improvement' ? 'Suggerimento' : 'Errore'}</span> : null}
                     {(reason?.original || reason?.corrected) ? (
