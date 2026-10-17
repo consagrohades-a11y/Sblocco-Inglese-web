@@ -22,7 +22,8 @@ function serverKey() {
   if (raw) {
     try {
       const keys = JSON.parse(raw) as Record<string, string>;
-      if (keys.default) return keys.default;
+      const candidate = keys.default || Object.values(keys)[0];
+      if (typeof candidate === "string") return candidate;
     } catch { /* Legacy fallback below. */ }
   }
   return Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
@@ -48,7 +49,7 @@ Deno.serve(async (req: Request) => {
   const key = serverKey();
   const openaiKey = Deno.env.get("OPENAI_API_KEY");
   if (!url || !key || !openaiKey) {
-    return respond({ error: "Server transcription configuration unavailable" }, 503);
+    return respond({ error: "Server transcription configuration unavailable", missing: [!url ? "SUPABASE_URL" : null, !key ? "SUPABASE_SECRET_KEYS_OR_SERVICE_ROLE_KEY" : null, !openaiKey ? "OPENAI_API_KEY" : null].filter(Boolean) }, 503);
   }
   const db = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
   const now = new Date();
