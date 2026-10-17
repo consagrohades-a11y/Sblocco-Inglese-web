@@ -1,6 +1,13 @@
 import React, { useMemo } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { diffText } from '../../lib/textDiff.js';
+import {
+  SPEAKING_CATEGORIES,
+  SPEAKING_PERFORMANCE_FIELDS,
+  SPEAKING_NEXT_STEP_FIELDS,
+  normalizeSpeakingFeedback,
+  hasSpeakingFeedback,
+} from '../../lib/speakingReviewCriteria.js';
 
 const CATEGORY_LABELS = {
   grammar: 'Grammatica',
@@ -55,12 +62,25 @@ const CATEGORY_STYLES = {
     added: 'bg-[#f0ece7] text-[#4f4a43] decoration-[#80776d] dark:bg-white/[0.07] dark:text-white/80',
     badge: 'bg-[#e8e3dc] text-[#4f4a43] dark:bg-white/10 dark:text-white/80',
   },
+  naturalness: {
+    removed: 'bg-[#e3e8eb] text-[#26465a] decoration-[#527387] dark:bg-[#557c96]/25 dark:text-[#cfe8f5]',
+    added: 'bg-[#eef1f3] text-[#26465a] decoration-[#527387] dark:bg-[#557c96]/15 dark:text-[#cfe8f5]',
+    badge: 'bg-[#e3e8eb] text-[#26465a] dark:bg-[#557c96]/25 dark:text-[#cfe8f5]',
+  },
   other: {
     removed: 'bg-[#ece8e2] text-[#5a5148] decoration-[#928579] dark:bg-white/10 dark:text-white/80',
     added: 'bg-[#f3f0ec] text-[#5a5148] decoration-[#928579] dark:bg-white/[0.07] dark:text-white/80',
     badge: 'bg-[#ece8e2] text-[#5a5148] dark:bg-white/10 dark:text-white/80',
   },
 };
+
+const SPEAKING_CATEGORY_LABELS = Object.fromEntries(SPEAKING_CATEGORIES);
+
+function categoryLabel(category, isSpeaking) {
+  return (isSpeaking ? SPEAKING_CATEGORY_LABELS[category] : null)
+    || CATEGORY_LABELS[category]
+    || CATEGORY_LABELS.other;
+}
 
 function styleForCategory(category) {
   return CATEGORY_STYLES[category] || CATEGORY_STYLES.other;
@@ -102,7 +122,7 @@ function categorizedSegments(originalText, reasons, view) {
       type: 'reason',
       text: view === 'original'
         ? originalText.slice(start, end)
-        : String(reason.corrected || ''),
+        : String(reason.corrected || originalText.slice(start, end)),
       reason,
     });
     cursor = end;
@@ -118,7 +138,7 @@ function categorizedSegments(originalText, reasons, view) {
   return segments;
 }
 
-function CorrectionText({ originalText, correctedText, reasons, view }) {
+function CorrectionText({ originalText, correctedText, reasons, view, isSpeaking }) {
   const categorized = useMemo(
     () => categorizedSegments(originalText, reasons, view),
     [originalText, reasons, view],
@@ -139,7 +159,8 @@ function CorrectionText({ originalText, correctedText, reasons, view }) {
         if (segment.type === 'reason') {
           const category = segment.reason?.category || 'other';
           const style = styleForCategory(category);
-          const label = CATEGORY_LABELS[category] || CATEGORY_LABELS.other;
+          const label = categoryLabel(category, isSpeaking);
+          const isSuggestion = segment.reason?.kind === 'improvement';
           if (!segment.text) return null;
 
           return (
@@ -147,7 +168,7 @@ function CorrectionText({ originalText, correctedText, reasons, view }) {
               key={index}
               title={label}
               className={`rounded-sm px-0.5 font-black decoration-2 ${view === 'original'
-                ? `line-through ${style.removed}`
+                ? `${isSuggestion ? 'border-b-2 border-dashed' : 'line-through'} ${style.removed}`
                 : `italic underline underline-offset-2 ${style.added}`}`}
             >
               {segment.text}
@@ -179,11 +200,14 @@ function CorrectionText({ originalText, correctedText, reasons, view }) {
   );
 }
 
-export default function WritingCorrectionDisplay({ originalText = '', correction = {}, compact = false }) {
+export default function WritingCorrectionDisplay({ originalText = '', correction = {}, compact = false, isSpeaking = false }) {
   const correctedText = String(correction?.corrected_text || '');
   const reasons = Array.isArray(correction?.reasons) ? correction.reasons : [];
 
-  if (!correctedText.trim()) return null;
+  const speakingFeedback = normalizeSpeakingFeedback(correction?.speaking_feedback);
+  const showSpeakingFeedback = isSpeaking && hasSpeakingFeedback(speakingFeedback);
+  const hasTextChanges = Boolean(reasons.length || (correctedText.trim() && correctedText !== String(originalText || '')));
+  if (!correctedText.trim() && !showSpeakingFeedback && !correction?.summary) return null;
 
   return (
     <section className={`mt-5 overflow-hidden rounded-2xl border border-[#d8c5b8] bg-[#fffaf5] shadow-sm dark:border-white/10 dark:bg-white/[0.035] ${compact ? 'text-sm' : ''}`}>
@@ -193,9 +217,9 @@ export default function WritingCorrectionDisplay({ originalText = '', correction
         </span>
         <div>
           <p className="text-[0.66rem] font-black uppercase tracking-[0.13em] text-clay dark:text-coral">Correzione del docente</p>
-          <h3 className="mt-1 text-lg font-black text-ink dark:text-white">Guarda esattamente cosa è cambiato.</h3>
+          <h3 className="mt-1 text-lg font-black text-ink dark:text-white">{isSpeaking ? 'La tua risposta e il feedback del docente.' : 'Guarda esattamente cosa è cambiato.'}</h3>
           <p className="mt-1 text-xs font-semibold leading-5 text-ink/50 dark:text-white/50">
-            I colori indicano il tipo di errore e corrispondono alle categorie qui sotto.
+            {isSpeaking ? 'Le correzioni distinguono gli errori dai suggerimenti per rendere l’inglese più naturale.' : 'I colori indicano il tipo di errore e corrispondono alle categorie qui sotto.'}
           </p>
           {correction?.summary ? (
             <p className="mt-2 text-sm font-semibold leading-6 text-ink/60 dark:text-white/60">{correction.summary}</p>
@@ -203,16 +227,21 @@ export default function WritingCorrectionDisplay({ originalText = '', correction
         </div>
       </div>
 
-      <div className="grid gap-0 lg:grid-cols-2">
+      {(hasTextChanges || !isSpeaking) ? <div className="grid gap-0 lg:grid-cols-2">
         <div className="border-b border-[#eadbd1] p-4 dark:border-white/10 lg:border-b-0 lg:border-r sm:p-5">
           <p className="mb-3 text-[0.65rem] font-black uppercase tracking-[0.12em] text-[#87351f] dark:text-[#ffc1ae]">La tua versione</p>
-          <CorrectionText originalText={originalText} correctedText={correctedText} reasons={reasons} view="original" />
+          <CorrectionText originalText={originalText} correctedText={correctedText} reasons={reasons} view="original" isSpeaking={isSpeaking} />
         </div>
         <div className="p-4 sm:p-5">
           <p className="mb-3 text-[0.65rem] font-black uppercase tracking-[0.12em] text-[#315f78] dark:text-[#cfe8f5]">Versione corretta</p>
-          <CorrectionText originalText={originalText} correctedText={correctedText} reasons={reasons} view="corrected" />
+          <CorrectionText originalText={originalText} correctedText={correctedText} reasons={reasons} view="corrected" isSpeaking={isSpeaking} />
         </div>
-      </div>
+      </div> : (
+        <div className="border-t border-[#eadbd1] p-5 dark:border-white/10">
+          <p className="text-[0.65rem] font-black uppercase tracking-wider text-ink/55 dark:text-white/55">La tua trascrizione</p>
+          <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-7 text-ink/80 dark:text-white/80">{originalText}</p>
+        </div>
+      )}
 
       {reasons.length ? (
         <div className="border-t border-[#eadbd1] px-4 py-4 dark:border-white/10 sm:px-5">
@@ -225,8 +254,9 @@ export default function WritingCorrectionDisplay({ originalText = '', correction
                 <article key={`${reason?.original || 'reason'}-${index}`} className="rounded-xl border border-ink/10 bg-white/75 p-3.5 dark:border-white/10 dark:bg-white/[0.035]">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className={`rounded-full px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-wide ${style.badge}`}>
-                      {CATEGORY_LABELS[category] || CATEGORY_LABELS.other}
+                      {categoryLabel(category, isSpeaking)}
                     </span>
+                    {isSpeaking ? <span className="text-[0.62rem] font-bold text-ink/60 dark:text-white/60">{reason.kind === 'improvement' ? 'Suggerimento' : 'Errore'}</span> : null}
                     {(reason?.original || reason?.corrected) ? (
                       <span className="flex min-w-0 flex-wrap items-center gap-1.5 text-xs font-bold text-ink/65 dark:text-white/65">
                         {reason?.original ? <span className={`line-through decoration-2 ${style.removed}`}>{reason.original}</span> : null}
@@ -241,6 +271,32 @@ export default function WritingCorrectionDisplay({ originalText = '', correction
             })}
           </div>
         </div>
+      ) : null}
+      {showSpeakingFeedback ? (
+        <section className="border-t border-[#eadbd1] px-4 py-5 dark:border-white/10 sm:px-5">
+          <p className="text-[0.66rem] font-black uppercase tracking-wider text-clay dark:text-coral">La tua performance orale</p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-3">
+            {SPEAKING_PERFORMANCE_FIELDS.filter(({ key }) => speakingFeedback[key].trim()).map((field) => (
+              <div key={field.key} className="rounded-xl border border-[#eadbd1] bg-white p-3.5 dark:border-white/10 dark:bg-white/[0.04]">
+                <p className="text-xs font-black text-ink dark:text-white">{field.label}</p>
+                <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6 text-ink/70 dark:text-white/70">{speakingFeedback[field.key]}</p>
+              </div>
+            ))}
+          </div>
+          {SPEAKING_NEXT_STEP_FIELDS.some(({ key }) => speakingFeedback[key].trim()) ? (
+            <div className="mt-5 border-t border-[#eadbd1] pt-4 dark:border-white/10">
+              <p className="text-[0.66rem] font-black uppercase tracking-wide text-ink/55 dark:text-white/55">Il tuo prossimo passo</p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                {SPEAKING_NEXT_STEP_FIELDS.filter(({ key }) => speakingFeedback[key].trim()).map((field) => (
+                  <div key={field.key}>
+                    <p className="text-xs font-black text-ink dark:text-white">{field.label}</p>
+                    <p className="mt-1 whitespace-pre-wrap text-sm font-semibold leading-6 text-ink/70 dark:text-white/70">{speakingFeedback[field.key]}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </section>
       ) : null}
     </section>
   );

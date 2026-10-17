@@ -308,6 +308,7 @@ function QuestionReviewCard({ item, review, onChange, reviewEnabled = true }) {
 
       {(item.question?.type === 'written_response' || (item.question?.type === 'audio_response' && speechTranscript && reviewEnabled)) ? (
         <WritingCorrectionWorkspace
+          isSpeaking={item.question?.type === 'audio_response'}
           sourceLabel={item.question?.type === 'audio_response' ? 'Trascrizione verificata' : 'Testo dello studente'}
           reviewLabel={item.question?.type === 'audio_response' ? 'Correzione manuale dello speaking' : 'Revisore scritto'}
           originalText={item.question?.type === 'audio_response'

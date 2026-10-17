@@ -1,8 +1,15 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { Check, Eye, FileText, RotateCcw, Sparkles, Trash2 } from 'lucide-react';
 import WritingCorrectionDisplay from './WritingCorrectionDisplay.jsx';
+import {
+  SPEAKING_CATEGORIES,
+  SPEAKING_PERFORMANCE_FIELDS,
+  SPEAKING_NEXT_STEP_FIELDS,
+  normalizeSpeakingFeedback,
+  hasSpeakingFeedback,
+} from '../../lib/speakingReviewCriteria.js';
 
-const CATEGORIES = [
+const WRITING_CATEGORIES = [
   ['grammar', 'Grammatica'],
   ['vocabulary', 'Lessico'],
   ['spelling', 'Ortografia'],
@@ -23,6 +30,7 @@ const CATEGORY_STYLES = {
   structure: 'bg-[#dfe4ea] text-[#26394b] decoration-[#536b80] dark:bg-[#7891a8]/15 dark:text-[#dce8f1]',
   style: 'bg-[#ece7e0] text-[#554b43] decoration-[#88786c] dark:bg-white/10 dark:text-white/80',
   clarity: 'bg-[#eee8df] text-[#5a5148] decoration-[#928579] dark:bg-white/10 dark:text-white/80',
+  naturalness: 'bg-[#e3e8eb] text-[#26465a] decoration-[#527387] dark:bg-[#557c96]/25 dark:text-[#cfe8f5]',
   other: 'bg-[#ece8e2] text-[#5a5148] decoration-[#928579] dark:bg-white/10 dark:text-white/80',
 };
 
@@ -31,6 +39,7 @@ function normalizeCorrection(correction) {
     corrected_text: typeof correction?.corrected_text === 'string' ? correction.corrected_text : '',
     summary: typeof correction?.summary === 'string' ? correction.summary : '',
     reasons: Array.isArray(correction?.reasons) ? correction.reasons : [],
+    speaking_feedback: normalizeSpeakingFeedback(correction?.speaking_feedback),
   };
 }
 
@@ -53,7 +62,7 @@ function correctedFromReasons(originalText, reasons, fallback = '') {
 
   let output = originalText;
   ranged.forEach((reason) => {
-    output = `${output.slice(0, Number(reason.start))}${String(reason.corrected || '')}${output.slice(Number(reason.end))}`;
+    output = `${output.slice(0, Number(reason.start))}${String(reason.corrected || originalText.slice(Number(reason.start), Number(reason.end)))}${output.slice(Number(reason.end))}`;
   });
   return output;
 }
@@ -93,9 +102,10 @@ function tabClass(active) {
     : 'text-ink/55 hover:text-ink dark:text-white/55 dark:hover:text-white';
 }
 
-export default function WritingCorrectionWorkspace({ originalText = '', correction = {}, onChange, sourceLabel = 'Testo dello studente', reviewLabel = 'Revisore scritto' }) {
+export default function WritingCorrectionWorkspace({ originalText = '', correction = {}, onChange, sourceLabel = 'Testo dello studente', reviewLabel = 'Revisore scritto', isSpeaking = false }) {
   const value = normalizeCorrection(correction);
   const text = String(originalText || '');
+  const categories = isSpeaking ? SPEAKING_CATEGORIES : WRITING_CATEGORIES;
   const [mode, setMode] = useState('edit');
   const [draft, setDraft] = useState(null);
   const [activeReasonIndex, setActiveReasonIndex] = useState(null);
@@ -141,6 +151,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
       corrected_text: correctedFromReasons(text, nextReasons, patch.corrected_text ?? value.corrected_text),
       summary: patch.summary ?? value.summary,
       reasons: nextReasons,
+      ...(isSpeaking ? { speaking_feedback: patch.speaking_feedback ?? value.speaking_feedback } : {}),
     });
   }
 
@@ -182,6 +193,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
       original: text.slice(cleanStart, cleanEnd),
       corrected: '',
       category: 'grammar',
+      kind: 'error',
       reason: '',
     });
     selection.removeAllRanges();
@@ -198,6 +210,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
       original: String(reason.original || ''),
       corrected: String(reason.corrected || ''),
       category: reason.category || 'other',
+      kind: reason.kind === 'improvement' ? 'improvement' : 'error',
       reason: String(reason.reason || ''),
     });
   }
@@ -209,6 +222,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
       original: draft.original || '',
       corrected: draft.corrected || '',
       reason: draft.reason || '',
+      ...(isSpeaking ? { kind: draft.kind === 'improvement' ? 'improvement' : 'error' } : {}),
       ...(Number.isInteger(draft.start) && Number.isInteger(draft.end) ? { start: draft.start, end: draft.end } : {}),
     };
 
@@ -240,16 +254,25 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
     onChange({});
   }
 
-  const hasCorrection = Boolean(value.reasons.length || value.summary.trim() || value.corrected_text.trim());
+  const hasCorrection = Boolean(
+    value.reasons.length || value.summary.trim() || value.corrected_text.trim()
+    || (isSpeaking && hasSpeakingFeedback(value.speaking_feedback)),
+  );
+
+  function updateSpeakingFeedback(key, textValue) {
+    emit(value.reasons, {
+      speaking_feedback: { ...value.speaking_feedback, [key]: textValue },
+    });
+  }
 
   return (
     <section className="mt-5 overflow-hidden rounded-3xl border border-[#d9c8bb] bg-[#fffaf5] shadow-sm dark:border-white/10 dark:bg-white/[0.035]">
       <header className="flex flex-wrap items-start justify-between gap-4 border-b border-[#eadbd1] px-5 py-5 dark:border-white/10 sm:px-6">
         <div className="min-w-0">
           <p className="text-[0.66rem] font-black uppercase tracking-[0.14em] text-clay dark:text-coral">{reviewLabel}</p>
-          <h3 className="mt-1 text-xl font-black text-ink dark:text-white">Seleziona il testo. Correggi solo ciò che serve.</h3>
+          <h3 className="mt-1 text-xl font-black text-ink dark:text-white">{isSpeaking ? 'Correggi la lingua. Valuta anche il parlato.' : 'Seleziona il testo. Correggi solo ciò che serve.'}</h3>
           <p className="mt-1 max-w-2xl text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
-            Evidenzia un passaggio nella risposta. Le correzioni già create restano sempre modificabili: cliccale nel testo o riaprile dall’elenco.
+            {isSpeaking ? 'La trascrizione riproduce quello che lo studente ha detto. Indica separatamente errori e miglioramenti, poi valuta il parlato ascoltando la registrazione.' : 'Evidenzia un passaggio nella risposta. Le correzioni già create restano sempre modificabili: cliccale nel testo o riaprile dall’elenco.'}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -302,7 +325,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
                     key={index}
                     type="button"
                     onClick={(event) => { event.stopPropagation(); openReason(segment.index); }}
-                    className={`focus-ring rounded px-0.5 font-bold line-through decoration-2 underline-offset-2 transition hover:brightness-95 ${style}`}
+                    className={`focus-ring rounded px-0.5 font-bold decoration-2 underline-offset-2 transition hover:brightness-95 ${segment.reason?.kind === 'improvement' ? 'border-b-2 border-dashed' : 'line-through'} ${style}`}
                     title="Apri questa correzione"
                   >
                     {segment.text}
@@ -319,7 +342,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
             {value.reasons.length ? (
               <div className="mt-5 flex flex-wrap gap-2">
                 {Object.entries(categoryCounts).map(([category, count]) => {
-                  const label = CATEGORIES.find(([key]) => key === category)?.[1] || 'Altro';
+                  const label = categories.find(([key]) => key === category)?.[1] || 'Altro';
                   return <span key={category} className={`rounded-full px-3 py-1.5 text-xs font-black ${CATEGORY_STYLES[category] || CATEGORY_STYLES.other}`}>{label} · {count}</span>;
                 })}
               </div>
@@ -340,11 +363,11 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
                 <div className="mt-5">
                   <p className="text-[0.62rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Categoria</p>
                   <div className="mt-2 flex flex-wrap gap-1.5">
-                    {CATEGORIES.map(([key, label]) => (
+                    {categories.map(([key, label]) => (
                       <button
                         key={key}
                         type="button"
-                        onClick={() => setDraft((current) => ({ ...current, category: key }))}
+                        onClick={() => setDraft((current) => ({ ...current, category: key, ...(isSpeaking && key === 'naturalness' && current.kind === 'error' ? {kind: 'improvement'} : {}) }))}
                         className={`focus-ring rounded-full border px-2.5 py-1.5 text-[0.68rem] font-black transition ${draft.category === key ? `${CATEGORY_STYLES[key]} border-current` : 'border-ink/10 bg-white text-ink/50 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/50'}`}
                       >
                         {label}
@@ -353,6 +376,20 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
                   </div>
                 </div>
 
+                {isSpeaking ? (
+                  <div className="mt-5">
+                    <p className="text-[0.62rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">Tipo di intervento</p>
+                    <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="Tipo di intervento">
+                      {[['error', 'Errore'], ['improvement', 'Miglioramento']].map(([kind, label]) => (
+                        <button key={kind} type="button" aria-pressed={draft.kind === kind}
+                          onClick={() => setDraft((current) => ({ ...current, kind }))}
+                          className={`focus-ring rounded-full border px-3 py-2 text-xs font-black ${draft.kind === kind ? 'border-clay bg-clay/10 text-clay dark:text-coral' : 'border-ink/15 bg-white text-ink/60 dark:border-white/15 dark:bg-white/5 dark:text-white/60'}`}>
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
                 <label className="mt-5 block text-[0.65rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">
                   Sostituisci con
                   <textarea
@@ -360,7 +397,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
                     value={draft.corrected}
                     onChange={(event) => setDraft((current) => ({ ...current, corrected: event.target.value }))}
                     className="focus-ring mt-2 w-full resize-y rounded-xl border border-ink/15 bg-white px-3.5 py-3 text-sm font-black italic leading-6 text-[#234f67] dark:border-white/15 dark:bg-surface-900 dark:text-[#cfe8f5]"
-                    placeholder="Scrivi la forma corretta…"
+                    placeholder={isSpeaking ? 'Correzione o alternativa consigliata (facoltativa)' : 'Scrivi la forma corretta…'}
                   />
                 </label>
 
@@ -394,12 +431,12 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
                     <p className="mt-1 text-sm font-semibold leading-6 text-ink/50 dark:text-white/50">Puoi riaprirle, modificarle o eliminarle anche dopo aver salvato la review.</p>
                     <div className="mt-4 grid gap-2">
                       {value.reasons.map((reason, index) => {
-                        const categoryLabel = CATEGORIES.find(([key]) => key === (reason.category || 'other'))?.[1] || 'Altro';
+                        const categoryLabel = categories.find(([key]) => key === (reason.category || 'other'))?.[1] || 'Altro';
                         return (
                           <div key={`${index}:${reason.start ?? ''}:${reason.end ?? ''}`} className="rounded-xl border border-[#eadbd1] bg-white p-3.5 dark:border-white/10 dark:bg-surface-900">
                             <div className="flex items-start gap-3">
                               <button type="button" onClick={() => openReason(index)} className="focus-ring min-w-0 flex-1 text-left">
-                                <span className="block text-[0.62rem] font-black uppercase tracking-wide text-clay dark:text-coral">{categoryLabel}</span>
+                                <span className="block text-[0.62rem] font-black uppercase tracking-wide text-clay dark:text-coral">{categoryLabel}{isSpeaking && reason.kind === 'improvement' ? ' · Suggerimento' : ''}</span>
                                 <span className="mt-1 block truncate text-sm font-bold text-[#87351f] line-through decoration-2 dark:text-[#ffc1ae]">{reason.original || text.slice(Number(reason.start || 0), Number(reason.end || 0))}</span>
                                 {reason.corrected ? <span className="mt-1 block truncate text-sm font-black italic text-[#234f67] dark:text-[#cfe8f5]">→ {reason.corrected}</span> : null}
                               </button>
@@ -439,14 +476,52 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
       {mode === 'student' ? (
         <div className="p-5 sm:p-7">
           {hasCorrection ? (
-            <WritingCorrectionDisplay originalText={text} correction={{ ...value, corrected_text: correctedText }} compact />
+            <WritingCorrectionDisplay originalText={text} correction={{ ...value, corrected_text: correctedText }} isSpeaking={isSpeaking} compact />
           ) : (
             <p className="rounded-2xl border border-dashed border-ink/15 p-6 text-sm font-semibold text-ink/50 dark:border-white/15 dark:text-white/50">Aggiungi almeno una correzione per vedere l’anteprima studente.</p>
           )}
         </div>
       ) : null}
 
-      <footer className="border-t border-[#eadbd1] px-5 py-5 dark:border-white/10 sm:px-6">
+      {isSpeaking && mode === 'edit' ? (
+        <section className="border-t border-[#eadbd1] bg-[#fffdf9] px-5 py-6 dark:border-white/10 dark:bg-white/[0.02] sm:px-7">
+          <div className="mb-5">
+            <p className="text-[0.66rem] font-black uppercase tracking-[0.12em] text-clay dark:text-coral">Performance orale</p>
+            <h4 className="mt-1 font-editorial text-2xl text-ink dark:text-white">Oltre le parole</h4>
+            <p className="mt-1 text-sm font-semibold leading-6 text-ink/55 dark:text-white/55">
+              Valutazione manuale e facoltativa. Ascolta l'audio per giudicare pronuncia e fluenza; lo svolgimento del compito riguarda pertinenza e sviluppo delle idee, non l'opinione espressa.
+            </p>
+          </div>
+          <div className="grid gap-3 lg:grid-cols-3">
+            {SPEAKING_PERFORMANCE_FIELDS.map((field) => (
+              <label key={field.key} className="block rounded-xl border border-[#eadbd1] bg-white p-4 dark:border-white/10 dark:bg-surface-900">
+                <span className="block text-xs font-black text-ink dark:text-white">{field.label}</span>
+                <span className="mt-1 block min-h-[3rem] text-xs font-semibold leading-5 text-ink/55 dark:text-white/55">{field.hint}</span>
+                <textarea rows={3} maxLength={1200} value={value.speaking_feedback[field.key]}
+                  onChange={(event) => updateSpeakingFeedback(field.key, event.target.value)}
+                  className="focus-ring mt-3 w-full resize-y rounded-lg border border-ink/15 bg-[#fffdf9] px-3 py-2.5 text-sm font-semibold leading-6 text-ink dark:border-white/15 dark:bg-surface-900 dark:text-white"
+                  placeholder="Osservazione del docente…"/>
+              </label>
+            ))}
+          </div>
+          <div className="mt-6 border-t border-[#eadbd1] pt-5 dark:border-white/10">
+            <p className="mb-3 text-xs font-black uppercase tracking-wide text-ink/60 dark:text-white/60">Feedback finale e prossimo obiettivo</p>
+            <div className="grid gap-3 lg:grid-cols-3">
+              {SPEAKING_NEXT_STEP_FIELDS.map((field) => (
+                <label key={field.key} className="block text-xs font-black text-ink/70 dark:text-white/70">
+                  {field.label}
+                  <textarea rows={3} maxLength={1200} value={value.speaking_feedback[field.key]}
+                    onChange={(event) => updateSpeakingFeedback(field.key, event.target.value)}
+                    className="focus-ring mt-2 w-full resize-y rounded-xl border border-ink/15 bg-white px-3 py-3 text-sm font-semibold leading-6 text-ink dark:border-white/15 dark:bg-surface-900 dark:text-white"
+                    placeholder={field.hint}/>
+                </label>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {!isSpeaking ? <footer className="border-t border-[#eadbd1] px-5 py-5 dark:border-white/10 sm:px-6">
         <label className="block text-[0.65rem] font-black uppercase tracking-wide text-ink/45 dark:text-white/45">
           Messaggio finale <span className="font-semibold normal-case tracking-normal opacity-60">(opzionale)</span>
           <textarea
@@ -457,7 +532,7 @@ export default function WritingCorrectionWorkspace({ originalText = '', correcti
             placeholder="Es. Il contenuto è chiaro: lavoriamo soprattutto su tempi verbali e collocazioni."
           />
         </label>
-      </footer>
+      </footer> : null}
     </section>
   );
 }
