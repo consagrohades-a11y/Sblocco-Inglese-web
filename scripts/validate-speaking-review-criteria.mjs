@@ -32,7 +32,7 @@ const editor = read('src/components/exercises/WritingCorrectionWorkspace.jsx');
 const display = read('src/components/exercises/WritingCorrectionDisplay.jsx');
 const admin = read('src/pages/AdminExerciseResults.jsx');
 const renderer = read('src/components/exercises/ExerciseQuestionRendererV2.jsx');
-const migration = read('supabase/migrations/20261017131500_speaking_specific_review_criteria.sql');
+const migration = read('supabase/migrations/20261017143736_speaking_specific_review_criteria.sql');
 const api = read('src/lib/exerciseResultsApi.js');
 
 assert(editor.includes('isSpeaking = false'));
