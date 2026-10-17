@@ -1138,10 +1138,13 @@ export default function ExerciseQuestionRendererV2({
       />
       {type === 'audio_response' && showSpeechTranscript && typeof item?.speech_transcript === 'string' && item.speech_transcript.trim() ? (
         <section className="mt-5">
-          {item?.teacher_correction?.corrected_text ? (
+          {(item?.teacher_correction?.corrected_text
+            || item?.teacher_correction?.summary
+            || Object.values(item?.teacher_correction?.speaking_feedback || {}).some((value) => typeof value === 'string' && value.trim())) ? (
             <WritingCorrectionDisplay
               originalText={item.speech_transcript}
               correction={item.teacher_correction}
+              isSpeaking
             />
           ) : (
             <div className="rounded-2xl border border-ink/10 bg-linen/30 p-5 dark:border-white/10 dark:bg-white/[0.035]">
