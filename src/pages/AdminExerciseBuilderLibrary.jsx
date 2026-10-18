@@ -1451,7 +1451,9 @@ export default function AdminExerciseBuilderLibrary() {
             setNotice(
               mode === 'group'
                 ? `Assigned ${assignItem.internal_title || 'activity'} to ${group?.name || 'group'} · ${result?.assignment_count || 0} learner assignments created.`
-                : `Assigned ${assignItem.internal_title || 'activity'} to ${learner?.display_name || learner?.email || 'learner'}.`
+                : mode === 'learners'
+                  ? `Assigned ${assignItem.internal_title || 'activity'} to ${result?.assignment_count || 0} selected learners.`
+                  : `Assigned ${assignItem.internal_title || 'activity'} to ${learner?.display_name || learner?.email || 'learner'}.`
             );
           }}
         />

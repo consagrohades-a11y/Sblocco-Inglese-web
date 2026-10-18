@@ -978,7 +978,9 @@ export default function AdminExerciseStudio() {
             setAssignmentNotice(
               mode === 'group'
                 ? `Assigned to ${group?.name || 'group'} · ${result?.assignment_count || 0} learner assignments created.`
-                : `Assigned to ${learner?.display_name || learner?.email || 'learner'}.`
+                : mode === 'learners'
+                  ? `Assigned to ${result?.assignment_count || 0} selected learners.`
+                  : `Assigned to ${learner?.display_name || learner?.email || 'learner'}.`
             );
           }}
         />

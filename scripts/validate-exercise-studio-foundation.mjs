@@ -1280,3 +1280,32 @@ assert.match(nativeListeningRendererSource, /revealTranscript/);
 assert.match(studioBlockEditorSource, /label="Listening instructions"/);
 assert.match(studioBlockEditorSource, /Separate steps with a blank line/);
 console.log('Listening instruction panels, editor guidance and existing media controls validated.');
+
+// Bulk Studio assignments must use one authorised, transactional database call.
+// Both Studio and Library must expose the same multi-select dialog; existing
+// single-learner and group routes must remain intact.
+const bulkQuickAssignPanelSource = fs.readFileSync(
+  'src/components/admin/exercise-studio/StudioQuickAssignPanel.jsx', 'utf8',
+);
+const bulkQuickAssignApiSource = fs.readFileSync('src/lib/exerciseStudioAssignmentApi.js', 'utf8');
+const bulkQuickAssignMigration = fs.readFileSync(
+  'supabase/migrations/20261018123000_studio_quick_assign_multiple_learners.sql', 'utf8',
+);
+const bulkStudioLibrarySource = fs.readFileSync('src/pages/AdminExerciseBuilderLibrary.jsx', 'utf8');
+assert.match(bulkQuickAssignPanelSource, /selectedLearnerIds/);
+assert.match(bulkQuickAssignPanelSource, /Select matches/);
+assert.match(bulkQuickAssignPanelSource, /Deselect matches/);
+assert.match(bulkQuickAssignPanelSource, /quickAssignStudioExerciseLearners/);
+assert.match(bulkQuickAssignPanelSource, /quickAssignStudioExerciseGroup/);
+assert.match(bulkQuickAssignPanelSource, /selectedLearnerIds\.length === 1/);
+assert.match(bulkQuickAssignApiSource, /admin_quick_assign_exercise_learners/);
+assert.match(bulkQuickAssignApiSource, /p_learner_ids: learnerIds/);
+assert.match(bulkQuickAssignMigration, /if not public\.is_admin\(\)/i);
+assert.match(bulkQuickAssignMigration, /cardinality\(p_learner_ids\) <>/i);
+assert.match(bulkQuickAssignMigration, /profile\.status = 'active'/);
+assert.match(bulkQuickAssignMigration, /for share/i);
+assert.match(bulkQuickAssignMigration, /public\.admin_quick_assign_exercise\(/);
+assert.match(bulkQuickAssignMigration, /grant execute on function public\.admin_quick_assign_exercise_learners[\s\S]*to authenticated/i);
+assert.match(studioPageSource, /mode === 'learners'/);
+assert.match(bulkStudioLibrarySource, /mode === 'learners'/);
+console.log('Studio atomic multi-learner quick assignment contract validated.');
