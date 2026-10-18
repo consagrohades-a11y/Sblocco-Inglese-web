@@ -5,7 +5,7 @@ export async function listQuickAssignLearners() {
   if (error) throw error;
 
   return (data || [])
-    .filter((learner) => learner?.status !== 'deleted')
+    .filter((learner) => learner?.status === 'active')
     .sort((a, b) => String(a.display_name || a.email || '').localeCompare(String(b.display_name || b.email || '')));
 }
 
