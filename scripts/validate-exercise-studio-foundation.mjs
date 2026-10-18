@@ -1284,28 +1284,28 @@ console.log('Listening instruction panels, editor guidance and existing media co
 // Bulk Studio assignments must use one authorised, transactional database call.
 // Both Studio and Library must expose the same multi-select dialog; existing
 // single-learner and group routes must remain intact.
-const quickAssignPanelSource = fs.readFileSync(
+const bulkQuickAssignPanelSource = fs.readFileSync(
   'src/components/admin/exercise-studio/StudioQuickAssignPanel.jsx', 'utf8',
 );
-const quickAssignApiSource = fs.readFileSync('src/lib/exerciseStudioAssignmentApi.js', 'utf8');
-const quickAssignBulkMigration = fs.readFileSync(
+const bulkQuickAssignApiSource = fs.readFileSync('src/lib/exerciseStudioAssignmentApi.js', 'utf8');
+const bulkQuickAssignMigration = fs.readFileSync(
   'supabase/migrations/20261018123000_studio_quick_assign_multiple_learners.sql', 'utf8',
 );
-const studioLibrarySource = fs.readFileSync('src/pages/AdminExerciseBuilderLibrary.jsx', 'utf8');
-assert.match(quickAssignPanelSource, /selectedLearnerIds/);
-assert.match(quickAssignPanelSource, /Select matches/);
-assert.match(quickAssignPanelSource, /Deselect matches/);
-assert.match(quickAssignPanelSource, /quickAssignStudioExerciseLearners/);
-assert.match(quickAssignPanelSource, /quickAssignStudioExerciseGroup/);
-assert.match(quickAssignPanelSource, /selectedLearnerIds\.length === 1/);
-assert.match(quickAssignApiSource, /admin_quick_assign_exercise_learners/);
-assert.match(quickAssignApiSource, /p_learner_ids: learnerIds/);
-assert.match(quickAssignBulkMigration, /if not public\.is_admin\(\)/i);
-assert.match(quickAssignBulkMigration, /cardinality\(p_learner_ids\) <>/i);
-assert.match(quickAssignBulkMigration, /profile\.status = 'active'/);
-assert.match(quickAssignBulkMigration, /for share/i);
-assert.match(quickAssignBulkMigration, /public\.admin_quick_assign_exercise\(/);
-assert.match(quickAssignBulkMigration, /grant execute on function public\.admin_quick_assign_exercise_learners[\s\S]*to authenticated/i);
+const bulkStudioLibrarySource = fs.readFileSync('src/pages/AdminExerciseBuilderLibrary.jsx', 'utf8');
+assert.match(bulkQuickAssignPanelSource, /selectedLearnerIds/);
+assert.match(bulkQuickAssignPanelSource, /Select matches/);
+assert.match(bulkQuickAssignPanelSource, /Deselect matches/);
+assert.match(bulkQuickAssignPanelSource, /quickAssignStudioExerciseLearners/);
+assert.match(bulkQuickAssignPanelSource, /quickAssignStudioExerciseGroup/);
+assert.match(bulkQuickAssignPanelSource, /selectedLearnerIds\.length === 1/);
+assert.match(bulkQuickAssignApiSource, /admin_quick_assign_exercise_learners/);
+assert.match(bulkQuickAssignApiSource, /p_learner_ids: learnerIds/);
+assert.match(bulkQuickAssignMigration, /if not public\.is_admin\(\)/i);
+assert.match(bulkQuickAssignMigration, /cardinality\(p_learner_ids\) <>/i);
+assert.match(bulkQuickAssignMigration, /profile\.status = 'active'/);
+assert.match(bulkQuickAssignMigration, /for share/i);
+assert.match(bulkQuickAssignMigration, /public\.admin_quick_assign_exercise\(/);
+assert.match(bulkQuickAssignMigration, /grant execute on function public\.admin_quick_assign_exercise_learners[\s\S]*to authenticated/i);
 assert.match(studioPageSource, /mode === 'learners'/);
-assert.match(studioLibrarySource, /mode === 'learners'/);
+assert.match(bulkStudioLibrarySource, /mode === 'learners'/);
 console.log('Studio atomic multi-learner quick assignment contract validated.');
