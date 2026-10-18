@@ -63,6 +63,17 @@ begin
     raise exception 'One or more learners are no longer active. Refresh the list.';
   end if;
 
+  -- Keep current_version_id stable across the whole selection, even if another
+  -- teacher publishes a new version concurrently.
+  perform 1
+  from public.exercise_builder_exercises exercise
+  where exercise.id = p_exercise_id
+    and exercise.status = 'published'
+  for share;
+  if not found then
+    raise exception 'Published exercise not found.';
+  end if;
+
   foreach v_learner_id in array p_learner_ids loop
     v_assignment := public.admin_quick_assign_exercise(
       p_learner_id => v_learner_id,
