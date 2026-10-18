@@ -94,3 +94,50 @@ export async function quickAssignStudioExerciseGroup({
   if (error) throw error;
   return data;
 }
+
+/**
+ * Atomic one-click assignment for an arbitrary selection of active learners.
+ * The database delegates to the normal single-learner publisher within one transaction,
+ * preserving independent grades, attempts and feedback for every learner.
+ */
+export async function quickAssignStudioExerciseLearners({
+  learnerIds,
+  exerciseId,
+  assignmentTitle = null,
+  deadlineAt = null,
+  required = true,
+  completionRule = 'submitted',
+  requiredScore = 70,
+  requiredAttempts = 1,
+  allowRetry = true,
+  showScore = true,
+  showCorrectAnswers = true,
+  showExplanations = true,
+  showDiagnosticSummary = false,
+}) {
+  if (!Array.isArray(learnerIds) || learnerIds.length === 0) throw new Error('Choose at least one learner.');
+  if (learnerIds.length > 100) throw new Error('Choose at most 100 learners.');
+  if (new Set(learnerIds).size !== learnerIds.length || learnerIds.some((id) => !id)) {
+    throw new Error('Choose each learner only once.');
+  }
+  if (!exerciseId) throw new Error('Publish the activity before assigning it.');
+
+  const { data, error } = await supabase.rpc('admin_quick_assign_exercise_learners', {
+    p_learner_ids: learnerIds,
+    p_exercise_id: exerciseId,
+    p_assignment_title: assignmentTitle?.trim() || null,
+    p_deadline_at: deadlineAt || null,
+    p_required: Boolean(required),
+    p_completion_rule: completionRule,
+    p_required_score: Number(requiredScore),
+    p_required_attempts: Number(requiredAttempts),
+    p_allow_retry: Boolean(allowRetry),
+    p_show_score: Boolean(showScore),
+    p_show_correct_answers: Boolean(showCorrectAnswers),
+    p_show_explanations: Boolean(showExplanations),
+    p_show_diagnostic_summary: Boolean(showDiagnosticSummary),
+  });
+
+  if (error) throw error;
+  return data;
+}
