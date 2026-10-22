@@ -13,8 +13,11 @@ import SEO from '../components/SEO.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { authPath } from '../lib/safeReturnTo.js';
 import { createCheckout, loadPathwayOffers } from '../lib/pathwayCommerce.js';
+import { readCommerceAttribution, withCommerceAttribution } from '../lib/commerceAttribution.js';
 import { RECOVERY_OFFER_ID, RECOVERY_PATHWAY } from '../config/recovery.js';
 import '../styles/learnerEditorial.css';
+
+const CONSENT_VERSION = 'recovery-checkout-2026-08-14-v2';
 
 const steps = [
   {
@@ -26,30 +29,30 @@ const steps = [
   {
     number: '02',
     title: 'Programma della scuola',
-    copy: 'Selezioni gli argomenti indicati per la prova: restano sempre dentro il percorso.',
+    copy: 'Selezioni gli argomenti indicati per la prova: il programma della scuola resta il riferimento.',
     Icon: CalendarDays,
   },
   {
     number: '03',
     title: 'Piano',
-    copy: 'Il tempo rimasto e i risultati decidono quali sessioni vengono prima.',
+    copy: 'La data dell’esame, il programma e i risultati decidono quali argomenti vengono prima.',
     Icon: Route,
   },
   {
     number: '04',
-    title: 'Verifica',
-    copy: 'Checkpoint e simulazioni aggiornano le priorità senza promettere un voto.',
+    title: 'Verifica per argomento',
+    copy: 'Le mini-verifiche fanno emergere gli errori da recuperare con pratica mirata.',
     Icon: ShieldCheck,
   },
 ];
 
 const benefits = [
-  'Piano personalizzato sul programma della scuola',
+  'Diagnostica iniziale per individuare priorità reali',
+  'Piano personalizzato sul programma della scuola e sulla data dell’esame',
   'Sessioni con Recupera → Allenati → Modalità scuola → Mini-verifica',
-  'Ripasso degli errori ricorrenti',
-  'Checkpoint misti e due simulazioni quando il tempo lo permette',
-  'Preparazione attuale per argomento, senza promesse sul voto',
-  'Accesso agli altri contenuti Sblocco che già possiedi',
+  'Pratica guidata sugli argomenti assegnati dalla scuola',
+  'Mini-verifiche per argomento e recupero mirato degli errori',
+  'Priorità aggiornate in base al lavoro svolto, senza promesse sul voto',
 ];
 
 export default function RecoveryLandingPage() {
@@ -59,6 +62,15 @@ export default function RecoveryLandingPage() {
   const [offer, setOffer] = useState(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [error, setError] = useState('');
+  const [consent, setConsent] = useState({
+    terms: false,
+    privacy: false,
+    immediateAccess: false,
+    adultPurchaser: false,
+  });
+  const consentReady = consent.terms && consent.privacy && consent.immediateAccess && consent.adultPurchaser;
+  const attribution = readCommerceAttribution(location.search);
+  const diagnosticHref = withCommerceAttribution('/test-recupero-inglese', attribution);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -70,9 +82,13 @@ export default function RecoveryLandingPage() {
     return () => controller.abort();
   }, [session?.access_token]);
 
+  function updateConsent(key) {
+    setConsent((current) => ({ ...current, [key]: !current[key] }));
+  }
+
   async function handleCheckout() {
     setError('');
-    const returnTo = `${location.pathname}#sblocca`;
+    const returnTo = withCommerceAttribution(`${location.pathname}#sblocca`, attribution);
     if (!user || !session?.access_token) {
       navigate(authPath('/login', returnTo), { state: { from: returnTo, message: 'Accedi o crea un account per continuare verso il pagamento.' } });
       return;
@@ -81,18 +97,29 @@ export default function RecoveryLandingPage() {
       navigate('/recupero-debito/onboarding');
       return;
     }
+    if (!consentReady) {
+      setError('Prima di continuare, conferma i quattro punti richiesti per l’acquisto digitale.');
+      return;
+    }
     setCheckoutLoading(true);
     try {
-      const payload = await createCheckout({ offerId: RECOVERY_OFFER_ID, accessToken: session.access_token });
+      const payload = await createCheckout({
+        offerId: RECOVERY_OFFER_ID,
+        accessToken: session.access_token,
+        consent: { ...consent, version: CONSENT_VERSION },
+        attribution,
+      });
       if (!payload.url) throw new Error('Checkout non disponibile.');
       window.location.assign(payload.url);
     } catch (checkoutError) {
       setError(
         checkoutError.code === 'already_owned'
           ? 'Hai già accesso a Recupero Debito Inglese.'
-          : checkoutError.code === 'offer_not_configured' || checkoutError.code === 'configuration_required'
-            ? 'Il pagamento non è ancora configurato.'
-            : 'Non è stato possibile aprire il pagamento. Riprova tra poco.',
+          : checkoutError.code === 'consent_required'
+            ? 'Prima di continuare, conferma i quattro punti richiesti per l’acquisto digitale.'
+            : checkoutError.code === 'offer_not_configured' || checkoutError.code === 'configuration_required'
+              ? 'Il pagamento non è ancora configurato.'
+              : 'Non è stato possibile aprire il pagamento. Riprova tra poco.',
       );
     } finally {
       setCheckoutLoading(false);
@@ -111,10 +138,10 @@ export default function RecoveryLandingPage() {
             <p className="learner-kicker">Recupero Debito Inglese</p>
             <h1 className="learner-display">Non una libreria di lezioni. <em>Un piano per la prova.</em></h1>
             <p className="recovery-sales-hero__lede">
-              Inserisci la data dell’esame e il programma dato dalla scuola. Sblocco mette prima gli argomenti più importanti, riprende gli errori che si ripetono e aggiorna il percorso quando il tempo cambia.
+              Inserisci la data dell’esame e il programma dato dalla scuola. Sblocco mette prima gli argomenti più importanti, riprende gli errori che si ripetono e aggiorna le priorità mentre procedi.
             </p>
             <div className="learner-form-actions">
-              <Link to="/test-recupero-inglese" className="learner-primary-button focus-ring">Fai il test gratuito <ArrowRight aria-hidden="true" size={16} /></Link>
+              <Link to={diagnosticHref} className="learner-primary-button focus-ring">Fai il test gratuito <ArrowRight aria-hidden="true" size={16} /></Link>
               <a href="#sblocca" className="learner-secondary-button focus-ring">Vedi cosa include</a>
             </div>
             <p className="recovery-sales-hero__principle"><span>Una priorità chiara, ogni volta che studi.</span> Il percorso si adatta ai risultati e ai giorni che restano.</p>
@@ -130,7 +157,7 @@ export default function RecoveryLandingPage() {
           <div className="recovery-journey__intro">
             <p className="learner-kicker">Dal punto di partenza alla prova</p>
             <h2 id="recovery-journey-title" className="learner-display">Studia ciò che serve, <em>nell’ordine giusto.</em></h2>
-            <p>La piattaforma non ti consegna una lista infinita. Trasforma il programma della scuola in una sequenza concreta, poi la corregge mentre procedi.</p>
+            <p>La piattaforma non ti consegna una lista infinita. Trasforma il programma della scuola in una sequenza concreta e usa le verifiche per argomento per indirizzare il recupero.</p>
           </div>
           <div className="recovery-journey__steps" role="list">
             {steps.map(({ number, title, copy, Icon }) => (
@@ -176,21 +203,46 @@ export default function RecoveryLandingPage() {
                 <p>Il test gratuito ti mostra le aree già solide e quelle da mettere in priorità. Nessuna previsione del voto, solo un primo quadro utile.</p>
               </div>
               <div className="recovery-offer-band__closing-actions">
-                <Link to="/test-recupero-inglese" className="learner-primary-button focus-ring">Fai il test gratuito <ArrowRight aria-hidden="true" size={16} /></Link>
+                <div className="rounded-2xl border border-ink/10 bg-white/70 p-4 text-left dark:border-white/10 dark:bg-white/[0.05]">
+                  <p className="text-lg font-black text-ink dark:text-white">€39 — pagamento unico</p>
+                  <p className="mt-1 text-sm font-bold text-ink/65 dark:text-white/65">Nessun abbonamento · Accesso per 90 giorni dall’acquisto</p>
+                </div>
+                <Link to={diagnosticHref} className="learner-primary-button focus-ring">Fai il test gratuito <ArrowRight aria-hidden="true" size={16} /></Link>
+                {!offer?.owned ? (
+                  <fieldset className="grid gap-3 rounded-2xl border border-ink/10 bg-white/60 p-4 text-left text-sm leading-6 dark:border-white/10 dark:bg-white/[0.04]">
+                    <legend className="px-1 font-black text-ink dark:text-white">Conferme prima del pagamento</legend>
+                    <label className="flex items-start gap-3">
+                      <input type="checkbox" checked={consent.terms} onChange={() => updateConsent('terms')} className="mt-1 h-4 w-4" />
+                      <span>Ho letto e accetto i <Link className="font-bold underline" to="/termini-e-condizioni" target="_blank" rel="noreferrer">Termini e Condizioni</Link>.</span>
+                    </label>
+                    <label className="flex items-start gap-3">
+                      <input type="checkbox" checked={consent.privacy} onChange={() => updateConsent('privacy')} className="mt-1 h-4 w-4" />
+                      <span>Confermo di aver letto la <Link className="font-bold underline" to="/privacy-policy" target="_blank" rel="noreferrer">Privacy Policy</Link>.</span>
+                    </label>
+                    <label className="flex items-start gap-3">
+                      <input type="checkbox" checked={consent.immediateAccess} onChange={() => updateConsent('immediateAccess')} className="mt-1 h-4 w-4" />
+                      <span>Chiedo che l’accesso digitale inizi subito dopo il pagamento, senza attendere la scadenza del periodo di recesso. Ho letto le informazioni sul diritto di recesso e sulla politica di rimborso.</span>
+                    </label>
+                    <label className="flex items-start gap-3">
+                      <input type="checkbox" checked={consent.adultPurchaser} onChange={() => updateConsent('adultPurchaser')} className="mt-1 h-4 w-4" />
+                      <span>Confermo di avere almeno 18 anni. Se il percorso è destinato a uno studente minorenne, confermo di essere il genitore o tutore legale che effettua l’acquisto.</span>
+                    </label>
+                  </fieldset>
+                ) : null}
                 {offer?.owned || offer?.configured ? (
                   <button
                     type="button"
                     className="learner-secondary-button focus-ring"
                     onClick={handleCheckout}
-                    disabled={checkoutLoading}
+                    disabled={checkoutLoading || (!offer?.owned && !consentReady)}
                   >
-                    {checkoutLoading ? <><LoaderCircle aria-hidden="true" className="animate-spin" size={16} /> Apertura Checkout...</> : offer?.owned ? 'Continua il percorso' : 'Sblocca Recupero Debito'}
+                    {checkoutLoading ? <><LoaderCircle aria-hidden="true" className="animate-spin" size={16} /> Apertura Checkout...</> : offer?.owned ? 'Continua il percorso' : 'Acquista a €39'}
                     {!checkoutLoading ? <ArrowRight aria-hidden="true" size={16} /> : null}
                   </button>
                 ) : (
                   <span className="recovery-offer-band__payment-status">Pagamento in configurazione</span>
                 )}
-                <p>Pagamento unico tramite Stripe Checkout. Il prezzo viene mostrato nel Checkout e l’accesso viene assegnato automaticamente.</p>
+                <p>Pagamento unico tramite Stripe Checkout. L’accesso viene assegnato dopo la conferma del pagamento e dura 90 giorni.</p>
               </div>
               {error ? <p className="learner-error" role="alert">{error}</p> : null}
             </div>

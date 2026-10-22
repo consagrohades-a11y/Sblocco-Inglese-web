@@ -10,6 +10,12 @@ function stripeId(value) {
   return typeof value === 'string' ? value : value.id || null;
 }
 
+function metadataText(value, maxLength = 100) {
+  if (typeof value !== 'string') return null;
+  const sanitized = value.replace(/[\u0000-\u001F\u007F]/g, '').trim().slice(0, maxLength);
+  return sanitized || null;
+}
+
 function trustedSessionData(session) {
   const offer = resolveOffer(session.metadata?.offer_id);
   const metadataUserId = session.metadata?.user_id || null;
@@ -17,6 +23,30 @@ function trustedSessionData(session) {
   if (!offer || !offer.fulfillable) throw new Error('Webhook references an unknown or unfulfillable offer.');
   if (!userId || (metadataUserId && metadataUserId !== session.client_reference_id)) throw new Error('Webhook user metadata is inconsistent.');
   return { offer, userId };
+}
+
+async function recordCheckoutContext(session) {
+  const metadata = session.metadata || {};
+  const hasContext = metadata.consent_version
+    || metadata.utm_source
+    || metadata.utm_medium
+    || metadata.utm_campaign
+    || metadata.utm_content;
+  if (!hasContext) return;
+
+  const recordedAt = typeof metadata.consent_recorded_at === 'string' && !Number.isNaN(Date.parse(metadata.consent_recorded_at))
+    ? metadata.consent_recorded_at
+    : null;
+  const { error } = await getSupabaseAdmin().rpc('record_stripe_checkout_context', {
+    p_checkout_session_id: session.id,
+    p_utm_source: metadataText(metadata.utm_source),
+    p_utm_medium: metadataText(metadata.utm_medium),
+    p_utm_campaign: metadataText(metadata.utm_campaign),
+    p_utm_content: metadataText(metadata.utm_content),
+    p_consent_version: metadataText(metadata.consent_version, 80),
+    p_consent_recorded_at: recordedAt,
+  });
+  if (error) throw error;
 }
 
 async function fulfillSession(session) {
@@ -36,6 +66,7 @@ async function fulfillSession(session) {
     p_access_target: offer.accessTarget,
   });
   if (error) throw error;
+  await recordCheckoutContext(session);
   return { fulfilled: true };
 }
 

@@ -7,7 +7,11 @@ import { pathwaySlugs } from '../data/pathways.js';
 export default function CheckoutCancel() {
   const [searchParams] = useSearchParams();
   const requestedPathway = searchParams.get('pathway') || '';
-  const destination = pathwaySlugs.includes(requestedPathway) ? `/percorsi/${requestedPathway}#supporto` : '/percorsi';
+  const destination = requestedPathway === 'recupero-debito'
+    ? '/percorsi/recupero-debito#sblocca'
+    : pathwaySlugs.includes(requestedPathway)
+      ? `/percorsi/${requestedPathway}#supporto`
+      : '/percorsi';
 
   return (
     <>
@@ -23,4 +27,3 @@ export default function CheckoutCancel() {
     </>
   );
 }
-
