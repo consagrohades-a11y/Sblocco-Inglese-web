@@ -200,10 +200,12 @@ assert.equal(part7PresetActivity.blocks[0].items.length, 10);
 assert.ok(part7PresetActivity.blocks[0].items.every((item) => item.correct_section_index === null));
 
 assert.deepEqual(
-  STUDIO_RECIPES.map((recipe) => recipe.id),
+  STUDIO_RECIPES.filter((recipe) => !recipe.id.startsWith('grammar_action_')).map((recipe) => recipe.id),
   ['quick_lesson', 'grammar_arc', 'listening_arc', 'vocabulary_to_use'],
-  'Studio Recipes should remain a small intentional set.',
+  'Existing core Studio recipes must remain available.',
 );
+assert.equal(STUDIO_RECIPES.filter((recipe) => recipe.id.startsWith('grammar_action_')).length, 5,
+  'Grammar in Action must expose only five curated sample recipes in its initial release.');
 
 for (const recipe of STUDIO_RECIPES) {
   const recipeDocument = applyStudioRecipe(createStudioDocument({
