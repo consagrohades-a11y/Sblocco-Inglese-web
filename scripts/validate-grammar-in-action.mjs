@@ -75,6 +75,17 @@ assert.equal(imported.document.blocks[0].type, 'grammar_construction');
 assert.equal(imported.publishable, true, JSON.stringify(imported.errors));
 assert.equal(imported.needs_attention_blocks, 0);
 
+const authoringKit = JSON.parse(readFileSync(new URL('../public/templates/sblocco-grammar-in-action-v1.json', import.meta.url), 'utf8'));
+assert.equal(authoringKit._template.template_id, 'sblocco-grammar-in-action');
+assert.equal(authoringKit._template.block_registry_version, 7);
+assert.ok(authoringKit._ai_authoring_guide.pedagogical_rules.length >= 8);
+const kitImport = parseStudioImport(authoringKit);
+assert.equal(kitImport.publishable, true, JSON.stringify(kitImport.errors));
+assert.equal(kitImport.document.blocks.filter((block) => block.type === 'grammar_construction').length, 4);
+assert.equal(kitImport.ready_blocks, kitImport.document.blocks.length);
+const importPanel = readFileSync(new URL('../src/components/admin/exercise-studio/StudioJsonImportPanel.jsx', import.meta.url), 'utf8');
+assert.ok(importPanel.includes('/templates/sblocco-grammar-in-action-v1.json'), 'JSON kit must be discoverable in Studio.');
+
 const learner = readFileSync(new URL('../src/components/exercises/ExerciseQuestionRenderer.jsx', import.meta.url), 'utf8');
 const editor = readFileSync(new URL('../src/components/admin/exercise-studio/StudioBlockEditor.jsx', import.meta.url), 'utf8');
 const preview = readFileSync(new URL('../src/pages/AdminExerciseStudio.jsx', import.meta.url), 'utf8');
