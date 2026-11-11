@@ -1,7 +1,9 @@
 import { addStudioBlock, normalizeStudioDocument } from './exerciseStudioDocument.js';
 import { getStudioBlockDefinition } from './exerciseStudioBlockRegistry.js';
+import { GRAMMAR_IN_ACTION_SAMPLES } from './grammarInActionSamples.js';
 
 export const STUDIO_RECIPES = Object.freeze([
+  ...GRAMMAR_IN_ACTION_SAMPLES,
   {
     id: 'quick_lesson',
     eyebrow: 'Fast lesson',
@@ -72,8 +74,15 @@ export function applyStudioRecipe(rawDocument, recipeId) {
   const recipe = getStudioRecipe(recipeId);
   if (!recipe) throw new Error('Unknown Studio recipe: ' + recipeId);
 
+  const isFresh = !(rawDocument?.blocks || []).length && !rawDocument?.internal_title;
   let next = {
     ...rawDocument,
+    ...(recipe.internal_title && !rawDocument?.internal_title ? { internal_title: recipe.internal_title } : {}),
+    ...(recipe.learner_title && !rawDocument?.learner_title ? { learner_title: recipe.learner_title } : {}),
+    ...(recipe.level && isFresh ? { level: recipe.level } : {}),
+    ...(recipe.topic && !rawDocument?.topic ? { topic: recipe.topic } : {}),
+    ...(recipe.estimated_minutes && !rawDocument?.estimated_minutes ? { estimated_minutes: recipe.estimated_minutes } : {}),
+    ...(recipe.tags ? { tags: [...new Set([...(rawDocument?.tags || []), ...recipe.tags])] } : {}),
     activity_type: recipe.activity_type,
     status: rawDocument?.status === 'published' ? 'draft' : (rawDocument?.status || 'draft'),
   };
