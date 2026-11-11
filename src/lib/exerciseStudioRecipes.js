@@ -102,6 +102,7 @@ export function buildStudioActivityPulse(rawDocument) {
     const category = getStudioBlockDefinition(block.type)?.category;
     if (category === 'theory') counts.teach += 1;
     if (category === 'practice') counts.practice += 1;
+    if (block.type === 'grammar_construction' && block.mode === 'oral') counts.produce += 1;
     if (category === 'production') counts.produce += 1;
     if (category === 'media') counts.media += 1;
   }
