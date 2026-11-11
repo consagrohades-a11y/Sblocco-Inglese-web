@@ -154,7 +154,7 @@ export const GRAMMAR_IN_ACTION_SAMPLES = Object.freeze([
     blocks: [
       explain('Anchor the meaning in time', 'Third conditional: an unreal past condition with a hypothetical past result (If she had applied, she might have got an interview). Mixed conditional: an unreal past condition with a hypothetical present consequence (If she had taken the offer, she might be living abroad now). Might have/might be express possibility, not certainty.'),
       contrast('Two counterfactual outcomes', 'If I had left earlier, I would have caught the train. (hypothetical past result)', 'If I had taken the remote job, I would be working from home now. (hypothetical present result)', 'Observe both the conditional clause and the time of the result.'),
-      build('Construct a mixed conditional', 'Describe a possible present result of an unreal past decision.', ['If', 'Maya had accepted the offer', 'she might be living abroad now'], {
+      build('Construct a mixed conditional', 'Describe a possible present result of an unreal past decision.', ['If', 'Maya had accepted the offer,', 'she might be living abroad now'], {
         context: 'Maya rejected the job abroad two years ago and still lives locally.',
         target_pattern: 'if + past perfect, might + base verb (present result)',
         learner_hint: 'The decision was in the past; the imagined consequence is now.',
