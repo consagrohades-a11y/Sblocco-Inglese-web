@@ -1,6 +1,26 @@
 
 -- Speaking transcripts are retained independently of short-lived recording files.
 -- Existing 14-day audio Storage and metadata cleanup jobs remain unchanged.
+-- Earlier production schema contains this optional feedback field, but historical
+-- migrations never declared it. Fresh replays must create it before the RPC
+-- definitions below reference it; this is idempotent on an existing database.
+alter table public.exercise_builder_attempts
+  add column if not exists learner_confidence text;
+
+do $
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.exercise_builder_attempts'::regclass
+      and conname = 'exercise_builder_attempts_learner_confidence_check'
+  ) then
+    alter table public.exercise_builder_attempts
+      add constraint exercise_builder_attempts_learner_confidence_check
+      check (learner_confidence is null or learner_confidence in ('lost', 'okay', 'confident'));
+  end if;
+end;
+$;
+
 alter table public.exercise_builder_attempt_questions
   add column if not exists speech_transcript text,
   add column if not exists speech_transcribed_at timestamptz;
