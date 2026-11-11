@@ -1,0 +1,198 @@
+{
+  "_template": {
+    "template_id": "sblocco-grammar-in-action",
+    "template_version": 1,
+    "authoring_contract_version": 1,
+    "block_registry_version": 7
+  },
+  "_ai_authoring_guide": {
+    "purpose": "Create adult-appropriate, actively constructed English grammar in the Sblocco Learning Studio, from A1 through C1. This is a completed example AND a self-contained AI authoring guide.",
+    "pedagogical_rules": [
+      "Start with a precise sentence-construction skill, not a game theme.",
+      "Teach form, meaning and use; do not rely on trigger words or isolated gap filling.",
+      "Vary mental operations: build, negate, question, combine, change meaning, edit and explain.",
+      "Use realistic adult contexts and provide explicit example(s), anticipated errors and transfer into independent speaking.",
+      "Different CEFR levels require different kinds of grammatical decisions, not the same activity with harder vocabulary.",
+      "Provide Italian scaffolding only where helpful; preserve accurate natural English.",
+      "Make oral tasks truly open-ended and teacher-led, not automatically marked against a single model sentence.",
+      "Use multiple valid accepted_answers for constrained typed tasks; if legitimate outputs are too numerous, use oral mode.",
+      "Include one or more genuine spoken production tasks with a new context and no mandatory grammar prompt.",
+      "Explain why the grammar works and what meaning it communicates. Avoid busywork and empty generic questions."
+    ],
+    "supported_blocks": [
+      {
+        "type": "explanation",
+        "required": [
+          "body"
+        ],
+        "purpose": "Concept and concise form/meaning explanation"
+      },
+      {
+        "type": "contrast",
+        "required": [
+          "left_body",
+          "right_body"
+        ],
+        "purpose": "Contrast two meanings or structures"
+      },
+      {
+        "type": "do_dont",
+        "required": [
+          "wrong",
+          "correct",
+          "why"
+        ],
+        "purpose": "Diagnose a common grammatical error"
+      },
+      {
+        "type": "grammar_construction",
+        "required": [
+          "mode",
+          "prompt"
+        ],
+        "purpose": "Construct sentences by moving chunks, typing a constrained answer or producing orally"
+      },
+      {
+        "type": "recap",
+        "required": [
+          "body"
+        ],
+        "purpose": "Recall grammar and reflect on independent production"
+      }
+    ],
+    "grammar_construction_modes": [
+      {
+        "mode": "tiles",
+        "additional_required": [
+          "chunks"
+        ],
+        "validation": "At least two chunks, already in correct order; omit punctuation from chunks and use terminal_punctuation separately."
+      },
+      {
+        "mode": "typed",
+        "additional_required": [
+          "accepted_answers"
+        ],
+        "validation": "At least one correct answer and every defensible constrained variant; automatic checking only for objectively constrained tasks."
+      },
+      {
+        "mode": "oral",
+        "additional_required": [],
+        "validation": "Teacher-led and deliberately ungraded; use for open-ended communicative production."
+      }
+    ],
+    "required_activity_fields": [
+      "internal_title",
+      "learner_title",
+      "level",
+      "topic",
+      "activity_type",
+      "blocks"
+    ],
+    "do_not_invent": [
+      "id",
+      "internal_code",
+      "slug",
+      "block IDs",
+      "question IDs",
+      "technical option keys",
+      "versions",
+      "sequence indexes",
+      "storage paths",
+      "diagnostic codes",
+      "assignment resource keys"
+    ],
+    "import_policy": "JSON imports are normalized and become repairable Studio drafts. Never bypass Studio preflight or publish structurally invalid activities.",
+    "feedback_rule": "Correct answers and explanations for independent tasks are revealed according to the activity's configured feedback timing. Teacher notes must remain private.",
+    "version_info": "Grammar in Action kit v1; Studio authoring contract v1; Block Registry v7."
+  },
+  "activity": {
+    "internal_title": "A1 · Present Simple · Build Statements & Questions",
+    "learner_title": "Make sentences that actually work",
+    "level": "A1",
+    "topic": "present_simple",
+    "activity_type": "mini_course",
+    "estimated_minutes": 18,
+    "tags": [
+      "grammar-in-action",
+      "sentence-building"
+    ],
+    "settings": {
+      "instruction_language": "en",
+      "feedback_timing": "exercise_end"
+    },
+    "blocks": [
+      {
+        "type": "explanation",
+        "title": "Subject, verb and the auxiliary",
+        "body": "I work in a café. She works in a café. Does she work in a café? She doesn't work on Sundays. The auxiliary does carries third-person agreement; the main verb stays in its base form."
+      },
+      {
+        "type": "contrast",
+        "title": "Two kinds of question",
+        "left_label": "Be",
+        "left_body": "Is she a teacher?",
+        "right_label": "Other main verbs",
+        "right_body": "Does she teach English?",
+        "body": "Ordinary questions with be invert be and the subject; other present-simple questions use do/does."
+      },
+      {
+        "type": "grammar_construction",
+        "title": "Build an affirmative statement",
+        "mode": "tiles",
+        "prompt": "Say what Lara usually does before work.",
+        "context": "Lara: drinks coffee before work most days.",
+        "target_pattern": "subject + frequency + verb + object",
+        "chunks": [
+          "Lara",
+          "usually",
+          "drinks",
+          "coffee",
+          "before work"
+        ],
+        "terminal_punctuation": ".",
+        "learner_hint": "With Lara (she), drink takes -s.",
+        "explanation": "Third-person singular uses drinks; usually precedes the main verb.",
+        "teacher_note": "Ask the student to change Lara to I."
+      },
+      {
+        "type": "grammar_construction",
+        "title": "Form a question",
+        "mode": "tiles",
+        "prompt": "Ask whether Lara works on Sundays.",
+        "chunks": [
+          "Does",
+          "Lara",
+          "work",
+          "on Sundays"
+        ],
+        "terminal_punctuation": "?",
+        "target_pattern": "Does + subject + base verb",
+        "learner_hint": "No -s on work after does."
+      },
+      {
+        "type": "grammar_construction",
+        "title": "Negate the sentence",
+        "mode": "typed",
+        "prompt": "Rewrite exactly as a negative: Lara works on Sundays.",
+        "accepted_answers": [
+          "Lara does not work on Sundays.",
+          "Lara doesn't work on Sundays.",
+          "Lara doesn’t work on Sundays."
+        ],
+        "target_pattern": "does not + base verb",
+        "learner_hint": "Does carries the agreement.",
+        "explanation": "The main verb is work, not works, after doesn't."
+      },
+      {
+        "type": "grammar_construction",
+        "title": "Use grammar in real speaking",
+        "mode": "oral",
+        "prompt": "Ask your teacher three questions about their normal week. Then say what you learned using complete sentences.",
+        "context": "Ask about work, hobbies and weekends.",
+        "learner_hint": "Do you…? / Where do you…? / What time do you…?",
+        "teacher_note": "Correct the question word order aloud. Ask for an independent reformulation at the end."
+      }
+    ]
+  }
+}
