@@ -7,7 +7,7 @@
 alter table public.exercise_builder_attempts
   add column if not exists learner_confidence text;
 
-do $
+do $grammar_confidence$
 begin
   if not exists (
     select 1 from pg_constraint
@@ -19,7 +19,7 @@ begin
       check (learner_confidence is null or learner_confidence in ('lost', 'okay', 'confident'));
   end if;
 end;
-$;
+$grammar_confidence$;
 
 alter table public.exercise_builder_attempt_questions
   add column if not exists speech_transcript text,
