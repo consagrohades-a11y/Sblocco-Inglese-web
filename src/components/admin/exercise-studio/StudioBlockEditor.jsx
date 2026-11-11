@@ -3,6 +3,7 @@ import { FileAudio2, FileVideo2, Loader2, Plus, Trash2, Upload } from 'lucide-re
 import { getStudioBlockDefinition } from '../../../lib/exerciseStudioBlockRegistry.js';
 import StudioSelect from './StudioSelect.jsx';
 import StudioSpeakingRoundEditor from './StudioSpeakingRoundEditor.jsx';
+import StudioGrammarConstructionEditor from './StudioGrammarConstructionEditor.jsx';
 import {
   deleteStudioContentMedia,
   uploadStudioContentMedia,
@@ -2000,6 +2001,7 @@ export default function StudioBlockEditor({ block, issues = [], onChange, onDele
         {block.type === 'reading_comprehension' ? <ReadingComprehensionEditor block={block} patch={patch} /> : null}
         {block.type === 'multiple_choice' ? <MultipleChoiceEditor block={block} patch={patch} /> : null}
         {block.type === 'gap_fill' ? <GapFillEditor block={block} patch={patch} /> : null}
+        {block.type === 'grammar_construction' ? <StudioGrammarConstructionEditor block={block} onChange={patch} /> : null}
         {block.type === 'word_order' ? (
           <>
             <TextInput label="Prompt" value={block.prompt} onChange={(value) => patch({ prompt: value })} />
