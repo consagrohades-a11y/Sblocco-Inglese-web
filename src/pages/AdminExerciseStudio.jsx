@@ -155,6 +155,8 @@ function transcriptBeforeBlock(blocks, index) {
 }
 
 function PreviewBlock({ block, document, index, total, selected, onSelect }) {
+  const [tryMode, setTryMode] = useState(false);
+  const [previewAnswer, setPreviewAnswer] = useState(null);
   let question = null;
   let previewError = '';
 
@@ -173,9 +175,9 @@ function PreviewBlock({ block, document, index, total, selected, onSelect }) {
     <div
       role="button"
       tabIndex={0}
-      onClick={onSelect}
+      onClick={() => { if (!tryMode) onSelect(); }}
       onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
+        if (!tryMode && (event.key === 'Enter' || event.key === ' ')) {
           event.preventDefault();
           onSelect();
         }
@@ -186,6 +188,15 @@ function PreviewBlock({ block, document, index, total, selected, onSelect }) {
         <span className="absolute -right-2 -top-2 z-10 rounded-full bg-orange-500 px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-wide text-white shadow-sm">
           Editing
         </span>
+      ) : null}
+      {question && block.type === 'grammar_construction' && ['tiles', 'typed'].includes(block.mode) ? (
+        <div className="flex justify-end px-3 pt-3">
+          <button type="button" aria-pressed={tryMode}
+            onClick={(event) => { event.stopPropagation(); setTryMode((value) => !value); setPreviewAnswer(null); }}
+            className="focus-ring rounded-full border border-orange-300 bg-white px-3 py-1.5 text-xs font-black text-orange-800 dark:border-orange-300/30 dark:bg-surface-950 dark:text-orange-200">
+            {tryMode ? 'Exit learner test' : 'Try as learner'}
+          </button>
+        </div>
       ) : null}
       {question ? (
         <ExerciseActivity
@@ -199,9 +210,9 @@ function PreviewBlock({ block, document, index, total, selected, onSelect }) {
         >
           <ExerciseQuestionRenderer
             item={{ id: block.id, question, result: null }}
-            answer={null}
-            onChange={() => {}}
-            disabled
+            answer={tryMode ? previewAnswer : null}
+            onChange={(value) => { if (tryMode) setPreviewAnswer(value); }}
+            disabled={!tryMode}
             showScore={false}
             showCorrectAnswers={false}
             showExplanations={false}

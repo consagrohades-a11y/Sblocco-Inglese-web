@@ -7,7 +7,7 @@ import {
   validateSpeakingRoundBlock,
 } from './speakingRoundContract.js';
 
-export const STUDIO_BLOCK_REGISTRY_VERSION = 6;
+export const STUDIO_BLOCK_REGISTRY_VERSION = 7;
 
 const text = (value) => typeof value === 'string' ? value.trim() : '';
 const list = (value) => Array.isArray(value) ? value.map((item) => text(item)).filter(Boolean) : [];
@@ -1339,6 +1339,87 @@ export const STUDIO_BLOCK_REGISTRY = Object.freeze({
         shuffle_strategy: 'stable_attempt',
       },
     }),
+  }),
+  grammar_construction: definition({
+    type: 'grammar_construction',
+    label: 'Grammar in Action · Sentence Construction',
+    category: 'practice',
+    capabilities: {
+      automaticGrading: true,
+      speaking: true,
+      learnerRenderer: 'grammar_construction',
+    },
+    createDefault: () => ({
+      title: '', prompt: '', instructions: 'Build a sentence that expresses the intended meaning.',
+      primary_skill: 'grammar', learning_objective: '',
+      mode: 'tiles', context: '', target_pattern: '', learner_hint: '',
+      chunks: [], terminal_punctuation: '',
+      accepted_answers: [], explanation: '', teacher_note: '',
+    }),
+    normalize: (block) => ({
+      ...block,
+      title: text(block.title),
+      prompt: text(block.prompt),
+      instructions: text(block.instructions),
+      mode: ['tiles', 'typed', 'oral'].includes(block.mode) ? block.mode : 'tiles',
+      context: text(block.context),
+      target_pattern: text(block.target_pattern),
+      learner_hint: text(block.learner_hint),
+      chunks: list(block.chunks),
+      terminal_punctuation: text(block.terminal_punctuation),
+      accepted_answers: list(block.accepted_answers),
+      explanation: text(block.explanation),
+      teacher_note: text(block.teacher_note),
+    }),
+    validate: (block) => {
+      const issues = requiredText(block, 'prompt', 'Sentence construction prompt');
+      if (block.mode === 'tiles') {
+        if (list(block.chunks).length < 2) issues.push(issue('minimum', 'Add at least two chunks in the correct order.', 'chunks'));
+        if (block.terminal_punctuation && !/^[.!?]+$/.test(block.terminal_punctuation)) {
+          issues.push(issue('punctuation', 'Use only ., ! or ? as final punctuation.', 'terminal_punctuation'));
+        }
+      }
+      if (block.mode === 'typed' && !list(block.accepted_answers).length) {
+        issues.push(issue('accepted_answer', 'Enter every accepted answer for this constrained task. Use Oral for open-ended production.', 'accepted_answers'));
+      }
+      return issues;
+    },
+    compile: (block, context) => {
+      // Reuse validated runtime answer types. Free oral construction is deliberately ungraded.
+      const mode = block.mode;
+      const grammar = {
+        mode,
+        context: block.context,
+        target_pattern: block.target_pattern,
+        learner_hint: block.learner_hint,
+      };
+      if (mode === 'tiles') return commonQuestion(block, context, {
+        type: 'word_order',
+        primary_skill: 'grammar',
+        content: {
+          presentation: 'grammar_construction',
+          grammar,
+          tokens: block.chunks,
+          correct_order: block.chunks,
+          terminal_punctuation: block.terminal_punctuation || null,
+          shuffle_strategy: 'stable_attempt',
+        },
+        grading: { mode: 'automatic', weight: 1, nearly_correct_multiplier: 0.5 },
+      });
+      if (mode === 'typed') return commonQuestion({ ...block, feedback: { explanation: block.explanation } }, context, {
+        type: 'translation',
+        primary_skill: 'grammar',
+        content: { presentation: 'grammar_construction', grammar, accepted_answers: block.accepted_answers },
+        grading: { mode: 'automatic', weight: 1, nearly_correct_multiplier: 0.5 },
+      });
+      return commonQuestion(block, context, {
+        type: 'content_block',
+        primary_skill: 'speaking',
+        learning_objective: text(block.learning_objective) || 'Construct and use the target grammar orally with the teacher.',
+        content: { presentation: 'grammar_construction', grammar, body: block.prompt },
+        grading: { mode: 'ungraded', weight: 0, nearly_correct_multiplier: 0 },
+      });
+    },
   }),
   speaking_round: definition({
     type: 'speaking_round',

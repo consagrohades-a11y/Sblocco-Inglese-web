@@ -1,7 +1,9 @@
 import { addStudioBlock, normalizeStudioDocument } from './exerciseStudioDocument.js';
 import { getStudioBlockDefinition } from './exerciseStudioBlockRegistry.js';
+import { GRAMMAR_IN_ACTION_SAMPLES } from './grammarInActionSamples.js';
 
 export const STUDIO_RECIPES = Object.freeze([
+  ...GRAMMAR_IN_ACTION_SAMPLES,
   {
     id: 'quick_lesson',
     eyebrow: 'Fast lesson',
@@ -72,14 +74,23 @@ export function applyStudioRecipe(rawDocument, recipeId) {
   const recipe = getStudioRecipe(recipeId);
   if (!recipe) throw new Error('Unknown Studio recipe: ' + recipeId);
 
+  const isFresh = !(rawDocument?.blocks || []).length && !rawDocument?.internal_title;
   let next = {
     ...rawDocument,
+    ...(recipe.internal_title && !rawDocument?.internal_title ? { internal_title: recipe.internal_title } : {}),
+    ...(recipe.learner_title && !rawDocument?.learner_title ? { learner_title: recipe.learner_title } : {}),
+    ...(recipe.level && isFresh ? { level: recipe.level } : {}),
+    ...(recipe.topic && !rawDocument?.topic ? { topic: recipe.topic } : {}),
+    ...(recipe.estimated_minutes && !rawDocument?.estimated_minutes ? { estimated_minutes: recipe.estimated_minutes } : {}),
+    ...(recipe.tags ? { tags: [...new Set([...(rawDocument?.tags || []), ...recipe.tags])] } : {}),
     activity_type: recipe.activity_type,
     status: rawDocument?.status === 'published' ? 'draft' : (rawDocument?.status || 'draft'),
   };
 
   for (const spec of recipe.blocks) {
-    next = addStudioBlock(next, spec.type, spec.initial || {}, spec.presetId || null);
+    // Existing recipes use { type, initial }; authored templates may provide full block fields.
+    const { type, initial, presetId, ...authoredFields } = spec;
+    next = addStudioBlock(next, type, initial || authoredFields, presetId || null);
   }
 
   return normalizeStudioDocument(next).document;
@@ -93,6 +104,7 @@ export function buildStudioActivityPulse(rawDocument) {
     const category = getStudioBlockDefinition(block.type)?.category;
     if (category === 'theory') counts.teach += 1;
     if (category === 'practice') counts.practice += 1;
+    if (block.type === 'grammar_construction' && block.mode === 'oral') counts.produce += 1;
     if (category === 'production') counts.produce += 1;
     if (category === 'media') counts.media += 1;
   }

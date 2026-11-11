@@ -69,6 +69,12 @@ jobs:
           create role authenticated nologin;
           create role service_role nologin;
           create schema auth;
+          -- The CI service is plain PostgreSQL, not hosted Supabase with
+          -- pg_cron. This stub validates cron.schedule calls in migrations
+          -- without executing external jobs or weakening production retention.
+          create schema cron;
+          create function cron.schedule(job_name text, schedule text, command text)
+          returns bigint language sql as $cron_ci_stub$ select 1::bigint $cron_ci_stub$;
           create table auth.users (
             id uuid primary key,
             email text,

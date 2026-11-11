@@ -1,6 +1,63 @@
 
 -- Speaking transcripts are retained independently of short-lived recording files.
 -- Existing 14-day audio Storage and metadata cleanup jobs remain unchanged.
+-- Earlier production schema contains this optional feedback field, but historical
+-- migrations never declared it. Fresh replays must create it before the RPC
+-- definitions below reference it; this is idempotent on an existing database.
+alter table public.exercise_builder_attempts
+  add column if not exists learner_confidence text;
+
+do $grammar_confidence$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.exercise_builder_attempts'::regclass
+      and conname = 'exercise_builder_attempts_learner_confidence_check'
+  ) then
+    alter table public.exercise_builder_attempts
+      add constraint exercise_builder_attempts_learner_confidence_check
+      check (learner_confidence is null or learner_confidence in ('lost', 'okay', 'confident'));
+  end if;
+end;
+$grammar_confidence$;
+
+-- The live database also contains a writing-revisions relation that the
+-- migration history never defined. Reconstruct its existing secure contract
+-- before the attempt-detail RPC below references it.
+create table if not exists public.exercise_builder_writing_revisions (
+  id uuid primary key default gen_random_uuid(),
+  attempt_question_id uuid not null
+    references public.exercise_builder_attempt_questions(id) on delete cascade,
+  learner_id uuid not null references public.profiles(id) on delete cascade,
+  revision_text text not null
+    check (char_length(btrim(revision_text)) between 1 and 12000),
+  created_at timestamptz not null default now()
+);
+
+create index if not exists exercise_builder_writing_revisions_question_idx
+  on public.exercise_builder_writing_revisions(attempt_question_id, created_at desc);
+create index if not exists exercise_builder_writing_revisions_learner_idx
+  on public.exercise_builder_writing_revisions(learner_id, created_at desc);
+
+alter table public.exercise_builder_writing_revisions enable row level security;
+revoke all on public.exercise_builder_writing_revisions from public, anon, authenticated;
+grant select on public.exercise_builder_writing_revisions to authenticated;
+
+do $grammar_revisions_policy$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public'
+      and tablename = 'exercise_builder_writing_revisions'
+      and policyname = 'exercise_builder_writing_revisions_select_own'
+  ) then
+    create policy exercise_builder_writing_revisions_select_own
+      on public.exercise_builder_writing_revisions for select to authenticated
+      using (learner_id = (select auth.uid()) or public.is_admin());
+  end if;
+end;
+$grammar_revisions_policy$;
+
 alter table public.exercise_builder_attempt_questions
   add column if not exists speech_transcript text,
   add column if not exists speech_transcribed_at timestamptz;

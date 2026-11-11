@@ -7,6 +7,7 @@ import ListeningComprehensionQuestion from './ListeningComprehensionQuestion.jsx
 import SafeTeachingContent from './SafeTeachingContent.jsx';
 import TranscriptReferencePanel from './TranscriptReferencePanel.jsx';
 import SpeakingRoundContent from '../speaking/SpeakingRoundContent.jsx';
+import GrammarConstructionRenderer from './GrammarConstructionRenderer.jsx';
 
 // Compatibility entry point for existing player and admin imports.
 // Legacy one-body teaching blocks keep their established editorial treatment.
@@ -18,6 +19,10 @@ export default function ExerciseQuestionRenderer(props) {
     ? <TranscriptReferencePanel transcript={props.referencedTranscript} />
     : null;
   const wrap = (content) => <>{transcriptPanel}{content}</>;
+
+  if (question.content?.presentation === 'grammar_construction') {
+    return wrap(<GrammarConstructionRenderer {...props} />);
+  }
 
   if (question.type === 'content_block' && question.content?.presentation === 'speaking_round') {
     return wrap(<SpeakingRoundContent round={question.content?.round || {}} showSupport />);

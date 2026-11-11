@@ -12,6 +12,7 @@ export const STUDIO_IMPORT_TEMPLATE_VERSION = 1;
 const SUPPORTED_TEMPLATE_IDS = new Set([
   'sblocco-learning-activity',
   'sblocco-grammar-mini-course',
+  'sblocco-grammar-in-action',
   'sblocco-mixed-practice',
   'sblocco-listening-lesson',
   'sblocco-writing-activity',
@@ -43,6 +44,8 @@ const BLOCK_ALIASES = Object.freeze({
   fill_the_gap: 'gap_fill',
   reorder: 'word_order',
   sentence_order: 'word_order',
+  sentence_construction: 'grammar_construction',
+  sentence_builder: 'grammar_construction',
   writing: 'written_response',
   free_writing: 'written_response',
   open_answer: 'translation',
